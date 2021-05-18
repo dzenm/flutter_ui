@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/widgets/tap_layout.dart';
 
 /// 单行输入框布局
 class SingleEditLayout extends StatefulWidget {
@@ -13,6 +12,7 @@ class SingleEditLayout extends StatefulWidget {
   final int? maxLength; // 设置最大字数长度
   final bool isShowMaxLength; // 是否显示最大长度
   final bool enabled; // 是否可用输入
+  final TextInputType? keyboardType; // 文本输入类型
   final ValueChanged<String>? onChanged; // 输入监听器
   final TextEditingController? controller; // 输入控制器
   final List<TextInputFormatter>? inputFormatters; // 输入文本的类型
@@ -30,15 +30,16 @@ class SingleEditLayout extends StatefulWidget {
     this.isShowMaxLength = true,
     this.enabled = true,
     this.controller,
+    this.keyboardType = TextInputType.text,
     this.inputFormatters,
     this.horizontalPadding = 16,
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _SingleEditLayout();
+  State<StatefulWidget> createState() => _SingleEditLayoutState();
 }
 
-class _SingleEditLayout extends State<SingleEditLayout> {
+class _SingleEditLayoutState extends State<SingleEditLayout> {
   var currentLength;
 
   // 判断和控制焦点的获取
@@ -48,18 +49,16 @@ class _SingleEditLayout extends State<SingleEditLayout> {
   @override
   void initState() {
     super.initState();
-    currentLength = widget.controller?.text.length ?? '0';
-    focusNode.addListener(() {
-      setState(() {
-        hasFocus = focusNode.hasFocus;
-      });
-    });
+    currentLength = widget.controller?.text.length;
+    focusNode.addListener(() => setState(() => hasFocus = focusNode.hasFocus));
   }
 
   @override
   Widget build(BuildContext context) {
+    List<TextInputFormatter> inputFormatters = [if (widget.maxLength != null) LengthLimitingTextInputFormatter(widget.maxLength)];
+    widget.inputFormatters?.forEach((element) => inputFormatters.add(element));
     return Container(
-      height: 50,
+      height: 50.0,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -73,7 +72,8 @@ class _SingleEditLayout extends State<SingleEditLayout> {
             child: textField(focusNode, widget.fontSize, widget.hintText ?? '', (value) => _onChanged(value),
                 enabled: widget.enabled,
                 textColor: widget.textColor,
-                inputFormatters: widget.inputFormatters,
+                keyboardType: widget.keyboardType,
+                inputFormatters: inputFormatters.isNotEmpty ? inputFormatters : null,
                 maxLength: widget.maxLength,
                 controller: widget.controller),
           ),
@@ -110,59 +110,6 @@ class _SingleEditLayout extends State<SingleEditLayout> {
   }
 }
 
-// 多级文本选择
-class SingleTextSelectionLayout extends StatefulWidget {
-  final String title;
-  final String text;
-  final String hintText;
-  final VoidCallback? onTap;
-  final Widget? child;
-
-  SingleTextSelectionLayout(
-    this.title,
-    this.text,
-    this.hintText, {
-    this.onTap,
-    this.child,
-  });
-
-  @override
-  State<StatefulWidget> createState() => _SingleTextSelectionLayout();
-}
-
-class _SingleTextSelectionLayout extends State<SingleTextSelectionLayout> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: 50.0,
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          SizedBox(width: 16),
-          // 标题文本
-          Text(widget.title, style: TextStyle(fontSize: 16)),
-          SizedBox(width: 8),
-
-          // 显示的内容文本
-          Flexible(
-            child: TapLayout(
-              height: 40,
-              child: Text(
-                widget.text.length == 0 ? widget.hintText : widget.text,
-                style: TextStyle(fontSize: 16, color: Colors.black),
-              ),
-              onTap: widget.onTap,
-            ),
-          ),
-          Offstage(offstage: widget.child == null, child: Row(children: [SizedBox(width: 8), if (widget.child != null) widget.child!])),
-          SizedBox(width: 16),
-        ],
-      ),
-    );
-  }
-}
-
 // 输入框
 textField(
   FocusNode focusNode,
@@ -171,6 +118,7 @@ textField(
   ValueChanged<String> onChanged, {
   bool? enabled,
   Color? textColor,
+  TextInputType? keyboardType,
   List<TextInputFormatter>? inputFormatters,
   int? maxLength,
   TextEditingController? controller,
@@ -178,7 +126,7 @@ textField(
   return TextField(
     enabled: enabled,
     focusNode: focusNode,
-    keyboardType: TextInputType.text,
+    keyboardType: keyboardType,
     inputFormatters: inputFormatters,
     style: TextStyle(
       fontSize: fontSize,

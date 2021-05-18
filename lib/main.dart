@@ -22,6 +22,7 @@ void init(Widget app) async {
       ChangeNotifierProvider(create: (context) => HomeViewModel()),
       ChangeNotifierProvider(create: (context) => MeViewModel()),
     ],
+    // Page必须放在MaterialApp中运行
     child: MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -32,6 +33,7 @@ void init(Widget app) async {
         //   TargetPlatform.iOS: SlidePageTransition(),
         // }),
       ),
+      // 初始化toast
       builder: BotToastInit(),
       title: "Flutter Demo",
       home: WillPopScopeRoute(app),

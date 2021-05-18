@@ -4,25 +4,33 @@ import 'package:flutter/widgets.dart';
 /// 可点击布局
 class TapLayout extends StatefulWidget {
   final Widget? child;
-  final Color? normalColor;
-  final Color? pressColor;
-  final Color? rippleColor;
-  final BorderRadius? borderRadius;
   final GestureTapCallback? onTap;
+
   final double? width;
   final double? height;
-  final bool isRipple;
+
+  final EdgeInsetsGeometry? margin;
+  final EdgeInsetsGeometry? padding;
+
+  final Color? normalColor;
+  final Color? pressColor;
+
+  final Color? rippleColor;
+  final BorderRadius? borderRadius;
+  final bool isRipple; // true为点击有波纹效果，false为点击有背景效果
 
   TapLayout({
     @required this.child,
-    this.normalColor,
-    this.pressColor,
-    this.rippleColor,
-    this.borderRadius,
     this.onTap,
     this.width,
     this.height,
-    this.isRipple = false,
+    this.margin,
+    this.padding,
+    this.normalColor = Colors.white,
+    this.pressColor,
+    this.rippleColor,
+    this.borderRadius,
+    this.isRipple = true,
   });
 
   @override
@@ -35,15 +43,12 @@ class _TapLayoutState extends State<TapLayout> {
     return Material(
       color: Colors.transparent,
       child: Ink(
-        decoration: BoxDecoration(
-          color: widget.normalColor ?? Colors.white,
-          borderRadius: widget.borderRadius,
-        ),
+        decoration: BoxDecoration(color: widget.normalColor, borderRadius: widget.borderRadius),
         child: InkResponse(
           borderRadius: widget.borderRadius,
           highlightColor: widget.pressColor,
           highlightShape: BoxShape.rectangle,
-          radius: widget.isRipple ? 0.0 : 500.0,
+          radius: widget.isRipple ? 500.0 : 0.0,
           splashColor: widget.rippleColor,
           containedInkWell: true,
           onTap: widget.onTap,
@@ -51,8 +56,11 @@ class _TapLayoutState extends State<TapLayout> {
           child: Container(
             width: widget.width,
             height: widget.height,
-            alignment: Alignment(0, 0), // 设置child 居中
-            child: widget.width == null ? widget.child : Row(children: [widget.child!],),
+            margin: widget.margin,
+            padding: widget.padding,
+            // 设置child 居中
+            alignment: Alignment(0, 0),
+            child: widget.child,
           ),
         ),
       ),

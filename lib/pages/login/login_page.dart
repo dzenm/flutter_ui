@@ -80,8 +80,7 @@ class _LoginPageState extends State<LoginPage> {
             flex: 1,
             child: MaterialButton(
               color: Colors.blue,
-              onPressed: isNotEmptyText ? _loginPressed : null,
-              disabledColor: Colors.black12,
+              onPressed: _loginPressed,
               child: Text('登录', style: TextStyle(color: Colors.white)),
             ),
           ),

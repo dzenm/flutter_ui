@@ -1,9 +1,13 @@
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_ui/utils/taost.dart';
 import 'package:flutter_ui/widgets/common_view.dart';
 import 'package:flutter_ui/widgets/single_edit_layout.dart';
+import 'package:flutter_ui/widgets/single_text_layout.dart';
+import 'package:flutter_ui/widgets/tap_layout.dart';
 
 class TextPage extends StatefulWidget {
   @override
@@ -13,6 +17,7 @@ class TextPage extends StatefulWidget {
 class _TextPageState extends State<TextPage> {
   TextEditingController _controller = new TextEditingController(text: "初始化");
   String text = '';
+  bool switchState = true;
 
   @override
   void initState() {
@@ -30,7 +35,7 @@ class _TextPageState extends State<TextPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('无边框带字数控制的输入框: ', style: TextStyle(color: Colors.blue)),
+              titleView('无边框带字数控制的输入框: '),
               SingleEditLayout(
                 '账户',
                 (value) => setState(() => text = value),
@@ -49,6 +54,7 @@ class _TextPageState extends State<TextPage> {
               SizedBox(height: 8),
               divider(),
               SizedBox(height: 24),
+              titleView('自适应宽度使用: '),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -65,6 +71,59 @@ class _TextPageState extends State<TextPage> {
                   Icon(Icons.add_photo_alternate_outlined),
                   Icon(Icons.info),
                 ],
+              ),
+              SizedBox(height: 8),
+              divider(),
+              SizedBox(height: 24),
+              titleView('自适应宽度使用: '),
+              TapLayout(
+                height: 50.0,
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                onTap: () => showToast('点击设置'),
+                child: SingleTextLayout(
+                  title: '设置',
+                  isForward: true,
+                ),
+              ),
+              TapLayout(
+                height: 50.0,
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                onTap: () => showToast('编辑手机号码'),
+                child: SingleTextLayout(
+                  title: '手机号码',
+                  text: '17601487212',
+                  isTextLeft: false,
+                  isForward: true,
+                ),
+              ),
+              TapLayout(
+                height: 50.0,
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                onTap: () => showToast('编辑出生日期'),
+                child: SingleTextLayout(
+                  icon: Icons.date_range_outlined,
+                  title: '生日',
+                  text: '1997/2/12',
+                  isTextLeft: false,
+                  isForward: true,
+                ),
+              ),
+              TapLayout(
+                height: 50.0,
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: SingleTextLayout(
+                  title: '通知开关',
+                  suffix: CupertinoSwitch(value: switchState, onChanged: (value) => setState(() => switchState = value)),
+                ),
+              ),
+              TapLayout(
+                height: 50.0,
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                onTap: () => showToast('查看内容'),
+                child: SingleTextLayout(
+                  title: '通知开关: ',
+                  text: '查看通知内容',
+                ),
               ),
             ],
           ),

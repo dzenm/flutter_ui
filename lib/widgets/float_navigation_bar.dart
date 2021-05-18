@@ -24,23 +24,12 @@ import 'package:flutter/widgets.dart';
 //   }
 // }
 class FloatNavigationBar extends StatefulWidget {
-  // 默认悬浮按钮的位置
-  final int actionIndex;
-
-  // 正常显示的高度
-  final double barHeight;
-
-  // 选中的颜色
-  final Color? actionColor;
-
-  // 未选中的颜色
-  final Color? inactionColor;
-
-  // 显示的图标
-  final List<IconData> icons;
-
-  // 显示的文本
-  final List<String>? title;
+  final int actionIndex; // 默认悬浮按钮的位置
+  final double barHeight; // 正常显示的高度
+  final Color? actionColor; // 选中的颜色
+  final Color? inactionColor; // 未选中的颜色
+  final List<IconData> icons; // 显示的图标
+  final List<String>? title; // 显示的文本
 
   FloatNavigationBar(
     this.icons, {

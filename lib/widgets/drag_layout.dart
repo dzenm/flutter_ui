@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 class DragLayout extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _DragLayout();
+  State<StatefulWidget> createState() => _DragLayoutState();
 }
 
-class _DragLayout extends State<DragLayout> {
+class _DragLayoutState extends State<DragLayout> {
   Offset offset = Offset(100, 100);
 
   @override
