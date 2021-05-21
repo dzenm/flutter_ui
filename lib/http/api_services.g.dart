@@ -9,7 +9,7 @@ part of 'api_services.dart';
 class _ApiServices implements ApiServices {
   _ApiServices(this._dio, {this.baseUrl}) {
     ArgumentError.checkNotNull(_dio, '_dio');
-    baseUrl ??= 'https://www.wanandroid.com';
+    baseUrl ??= 'https://www.wanandroid.com/';
   }
 
   final Dio _dio;
@@ -17,7 +17,7 @@ class _ApiServices implements ApiServices {
   String? baseUrl;
 
   @override
-  Future<User> login(username, password) async {
+  Future<UserBean> login(username, password) async {
     ArgumentError.checkNotNull(username, 'username');
     ArgumentError.checkNotNull(password, 'password');
     const _extra = <String, dynamic>{};
@@ -31,12 +31,12 @@ class _ApiServices implements ApiServices {
             extra: _extra,
             baseUrl: baseUrl),
         data: _data);
-    final value = User.fromJson(_result.data);
+    final value = UserBean.fromJson(_result.data);
     return value;
   }
 
   @override
-  Future<User> register(username, password, repassword) async {
+  Future<UserBean> register(username, password, repassword) async {
     ArgumentError.checkNotNull(username, 'username');
     ArgumentError.checkNotNull(password, 'password');
     ArgumentError.checkNotNull(repassword, 'repassword');
@@ -51,12 +51,12 @@ class _ApiServices implements ApiServices {
             extra: _extra,
             baseUrl: baseUrl),
         data: _data);
-    final value = User.fromJson(_result.data);
+    final value = UserBean.fromJson(_result.data);
     return value;
   }
 
   @override
-  Future<User> logout(username, password) async {
+  Future<UserBean> logout(username, password) async {
     ArgumentError.checkNotNull(username, 'username');
     ArgumentError.checkNotNull(password, 'password');
     const _extra = <String, dynamic>{};
@@ -70,7 +70,26 @@ class _ApiServices implements ApiServices {
             extra: _extra,
             baseUrl: baseUrl),
         data: _data);
-    final value = User.fromJson(_result.data);
+    final value = UserBean.fromJson(_result.data);
+    return value;
+  }
+
+  @override
+  Future<DataBean> article(pageNumber) async {
+    ArgumentError.checkNotNull(pageNumber, 'pageNumber');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>(
+        'article/list/$pageNumber/json',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = DataBean.fromJson(_result.data);
     return value;
   }
 }

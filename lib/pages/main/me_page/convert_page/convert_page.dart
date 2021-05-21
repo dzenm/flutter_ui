@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/http/log.dart';
-import 'package:flutter_ui/models/user.dart';
+import 'package:flutter_ui/models/user_bean.dart';
 import 'package:flutter_ui/utils/sp_util.dart';
 import 'package:flutter_ui/utils/str_util.dart';
 import 'package:flutter_ui/widgets/common_view.dart';
@@ -22,8 +22,8 @@ class _ConvertPageState extends State<ConvertPage> {
 
   @override
   Widget build(BuildContext context) {
-    User user = User.fromJson(data);
-    List<User> users = [user, user, user];
+    UserBean user = UserBean.fromJson(data);
+    List<UserBean> users = [user, user, user];
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
@@ -58,7 +58,7 @@ class _ConvertPageState extends State<ConvertPage> {
                     String string = SpUtil.getUser();
                     Log.d('从SP取出字符数组=$string');
                     if (string.length > 0) {
-                      List<User> list = (jsonDecode(string) as List<dynamic>).map((e) => User.fromJson((e as Map<String, dynamic>))).toList();
+                      List<UserBean> list = (jsonDecode(string) as List<dynamic>).map((e) => UserBean.fromJson((e as Map<String, dynamic>))).toList();
                       setState(() {
                         listStr = jsonEncode(list);
                         listToJsonStr = StrUtil.formatToJson(list);

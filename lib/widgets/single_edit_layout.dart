@@ -49,7 +49,7 @@ class _SingleEditLayoutState extends State<SingleEditLayout> {
   @override
   void initState() {
     super.initState();
-    currentLength = widget.controller?.text.length;
+    currentLength = widget.controller?.text.length ?? 0;
     focusNode.addListener(() => setState(() => hasFocus = focusNode.hasFocus));
   }
 

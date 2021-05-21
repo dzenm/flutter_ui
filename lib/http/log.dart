@@ -1,13 +1,9 @@
-/// 日志打印工具
-/// 使用
-/// Log.d('log');
-/// Log.d('log', tag = 'Main');
+
+
 class Log {
-  factory Log._instance() => Log._internal();
-
-  static get instance => Log._instance();
-
   Log._internal();
+
+  static final Log instance = Log._internal();
 
   static const String _TAG = "Log";
 
@@ -18,7 +14,7 @@ class Log {
   static int sLevel = _DEBUG;
 
   static bool debuggable = true; // 是否是debug模式
-  static String sTag = _TAG; // 设置自定义的TAG
+  static String sTag = _TAG;
 
   static void init({bool isDebug = true, String tag = _TAG}) {
     debuggable = isDebug;

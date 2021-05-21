@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/naughty/naughty.dart';
 import 'package:flutter_ui/pages/main/main_route.dart';
 import 'package:flutter_ui/router/navigator_utils.dart';
 import 'package:flutter_ui/widgets/common_view.dart';
@@ -41,6 +42,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _body() {
+    Naughty.instance.init(context);
     bool isNotEmptyText = username.isNotEmpty && password.isNotEmpty;
     return Container(
       padding: EdgeInsets.all(24),
@@ -90,6 +92,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _loginPressed() {
+    Naughty.instance.show();
+    NavigatorUtils.pop(context);
     NavigatorUtils.push(context, MainRoute.main);
   }
 }

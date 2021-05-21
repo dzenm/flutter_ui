@@ -1,7 +1,5 @@
-import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/channels/android_back_action.dart';
 import 'package:flutter_ui/widgets/common_view.dart';
 import 'package:flutter_ui/widgets/tap_layout.dart';
 
@@ -46,8 +44,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   // 底部app bar item
-  Widget _bottomAppBarItemView(IconData icon, String title, int index,
-      {int badgeCount = 0}) {
+  Widget _bottomAppBarItemView(IconData icon, String title, int index, {int badgeCount = 0}) {
     Color color = _itemIndex == index ? Colors.green : Colors.grey.shade500;
     double width = 56, height = 56;
     // 平分整个宽度
@@ -73,21 +70,16 @@ class _MainPageState extends State<MainPage> {
               child: Stack(
                 alignment: Alignment.center,
                 clipBehavior: Clip.none,
-                children: [
-                  Positioned(
-                      left: 16, top: 2, child: badgeView(count: badgeCount))
-                ],
+                children: [Positioned(left: 16, top: 2, child: badgeView(count: badgeCount))],
               ),
             ),
             // 图标和文字充满Stack并居中显示
             Positioned.fill(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(icon, color: color, size: 20),
-                    SizedBox(height: 2),
-                    Text(title, style: TextStyle(fontSize: 10, color: color)),
-                  ]),
+              child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Icon(icon, color: color, size: 20),
+                SizedBox(height: 2),
+                Text(title, style: TextStyle(fontSize: 10, color: color)),
+              ]),
             ),
           ]),
         ),

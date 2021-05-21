@@ -4,8 +4,8 @@ import 'package:dio/dio.dart' as dio;
 import 'package:flutter_ui/http/log.dart';
 
 /// 网络请求[dio.Interceptor], 网络请求信息输出.
-class LoggerInterceptor extends dio.Interceptor {
-  LoggerInterceptor({
+class LogInterceptor extends dio.Interceptor {
+  LogInterceptor({
     this.request = true,
     this.requestHeader = true,
     this.requestBody = true,
@@ -38,8 +38,6 @@ class LoggerInterceptor extends dio.Interceptor {
   bool isFormat;
 
   String interval = '  ';
-
-  int id = 0;
 
   /// Log printer; defaults print log to console.
   /// In flutter, you'd better use debugPrint.

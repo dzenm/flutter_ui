@@ -43,17 +43,17 @@ class _MePageState extends State<MePage> {
       ),
       SizedBox(height: 8),
       MaterialButton(
-        child: text('全局悬浮窗'),
-        textColor: Colors.white,
-        color: Colors.blue,
-        onPressed: () => NavigatorUtils.push(context, MeRouter.appOverlay),
-      ),
-      SizedBox(height: 8),
-      MaterialButton(
         child: text('字符转化'),
         textColor: Colors.white,
         color: Colors.blue,
         onPressed: () => NavigatorUtils.push(context, MeRouter.convert),
+      ),
+      SizedBox(height: 8),
+      MaterialButton(
+        child: text('Http请求'),
+        textColor: Colors.white,
+        color: Colors.blue,
+        onPressed: () => NavigatorUtils.push(context, MeRouter.http),
       ),
       SizedBox(height: 8),
       MaterialButton(
