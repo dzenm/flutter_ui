@@ -1,10 +1,11 @@
 import 'dart:ui';
 
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/utils/taost.dart';
-import 'package:flutter_ui/widgets/common_view.dart';
+import 'package:flutter_ui/widgets/common_dialog.dart';
+import 'package:flutter_ui/widgets/common_widget.dart';
 import 'package:flutter_ui/widgets/single_edit_layout.dart';
 import 'package:flutter_ui/widgets/single_text_layout.dart';
 import 'package:flutter_ui/widgets/tap_layout.dart';
@@ -77,48 +78,38 @@ class _TextPageState extends State<TextPage> {
                 SizedBox(height: 8),
                 divider(),
                 SizedBox(height: 24),
-                titleView('自适应宽度使用: '),
+                titleView('设置页面常用单行布局: '),
                 TapLayout(
                   height: 50.0,
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   onTap: () => showToast('点击设置'),
-                  child: SingleTextLayout(
-                    title: '设置',
-                    isForward: true,
-                  ),
+                  child: SingleTextLayout(title: '设置', isShowForward: true, prefix: badgeView(count: 10)),
                 ),
                 TapLayout(
                   height: 50.0,
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   onTap: () => showToast('编辑手机号码'),
-                  child: SingleTextLayout(
-                    title: '手机号码',
-                    text: '17601487212',
-                    isTextLeft: false,
-                    isForward: true,
-                  ),
+                  child: SingleTextLayout(title: '手机号码', text: '17601487212', isTextLeft: false, isShowForward: true),
                 ),
                 TapLayout(
                   height: 50.0,
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   onTap: () => showToast('编辑出生日期'),
-                  child: SingleTextLayout(
-                    icon: Icons.date_range_outlined,
-                    title: '生日',
-                    text: '1997/2/12',
-                    isTextLeft: false,
-                    isForward: true,
-                  ),
+                  child: SingleTextLayout(icon: Icons.date_range_outlined, title: '生日', text: '1997/2/12', isTextLeft: false, isShowForward: true),
                 ),
                 TapLayout(
                   height: 50.0,
                   padding: EdgeInsets.symmetric(horizontal: 16),
-                  onTap: () => showToast('进入下一个设置页面'),
+                  onTap: () {
+                    CancelFunc cancel = loadingDialog();
+                    Future.delayed(Duration(seconds: 4), () => cancel());
+                  },
                   child: SingleTextLayout(
                     icon: Icons.adb,
                     title: '关于',
                     isTextLeft: false,
-                    isForward: true,
+                    isShowForward: true,
+                    isShowBadge: true,
                   ),
                 ),
                 TapLayout(
@@ -133,25 +124,26 @@ class _TextPageState extends State<TextPage> {
                       borderRadius: BorderRadius.circular(16),
                       child: Image.asset('assets/images/a.jpg', fit: BoxFit.cover, width: 24, height: 24),
                     ),
-                    isForward: true,
+                    isShowForward: true,
                   ),
                 ),
                 TapLayout(
                   height: 50.0,
                   padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: SingleTextLayout(
-                    title: '通知开关',
-                    suffix: CupertinoSwitch(value: switchState, onChanged: (value) => setState(() => switchState = value)),
-                  ),
+                  child:
+                      SingleTextLayout(title: '通知开关', suffix: CupertinoSwitch(value: switchState, onChanged: (value) => setState(() => switchState = value))),
                 ),
                 TapLayout(
                   height: 50.0,
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   onTap: () => showToast('查看内容'),
-                  child: SingleTextLayout(
-                    title: '通知开关: ',
-                    text: '查看通知内容',
-                  ),
+                  child: SingleTextLayout(title: '通知开关: ', text: '查看通知内容'),
+                ),
+                TapLayout(
+                  height: 60.0,
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  onTap: () => showToast('登录记录'),
+                  child: SingleTextLayout(title: '登录记录', summary: '查看最近所有的登录记录', isShowBadge: true, isShowForward: true),
                 ),
               ],
             ),

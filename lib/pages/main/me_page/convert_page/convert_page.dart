@@ -6,7 +6,7 @@ import 'package:flutter_ui/http/log.dart';
 import 'package:flutter_ui/models/user_bean.dart';
 import 'package:flutter_ui/utils/sp_util.dart';
 import 'package:flutter_ui/utils/str_util.dart';
-import 'package:flutter_ui/widgets/common_view.dart';
+import 'package:flutter_ui/widgets/common_widget.dart';
 
 class ConvertPage extends StatefulWidget {
   @override

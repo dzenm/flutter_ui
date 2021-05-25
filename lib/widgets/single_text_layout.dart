@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_ui/widgets/common_widget.dart';
 
 /// 单行文本布局
 class SingleTextLayout extends StatefulWidget {
   final IconData? icon; // 标题图标
   final Color? iconColor; // 标题图标颜色
+
+  final Widget? prefix; // 标题后内容前的布局
 
   final String? title; // 标题文本
   final Color? titleColor; // 标题文本颜色
@@ -12,12 +15,16 @@ class SingleTextLayout extends StatefulWidget {
   final String? text; // 内容文本
   final Color? textColor; // 内容文本颜色
 
+  final String? summary; // 概要文本
+  final Color? summaryColor; // 概要文本颜色
+
   final double fontSize; //字体大小
   final bool isTextLeft; // 内容是否靠左边显示
 
   final Widget? suffix; // 指向下一级按钮前的布局
 
-  final bool isForward; // 是否显示指向下一级图标
+  final bool isShowForward; // 是否显示指向下一级图标
+  final bool isShowBadge; // 是否显示小红点
   final Color? forwardColor; // 指向下一级图标颜色
 
   SingleTextLayout({
@@ -26,12 +33,16 @@ class SingleTextLayout extends StatefulWidget {
     this.iconColor,
     this.title,
     this.titleColor,
+    this.prefix,
     this.text,
     this.textColor,
+    this.summary,
+    this.summaryColor,
     this.fontSize = 14,
     this.isTextLeft = true,
     this.suffix,
-    this.isForward = false,
+    this.isShowForward = false,
+    this.isShowBadge = false,
     this.forwardColor,
   }) : super(key: key);
 
@@ -42,24 +53,40 @@ class SingleTextLayout extends StatefulWidget {
 class _SingleTextLayoutState extends State<SingleTextLayout> {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        // 标题图标
-        _titleIcon(),
-        if (widget.icon != null) SizedBox(width: 8),
-        // 标题文本
-        _titleText(),
-        if (widget.title != null) SizedBox(width: 8),
-        // 文本内容
-        _contentText(),
-        if (widget.text != null) SizedBox(width: 8),
-        // 后缀布局
-        _suffixWidget(),
-        if (widget.suffix != null && widget.isForward) SizedBox(width: 8),
-        // 下一级图标
-        _forwardIcon(),
-      ],
-    );
+    return Row(children: [
+      Expanded(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(children: [
+              // 标题图标
+              _titleIcon(),
+              if (widget.icon != null && widget.title != null) SizedBox(width: 8),
+              // 标题文本
+              _titleText(),
+              if (widget.title != null && widget.prefix != null) SizedBox(width: 8),
+              // 前缀布局
+              Offstage(offstage: widget.prefix == null, child: widget.prefix),
+              if (widget.icon != null || widget.title != null) SizedBox(width: 16),
+              // 文本内容
+              _contentText(),
+              if (widget.text != null) SizedBox(width: 8),
+            ]),
+            if (widget.summary != null) SizedBox(height: 8),
+            // 概要文本
+            _summaryText(),
+          ],
+        ),
+      ),
+      // 后缀布局
+      Offstage(offstage: widget.suffix == null, child: widget.suffix),
+      if (widget.suffix != null && widget.isShowForward) SizedBox(width: 8),
+      // 小红点
+      _badgeView(),
+      // 下一级图标
+      _forwardIcon(),
+    ]);
   }
 
   Widget _titleIcon() {
@@ -103,18 +130,29 @@ class _SingleTextLayoutState extends State<SingleTextLayout> {
           );
   }
 
-  Widget _suffixWidget() {
-    bool isShowSuffix = widget.suffix != null;
+  Widget _summaryText() {
     return Offstage(
-      offstage: !isShowSuffix,
-      child: widget.suffix,
+      offstage: widget.summary == null,
+      child: Text(
+        widget.summary ?? '',
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(
+          fontSize: widget.fontSize - 2,
+          color: widget.summaryColor,
+        ),
+      ),
     );
   }
 
   Widget _forwardIcon() {
     return Offstage(
-      offstage: !widget.isForward,
+      offstage: !widget.isShowForward,
       child: Icon(Icons.arrow_forward_ios_rounded, color: widget.forwardColor, size: 12),
     );
+  }
+
+  Widget _badgeView() {
+    return Offstage(offstage: !widget.isShowBadge, child: badgeView(count: 0));
   }
 }

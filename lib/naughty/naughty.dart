@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_ui/channels/native_channels.dart';
 import 'package:flutter_ui/http/log.dart';
 
 import 'drag_layout.dart';
-import 'page/home/home_page.dart';
 
 /// 悬浮窗
 class Naughty {
@@ -33,7 +33,8 @@ class Naughty {
       builder: (BuildContext context) =>
           _child ??
           DragLayout(
-            onTap: () => Navigator.of(context).pushNamed(HOME_ROUTE),
+            // onTap: () => Navigator.of(context).pushNamed(HOME_ROUTE),
+            onTap: () => NativeChannels.startNaughtyActivity(),
             child: Container(
               alignment: Alignment.center,
               height: 64.0,

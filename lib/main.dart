@@ -8,7 +8,7 @@ import 'package:flutter_ui/view_models/home_view_model.dart';
 import 'package:flutter_ui/view_models/me_view_model.dart';
 import 'package:provider/provider.dart';
 
-import 'channels/android_back_action.dart';
+import 'widgets/will_pop_scope_route.dart';
 import 'http/log.dart';
 
 void main() => Application.instance.init(LoginPage());
@@ -61,6 +61,7 @@ class Application {
           HOME_ROUTE: (buildContext) => HomePage(),
         },
         builder: BotToastInit(),
+        navigatorObservers: [BotToastNavigatorObserver()],
         title: "Flutter Demo",
         home: WillPopScopeRoute(child),
       ),

@@ -1,17 +1,22 @@
 import 'dart:io';
 
+import 'package:bot_toast/bot_toast.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_ui/http/api_services.dart';
 import 'package:flutter_ui/http/exception_handle.dart';
 import 'package:flutter_ui/models/data_bean.dart';
-import 'package:flutter_ui/utils/taost.dart';
+import 'package:flutter_ui/widgets/common_dialog.dart';
 
 import 'log_interceptor.dart';
 
 typedef Success = void Function(dynamic data);
 
 typedef Failed = void Function(RequestException e);
+
+ApiClient apiClient = ApiClient.instance;
+
+ApiServices apiServices = ApiClient.instance.apiServices;
 
 /// HTTP请求封装
 class ApiClient {
@@ -23,8 +28,9 @@ class ApiClient {
   late Dio dio;
   late ApiServices apiServices;
 
+  // 构造方法
   ApiClient._internal() {
-    var options = BaseOptions(
+    BaseOptions options = BaseOptions(
       connectTimeout: CONNECT_TIMEOUT,
       receiveTimeout: RECEIVE_TIMEOUT,
       validateStatus: (status) {
@@ -55,32 +61,46 @@ class ApiClient {
   }
 
   // 发起http请求
-  void request(Future<DataBean> future, Success success, Failed failed, {bool isShowToast = true}) async {
+  void request(
+    Future<DataBean> future, {
+    Success? success,
+    Failed? failed,
+    bool isShowDialog = true,
+    bool isShowToast = true,
+  }) async {
+    CancelFunc? cancel = isShowDialog ? loadingDialog() : null;
     try {
       // 没有网络
       await future.then((data) {
         // 根据前后端协议
         if (data.errorCode == 0) {
-          success(data.data);
+          if (success != null) success(data.data);
         } else if (data.errorCode == -1001) {
           // 未登录的错误码
-          _error(failed, ExceptionHandle.handle(code: ExceptionHandle.un_login), isShowToast: isShowToast);
+          _error(failed, ExceptionHandle.handle(code: ExceptionHandle.un_login), isShowToast);
         } else if (data.errorCode == -1) {
           // 接口错误
-          _error(failed, ExceptionHandle.handle(code: ExceptionHandle.api), isShowToast: isShowToast);
+          _error(failed, ExceptionHandle.handle(code: ExceptionHandle.api), isShowToast);
         }
+        _dismissDialog(cancel);
       }).catchError((err) {
+        _dismissDialog(cancel);
         // 异步异常捕获
-        _error(failed, ExceptionHandle.handle(error: err), isShowToast: isShowToast);
+        _error(failed, ExceptionHandle.handle(error: err), isShowToast);
       }, test: (_) => true);
     } catch (err) {
-      _error(failed, ExceptionHandle.handle(error: err), isShowToast: isShowToast);
+      _dismissDialog(cancel);
+      _error(failed, ExceptionHandle.handle(error: err), isShowToast);
     }
   }
 
-  void _error(Failed failed, RequestException exception, {bool isShowToast = true}) {
+  void _error(Failed? failed, RequestException exception, bool isShowToast) {
     if (isShowToast) showToast(exception.message);
-    failed(exception);
+    if (failed != null) failed(exception);
+  }
+
+  void _dismissDialog(CancelFunc? cancel) {
+    if (cancel != null) cancel();
   }
 }
 

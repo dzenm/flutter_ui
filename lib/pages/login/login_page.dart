@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_ui/naughty/naughty.dart';
 import 'package:flutter_ui/pages/main/main_route.dart';
 import 'package:flutter_ui/router/navigator_utils.dart';
-import 'package:flutter_ui/widgets/common_view.dart';
+import 'package:flutter_ui/widgets/common_widget.dart';
 
 class LoginPage extends StatefulWidget {
   @override

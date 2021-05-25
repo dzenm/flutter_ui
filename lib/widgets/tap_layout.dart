@@ -26,7 +26,7 @@ class TapLayout extends StatefulWidget {
     this.height,
     this.margin,
     this.padding,
-    this.normalColor = Colors.white,
+    this.normalColor = Colors.transparent,
     this.pressColor,
     this.rippleColor,
     this.borderRadius,
