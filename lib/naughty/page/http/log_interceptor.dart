@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:dio/dio.dart' as dio;
+import 'package:dio/dio.dart';
 import 'package:flutter_ui/http/log.dart';
 
 /// 网络请求[dio.Interceptor], 网络请求信息输出.
-class LogInterceptor extends dio.Interceptor {
+class LogInterceptor extends Interceptor {
   LogInterceptor({
     this.request = true,
     this.requestHeader = true,
@@ -52,7 +52,7 @@ class LogInterceptor extends dio.Interceptor {
   void Function(Object object) logPrint;
 
   @override
-  Future onRequest(dio.RequestOptions options) async {
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     logPrint('');
     logPrint('******************** Request Start *********************');
     logPrint('${options.method}  ${options.uri}');
@@ -77,14 +77,14 @@ class LogInterceptor extends dio.Interceptor {
     }
 
     logPrint('******************** Request End ***********************');
-    return options;
+    handler.next(options);
   }
 
   @override
-  Future onResponse(dio.Response response) async {
+  void onResponse(Response response, ResponseInterceptorHandler handler) async {
     logPrint('');
     logPrint('******************** Response Start ********************');
-    logPrint('${response.statusCode}  ${response.request.uri}');
+    logPrint('${response.statusCode}  ${response.requestOptions.uri}');
 
     if (responseHeader) {
       if (response.isRedirect == true) {
@@ -101,17 +101,17 @@ class LogInterceptor extends dio.Interceptor {
 
     logPrint('******************** Response End **********************');
     logPrint('');
-    return response;
+    handler.next(response);
   }
 
   @override
-  Future onError(dio.DioError err) async {
+  void onError(DioError err, ErrorInterceptorHandler handler) async {
     if (error) {
       logPrint('******************** DioError Start ********************');
       logPrint('$err');
       logPrint('******************** DioError End **********************');
     }
-    return err;
+    handler.next(err);
   }
 
   /// 打印Json字符串

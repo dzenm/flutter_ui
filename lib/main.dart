@@ -2,14 +2,15 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/naughty/page/home/home_page.dart';
 import 'package:flutter_ui/pages/login/login_page.dart';
-import 'package:flutter_ui/router/navigator_utils.dart';
 import 'package:flutter_ui/utils/sp_util.dart';
 import 'package:flutter_ui/view_models/home_view_model.dart';
 import 'package:flutter_ui/view_models/me_view_model.dart';
 import 'package:provider/provider.dart';
 
-import 'widgets/will_pop_scope_route.dart';
 import 'http/log.dart';
+import 'router/route_manager.dart';
+import 'router/slide_route_transition.dart';
+import 'widgets/will_pop_scope_route.dart';
 
 void main() => Application.instance.init(LoginPage());
 
@@ -28,7 +29,7 @@ class Application {
   void init(Widget child) async {
     WidgetsFlutterBinding.ensureInitialized();
 
-    BaseRouter.registerConfigureRoutes();
+    RouteManager.registerConfigureRoutes();
     SpUtil.instance.init();
 
     Log.d('Application是否单例: ${Application.instance == Application()}');
@@ -49,12 +50,11 @@ class Application {
         navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          platform: TargetPlatform.iOS,
           primarySwatch: Colors.lightBlue,
-          // pageTransitionsTheme: PageTransitionsTheme(builders: <TargetPlatform, PageTransitionsBuilder>{
-          //   TargetPlatform.android: SlidePageTransition(),
-          //   TargetPlatform.iOS: SlidePageTransition(),
-          // }),
+          pageTransitionsTheme: PageTransitionsTheme(builders: <TargetPlatform, PageTransitionsBuilder>{
+            TargetPlatform.android: SlidePageTransition(),
+            TargetPlatform.iOS: SlidePageTransition(),
+          }),
         ),
         // 初始化toast
         routes: {

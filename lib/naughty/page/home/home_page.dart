@@ -50,7 +50,6 @@ class _HomePageState extends State<HomePage> {
   // 下拉刷新方法,为list重新赋值
   Future<Null> _onRefresh() async {
     await Future.delayed(Duration(seconds: 3), () {
-      print('refresh');
       setState(() {
         list = List.generate(20, (i) => '哈喽,我是新刷新的 $i');
       });

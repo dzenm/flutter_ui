@@ -7,10 +7,11 @@ class SingleTextLayout extends StatefulWidget {
   final IconData? icon; // 标题图标
   final Color? iconColor; // 标题图标颜色
 
-  final Widget? prefix; // 标题后内容前的布局
-
   final String? title; // 标题文本
   final Color? titleColor; // 标题文本颜色
+
+  final Widget? prefix; // 标题后内容前的布局
+  final bool isDense; // 标题和内容是否存在间距
 
   final String? text; // 内容文本
   final Color? textColor; // 内容文本颜色
@@ -34,6 +35,7 @@ class SingleTextLayout extends StatefulWidget {
     this.title,
     this.titleColor,
     this.prefix,
+    this.isDense = false,
     this.text,
     this.textColor,
     this.summary,
@@ -68,7 +70,7 @@ class _SingleTextLayoutState extends State<SingleTextLayout> {
               if (widget.title != null && widget.prefix != null) SizedBox(width: 8),
               // 前缀布局
               Offstage(offstage: widget.prefix == null, child: widget.prefix),
-              if (widget.icon != null || widget.title != null) SizedBox(width: 16),
+              if ((widget.icon != null || widget.title != null) && !widget.isDense) SizedBox(width: 16),
               // 文本内容
               _contentText(),
               if (widget.text != null) SizedBox(width: 8),

@@ -29,6 +29,8 @@ class ExceptionHandle {
   static const int api_error_code = 1108;
   static const int unknown_error_code = 1109;
 
+  static const int runtime_error_code = 1120;
+
   /// message
   static const String success_msg = '';
   static const String success_not_content_msg = '';
@@ -48,6 +50,8 @@ class ExceptionHandle {
   static const String api_error_msg = '接口错误';
   static const String unknown_error_msg = '未知异常';
 
+  static const String runtime_error_msg = '运行时的错误';
+
   // 处理异常
   static RequestException handle({error, int code = 0, String message = ''}) {
     if (code == un_login) {
@@ -55,7 +59,7 @@ class ExceptionHandle {
     } else if (code == api) {
       return RequestException(api_error_code, api_error_msg);
     } else if (error != null && error is DioError) {
-      if (error.type == DioErrorType.DEFAULT || error.type == DioErrorType.RESPONSE) {
+      if (error.type == DioErrorType.other || error.type == DioErrorType.response) {
         dynamic e = error.error;
         if (e is SocketException) {
           return RequestException(socket_error_code, socket_error_msg);
@@ -67,14 +71,16 @@ class ExceptionHandle {
           return RequestException(parse_error_code, parse_error_msg);
         }
         return RequestException(net_error_code, net_error_msg);
-      } else if (error.type == DioErrorType.CONNECT_TIMEOUT || error.type == DioErrorType.SEND_TIMEOUT || error.type == DioErrorType.RECEIVE_TIMEOUT) {
+      } else if (error.type == DioErrorType.connectTimeout || error.type == DioErrorType.sendTimeout || error.type == DioErrorType.receiveTimeout) {
         // 连接超时 || 请求超时 || 响应超时
         return RequestException(timeout_error_code, timeout_error_msg);
-      } else if (error.type == DioErrorType.CANCEL) {
+      } else if (error.type == DioErrorType.cancel) {
         return RequestException(cancel_error_code, cancel_error_msg);
       } else {
         return RequestException(unknown_error_code, unknown_error_msg);
       }
+    } else if (error != null) {
+      return RequestException(runtime_error_code, runtime_error_msg);
     } else {
       return RequestException(code, message);
     }

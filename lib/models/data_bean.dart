@@ -1,7 +1,7 @@
-class DataBean {
+class DataBean<T> {
   int? errorCode;
   String? errorMsg;
-  dynamic data;
+  T? data;
 
   DataBean({this.errorCode = 200, this.errorMsg, this.data});
 

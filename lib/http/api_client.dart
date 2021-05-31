@@ -5,6 +5,7 @@ import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_ui/http/api_services.dart';
 import 'package:flutter_ui/http/exception_handle.dart';
+import 'package:flutter_ui/http/log.dart';
 import 'package:flutter_ui/models/data_bean.dart';
 import 'package:flutter_ui/widgets/common_dialog.dart';
 
@@ -13,8 +14,6 @@ import 'log_interceptor.dart';
 typedef Success = void Function(dynamic data);
 
 typedef Failed = void Function(RequestException e);
-
-ApiClient apiClient = ApiClient.instance;
 
 ApiServices apiServices = ApiClient.instance.apiServices;
 
@@ -40,7 +39,6 @@ class ApiClient {
       baseUrl: baseUrl,
       headers: httpHeaders(),
     );
-
     dio = Dio(options);
     // 不验证https证书
     (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (HttpClient client) {
@@ -61,41 +59,40 @@ class ApiClient {
   }
 
   // 发起http请求
-  void request(
-    Future<DataBean> future, {
-    Success? success,
-    Failed? failed,
-    bool isShowDialog = true,
-    bool isShowToast = true,
-  }) async {
+  void request(Future future, {Success? success, Failed? failed, bool isShowDialog = true, bool isShowToast = true}) async {
     CancelFunc? cancel = isShowDialog ? loadingDialog() : null;
     try {
       // 没有网络
       await future.then((data) {
+        _dismissDialog(cancel);
         // 根据前后端协议
         if (data.errorCode == 0) {
           if (success != null) success(data.data);
         } else if (data.errorCode == -1001) {
-          // 未登录的错误码
+          Log.d('HTTP请求-未登录: ${data.errorCode}, ${data.errorMsg}');
+          // 未登录
           _error(failed, ExceptionHandle.handle(code: ExceptionHandle.un_login), isShowToast);
         } else if (data.errorCode == -1) {
+          Log.d('HTTP请求-接口错误: ${data.errorCode}, ${data.errorMsg}');
           // 接口错误
           _error(failed, ExceptionHandle.handle(code: ExceptionHandle.api), isShowToast);
         }
-        _dismissDialog(cancel);
       }).catchError((err) {
+        Log.d('HTTP请求-异步时捕获的异常信息: ${err.toString()}');
         _dismissDialog(cancel);
-        // 异步异常捕获
+        // 异步时捕获的异常
         _error(failed, ExceptionHandle.handle(error: err), isShowToast);
       }, test: (_) => true);
     } catch (err) {
+      Log.d('HTTP请求-捕获的异常信息: ${err.toString()}');
       _dismissDialog(cancel);
+      // 捕获的异常信息
       _error(failed, ExceptionHandle.handle(error: err), isShowToast);
     }
   }
 
   void _error(Failed? failed, RequestException exception, bool isShowToast) {
-    if (isShowToast) showToast(exception.message);
+    if (isShowToast) showToast('${exception.message.isEmpty ? 'no message' : exception.message}: ${exception.code}');
     if (failed != null) failed(exception);
   }
 

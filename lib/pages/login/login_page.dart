@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ui/naughty/naughty.dart';
 import 'package:flutter_ui/pages/main/main_route.dart';
-import 'package:flutter_ui/router/navigator_utils.dart';
+import 'package:flutter_ui/router/navigator_manager.dart';
 import 'package:flutter_ui/widgets/common_widget.dart';
 
 class LoginPage extends StatefulWidget {
@@ -93,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void _loginPressed() {
     Naughty.instance.show();
-    NavigatorUtils.pop(context);
-    NavigatorUtils.push(context, MainRoute.main);
+    NavigatorManager.pop(context);
+    NavigatorManager.push(context, MainRoute.main);
   }
 }
