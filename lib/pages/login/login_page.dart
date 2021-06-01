@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/base/widgets/common_widget.dart';
 import 'package:flutter_ui/naughty/naughty.dart';
 import 'package:flutter_ui/pages/main/main_route.dart';
 import 'package:flutter_ui/router/navigator_manager.dart';
-import 'package:flutter_ui/widgets/common_widget.dart';
 
 class LoginPage extends StatefulWidget {
   @override

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:flutter_ui/http/log.dart';
+import 'package:flutter_ui/base/http/log.dart';
 
 /// 网络请求[dio.Interceptor], 网络请求信息输出.
 class LogInterceptor extends Interceptor {

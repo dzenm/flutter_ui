@@ -3,12 +3,11 @@ import 'dart:io';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_ui/base/http/exception_handle.dart';
+import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/http/api_services.dart';
-import 'package:flutter_ui/http/exception_handle.dart';
-import 'package:flutter_ui/http/log.dart';
-import 'package:flutter_ui/models/data_bean.dart';
-import 'package:flutter_ui/widgets/common_dialog.dart';
 
+import 'log.dart';
 import 'log_interceptor.dart';
 
 typedef Success = void Function(dynamic data);
@@ -29,17 +28,20 @@ class ApiClient {
 
   // 构造方法
   ApiClient._internal() {
-    BaseOptions options = BaseOptions(
+    _createDio();
+  }
+
+  void _createDio() {
+    dio = Dio(BaseOptions(
       connectTimeout: CONNECT_TIMEOUT,
       receiveTimeout: RECEIVE_TIMEOUT,
       validateStatus: (status) {
         // 不使用http状态码判断状态，使用AdapterInterceptor来处理（适用于标准REST风格）
         return true;
       },
-      baseUrl: baseUrl,
+      baseUrl: _baseUrl(),
       headers: httpHeaders(),
-    );
-    dio = Dio(options);
+    ));
     // 不验证https证书
     (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (HttpClient client) {
       client.badCertificateCallback = (X509Certificate cert, String host, int port) {
@@ -48,7 +50,13 @@ class ApiClient {
     };
     // log interceptor
     dio.interceptors.add(LoggerInterceptor());
-    apiServices = ApiServices(dio);
+    apiServices = ApiServices(dio, baseUrl: _baseUrl());
+  }
+
+  String _baseUrl() {
+    // baseUrl必须使用 "", 不能使用 ''
+    const String baseUrl = "https://www.wanandroid.com/";
+    return baseUrl;
   }
 
   // 请求头

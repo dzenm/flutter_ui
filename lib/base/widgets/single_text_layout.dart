@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/widgets/common_widget.dart';
+
+import 'common_widget.dart';
 
 /// 单行文本布局
 class SingleTextLayout extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/http/log.dart';
+import 'package:flutter_ui/base/http/log.dart';
 
 class NativeChannels {
   // 管理返回键操作通道
@@ -19,7 +19,7 @@ class NativeChannels {
     // 通知安卓返回,到手机桌面
     try {
       final bool out = await channel.invokeMethod('backToDesktop');
-      return Future.value(true);
+      return Future.value(out);
     } on PlatformException catch (e) {
       print(e.message);
     }
@@ -57,6 +57,4 @@ class NativeChannels {
     }
     return Future.value(false);
   }
-
-
 }

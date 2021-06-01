@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/http/log.dart';
 
 typedef RefreshFunction = Future<void> Function(bool refresh);
 
@@ -28,7 +27,6 @@ class _RefreshListViewState extends State<RefreshListView> {
 
     _controller.addListener(() {
       if (_controller.position.pixels == _controller.position.maxScrollExtent) {
-        Log.d('ListView滑动到底部');
         _loadingMore();
       }
     });
@@ -44,6 +42,12 @@ class _RefreshListViewState extends State<RefreshListView> {
         controller: _controller,
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
   }
 
   Future<void> _onRefresh() => widget.refresh(true);

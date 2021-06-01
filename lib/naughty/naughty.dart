@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/channels/native_channels.dart';
-import 'package:flutter_ui/http/log.dart';
+import 'package:flutter_ui/base/channels/native_channels.dart';
+import 'package:flutter_ui/base/http/log.dart';
 
 import 'drag_layout.dart';
 

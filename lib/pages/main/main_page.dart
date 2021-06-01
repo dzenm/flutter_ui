@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/widgets/common_widget.dart';
-import 'package:flutter_ui/widgets/tap_layout.dart';
+import 'package:flutter_ui/base/widgets/common_widget.dart';
+import 'package:flutter_ui/base/widgets/tap_layout.dart';
 
 import 'home_page/home_page.dart';
 import 'me_page/me_page.dart';

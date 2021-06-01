@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/http/api_client.dart';
-import 'package:flutter_ui/utils/str_util.dart';
-import 'package:flutter_ui/widgets/common_dialog.dart';
-import 'package:flutter_ui/widgets/single_text_layout.dart';
-import 'package:flutter_ui/widgets/tap_layout.dart';
+import 'package:flutter_ui/base/widgets/common_dialog.dart';
+import 'package:flutter_ui/base/widgets/single_text_layout.dart';
+import 'package:flutter_ui/base/widgets/tap_layout.dart';
+import 'package:flutter_ui/base/http/api_client.dart';
+import 'package:flutter_ui/base/utils/str_util.dart';
 
 class HTTPPage extends StatefulWidget {
   @override

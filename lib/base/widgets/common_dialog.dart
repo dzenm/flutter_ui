@@ -1,8 +1,9 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/widgets/common_widget.dart';
-import 'package:flutter_ui/widgets/tap_layout.dart';
+import 'package:flutter_ui/base/widgets/tap_layout.dart';
+
+import 'common_widget.dart';
 
 /// toast弹出提示框
 CancelFunc showToast(String text, {int seconds = 2}) {

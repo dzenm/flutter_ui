@@ -1,4 +1,4 @@
-import 'package:flutter_ui/http/log.dart';
+import 'package:flutter_ui/base/http/log.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// SharedPreferences工具类

@@ -1,5 +1,3 @@
-
-
 class Log {
   Log._internal();
 

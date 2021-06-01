@@ -1,6 +1,6 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/http/log.dart';
+import 'package:flutter_ui/base/http/log.dart';
 import 'package:flutter_ui/router/route_manager.dart';
 
 /// 路由跳转工具类

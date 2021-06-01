@@ -7,10 +7,10 @@ import 'package:flutter_ui/view_models/home_view_model.dart';
 import 'package:flutter_ui/view_models/me_view_model.dart';
 import 'package:provider/provider.dart';
 
-import 'http/log.dart';
+import 'base/http/log.dart';
+import 'base/widgets/will_pop_scope_route.dart';
 import 'router/route_manager.dart';
 import 'router/slide_route_transition.dart';
-import 'widgets/will_pop_scope_route.dart';
 
 void main() => Application.instance.init(LoginPage());
 
