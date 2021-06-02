@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/base/widgets/common_widget.dart';
 import 'package:flutter_ui/base/http/log.dart';
-import 'package:flutter_ui/models/user_bean.dart';
-import 'package:flutter_ui/utils/sp_util.dart';
 import 'package:flutter_ui/base/utils/str_util.dart';
+import 'package:flutter_ui/base/widgets/common_widget.dart';
+import 'package:flutter_ui/beans/user_bean.dart';
+import 'package:flutter_ui/utils/sp_util.dart';
 
 class ConvertPage extends StatefulWidget {
   @override
@@ -25,7 +25,11 @@ class _ConvertPageState extends State<ConvertPage> {
     UserBean user = UserBean.fromJson(data);
     List<UserBean> users = [user, user, user];
     return Scaffold(
-      appBar: appBar(title: '字符转化'),
+      appBar: AppBar(
+        title: Text('字符转化', style: TextStyle(color: Colors.white)),
+        leading: leadingView(),
+        elevation: 0.0,
+      ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Container(

@@ -28,13 +28,12 @@ class _FloatNavigationPageState extends State<FloatNavigationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(
-        backgroundColor: Colors.transparent,
+      appBar: AppBar(
         elevation: 0.0,
-        title: 'NavigationBar',
+        leading: leadingView(),
+        title: Text('NavigationBar', style: TextStyle(color: Colors.white)),
         centerTitle: true,
       ),
-      backgroundColor: Color(0xFFFF0035),
       body: Center(child: Text('hello')),
       bottomNavigationBar: FloatNavigationBar(_navs, title: _title),
     );

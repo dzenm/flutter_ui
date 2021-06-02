@@ -11,10 +11,10 @@ class _NotFoundPageState extends State<NotFoundPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(
-        backgroundColor: Colors.red,
+      appBar: AppBar(
+        title: Text('Page is not found', style: TextStyle(color: Colors.white)),
+        leading: leadingView(),
         elevation: 0.0,
-        title: 'Page is not found',
       ),
       body: Center(child: Text('Page is not found, please check it')),
     );

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/base/widgets/common_widget.dart';
 import 'package:flutter_ui/pages/main/me_page/me_router.dart';
 import 'package:flutter_ui/router/common_route.dart';
 import 'package:flutter_ui/router/navigator_manager.dart';
@@ -19,7 +18,7 @@ class _MePageState extends State<MePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(isShowHomeButton: false, title: widget._title),
+      appBar: AppBar(brightness: Brightness.dark, title: Text(widget._title, style: TextStyle(color: Colors.white))),
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Column(children: childrenButtons()),
@@ -70,6 +69,13 @@ class _MePageState extends State<MePage> {
         textColor: Colors.white,
         color: Colors.blue,
         onPressed: () => NavigatorManager.push(context, MeRouter.list),
+      ),
+      SizedBox(height: 8),
+      MaterialButton(
+        child: text('主题设置'),
+        textColor: Colors.white,
+        color: Colors.blue,
+        onPressed: () => NavigatorManager.push(context, MeRouter.theme),
       ),
     ];
   }

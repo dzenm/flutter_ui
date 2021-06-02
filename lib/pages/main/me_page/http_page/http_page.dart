@@ -20,7 +20,10 @@ class _HTTPPageState extends State<HTTPPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(title: 'HTTP请求'),
+      appBar: AppBar(
+        leading: leadingView(),
+        title: Text('HTTP请求', style: TextStyle(color: Colors.white)),
+      ),
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,

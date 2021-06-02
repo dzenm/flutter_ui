@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_ui/base/models/data_bean.dart';
+import 'package:flutter_ui/base/beans/data_bean.dart';
 import 'package:retrofit/http.dart';
 
 part 'api_services.g.dart';

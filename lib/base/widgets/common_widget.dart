@@ -44,27 +44,11 @@ Widget divider({double height = 0.5, double left = 0, double right = 0, Color co
   );
 }
 
-//  Appbar
-PreferredSizeWidget appBar({
-  bool isLight = true,
-  bool isShowHomeButton = true,
-  bool centerTitle = false,
-  Color? backgroundColor,
-  double? elevation = 2.0,
-  String? title,
-  Widget? child,
-}) {
-  Color color = isLight ? Colors.white : Colors.black87;
-  return AppBar(
-    // 导航栏和内容之间没有阴影
-    elevation: elevation,
-    backgroundColor: backgroundColor,
-    centerTitle: centerTitle,
-    brightness: Brightness.dark,
-    leading: isShowHomeButton ? BackButton(color: color) : null,
-    title: title != null ? Text(title, style: TextStyle(color: color)) : child,
-  );
+Widget? leadingView({bool isLight = true}) {
+  return BackButton(color: brightnessTheme(isLight: isLight));
 }
+
+Color brightnessTheme({bool isLight = true}) => isLight ? Colors.white : Colors.black87;
 
 // 标题
 Widget titleView(String title, {double left = 8, double top = 8, double right = 8, double bottom = 8}) {

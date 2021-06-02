@@ -34,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(isShowHomeButton: false, title: '登录'),
+      appBar: AppBar(title: Text('登录', style: TextStyle(color: Colors.white))),
       body: Center(
         child: _body(),
       ),

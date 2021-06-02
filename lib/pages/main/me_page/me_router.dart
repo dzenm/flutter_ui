@@ -3,6 +3,7 @@ import 'package:fluro/src/fluro_router.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_ui/base/http/log.dart';
 import 'package:flutter_ui/pages/main/me_page/http_page/http_page.dart';
+import 'package:flutter_ui/pages/main/me_page/theme_page/theme_page.dart';
 import 'package:flutter_ui/router/route_manager.dart';
 
 import 'convert_page/convert_page.dart';
@@ -16,6 +17,7 @@ class MeRouter extends BaseRoute {
   static const String convert = "/main/me/convert";
   static const String http = "/main/me/http";
   static const String list = "/main/me/list";
+  static const String theme = "/main/me/theme";
 
   @override
   void initRouter(FluroRouter router) {
@@ -38,6 +40,10 @@ class MeRouter extends BaseRoute {
     router.define(list, handler: Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
       Log.d("进入列表页面: $list");
       return ListPage();
+    }));
+    router.define(theme, handler: Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+      Log.d("进入主题设置页面: $theme");
+      return ThemePage();
     }));
   }
 }

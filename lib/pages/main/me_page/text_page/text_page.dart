@@ -33,7 +33,10 @@ class _TextPageState extends State<TextPage> {
   Widget build(BuildContext context) {
     return WillPopScopeRoute(
       Scaffold(
-        appBar: appBar(title: '文本和输入框'),
+        appBar: AppBar(
+          title: Text('文本和输入框', style: TextStyle(color: Colors.white)),
+          leading: leadingView(),
+        ),
         body: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
           child: Padding(

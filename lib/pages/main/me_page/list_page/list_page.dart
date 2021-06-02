@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_ui/base/http/api_client.dart';
 import 'package:flutter_ui/base/widgets/common_widget.dart';
 import 'package:flutter_ui/base/widgets/loading_view.dart';
 import 'package:flutter_ui/base/widgets/refresh_list_view.dart';
-import 'package:flutter_ui/base/http/api_client.dart';
-import 'package:flutter_ui/models/article_bean.dart';
+import 'package:flutter_ui/beans/article_bean.dart';
 
 class ListPage extends StatefulWidget {
   @override
@@ -26,7 +26,10 @@ class _ListPageState extends State<ListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(title: '列表和刷新'),
+      appBar: AppBar(
+        title: Text('列表和刷新', style: TextStyle(color: Colors.white)),
+        leading: leadingView(),
+      ),
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
