@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_ui/base/widgets/common_widget.dart';
 
 //子页面
 //代码中设置了一个内部的_title变量，这个变量是从主页面传递过来的，然后根据传递过来的具体值显示在APP的标题栏和屏幕中间。
@@ -25,7 +26,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget._title)),
+      appBar: appBar(isShowHomeButton: false, title: widget._title),
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Center(

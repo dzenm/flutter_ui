@@ -25,11 +25,7 @@ class _ConvertPageState extends State<ConvertPage> {
     UserBean user = UserBean.fromJson(data);
     List<UserBean> users = [user, user, user];
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        title: Text('字符转化'),
-        centerTitle: true,
-      ),
+      appBar: appBar(title: '字符转化'),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Container(

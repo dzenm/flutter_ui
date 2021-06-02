@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/widgets/common_dialog.dart';
-import 'package:flutter_ui/base/widgets/single_text_layout.dart';
-import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/base/http/api_client.dart';
 import 'package:flutter_ui/base/utils/str_util.dart';
+import 'package:flutter_ui/base/widgets/common_dialog.dart';
+import 'package:flutter_ui/base/widgets/common_widget.dart';
+import 'package:flutter_ui/base/widgets/single_text_layout.dart';
+import 'package:flutter_ui/base/widgets/tap_layout.dart';
 
 class HTTPPage extends StatefulWidget {
   @override
@@ -19,7 +20,7 @@ class _HTTPPageState extends State<HTTPPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('HTTP请求')),
+      appBar: appBar(title: 'HTTP请求'),
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,

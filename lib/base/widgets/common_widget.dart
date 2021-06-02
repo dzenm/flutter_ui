@@ -45,17 +45,23 @@ Widget divider({double height = 0.5, double left = 0, double right = 0, Color co
 }
 
 //  Appbar
-PreferredSizeWidget appbar({
-  BuildContext? context,
+PreferredSizeWidget appBar({
   bool isLight = true,
+  bool isShowHomeButton = true,
+  bool centerTitle = false,
+  Color? backgroundColor,
+  double? elevation = 2.0,
   String? title,
   Widget? child,
 }) {
   Color color = isLight ? Colors.white : Colors.black87;
   return AppBar(
-    elevation: 2,
     // 导航栏和内容之间没有阴影
+    elevation: elevation,
+    backgroundColor: backgroundColor,
+    centerTitle: centerTitle,
     brightness: Brightness.dark,
+    leading: isShowHomeButton ? BackButton(color: color) : null,
     title: title != null ? Text(title, style: TextStyle(color: color)) : child,
   );
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_ui/base/widgets/common_widget.dart';
 import 'package:flutter_ui/pages/main/me_page/me_router.dart';
 import 'package:flutter_ui/router/common_route.dart';
 import 'package:flutter_ui/router/navigator_manager.dart';
@@ -18,7 +19,7 @@ class _MePageState extends State<MePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget._title)),
+      appBar: appBar(isShowHomeButton: false, title: widget._title),
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Column(children: childrenButtons()),

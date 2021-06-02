@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_ui/base/widgets/common_widget.dart';
 import 'package:flutter_ui/base/widgets/float_navigation_bar.dart';
 
 class FloatNavigationPage extends StatefulWidget {
@@ -8,7 +9,6 @@ class FloatNavigationPage extends StatefulWidget {
 }
 
 class _FloatNavigationPageState extends State<FloatNavigationPage> {
-
   List<IconData> _navs = [
     Icons.search,
     Icons.ondemand_video,
@@ -28,15 +28,15 @@ class _FloatNavigationPageState extends State<FloatNavigationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: appBar(
         backgroundColor: Colors.transparent,
         elevation: 0.0,
-        title: Text('NavigationBar'),
+        title: 'NavigationBar',
         centerTitle: true,
       ),
       backgroundColor: Color(0xFFFF0035),
       body: Center(child: Text('hello')),
-      bottomNavigationBar: FloatNavigationBar(_navs, title: _title,),
+      bottomNavigationBar: FloatNavigationBar(_navs, title: _title),
     );
   }
 }
