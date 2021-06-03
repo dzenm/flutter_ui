@@ -27,7 +27,6 @@ class _ConvertPageState extends State<ConvertPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('字符转化', style: TextStyle(color: Colors.white)),
-        leading: leadingView(),
         elevation: 0.0,
       ),
       body: SingleChildScrollView(

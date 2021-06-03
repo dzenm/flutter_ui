@@ -56,6 +56,10 @@ class LoggerInterceptor extends Interceptor {
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+    handler.next(options);
+  }
+
+  void _handleRequest(RequestOptions options) {
     logPrint('');
     logPrint('******************** Request Start *********************');
     logPrint('${options.method}  ${options.uri}');
@@ -63,12 +67,15 @@ class LoggerInterceptor extends Interceptor {
     //options.headers;
     if (request) {
       _printKV('responseType', options.responseType.toString());
-      _printKV('followRedirects', options.followRedirects);
-      _printKV('connectTimeout', options.connectTimeout);
+      _printKV('maxRedirects', options.maxRedirects);
+      _printKV('listFormat', options.listFormat.toString());
       _printKV('sendTimeout', options.sendTimeout);
+      _printKV('connectTimeout', options.connectTimeout);
       _printKV('receiveTimeout', options.receiveTimeout);
+      _printKV('followRedirects', options.followRedirects);
       _printKV('receiveDataWhenStatusError', options.receiveDataWhenStatusError);
       _printKV('extra', options.extra);
+      _printKV('queryParameters', options.queryParameters);
     }
     if (requestHeader) {
       logPrint('headers:');
@@ -80,16 +87,22 @@ class LoggerInterceptor extends Interceptor {
     }
 
     logPrint('******************** Request End ***********************');
-    handler.next(options);
   }
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) async {
+    _handleRequest(response.requestOptions);
+    _handleResponse(response);
+    handler.next(response);
+  }
+
+  void _handleResponse(Response response) {
     logPrint('');
     logPrint('******************** Response Start ********************');
-    logPrint('${response.statusCode}  ${response.requestOptions.uri}');
+    logPrint('${response.statusCode}  ${response.requestOptions.uri}  ${response.statusMessage}');
 
     if (responseHeader) {
+      logPrint('extra: ${response.extra}');
       if (response.isRedirect == true) {
         _printKV('redirect', response.realUri);
       }
@@ -104,17 +117,20 @@ class LoggerInterceptor extends Interceptor {
 
     logPrint('******************** Response End **********************');
     logPrint('');
-    handler.next(response);
   }
 
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) async {
+    _handleError(err);
+    handler.next(err);
+  }
+
+  void _handleError(DioError err) {
     if (error) {
       logPrint('******************** DioError Start ********************');
       logPrint('$err');
       logPrint('******************** DioError End **********************');
     }
-    handler.next(err);
   }
 
   /// 打印Json字符串

@@ -26,7 +26,7 @@ class SingleTextLayout extends StatefulWidget {
   final Widget? suffix; // 指向下一级按钮前的布局
 
   final bool isShowForward; // 是否显示指向下一级图标
-  final bool isShowBadge; // 是否显示小红点
+  final int badgeCount; // 小红点数量
   final Color? forwardColor; // 指向下一级图标颜色
 
   SingleTextLayout({
@@ -45,7 +45,7 @@ class SingleTextLayout extends StatefulWidget {
     this.isTextLeft = true,
     this.suffix,
     this.isShowForward = false,
-    this.isShowBadge = false,
+    this.badgeCount = -1,
     this.forwardColor,
   }) : super(key: key);
 
@@ -86,7 +86,7 @@ class _SingleTextLayoutState extends State<SingleTextLayout> {
       Offstage(offstage: widget.suffix == null, child: widget.suffix),
       if (widget.suffix != null && widget.isShowForward) SizedBox(width: 8),
       // 小红点
-      _badgeView(),
+      badgeView(count: widget.badgeCount),
       // 下一级图标
       _forwardIcon(),
     ]);
@@ -153,9 +153,5 @@ class _SingleTextLayoutState extends State<SingleTextLayout> {
       offstage: !widget.isShowForward,
       child: Icon(Icons.arrow_forward_ios_rounded, color: widget.forwardColor, size: 12),
     );
-  }
-
-  Widget _badgeView() {
-    return Offstage(offstage: !widget.isShowBadge, child: badgeView(count: 0));
   }
 }

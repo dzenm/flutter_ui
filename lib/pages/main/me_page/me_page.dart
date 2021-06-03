@@ -72,10 +72,10 @@ class _MePageState extends State<MePage> {
       ),
       SizedBox(height: 8),
       MaterialButton(
-        child: text('主题设置'),
+        child: text('设置'),
         textColor: Colors.white,
         color: Colors.blue,
-        onPressed: () => NavigatorManager.push(context, MeRouter.theme),
+        onPressed: () => NavigatorManager.push(context, MeRouter.settingPage),
       ),
     ];
   }

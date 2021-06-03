@@ -69,6 +69,8 @@ class _LoadingViewState extends State<LoadingView> {
         return '加载为空';
       case LoadingState.more:
         return '加载更多';
+      case LoadingState.success:
+        return '加载成功';
       case LoadingState.error:
         return '加载失败';
       case LoadingState.complete:
@@ -83,6 +85,7 @@ enum LoadingState {
   loading, // 加载中，正在请求数据
   empty, // 加载为空数据
   more, // 加载部分页数，还有更多页面可以加载
+  success, // 加载成功
   error, // 加载错误
   complete, // 加载数据完成，没有数据可以加载
 }

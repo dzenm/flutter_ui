@@ -35,12 +35,16 @@ Widget badgeView({int count = -1}) {
 }
 
 // 分割线
-Widget divider({double height = 0.5, double left = 0, double right = 0, Color color = Colors.grey}) {
-  return Divider(
+Widget divider({double height = 0.5, double left = 0, double right = 0, Color color = Colors.black12}) {
+  return Container(
     height: height,
-    indent: left,
-    endIndent: right,
     color: color,
+    child: Divider(
+      height: height,
+      indent: left,
+      endIndent: right,
+      color: Colors.transparent,
+    ),
   );
 }
 

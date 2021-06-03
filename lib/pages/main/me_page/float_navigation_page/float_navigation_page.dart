@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/base/widgets/common_widget.dart';
 import 'package:flutter_ui/base/widgets/float_navigation_bar.dart';
 
 class FloatNavigationPage extends StatefulWidget {
@@ -30,7 +29,6 @@ class _FloatNavigationPageState extends State<FloatNavigationPage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        leading: leadingView(),
         title: Text('NavigationBar', style: TextStyle(color: Colors.white)),
         centerTitle: true,
       ),

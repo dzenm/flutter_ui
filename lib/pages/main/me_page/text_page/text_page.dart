@@ -4,8 +4,10 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_ui/base/res/assets.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/common_widget.dart';
+import 'package:flutter_ui/base/widgets/menu_Item.dart';
 import 'package:flutter_ui/base/widgets/single_edit_layout.dart';
 import 'package:flutter_ui/base/widgets/single_text_layout.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
@@ -35,7 +37,18 @@ class _TextPageState extends State<TextPage> {
       Scaffold(
         appBar: AppBar(
           title: Text('文本和输入框', style: TextStyle(color: Colors.white)),
-          leading: leadingView(),
+          actions: [
+            PopupMenuButton<Item>(
+              onSelected: (Item item) {
+                showToast('测试${item.title}');
+              },
+              itemBuilder: (BuildContext context) => [
+                PopupMenuItem<Item>(child: Text('测试1')),
+                PopupMenuItem<Item>(child: Text('测试2')),
+                PopupMenuItem<Item>(child: Text('测试3')),
+              ],
+            )
+          ],
         ),
         body: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
@@ -117,7 +130,7 @@ class _TextPageState extends State<TextPage> {
                       title: '关于',
                       isTextLeft: false,
                       isShowForward: true,
-                      isShowBadge: true,
+                      badgeCount: 0,
                     ),
                   ),
                   TapLayout(
@@ -130,7 +143,7 @@ class _TextPageState extends State<TextPage> {
                       isTextLeft: false,
                       suffix: ClipRRect(
                         borderRadius: BorderRadius.circular(16),
-                        child: Image.asset('assets/images/a.jpg', fit: BoxFit.cover, width: 24, height: 24),
+                        child: Image.asset(Assets.image('a.jpg'), fit: BoxFit.cover, width: 24, height: 24),
                       ),
                       isShowForward: true,
                     ),
@@ -151,7 +164,7 @@ class _TextPageState extends State<TextPage> {
                     height: 60.0,
                     padding: EdgeInsets.symmetric(horizontal: 16),
                     onTap: () => showToast('登录记录'),
-                    child: SingleTextLayout(title: '登录记录', summary: '查看最近所有的登录记录', isShowBadge: true, isShowForward: true),
+                    child: SingleTextLayout(title: '登录记录', summary: '查看最近所有的登录记录', badgeCount: 0, isShowForward: true),
                   ),
                 ],
               ),
