@@ -1,9 +1,16 @@
+import 'dart:math';
+
+import 'package:flutter/foundation.dart';
+
+// 缩进的距离
+const String interval = '  ';
+
 class Log {
   Log._internal();
 
   static final Log instance = Log._internal();
 
-  static const String _TAG = "Log";
+  static const String _TAG = 'Log';
 
   static const int _INFO = 4;
   static const int _DEBUG = 5;
@@ -13,6 +20,7 @@ class Log {
 
   static bool debuggable = true; // 是否是debug模式
   static String sTag = _TAG;
+  static const MAX_LENGTH = 800;
 
   static void init({bool isDebug = true, String tag = _TAG}) {
     debuggable = isDebug;
@@ -31,11 +39,11 @@ class Log {
     _printLog(tag, 'E', _ERROR, message);
   }
 
-  static void httpLog(dynamic message, {String tag = ''}) {
-    print(message.toString());
-  }
-
   static void _printLog(String tag, String stag, int level, dynamic message) {
+    if (kReleaseMode) {
+      // release模式不打印
+      return;
+    }
     if (debuggable) {
       if (sLevel <= level) {
         _print(tag, stag, message);
@@ -52,6 +60,19 @@ class Log {
     sb.write((tag.isEmpty) ? sTag : tag);
     sb.write('  ');
     sb.write(message);
-    print(sb.toString());
+    debugPrint(sb.toString());
+  }
+
+  static void _printLongMsg(dynamic msg) {
+    int len = msg.length;
+    if (len > MAX_LENGTH) {
+      for (int i = 0; i < len;) {
+        int start = i;
+        i = i + MAX_LENGTH;
+        print(msg.substring(start, min(i, len)));
+      }
+    } else {
+      print(msg);
+    }
   }
 }
