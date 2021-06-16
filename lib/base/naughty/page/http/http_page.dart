@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/base/utils/str_util.dart';
+import 'package:flutter_ui/base/naughty/beans/http_bean.dart';
+import 'package:flutter_ui/base/naughty/naughty.dart';
+import 'package:flutter_ui/base/naughty/page/http/item_page.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
-import 'package:flutter_ui/naughty/beans/http_bean.dart';
-import 'package:flutter_ui/naughty/naughty.dart';
-import 'package:flutter_ui/naughty/page/home/http_page.dart';
 
-const String HOME_PAGE_ROUTE = 'naughty/homePage';
+const String HTTP_PAGE_ROUTE = 'naughty/httpPage';
 
 /// naughty 主页
-class HomePage extends StatefulWidget {
+class HttpPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _HomePageState();
+  State<StatefulWidget> createState() => _HttpPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HttpPageState extends State<HttpPage> {
   List<HttpBean> list = [];
 
   @override
@@ -66,7 +65,7 @@ class _HomePageState extends State<HomePage> {
         ),
         child: TapLayout(
           borderRadius: BorderRadius.all(Radius.circular(7)),
-          onTap: () => Navigator.of(context).pushNamed(HTTP_PAGE_ROUTE, arguments: list[index]),
+          onTap: () => Navigator.of(context).pushNamed(ITEM_PAGE_ROUTE, arguments: list[index]),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -141,9 +140,9 @@ class _HomePageState extends State<HomePage> {
   Widget _detail(int index) {
     return Row(
       children: [
-        SizedBox(width: 80, child: Text('${list[index].duration} ms')),
+        SizedBox(width: 80, child: Text(list[index].duration ?? '')),
         Expanded(child: Text(list[index].time ?? '')),
-        Text(StrUtil.formatSize(list[index].size)),
+        Text(list[index].size ?? ''),
       ],
     );
   }

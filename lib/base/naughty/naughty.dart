@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/base/channels/native_channels.dart';
-import 'package:flutter_ui/base/http/log.dart';
-
-import 'drag_layout.dart';
+import 'package:flutter_ui/base/naughty/beans/http_bean.dart';
+import 'package:flutter_ui/base/naughty/drag_layout.dart';
+import 'package:flutter_ui/base/naughty/page/http/http_page.dart';
 
 /// 悬浮窗
 class Naughty {
@@ -18,23 +17,22 @@ class Naughty {
 
   OverlayEntry? _overlayEntry;
 
+  List<HttpBean> data = [];
+
   /// 初始化, 设置子widget
   void init(BuildContext context, {Widget? child}) {
     this._context = context;
     this._child = child;
-    Log.d('初始化悬浮窗: context=$_context, child=$_child');
   }
 
   /// 显示悬浮窗
   void show() {
     dismiss();
-    Log.d('显示悬浮窗');
     _overlayEntry = OverlayEntry(
       builder: (BuildContext context) =>
           _child ??
           DragLayout(
-            // onTap: () => Navigator.of(context).pushNamed(HOME_ROUTE),
-            onTap: () => NativeChannels.startNaughtyActivity(),
+            onTap: () => Navigator.of(context).pushNamed(HTTP_PAGE_ROUTE),
             child: Container(
               alignment: Alignment.center,
               height: 64.0,
@@ -47,12 +45,13 @@ class Naughty {
             ),
           ),
     );
-    Overlay.of(_context!)!.insert(_overlayEntry!);
+    if (_context != null) {
+      Overlay.of(_context!)?.insert(_overlayEntry!);
+    }
   }
 
   /// 隐藏悬浮窗
   void dismiss() {
-    Log.d('隐藏悬浮窗');
     _overlayEntry?.remove();
     _overlayEntry = null;
   }

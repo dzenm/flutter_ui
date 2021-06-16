@@ -8,15 +8,29 @@ part 'api_services.g.dart';
 abstract class ApiServices {
   factory ApiServices(Dio dio, {String? baseUrl}) = _ApiServices;
 
+  // 登录请求
   @POST('user/login')
-  Future<DataBean> login(String username, String password);
+  Future<DataBean> login(
+    @Query('username') String username, // 用户名/手机号
+    @Query('password') String password, // 密码
+  );
 
   @POST('user/register')
-  Future<DataBean> register(String username, String password, String repassword);
+  Future<DataBean> register(
+    @Query('username') String username, // 用户名/手机号
+    @Query('password') String password, // 密码
+    @Query('repassword') String repassword, // 密码
+  );
 
   @GET('user/logout/json')
-  Future<DataBean> logout(String username, String password);
+  Future<DataBean> logout();
 
   @GET('article/list/{pageNumber}/json')
-  Future<DataBean> article(@Path("pageNumber") String pageNumber);
+  Future<DataBean> article(
+    @Path("pageNumber") String pageNumber,
+  );
+
+  @GET('banner/json')
+  Future<DataBean> banner();
+
 }

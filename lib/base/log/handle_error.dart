@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/utils/file_util.dart';
-import 'package:flutter_ui/base/utils/str_util.dart';
 import 'package:package_info/package_info.dart';
 
 /// 启动flutter APP
@@ -79,7 +78,6 @@ class HandleError {
       Log.e('╚════════════════════════════════════════════════════════════════════════════╝');
 
       String msg = await _handleErrorConvertText(error, stackTrace);
-      Log.d('text size=${StrUtil.getStringLength(msg)}');
       // 保存为文件
       fileName = fileName ?? 'crash_${DateTime.now()}.log';
       await FileUtil.instance.save(fileName!, msg, dir: crashParent).then((value) async {

@@ -2,6 +2,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_ui/base/http/api_client.dart';
 import 'package:flutter_ui/base/res/assets.dart';
 import 'package:flutter_ui/base/res/colors.dart';
 import 'package:flutter_ui/base/res/local_model.dart';
@@ -10,6 +11,9 @@ import 'package:flutter_ui/base/widgets/common_widget.dart';
 import 'package:flutter_ui/base/widgets/single_text_layout.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/models/provider_model.dart';
+import 'package:flutter_ui/pages/login/login_route.dart';
+import 'package:flutter_ui/router/navigator_manager.dart';
+import 'package:flutter_ui/utils/sp_util.dart';
 
 class SettingPage extends StatefulWidget {
   @override
@@ -143,7 +147,7 @@ class _SettingPageState extends State<SettingPage> {
               TapLayout(
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: () => showToast('注销'),
+                onTap: _logout,
                 child: SingleTextLayout(title: '注销', isShowForward: true),
               ),
               TapLayout(
@@ -197,5 +201,15 @@ class _SettingPageState extends State<SettingPage> {
         );
       },
     ).then((value) => showToast('设置成功'));
+  }
+
+  void _logout() {
+    ApiClient.instance.request(apiServices.logout(), success: (data) {
+      SpUtil.setIsLogin(false);
+      SpUtil.setUserId(null);
+      SpUtil.setToken(null);
+
+      NavigatorManager.push(context, LoginRoute.login, clearStack: true);
+    });
   }
 }

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 
-import 'log.dart';
+import '../log/log.dart';
 
 /// 网络请求[dio.Interceptor], 网络请求信息输出.
 class LoggerInterceptor extends Interceptor {
@@ -14,7 +14,8 @@ class LoggerInterceptor extends Interceptor {
     this.responseBody = true,
     this.error = true,
     this.isFormat = true,
-    this.logPrint = Log.httpLog,
+    this.isDecorate = true,
+    this.logPrint = Log.d,
   });
 
   /// Print request [Options]
@@ -38,9 +39,8 @@ class LoggerInterceptor extends Interceptor {
   /// format json
   bool isFormat;
 
-  String interval = '  ';
-
-  int id = 0;
+  /// 添加装饰
+  bool isDecorate;
 
   /// Log printer; defaults print log to console.
   /// In flutter, you'd better use debugPrint.
@@ -60,9 +60,8 @@ class LoggerInterceptor extends Interceptor {
   }
 
   void _handleRequest(RequestOptions options) {
-    logPrint('');
-    logPrint('******************** Request Start *********************');
-    logPrint('${options.method}  ${options.uri}');
+    logPrint('╔══════════════════════════════ Request ═════════════════════════════════════╗');
+    _print('${options.method}  ${options.uri}');
 
     //options.headers;
     if (request) {
@@ -78,15 +77,14 @@ class LoggerInterceptor extends Interceptor {
       _printKV('queryParameters', options.queryParameters);
     }
     if (requestHeader) {
-      logPrint('headers:');
+      _print('headers:');
       options.headers.forEach((key, val) => _printKV('$key', val));
     }
     if (requestBody) {
-      logPrint('body:');
+      _print('body:');
       _printJson(options.data.toString());
     }
-
-    logPrint('******************** Request End ***********************');
+    logPrint('╚════════════════════════════════════════════════════════════════════════════╝');
   }
 
   @override
@@ -97,26 +95,23 @@ class LoggerInterceptor extends Interceptor {
   }
 
   void _handleResponse(Response response) {
-    logPrint('');
-    logPrint('******************** Response Start ********************');
-    logPrint('${response.statusCode}  ${response.requestOptions.uri}  ${response.statusMessage}');
+    logPrint('╔══════════════════════════════ Response ════════════════════════════════════╗');
+    _print('${response.statusCode}  ${response.requestOptions.uri}  ${response.statusMessage}');
 
     if (responseHeader) {
-      logPrint('extra: ${response.extra}');
+      _print('extra: ${response.extra}');
       if (response.isRedirect == true) {
         _printKV('redirect', response.realUri);
       }
 
-      logPrint('headers:');
+      _print('headers:');
       response.headers.forEach((key, val) => _printKV('$key', val.join('\r\n\t')));
     }
     if (responseBody) {
-      logPrint('body:');
+      _print('body:');
       _printJson(response.toString());
     }
-
-    logPrint('******************** Response End **********************');
-    logPrint('');
+    logPrint('╚════════════════════════════════════════════════════════════════════════════╝');
   }
 
   @override
@@ -127,50 +122,28 @@ class LoggerInterceptor extends Interceptor {
 
   void _handleError(DioError err) {
     if (error) {
-      logPrint('******************** DioError Start ********************');
-      logPrint('$err');
-      logPrint('******************** DioError End **********************');
+      logPrint('╔══════════════════════════════ DioError ════════════════════════════════════╗');
+      _print('$err');
+      logPrint('╚════════════════════════════════════════════════════════════════════════════╝');
     }
   }
 
   /// 打印Json字符串
-  void _printJson(String message) => convert(message).toString().split('\n').forEach((val) => logPrint('$interval$val'));
+  void _printJson(String msg) => convert(msg).toString().split('\n').forEach((val) => _print('$interval$val'));
 
   /// 打印键值对
-  void _printKV(String key, Object? val) => logPrint('$interval$key: $val');
+  void _printKV(String key, Object? val) => _print('$interval$key: $val');
+
+  void _print(String msg) {
+    logPrint((isDecorate && msg.isNotEmpty ? '║$interval' : '') + msg);
+  }
 
   /// 转成json格式字符串
-  String convert(String message) {
+  String convert(String msg) {
     try {
-      return JsonEncoder.withIndent('  ').convert(json.decode(message));
+      return JsonEncoder.withIndent('  ').convert(json.decode(msg));
     } catch (e) {
-      return message;
+      return msg;
     }
   }
-}
-
-enum Status {
-  prepare,
-  running,
-  finished,
-}
-
-class HttpData {
-  Status status;
-  String method;
-  String url;
-  String duration;
-  String time;
-  String size;
-  int running;
-
-  HttpData({
-    this.status = Status.prepare,
-    this.method = '',
-    this.url = '',
-    this.duration = '',
-    this.time = '',
-    this.size = '',
-    this.running = 0,
-  });
 }

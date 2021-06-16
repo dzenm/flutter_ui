@@ -12,6 +12,8 @@ class TapLayout extends StatefulWidget {
   final EdgeInsetsGeometry? margin;
   final EdgeInsetsGeometry? padding;
 
+  final AlignmentGeometry alignment;
+
   final Color? normalColor;
   final Color? pressColor;
 
@@ -26,6 +28,7 @@ class TapLayout extends StatefulWidget {
     this.height,
     this.margin,
     this.padding,
+    this.alignment = Alignment.center,
     this.normalColor = Colors.transparent,
     this.pressColor,
     this.rippleColor,
@@ -59,7 +62,7 @@ class _TapLayoutState extends State<TapLayout> {
             margin: widget.margin,
             padding: widget.padding,
             // 设置child 居中
-            alignment: Alignment(0, 0),
+            alignment: widget.alignment,
             child: widget.child,
           ),
         ),

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/base/http/log.dart';
+import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/utils/str_util.dart';
 import 'package:flutter_ui/base/widgets/common_widget.dart';
 import 'package:flutter_ui/beans/user_bean.dart';
@@ -14,7 +14,21 @@ class ConvertPage extends StatefulWidget {
 }
 
 class _ConvertPageState extends State<ConvertPage> {
-  Map<String, dynamic> data = {"username": "John Smith", "sex": "male", "age": 25, "address": "China Beijing"};
+  Map<String, dynamic> data = {
+    "admin": false,
+    "chapterTops": [],
+    "coinCount": 0,
+    "collectIds": [11344],
+    "email": "",
+    "icon": "",
+    "id": 4824,
+    "nickname": "FreedomEden",
+    "password": "",
+    "publicName": "FreedomEden",
+    "token": "",
+    "type": 0,
+    "username": "FreedomEden"
+  };
 
   String listStr = '';
   String listToJsonStr = '';

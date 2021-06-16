@@ -1,18 +1,38 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/base/http/log.dart';
+import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/router/route_manager.dart';
 
 /// 路由跳转工具类
 class NavigatorManager {
-  static void push(BuildContext context, String path,
-      {Object? argument, Function(Object)? function, bool clearStack = false, bool replace = false, transition: TransitionType.native}) {
+  static void push(
+    BuildContext context,
+    String path, {
+    Object? argument,
+    Function(Object)? function,
+    bool rootNavigator = false,
+    bool clearStack = false,
+    bool replace = false,
+    Duration? transitionDuration,
+    TransitionType? transition = TransitionType.cupertino,
+    RouteTransitionsBuilder? transitionBuilder,
+  }) {
     // 让页面失去焦点的控制
     FocusScope.of(context).unfocus();
     RouteSettings routeSettings = RouteSettings(arguments: argument);
     if (argument != null && function != null) {
       RouteManager.router
-          .navigateTo(context, path, routeSettings: routeSettings, clearStack: clearStack, replace: replace, transition: transition)
+          .navigateTo(
+        context,
+        path,
+        routeSettings: routeSettings,
+        rootNavigator: rootNavigator,
+        clearStack: clearStack,
+        replace: replace,
+        transitionDuration: transitionDuration,
+        transition: transition,
+        transitionBuilder: transitionBuilder,
+      )
           .then((value) {
         if (value == null) {
           return;
@@ -22,7 +42,18 @@ class NavigatorManager {
         Log.d("页面跳转错误: $onError");
       });
     } else if (function != null) {
-      RouteManager.router.navigateTo(context, path, clearStack: clearStack, replace: replace, transition: transition).then((value) {
+      RouteManager.router
+          .navigateTo(
+        context,
+        path,
+        rootNavigator: rootNavigator,
+        clearStack: clearStack,
+        replace: replace,
+        transitionDuration: transitionDuration,
+        transition: transition,
+        transitionBuilder: transitionBuilder,
+      )
+          .then((value) {
         if (value == null) {
           return;
         }
@@ -31,9 +62,28 @@ class NavigatorManager {
         Log.d("页面跳转错误: $onError");
       });
     } else if (argument != null) {
-      RouteManager.router.navigateTo(context, path, routeSettings: routeSettings, replace: replace, clearStack: clearStack, transition: transition);
+      RouteManager.router.navigateTo(
+        context,
+        path,
+        routeSettings: routeSettings,
+        replace: replace,
+        rootNavigator: rootNavigator,
+        clearStack: clearStack,
+        transitionDuration: transitionDuration,
+        transition: transition,
+        transitionBuilder: transitionBuilder,
+      );
     } else {
-      RouteManager.router.navigateTo(context, path, clearStack: clearStack, replace: replace, transition: transition);
+      RouteManager.router.navigateTo(
+        context,
+        path,
+        rootNavigator: rootNavigator,
+        clearStack: clearStack,
+        replace: replace,
+        transitionDuration: transitionDuration,
+        transition: transition,
+        transitionBuilder: transitionBuilder,
+      );
     }
   }
 

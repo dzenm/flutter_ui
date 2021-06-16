@@ -1,7 +1,7 @@
 import 'package:fluro/fluro.dart';
 import 'package:fluro/src/fluro_router.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/base/http/log.dart';
+import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/pages/not_found/not_found_page.dart';
 import 'package:flutter_ui/router/route_manager.dart';
 

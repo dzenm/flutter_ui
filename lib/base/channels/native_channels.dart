@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/base/http/log.dart';
+import 'package:flutter_ui/base/log/log.dart';
 
 class NativeChannels {
   // 管理返回键操作通道

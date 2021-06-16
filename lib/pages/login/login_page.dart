@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/base/widgets/common_widget.dart';
-import 'package:flutter_ui/naughty/naughty.dart';
+import 'package:flutter_ui/base/http/api_client.dart';
+import 'package:flutter_ui/beans/user_bean.dart';
 import 'package:flutter_ui/pages/main/main_route.dart';
 import 'package:flutter_ui/router/navigator_manager.dart';
+import 'package:flutter_ui/utils/sp_util.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -12,38 +13,44 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  late TextEditingController usernameController;
-  late TextEditingController passwordController;
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
-  String username = '';
-  String password = '';
+  String _username = '';
+  String _password = '';
+  bool _isDisableLoginButton = true;
+  bool _isShowPwd = false;
 
   @override
   void initState() {
     super.initState();
-    usernameController = TextEditingController()
-      ..addListener(() {
-        setState(() => username = usernameController.text);
-      });
-    passwordController = TextEditingController()
-      ..addListener(() {
-        setState(() => password = passwordController.text);
-      });
+
+    _initInputText();
+  }
+
+  // 初始化输入框的内容，如果本地储存账号和密码，获取并填充到输入框
+  void _initInputText() {
+    usernameController.text = _username = SpUtil.getUsername();
+    usernameController.addListener(() {
+      setState(() => _username = usernameController.text);
+      _resetLoginButtonState();
+    });
+    passwordController.addListener(() {
+      setState(() => _password = passwordController.text);
+      _resetLoginButtonState();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('登录', style: TextStyle(color: Colors.white))),
-      body: Center(
-        child: _body(),
-      ),
+      body: Center(child: _body()),
     );
   }
 
+  // 主体页面结构
   Widget _body() {
-    Naughty.instance.init(context);
-    bool isNotEmptyText = username.isNotEmpty && password.isNotEmpty;
     return Container(
       padding: EdgeInsets.all(24),
       child: Column(mainAxisSize: MainAxisSize.min, children: [
@@ -53,6 +60,7 @@ class _LoginPageState extends State<LoginPage> {
             icon: Icon(Icons.person),
             labelText: '用户名/手机号/邮箱',
             suffixIcon: IconButton(
+              splashColor: Colors.transparent,
               icon: Icon(Icons.close),
               onPressed: () => usernameController.clear(),
             ),
@@ -68,21 +76,26 @@ class _LoginPageState extends State<LoginPage> {
             icon: Icon(Icons.admin_panel_settings),
             labelText: '密码',
             suffixIcon: IconButton(
-              icon: Icon(Icons.close),
-              onPressed: () => passwordController.clear(),
+              splashColor: Colors.transparent,
+              icon: Icon(_isShowPwd ? Icons.visibility : Icons.visibility_off, size: 20),
+              iconSize: 16,
+              // 点击改变显示或隐藏密码
+              onPressed: () => setState(() => _isShowPwd = !_isShowPwd),
             ),
           ),
           maxLines: 1,
           keyboardType: TextInputType.text,
-          obscureText: true,
+          obscureText: !_isShowPwd,
         ),
         SizedBox(height: 32),
         Row(children: [
           Expanded(
             flex: 1,
             child: MaterialButton(
-              color: Colors.blue,
+              color: _isDisableLoginButton ? Colors.grey : Colors.blue,
               onPressed: _loginPressed,
+              elevation: 0,
+              highlightElevation: 0,
               child: Text('登录', style: TextStyle(color: Colors.white)),
             ),
           ),
@@ -91,9 +104,28 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  // 如果输入的账号密码为空则禁用登录按钮
+  void _resetLoginButtonState() {
+    setState(() => _isDisableLoginButton = _username.isEmpty || _password.isEmpty);
+  }
+
+  // 登录按钮点击事件
   void _loginPressed() {
-    Naughty.instance.show();
-    NavigatorManager.pop(context);
-    NavigatorManager.push(context, MainRoute.main);
+    if (_isDisableLoginButton) return;
+
+    FocusScope.of(context).unfocus();
+    ApiClient.instance.request(apiServices.login(_username, _password), success: (data) {
+      UserBean bean = UserBean.fromJson(data);
+      SpUtil.setIsLogin(true);
+      SpUtil.setUsername(bean.username);
+      SpUtil.setUserId(bean.id.toString());
+      SpUtil.setToken(bean.token);
+
+      _pushMainPage();
+    });
+  }
+
+  void _pushMainPage() {
+    NavigatorManager.push(context, MainRoute.main, clearStack: true);
   }
 }
