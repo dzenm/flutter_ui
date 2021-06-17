@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/utils/str_util.dart';
 import 'package:flutter_ui/base/widgets/common_widget.dart';
 import 'package:flutter_ui/beans/user_bean.dart';
@@ -69,7 +68,6 @@ class _ConvertPageState extends State<ConvertPage> {
                   child: Text('从SP取出字符数组'),
                   onPressed: () {
                     String string = SpUtil.getUser();
-                    Log.d('从SP取出字符数组=$string');
                     if (string.length > 0) {
                       List<UserBean> list = (jsonDecode(string) as List<dynamic>).map((e) => UserBean.fromJson((e as Map<String, dynamic>))).toList();
                       setState(() {

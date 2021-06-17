@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/naughty/naughty.dart';
+import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/widgets/common_widget.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 
@@ -30,7 +31,7 @@ class _MainPageState extends State<MainPage> {
         controller: _pageController,
         physics: NeverScrollableScrollPhysics(),
         onPageChanged: (index) => setState(() => {_itemIndex = index}),
-        children: [HomePage("Home"), MePage("me")],
+        children: [HomePage(S.of(context).home), MePage(S.of(context).me)],
       ),
       bottomNavigationBar: BottomAppBar(
         // shape: CircularNotchedRectangle(),
@@ -38,8 +39,8 @@ class _MainPageState extends State<MainPage> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           mainAxisSize: MainAxisSize.max,
           children: [
-            _bottomAppBarItemView(Icons.home, '主页', 0, badgeCount: 56),
-            _bottomAppBarItemView(Icons.person, '我的', 1, badgeCount: 0),
+            _bottomAppBarItemView(Icons.home, S.of(context).home, 0, badgeCount: 56),
+            _bottomAppBarItemView(Icons.person, S.of(context).me, 1, badgeCount: 0),
           ],
         ),
       ),

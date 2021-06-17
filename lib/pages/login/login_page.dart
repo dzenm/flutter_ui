@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ui/base/http/api_client.dart';
+import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/beans/user_bean.dart';
 import 'package:flutter_ui/pages/main/main_route.dart';
 import 'package:flutter_ui/router/navigator_manager.dart';
@@ -44,8 +45,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('登录', style: TextStyle(color: Colors.white))),
-      body: Center(child: _body()),
+      appBar: AppBar(title: Text(S.of(context).login, style: TextStyle(color: Colors.white))),
+      body: Padding(padding: EdgeInsets.only(top: 100), child: _body()),
     );
   }
 
@@ -58,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
           controller: usernameController,
           decoration: InputDecoration(
             icon: Icon(Icons.person),
-            labelText: '用户名/手机号/邮箱',
+            labelText: S.of(context).username,
             suffixIcon: IconButton(
               splashColor: Colors.transparent,
               icon: Icon(Icons.close),
@@ -74,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
           controller: passwordController,
           decoration: InputDecoration(
             icon: Icon(Icons.admin_panel_settings),
-            labelText: '密码',
+            labelText: S.of(context).password,
             suffixIcon: IconButton(
               splashColor: Colors.transparent,
               icon: Icon(_isShowPwd ? Icons.visibility : Icons.visibility_off, size: 20),
@@ -96,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
               onPressed: _loginPressed,
               elevation: 0,
               highlightElevation: 0,
-              child: Text('登录', style: TextStyle(color: Colors.white)),
+              child: Text(S.of(context).login, style: TextStyle(color: Colors.white)),
             ),
           ),
         ]),

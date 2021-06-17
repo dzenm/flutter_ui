@@ -140,9 +140,9 @@ class _HttpPageState extends State<HttpPage> {
   Widget _detail(int index) {
     return Row(
       children: [
-        SizedBox(width: 80, child: Text(list[index].duration ?? '')),
-        Expanded(child: Text(list[index].time ?? '')),
-        Text(list[index].size ?? ''),
+        SizedBox(width: 80, child: Text(list[index].duration)),
+        Expanded(child: Text(list[index].time)),
+        Text(list[index].size),
       ],
     );
   }

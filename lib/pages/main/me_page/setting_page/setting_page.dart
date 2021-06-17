@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/http/api_client.dart';
 import 'package:flutter_ui/base/res/assets.dart';
 import 'package:flutter_ui/base/res/colors.dart';
-import 'package:flutter_ui/base/res/local_model.dart';
+import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/common_widget.dart';
 import 'package:flutter_ui/base/widgets/single_text_layout.dart';
@@ -21,15 +21,18 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
-  TextEditingController _controller = new TextEditingController(text: "初始化");
+  TextEditingController _controller = new TextEditingController(text: "init");
   String text = '';
   String newText = '';
   bool switchState = true;
-  String _colorKey = LocalModel().themeColor;
+  late String _colorKey;
+  late Locale _locale;
 
   @override
   void initState() {
     super.initState();
+    _colorKey = ProviderManager.localModel(context).theme;
+    _locale = ProviderManager.localModel(context).locale;
     newText = text = _controller.text;
   }
 
@@ -37,7 +40,7 @@ class _SettingPageState extends State<SettingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('设置', style: TextStyle(color: Colors.white)),
+        title: Text(S.of(context).setting, style: TextStyle(color: Colors.white)),
       ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
@@ -48,8 +51,8 @@ class _SettingPageState extends State<SettingPage> {
               TapLayout(
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: () => showToast('用户名'),
-                child: SingleTextLayout(icon: Icons.person, title: '用户名', text: '知晓', isTextLeft: false, isShowForward: true),
+                onTap: () => showToast(S.of(context).username),
+                child: SingleTextLayout(icon: Icons.person, title: S.of(context).username, text: '知晓', isTextLeft: false, isShowForward: true),
               ),
               TapLayout(
                 height: 50.0,
@@ -69,8 +72,8 @@ class _SettingPageState extends State<SettingPage> {
               TapLayout(
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: () => showToast('手机号码'),
-                child: SingleTextLayout(icon: Icons.phone_android, title: '手机号', text: '17601487212', isTextLeft: false, isShowForward: true),
+                onTap: () => showToast(S.of(context).phone),
+                child: SingleTextLayout(icon: Icons.phone_android, title: S.of(context).phone, text: '17601487212', isTextLeft: false, isShowForward: true),
               ),
               TapLayout(
                 height: 50.0,
@@ -102,7 +105,7 @@ class _SettingPageState extends State<SettingPage> {
                 onTap: _selectedTheme,
                 child: SingleTextLayout(
                   icon: Icons.color_lens,
-                  title: '主题',
+                  title: S.of(context).theme,
                   isShowForward: true,
                   suffix: Container(
                     height: 24,
@@ -115,12 +118,12 @@ class _SettingPageState extends State<SettingPage> {
               TapLayout(
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: _selectedTheme,
+                onTap: _selectedLanguage,
                 child: SingleTextLayout(
                   icon: Icons.language,
-                  title: '语言',
+                  title: S.of(context).language,
                   isShowForward: true,
-                  text: '跟随系统',
+                  text: _convertLocale(_locale),
                   isTextLeft: false,
                 ),
               ),
@@ -148,7 +151,7 @@ class _SettingPageState extends State<SettingPage> {
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 onTap: _logout,
-                child: SingleTextLayout(title: '注销', isShowForward: true),
+                child: SingleTextLayout(title: S.of(context).logout, isShowForward: true),
               ),
               TapLayout(
                 height: 50.0,
@@ -160,7 +163,7 @@ class _SettingPageState extends State<SettingPage> {
                     cancel();
                   });
                 },
-                child: SingleTextLayout(title: '退出', isShowForward: true),
+                child: SingleTextLayout(title: S.of(context).exit, isShowForward: true),
               ),
             ],
           ),
@@ -200,7 +203,38 @@ class _SettingPageState extends State<SettingPage> {
           ),
         );
       },
-    ).then((value) => showToast('设置成功'));
+    );
+  }
+
+  void _selectedLanguage() {
+    showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: Text('选择语言'),
+          children: S.supportedLocales.map((value) {
+            return SimpleDialogOption(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              child: Text(_convertLocale(value)),
+              onPressed: () {
+                setState(() => _locale = value);
+                ProviderManager.localModel(context).setLocale(value);
+                Navigator.pop(context);
+              },
+            );
+          }).toList(),
+        );
+      },
+    );
+  }
+
+  String _convertLocale(Locale locale) {
+    if (locale.languageCode == 'zh') {
+      return '简体中文';
+    } else if (locale.languageCode == 'en') {
+      return '美国英语';
+    }
+    return '跟随系统';
   }
 
   void _logout() {

@@ -15,7 +15,7 @@ class _ThemePageState extends State<ThemePage> {
   @override
   void initState() {
     super.initState();
-    _colorKey = LocalModel().themeColor;
+    _colorKey = ProviderManager.localModel(context).theme;
   }
 
   @override

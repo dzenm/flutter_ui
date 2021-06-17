@@ -4,11 +4,13 @@ import 'dart:io';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_ui/base/log/handle_error.dart';
 import 'package:flutter_ui/base/naughty/page/http/http_page.dart';
 import 'package:flutter_ui/base/naughty/page/http/item_page.dart';
 import 'package:flutter_ui/base/res/colors.dart';
 import 'package:flutter_ui/base/res/local_model.dart';
-import 'package:flutter_ui/base/log/handle_error.dart';
+import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/pages/login/login_page.dart';
 import 'package:flutter_ui/pages/main/main_page.dart';
 import 'package:flutter_ui/utils/sp_util.dart';
@@ -69,11 +71,12 @@ class Application {
         ChangeNotifierProvider(create: (context) => MeModel()),
       ],
       // Page必须放在MaterialApp中运行
-      child: Consumer<LocalModel>(builder: (context, res, _) {
-        Map theme = themeColorModel[res.themeColor]!;
+      child: Consumer<LocalModel>(builder: (context, res, widget) {
+        Map theme = themeColorModel[res.theme]!;
         return MaterialApp(
           navigatorKey: navigatorKey,
-          // debugShowCheckedModeBanner: false,
+          debugShowCheckedModeBanner: false,
+          // 设置主题，读取LocalModel的值，改变LocalModel的theme值会通过provider刷新页面
           theme: ThemeData(
             primaryColor: theme['primaryColor'],
             scaffoldBackgroundColor: theme['backgroundColor'],
@@ -82,6 +85,17 @@ class Application {
             ),
             floatingActionButtonTheme: FloatingActionButtonThemeData(backgroundColor: theme['primaryColor']),
           ),
+
+          // 设置语言，读取LocalModel的值，改变LocalModel的locale值会通过provider刷新页面
+          locale: res.locale,
+          localizationsDelegates: [
+            S.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate
+          ],
+          supportedLocales: S.supportedLocales,
+
           // 初始化toast
           routes: {
             HTTP_PAGE_ROUTE: (buildContext) => HttpPage(),
@@ -89,7 +103,6 @@ class Application {
           },
           builder: BotToastInit(),
           navigatorObservers: [BotToastNavigatorObserver()],
-          title: 'Flutter Demo',
           home: WillPopScopeRoute(child),
         );
       }),

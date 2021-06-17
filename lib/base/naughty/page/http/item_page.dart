@@ -87,7 +87,13 @@ class _ItemPageState extends State<ItemPage> with SingleTickerProviderStateMixin
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(child: Text(key, style: TextStyle(fontWeight: FontWeight.bold))),
+        Expanded(
+          child: Text(
+            key,
+            style: TextStyle(fontWeight: FontWeight.bold),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
         SizedBox(width: 16),
         Expanded(
           flex: 2,

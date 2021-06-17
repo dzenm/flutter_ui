@@ -13,6 +13,7 @@ class HttpInterceptor extends Interceptor {
     HttpBean bean = HttpBean();
     bean.status = Status.running;
     bean.duration = DateTime.now().millisecondsSinceEpoch.toString();
+    bean.time = DateFormat("HH:mm:ss SSS").format(DateTime.now());
     map[options] = bean;
     Naughty.instance.data.insert(0, bean);
 
@@ -41,8 +42,7 @@ class HttpInterceptor extends Interceptor {
 
   void _handle(Response? response, HttpBean bean) {
     bean.status = Status.success;
-    bean.duration = (DateTime.now().millisecondsSinceEpoch - int.parse(bean.duration!)).toString();
-    bean.time = DateFormat("HH:mm:ss SSS").format(DateTime.now());
+    bean.duration = '${DateTime.now().millisecondsSinceEpoch - int.parse(bean.duration)} ms';
     bean.size = StrUtil.formatSize(StrUtil.getStringLength(response?.data.toString()));
 
     // request

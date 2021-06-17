@@ -20,6 +20,9 @@ class SpUtil {
   static const String _USER_USER_ID = 'u_user_id';
   static const String _USER_TOKEN = 'u_token';
 
+  static const String _SETTING_THEME = 's_theme';
+  static const String _SETTING_LOCALE = 's_locale';
+
   Future init() async {
     _prefs = await SharedPreferences.getInstance();
     Log.d('SP初始化${_prefs != null ? '成功' : '失败'}');
@@ -88,6 +91,32 @@ class SpUtil {
   static void setToken(String? token) {
     Log.d('setToken=$token', tag: TAG);
     setString(_USER_TOKEN, token);
+  }
+
+  // 获取主题样式
+  static String getTheme() {
+    String theme = getString(_SETTING_THEME);
+    Log.d('getTheme=$theme', tag: TAG);
+    return theme.isEmpty ? 'blue' : theme;
+  }
+
+  // 保存主题样式
+  static void setTheme(String? theme) {
+    Log.d('setTheme=$theme', tag: TAG);
+    setString(_SETTING_THEME, theme);
+  }
+
+  // 获取语言设置
+  static String getLocale() {
+    String locale = getString(_SETTING_LOCALE);
+    Log.d('getLocale=$locale', tag: TAG);
+    return locale.isEmpty ? 'zh' : locale;
+  }
+
+  // 保存语言设置
+  static void setLocale(String? locale) {
+    Log.d('setLocale=$locale', tag: TAG);
+    setString(_SETTING_LOCALE, locale);
   }
 
   static String getString(String key) {

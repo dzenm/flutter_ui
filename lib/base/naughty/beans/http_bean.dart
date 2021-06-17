@@ -1,8 +1,8 @@
 class HttpBean {
-  Status? status;
-  String? duration;
-  String? time;
-  String? size;
+  Status status = Status.prepare;
+  String duration = '0 ms';
+  String time = '';
+  String size = '0 B';
 
   // request
   String? method;
@@ -34,9 +34,9 @@ class HttpBean {
 
   Map<String, dynamic> request() {
     Map<String, dynamic> map = {
-      "Request Method": method,
-      "Request Url": baseUrl,
-      "Request Path": path,
+      "method": method,
+      "baseUrl": baseUrl,
+      "path": path,
     };
 
     requestHeader?.forEach((key, value) => map[key] = value);
@@ -48,18 +48,18 @@ class HttpBean {
 
   Map<String, dynamic> response() {
     Map<String, dynamic> map = {
-      "Status Code": statusCode,
-      "Response Type": responseType,
-      "Response Url": realUrl,
-      "Response Duration": duration,
-      "Content-Length": size,
-      "Max Redirects": maxRedirects,
-      "List Format": listFormat,
-      "Send Timeout": sendTimeout,
-      "Connect Timeout": connectTimeout,
-      "Receive Timeout": receiveTimeout,
-      "Follow Redirects": followRedirects,
-      "Is Redirect": isRedirect,
+      "statusCode": statusCode,
+      "responseType": responseType,
+      "url": realUrl,
+      "duration": duration,
+      "content-length": size,
+      "maxRedirects": maxRedirects,
+      "listFormat": listFormat,
+      "sendTimeout": sendTimeout,
+      "connectTimeout": connectTimeout,
+      "receiveTimeout": receiveTimeout,
+      "followRedirects": followRedirects,
+      "isRedirect": isRedirect,
     };
     responseHeader?.forEach((key, value) => map[key] = value);
     responseExtra?.forEach((key, value) => map[key] = value);

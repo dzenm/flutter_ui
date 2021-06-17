@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/pages/main/me_page/me_router.dart';
 import 'package:flutter_ui/router/common_route.dart';
 import 'package:flutter_ui/router/navigator_manager.dart';
@@ -30,49 +31,49 @@ class _MePageState extends State<MePage> {
   List<Widget> childrenButtons() {
     return [
       MaterialButton(
-        child: text('文本和输入框'),
+        child: text(S.of(context).textAndInput),
         textColor: Colors.white,
         color: Colors.blue,
         onPressed: () => NavigatorManager.push(context, MeRouter.textPage),
       ),
       SizedBox(height: 8),
       MaterialButton(
-        child: text('NavigationBar'),
+        child: text(S.of(context).navigationBar),
         textColor: Colors.white,
         color: Colors.blue,
         onPressed: () => NavigatorManager.push(context, MeRouter.floatNavigator),
       ),
       SizedBox(height: 8),
       MaterialButton(
-        child: text('字符转化'),
+        child: text(S.of(context).charConvert),
         textColor: Colors.white,
         color: Colors.blue,
         onPressed: () => NavigatorManager.push(context, MeRouter.convert),
       ),
       SizedBox(height: 8),
       MaterialButton(
-        child: text('Http请求'),
+        child: text(S.of(context).httpRequest),
         textColor: Colors.white,
         color: Colors.blue,
         onPressed: () => NavigatorManager.push(context, MeRouter.http),
       ),
       SizedBox(height: 8),
       MaterialButton(
-        child: text('未找到对应的页面'),
+        child: text(S.of(context).pageIsNotFound),
         textColor: Colors.white,
         color: Colors.blue,
         onPressed: () => NavigatorManager.push(context, CommonRoute.notFound),
       ),
       SizedBox(height: 8),
       MaterialButton(
-        child: text('列表和刷新'),
+        child: text(S.of(context).listAndRefresh),
         textColor: Colors.white,
         color: Colors.blue,
         onPressed: () => NavigatorManager.push(context, MeRouter.list),
       ),
       SizedBox(height: 8),
       MaterialButton(
-        child: text('设置'),
+        child: text(S.of(context).setting),
         textColor: Colors.white,
         color: Colors.blue,
         onPressed: () => NavigatorManager.push(context, MeRouter.settingPage),
