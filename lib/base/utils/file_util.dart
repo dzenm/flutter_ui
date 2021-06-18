@@ -6,9 +6,9 @@ import 'package:path_provider/path_provider.dart';
 class FileUtil {
   FileUtil._internal();
 
-  static final FileUtil instance = FileUtil._internal();
+  static final FileUtil getInstance = FileUtil._internal();
 
-  factory FileUtil() => instance;
+  factory FileUtil() => getInstance;
 
   /// 此方法返回本地文件地址
   Future<Directory> getParent({String? dir}) async {

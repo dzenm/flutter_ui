@@ -68,7 +68,7 @@ class _ListPageState extends State<ListPage> {
     setState(() => loadingState = LoadingState.loading);
 
     _page = isReset ? 0 : _page;
-    ApiClient.instance.request(
+    ApiClient.getInstance.request(
       apiServices.article(_page.toString()),
       isShowDialog: false,
       success: (data) {

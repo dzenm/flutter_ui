@@ -5,9 +5,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SpUtil {
   SpUtil._internal();
 
-  static final SpUtil _instance = SpUtil._internal();
+  static final SpUtil _getInstance = SpUtil._internal();
 
-  static SpUtil get instance => _instance;
+  static SpUtil get getInstance => _getInstance;
 
   static SharedPreferences? _prefs;
 

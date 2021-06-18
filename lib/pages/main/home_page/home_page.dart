@@ -57,15 +57,20 @@ class _HomePageState extends State<HomePage> {
 
   // 登录按钮点击事件
   void _getBanner() {
-    ApiClient.instance.request(apiServices.banner(), success: (data) {
+    ApiClient.getInstance.request(apiServices.banner(), success: (data) async {
       List<BannerBean?> list = (data as List<dynamic>).map((e) => BannerBean.fromJson(e)).toList();
-      list.map((e) {
-        setState(() {
-          _titles.add(e?.title ?? '');
-          _images.add(e?.imagePath ?? '');
-          _urls.add(e?.url ?? '');
-        });
+      list.forEach((element) async {
+        //   _titles.add(element!.title ?? '');
+        //   _images.add(element.imagePath ?? '');
+        //   _urls.add(element.url ?? '');
+        await BannerBean().insertItem(element!);
       });
+      setState(() {});
+      await BannerBean().queryItems(BannerBean());
+      await BannerBean().deleteItem('id', '29');
+      await BannerBean().queryItems(BannerBean());
+      await BannerBean().deleteItem('id', '20');
+      await BannerBean().queryItems(BannerBean());
     });
   }
 }

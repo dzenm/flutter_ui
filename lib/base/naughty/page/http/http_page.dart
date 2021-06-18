@@ -25,7 +25,7 @@ class _HttpPageState extends State<HttpPage> {
   //列表要展示的数据
   Future getData() async {
     await Future.delayed(Duration(seconds: 0), () {
-      setState(() => list = Naughty.instance.data);
+      setState(() => list = Naughty.getInstance.data);
     });
   }
 

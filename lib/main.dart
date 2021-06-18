@@ -44,7 +44,7 @@ class Application {
 
     RouteManager.registerConfigureRoutes();
 
-    await SpUtil.instance.init();
+    await SpUtil.getInstance.init();
 
     // 设置Android头部的导航栏透明
     if (Platform.isAndroid) {

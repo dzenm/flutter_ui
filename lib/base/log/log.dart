@@ -8,7 +8,7 @@ const String interval = '  ';
 class Log {
   Log._internal();
 
-  static final Log instance = Log._internal();
+  static final Log getInstance = Log._internal();
 
   static const String _TAG = 'Log';
 

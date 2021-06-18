@@ -1,5 +1,8 @@
+import 'package:flutter_ui/db/database/base_db.dart';
+import 'package:flutter_ui/db/database/db_dao.dart';
+
 /// 轮播图
-class BannerBean {
+class BannerBean extends BaseDB with DBDao {
   String? desc;
   int? id;
   String? imagePath;
@@ -9,7 +12,9 @@ class BannerBean {
   int? type;
   String? url;
 
-  BannerBean.fromJson(Map<String, dynamic> json) {
+  BannerBean() : super();
+
+  BannerBean.fromJson(Map<String, dynamic> json) : super.fromJson(json) {
     desc = json['desc'];
     id = json['id'];
     imagePath = json['imagePath'];
@@ -20,6 +25,7 @@ class BannerBean {
     url = json['url'];
   }
 
+  @override
   Map<String, dynamic> toJson() => {
         "desc": desc,
         "id": id,
@@ -30,4 +36,21 @@ class BannerBean {
         "type": type,
         "url": url,
       };
+
+  @override
+  BannerBean fromJson(Map<String, dynamic> json) => BannerBean.fromJson(json);
+
+  @override
+  String columnString() => '''
+    id INTEGER PRIMARY KEY NOT NULL, 
+    "desc" TEXT,
+    imagePath TEXT,
+    isVisible INTEGER,
+    "order" INTEGER,
+    title TEXT,
+    type INTEGER,
+    url TEXT''';
+
+  @override
+  String getTableName() => 't_banner';
 }

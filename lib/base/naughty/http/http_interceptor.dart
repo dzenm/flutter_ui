@@ -15,7 +15,7 @@ class HttpInterceptor extends Interceptor {
     bean.duration = DateTime.now().millisecondsSinceEpoch.toString();
     bean.time = DateFormat("HH:mm:ss SSS").format(DateTime.now());
     map[options] = bean;
-    Naughty.instance.data.insert(0, bean);
+    Naughty.getInstance.data.insert(0, bean);
 
     handler.next(options);
   }

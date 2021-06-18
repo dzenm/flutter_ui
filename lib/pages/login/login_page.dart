@@ -115,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
     if (_isDisableLoginButton) return;
 
     FocusScope.of(context).unfocus();
-    ApiClient.instance.request(apiServices.login(_username, _password), success: (data) {
+    ApiClient.getInstance.request(apiServices.login(_username, _password), success: (data) {
       UserBean bean = UserBean.fromJson(data);
       SpUtil.setIsLogin(true);
       SpUtil.setUsername(bean.username);

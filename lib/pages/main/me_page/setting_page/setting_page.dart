@@ -238,7 +238,7 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   void _logout() {
-    ApiClient.instance.request(apiServices.logout(), success: (data) {
+    ApiClient.getInstance.request(apiServices.logout(), success: (data) {
       SpUtil.setIsLogin(false);
       SpUtil.setUserId(null);
       SpUtil.setToken(null);

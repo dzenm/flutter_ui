@@ -100,7 +100,7 @@ class _HTTPPageState extends State<HTTPPage> {
   }
 
   void _getArticle() {
-    ApiClient.instance.request(apiServices.article('0'), isShowDialog: isShowDialog, isShowToast: isShowToast, success: (data) {
+    ApiClient.getInstance.request(apiServices.article('0'), isShowDialog: isShowDialog, isShowToast: isShowToast, success: (data) {
       setState(() => _text = StrUtil.formatToJson(data));
     });
   }

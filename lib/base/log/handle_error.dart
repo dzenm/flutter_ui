@@ -26,9 +26,9 @@ class HandleError {
   // 私有构造方法
   HandleError._internal();
 
-  static final HandleError instance = HandleError._internal();
+  static final HandleError getInstance = HandleError._internal();
 
-  factory HandleError() => instance;
+  factory HandleError() => getInstance;
 
   static const String crashParent = 'crash';
 
@@ -80,10 +80,10 @@ class HandleError {
       String msg = await _handleErrorConvertText(error, stackTrace);
       // 保存为文件
       fileName = fileName ?? 'crash_${DateTime.now()}.log';
-      await FileUtil.instance.save(fileName!, msg, dir: crashParent).then((value) async {
+      await FileUtil.getInstance.save(fileName!, msg, dir: crashParent).then((value) async {
         if (value) {
           // 处理文件
-          Directory dir = await FileUtil.instance.getParent(dir: crashParent);
+          Directory dir = await FileUtil.getInstance.getParent(dir: crashParent);
           File file = File('${dir.path}/$fileName');
           if (handleMsg != null) {
             handleMsg(file.path);

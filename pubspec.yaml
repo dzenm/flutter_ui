@@ -49,8 +49,15 @@ dependencies:
   path_provider: ^2.0.2
   # 路由管理 https://pub.flutter-io.cn/packages/fluro
   fluro: ^2.0.3
+  # 状态管理 https://pub.dev/packages/provider
+  provider: ^5.0.0
   # 时间格式化 https://pub.dev/packages/intl
   intl: ^0.17.0
+
+  # sq https://pub.dev/packages/sqflite
+  sqflite: ^2.0.0+3
+  # 本地化存储 https://pub.dev/packages/shared_preferences
+  shared_preferences: ^2.0.6
   #  # 网络请求 https://pub.dev/packages/dio#-installing-tab-
   #  dio: ^3.0.1
   #  # 网络请求 https://pub.dev/packages/dio_http_cache#-installing-tab-
@@ -89,16 +96,12 @@ dependencies:
   #  flutter_echarts: ^2.0.0
   #  # 小红点 https://pub.flutter-io.cn/packages/badges
   #  badges: ^1.2.0
-  # sq https://pub.dev/packages/sqflite
-  sqflite: ^2.0.0+3
-  # 本地化存储 https://pub.dev/packages/shared_preferences
-  shared_preferences: ^2.0.6
+
   #  # 二维码生成 https://pub.dev/packages/qr_flutter
   #  qr_flutter: ^4.0.0
   #  # 二维码扫描 https://pub.dev/packages/barcode_scan
   #  barcode_scan: ^3.0.1
-  # 状态管理 https://pub.dev/packages/provider
-  provider: ^5.0.0
+
 #  # 轮播 https://pub.dev/packages/flutter_swiper
 #  flutter_swiper: ^1.1.6
 #  # 轮播 https://pub.flutter-io.cn/packages/carousel_slider

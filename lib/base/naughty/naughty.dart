@@ -8,9 +8,9 @@ import 'package:flutter_ui/base/naughty/page/http/http_page.dart';
 class Naughty {
   Naughty._internal();
 
-  static final Naughty instance = Naughty._internal();
+  static final Naughty getInstance = Naughty._internal();
 
-  factory Naughty() => instance;
+  factory Naughty() => getInstance;
 
   Widget? _child;
   BuildContext? _context;

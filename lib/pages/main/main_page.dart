@@ -23,9 +23,14 @@ class _MainPageState extends State<MainPage> {
   int _itemIndex = 0;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    Naughty.instance.init(context);
-    Future.delayed(Duration(milliseconds: 1000), () => Naughty.instance.show());
+    Naughty.getInstance.init(context);
+    Future.delayed(Duration(milliseconds: 1000), () => Naughty.getInstance.show());
     return Scaffold(
       body: PageView(
         controller: _pageController,

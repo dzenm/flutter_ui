@@ -14,7 +14,7 @@ typedef Success = void Function(dynamic? data);
 
 typedef Failed = void Function(HttpError e);
 
-ApiServices apiServices = ApiClient.instance.apiServices;
+ApiServices apiServices = ApiClient.getInstance.apiServices;
 
 class HttpError {
   int code;
@@ -28,7 +28,7 @@ class ApiClient {
   static const int CONNECT_TIMEOUT = 20000;
   static const int RECEIVE_TIMEOUT = 20000;
 
-  static final ApiClient instance = ApiClient._internal();
+  static final ApiClient getInstance = ApiClient._internal();
 
   late Dio dio;
   late ApiServices apiServices;
