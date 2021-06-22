@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/http/api_client.dart';
+import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/widgets/banner_view.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/beans/banner_bean.dart';
@@ -58,19 +61,16 @@ class _HomePageState extends State<HomePage> {
   // 登录按钮点击事件
   void _getBanner() {
     ApiClient.getInstance.request(apiServices.banner(), success: (data) async {
-      List<BannerBean?> list = (data as List<dynamic>).map((e) => BannerBean.fromJson(e)).toList();
+      BannerBean bean = BannerBean();
+      List<BannerBean?> list = (data as List<dynamic>).map((e) => bean.fromJson(e)).toList();
       list.forEach((element) async {
         //   _titles.add(element!.title ?? '');
         //   _images.add(element.imagePath ?? '');
         //   _urls.add(element.url ?? '');
-        await BannerBean().insertItem(element!);
+        await bean.insertItem(element);
       });
       setState(() {});
-      await BannerBean().queryItems(BannerBean());
-      await BannerBean().deleteItem('id', '29');
-      await BannerBean().queryItems(BannerBean());
-      await BannerBean().deleteItem('id', '20');
-      await BannerBean().queryItems(BannerBean());
+      await bean.queryItems(bean);
     });
   }
 }

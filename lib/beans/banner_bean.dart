@@ -1,5 +1,5 @@
-import 'package:flutter_ui/db/database/base_db.dart';
-import 'package:flutter_ui/db/database/db_dao.dart';
+import 'package:flutter_ui/db/db_model.dart';
+import 'package:flutter_ui/db/db_dao.dart';
 
 /// 轮播图
 class BannerBean extends BaseDB with DBDao {

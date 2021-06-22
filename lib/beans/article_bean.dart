@@ -1,4 +1,7 @@
-class ArticleBean {
+import 'package:flutter_ui/db/db_dao.dart';
+import 'package:flutter_ui/db/db_model.dart';
+
+class ArticleBean extends BaseDB with DBDao {
   String? apkLink;
   int? audit;
   String? author;
@@ -33,6 +36,9 @@ class ArticleBean {
   int? visible;
   int? zan;
 
+  ArticleBean() : super();
+
+  @override
   ArticleBean.fromJson(Map<String, dynamic> json) {
     apkLink = json['apkLink'];
     audit = json['audit'];
@@ -68,6 +74,7 @@ class ArticleBean {
     zan = json['zan'];
   }
 
+  @override
   Map<String, dynamic> toJson() => {
         'apkLink': apkLink,
         'audit': audit,
@@ -102,4 +109,21 @@ class ArticleBean {
         'visible': visible,
         'zan': zan,
       };
+
+  @override
+  ArticleBean fromJson(Map<String, dynamic> json) => ArticleBean.fromJson(json);
+
+  @override
+  String columnString() => '''
+    id INTEGER PRIMARY KEY NOT NULL, 
+    "desc" TEXT,
+    imagePath TEXT,
+    isVisible INTEGER,
+    "order" INTEGER,
+    title TEXT,
+    type INTEGER,
+    url TEXT''';
+
+  @override
+  String getTableName() => 't_article';
 }
