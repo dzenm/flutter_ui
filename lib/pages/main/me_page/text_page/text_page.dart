@@ -61,7 +61,7 @@ class _TextPageState extends State<TextPage> {
                   titleView('无边框带字数控制的输入框: '),
                   SingleEditLayout(
                     '账户',
-                    (value) => setState(() => newText = value),
+                    onChanged: (value) => setState(() => newText = value),
                     controller: _controller,
                     maxLength: 12,
                     fontSize: 14,
@@ -163,7 +163,7 @@ class _TextPageState extends State<TextPage> {
                   TapLayout(
                     height: 60.0,
                     padding: EdgeInsets.symmetric(horizontal: 16),
-                    onTap: () => throw Exception("自定义异常"),
+                    onTap: () => showToast('登录记录'),
                     child: SingleTextLayout(title: '登录记录', summary: '查看最近所有的登录记录', badgeCount: 0, isShowForward: true),
                   ),
                 ],

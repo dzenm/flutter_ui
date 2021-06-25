@@ -29,7 +29,6 @@ class ArticleBean extends BaseDB with DBDao {
   String? shareUser;
   int? superChapterId;
   String? superChapterName;
-  List<dynamic>? tags;
   String? title;
   int? type;
   int? userId;
@@ -42,15 +41,15 @@ class ArticleBean extends BaseDB with DBDao {
   ArticleBean.fromJson(Map<String, dynamic> json) {
     apkLink = json['apkLink'];
     audit = json['audit'];
-    canEdit = json['canEdit'];
+    canEdit = json['canEdit'] == 1;
     chapterId = json['chapterId'];
     chapterName = json['chapterName'];
-    collect = json['collect'];
+    collect = json['collect'] == 1;
     courseId = json['courseId'];
     desc = json['desc'];
     descMd = json['descMd'];
     envelopePic = json['envelopePic'];
-    fresh = json['fresh'];
+    fresh = json['fresh'] == 1;
     host = json['host'];
     id = json['id'];
     link = json['link'];
@@ -66,7 +65,6 @@ class ArticleBean extends BaseDB with DBDao {
     shareUser = json['shareUser'];
     superChapterId = json['superChapterId'];
     superChapterName = json['superChapterName'];
-    tags = json['tags'];
     title = json['title'];
     type = json['type'];
     userId = json['userId'];
@@ -102,7 +100,6 @@ class ArticleBean extends BaseDB with DBDao {
         'shareUser': shareUser,
         'superChapterId': superChapterId,
         'superChapterName': superChapterName,
-        'tags': tags,
         'title': title,
         'type': type,
         'userId': userId,
@@ -116,13 +113,37 @@ class ArticleBean extends BaseDB with DBDao {
   @override
   String columnString() => '''
     id INTEGER PRIMARY KEY NOT NULL, 
+    apkLink TEXT,
+    audit INTEGER,
+    author TEXT,
+    canEdit BIT,
+    chapterId INTEGER,
+    chapterName TEXT,
+    collect BIT,
+    courseId INTEGER,
     "desc" TEXT,
-    imagePath TEXT,
-    isVisible INTEGER,
-    "order" INTEGER,
+    descMd TEXT,
+    envelopePic TEXT,
+    fresh BIT,
+    host TEXT,
+    link TEXT,
+    niceDate TEXT,
+    niceShareDate TEXT,
+    origin TEXT,
+    prefix TEXT,
+    projectLink TEXT,
+    publishTime INTEGER,
+    realSuperChapterId INTEGER,
+    selfVisible INTEGER,
+    shareDate INTEGER,
+    shareUser TEXT,
+    superChapterId INTEGER,
+    superChapterName TEXT,
     title TEXT,
     type INTEGER,
-    url TEXT''';
+    userId INTEGER,
+    visible INTEGER,
+    zan INTEGER''';
 
   @override
   String getTableName() => 't_article';

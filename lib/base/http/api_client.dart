@@ -23,14 +23,13 @@ class HttpError {
   HttpError(this.code, this.msg);
 }
 
-/// HTTP请求封装
+/// HTTP请求
 class ApiClient {
-  static const int CONNECT_TIMEOUT = 20000;
-  static const int RECEIVE_TIMEOUT = 20000;
+  static const int _CONNECT_TIMEOUT = 20000;
+  static const int _RECEIVE_TIMEOUT = 20000;
 
   static final ApiClient getInstance = ApiClient._internal();
 
-  late Dio dio;
   late ApiServices apiServices;
 
   // 构造方法
@@ -44,9 +43,9 @@ class ApiClient {
     baseUrl = baseUrl ?? "https://www.wanandroid.com/";
     token = token ?? '';
 
-    dio = Dio(BaseOptions(
-      connectTimeout: CONNECT_TIMEOUT,
-      receiveTimeout: RECEIVE_TIMEOUT,
+    Dio dio = Dio(BaseOptions(
+      connectTimeout: _CONNECT_TIMEOUT,
+      receiveTimeout: _RECEIVE_TIMEOUT,
       // 不使用http状态码判断状态，使用AdapterInterceptor来处理（适用于标准REST风格）
       validateStatus: (status) => true,
       baseUrl: baseUrl,
@@ -72,7 +71,13 @@ class ApiClient {
   }
 
   // 发起http请求
-  void request(Future future, {Success? success, Failed? failed, bool isShowDialog = true, bool isShowToast = true}) async {
+  void request(
+    Future future, {
+    Success? success,
+    Failed? failed,
+    bool isShowDialog = true,
+    bool isShowToast = true,
+  }) async {
     CancelFunc? cancel = isShowDialog ? loadingDialog() : null;
     try {
       // 没有网络
@@ -194,7 +199,7 @@ class HandleHttpError {
     } else if (error != null) {
       return HttpError(runtime_error_code, runtime_error_msg);
     } else {
-      return HttpError(code, msg);
+      return HttpError(unknown_error_code, unknown_error_msg);
     }
   }
 }

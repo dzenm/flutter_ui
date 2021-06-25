@@ -60,7 +60,7 @@ class Log {
     sb.write((tag.isEmpty) ? sTag : tag);
     sb.write('  ');
     sb.write(message);
-    debugPrint(sb.toString());
+    _printLongMsg(sb.toString());
   }
 
   static void _printLongMsg(dynamic msg) {

@@ -6,6 +6,7 @@ import 'package:flutter_ui/base/http/api_client.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/widgets/banner_view.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
+import 'package:flutter_ui/beans/article_bean.dart';
 import 'package:flutter_ui/beans/banner_bean.dart';
 
 //子页面
@@ -37,7 +38,7 @@ class _HomePageState extends State<HomePage> {
     // images.add("http://n.sinaimg.cn/news/1_img/vcg/2b0c102b/99/w1024h675/20181024/FGXD-hmuuiyw6863401.jpg");
     // images.add("http://n.sinaimg.cn/news/1_img/vcg/2b0c102b/107/w1024h683/20181024/kZj2-hmuuiyw6863420.jpg");
     // images.add("http://n.sinaimg.cn/news/1_img/vcg/2b0c102b/105/w1024h681/20181024/tOiL-hmuuiyw6863462.jpg");
-    _getBanner();
+    _getData();
   }
 
   @override
@@ -58,8 +59,13 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void _getData() async {
+    await _getBanner();
+    await _getArticle('3');
+  }
+
   // 登录按钮点击事件
-  void _getBanner() {
+  Future<void> _getBanner() async {
     ApiClient.getInstance.request(apiServices.banner(), success: (data) async {
       BannerBean bean = BannerBean();
       List<BannerBean?> list = (data as List<dynamic>).map((e) => bean.fromJson(e)).toList();
@@ -69,8 +75,18 @@ class _HomePageState extends State<HomePage> {
         //   _urls.add(element.url ?? '');
         await bean.insertItem(element);
       });
-      setState(() {});
       await bean.queryItems(bean);
+    });
+  }
+
+  Future<void> _getArticle(String number) async {
+    ApiClient.getInstance.request(apiServices.article(number), success: (data) async {
+      ArticleBean bean = ArticleBean();
+      List<ArticleBean?> list = (data["datas"] as List<dynamic>).map((e) => bean.fromJson(e)).toList();
+      list.forEach((element) async {
+        await bean.insertItem(element);
+      });
+      await ArticleBean().queryItems(ArticleBean());
     });
   }
 }

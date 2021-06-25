@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 
 import '../log/log.dart';
 
-/// 网络请求[dio.Interceptor], 网络请求信息输出.
+/// 网络请求[dio.Interceptor], 网络请求信息输出到控制台.
 class LoggerInterceptor extends Interceptor {
   LoggerInterceptor({
     this.request = true,
@@ -134,9 +134,7 @@ class LoggerInterceptor extends Interceptor {
   /// 打印键值对
   void _printKV(String key, Object? val) => _print('$interval$key: $val');
 
-  void _print(String msg) {
-    logPrint((isDecorate && msg.isNotEmpty ? '║$interval' : '') + msg);
-  }
+  void _print(String msg) => logPrint((isDecorate && msg.isNotEmpty ? '║$interval' : '') + msg);
 
   /// 转成json格式字符串
   String convert(String msg) {

@@ -27,6 +27,8 @@ dependencies:
     sdk: flutter
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
+
+  # Toast https://pub.flutter-io.cn/packages/bot_toast
   bot_toast: ^4.0.1
   retrofit: ^2.0.0
   transparent_image: ^0.1.0
@@ -54,53 +56,46 @@ dependencies:
   # 时间格式化 https://pub.dev/packages/intl
   intl: ^0.17.0
 
-  # sq https://pub.dev/packages/sqflite
+  # sql https://pub.dev/packages/sqflite
   sqflite: ^2.0.0+3
   # 本地化存储 https://pub.dev/packages/shared_preferences
   shared_preferences: ^2.0.6
-  #  # 网络请求 https://pub.dev/packages/dio#-installing-tab-
-  #  dio: ^3.0.1
-  #  # 网络请求 https://pub.dev/packages/dio_http_cache#-installing-tab-
-  #  #  dio_http_cache: ^0.2.11
-  #  # 图片缓存 https://pub.flutter-io.cn/packages/cached_network_image
-  #  cached_network_image: ^3.0.0
-  #  # 屏幕参数适配 https://pub.dev/packages/flutter_screenutil
-  #  flutter_screenutil: ^4.0.4+1
-  #  # 处理键盘事件 https://pub.flutter-io.cn/packages/keyboard_actions
-  #  keyboard_actions: ^3.4.0
-  #  # webview https://pub.flutter-io.cn/packages/webview_flutter#-installing-tab-
-  #  webview_flutter: ^2.0.2
-  #  # 弹框 https://pub.dev/packages/fluttertoast#-installing-tab-
-  #  fluttertoast: ^8.0.3
-  #  # 加载框 https://pub.flutter-io.cn/packages/oktoast#-readme-tab-
-  #  oktoast: 3.0.0
-  #
-  #  # 下拉刷新 https://pub.flutter-io.cn/packages/pull_to_refresh
-  #  pull_to_refresh: ^1.6.4
-  #  # 下拉刷新 https://pub.flutter-io.cn/packages/flutter_easyrefresh
-  #  flutter_easyrefresh: 2.1.8
-  #  # 底部弹出 日期选择器 单列多列  https://pub.flutter-io.cn/packages/flutter_picker
-  #  flutter_picker: 2.0.1
-  #  # 时间格式转换 https://pub.dev/packages/date_format
-  #  date_format: 2.0.2
-  #  # 图片手势 https://pub.dev/packages/photo_view
-  #  photo_view: 0.11.1
-  #  # 相机拍照，单图选择 https://pub.flutter-io.cn/packages/image_picker
-  #  image_picker: ^0.7.4
+#  # 网络请求 https://pub.dev/packages/dio_http_cache#-installing-tab-
+#  #  dio_http_cache: ^0.2.11
+#  # 图片缓存 https://pub.flutter-io.cn/packages/cached_network_image
+#  cached_network_image: ^3.0.0
+#  # 屏幕参数适配 https://pub.dev/packages/flutter_screenutil
+#  flutter_screenutil: ^4.0.4+1
+#  # 处理键盘事件 https://pub.flutter-io.cn/packages/keyboard_actions
+#  keyboard_actions: ^3.4.0
+#  # webview https://pub.flutter-io.cn/packages/webview_flutter#-installing-tab-
+#  webview_flutter: ^2.0.2
+#  # 下拉刷新 https://pub.flutter-io.cn/packages/pull_to_refresh
+#  pull_to_refresh: ^1.6.4
+#  # 下拉刷新 https://pub.flutter-io.cn/packages/flutter_easyrefresh
+#  flutter_easyrefresh: 2.1.8
+#  # 底部弹出 日期选择器 单列多列  https://pub.flutter-io.cn/packages/flutter_picker
+#  flutter_picker: 2.0.1
+#  # 时间格式转换 https://pub.dev/packages/date_format
+#  date_format: 2.0.2
+#  # 图片手势 https://pub.dev/packages/photo_view
+#  photo_view: 0.11.1
+#  # 相机拍照，单图选择 https://pub.flutter-io.cn/packages/image_picker
+#  image_picker: ^0.7.4
 
-  #  # 网页打开工具 https://pub.dev/packages/url_launcher#-readme-tab-
-  #  url_launcher: ^6.0.3
-  #  # Flutter 常用工具类库（本地化 屏幕适配） https://pub.flutter-io.cn/packages/flustars
-  #  flustars: ^2.0.1
-  #  # EChart 图表（缩放手势冲突） https://pub.flutter-io.cn/packages/flutter_echarts
-  #  flutter_echarts: ^2.0.0
-  #  # 小红点 https://pub.flutter-io.cn/packages/badges
-  #  badges: ^1.2.0
+#  # 网页打开工具 https://pub.dev/packages/url_launcher#-readme-tab-
+#  url_launcher: ^6.0.3
+#  # Flutter 常用工具类库（本地化 屏幕适配） https://pub.flutter-io.cn/packages/flustars
+#  flustars: ^2.0.1
+#  # EChart 图表（缩放手势冲突） https://pub.flutter-io.cn/packages/flutter_echarts
+#  flutter_echarts: ^2.0.0
+#  # 小红点 https://pub.flutter-io.cn/packages/badges
+#  badges: ^1.2.0
 
-  #  # 二维码生成 https://pub.dev/packages/qr_flutter
-  #  qr_flutter: ^4.0.0
-  #  # 二维码扫描 https://pub.dev/packages/barcode_scan
-  #  barcode_scan: ^3.0.1
+  # 二维码生成 https://pub.dev/packages/qr_flutter
+#  qr_flutter: ^4.0.0
+  # 二维码扫描 https://pub.dev/packages/barcode_scan
+#  barcode_scan: ^3.0.1
 
 #  # 轮播 https://pub.dev/packages/flutter_swiper
 #  flutter_swiper: ^1.1.6

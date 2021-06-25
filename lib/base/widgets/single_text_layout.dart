@@ -151,7 +151,7 @@ class _SingleTextLayoutState extends State<SingleTextLayout> {
   Widget _forwardIcon() {
     return Offstage(
       offstage: !widget.isShowForward,
-      child: Icon(Icons.arrow_forward_ios_rounded, color: widget.forwardColor, size: 12),
+      child: Icon(Icons.keyboard_arrow_right, color: widget.forwardColor, size: 16),
     );
   }
 }

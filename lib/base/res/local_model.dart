@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/utils/sp_util.dart';
 
 class LocalModel with ChangeNotifier {
+
   // 主题设置
   String _theme = SpUtil.getTheme();
 

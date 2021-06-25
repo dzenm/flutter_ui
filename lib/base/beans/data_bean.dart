@@ -13,7 +13,7 @@ class DataBean<T> {
 
   Map<String, dynamic> toJson() => {
         'errorCode': errorCode,
-        'message': errorMsg,
+        'errorMsg': errorMsg,
         'data': data,
       };
 }

@@ -49,6 +49,7 @@ class _SettingPageState extends State<SettingPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TapLayout(
+                isRipple: false,
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 onTap: () => showToast(S.of(context).username),

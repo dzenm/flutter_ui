@@ -32,5 +32,4 @@ abstract class ApiServices {
 
   @GET('banner/json')
   Future<DataBean> banner();
-
 }

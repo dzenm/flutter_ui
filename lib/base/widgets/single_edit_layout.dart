@@ -19,8 +19,8 @@ class SingleEditLayout extends StatefulWidget {
   final double horizontalPadding; // 左右的内边距
 
   SingleEditLayout(
-    this.title,
-    this.onChanged, {
+    this.title, {
+    this.onChanged,
     Key? key,
     this.titleColor,
     this.textColor,
