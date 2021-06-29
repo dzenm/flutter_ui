@@ -1,4 +1,4 @@
-class UserBean {
+class UserEntity {
   bool? admin;
   List<dynamic>? chapterTops;
   int? coinCount;
@@ -13,7 +13,9 @@ class UserBean {
   int? type;
   String? username;
 
-  UserBean.fromJson(Map<String, dynamic> json) {
+  UserEntity();
+
+  UserEntity.fromJson(Map<String, dynamic> json) {
     admin = json['admin'];
     chapterTops = json['chapterTops'];
     coinCount = json['coinCount'];

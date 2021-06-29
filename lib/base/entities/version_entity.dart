@@ -1,12 +1,13 @@
-class VersionBean {
+/// 版本更新的数据对应的实体类
+class VersionEntity {
   String? title;
   String? content;
   String? url;
   String? version;
 
-  VersionBean({this.title, this.content, this.url, this.version});
+  VersionEntity({this.title, this.content, this.url, this.version});
 
-  VersionBean.fromJson(Map<String, dynamic> json) {
+  VersionEntity.fromJson(Map<String, dynamic> json) {
     title = json['title'];
     content = json['content'];
     url = json['url'];

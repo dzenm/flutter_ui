@@ -1,5 +1,5 @@
-import 'package:flutter_ui/db/db_model.dart';
-import 'package:flutter_ui/db/sql_manager.dart';
+import 'package:flutter_ui/base/db/db_model.dart';
+import 'package:flutter_ui/base/db/sql_manager.dart';
 import 'package:sqflite/sqflite.dart';
 
 /// 数据库操作(增删改查), 在model中使用with混入即可。

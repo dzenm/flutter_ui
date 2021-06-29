@@ -16,6 +16,7 @@ class SpUtil {
   static const String _USER_INFO = 'user_info';
 
   static const String _IS_LOGIN = 'is_login';
+  static const String _USER_USER = 'u_user';
   static const String _USER_USERNAME = 'u_username';
   static const String _USER_USER_ID = 'u_user_id';
   static const String _USER_TOKEN = 'u_token';
@@ -29,15 +30,15 @@ class SpUtil {
   }
 
   // 获取用户信息
-  static String getUser() {
+  static String getUserInfo() {
     String user = getString(_USER_INFO);
-    Log.d('getUser=$user', tag: TAG);
+    Log.d('getUserInfo=$user', tag: TAG);
     return user;
   }
 
   // 保存用户信息
-  static void setUser(String? user) {
-    Log.d('setUser=$user', tag: TAG);
+  static void setUserInfo(String? user) {
+    Log.d('setUserInfo=$user', tag: TAG);
     setString(_USER_INFO, user);
   }
 
@@ -54,7 +55,20 @@ class SpUtil {
     setBool(_IS_LOGIN, isLogin);
   }
 
-  // 获取用户名
+  // 获取用户信息
+  static String getUser() {
+    String user = getString(_USER_USER);
+    Log.d('getUser=$user', tag: TAG);
+    return user;
+  }
+
+  // 保存用户信息
+  static void setUser(String? user) {
+    Log.d('setUser=$user', tag: TAG);
+    setString(_USER_USER, user);
+  }
+
+// 获取用户名
   static String getUsername() {
     String username = getString(_USER_USERNAME);
     Log.d('getUsername=$username', tag: TAG);

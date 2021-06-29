@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/utils/str_util.dart';
 import 'package:flutter_ui/base/widgets/common_widget.dart';
-import 'package:flutter_ui/beans/user_bean.dart';
+import 'package:flutter_ui/entities/user_entity.dart';
 import 'package:flutter_ui/utils/sp_util.dart';
 
 class ConvertPage extends StatefulWidget {
@@ -35,8 +35,8 @@ class _ConvertPageState extends State<ConvertPage> {
 
   @override
   Widget build(BuildContext context) {
-    UserBean user = UserBean.fromJson(data);
-    List<UserBean> users = [user, user, user];
+    UserEntity user = UserEntity.fromJson(data);
+    List<UserEntity> users = [user, user, user];
     return Scaffold(
       appBar: AppBar(
         title: Text('字符转化', style: TextStyle(color: Colors.white)),
@@ -53,7 +53,7 @@ class _ConvertPageState extends State<ConvertPage> {
                   color: Colors.blue,
                   textColor: Colors.white,
                   child: Text('存储字符数组到SP'),
-                  onPressed: () => SpUtil.setUser(jsonEncode(users)),
+                  onPressed: () => SpUtil.setUserInfo(jsonEncode(users)),
                 ),
               ]),
               SizedBox(height: 8),
@@ -67,9 +67,9 @@ class _ConvertPageState extends State<ConvertPage> {
                   textColor: Colors.white,
                   child: Text('从SP取出字符数组'),
                   onPressed: () {
-                    String string = SpUtil.getUser();
+                    String string = SpUtil.getUserInfo();
                     if (string.length > 0) {
-                      List<UserBean> list = (jsonDecode(string) as List<dynamic>).map((e) => UserBean.fromJson((e as Map<String, dynamic>))).toList();
+                      List<UserEntity> list = (jsonDecode(string) as List<dynamic>).map((e) => UserEntity.fromJson((e as Map<String, dynamic>))).toList();
                       setState(() {
                         listStr = jsonEncode(list);
                         listToJsonStr = StrUtil.formatToJson(list);

@@ -1,4 +1,4 @@
-class PageBean<T> {
+class PageEntity<T> {
   int? size;
   int? total;
   int? curPage;
@@ -7,7 +7,7 @@ class PageBean<T> {
   int? pageCount;
   List<T?>? datas;
 
-  PageBean.fromJson(Map<String, dynamic> json) {
+  PageEntity.fromJson(Map<String, dynamic> json) {
     size = json['size'];
     total = json['total'];
     curPage = json['curPage'];

@@ -14,7 +14,7 @@ class _ApiServices implements ApiServices {
   String? baseUrl;
 
   @override
-  Future<DataBean<dynamic>> login(username, password) async {
+  Future<DataEntity<dynamic>> login(username, password) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'username': username,
@@ -22,17 +22,17 @@ class _ApiServices implements ApiServices {
     };
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<DataBean<dynamic>>(
+        _setStreamType<DataEntity<dynamic>>(
             Options(method: 'POST', headers: <String, dynamic>{}, extra: _extra)
                 .compose(_dio.options, 'user/login',
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = DataBean<dynamic>.fromJson(_result.data!);
+    final value = DataEntity<dynamic>.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<DataBean<dynamic>> register(username, password, repassword) async {
+  Future<DataEntity<dynamic>> register(username, password, repassword) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'username': username,
@@ -41,57 +41,57 @@ class _ApiServices implements ApiServices {
     };
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<DataBean<dynamic>>(
+        _setStreamType<DataEntity<dynamic>>(
             Options(method: 'POST', headers: <String, dynamic>{}, extra: _extra)
                 .compose(_dio.options, 'user/register',
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = DataBean<dynamic>.fromJson(_result.data!);
+    final value = DataEntity<dynamic>.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<DataBean<dynamic>> logout() async {
+  Future<DataEntity<dynamic>> logout() async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<DataBean<dynamic>>(
+        _setStreamType<DataEntity<dynamic>>(
             Options(method: 'GET', headers: <String, dynamic>{}, extra: _extra)
                 .compose(_dio.options, 'user/logout/json',
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = DataBean<dynamic>.fromJson(_result.data!);
+    final value = DataEntity<dynamic>.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<DataBean<dynamic>> article(pageNumber) async {
+  Future<DataEntity<dynamic>> article(pageNumber) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<DataBean<dynamic>>(
+        _setStreamType<DataEntity<dynamic>>(
             Options(method: 'GET', headers: <String, dynamic>{}, extra: _extra)
                 .compose(_dio.options, 'article/list/$pageNumber/json',
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = DataBean<dynamic>.fromJson(_result.data!);
+    final value = DataEntity<dynamic>.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<DataBean<dynamic>> banner() async {
+  Future<DataEntity<dynamic>> banner() async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<DataBean<dynamic>>(
+        _setStreamType<DataEntity<dynamic>>(
             Options(method: 'GET', headers: <String, dynamic>{}, extra: _extra)
                 .compose(_dio.options, 'banner/json',
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = DataBean<dynamic>.fromJson(_result.data!);
+    final value = DataEntity<dynamic>.fromJson(_result.data!);
     return value;
   }
 

@@ -1,7 +1,6 @@
-import 'package:flutter_ui/db/db_dao.dart';
-import 'package:flutter_ui/db/db_model.dart';
+import 'package:flutter_ui/base/db/db_model.dart';
 
-class ArticleBean extends BaseDB with DBDao {
+class ArticleEntity extends BaseDB {
   String? apkLink;
   int? audit;
   String? author;
@@ -35,10 +34,10 @@ class ArticleBean extends BaseDB with DBDao {
   int? visible;
   int? zan;
 
-  ArticleBean() : super();
+  ArticleEntity() : super();
 
   @override
-  ArticleBean.fromJson(Map<String, dynamic> json) {
+  ArticleEntity.fromJson(Map<String, dynamic> json) {
     apkLink = json['apkLink'];
     audit = json['audit'];
     canEdit = json['canEdit'] == 1;
@@ -108,7 +107,7 @@ class ArticleBean extends BaseDB with DBDao {
       };
 
   @override
-  ArticleBean fromJson(Map<String, dynamic> json) => ArticleBean.fromJson(json);
+  ArticleEntity fromJson(Map<String, dynamic> json) => ArticleEntity.fromJson(json);
 
   @override
   String columnString() => '''

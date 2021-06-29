@@ -3,8 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/http/api_client.dart';
 import 'package:flutter_ui/base/widgets/loading_view.dart';
 import 'package:flutter_ui/base/widgets/refresh_list_view.dart';
-import 'package:flutter_ui/beans/article_bean.dart';
-import 'package:flutter_ui/beans/page_bean.dart';
+import 'package:flutter_ui/entities/article_entity.dart';
+import 'package:flutter_ui/entities/page_entity.dart';
 
 class ListPage extends StatefulWidget {
   @override
@@ -12,7 +12,7 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> {
-  List<ArticleBean?> articleList = [];
+  List<ArticleEntity?> articleList = [];
   int _page = 0; // 加载的页数
   LoadingState loadingState = LoadingState.loading;
   bool isInit = false;
@@ -72,8 +72,8 @@ class _ListPageState extends State<ListPage> {
       apiServices.article(_page.toString()),
       isShowDialog: false,
       success: (data) {
-        PageBean pageBean = PageBean.fromJson(data);
-        List<ArticleBean?> list = (data['datas'] as List<dynamic>).map((e) => ArticleBean.fromJson(e)).toList();
+        PageEntity pageBean = PageEntity.fromJson(data);
+        List<ArticleEntity?> list = (data['datas'] as List<dynamic>).map((e) => ArticleEntity.fromJson(e)).toList();
         setState(() {
           if (_page == pageBean.total) {
             loadingState = LoadingState.complete;

@@ -1,5 +1,8 @@
+
+import 'package:flutter_ui/base/db/db_dao.dart';
+
 /// 数据的基类，数据和实体类的转换，数据库表的信息
-abstract class BaseDB {
+abstract class BaseDB with DBDao {
   BaseDB();
 
   BaseDB.fromJson(Map<String, dynamic> json);

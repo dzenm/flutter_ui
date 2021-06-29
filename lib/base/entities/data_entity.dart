@@ -1,11 +1,12 @@
-class DataBean<T> {
+/// HTTP返回时最外层数据对应的实体类
+class DataEntity<T> {
   int? errorCode;
   String? errorMsg;
   T? data;
 
-  DataBean({this.errorCode = 200, this.errorMsg, this.data});
+  DataEntity({this.errorCode = 200, this.errorMsg, this.data});
 
-  DataBean.fromJson(Map<String, dynamic> json) {
+  DataEntity.fromJson(Map<String, dynamic> json) {
     errorCode = json['errorCode'];
     errorMsg = json['errorMsg'];
     data = json['data'];

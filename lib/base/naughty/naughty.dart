@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/base/naughty/beans/http_bean.dart';
 import 'package:flutter_ui/base/naughty/drag_layout.dart';
+import 'package:flutter_ui/base/naughty/entities/http_entity.dart';
 import 'package:flutter_ui/base/naughty/page/http/http_page.dart';
 
 /// 悬浮窗
@@ -17,7 +17,7 @@ class Naughty {
 
   OverlayEntry? _overlayEntry;
 
-  List<HttpBean> data = [];
+  List<HTTPEntity> data = [];
 
   /// 初始化, 设置子widget
   void init(BuildContext context, {Widget? child}) {
@@ -37,7 +37,6 @@ class Naughty {
               alignment: Alignment.center,
               height: 64.0,
               width: 64.0,
-              child: Text('悬浮窗', style: TextStyle(fontSize: 14)),
               decoration: BoxDecoration(
                 color: Colors.blue, shape: BoxShape.circle, // 可以设置角度，BoxShape.circle 直接圆形
                 boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 8)],
@@ -45,7 +44,7 @@ class Naughty {
             ),
           ),
     );
-    if (_context != null) {
+    if (_context != null && _overlayEntry != null) {
       Overlay.of(_context!)?.insert(_overlayEntry!);
     }
   }

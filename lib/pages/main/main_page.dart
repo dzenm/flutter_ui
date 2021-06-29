@@ -36,7 +36,7 @@ class _MainPageState extends State<MainPage> {
         controller: _pageController,
         physics: NeverScrollableScrollPhysics(),
         onPageChanged: (index) => setState(() => {_itemIndex = index}),
-        children: [HomePage(S.of(context).home), MePage(S.of(context).me)],
+        children: [HomePage(S.of.home), MePage(S.of.me)],
       ),
       bottomNavigationBar: BottomAppBar(
         // shape: CircularNotchedRectangle(),
@@ -44,8 +44,8 @@ class _MainPageState extends State<MainPage> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           mainAxisSize: MainAxisSize.max,
           children: [
-            _bottomAppBarItemView(Icons.home, S.of(context).home, 0, badgeCount: 56),
-            _bottomAppBarItemView(Icons.person, S.of(context).me, 1, badgeCount: 0),
+            _bottomAppBarItemView(Icons.home, S.of.home, 0, badgeCount: 56),
+            _bottomAppBarItemView(Icons.person, S.of.me, 1, badgeCount: 0),
           ],
         ),
       ),

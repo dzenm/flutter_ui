@@ -1,4 +1,4 @@
-class HttpBean {
+class HTTPEntity {
   Status status = Status.prepare;
   String duration = '0 ms';
   String time = '';

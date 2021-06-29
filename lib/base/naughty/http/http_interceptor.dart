@@ -1,16 +1,16 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_ui/base/naughty/beans/http_bean.dart';
+import 'package:flutter_ui/base/naughty/entities/http_entity.dart';
 import 'package:flutter_ui/base/naughty/naughty.dart';
 import 'package:flutter_ui/base/naughty/utils/str_util.dart';
 import 'package:intl/intl.dart';
 
 /// HTTP请求信息拦截
 class HttpInterceptor extends Interceptor {
-  Map<RequestOptions, HttpBean> map = {};
+  Map<RequestOptions, HTTPEntity> map = {};
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
-    HttpBean bean = HttpBean();
+    HTTPEntity bean = HTTPEntity();
     bean.status = Status.running;
     bean.duration = DateTime.now().millisecondsSinceEpoch.toString();
     bean.time = DateFormat("HH:mm:ss SSS").format(DateTime.now());
@@ -22,7 +22,7 @@ class HttpInterceptor extends Interceptor {
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) async {
-    HttpBean? bean = map[response.requestOptions];
+    HTTPEntity? bean = map[response.requestOptions];
     if (bean != null) {
       bean.status = Status.success;
       _handle(response, bean);
@@ -32,7 +32,7 @@ class HttpInterceptor extends Interceptor {
 
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) async {
-    HttpBean? bean = map[err.requestOptions];
+    HTTPEntity? bean = map[err.requestOptions];
     if (bean != null) {
       bean.status = Status.failed;
       _handle(err.response, bean);
@@ -40,7 +40,7 @@ class HttpInterceptor extends Interceptor {
     handler.next(err);
   }
 
-  void _handle(Response? response, HttpBean bean) {
+  void _handle(Response? response, HTTPEntity bean) {
     bean.status = Status.success;
     bean.duration = '${DateTime.now().millisecondsSinceEpoch - int.parse(bean.duration)} ms';
     bean.size = StrUtil.formatSize(StrUtil.getStringLength(response?.data.toString()));

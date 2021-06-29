@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_ui/main.dart';
 
 /// 设置语言包
 class S implements WidgetsLocalizations {
@@ -17,7 +18,9 @@ class S implements WidgetsLocalizations {
     Locale('en'),
   ];
 
-  static S of(BuildContext context) => Localizations.of(context, S);
+  // static S of(BuildContext context) => Localizations.of(context, S);
+
+  static S get of => Localizations.of(Application.getInstance.navigatorKey.currentContext!, S);
 
   @override
   TextDirection get textDirection => TextDirection.ltr;
@@ -26,20 +29,7 @@ class S implements WidgetsLocalizations {
   static Map<String, Map<String, String>> localizedValues = {
     'zh': {
       // 登录注册模块
-      'login': '登录',
-      'register': '注册',
-      'username': '用户名',
-      'phone': '手机号',
-      'email': '邮箱',
-      'password': '密码',
-      'setting': '设置',
-      'theme': '主题',
-      'language': '语言',
-      'logout': '注销',
-      'exit': '退出',
       // 主页模块
-      'home': '首页',
-      'me': '我',
       // 未找到路由模块
       'pageIsNotFound': '页面未找到',
       'pageIsNotFoundPleaseCheckIt': '页面未找到，请检查是否注册',
@@ -49,23 +39,36 @@ class S implements WidgetsLocalizations {
       'charConvert': '字符转化',
       'httpRequest': 'Http请求',
       'listAndRefresh': '列表和刷新',
+      'verifyPhone': '验证手机号',
+      'notificationSwitch': '通知开关',
+      'selectTheme': '选择主题',
+      'selectLanguage': '选择语言',
+      'followSystem': '跟随系统',
+      'loginRecord': '登录记录',
+      'checkUpgrade': '检查更新',
+      // 通用文本
+      'login': '登录',
+      'register': '注册',
+      'username': '用户名',
+      'phone': '手机号',
+      'avatar': '头像',
+      'email': '邮箱',
+      'password': '密码',
+      'setting': '设置',
+      'theme': '主题',
+      'language': '语言',
+      'chinese': '简体中文',
+      'english': '美国英语',
+      'logout': '注销',
+      'exit': '退出',
+      'home': '首页',
+      'me': '我',
+      'loading': '加载中',
+      'unknown': '未知',
     },
     'en': {
       // 登录注册，个人中心，设置模块
-      'login': 'Login',
-      'register': 'Register',
-      'username': 'Username',
-      'phone': 'Phone',
-      'email': 'Email',
-      'password': 'Password',
-      'setting': 'Setting',
-      'theme': 'Theme',
-      'language': 'Language',
-      'logout': 'Logout',
-      'exit': 'Exit',
       // 主页模块
-      'home': 'home',
-      'me': 'me',
       // 未找到路由模块
       'pageIsNotFound': 'Page is not found',
       'pageIsNotFoundPleaseCheckIt': 'Page is not found, please check it',
@@ -75,54 +78,108 @@ class S implements WidgetsLocalizations {
       'charConvert': 'Character Convert',
       'httpRequest': 'Http Request',
       'listAndRefresh': 'List And Refresh',
+      'notificationSwitch': 'Notification Switch',
+      'verifyPhone': 'Verify Phone',
+      'selectTheme': 'Select Theme',
+      'selectLanguage': 'Select Language',
+      'followSystem': 'Follow System',
+      'loginRecord': 'Login Record',
+      'checkUpgrade': 'Check Upgrade',
+      // 通用文本
+      'login': 'Login',
+      'register': 'Register',
+      'username': 'Username',
+      'phone': 'Phone',
+      'avatar': 'Avatar',
+      'email': 'Email',
+      'password': 'Password',
+      'setting': 'Setting',
+      'theme': 'Theme',
+      'language': 'Language',
+      'chinese': 'Chinese',
+      'english': 'English',
+      'logout': 'Logout',
+      'exit': 'Exit',
+      'home': 'Home',
+      'me': 'Me',
+      'loading': 'Loading',
+      'unknown': 'Unknown',
     },
   };
 
-  Map<String, String> get _values => localizedValues[_locale.languageCode]!;
+  Map<String, String> get _getLanguages => localizedValues[_locale.languageCode]!;
+
+  String _getValues(String key) => _getLanguages[key] ?? _getLanguages['unknown']!;
 
   // 登录注册模块
-  String get login => _values['login']!;
-
-  String get register => _values['register']!;
-
-  String get username => _values['username']!;
-
-  String get password => _values['password']!;
-
-  String get phone => _values['phone']!;
-
-  String get email => _values['email']!;
-
-  String get setting => _values['setting']!;
-
-  String get theme => _values['theme']!;
-
-  String get language => _values['language']!;
-
-  String get logout => _values['logout']!;
-
-  String get exit => _values['exit']!;
-
   // 主页模块
-  String get home => _values['home']!;
-
-  String get me => _values['me']!;
 
   // 未找到路由模块
-  String get pageIsNotFound => _values['pageIsNotFoundPleaseCheckIt']!;
+  String get pageIsNotFound => _getValues('pageIsNotFoundPleaseCheckIt');
 
-  String get pageIsNotFoundPleaseCheckIt => _values['pageIsNotFoundPleaseCheckIt']!;
+  String get pageIsNotFoundPleaseCheckIt => _getValues('pageIsNotFoundPleaseCheckIt');
 
   // 其他模块
-  String get textAndInput => _values['textAndInput']!;
+  String get textAndInput => _getValues('textAndInput');
 
-  String get navigationBar => _values['navigationBar']!;
+  String get navigationBar => _getValues('navigationBar');
 
-  String get charConvert => _values['charConvert']!;
+  String get charConvert => _getValues('charConvert');
 
-  String get httpRequest => _values['httpRequest']!;
+  String get httpRequest => _getValues('httpRequest');
 
-  String get listAndRefresh => _values['listAndRefresh']!;
+  String get listAndRefresh => _getValues('listAndRefresh');
+
+  String get notificationSwitch => _getValues('notificationSwitch');
+
+  String get verifyPhone => _getValues('verifyPhone');
+
+  String get selectTheme => _getValues('selectTheme');
+
+  String get selectLanguage => _getValues('selectLanguage');
+
+  String get followSystem => _getValues('followSystem');
+
+  String get loginRecord => _getValues('loginRecord');
+
+  String get checkUpgrade => _getValues('checkUpgrade');
+
+  // 通用文本
+  String get login => _getValues('login');
+
+  String get register => _getValues('register');
+
+  String get username => _getValues('username');
+
+  String get password => _getValues('password');
+
+  String get phone => _getValues('phone');
+
+  String get avatar => _getValues('avatar');
+
+  String get email => _getValues('email');
+
+  String get setting => _getValues('setting');
+
+  String get theme => _getValues('theme');
+
+  String get language => _getValues('language');
+
+  String get chinese => _getValues('chinese');
+
+  String get english => _getValues('english');
+
+  String get logout => _getValues('logout');
+
+  String get exit => _getValues('exit');
+
+  String get home => _getValues('home');
+
+  String get me => _getValues('me');
+
+  String get loading => _getValues('loading');
+
+  String get unknown => _getValues('unknown');
 }
 
 /// 资源加载委托工具

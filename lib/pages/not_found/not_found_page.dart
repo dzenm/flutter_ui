@@ -12,9 +12,9 @@ class _NotFoundPageState extends State<NotFoundPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).pageIsNotFound, style: TextStyle(color: Colors.white)),
+        title: Text(S.of.pageIsNotFound, style: TextStyle(color: Colors.white)),
       ),
-      body: Center(child: Text(S.of(context).pageIsNotFoundPleaseCheckIt)),
+      body: Center(child: Text(S.of.pageIsNotFoundPleaseCheckIt)),
     );
   }
 }

@@ -4,13 +4,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_ui/base/log/log.dart';
 
 class NativeChannels {
-  // 管理返回键操作通道
+  // 管理返回键操作渠道
   static const BACK_TO_DESKTOP_CHANNEL = 'android/channel/backToDesktop';
 
-  // 启动服务通道
+  // 启动服务渠道
   static const START_VIDEO_SERVICE_SERVICE = 'android/channel/startVideoService';
 
-  // 启动HTTPActivity通道
+  // 启动HTTPActivity渠道
   static const START_NAUGHTY_ACTIVITY_CHANNEL = 'android/channel/startNaughtyActivity';
 
   // 点击返回键回退到手机桌面而不是结束当前页面

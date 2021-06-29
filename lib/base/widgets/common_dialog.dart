@@ -1,6 +1,7 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 
 import 'common_widget.dart';
@@ -17,7 +18,7 @@ CancelFunc showToast(String text, {int seconds = 2}) {
 
 /// 加载中对话框
 CancelFunc loadingDialog({String? loadingTxt, bool isVertical = true}) {
-  loadingTxt ??= '加载中';
+  loadingTxt ??= S.of.loading;
   List<Widget> widgets = [
     SizedBox(width: 30, height: 30, child: CircularProgressIndicator(strokeWidth: 2, backgroundColor: Colors.white)),
     SizedBox(width: 20, height: 20),

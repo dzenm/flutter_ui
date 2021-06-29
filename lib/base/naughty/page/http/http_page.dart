@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/base/naughty/beans/http_bean.dart';
+import 'package:flutter_ui/base/naughty/entities/http_entity.dart';
 import 'package:flutter_ui/base/naughty/naughty.dart';
 import 'package:flutter_ui/base/naughty/page/http/item_page.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
@@ -14,7 +14,7 @@ class HttpPage extends StatefulWidget {
 }
 
 class _HttpPageState extends State<HttpPage> {
-  List<HttpBean> list = [];
+  List<HTTPEntity> list = [];
 
   @override
   void initState() {

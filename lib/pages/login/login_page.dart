@@ -1,9 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ui/base/http/api_client.dart';
 import 'package:flutter_ui/base/res/strings.dart';
-import 'package:flutter_ui/beans/user_bean.dart';
+import 'package:flutter_ui/entities/user_entity.dart';
 import 'package:flutter_ui/pages/main/main_route.dart';
 import 'package:flutter_ui/router/navigator_manager.dart';
 import 'package:flutter_ui/utils/sp_util.dart';
@@ -45,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(S.of(context).login, style: TextStyle(color: Colors.white))),
+      appBar: AppBar(title: Text(S.of.login, style: TextStyle(color: Colors.white))),
       body: Padding(padding: EdgeInsets.only(top: 100), child: _body()),
       resizeToAvoidBottomInset: false,
     );
@@ -60,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
           controller: usernameController,
           decoration: InputDecoration(
             icon: Icon(Icons.person),
-            labelText: S.of(context).username,
+            labelText: S.of.username,
             suffixIcon: IconButton(
               splashColor: Colors.transparent,
               icon: Icon(Icons.close),
@@ -76,7 +78,7 @@ class _LoginPageState extends State<LoginPage> {
           controller: passwordController,
           decoration: InputDecoration(
             icon: Icon(Icons.admin_panel_settings),
-            labelText: S.of(context).password,
+            labelText: S.of.password,
             suffixIcon: IconButton(
               splashColor: Colors.transparent,
               icon: Icon(_isShowPwd ? Icons.visibility : Icons.visibility_off, size: 20),
@@ -98,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
               onPressed: _loginPressed,
               elevation: 0,
               highlightElevation: 0,
-              child: Text(S.of(context).login, style: TextStyle(color: Colors.white)),
+              child: Text(S.of.login, style: TextStyle(color: Colors.white)),
             ),
           ),
         ]),
@@ -117,11 +119,12 @@ class _LoginPageState extends State<LoginPage> {
 
     FocusScope.of(context).unfocus();
     ApiClient.getInstance.request(apiServices.login(_username, _password), success: (data) {
-      UserBean bean = UserBean.fromJson(data);
+      UserEntity user = UserEntity.fromJson(data);
       SpUtil.setIsLogin(true);
-      SpUtil.setUsername(bean.username);
-      SpUtil.setUserId(bean.id.toString());
-      SpUtil.setToken(bean.token);
+      SpUtil.setUser(jsonEncode(user));
+      SpUtil.setUsername(user.username);
+      SpUtil.setUserId(user.id.toString());
+      SpUtil.setToken(user.token);
 
       _pushMainPage();
     });

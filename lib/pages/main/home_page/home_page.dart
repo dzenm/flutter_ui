@@ -1,13 +1,11 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/http/api_client.dart';
-import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/widgets/banner_view.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
-import 'package:flutter_ui/beans/article_bean.dart';
-import 'package:flutter_ui/beans/banner_bean.dart';
+import 'package:flutter_ui/entities/article_entity.dart';
+import 'package:flutter_ui/entities/banner_entity.dart';
 
 //子页面
 //代码中设置了一个内部的_title变量，这个变量是从主页面传递过来的，然后根据传递过来的具体值显示在APP的标题栏和屏幕中间。
@@ -67,8 +65,8 @@ class _HomePageState extends State<HomePage> {
   // 登录按钮点击事件
   Future<void> _getBanner() async {
     ApiClient.getInstance.request(apiServices.banner(), success: (data) async {
-      BannerBean bean = BannerBean();
-      List<BannerBean?> list = (data as List<dynamic>).map((e) => bean.fromJson(e)).toList();
+      BannerEntity bean = BannerEntity();
+      List<BannerEntity?> list = (data as List<dynamic>).map((e) => bean.fromJson(e)).toList();
       list.forEach((element) async {
         //   _titles.add(element!.title ?? '');
         //   _images.add(element.imagePath ?? '');
@@ -81,12 +79,12 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _getArticle(String number) async {
     ApiClient.getInstance.request(apiServices.article(number), success: (data) async {
-      ArticleBean bean = ArticleBean();
-      List<ArticleBean?> list = (data["datas"] as List<dynamic>).map((e) => bean.fromJson(e)).toList();
+      ArticleEntity bean = ArticleEntity();
+      List<ArticleEntity?> list = (data["datas"] as List<dynamic>).map((e) => bean.fromJson(e)).toList();
       list.forEach((element) async {
         await bean.insertItem(element);
       });
-      await ArticleBean().queryItems(ArticleBean());
+      await ArticleEntity().queryItems(ArticleEntity());
     });
   }
 }

@@ -1,8 +1,7 @@
-import 'package:flutter_ui/db/db_model.dart';
-import 'package:flutter_ui/db/db_dao.dart';
+import 'package:flutter_ui/base/db/db_model.dart';
 
 /// 轮播图
-class BannerBean extends BaseDB with DBDao {
+class BannerEntity extends BaseDB {
   String? desc;
   int? id;
   String? imagePath;
@@ -12,9 +11,9 @@ class BannerBean extends BaseDB with DBDao {
   int? type;
   String? url;
 
-  BannerBean() : super();
+  BannerEntity() : super();
 
-  BannerBean.fromJson(Map<String, dynamic> json) : super.fromJson(json) {
+  BannerEntity.fromJson(Map<String, dynamic> json) : super.fromJson(json) {
     desc = json['desc'];
     id = json['id'];
     imagePath = json['imagePath'];
@@ -38,7 +37,7 @@ class BannerBean extends BaseDB with DBDao {
       };
 
   @override
-  BannerBean fromJson(Map<String, dynamic> json) => BannerBean.fromJson(json);
+  BannerEntity fromJson(Map<String, dynamic> json) => BannerEntity.fromJson(json);
 
   @override
   String columnString() => '''

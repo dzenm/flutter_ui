@@ -22,15 +22,15 @@ import 'models/home_model.dart';
 import 'models/me_model.dart';
 import 'router/route_manager.dart';
 
-void main() => Application.instance.init();
+void main() => Application.getInstance.init();
 
 class Application {
   // 私有构造方法
   Application._internal();
 
-  static final Application instance = Application._internal();
+  static final Application getInstance = Application._internal();
 
-  factory Application() => instance;
+  factory Application() => getInstance;
 
   // 全局context
   GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
@@ -38,7 +38,7 @@ class Application {
   // 初始化
   Future init() async {
     Log.d('═══════════════════════════════ 开始初始化 ════════════════════════════════════');
-    Log.d('Application是否单例: ${Application.instance == Application()}');
+    Log.d('Application是否单例: ${Application.getInstance == Application()}');
 
     WidgetsFlutterBinding.ensureInitialized();
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/base/naughty/beans/http_bean.dart';
+import 'package:flutter_ui/base/naughty/entities/http_entity.dart';
 import 'package:flutter_ui/base/naughty/utils/str_util.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/common_widget.dart';
@@ -15,7 +15,7 @@ class ItemPage extends StatefulWidget {
 }
 
 class _ItemPageState extends State<ItemPage> with SingleTickerProviderStateMixin {
-  late HttpBean _bean;
+  late HTTPEntity _bean;
   late TabController _tabController;
 
   @override
@@ -26,7 +26,7 @@ class _ItemPageState extends State<ItemPage> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    _bean = ModalRoute.of(context)?.settings.arguments as HttpBean;
+    _bean = ModalRoute.of(context)?.settings.arguments as HTTPEntity;
     return Scaffold(
       appBar: AppBar(
         title: Row(children: [

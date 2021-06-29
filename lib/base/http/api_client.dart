@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_ui/base/entities/data_entity.dart';
 import 'package:flutter_ui/base/naughty/http/http_interceptor.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/http/api_services.dart';
@@ -14,8 +15,9 @@ typedef Success = void Function(dynamic? data);
 
 typedef Failed = void Function(HttpError e);
 
-ApiServices apiServices = ApiClient.getInstance.apiServices;
+ApiServices apiServices = ApiClient.getInstance._apiServices;
 
+/// HTTP请求错误信息的处理
 class HttpError {
   int code;
   String msg;
@@ -30,7 +32,7 @@ class ApiClient {
 
   static final ApiClient getInstance = ApiClient._internal();
 
-  late ApiServices apiServices;
+  late ApiServices _apiServices;
 
   // 构造方法
   ApiClient._internal() {
@@ -67,11 +69,11 @@ class ApiClient {
     // 通过悬浮窗查看Http请求数据
     dio.interceptors.add(HttpInterceptor());
     // dio.interceptors.add(CookieManager(PersistCookieJar()));
-    apiServices = ApiServices(dio, baseUrl: baseUrl);
+    _apiServices = ApiServices(dio, baseUrl: baseUrl);
   }
 
   // 发起http请求
-  void request(
+  Future request(
     Future future, {
     Success? success,
     Failed? failed,

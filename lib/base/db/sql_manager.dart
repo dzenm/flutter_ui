@@ -1,9 +1,10 @@
 import 'package:flutter_ui/base/log/log.dart';
-import 'package:flutter_ui/db/db_model.dart';
 import 'package:flutter_ui/utils/sp_util.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
+
+import 'db_model.dart';
 
 /// 数据库操作管理
 class SqlManager {
@@ -102,18 +103,13 @@ class SqlManager {
   }
 
   /// 删除数据库
-  Future<void> delete() async {
-    await getPath().then((value) async {
-      await deleteDatabase(value).then((value) => Log.d('删除数据库成功', tag: _TAG));
-    });
-  }
+  Future<void> delete() async => await getPath().then((value) async => await deleteDatabase(value).then((value) => Log.d('删除数据库成功', tag: _TAG)));
 
   /// 关闭数据库
   Future<void> close() async {
     // 如果数据库存在，而且数据库没有关闭，先关闭数据库
     if (_database != null && _database!.isOpen) {
-      await _database!.close();
-      _database = null;
+      await _database!.close().then((value) => _database = null);
     }
   }
 
