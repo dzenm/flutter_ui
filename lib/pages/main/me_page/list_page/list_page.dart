@@ -4,7 +4,7 @@ import 'package:flutter_ui/base/http/api_client.dart';
 import 'package:flutter_ui/base/widgets/loading_view.dart';
 import 'package:flutter_ui/base/widgets/refresh_list_view.dart';
 import 'package:flutter_ui/entities/article_entity.dart';
-import 'package:flutter_ui/entities/page_entity.dart';
+import 'package:flutter_ui/base/entities/page_entity.dart';
 
 class ListPage extends StatefulWidget {
   @override
@@ -72,10 +72,10 @@ class _ListPageState extends State<ListPage> {
       apiServices.article(_page.toString()),
       isShowDialog: false,
       success: (data) {
-        PageEntity pageBean = PageEntity.fromJson(data);
+        PageEntity pageEntity = PageEntity.fromJson(data);
         List<ArticleEntity?> list = (data['datas'] as List<dynamic>).map((e) => ArticleEntity.fromJson(e)).toList();
         setState(() {
-          if (_page == pageBean.total) {
+          if (_page == pageEntity.total) {
             loadingState = LoadingState.complete;
             return;
           } else {

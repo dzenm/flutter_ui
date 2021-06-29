@@ -5,22 +5,30 @@ import 'package:sqflite/sqflite.dart';
 /// 数据库操作(增删改查), 在model中使用with混入即可。
 class DBDao {
   Future<void> insertItem<T extends BaseDB>(
-    T? data, {
+    dynamic data, {
     ConflictAlgorithm? conflictAlgorithm,
   }) async {
     if (data == null) return;
-    return SqlManager().insertItem(
-      data,
-      conflictAlgorithm: conflictAlgorithm,
-    );
+
+    if (data is List) {
+      data.forEach((element) async => await SqlManager().insertItem(
+            element as T,
+            conflictAlgorithm: conflictAlgorithm,
+          ));
+    } else if (data is T) {
+      await SqlManager().insertItem(
+        data,
+        conflictAlgorithm: conflictAlgorithm,
+      );
+    }
   }
 
-  Future<void> deleteItem<T extends BaseDB>(
+  Future<int> deleteItem<T extends BaseDB>(
     T? data, {
     String? key,
     String? value,
   }) async {
-    if (data == null) return;
+    if (data == null) return 0;
     return SqlManager().deleteItem(
       data,
       key: key,
@@ -28,13 +36,13 @@ class DBDao {
     );
   }
 
-  Future<void> updateItem<T extends BaseDB>(
+  Future<int> updateItem<T extends BaseDB>(
     T? data,
     String key,
     String value, {
     ConflictAlgorithm? conflictAlgorithm,
   }) async {
-    if (data == null) return;
+    if (data == null) return 0;
     return SqlManager().updateItem(
       data,
       key,
@@ -43,16 +51,14 @@ class DBDao {
     );
   }
 
-  Future<List<BaseDB>> queryItems<T extends BaseDB>(
+  Future<List<BaseDB>> queryItem<T extends BaseDB>(
     T? data, {
-    String? key,
-    String? value,
+    Map<String, String>? where,
   }) async {
     if (data == null) return [];
-    return SqlManager().queryItems(
+    return SqlManager().queryItem(
       data,
-      key: key,
-      value: value,
+      where: where,
     );
   }
 }

@@ -21,7 +21,13 @@ class DragLayout extends StatefulWidget {
 }
 
 class _DragLayoutState extends State<DragLayout> {
-  Offset realPosition = Offset(0, kToolbarHeight); // 当前悬浮窗的位置
+  // 当前悬浮窗的位置
+  Offset realPosition = Offset(0, kToolbarHeight + 64);
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   Offset _dragWidget(Offset lastPosition, Offset offset) {
     double statusBarHeight = MediaQueryData.fromWindow(window).padding.top;

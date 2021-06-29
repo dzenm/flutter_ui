@@ -28,6 +28,10 @@ class Naughty {
   /// 显示悬浮窗
   void show() {
     dismiss();
+    Future.delayed(Duration(milliseconds: 100), _create);
+  }
+
+  Future _create() async {
     _overlayEntry = OverlayEntry(
       builder: (BuildContext context) =>
           _child ??

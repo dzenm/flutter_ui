@@ -150,7 +150,7 @@ class SqlManager {
   }
 
   // 插入数据
-  Future<void> insertItem<T extends BaseDB>(
+  Future<int> insertItem<T extends BaseDB>(
     T data, {
     ConflictAlgorithm? conflictAlgorithm,
   }) async {
@@ -158,17 +158,18 @@ class SqlManager {
     await checkTable(db, data);
     String tableName = data.getTableName();
 
-    await db
-        .insert(
-          tableName,
-          data.toJson(),
-          conflictAlgorithm: conflictAlgorithm ?? ConflictAlgorithm.replace,
-        )
-        .then((val) => Log.d('表 $tableName 新增1条数据: ${data.toJson()}', tag: _TAG));
+    int id = 0;
+    id = await db.insert(
+      tableName,
+      data.toJson(),
+      conflictAlgorithm: conflictAlgorithm ?? ConflictAlgorithm.replace,
+    );
+    Log.d('表$tableName新增 id=$id 数据: ${data.toJson()}', tag: _TAG);
+    return id;
   }
 
   /// 删除数据，当key和value存在时，删除对应表中的数据，当key和value不存在时，删除该表
-  Future<void> deleteItem<T extends BaseDB>(
+  Future<int> deleteItem<T extends BaseDB>(
     T data, {
     String? key,
     String? value,
@@ -179,19 +180,22 @@ class SqlManager {
 
     key = key ?? '';
     value = value ?? '';
+    int count = 0;
     if (key.isEmpty || value.isEmpty) {
-      await db.delete(tableName).then((val) => Log.d('表 $tableName 删除数据$val条', tag: _TAG));
+      count = await db.delete(tableName);
     } else {
-      await db.delete(
+      count = await db.delete(
         tableName,
         where: '$key = ?',
         whereArgs: [value],
-      ).then((val) => Log.d('表 $tableName 删除 $key=$value 数据$val条', tag: _TAG));
+      );
+      Log.d('表$tableName删除 key=$key, value=$value 数据$count条', tag: _TAG);
     }
+    return count;
   }
 
   /// 更新数据，更新对应key和value表中的数据
-  Future<void> updateItem<T extends BaseDB>(
+  Future<int> updateItem<T extends BaseDB>(
     T data,
     String key,
     String value, {
@@ -201,23 +205,23 @@ class SqlManager {
     await checkTable(db, data);
     String tableName = data.getTableName();
 
+    int count = 0;
     // 更新数据
-    await db
-        .update(
-          tableName,
-          data.toJson(),
-          where: '$key = ?',
-          whereArgs: [value],
-          conflictAlgorithm: conflictAlgorithm ?? ConflictAlgorithm.replace,
-        )
-        .then((val) => Log.d('表 $tableName 更新 $key=$value 数据$val条', tag: _TAG));
+    count = await db.update(
+      tableName,
+      data.toJson(),
+      where: '$key = ?',
+      whereArgs: [value],
+      conflictAlgorithm: conflictAlgorithm ?? ConflictAlgorithm.replace,
+    );
+    Log.d('表$tableName更新 key=$key, value=$value 数据$count条', tag: _TAG);
+    return count;
   }
 
   // 查询数据，当key和value存在时，查询对应表中的数据，当key和value不存在时，查询对应表中所有数据
-  Future<List<BaseDB>> queryItems<T extends BaseDB>(
+  Future<List<BaseDB>> queryItem<T extends BaseDB>(
     T data, {
-    String? key,
-    String? value,
+    Map<String, String>? where,
   }) async {
     Database db = await open();
     await checkTable(db, data);
@@ -225,18 +229,26 @@ class SqlManager {
 
     List<Map<String, dynamic>> list = [];
 
-    key = key ?? '';
-    value = value ?? '';
-    if (key.isEmpty || value.isEmpty) {
-      list = await db.query(tableName);
-      Log.d('表 $tableName 查询${list.length}条数据: $list', tag: _TAG);
-    } else {
+    if (where != null) {
+      StringBuffer queryParams = StringBuffer();
+      StringBuffer wheres = StringBuffer();
+      List whereArgs = [];
+      where.forEach((key, value) {
+        if (wheres.isNotEmpty) wheres.write(',');
+        wheres.write('$key = ?');
+        whereArgs.add(value);
+        queryParams.write('key=$key, value=$value');
+      });
+
       list = await db.query(
         tableName,
-        where: '$key = ?',
-        whereArgs: [value],
+        where: wheres.toString(),
+        whereArgs: whereArgs,
       );
-      Log.d('表 $tableName 查询 $key=$value 数据${list.length}条$list: $list', tag: _TAG);
+      Log.d('表$tableName查询 ${queryParams.toString()} 数据${list.length}条: $list', tag: _TAG);
+    } else {
+      list = await db.query(tableName);
+      Log.d('表$tableName查询数据 ${list.length} 条: $list', tag: _TAG);
     }
 
     // map转换为List集合

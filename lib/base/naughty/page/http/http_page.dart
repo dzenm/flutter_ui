@@ -19,6 +19,7 @@ class _HttpPageState extends State<HttpPage> {
   @override
   void initState() {
     super.initState();
+    Naughty.getInstance.dismiss();
     getData();
   }
 
@@ -27,6 +28,12 @@ class _HttpPageState extends State<HttpPage> {
     await Future.delayed(Duration(seconds: 0), () {
       setState(() => list = Naughty.getInstance.data);
     });
+  }
+
+  @override
+  void dispose() {
+    Naughty.getInstance.show();
+    super.dispose();
   }
 
   @override

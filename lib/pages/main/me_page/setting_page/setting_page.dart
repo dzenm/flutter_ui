@@ -250,6 +250,7 @@ class _SettingPageState extends State<SettingPage> {
       SpUtil.setIsLogin(false);
       SpUtil.setUserId(null);
       SpUtil.setToken(null);
+      SpUtil.setUser(null);
 
       NavigatorManager.push(context, LoginRoute.login, clearStack: true);
     });

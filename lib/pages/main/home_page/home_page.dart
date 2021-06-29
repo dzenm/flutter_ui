@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/http/api_client.dart';
@@ -59,7 +58,7 @@ class _HomePageState extends State<HomePage> {
 
   void _getData() async {
     await _getBanner();
-    await _getArticle('3');
+    await _getArticle('1');
   }
 
   // 登录按钮点击事件
@@ -71,9 +70,9 @@ class _HomePageState extends State<HomePage> {
         //   _titles.add(element!.title ?? '');
         //   _images.add(element.imagePath ?? '');
         //   _urls.add(element.url ?? '');
-        await bean.insertItem(element);
       });
-      await bean.queryItems(bean);
+      await bean.insertItem(list);
+      await bean.queryItem(bean);
     });
   }
 
@@ -81,10 +80,8 @@ class _HomePageState extends State<HomePage> {
     ApiClient.getInstance.request(apiServices.article(number), success: (data) async {
       ArticleEntity bean = ArticleEntity();
       List<ArticleEntity?> list = (data["datas"] as List<dynamic>).map((e) => bean.fromJson(e)).toList();
-      list.forEach((element) async {
-        await bean.insertItem(element);
-      });
-      await ArticleEntity().queryItems(ArticleEntity());
+      await bean.insertItem(list);
+      await bean.queryItem(bean, where: {'chapterName': '鸿洋'});
     });
   }
 }
