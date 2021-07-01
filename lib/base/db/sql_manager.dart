@@ -1,10 +1,10 @@
+import 'package:flutter_ui/base/entities/column_entity.dart';
+import 'package:flutter_ui/base/entities/table_entity.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/utils/sp_util.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
-
-import 'db_model.dart';
 
 /// 数据库操作管理
 class SqlManager {
@@ -21,10 +21,10 @@ class SqlManager {
   factory SqlManager() => getInstance;
 
   /// 获取当前数据库对象
-  Future<Database> open() async {
+  Future<Database> getDatabase({String? dbName}) async {
     if (_database == null) {
       Log.d('获取当前数据库对象', tag: _TAG);
-      String databasesPath = await getPath();
+      String databasesPath = await getPath(dbName: dbName);
       _database = await openDatabase(databasesPath, version: _VERSION, onCreate: _onCreate, onUpgrade: _onUpgrade);
     }
     return _database!;
@@ -119,18 +119,26 @@ class SqlManager {
   }
 
   /// 获取数据库的路径
-  Future<String> getPath() async {
+  Future<String> getPath({String? dbName}) async {
     String databasesPath = await getDatabasesPath();
-    String dbName = getDBName();
+    dbName = dbName ?? getDBName();
     Log.d('数据库路径=$databasesPath, 数据库名称=$dbName', tag: _TAG);
     return join(databasesPath, dbName);
   }
 
   /// 判断表是否存在
-  Future<bool> isTableExist(String tableName) async {
-    Database db = await open();
-    List list = await db.rawQuery("SELECT * FROM Sqlite_master WHERE TYPE = 'table' AND NAME = '$tableName'");
+  Future<bool> isTableExist(String tableName, {String? dbName}) async {
+    Database db = await getDatabase(dbName: dbName);
+    List list = await db.rawQuery("SELECT * FROM Sqlite_master WHERE TYPE='table' AND NAME='$tableName'");
     return list.length > 0;
+  }
+
+  /// 获取数据中所有表的数据
+  Future<List<TableEntity>> getTableList({String? dbName}) async {
+    Database db = await getDatabase(dbName: dbName);
+    List<dynamic> list = await db.rawQuery("SELECT * FROM sqlite_master WHERE TYPE='table'");
+    Log.d('查询所有表: $list');
+    return list.map((element) => TableEntity.fromJson(element)).toList();
   }
 
   /// 创建新表
@@ -140,43 +148,46 @@ class SqlManager {
   }
 
   /// 如果表不存在，进行创建表
-  Future<void> checkTable(Database db, BaseDB data) async {
-    String tableName = data.getTableName();
+  Future<void> checkTable(String tableName, String columnString) async {
     bool isTableExist = await SqlManager().isTableExist(tableName);
     if (!isTableExist) {
-      String columnString = data.columnString();
-      await _createTable(db, tableName, columnString);
+      await _createTable(_database!, tableName, columnString);
     }
   }
 
+  /// 获取数据库中表的所有列结构的数据
+  Future<List<ColumnEntity>> getTableColumn(String dbName, String tableName) async {
+    Database db = await getDatabase(dbName: dbName);
+    List list = await db.rawQuery('PRAGMA table_info($tableName)');
+    Log.d('查询表列名: $list');
+    return list.map((e) => ColumnEntity.fromJson(e)).toList();
+  }
+
   // 插入数据
-  Future<int> insertItem<T extends BaseDB>(
-    T data, {
+  Future<int> insertItem(
+    String tableName,
+    Map<String, dynamic> values, {
     ConflictAlgorithm? conflictAlgorithm,
   }) async {
-    Database db = await open();
-    await checkTable(db, data);
-    String tableName = data.getTableName();
+    Database db = await getDatabase();
 
     int id = 0;
     id = await db.insert(
       tableName,
-      data.toJson(),
+      values,
       conflictAlgorithm: conflictAlgorithm ?? ConflictAlgorithm.replace,
     );
-    Log.d('表$tableName新增 id=$id 数据: ${data.toJson()}', tag: _TAG);
+    Log.d('表$tableName新增 id=$id 数据: $values', tag: _TAG);
     return id;
   }
 
   /// 删除数据，当key和value存在时，删除对应表中的数据，当key和value不存在时，删除该表
-  Future<int> deleteItem<T extends BaseDB>(
-    T data, {
+  Future<int> deleteItem(
+    String tableName, {
     String? key,
     String? value,
   }) async {
-    Database db = await open();
-    await checkTable(db, data);
-    String tableName = data.getTableName();
+    Database db = await getDatabase();
 
     key = key ?? '';
     value = value ?? '';
@@ -195,21 +206,20 @@ class SqlManager {
   }
 
   /// 更新数据，更新对应key和value表中的数据
-  Future<int> updateItem<T extends BaseDB>(
-    T data,
+  Future<int> updateItem(
+    String tableName,
+    Map<String, dynamic> values,
     String key,
     String value, {
     ConflictAlgorithm? conflictAlgorithm,
   }) async {
-    Database db = await open();
-    await checkTable(db, data);
-    String tableName = data.getTableName();
+    Database db = await getDatabase();
 
     int count = 0;
     // 更新数据
     count = await db.update(
       tableName,
-      data.toJson(),
+      values,
       where: '$key = ?',
       whereArgs: [value],
       conflictAlgorithm: conflictAlgorithm ?? ConflictAlgorithm.replace,
@@ -219,13 +229,11 @@ class SqlManager {
   }
 
   // 查询数据，当key和value存在时，查询对应表中的数据，当key和value不存在时，查询对应表中所有数据
-  Future<List<BaseDB>> queryItem<T extends BaseDB>(
-    T data, {
+  Future<List<Map<String, dynamic>>> queryItem(
+    String tableName, {
     Map<String, String>? where,
   }) async {
-    Database db = await open();
-    await checkTable(db, data);
-    String tableName = data.getTableName();
+    Database db = await getDatabase();
 
     List<Map<String, dynamic>> list = [];
 
@@ -252,6 +260,6 @@ class SqlManager {
     }
 
     // map转换为List集合
-    return List.generate(list.length, (i) => data.fromJson(list[i]));
+    return list;
   }
 }

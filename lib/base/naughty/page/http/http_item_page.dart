@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/naughty/entities/http_entity.dart';
-import 'package:flutter_ui/base/naughty/utils/str_util.dart';
+import 'package:flutter_ui/base/utils/str_util.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/common_widget.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 
-const String ITEM_PAGE_ROUTE = 'naughty/httpPage/itemPage';
-
 /// 一个Http请求数据展示页面
-class ItemPage extends StatefulWidget {
+class HTTPItemPage extends StatefulWidget {
+  final HTTPEntity entity;
+
+  HTTPItemPage(
+    this.entity,
+  );
+
   @override
-  State<StatefulWidget> createState() => _ItemPageState();
+  State<StatefulWidget> createState() => _HTTPItemPageState();
 }
 
-class _ItemPageState extends State<ItemPage> with SingleTickerProviderStateMixin {
-  late HTTPEntity _bean;
+class _HTTPItemPageState extends State<HTTPItemPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -26,13 +29,12 @@ class _ItemPageState extends State<ItemPage> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    _bean = ModalRoute.of(context)?.settings.arguments as HTTPEntity;
     return Scaffold(
       appBar: AppBar(
         title: Row(children: [
-          Text(_bean.method ?? ''),
+          Text(widget.entity.method ?? ''),
           SizedBox(width: 8),
-          Expanded(child: Text(_bean.path ?? '', maxLines: 1, overflow: TextOverflow.ellipsis)),
+          Expanded(child: Text(widget.entity.path ?? '', maxLines: 1, overflow: TextOverflow.ellipsis)),
         ]),
         bottom: TabBar(
           controller: _tabController,
@@ -45,8 +47,8 @@ class _ItemPageState extends State<ItemPage> with SingleTickerProviderStateMixin
       body: TabBarView(
         controller: _tabController,
         children: [
-          SingleChildScrollView(child: _listView(_bean.response())),
-          SingleChildScrollView(child: _listView(_bean.request())),
+          SingleChildScrollView(child: _listView(widget.entity.response())),
+          SingleChildScrollView(child: _listView(widget.entity.request())),
         ],
       ),
     );

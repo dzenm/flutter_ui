@@ -9,15 +9,18 @@ class DBDao {
     ConflictAlgorithm? conflictAlgorithm,
   }) async {
     if (data == null) return;
-
     if (data is List) {
+      await SqlManager.getInstance.checkTable(data[0].getTableName(), data[0].columnString());
       data.forEach((element) async => await SqlManager().insertItem(
-            element as T,
+            element.getTableName(),
+            element.toJson(),
             conflictAlgorithm: conflictAlgorithm,
           ));
     } else if (data is T) {
+      await SqlManager.getInstance.checkTable(data.getTableName(), data.columnString());
       await SqlManager().insertItem(
-        data,
+        data.getTableName(),
+        data.toJson(),
         conflictAlgorithm: conflictAlgorithm,
       );
     }
@@ -29,8 +32,9 @@ class DBDao {
     String? value,
   }) async {
     if (data == null) return 0;
+    await SqlManager.getInstance.checkTable(data.getTableName(), data.columnString());
     return SqlManager().deleteItem(
-      data,
+      data.getTableName(),
       key: key,
       value: value,
     );
@@ -43,8 +47,10 @@ class DBDao {
     ConflictAlgorithm? conflictAlgorithm,
   }) async {
     if (data == null) return 0;
+    await SqlManager.getInstance.checkTable(data.getTableName(), data.columnString());
     return SqlManager().updateItem(
-      data,
+      data.getTableName(),
+      data.toJson(),
       key,
       value,
       conflictAlgorithm: conflictAlgorithm,
@@ -56,9 +62,12 @@ class DBDao {
     Map<String, String>? where,
   }) async {
     if (data == null) return [];
-    return SqlManager().queryItem(
-      data,
-      where: where,
-    );
+    await SqlManager.getInstance.checkTable(data.getTableName(), data.columnString());
+    return SqlManager()
+        .queryItem(
+          data.getTableName(),
+          where: where,
+        )
+        .then((value) => value.map((e) => data.fromJson(e)).toList());
   }
 }

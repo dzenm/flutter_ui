@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_ui/base/log/handle_error.dart';
-import 'package:flutter_ui/base/naughty/page/http/http_page.dart';
-import 'package:flutter_ui/base/naughty/page/http/item_page.dart';
+import 'package:flutter_ui/base/naughty/page/db/db_list_page.dart';
+import 'package:flutter_ui/base/naughty/page/http/http_list_page.dart';
+import 'package:flutter_ui/base/naughty/page/http/http_item_page.dart';
 import 'package:flutter_ui/base/res/colors.dart';
 import 'package:flutter_ui/base/res/local_model.dart';
 import 'package:flutter_ui/base/res/strings.dart';
@@ -95,12 +96,6 @@ class Application {
             GlobalCupertinoLocalizations.delegate
           ],
           supportedLocales: S.supportedLocales,
-
-          // 初始化toast
-          routes: {
-            HTTP_PAGE_ROUTE: (buildContext) => HttpPage(),
-            ITEM_PAGE_ROUTE: (buildContext) => ItemPage(),
-          },
           builder: BotToastInit(),
           navigatorObservers: [BotToastNavigatorObserver()],
           home: WillPopScopeRoute(child),

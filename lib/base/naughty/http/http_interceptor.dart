@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_ui/base/naughty/entities/http_entity.dart';
 import 'package:flutter_ui/base/naughty/naughty.dart';
-import 'package:flutter_ui/base/naughty/utils/str_util.dart';
+import 'package:flutter_ui/base/utils/str_util.dart';
 import 'package:intl/intl.dart';
 
 /// HTTP请求信息拦截

@@ -2,19 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/naughty/entities/http_entity.dart';
 import 'package:flutter_ui/base/naughty/naughty.dart';
-import 'package:flutter_ui/base/naughty/page/http/item_page.dart';
+import 'package:flutter_ui/base/naughty/page/db/db_list_page.dart';
+import 'package:flutter_ui/base/naughty/page/http/http_item_page.dart';
+import 'package:flutter_ui/base/widgets/menu_Item.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 
-const String HTTP_PAGE_ROUTE = 'naughty/httpPage';
-
 /// naughty 主页
-class HttpPage extends StatefulWidget {
+class HTTPListPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _HttpPageState();
+  State<StatefulWidget> createState() => _HTTPListPageState();
 }
 
-class _HttpPageState extends State<HttpPage> {
-  List<HTTPEntity> list = [];
+class _HTTPListPageState extends State<HTTPListPage> {
+  List<HTTPEntity> _list = [];
+  List<Item> _items = [
+    Item(0, title: 'Database'),
+    Item(1, title: 'SharedPreference'),
+    Item(2, title: 'Setting'),
+    Item(3, title: 'Clear'),
+    Item(4, title: 'Quit'),
+  ];
 
   @override
   void initState() {
@@ -26,7 +33,7 @@ class _HttpPageState extends State<HttpPage> {
   //列表要展示的数据
   Future getData() async {
     await Future.delayed(Duration(seconds: 0), () {
-      setState(() => list = Naughty.getInstance.data);
+      setState(() => _list = Naughty.getInstance.data);
     });
   }
 
@@ -39,13 +46,28 @@ class _HttpPageState extends State<HttpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Debug Mode')),
+      appBar: AppBar(
+        title: Text('Debug Mode'),
+        actions: [
+          PopupMenuButton<Item>(
+            elevation: 4.0,
+            onSelected: (Item item) {
+              if (item.index == 0) {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => DBListPage()));
+              }
+            },
+            itemBuilder: (BuildContext context) {
+              return _items.map((value) => PopupMenuItem<Item>(value: value, child: Text(value.title ?? ''))).toList();
+            },
+          )
+        ],
+      ),
       body: RefreshIndicator(
         onRefresh: _onRefresh,
         child: ListView.builder(
           shrinkWrap: true,
           itemBuilder: _renderRow,
-          itemCount: list.length,
+          itemCount: _list.length,
         ),
       ),
     );
@@ -56,7 +78,7 @@ class _HttpPageState extends State<HttpPage> {
     return ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(8.0)),
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+        margin: EdgeInsets.all(8.0),
         decoration: BoxDecoration(
           color: Colors.white,
           shape: BoxShape.rectangle,
@@ -72,7 +94,7 @@ class _HttpPageState extends State<HttpPage> {
         ),
         child: TapLayout(
           borderRadius: BorderRadius.all(Radius.circular(7)),
-          onTap: () => Navigator.of(context).pushNamed(ITEM_PAGE_ROUTE, arguments: list[index]),
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => HTTPItemPage(_list[index]))),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -106,11 +128,11 @@ class _HttpPageState extends State<HttpPage> {
 
   // 请求状态
   Widget _statusView(int index) {
-    String text = list[index].status == Status.running
+    String text = _list[index].status == Status.running
         ? 'Running'
-        : list[index].status == Status.success
+        : _list[index].status == Status.success
             ? 'Success'
-            : list[index].status == Status.failed
+            : _list[index].status == Status.failed
                 ? 'Failed'
                 : 'None';
     return Container(
@@ -127,7 +149,7 @@ class _HttpPageState extends State<HttpPage> {
   // 请求状态码布局
   Widget _statusCodeView(int index) {
     return Text(
-      list[index].statusCode.toString(),
+      _list[index].statusCode.toString(),
       style: TextStyle(fontWeight: FontWeight.bold, color: _stateColor(index)),
     );
   }
@@ -136,36 +158,36 @@ class _HttpPageState extends State<HttpPage> {
   Widget _methodView(int index) {
     return Row(children: [
       Text(
-        list[index].method ?? '',
+        _list[index].method ?? '',
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
       SizedBox(width: 8),
-      Expanded(child: Text(list[index].path ?? '', maxLines: 1, overflow: TextOverflow.ellipsis)),
+      Expanded(child: Text(_list[index].path ?? '', maxLines: 1, overflow: TextOverflow.ellipsis)),
     ]);
   }
 
   Widget _detail(int index) {
     return Row(
       children: [
-        SizedBox(width: 80, child: Text(list[index].duration)),
-        Expanded(child: Text(list[index].time)),
-        Text(list[index].size),
+        SizedBox(width: 80, child: Text(_list[index].duration)),
+        Expanded(child: Text(_list[index].time)),
+        Text(_list[index].size),
       ],
     );
   }
 
   // 根据请求状态显示不同的颜色
   Color _stateColor(int index) {
-    return list[index].status == Status.running
+    return _list[index].status == Status.running
         ? Colors.blue
-        : list[index].status == Status.success
+        : _list[index].status == Status.success
             ? Colors.green
-            : list[index].status == Status.failed
+            : _list[index].status == Status.failed
                 ? Colors.red
                 : Colors.yellow;
   }
 
-  // 下拉刷新方法,为list重新赋值
+  // 下拉刷新方法,为_list重新赋值
   Future<Null> _onRefresh() async {
     await getData();
   }

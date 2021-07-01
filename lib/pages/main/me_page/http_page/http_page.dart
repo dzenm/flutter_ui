@@ -6,12 +6,12 @@ import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/base/widgets/single_text_layout.dart';
 
-class HTTPPage extends StatefulWidget {
+class HTTPListPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _HTTPPageState();
+  State<StatefulWidget> createState() => _HTTPListPageState();
 }
 
-class _HTTPPageState extends State<HTTPPage> {
+class _HTTPListPageState extends State<HTTPListPage> {
   String _text = '';
   bool isShowDialog = true;
   bool isShowToast = true;

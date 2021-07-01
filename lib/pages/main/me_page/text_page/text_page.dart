@@ -24,6 +24,13 @@ class _TextPageState extends State<TextPage> {
   String newText = '';
   bool switchState = true;
   bool isChanged = false;
+  List<Item> _items = [
+    Item(0, title: '数据库'),
+    Item(1, title: 'SharedPreference'),
+    Item(2, title: '设置'),
+    Item(3, title: '清空所有'),
+    Item(4, title: '退出'),
+  ];
 
   @override
   void initState() {
@@ -39,14 +46,13 @@ class _TextPageState extends State<TextPage> {
           title: Text('文本和输入框', style: TextStyle(color: Colors.white)),
           actions: [
             PopupMenuButton<Item>(
+              elevation: 4.0,
               onSelected: (Item item) {
-                showToast('测试${item.title}');
+                showToast(item.title ?? '');
               },
-              itemBuilder: (BuildContext context) => [
-                PopupMenuItem<Item>(child: Text('测试1')),
-                PopupMenuItem<Item>(child: Text('测试2')),
-                PopupMenuItem<Item>(child: Text('测试3')),
-              ],
+              itemBuilder: (BuildContext context) {
+                return _items.map((value) => PopupMenuItem<Item>(value: value, child: Text(value.title ?? ''))).toList();
+              },
             )
           ],
         ),

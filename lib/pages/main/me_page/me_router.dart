@@ -37,7 +37,7 @@ class MeRouter extends BaseRoute {
     }));
     router.define(http, handler: Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
       Log.d("进入网络请求页面: $http");
-      return HTTPPage();
+      return HTTPListPage();
     }));
     router.define(list, handler: Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
       Log.d("进入列表页面: $list");

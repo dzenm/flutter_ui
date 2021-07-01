@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:sqflite/sqflite.dart';
 
 class FileUtil {
   FileUtil._internal();
@@ -15,14 +16,27 @@ class FileUtil {
     // 获取文档目录的路径
     Directory? packageDir = await getExternalStorageDirectory();
     if (packageDir == null) {
-      return Directory('/storage/emulated/0/tmp');
+      return Directory('/storage/emulated/0');
     }
     Directory parent = Directory('${packageDir.path}${dir == null ? '' : '/$dir'}');
     if (!parent.existsSync()) {
       await parent.create();
     }
-    Log.d('文件夹: parent=${parent.path}');
+    Log.d('文件夹路径: ${parent.path}');
     return parent;
+  }
+
+  /// 获取数据库文件夹所有数据库文件
+  Future<List<String>> getDBFiles() async {
+    String parent = await getDatabasesPath();
+    List<String> files = [];
+    Directory(parent).listSync().forEach((element) {
+      if (element.path.endsWith('.db')) {
+        files.add(element.path);
+      }
+    });
+    Log.d('数据库文件夹: path=$parent, fileSize=${files.length}');
+    return files;
   }
 
   /// 保存text到本地文件里面
