@@ -37,15 +37,23 @@ class Application {
   GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
   // 初始化
-  Future init() async {
+  void init() async {
     Log.d('═══════════════════════════════ 开始初始化 ════════════════════════════════════');
+    Log.d('启动: ${DateTime.now().millisecondsSinceEpoch}');
     Log.d('Application是否单例: ${Application.getInstance == Application()}');
 
+    /// 确保初始化
     WidgetsFlutterBinding.ensureInitialized();
-
+    /// 初始化路由设置
     RouteManager.registerConfigureRoutes();
-
+    /// 初始化SharedPreferences
     await SpUtil.getInstance.init();
+
+    Log.d('结束: ${DateTime.now().millisecondsSinceEpoch}');
+    Log.d('═══════════════════════════════ 结束初始化 ════════════════════════════════════');
+
+    // 运行flutter时全局异常捕获
+    await HandleError().catchFlutterError(() => _runAppWidget(WillPopScopeRoute(_initPage())));
 
     // 设置Android头部的导航栏透明
     if (Platform.isAndroid) {
@@ -56,10 +64,6 @@ class Application {
       ));
     }
 
-    Log.d('═══════════════════════════════ 结束初始化 ════════════════════════════════════');
-
-    // 运行flutter时全局异常捕获
-    await HandleError().catchFlutterError(() => _runAppWidget(_initPage()));
   }
 
   // 运行第一个页面，设置最顶层的共享数据
@@ -98,7 +102,7 @@ class Application {
           supportedLocales: S.supportedLocales,
           builder: BotToastInit(),
           navigatorObservers: [BotToastNavigatorObserver()],
-          home: WillPopScopeRoute(child),
+          home: child,
         );
       }),
     ));
@@ -106,6 +110,7 @@ class Application {
 
   // 初始化的页面
   Widget _initPage() {
+    Log.d('启动页面: ${DateTime.now().millisecondsSinceEpoch}');
     return SpUtil.getIsLogin() ? MainPage() : LoginPage();
   }
 }

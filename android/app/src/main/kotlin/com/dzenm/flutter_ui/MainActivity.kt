@@ -3,7 +3,6 @@ package com.dzenm.flutter_ui
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.os.PersistableBundle
 import io.flutter.Log
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -20,10 +19,12 @@ class MainActivity : FlutterActivity() {
     private var serviceIntent: Intent? = null
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
-        Log.d(TAG, "====================configureFlutterEngine")
-        registerWith(flutterEngine)
-        val messenger = flutterEngine.dartExecutor.binaryMessenger
-        loadMethodChannel(messenger)
+        Log.d(TAG, "════════════════════════════════════════ configureFlutterEngine: ${System.currentTimeMillis()}")
+        flutterEngine.let {
+            registerWith(it)
+            val messenger = it.dartExecutor.binaryMessenger
+            loadMethodChannel(messenger)
+        }
     }
 
     /**
@@ -76,7 +77,7 @@ class MainActivity : FlutterActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(TAG, "====================onCreate")
+        Log.d(TAG, "════════════════════════════════════════ onCreate: ${System.currentTimeMillis()}")
 
         // ATTENTION: This was auto-generated to handle app links.
         val appLinkIntent = intent
@@ -86,7 +87,7 @@ class MainActivity : FlutterActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d(TAG, "====================onDestroy")
+        Log.d(TAG, "════════════════════════════════════════ onDestroy")
         stopService(serviceIntent)
     }
 
