@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/naughty/page/db/db_table_list_page.dart';
 import 'package:flutter_ui/base/utils/file_util.dart';
+import 'package:flutter_ui/base/utils/route_manager.dart';
 import 'package:flutter_ui/base/utils/str_util.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:intl/intl.dart';
@@ -69,7 +70,7 @@ class _DBListPageState extends State<DBListPage> {
         ),
         child: TapLayout(
           borderRadius: BorderRadius.all(Radius.circular(7)),
-          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => DBTableListPage(_list[index]))),
+          onTap: () => RouteManager.push(DBTableListPage(_list[index])),
           child: Padding(
             padding: EdgeInsets.all(16),
             child: Column(

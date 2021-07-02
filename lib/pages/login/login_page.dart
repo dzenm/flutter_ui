@@ -48,8 +48,9 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(S.of.login, style: TextStyle(color: Colors.white))),
-      body: Padding(padding: EdgeInsets.only(top: 100), child: _body()),
-      resizeToAvoidBottomInset: false,
+      body: SingleChildScrollView(
+        child: Padding(padding: EdgeInsets.only(top: 100), child: _body()),
+      ),
     );
   }
 

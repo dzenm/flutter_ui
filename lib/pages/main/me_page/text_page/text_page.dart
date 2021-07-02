@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/res/assets.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/common_widget.dart';
+import 'package:flutter_ui/base/widgets/friend_item_dialog.dart';
 import 'package:flutter_ui/base/widgets/menu_Item.dart';
 import 'package:flutter_ui/base/widgets/single_edit_layout.dart';
 import 'package:flutter_ui/base/widgets/single_text_layout.dart';
@@ -169,7 +170,7 @@ class _TextPageState extends State<TextPage> {
                   TapLayout(
                     height: 60.0,
                     padding: EdgeInsets.symmetric(horizontal: 16),
-                    onTap: () => showToast('登录记录'),
+                    onTap: () => friendItemDialog(context, userId: '', callback: (v) {}),
                     child: SingleTextLayout(title: '登录记录', summary: '查看最近所有的登录记录', badgeCount: 0, isShowForward: true),
                   ),
                 ],

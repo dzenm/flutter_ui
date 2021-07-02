@@ -2,13 +2,11 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:bot_toast/bot_toast.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_ui/base/log/handle_error.dart';
-import 'package:flutter_ui/base/naughty/page/db/db_list_page.dart';
-import 'package:flutter_ui/base/naughty/page/http/http_list_page.dart';
-import 'package:flutter_ui/base/naughty/page/http/http_item_page.dart';
 import 'package:flutter_ui/base/res/colors.dart';
 import 'package:flutter_ui/base/res/local_model.dart';
 import 'package:flutter_ui/base/res/strings.dart';
@@ -25,6 +23,8 @@ import 'router/route_manager.dart';
 
 void main() => Application.getInstance.init();
 
+GlobalKey<NavigatorState> navigator = new GlobalKey<NavigatorState>();
+
 class Application {
   // 私有构造方法
   Application._internal();
@@ -32,9 +32,6 @@ class Application {
   static final Application getInstance = Application._internal();
 
   factory Application() => getInstance;
-
-  // 全局context
-  GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
   // 初始化
   void init() async {
@@ -44,8 +41,10 @@ class Application {
 
     /// 确保初始化
     WidgetsFlutterBinding.ensureInitialized();
+
     /// 初始化路由设置
     RouteManager.registerConfigureRoutes();
+
     /// 初始化SharedPreferences
     await SpUtil.getInstance.init();
 
@@ -63,7 +62,6 @@ class Application {
         statusBarIconBrightness: Brightness.light, // light:黑色图标 dark：白色图标, 在此处设置statusBarIconBrightness为全局设置
       ));
     }
-
   }
 
   // 运行第一个页面，设置最顶层的共享数据
@@ -79,7 +77,7 @@ class Application {
       child: Consumer<LocalModel>(builder: (context, res, widget) {
         Map theme = themeColorModel[res.theme]!;
         return MaterialApp(
-          navigatorKey: navigatorKey,
+          navigatorKey: navigator,
           debugShowCheckedModeBanner: false,
           // 设置主题，读取LocalModel的值，改变LocalModel的theme值会通过provider刷新页面
           theme: ThemeData(
@@ -89,6 +87,12 @@ class Application {
               brightness: Brightness.dark,
             ),
             floatingActionButtonTheme: FloatingActionButtonThemeData(backgroundColor: theme['primaryColor']),
+            pageTransitionsTheme: PageTransitionsTheme(
+              builders: <TargetPlatform, PageTransitionsBuilder>{
+                TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+                TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+              },
+            ),
           ),
 
           // 设置语言，读取LocalModel的值，改变LocalModel的locale值会通过provider刷新页面

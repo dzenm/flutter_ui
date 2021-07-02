@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/base/http/api_client.dart';
+import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/utils/str_util.dart';
+import 'package:flutter_ui/base/widgets/commom_button.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/base/widgets/single_text_layout.dart';
@@ -87,6 +89,20 @@ class _HTTPListPageState extends State<HTTPListPage> {
                 flex: 1,
               ),
             ]),
+            SizedBox(height: 16),
+            ComMomButton(
+              text: S.of.login,
+              margin: EdgeInsets.only(left: 10.0),
+              width: 100.0,
+              onTap: () => {},
+            ),
+            ComMomButton(
+                text: S.of.register,
+                color: Colors.white,
+                style: TextStyle(fontSize: 15.0, color: Color.fromRGBO(8, 191, 98, 1.0)),
+                margin: EdgeInsets.only(right: 10.0),
+                onTap: () => {},
+                width: 100.0),
             SizedBox(height: 16),
             Expanded(
                 child: SingleChildScrollView(

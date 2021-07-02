@@ -7,13 +7,13 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/http/api_client.dart';
 import 'package:flutter_ui/base/res/assets.dart';
 import 'package:flutter_ui/base/res/colors.dart';
+import 'package:flutter_ui/base/res/local_model.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/common_widget.dart';
 import 'package:flutter_ui/base/widgets/single_text_layout.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/entities/user_entity.dart';
-import 'package:flutter_ui/models/provider_model.dart';
 import 'package:flutter_ui/pages/login/login_route.dart';
 import 'package:flutter_ui/router/navigator_manager.dart';
 import 'package:flutter_ui/utils/sp_util.dart';
@@ -33,8 +33,8 @@ class _SettingPageState extends State<SettingPage> {
   @override
   void initState() {
     super.initState();
-    _colorKey = ProviderManager.localModel(context).theme;
-    _locale = ProviderManager.localModel(context).locale;
+    _colorKey = LocalModel.of.theme;
+    _locale = LocalModel.of.locale;
     String user = SpUtil.getUser();
     if (user.length > 0) {
       _user = UserEntity.fromJson(jsonDecode(user));
@@ -196,7 +196,7 @@ class _SettingPageState extends State<SettingPage> {
                 return InkWell(
                   onTap: () {
                     setState(() => _colorKey = key);
-                    ProviderManager.localModel(context).setTheme(key);
+                    LocalModel.of.setTheme(key);
                     Navigator.pop(context);
                   },
                   child: Container(
@@ -226,7 +226,7 @@ class _SettingPageState extends State<SettingPage> {
               child: Text(_convertLocale(value)),
               onPressed: () {
                 setState(() => _locale = value);
-                ProviderManager.localModel(context).setLocale(value);
+                LocalModel.of.setLocale(value);
                 Navigator.pop(context);
               },
             );

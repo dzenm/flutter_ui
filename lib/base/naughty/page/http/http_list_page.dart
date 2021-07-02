@@ -4,6 +4,7 @@ import 'package:flutter_ui/base/naughty/entities/http_entity.dart';
 import 'package:flutter_ui/base/naughty/naughty.dart';
 import 'package:flutter_ui/base/naughty/page/db/db_list_page.dart';
 import 'package:flutter_ui/base/naughty/page/http/http_item_page.dart';
+import 'package:flutter_ui/base/utils/route_manager.dart';
 import 'package:flutter_ui/base/widgets/menu_Item.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 
@@ -53,7 +54,7 @@ class _HTTPListPageState extends State<HTTPListPage> {
             elevation: 4.0,
             onSelected: (Item item) {
               if (item.index == 0) {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => DBListPage()));
+                RouteManager.push(DBListPage());
               }
             },
             itemBuilder: (BuildContext context) {
@@ -94,7 +95,7 @@ class _HTTPListPageState extends State<HTTPListPage> {
         ),
         child: TapLayout(
           borderRadius: BorderRadius.all(Radius.circular(7)),
-          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => HTTPItemPage(_list[index]))),
+          onTap: () => RouteManager.push(HTTPItemPage(_list[index])),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
