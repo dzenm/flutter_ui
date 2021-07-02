@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ui/base/http/api_client.dart';
 import 'package:flutter_ui/base/res/strings.dart';
+import 'package:flutter_ui/base/router/navigator_manager.dart';
 import 'package:flutter_ui/entities/user_entity.dart';
 import 'package:flutter_ui/pages/main/main_route.dart';
-import 'package:flutter_ui/router/navigator_manager.dart';
 import 'package:flutter_ui/utils/sp_util.dart';
 
 class LoginPage extends StatefulWidget {
@@ -47,7 +47,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(S.of.login, style: TextStyle(color: Colors.white))),
+      appBar: AppBar(
+          title: Text(S.of.login, style: TextStyle(color: Colors.white))),
       body: SingleChildScrollView(
         child: Padding(padding: EdgeInsets.only(top: 100), child: _body()),
       ),
@@ -82,7 +83,8 @@ class _LoginPageState extends State<LoginPage> {
             labelText: S.of.password,
             suffixIcon: IconButton(
               splashColor: Colors.transparent,
-              icon: Icon(_isShowPwd ? Icons.visibility : Icons.visibility_off, size: 20),
+              icon: Icon(_isShowPwd ? Icons.visibility : Icons.visibility_off,
+                  size: 20),
               iconSize: 16,
               // 点击改变显示或隐藏密码
               onPressed: () => setState(() => _isShowPwd = !_isShowPwd),
@@ -111,7 +113,8 @@ class _LoginPageState extends State<LoginPage> {
 
   // 如果输入的账号密码为空则禁用登录按钮
   void _resetLoginButtonState() {
-    setState(() => _isDisableLoginButton = _username.isEmpty || _password.isEmpty);
+    setState(
+        () => _isDisableLoginButton = _username.isEmpty || _password.isEmpty);
   }
 
   // 登录按钮点击事件
@@ -119,7 +122,8 @@ class _LoginPageState extends State<LoginPage> {
     if (_isDisableLoginButton) return;
 
     FocusScope.of(context).unfocus();
-    ApiClient.getInstance.request(apiServices.login(_username, _password), success: (data) {
+    ApiClient.getInstance.request(apiServices.login(_username, _password),
+        success: (data) {
       UserEntity user = UserEntity.fromJson(data);
       SpUtil.setIsLogin(true);
       SpUtil.setUser(jsonEncode(user));

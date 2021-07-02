@@ -4,7 +4,7 @@ import 'package:flutter_ui/base/naughty/entities/http_entity.dart';
 import 'package:flutter_ui/base/naughty/naughty.dart';
 import 'package:flutter_ui/base/naughty/page/db/db_list_page.dart';
 import 'package:flutter_ui/base/naughty/page/http/http_item_page.dart';
-import 'package:flutter_ui/base/utils/route_manager.dart';
+import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/base/widgets/menu_Item.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 
@@ -54,11 +54,14 @@ class _HTTPListPageState extends State<HTTPListPage> {
             elevation: 4.0,
             onSelected: (Item item) {
               if (item.index == 0) {
-                RouteManager.push(DBListPage());
+                Navigation.push(DBListPage());
               }
             },
             itemBuilder: (BuildContext context) {
-              return _items.map((value) => PopupMenuItem<Item>(value: value, child: Text(value.title ?? ''))).toList();
+              return _items
+                  .map((value) => PopupMenuItem<Item>(
+                      value: value, child: Text(value.title ?? '')))
+                  .toList();
             },
           )
         ],
@@ -95,13 +98,14 @@ class _HTTPListPageState extends State<HTTPListPage> {
         ),
         child: TapLayout(
           borderRadius: BorderRadius.all(Radius.circular(7)),
-          onTap: () => RouteManager.push(HTTPItemPage(_list[index])),
+          onTap: () => Navigation.push(HTTPItemPage(_list[index])),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               _statusView(index),
               Container(
-                padding: EdgeInsets.only(left: 16.0, top: 8.0, right: 16.0, bottom: 16.0),
+                padding: EdgeInsets.only(
+                    left: 16.0, top: 8.0, right: 16.0, bottom: 16.0),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -141,7 +145,8 @@ class _HTTPListPageState extends State<HTTPListPage> {
       decoration: BoxDecoration(
         color: _stateColor(index),
         shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.only(topRight: Radius.circular(7), bottomLeft: Radius.circular(7)),
+        borderRadius: BorderRadius.only(
+            topRight: Radius.circular(7), bottomLeft: Radius.circular(7)),
       ),
       child: Text(text, style: TextStyle(color: Colors.white)),
     );
@@ -163,7 +168,9 @@ class _HTTPListPageState extends State<HTTPListPage> {
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
       SizedBox(width: 8),
-      Expanded(child: Text(_list[index].path ?? '', maxLines: 1, overflow: TextOverflow.ellipsis)),
+      Expanded(
+          child: Text(_list[index].path ?? '',
+              maxLines: 1, overflow: TextOverflow.ellipsis)),
     ]);
   }
 

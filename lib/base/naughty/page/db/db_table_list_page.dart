@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/db/sql_manager.dart';
 import 'package:flutter_ui/base/entities/table_entity.dart';
 import 'package:flutter_ui/base/naughty/page/db/db_table_item_page.dart';
-import 'package:flutter_ui/base/utils/route_manager.dart';
+import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/base/utils/str_util.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 
@@ -73,7 +73,8 @@ class _DBTableListPageState extends State<DBTableListPage> {
         ),
         child: TapLayout(
           borderRadius: BorderRadius.all(Radius.circular(7)),
-          onTap: () => RouteManager.push(DBTableItemPage(widget.dbName, _list[index].name ?? '')),
+          onTap: () => Navigation.push(
+              DBTableItemPage(widget.dbName, _list[index].name ?? '')),
           child: Padding(
             padding: EdgeInsets.all(16),
             child: Row(
@@ -81,7 +82,10 @@ class _DBTableListPageState extends State<DBTableListPage> {
                 Expanded(
                   child: Text(
                     _list[index].name ?? '',
-                    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black87, fontSize: 18.0),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                        fontSize: 18.0),
                   ),
                 ),
               ],

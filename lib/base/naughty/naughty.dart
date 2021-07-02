@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/naughty/drag_layout.dart';
 import 'package:flutter_ui/base/naughty/entities/http_entity.dart';
 import 'package:flutter_ui/base/naughty/page/http/http_list_page.dart';
-import 'package:flutter_ui/base/utils/route_manager.dart';
+import 'package:flutter_ui/base/router/route_manager.dart';
 
 /// 悬浮窗
 class Naughty {
@@ -38,13 +38,15 @@ class Naughty {
       builder: (BuildContext context) =>
           _child ??
           DragLayout(
-            onTap: () => RouteManager.push(HTTPListPage()),
+            onTap: () => Navigation.push(HTTPListPage()),
             child: Container(
               alignment: Alignment.center,
               height: 64.0,
               width: 64.0,
               decoration: BoxDecoration(
-                color: Colors.blue, shape: BoxShape.circle, // 可以设置角度，BoxShape.circle 直接圆形
+                color: Colors.blue,
+                shape: BoxShape.circle,
+                // 可以设置角度，BoxShape.circle 直接圆形
                 boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 8)],
               ),
             ),

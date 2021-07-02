@@ -1,7 +1,7 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/log/log.dart';
-import 'package:flutter_ui/router/route_manager.dart';
+import 'package:flutter_ui/base/router/route_manager.dart';
 
 /// 路由跳转工具类
 class NavigatorManager {
@@ -96,13 +96,18 @@ class NavigatorManager {
     }
   }
 
-  static String changeToNavigatorPath(String registerPath, {Map<String, dynamic>? params}) {
+  static String changeToNavigatorPath(String registerPath,
+      {Map<String, dynamic>? params}) {
     if (params == null || params.isEmpty) {
       return registerPath;
     }
     StringBuffer bufferStr = StringBuffer();
     params.forEach((key, value) {
-      bufferStr..write(key)..write("=")..write(Uri.encodeComponent(value))..write("&");
+      bufferStr
+        ..write(key)
+        ..write("=")
+        ..write(Uri.encodeComponent(value))
+        ..write("&");
     });
     String paramStr = bufferStr.toString();
     paramStr = paramStr.substring(0, paramStr.length - 1);
