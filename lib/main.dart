@@ -61,8 +61,7 @@ class Application {
         // 全局设置透明
         statusBarBrightness: Brightness.light,
         // light:黑色图标 dark：白色图标, 在此处设置statusBarIconBrightness为全局设置
-        statusBarIconBrightness: Brightness
-            .light, // light:黑色图标 dark：白色图标, 在此处设置statusBarIconBrightness为全局设置
+        statusBarIconBrightness: Brightness.light, // light:黑色图标 dark：白色图标, 在此处设置statusBarIconBrightness为全局设置
       ));
     }
   }
@@ -89,8 +88,7 @@ class Application {
             appBarTheme: AppBarTheme(
               brightness: Brightness.dark,
             ),
-            floatingActionButtonTheme: FloatingActionButtonThemeData(
-                backgroundColor: theme['primaryColor']),
+            floatingActionButtonTheme: FloatingActionButtonThemeData(backgroundColor: theme['primaryColor']),
             pageTransitionsTheme: PageTransitionsTheme(
               builders: <TargetPlatform, PageTransitionsBuilder>{
                 TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),

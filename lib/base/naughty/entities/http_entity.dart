@@ -13,7 +13,7 @@ class HTTPEntity {
   Map<String, dynamic>? requestExtra;
   Map<String, dynamic>? requestQueryParameters;
   Map<String, dynamic>? requestHeader;
-  Map<String, dynamic>? requestBody;
+  dynamic? requestBody;
 
   // response
   int? statusCode;
@@ -30,7 +30,7 @@ class HTTPEntity {
 
   Map<String, dynamic>? responseExtra;
   Map<String, dynamic>? responseHeader;
-  Map<String, dynamic>? responseBody;
+  dynamic? responseBody;
 
   Map<String, dynamic> request() {
     Map<String, dynamic> map = {

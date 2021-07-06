@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/base/naughty/naughty.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/widgets/common_widget.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
@@ -29,8 +28,6 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    Naughty.getInstance.init(context);
-    Future.delayed(Duration(milliseconds: 1000), () => Naughty.getInstance.show());
     return Scaffold(
       body: PageView(
         controller: _pageController,

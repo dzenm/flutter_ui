@@ -38,18 +38,4 @@ class BannerEntity extends BaseDB {
 
   @override
   BannerEntity fromJson(Map<String, dynamic> json) => BannerEntity.fromJson(json);
-
-  @override
-  String columnString() => '''
-    id INTEGER PRIMARY KEY NOT NULL, 
-    "desc" TEXT,
-    imagePath TEXT,
-    isVisible INTEGER,
-    "order" INTEGER,
-    title TEXT,
-    type INTEGER,
-    url TEXT''';
-
-  @override
-  String getTableName() => 't_banner';
 }

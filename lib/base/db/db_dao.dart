@@ -10,14 +10,12 @@ class DBDao {
   }) async {
     if (data == null) return;
     if (data is List) {
-      await SqlManager.getInstance.checkTable(data[0].getTableName(), data[0].columnString());
       data.forEach((element) async => await SqlManager().insertItem(
             element.getTableName(),
             element.toJson(),
             conflictAlgorithm: conflictAlgorithm,
           ));
     } else if (data is T) {
-      await SqlManager.getInstance.checkTable(data.getTableName(), data.columnString());
       await SqlManager().insertItem(
         data.getTableName(),
         data.toJson(),
@@ -26,45 +24,38 @@ class DBDao {
     }
   }
 
-  Future<int> deleteItem<T extends BaseDB>(
+  Future<int> delete<T extends BaseDB>(
     T? data, {
-    String? key,
-    String? value,
+    Map<String, String>? where,
   }) async {
     if (data == null) return 0;
-    await SqlManager.getInstance.checkTable(data.getTableName(), data.columnString());
     return SqlManager().deleteItem(
       data.getTableName(),
-      key: key,
-      value: value,
+      where: where,
     );
   }
 
-  Future<int> updateItem<T extends BaseDB>(
+  Future<int> update<T extends BaseDB>(
     T? data,
-    String key,
-    String value, {
+    Map<String, String> where, {
     ConflictAlgorithm? conflictAlgorithm,
   }) async {
     if (data == null) return 0;
-    await SqlManager.getInstance.checkTable(data.getTableName(), data.columnString());
     return SqlManager().updateItem(
       data.getTableName(),
       data.toJson(),
-      key,
-      value,
+      where,
       conflictAlgorithm: conflictAlgorithm,
     );
   }
 
-  Future<List<BaseDB>> queryItem<T extends BaseDB>(
+  Future<List<BaseDB>> where<T extends BaseDB>(
     T? data, {
     Map<String, String>? where,
   }) async {
     if (data == null) return [];
-    await SqlManager.getInstance.checkTable(data.getTableName(), data.columnString());
     return SqlManager()
-        .queryItem(
+        .where(
           data.getTableName(),
           where: where,
         )

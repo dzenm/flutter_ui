@@ -33,7 +33,7 @@ class _DBTableItemPageState extends State<DBTableItemPage> {
 
   Future<void> getData() async {
     _columns = await SqlManager.getInstance.getTableColumn(widget.dbName, widget.tableName);
-    _list = await SqlManager.getInstance.queryItem(widget.tableName);
+    _list = await SqlManager.getInstance.where(widget.tableName);
     setState(() => _loadingState = LoadingState.success);
   }
 

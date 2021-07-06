@@ -108,42 +108,4 @@ class ArticleEntity extends BaseDB {
 
   @override
   ArticleEntity fromJson(Map<String, dynamic> json) => ArticleEntity.fromJson(json);
-
-  @override
-  String columnString() => '''
-    id INTEGER PRIMARY KEY NOT NULL, 
-    apkLink TEXT,
-    audit INTEGER,
-    author TEXT,
-    canEdit BIT,
-    chapterId INTEGER,
-    chapterName TEXT,
-    collect BIT,
-    courseId INTEGER,
-    "desc" TEXT,
-    descMd TEXT,
-    envelopePic TEXT,
-    fresh BIT,
-    host TEXT,
-    link TEXT,
-    niceDate TEXT,
-    niceShareDate TEXT,
-    origin TEXT,
-    prefix TEXT,
-    projectLink TEXT,
-    publishTime INTEGER,
-    realSuperChapterId INTEGER,
-    selfVisible INTEGER,
-    shareDate INTEGER,
-    shareUser TEXT,
-    superChapterId INTEGER,
-    superChapterName TEXT,
-    title TEXT,
-    type INTEGER,
-    userId INTEGER,
-    visible INTEGER,
-    zan INTEGER''';
-
-  @override
-  String getTableName() => 't_article';
 }

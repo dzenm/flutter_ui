@@ -1,6 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_ui/base/naughty/entities/http_entity.dart';
 import 'package:flutter_ui/base/naughty/naughty.dart';
+import 'package:flutter_ui/base/naughty/page/http/http_list_page.dart';
+import 'package:flutter_ui/base/router/route_manager.dart';
+import 'package:flutter_ui/base/utils/notification_util.dart';
 import 'package:flutter_ui/base/utils/str_util.dart';
 import 'package:intl/intl.dart';
 
@@ -10,68 +13,70 @@ class HttpInterceptor extends Interceptor {
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
-    HTTPEntity bean = HTTPEntity();
-    bean.status = Status.running;
-    bean.duration = DateTime.now().millisecondsSinceEpoch.toString();
-    bean.time = DateFormat("HH:mm:ss SSS").format(DateTime.now());
-    map[options] = bean;
-    Naughty.getInstance.data.insert(0, bean);
+    HTTPEntity entity = HTTPEntity();
+    entity.status = Status.running;
+    entity.duration = DateTime.now().millisecondsSinceEpoch.toString();
+    entity.time = DateFormat("HH:mm:ss SSS").format(DateTime.now());
+    map[options] = entity;
+    Naughty.getInstance.data.insert(0, entity);
 
+    String body = '${options.method}  ${options.path}';
+    NotificationUtil.showNotification(body: body, onTap: (payload) async => Navigation.push(HTTPListPage()));
     handler.next(options);
   }
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) async {
-    HTTPEntity? bean = map[response.requestOptions];
-    if (bean != null) {
-      bean.status = Status.success;
-      _handle(response, bean);
+    HTTPEntity? entity = map[response.requestOptions];
+    if (entity != null) {
+      entity.status = Status.success;
+      _handle(response, entity);
     }
     handler.next(response);
   }
 
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) async {
-    HTTPEntity? bean = map[err.requestOptions];
-    if (bean != null) {
-      bean.status = Status.failed;
-      _handle(err.response, bean);
+    HTTPEntity? entity = map[err.requestOptions];
+    if (entity != null) {
+      entity.status = Status.failed;
+      _handle(err.response, entity);
     }
     handler.next(err);
   }
 
-  void _handle(Response? response, HTTPEntity bean) {
-    bean.status = Status.success;
-    bean.duration = '${DateTime.now().millisecondsSinceEpoch - int.parse(bean.duration)} ms';
-    bean.size = StrUtil.formatSize(StrUtil.getStringLength(response?.data.toString()));
+  void _handle(Response? response, HTTPEntity entity) {
+    entity.status = Status.success;
+    entity.duration = '${DateTime.now().millisecondsSinceEpoch - int.parse(entity.duration)} ms';
+    entity.size = StrUtil.formatSize(StrUtil.getStringLength(response?.data.toString()));
 
     // request
-    bean.method = response?.requestOptions.method ?? 'unknown';
-    bean.url = response?.requestOptions.uri.toString() ?? 'unknown';
-    bean.baseUrl = response?.requestOptions.baseUrl ?? 'unknown';
-    bean.path = response?.requestOptions.path;
-    bean.requestExtra = response?.requestOptions.extra;
-    bean.requestQueryParameters = response?.requestOptions.queryParameters;
-    bean.requestHeader = response?.requestOptions.headers;
-    bean.requestBody = response?.requestOptions.data;
+    entity.method = response?.requestOptions.method ?? 'unknown';
+    entity.url = response?.requestOptions.uri.toString() ?? 'unknown';
+    entity.baseUrl = response?.requestOptions.baseUrl ?? 'unknown';
+    entity.path = response?.requestOptions.path;
+    entity.requestExtra = response?.requestOptions.extra;
+    entity.requestQueryParameters = response?.requestOptions.queryParameters;
+    entity.requestHeader = response?.requestOptions.headers;
+    entity.requestBody = response?.requestOptions.data;
 
     // response
-    bean.statusCode = response?.statusCode ?? -1;
-    bean.realUrl = response?.realUri.toString() ?? 'unknown';
-    bean.responseType = response?.requestOptions.responseType.toString() ?? 'unknown';
-    bean.maxRedirects = response?.requestOptions.maxRedirects ?? -1;
-    bean.listFormat = response?.requestOptions.listFormat.toString() ?? 'unknown';
-    bean.sendTimeout = response?.requestOptions.sendTimeout ?? -1;
-    bean.connectTimeout = response?.requestOptions.connectTimeout ?? -1;
-    bean.receiveTimeout = response?.requestOptions.receiveTimeout ?? -1;
-    bean.followRedirects = response?.requestOptions.followRedirects ?? true;
-    bean.receiveDataWhenStatusError = response?.requestOptions.receiveDataWhenStatusError ?? true;
-    bean.isRedirect = response?.isRedirect ?? false;
+    entity.statusCode = response?.statusCode ?? -1;
+    entity.realUrl = response?.realUri.toString() ?? 'unknown';
+    entity.responseType = response?.requestOptions.responseType.toString() ?? 'unknown';
+    entity.maxRedirects = response?.requestOptions.maxRedirects ?? -1;
+    entity.listFormat = response?.requestOptions.listFormat.toString() ?? 'unknown';
+    entity.sendTimeout = response?.requestOptions.sendTimeout ?? -1;
+    entity.connectTimeout = response?.requestOptions.connectTimeout ?? -1;
+    entity.receiveTimeout = response?.requestOptions.receiveTimeout ?? -1;
+    entity.followRedirects = response?.requestOptions.followRedirects ?? true;
+    entity.receiveDataWhenStatusError = response?.requestOptions.receiveDataWhenStatusError ?? true;
+    entity.isRedirect = response?.isRedirect ?? false;
 
-    bean.responseExtra = response?.extra;
+    entity.responseExtra = response?.extra;
     Map<String, dynamic> headers = {};
     response?.headers.forEach((key, val) => headers[key] = val);
-    bean.responseHeader = headers;
-    bean.responseBody = response?.data;
+    entity.responseHeader = headers;
+    entity.responseBody = response?.data;
   }
 }

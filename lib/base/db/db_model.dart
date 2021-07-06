@@ -12,9 +12,8 @@ abstract class BaseDB with DBDao {
   // 将实体类转化为map类型数据
   Map<String, dynamic> toJson();
 
-  // 列名字符串，如果字段存在关键字，必须使用双引号转义
-  String columnString();
-
   // 表名
-  String getTableName();
+  String getTableName() {
+    return 't_' + '$runtimeType'.toLowerCase().replaceAll('entity', '');
+  }
 }

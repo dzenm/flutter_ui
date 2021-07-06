@@ -1,3 +1,4 @@
+import 'package:flutter_ui/base/db/db_sql.dart';
 import 'package:flutter_ui/base/entities/column_entity.dart';
 import 'package:flutter_ui/base/entities/table_entity.dart';
 import 'package:flutter_ui/base/log/log.dart';
@@ -10,7 +11,7 @@ import 'package:sqflite/sqlite_api.dart';
 class SqlManager {
   static Database? _database;
 
-  static const _VERSION = 3;
+  static const _VERSION = 1;
 
   static const String _TAG = 'SqlManager';
 
@@ -30,14 +31,23 @@ class SqlManager {
     return _database!;
   }
 
-  /// 当数据库不存在时调用并进行创建
+  /// 当数据库不存在时调用并进行创建, 只在创建第一次时调用
   void _onCreate(Database db, int version) async {
-    Log.d('Database onCreate version=$version', tag: _TAG);
+    Log.d('创建新数据库 init version=$version', tag: _TAG);
+
+    List<String> tables = [Sql.tableBannerSql, Sql.tableArticleSql];
+    tables.forEach((element) => createNewTable(db, element));
+  }
+
+  /// 创建新表
+  void createNewTable(Database db, String sql) {
+    Log.d('创建新表: $sql', tag: _TAG);
+    db.execute(sql);
   }
 
   /// 当数据库版本变化时调用并进行升级
   void _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    Log.d('Database onUpgrade oldVersion=$oldVersion, newVersion=$newVersion', tag: _TAG);
+    Log.d('数据库版本变化 oldVersion=$oldVersion, newVersion=$newVersion', tag: _TAG);
     // – 修改表名
     // – ALTER TABLE tableName RENAME TO test;
 
@@ -184,23 +194,24 @@ class SqlManager {
   /// 删除数据，当key和value存在时，删除对应表中的数据，当key和value不存在时，删除该表
   Future<int> deleteItem(
     String tableName, {
-    String? key,
-    String? value,
+    Map<String, String>? where,
   }) async {
     Database db = await getDatabase();
 
-    key = key ?? '';
-    value = value ?? '';
     int count = 0;
-    if (key.isEmpty || value.isEmpty) {
+    if (where == null) {
       count = await db.delete(tableName);
     } else {
+      StringBuffer params = StringBuffer();
+      StringBuffer whereString = StringBuffer();
+      List<String> whereArgs = [];
+      _handleMap(where, whereArgs, whereString, params);
       count = await db.delete(
         tableName,
-        where: '$key = ?',
-        whereArgs: [value],
+        where: whereString.toString(),
+        whereArgs: whereArgs,
       );
-      Log.d('表$tableName删除 key=$key, value=$value 数据$count条', tag: _TAG);
+      Log.d('表$tableName删除 ${params.toString()} 数据$count条', tag: _TAG);
     }
     return count;
   }
@@ -209,27 +220,30 @@ class SqlManager {
   Future<int> updateItem(
     String tableName,
     Map<String, dynamic> values,
-    String key,
-    String value, {
+    Map<String, String> where, {
     ConflictAlgorithm? conflictAlgorithm,
   }) async {
     Database db = await getDatabase();
 
+    StringBuffer params = StringBuffer();
+    StringBuffer whereString = StringBuffer();
+    List<String> whereArgs = [];
+    _handleMap(where, whereArgs, whereString, params);
     int count = 0;
     // 更新数据
     count = await db.update(
       tableName,
       values,
-      where: '$key = ?',
-      whereArgs: [value],
+      where: whereString.toString(),
+      whereArgs: whereArgs,
       conflictAlgorithm: conflictAlgorithm ?? ConflictAlgorithm.replace,
     );
-    Log.d('表$tableName更新 key=$key, value=$value 数据$count条', tag: _TAG);
+    Log.d('表$tableName更新 ${params.toString()} 数据$count条', tag: _TAG);
     return count;
   }
 
   // 查询数据，当key和value存在时，查询对应表中的数据，当key和value不存在时，查询对应表中所有数据
-  Future<List<Map<String, dynamic>>> queryItem(
+  Future<List<Map<String, dynamic>>> where(
     String tableName, {
     Map<String, String>? where,
   }) async {
@@ -237,29 +251,33 @@ class SqlManager {
 
     List<Map<String, dynamic>> list = [];
 
-    if (where != null) {
-      StringBuffer queryParams = StringBuffer();
-      StringBuffer wheres = StringBuffer();
-      List whereArgs = [];
-      where.forEach((key, value) {
-        if (wheres.isNotEmpty) wheres.write(',');
-        wheres.write('$key = ?');
-        whereArgs.add(value);
-        queryParams.write('key=$key, value=$value');
-      });
+    if (where == null) {
+      list = await db.query(tableName);
+      Log.d('表$tableName查询数据 ${list.length} 条: $list', tag: _TAG);
+    } else {
+      StringBuffer params = StringBuffer();
+      StringBuffer whereString = StringBuffer();
+      List<String> whereArgs = [];
+      _handleMap(where, whereArgs, whereString, params);
 
       list = await db.query(
         tableName,
-        where: wheres.toString(),
+        where: whereString.toString(),
         whereArgs: whereArgs,
       );
-      Log.d('表$tableName查询 ${queryParams.toString()} 数据${list.length}条: $list', tag: _TAG);
-    } else {
-      list = await db.query(tableName);
-      Log.d('表$tableName查询数据 ${list.length} 条: $list', tag: _TAG);
+      Log.d('表$tableName查询 ${params.toString()} 数据${list.length}条: $list', tag: _TAG);
     }
 
     // map转换为List集合
     return list;
+  }
+
+  void _handleMap(Map<String, String> whereMap, List<String> whereArgs, StringBuffer where, StringBuffer params) {
+    whereMap.forEach((key, value) {
+      if (where.isNotEmpty) where.write(',');
+      where.write('$key = ?');
+      whereArgs.add(value);
+      params.write('key=$key, value=$value');
+    });
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/http/api_client.dart';
+import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/widgets/banner_view.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/entities/article_entity.dart';
@@ -61,10 +62,10 @@ class _HomePageState extends State<HomePage> {
     await _getArticle('1');
   }
 
-  // 登录按钮点击事件
   Future<void> _getBanner() async {
     ApiClient.getInstance.request(apiServices.banner(), success: (data) async {
       BannerEntity bean = BannerEntity();
+      Log.d('name: ${bean.getTableName()}');
       List<BannerEntity?> list = (data as List<dynamic>).map((e) => bean.fromJson(e)).toList();
       list.forEach((element) async {
         //   _titles.add(element!.title ?? '');
@@ -72,16 +73,19 @@ class _HomePageState extends State<HomePage> {
         //   _urls.add(element.url ?? '');
       });
       await bean.insertItem(list);
-      await bean.queryItem(bean);
+      await bean.where(bean);
     });
   }
 
   Future<void> _getArticle(String number) async {
     ApiClient.getInstance.request(apiServices.article(number), success: (data) async {
       ArticleEntity bean = ArticleEntity();
+
       List<ArticleEntity?> list = (data["datas"] as List<dynamic>).map((e) => bean.fromJson(e)).toList();
       await bean.insertItem(list);
-      await bean.queryItem(bean, where: {'chapterName': '鸿洋'});
+      await bean.where(bean, where: {'chapterName': '鸿洋'});
+      await bean.delete(bean, where: {'id': '18744'});
+      await bean.where(bean);
     });
   }
 }

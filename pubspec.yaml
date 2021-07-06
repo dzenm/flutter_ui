@@ -55,11 +55,12 @@ dependencies:
   provider: ^5.0.0
   # 时间格式化 https://pub.dev/packages/intl
   intl: ^0.17.0
-
   # sql https://pub.dev/packages/sqflite
   sqflite: ^2.0.0+3
   # 本地化存储 https://pub.dev/packages/shared_preferences
   shared_preferences: ^2.0.6
+  # 通知栏通知提醒 https://pub.flutter-io.cn/packages/flutter_local_notifications
+  flutter_local_notifications: ^5.0.0
 #  # 网络请求 https://pub.dev/packages/dio_http_cache#-installing-tab-
 #  #  dio_http_cache: ^0.2.11
 #  # 图片缓存 https://pub.flutter-io.cn/packages/cached_network_image
@@ -148,6 +149,7 @@ flutter:
     - assets/image/c.jpg
     - assets/image/d.jpg
     - assets/image/e.jpg
+    - assets/image/vnote.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

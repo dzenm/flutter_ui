@@ -40,12 +40,12 @@ class _HTTPListPageState extends State<HTTPListPage> {
 
   @override
   void dispose() {
-    Naughty.getInstance.show();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    Naughty.getInstance.init(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Debug Mode'),
@@ -58,10 +58,7 @@ class _HTTPListPageState extends State<HTTPListPage> {
               }
             },
             itemBuilder: (BuildContext context) {
-              return _items
-                  .map((value) => PopupMenuItem<Item>(
-                      value: value, child: Text(value.title ?? '')))
-                  .toList();
+              return _items.map((value) => PopupMenuItem<Item>(value: value, child: Text(value.title ?? ''))).toList();
             },
           )
         ],
@@ -104,8 +101,7 @@ class _HTTPListPageState extends State<HTTPListPage> {
             children: [
               _statusView(index),
               Container(
-                padding: EdgeInsets.only(
-                    left: 16.0, top: 8.0, right: 16.0, bottom: 16.0),
+                padding: EdgeInsets.only(left: 16.0, top: 8.0, right: 16.0, bottom: 16.0),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -145,8 +141,7 @@ class _HTTPListPageState extends State<HTTPListPage> {
       decoration: BoxDecoration(
         color: _stateColor(index),
         shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.only(
-            topRight: Radius.circular(7), bottomLeft: Radius.circular(7)),
+        borderRadius: BorderRadius.only(topRight: Radius.circular(7), bottomLeft: Radius.circular(7)),
       ),
       child: Text(text, style: TextStyle(color: Colors.white)),
     );
@@ -168,9 +163,7 @@ class _HTTPListPageState extends State<HTTPListPage> {
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
       SizedBox(width: 8),
-      Expanded(
-          child: Text(_list[index].path ?? '',
-              maxLines: 1, overflow: TextOverflow.ellipsis)),
+      Expanded(child: Text(_list[index].path ?? '', maxLines: 1, overflow: TextOverflow.ellipsis)),
     ]);
   }
 
