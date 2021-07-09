@@ -1,4 +1,4 @@
-import 'package:flutter_ui/base/db/db_dao.dart';
+import 'db_dao.dart';
 
 /// 数据的基类，数据和实体类的转换，数据库表的信息
 abstract class BaseDB with DBDao {

@@ -24,7 +24,10 @@ class TapLayout extends StatefulWidget {
   final BorderRadius? borderRadius;
   final bool isRipple; // true为点击有波纹效果，false为点击有背景效果
 
+  final int delay;
+
   TapLayout({
+    Key? key,
     @required this.child,
     this.onTap,
     this.onDoubleTap,
@@ -42,6 +45,7 @@ class TapLayout extends StatefulWidget {
     this.decorationImage,
     this.borderRadius,
     this.isRipple = true,
+    this.delay = 150,
   });
 
   @override
@@ -53,43 +57,53 @@ class _TapLayoutState extends State<TapLayout> {
 
   @override
   Widget build(BuildContext context) {
-    final Color? color = widget.isRipple
+    final Color? color = widget.onTap == null
         ? widget.background
-        : _isTouchDown
-            ? widget.foreground ?? Theme.of(context).highlightColor
-            : widget.background;
-    return Material(
-      color: Colors.transparent,
-      child: Ink(
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: widget.borderRadius,
-          shape: BoxShape.rectangle,
-          border: widget.border,
-          boxShadow: widget.boxShadow,
-          image: widget.decorationImage,
-          gradient: widget.gradient,
-        ),
-        child: InkResponse(
-          onTap: widget.onTap,
-          onHighlightChanged: (value) => setState(() => _isTouchDown = value),
-          onDoubleTap: widget.onDoubleTap,
-          onLongPress: widget.onLongPress,
-          borderRadius: widget.borderRadius,
-          radius: widget.isRipple ? null : 0.0,
-          highlightShape: BoxShape.rectangle,
-          highlightColor: Colors.transparent,
-          splashColor: widget.isRipple ? widget.foreground : Colors.transparent,
-          containedInkWell: true,
-          // 不要在这里设置背景色，否则会遮挡水波纹效果,如果设置的话尽量设置Material下面的color来实现背景色
-          child: Container(
-            // 设置child 居中
-            alignment: widget.alignment,
-            padding: widget.padding,
-            width: widget.width,
-            height: widget.height,
-            margin: widget.margin,
-            child: widget.child,
+        : widget.isRipple
+            ? widget.background
+            : _isTouchDown
+                ? widget.foreground ?? Theme.of(context).highlightColor
+                : widget.background;
+    return Container(
+      width: widget.width,
+      height: widget.height,
+      margin: widget.margin,
+      child: Material(
+        color: Colors.transparent,
+        child: Ink(
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: widget.borderRadius,
+            shape: BoxShape.rectangle,
+            border: widget.border,
+            boxShadow: widget.boxShadow,
+            image: widget.decorationImage,
+            gradient: widget.gradient,
+          ),
+          child: InkResponse(
+            onTap: () async {
+              Future.delayed(Duration(milliseconds: widget.delay), () {
+                if (widget.onTap != null) {
+                  widget.onTap!();
+                }
+              });
+            },
+            onLongPress: widget.onLongPress,
+            onDoubleTap: widget.onDoubleTap,
+            onHighlightChanged: (value) => setState(() => _isTouchDown = value),
+            borderRadius: widget.borderRadius,
+            radius: widget.isRipple ? null : 0.0,
+            highlightShape: BoxShape.rectangle,
+            highlightColor: Colors.transparent,
+            splashColor: widget.isRipple && widget.onTap != null ? widget.foreground : Colors.transparent,
+            containedInkWell: true,
+            // 不要在这里设置背景色，否则会遮挡水波纹效果,如果设置的话尽量设置Material下面的color来实现背景色
+            child: Container(
+              // 设置child 居中
+              alignment: widget.alignment,
+              padding: widget.padding,
+              child: widget.child,
+            ),
           ),
         ),
       ),

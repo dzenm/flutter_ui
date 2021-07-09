@@ -7,7 +7,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/res/assets.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/common_widget.dart';
-import 'package:flutter_ui/base/widgets/friend_item_dialog.dart';
 import 'package:flutter_ui/base/widgets/menu_Item.dart';
 import 'package:flutter_ui/base/widgets/single_edit_layout.dart';
 import 'package:flutter_ui/base/widgets/single_text_layout.dart';
@@ -164,14 +163,27 @@ class _TextPageState extends State<TextPage> {
                   TapLayout(
                     height: 50.0,
                     padding: EdgeInsets.symmetric(horizontal: 16),
-                    onTap: () => showToast('查看内容'),
+                    onTap: () => showSelectImageBottomSheet(context),
                     child: SingleTextLayout(title: '通知开关: ', text: '查看通知内容'),
                   ),
                   TapLayout(
                     height: 60.0,
                     padding: EdgeInsets.symmetric(horizontal: 16),
-                    onTap: () => friendItemDialog(context, userId: '', callback: (v) {}),
+                    onTap: () => showListBottomSheet(context, data, (int index) {
+                      Navigator.pop(context);
+                    }),
                     child: SingleTextLayout(title: '登录记录', summary: '查看最近所有的登录记录', badgeCount: 0, isShowForward: true),
+                  ),
+                  TapLayout(
+                    height: 48.0,
+                    isRipple: false,
+                    background: Colors.red,
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    // onTap: () => showListBottomSheet(context, data, (int index) {
+                    //   Navigator.pop(context);
+                    // }),
+                    child: Row(children: [Text('登录')],),
                   ),
                 ],
               ),
@@ -183,4 +195,15 @@ class _TextPageState extends State<TextPage> {
       isChanged: text != newText,
     );
   }
+
+  List<String> data = [
+    '设置备注和标签',
+    '把她推荐给朋友',
+    '设为星标好友',
+    '设置朋友圈和视频动态权限',
+    '加入黑名单',
+    '投诉',
+    '添加到桌面',
+    '删除',
+  ];
 }

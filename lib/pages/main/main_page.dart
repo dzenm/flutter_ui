@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/widgets/common_widget.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
+import 'package:flutter_ui/models/main_model.dart';
 
 import 'home_page/home_page.dart';
 import 'me_page/me_page.dart';
@@ -41,8 +42,8 @@ class _MainPageState extends State<MainPage> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           mainAxisSize: MainAxisSize.max,
           children: [
-            _bottomAppBarItemView(Icons.home, S.of.home, 0, badgeCount: 56),
-            _bottomAppBarItemView(Icons.person, S.of.me, 1, badgeCount: 0),
+            _bottomAppBarItemView(Icons.home, S.of.home, 0, badgeCount: MainModel.of.homeCount),
+            _bottomAppBarItemView(Icons.person, S.of.me, 1, badgeCount: MainModel.of.meCount),
           ],
         ),
       ),

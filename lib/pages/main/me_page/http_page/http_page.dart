@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ui/base/http/api_client.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/utils/str_util.dart';
-import 'package:flutter_ui/base/widgets/commom_button.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
-import 'package:flutter_ui/base/widgets/tap_layout.dart';
+import 'package:flutter_ui/base/widgets/wrap_button.dart';
 import 'package:flutter_ui/base/widgets/single_text_layout.dart';
+import 'package:flutter_ui/base/widgets/tap_layout.dart';
 
 class HTTPListPage extends StatefulWidget {
   @override
@@ -90,13 +90,13 @@ class _HTTPListPageState extends State<HTTPListPage> {
               ),
             ]),
             SizedBox(height: 16),
-            ComMomButton(
+            WrapButton(
               text: S.of.login,
               margin: EdgeInsets.only(left: 10.0),
               width: 100.0,
               onTap: () => {},
             ),
-            ComMomButton(
+            WrapButton(
                 text: S.of.register,
                 color: Colors.white,
                 style: TextStyle(fontSize: 15.0, color: Color.fromRGBO(8, 191, 98, 1.0)),

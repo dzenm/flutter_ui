@@ -1,6 +1,7 @@
-import 'package:flutter_ui/base/db/db_model.dart';
-import 'package:flutter_ui/base/db/sql_manager.dart';
 import 'package:sqflite/sqflite.dart';
+
+import 'db_model.dart';
+import 'sql_manager.dart';
 
 /// 数据库操作(增删改查), 在model中使用with混入即可。
 class DBDao {

@@ -11,13 +11,9 @@ class WillPopScopeRoute extends StatefulWidget {
   final BackEvent event; // 返回键的事件类型
   final bool isChanged; // 仅对[BackEvent.unsavedPrompt]生效，即页面数据发生变化时，会提示对数据的操作
   final WidgetBuilder? builder; // 仅对[BackEvent.unsavedPrompt]生效，即页面数据发生变化时，弹出框的提示widget
+  final bool? showDialog; //是否显示弹框
 
-  WillPopScopeRoute(
-    this.child, {
-    this.event = BackEvent.moveTaskToBack,
-    this.isChanged = false,
-    this.builder,
-  });
+  WillPopScopeRoute(this.child, {this.event = BackEvent.moveTaskToBack, this.isChanged = false, this.builder, this.showDialog = true});
 
   @override
   State<StatefulWidget> createState() => _WillPopScopeRouteState();
@@ -64,17 +60,19 @@ class _WillPopScopeRouteState extends State<WillPopScopeRoute> {
   // 未保存的提示
   Future<bool> _unsavedPrompt(bool isChanged) async {
     if (isChanged) {
-      bool isBackResult = true;
-      showDialog<bool>(
-        context: context,
-        builder: widget.builder ?? _backDialogPrompt,
-      ).then((value) {
-        isBackResult = value ?? true;
-        if (value == null) return;
-        if (value) {
-          Navigator.pop(context);
-        }
-      });
+      bool isBackResult = false; //l 默认不返回
+      if (widget.showDialog ?? true) {
+        showDialog<bool>(
+          context: context,
+          builder: widget.builder ?? _backDialogPrompt,
+        ).then((value) {
+          isBackResult = value ?? true;
+          if (value == null) return;
+          if (value) {
+            Navigator.pop(context);
+          }
+        });
+      }
       return isBackResult;
     } else {
       return true;

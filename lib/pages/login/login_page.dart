@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_ui/base/http/api_client.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/router/navigator_manager.dart';
+import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/entities/user_entity.dart';
 import 'package:flutter_ui/pages/main/main_route.dart';
 import 'package:flutter_ui/utils/sp_util.dart';
@@ -98,11 +99,11 @@ class _LoginPageState extends State<LoginPage> {
         Row(children: [
           Expanded(
             flex: 1,
-            child: MaterialButton(
-              color: _isDisableLoginButton ? Colors.grey : Colors.blue,
-              onPressed: _loginPressed,
-              elevation: 0,
-              highlightElevation: 0,
+            child: TapLayout(
+              height: 36.0,
+              borderRadius: BorderRadius.all(Radius.circular(2)),
+              background: _isDisableLoginButton ? Colors.blue.shade200 : Colors.blue,
+              onTap: _isDisableLoginButton ? null : _loginPressed,
               child: Text(S.of.login, style: TextStyle(color: Colors.white)),
             ),
           ),
@@ -119,8 +120,6 @@ class _LoginPageState extends State<LoginPage> {
 
   // 登录按钮点击事件
   void _loginPressed() {
-    if (_isDisableLoginButton) return;
-
     FocusScope.of(context).unfocus();
     ApiClient.getInstance.request(apiServices.login(_username, _password),
         success: (data) {
@@ -136,6 +135,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _pushMainPage() {
-    NavigatorManager.push(context, MainRoute.main, clearStack: true);
+    NavigatorManager.navigateTo(context, MainRoute.main, clearStack: true);
   }
 }

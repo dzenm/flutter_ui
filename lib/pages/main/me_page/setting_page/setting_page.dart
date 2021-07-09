@@ -60,12 +60,7 @@ class _SettingPageState extends State<SettingPage> {
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 onTap: () => showToast(S.of.username),
-                child: SingleTextLayout(
-                    icon: Icons.person,
-                    title: S.of.username,
-                    text: _user.username,
-                    isTextLeft: false,
-                    isShowForward: true),
+                child: SingleTextLayout(icon: Icons.person, title: S.of.username, text: _user.username, isTextLeft: false, isShowForward: true),
               ),
               TapLayout(
                 height: 50.0,
@@ -77,8 +72,7 @@ class _SettingPageState extends State<SettingPage> {
                   isTextLeft: false,
                   suffix: ClipRRect(
                     borderRadius: BorderRadius.circular(16),
-                    child: Image.asset(Assets.image('a.jpg'),
-                        fit: BoxFit.cover, width: 24, height: 24),
+                    child: Image.asset(Assets.image('a.jpg'), fit: BoxFit.cover, width: 24, height: 24),
                   ),
                   isShowForward: true,
                 ),
@@ -87,12 +81,7 @@ class _SettingPageState extends State<SettingPage> {
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 onTap: () => showToast(S.of.phone),
-                child: SingleTextLayout(
-                    icon: Icons.phone_android,
-                    title: S.of.phone,
-                    text: _user.id.toString(),
-                    isTextLeft: false,
-                    isShowForward: true),
+                child: SingleTextLayout(icon: Icons.phone_android, title: S.of.phone, text: _user.id.toString(), isTextLeft: false, isShowForward: true),
               ),
               TapLayout(
                 height: 50.0,
@@ -115,10 +104,7 @@ class _SettingPageState extends State<SettingPage> {
                 child: SingleTextLayout(
                   icon: Icons.notifications_on_sharp,
                   title: S.of.notificationSwitch,
-                  suffix: CupertinoSwitch(
-                      value: switchState,
-                      onChanged: (value) =>
-                          setState(() => switchState = value)),
+                  suffix: CupertinoSwitch(value: switchState, onChanged: (value) => setState(() => switchState = value)),
                 ),
               ),
               TapLayout(
@@ -153,11 +139,8 @@ class _SettingPageState extends State<SettingPage> {
               TapLayout(
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: () => showToast('异常登录记录'),
-                child: SingleTextLayout(
-                    title: S.of.loginRecord,
-                    badgeCount: 0,
-                    isShowForward: true),
+                onTap: () => LocalModel.of.setValue('new value'),
+                child: SingleTextLayout(title: S.of.loginRecord, badgeCount: 0, isShowForward: true),
               ),
               TapLayout(
                 height: 50.0,
@@ -169,18 +152,14 @@ class _SettingPageState extends State<SettingPage> {
                     cancel();
                   });
                 },
-                child: SingleTextLayout(
-                    title: S.of.checkUpgrade,
-                    badgeCount: 100,
-                    isShowForward: true),
+                child: SingleTextLayout(title: S.of.checkUpgrade, badgeCount: 100, isShowForward: true),
               ),
               divider(height: 8),
               TapLayout(
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 onTap: _logout,
-                child:
-                    SingleTextLayout(title: S.of.logout, isShowForward: true),
+                child: SingleTextLayout(title: S.of.logout, isShowForward: true),
               ),
               TapLayout(
                 height: 50.0,
@@ -224,9 +203,7 @@ class _SettingPageState extends State<SettingPage> {
                     width: 40,
                     height: 40,
                     color: value,
-                    child: _colorKey == key
-                        ? Icon(Icons.done, color: Colors.white)
-                        : null,
+                    child: _colorKey == key ? Icon(Icons.done, color: Colors.white) : null,
                   ),
                 );
               }).toList(),
@@ -275,7 +252,7 @@ class _SettingPageState extends State<SettingPage> {
       SpUtil.setToken(null);
       SpUtil.setUser(null);
 
-      NavigatorManager.push(context, LoginRoute.login, clearStack: true);
+      NavigatorManager.navigateTo(context, LoginRoute.login, clearStack: true);
     });
   }
 }

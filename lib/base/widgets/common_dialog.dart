@@ -1,10 +1,13 @@
+import 'dart:async';
+
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/res/strings.dart';
-import 'package:flutter_ui/base/widgets/tap_layout.dart';
 
-import 'common_widget.dart';
+import 'tap_layout.dart';
+
+typedef ItemClickCallback = void Function(int index);
 
 /// toast弹出提示框
 CancelFunc showToast(String text, {int seconds = 2}) {
@@ -39,71 +42,145 @@ CancelFunc loadingDialog({String? loadingTxt, bool isVertical = true}) {
   );
 }
 
-void showSelectImageSheet(BuildContext context, {Function? onCameraClick, Function? onGalleryClick}) {
-  showBottomSheetLayout(context, items: ['拍照', '从相册中选择'], onTapFunc: (item) async {
-    if (item == '拍照') {
+/// 选择图片对话框
+void showSelectImageBottomSheet(BuildContext context, {Function? onCameraClick, Function? onGalleryClick}) {
+  showListBottomSheet(context, [S.of.camera, S.of.gallery], (item) async {
+    if (item == 0) {
       if (onCameraClick != null) onCameraClick();
-    } else {
+    } else if (item == 1) {
       if (onGalleryClick != null) onGalleryClick();
     }
   });
 }
 
-void showBottomSheetLayout(BuildContext context, {List<String>? items, Function? onTapFunc}) {
+/// 列表选择对话框
+void showListBottomSheet(BuildContext context, List<String> items, ItemClickCallback? onTap, {double height = 45.0}) {
+  List<Widget> _listItems() {
+    List<Widget> list = [];
+    int index = 0;
+    items.add(S.of.cancel);
+    items.forEach((item) {
+      list.add(TapLayout(
+        width: MediaQuery.of(context).size.width,
+        height: height,
+        onTap: () {
+          Navigator.pop(context);
+          if (onTap != null && index != items.length - 1) onTap(index);
+        },
+        child: Container(
+          alignment: Alignment.center,
+          child: Text(item),
+        ),
+      ));
+      index++;
+    });
+    return list;
+  }
+
   showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-      builder: (builder) {
-        return Column(mainAxisSize: MainAxisSize.min, children: [
-          PhysicalModel(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(5),
-            clipBehavior: Clip.antiAlias,
-            child: Column(
-              children: items!.map((e) {
-                int index = items.indexOf(e);
-                if (index != items.length - 1) {
-                  return Column(
-                    children: [
-                      TapLayout(
-                          width: MediaQuery.of(context).size.width,
-                          height: 45,
-                          onTap: () {
-                            Navigator.pop(context);
-                            if (onTapFunc != null) onTapFunc(e);
-                          },
-                          child: Container(
-                            alignment: Alignment.center,
-                            child: Text(e),
-                          )),
-                      divider(),
-                    ],
-                  );
-                } else {
-                  return TapLayout(
-                      width: MediaQuery.of(context).size.width,
-                      height: 45,
-                      onTap: () {
-                        Navigator.pop(context);
-                        if (onTapFunc != null) onTapFunc(e);
-                      },
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: Text(e),
-                      ));
-                }
-              }).toList(),
-            ),
-          ),
-          TapLayout(
-            width: MediaQuery.of(context).size.width,
-            margin: EdgeInsets.only(top: 5, bottom: 2),
-            height: 45,
-            borderRadius: BorderRadius.circular(5),
-            onTap: () => Navigator.pop(context),
-            child: Container(alignment: Alignment.center, child: Text('取消')),
-          ),
-        ]);
-      });
+    context: context,
+    backgroundColor: Colors.transparent,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+    builder: (builder) {
+      return Column(mainAxisSize: MainAxisSize.min, children: [
+        PhysicalModel(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(5),
+          clipBehavior: Clip.antiAlias,
+          child: Column(children: _listItems()),
+        ),
+      ]);
+    },
+  );
+}
+
+class CustomDialog extends StatefulWidget {
+  //------------------不带图片的dialog------------------------
+  final String? title; //弹窗标题
+  final String? content; //弹窗内容
+  final String? confirmContent; //按钮文本
+  final Color? confirmTextColor; //确定按钮文本颜色
+  final bool isCancel; //是否有取消按钮，默认为true true：有 false：没有
+  final Color? confirmColor; //确定按钮颜色
+  final Color? cancelColor; //取消按钮颜色
+  final bool outsideDismiss; //点击弹窗外部，关闭弹窗，默认为true true：可以关闭 false：不可以关闭
+  final Function? confirmCallback; //点击确定按钮回调
+  final Function? dismissCallback; //弹窗关闭回调
+  final Widget? dialogWidget;
+  final bool hideKeyboard;
+
+  //------------------带图片的dialog------------------------
+  final String? image; //dialog添加图片
+  final String? imageHintText; //图片下方的文本提示
+
+  const CustomDialog(
+      {Key? key,
+      this.title,
+      this.content,
+      this.confirmContent,
+      this.confirmTextColor,
+      this.isCancel = true,
+      this.confirmColor,
+      this.cancelColor,
+      this.outsideDismiss = true,
+      this.confirmCallback,
+      this.dismissCallback,
+      this.image,
+      this.hideKeyboard = false,
+      this.imageHintText,
+      this.dialogWidget})
+      : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _CustomDialogState();
+}
+
+class _CustomDialogState extends State<CustomDialog> {
+  StreamSubscription? onKeyboardChange;
+
+  _dismissDialog() {
+    if (widget.dismissCallback != null) {
+      widget.dismissCallback!();
+    } else {
+      Navigator.of(context).pop();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.hideKeyboard) {
+      // onKeyboardChange = KeyboardVisibility.onChange.listen((bool visible) {
+      //   if (!visible) FocusScope.of(context).unfocus();
+      // });
+    }
+  }
+
+  @override
+  void dispose() {
+    onKeyboardChange?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+        onTap: () => widget.outsideDismiss ? _dismissDialog() : null,
+        behavior: HitTestBehavior.opaque,
+        child: Scaffold(backgroundColor: Colors.transparent, body: Center(child: widget.dialogWidget)));
+//        return WillPopScope(
+//        child: GestureDetector(
+//          onTap: () => {widget.outsideDismiss ? _dismissDialog() : null},
+//          child: Material(
+//            type: MaterialType.transparency,
+//            child: Scaffold(
+//              backgroundColor: Colors.transparent,
+//              body: Center(child: widget.dialogWidget)
+//            ),
+//          ),
+//        ),
+//        onWillPop: () async {
+//          return widget.outsideDismiss;
+//        });
+  }
 }

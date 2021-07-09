@@ -19,6 +19,7 @@ import 'package:provider/provider.dart';
 import 'base/log/log.dart';
 import 'base/widgets/will_pop_scope_route.dart';
 import 'models/home_model.dart';
+import 'models/main_model.dart';
 import 'models/me_model.dart';
 
 void main() => Application.getInstance.init();
@@ -72,6 +73,7 @@ class Application {
       // 共享状态管理
       providers: [
         ChangeNotifierProvider(create: (context) => LocalModel()),
+        ChangeNotifierProvider(create: (context) => MainModel()),
         ChangeNotifierProvider(create: (context) => HomeModel()),
         ChangeNotifierProvider(create: (context) => MeModel()),
       ],

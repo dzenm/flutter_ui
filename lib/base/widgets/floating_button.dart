@@ -2,7 +2,8 @@ import 'dart:async';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/widgets/floating_button_painter.dart';
+
+import 'floating_button_painter.dart';
 
 class FloatingButton extends StatefulWidget {
   final ImageProvider imageProvider;

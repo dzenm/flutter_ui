@@ -64,6 +64,10 @@ class S implements WidgetsLocalizations {
       'home': '首页',
       'me': '我',
       'loading': '加载中',
+      'confirm': '确定',
+      'cancel': '取消',
+      'camera': '拍照',
+      'gallery': '相册',
       'unknown': '未知',
     },
     'en': {
@@ -103,6 +107,10 @@ class S implements WidgetsLocalizations {
       'home': 'Home',
       'me': 'Me',
       'loading': 'Loading',
+      'confirm': 'Confirm',
+      'cancel': 'Cancel',
+      'camera': 'Camera',
+      'gallery': 'Gallery',
       'unknown': 'Unknown',
     },
   };
@@ -144,6 +152,10 @@ class S implements WidgetsLocalizations {
 
   String get checkUpgrade => _getValues('checkUpgrade');
 
+  String get camera => _getValues('camera');
+
+  String get gallery => _getValues('gallery');
+
   // 通用文本
   String get login => _getValues('login');
 
@@ -178,6 +190,10 @@ class S implements WidgetsLocalizations {
   String get me => _getValues('me');
 
   String get loading => _getValues('loading');
+
+  String get confirm => _getValues('confirm');
+
+  String get cancel => _getValues('cancel');
 
   String get unknown => _getValues('unknown');
 }

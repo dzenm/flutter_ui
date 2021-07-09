@@ -1,4 +1,3 @@
-import 'package:flutter_ui/base/db/db_sql.dart';
 import 'package:flutter_ui/base/entities/column_entity.dart';
 import 'package:flutter_ui/base/entities/table_entity.dart';
 import 'package:flutter_ui/base/log/log.dart';
@@ -6,6 +5,8 @@ import 'package:flutter_ui/utils/sp_util.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
+
+import 'db_sql.dart';
 
 /// 数据库操作管理
 class SqlManager {

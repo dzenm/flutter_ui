@@ -1,11 +1,17 @@
 import 'package:fluro/fluro.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
 
+import '../../main.dart';
+
 /// 路由跳转工具类
 class NavigatorManager {
-  static void push(
+  static NavigatorState get _state => navigator.currentState!;
+
+  static void navigateTo(
     BuildContext context,
     String path, {
     Object? argument,
@@ -87,7 +93,7 @@ class NavigatorManager {
     }
   }
 
-  static void pop(BuildContext context, {result}) {
+  static void finish(BuildContext context, {result}) {
     FocusScope.of(context).unfocus();
     if (result == null) {
       Navigator.pop(context);
@@ -96,22 +102,48 @@ class NavigatorManager {
     }
   }
 
-  static String changeToNavigatorPath(String registerPath,
-      {Map<String, dynamic>? params}) {
+  static String changeToNavigatorPath(String registerPath, {Map<String, dynamic>? params}) {
     if (params == null || params.isEmpty) {
       return registerPath;
     }
     StringBuffer bufferStr = StringBuffer();
     params.forEach((key, value) {
-      bufferStr
-        ..write(key)
-        ..write("=")
-        ..write(Uri.encodeComponent(value))
-        ..write("&");
+      bufferStr..write(key)..write("=")..write(Uri.encodeComponent(value))..write("&");
     });
     String paramStr = bufferStr.toString();
     paramStr = paramStr.substring(0, paramStr.length - 1);
     Log.d("传递的参数: $paramStr");
     return "$registerPath?$paramStr";
+  }
+
+  static Future<dynamic> push(Widget page, {bool isMaterial = false}) {
+    return _state.push(_getPageRoute(page, isMaterial));
+  }
+
+  static void pop({dynamic result}) {
+    FocusScope.of(_state.context).unfocus();
+    _state.pop(result);
+  }
+
+  static Future<dynamic> pushReplacement(Widget page, {bool isMaterial = false}) {
+    return _state.pushReplacement(_getPageRoute(page, isMaterial));
+  }
+
+  static Future<dynamic> pushAndRemoveUntil(Widget page, {bool isMaterial = false}) {
+    return _state.pushAndRemoveUntil(_getPageRoute(page, isMaterial), (Route<dynamic> route) => false);
+  }
+
+  static PageRoute _getPageRoute(Widget page, bool isMaterial) {
+    if (isMaterial) {
+      return MaterialPageRoute(
+        builder: (BuildContext context) => page,
+        settings: RouteSettings(name: page.toStringShort()),
+      );
+    } else {
+      return CupertinoPageRoute(
+        builder: (BuildContext context) => page,
+        settings: RouteSettings(name: page.toStringShort()),
+      );
+    }
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/widgets/tap_layout.dart';
+
+import 'tap_layout.dart';
 
 /// ListView加载底部数据的View
 class LoadingView extends StatefulWidget {

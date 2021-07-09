@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/naughty/page/db/db_table_list_page.dart';
-import 'package:flutter_ui/base/router/route_manager.dart';
+import 'package:flutter_ui/base/router/navigator_manager.dart';
 import 'package:flutter_ui/base/utils/file_util.dart';
 import 'package:flutter_ui/base/utils/str_util.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
@@ -70,7 +70,7 @@ class _DBListPageState extends State<DBListPage> {
         ),
         child: TapLayout(
           borderRadius: BorderRadius.all(Radius.circular(7)),
-          onTap: () => Navigation.push(DBTableListPage(_list[index])),
+          onTap: () => NavigatorManager.push(DBTableListPage(_list[index])),
           child: Padding(
             padding: EdgeInsets.all(16),
             child: Column(
@@ -89,13 +89,11 @@ class _DBListPageState extends State<DBListPage> {
     File file = File(path);
     int len = file.lengthSync();
     String size = StrUtil.formatSize(len);
-    String modifyTime =
-        DateFormat("yyyy-MM-dd HH:mm:ss").format(file.lastModifiedSync());
+    String modifyTime = DateFormat("yyyy-MM-dd HH:mm:ss").format(file.lastModifiedSync());
     return [
       Text(
         name,
-        style: TextStyle(
-            fontWeight: FontWeight.bold, color: Colors.black87, fontSize: 18.0),
+        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black87, fontSize: 18.0),
       ),
       SizedBox(height: 8),
       Text(path),

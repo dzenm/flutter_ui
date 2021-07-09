@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ComMomButton extends StatelessWidget {
+class WrapButton extends StatelessWidget {
   final double? width;
   final double height;
   final EdgeInsetsGeometry? padding;
@@ -16,7 +16,7 @@ class ComMomButton extends StatelessWidget {
   final Gradient gradient;
   final bool enable;
 
-  ComMomButton({
+  WrapButton({
     this.width,
     this.height = 40.0,
     this.padding = const EdgeInsets.symmetric(horizontal: 5.0),
