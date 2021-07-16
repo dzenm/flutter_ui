@@ -92,17 +92,18 @@ class _HTTPListPageState extends State<HTTPListPage> {
             SizedBox(height: 16),
             WrapButton(
               text: S.of.login,
-              margin: EdgeInsets.only(left: 10.0),
+              margin: EdgeInsets.only(bottom: 10.0),
               width: 100.0,
-              onTap: () => {},
+              onTap: () => {showToast('hello')},
             ),
             WrapButton(
-                text: S.of.register,
-                color: Colors.white,
-                style: TextStyle(fontSize: 15.0, color: Color.fromRGBO(8, 191, 98, 1.0)),
-                margin: EdgeInsets.only(right: 10.0),
-                onTap: () => {},
-                width: 100.0),
+              text: S.of.register,
+              color: Colors.white,
+              style: TextStyle(fontSize: 15.0, color: Color.fromRGBO(8, 191, 98, 1.0)),
+              margin: EdgeInsets.only(top: 10.0),
+              onTap: () => {},
+              width: 100.0,
+            ),
             SizedBox(height: 16),
             Expanded(
                 child: SingleChildScrollView(

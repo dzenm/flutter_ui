@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/http/api_client.dart';
+import 'package:flutter_ui/base/router/navigator_manager.dart';
 import 'package:flutter_ui/base/widgets/loading_view.dart';
 import 'package:flutter_ui/base/widgets/refresh_list_view.dart';
+import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/entities/article_entity.dart';
 import 'package:flutter_ui/base/entities/page_entity.dart';
+import 'package:flutter_ui/pages/main/main_route.dart';
+import 'package:flutter_ui/pages/main/me_page/me_router.dart';
 
 class ListPage extends StatefulWidget {
   @override
@@ -41,8 +45,15 @@ class _ListPageState extends State<ListPage> {
           children: [
             Expanded(
               child: isInit
-                  ? RefreshListView(list: articleList, refresh: _onRefresh, builder: _renderArticleItem)
-                  : LoadingView(loadingState: loadingState, onTap: () => _getArticle()),
+                  ? RefreshListView(
+                      list: articleList,
+                      refresh: _onRefresh,
+                      builder: _renderArticleItem,
+                    )
+                  : LoadingView(
+                      loadingState: loadingState,
+                      onTap: () => _getArticle(),
+                    ),
             )
           ],
         ),
@@ -52,8 +63,14 @@ class _ListPageState extends State<ListPage> {
 
   Widget _renderArticleItem(BuildContext context, int index) {
     if (index < articleList.length) {
-      return ListTile(
-        title: Text(articleList[index]?.title ?? ''),
+      ArticleEntity article = articleList[index] ?? ArticleEntity();
+      String title = article.title ?? '';
+      return TapLayout(
+        onTap: () => NavigatorManager.navigateTo(context, MainRoute.webView),
+        //
+        child: ListTile(
+          title: Text(title),
+        ),
       );
     }
     return LoadingView(loadingState: loadingState, vertical: false, onTap: () => _getArticle());

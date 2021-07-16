@@ -120,7 +120,20 @@ class _TextPageState extends State<TextPage> {
                   TapLayout(
                     height: 50.0,
                     padding: EdgeInsets.symmetric(horizontal: 16),
-                    onTap: () => showToast('编辑出生日期'),
+                    onTap: () => showPromptDialog(
+                      context,
+                      titleString: '立即开通',
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('购买类型：', style: TextStyle(fontSize: 16)),
+                          Text('应付金额：￥', style: TextStyle(fontSize: 16)),
+                          Text('支付方式：(￥)', style: TextStyle(fontSize: 16)),
+                        ],
+                      ),
+                    ),
                     child: SingleTextLayout(icon: Icons.date_range_outlined, title: '生日', text: '1997/2/12', isTextLeft: false, isShowForward: true),
                   ),
                   TapLayout(
@@ -142,7 +155,7 @@ class _TextPageState extends State<TextPage> {
                   TapLayout(
                     height: 50.0,
                     padding: EdgeInsets.symmetric(horizontal: 16),
-                    onTap: () => showToast('设置头像'),
+                    onTap: () => showPromptDialog(context, title: Text('设置头像'), content: Text('输入内容'), onPositiveTap: () => showToast('修改成功')),
                     child: SingleTextLayout(
                       icon: Icons.person,
                       title: '头像',
@@ -157,8 +170,7 @@ class _TextPageState extends State<TextPage> {
                   TapLayout(
                     height: 50.0,
                     padding: EdgeInsets.symmetric(horizontal: 16),
-                    child:
-                        SingleTextLayout(title: '通知开关', suffix: CupertinoSwitch(value: switchState, onChanged: (value) => setState(() => switchState = value))),
+                    child: SingleTextLayout(title: '通知开关', suffix: CupertinoSwitch(value: switchState, onChanged: (value) => setState(() => switchState = value))),
                   ),
                   TapLayout(
                     height: 50.0,
@@ -183,7 +195,9 @@ class _TextPageState extends State<TextPage> {
                     // onTap: () => showListBottomSheet(context, data, (int index) {
                     //   Navigator.pop(context);
                     // }),
-                    child: Row(children: [Text('登录')],),
+                    child: Row(
+                      children: [Text('登录')],
+                    ),
                   ),
                 ],
               ),

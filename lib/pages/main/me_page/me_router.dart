@@ -23,38 +23,31 @@ class MeRouter extends BaseRoute {
 
   @override
   void initRouter(FluroRouter router) {
-    router.define(textPage, handler: Handler(
-        handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+    router.define(textPage, handler: Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
       Log.d("进入文本和输入框页面: $textPage");
       return TextPage();
     }));
-    router.define(floatNavigator, handler: Handler(
-        handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+    router.define(floatNavigator, handler: Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
       Log.d("进入NavigationBar页面: $floatNavigator");
       return FloatNavigationPage();
     }));
-    router.define(convert, handler: Handler(
-        handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+    router.define(convert, handler: Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
       Log.d("进入字符转化页面: $convert");
       return ConvertPage();
     }));
-    router.define(http, handler: Handler(
-        handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+    router.define(http, handler: Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
       Log.d("进入网络请求页面: $http");
       return HTTPListPage();
     }));
-    router.define(list, handler: Handler(
-        handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+    router.define(list, handler: Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
       Log.d("进入列表页面: $list");
       return ListPage();
     }));
-    router.define(theme, handler: Handler(
-        handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+    router.define(theme, handler: Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
       Log.d("进入主题设置页面: $theme");
       return ThemePage();
     }));
-    router.define(settingPage, handler: Handler(
-        handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+    router.define(settingPage, handler: Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
       Log.d("进入主设置页面: $settingPage");
       return SettingPage();
     }));

@@ -61,6 +61,8 @@ dependencies:
   shared_preferences: ^2.0.6
   # 通知栏通知提醒 https://pub.flutter-io.cn/packages/flutter_local_notifications
   flutter_local_notifications: ^5.0.0
+  # WebView https://pub.dev/packages/webview_flutter
+  webview_flutter: ^2.0.9
 #  # 网络请求 https://pub.dev/packages/dio_http_cache#-installing-tab-
 #  #  dio_http_cache: ^0.2.11
 #  # 图片缓存 https://pub.flutter-io.cn/packages/cached_network_image

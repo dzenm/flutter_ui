@@ -1,9 +1,9 @@
-import 'dart:async';
-
 import 'package:bot_toast/bot_toast.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/res/strings.dart';
+import 'package:flutter_ui/base/widgets/common_widget.dart';
 
 import 'tap_layout.dart';
 
@@ -55,26 +55,40 @@ void showSelectImageBottomSheet(BuildContext context, {Function? onCameraClick, 
 
 /// 列表选择对话框
 void showListBottomSheet(BuildContext context, List<String> items, ItemClickCallback? onTap, {double height = 45.0}) {
-  List<Widget> _listItems() {
-    List<Widget> list = [];
-    int index = 0;
-    items.add(S.of.cancel);
-    items.forEach((item) {
-      list.add(TapLayout(
-        width: MediaQuery.of(context).size.width,
-        height: height,
-        onTap: () {
-          Navigator.pop(context);
-          if (onTap != null && index != items.length - 1) onTap(index);
-        },
-        child: Container(
-          alignment: Alignment.center,
-          child: Text(item),
-        ),
-      ));
-      index++;
-    });
-    return list;
+  List<String> data = [];
+  items.forEach((item) => data.add(item));
+  data.add(S.of.cancel);
+
+  double realHeight = (items.length + 1) * height;
+
+  Widget _child(int index) {
+    return TapLayout(
+      height: height,
+      onTap: () {
+        Navigator.pop(context);
+        if (onTap != null && index < data.length - 1) onTap(index);
+      },
+      child: Container(alignment: Alignment.center, child: Text(data[index])),
+    );
+  }
+
+  Widget _listView() {
+    return ListView.builder(
+      itemCount: data.length,
+      shrinkWrap: true,
+      itemBuilder: (BuildContext context, int index) => _child(index),
+    );
+  }
+
+  Widget _columns() {
+    int index = -1;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: data.map((e) {
+        index++;
+        return _child(index);
+      }).toList(),
+    );
   }
 
   showModalBottomSheet(
@@ -82,105 +96,170 @@ void showListBottomSheet(BuildContext context, List<String> items, ItemClickCall
     backgroundColor: Colors.transparent,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
     builder: (builder) {
-      return Column(mainAxisSize: MainAxisSize.min, children: [
-        PhysicalModel(
+      return Container(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height / 2,
+          minHeight: height,
+        ),
+        width: MediaQuery.of(context).size.width,
+        child: PhysicalModel(
           color: Colors.white,
           borderRadius: BorderRadius.circular(5),
           clipBehavior: Clip.antiAlias,
-          child: Column(children: _listItems()),
+          child: realHeight > MediaQuery.of(context).size.width / 2 ? _listView() : _columns(),
         ),
-      ]);
+      );
     },
   );
 }
 
-class CustomDialog extends StatefulWidget {
-  //------------------不带图片的dialog------------------------
-  final String? title; //弹窗标题
-  final String? content; //弹窗内容
-  final String? confirmContent; //按钮文本
-  final Color? confirmTextColor; //确定按钮文本颜色
-  final bool isCancel; //是否有取消按钮，默认为true true：有 false：没有
-  final Color? confirmColor; //确定按钮颜色
-  final Color? cancelColor; //取消按钮颜色
-  final bool outsideDismiss; //点击弹窗外部，关闭弹窗，默认为true true：可以关闭 false：不可以关闭
-  final Function? confirmCallback; //点击确定按钮回调
-  final Function? dismissCallback; //弹窗关闭回调
-  final Widget? dialogWidget;
-  final bool hideKeyboard;
-
-  //------------------带图片的dialog------------------------
-  final String? image; //dialog添加图片
-  final String? imageHintText; //图片下方的文本提示
-
-  const CustomDialog(
-      {Key? key,
-      this.title,
-      this.content,
-      this.confirmContent,
-      this.confirmTextColor,
-      this.isCancel = true,
-      this.confirmColor,
-      this.cancelColor,
-      this.outsideDismiss = true,
-      this.confirmCallback,
-      this.dismissCallback,
-      this.image,
-      this.hideKeyboard = false,
-      this.imageHintText,
-      this.dialogWidget})
-      : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() => _CustomDialogState();
+void showPromptDialog(
+  BuildContext context, {
+  bool isTouchOutsideDismiss = false,
+  String? titleString,
+  Widget? title,
+  Widget? content,
+  String? positiveText,
+  String? negativeText,
+  TextStyle? positiveStyle,
+  TextStyle? negativeStyle,
+  GestureTapCallback? onPositiveTap,
+  GestureTapCallback? onNegativeTap,
+}) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return DialogWrapper(
+        isTouchOutsideDismiss: isTouchOutsideDismiss,
+        child: PromptDialog(
+          titleString: titleString,
+          title: title,
+          content: content,
+          positiveText: positiveText,
+          negativeText: negativeText,
+          positiveStyle: positiveStyle,
+          negativeStyle: negativeStyle,
+          onPositiveTap: onPositiveTap,
+          onNegativeTap: onNegativeTap,
+        ),
+      );
+    },
+  );
 }
 
-class _CustomDialogState extends State<CustomDialog> {
-  StreamSubscription? onKeyboardChange;
+/// Dialog设置是否可以点击外部取消显示
+class DialogWrapper extends StatefulWidget {
+  final bool isTouchOutsideDismiss; // 点击弹窗外部，关闭弹窗，默认为true true：可以关闭 false：不可以关闭
+  final GestureTapCallback? dismissCallback; // 弹窗关闭回调
+  final Widget? child;
 
-  _dismissDialog() {
-    if (widget.dismissCallback != null) {
-      widget.dismissCallback!();
-    } else {
-      Navigator.of(context).pop();
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.hideKeyboard) {
-      // onKeyboardChange = KeyboardVisibility.onChange.listen((bool visible) {
-      //   if (!visible) FocusScope.of(context).unfocus();
-      // });
-    }
-  }
+  const DialogWrapper({
+    Key? key,
+    this.isTouchOutsideDismiss = false,
+    this.dismissCallback,
+    this.child,
+  }) : super(key: key);
 
   @override
-  void dispose() {
-    onKeyboardChange?.cancel();
-    super.dispose();
-  }
+  State<StatefulWidget> createState() => _DialogWrapperState();
+}
 
+class _DialogWrapperState extends State<DialogWrapper> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: () => widget.outsideDismiss ? _dismissDialog() : null,
-        behavior: HitTestBehavior.opaque,
-        child: Scaffold(backgroundColor: Colors.transparent, body: Center(child: widget.dialogWidget)));
-//        return WillPopScope(
-//        child: GestureDetector(
-//          onTap: () => {widget.outsideDismiss ? _dismissDialog() : null},
-//          child: Material(
-//            type: MaterialType.transparency,
-//            child: Scaffold(
-//              backgroundColor: Colors.transparent,
-//              body: Center(child: widget.dialogWidget)
-//            ),
-//          ),
-//        ),
-//        onWillPop: () async {
-//          return widget.outsideDismiss;
-//        });
+      onTap: widget.isTouchOutsideDismiss
+          ? widget.dismissCallback == null
+              ? () => Navigator.of(context).pop()
+              : widget.dismissCallback
+          : null,
+      behavior: HitTestBehavior.opaque,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Center(
+          child: widget.child,
+        ),
+      ),
+    );
+  }
+}
+
+/// 自定义的提示框
+class PromptDialog extends StatefulWidget {
+  final String? titleString;
+  final Widget? title;
+  final Widget? content;
+
+  final String? positiveText;
+  final String? negativeText;
+
+  final TextStyle? positiveStyle;
+  final TextStyle? negativeStyle;
+
+  final GestureTapCallback? onPositiveTap;
+  final GestureTapCallback? onNegativeTap;
+
+  PromptDialog({
+    this.titleString,
+    this.title,
+    this.content,
+    this.onPositiveTap,
+    this.onNegativeTap,
+    this.positiveStyle,
+    this.negativeStyle,
+    this.positiveText,
+    this.negativeText,
+  });
+
+  @override
+  State<StatefulWidget> createState() => _PromptDialog();
+}
+
+class _PromptDialog extends State<PromptDialog> {
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.all(Radius.circular(10)),
+      child: Container(
+        width: MediaQuery.of(context).size.width - 40 * 2,
+        padding: EdgeInsets.only(top: 20),
+        color: Colors.white,
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          widget.title ?? Text(widget.titleString ?? '', style: TextStyle(fontSize: 16)),
+          widget.content == null
+              ? SizedBox(width: 0, height: 16)
+              : Flexible(
+                  child: Padding(
+                    child: widget.content,
+                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                  ),
+                ),
+          divider(color: Color(0xffbababa), height: 0.5),
+          Row(children: [
+            Expanded(
+              child: TapLayout(
+                onTap: () {
+                  Navigator.of(context).pop();
+                  if (widget.onNegativeTap != null) widget.onNegativeTap!();
+                },
+                height: 45.0,
+                child: Text(widget.negativeText ?? S.of.cancel, style: widget.negativeStyle),
+              ),
+            ),
+            Container(height: 45.0, width: 0.5, color: Color(0xffbababa)),
+            Expanded(
+              child: TapLayout(
+                onTap: () {
+                  Navigator.of(context).pop();
+                  if (widget.onPositiveTap != null) widget.onPositiveTap!();
+                },
+                height: 45.0,
+                child: Text(widget.positiveText ?? S.of.confirm, style: widget.positiveStyle),
+              ),
+            ),
+          ])
+        ]),
+      ),
+    );
   }
 }
