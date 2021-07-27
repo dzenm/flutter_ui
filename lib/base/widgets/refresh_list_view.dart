@@ -81,14 +81,4 @@ class _RefreshListViewState extends State<RefreshListView> {
   Future<void> _loadingMore() async {
     widget.refresh(false);
   }
-
-  bool isInterceptorLoadingg() {
-    if (widget.loadingState == LoadingState.loading){
-      setState(() {
-
-      });
-      return true;
-    }
-    return false;
-  }
 }

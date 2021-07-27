@@ -17,14 +17,15 @@ class ListPage extends StatefulWidget {
 class _ListPageState extends State<ListPage> {
   List<ArticleEntity?> articleList = [];
   int _page = 0; // 加载的页数
-  LoadingState _loadingState = LoadingState.none;
+  LoadingState _loadingState = LoadingState.loading;
   bool _isInit = false;
 
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration(milliseconds: 500), () {
-      _onRefresh(true);
+      _loadingState = LoadingState.none;
+      _getArticle(isReset: true);
     });
   }
 
@@ -72,7 +73,7 @@ class _ListPageState extends State<ListPage> {
   Future<void> _onRefresh(bool refresh) async => _getArticle(isReset: refresh);
 
   // 根据页数获取文章
-  void _getArticle({bool isReset = false}) async {
+  void _getArticle({bool isReset = false}) {
     if (_loadingState == LoadingState.loading) return;
     setState(() => _loadingState = LoadingState.loading);
 
