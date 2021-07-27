@@ -54,5 +54,3 @@ Map<String, Map<String, Color>> themeColorModel = {
     'backgroundColor': Colors.white,
   },
 };
-
-class ColorConst {}

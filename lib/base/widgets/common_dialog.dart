@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/res/strings.dart';
-import 'package:flutter_ui/base/widgets/common_widget.dart';
 
+import 'common_widget.dart';
 import 'tap_layout.dart';
 
 typedef ItemClickCallback = void Function(int index);
@@ -131,17 +131,26 @@ void showPromptDialog(
     builder: (context) {
       return DialogWrapper(
         isTouchOutsideDismiss: isTouchOutsideDismiss,
-        child: PromptDialog(
-          titleString: titleString,
-          title: title,
-          content: content,
-          positiveText: positiveText,
-          negativeText: negativeText,
-          positiveStyle: positiveStyle,
-          negativeStyle: negativeStyle,
-          onPositiveTap: onPositiveTap,
-          onNegativeTap: onNegativeTap,
-        ),
+        child: Column(mainAxisSize: MainAxisSize.min,children: [
+          SizedBox(height: 20),
+          title ?? Text(titleString ?? '', style: TextStyle(fontSize: 16)),
+          content == null
+              ? SizedBox(width: 0, height: 16)
+              : Flexible(
+            child: Padding(
+              child: content,
+              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+            ),
+          ),
+          BottomButton(
+            positiveText: positiveText,
+            negativeText: negativeText,
+            positiveStyle: positiveStyle,
+            negativeStyle: negativeStyle,
+            onPositiveTap: onPositiveTap,
+            onNegativeTap: onNegativeTap,
+          )
+        ]),
       );
     },
   );
@@ -152,12 +161,16 @@ class DialogWrapper extends StatefulWidget {
   final bool isTouchOutsideDismiss; // 点击弹窗外部，关闭弹窗，默认为true true：可以关闭 false：不可以关闭
   final GestureTapCallback? dismissCallback; // 弹窗关闭回调
   final Widget? child;
+  final Color color;
+  final BorderRadius borderRadius;
 
   const DialogWrapper({
     Key? key,
     this.isTouchOutsideDismiss = false,
     this.dismissCallback,
     this.child,
+    this.color = Colors.white,
+    this.borderRadius = const BorderRadius.all(Radius.circular(10)),
   }) : super(key: key);
 
   @override
@@ -176,20 +189,28 @@ class _DialogWrapperState extends State<DialogWrapper> {
       behavior: HitTestBehavior.opaque,
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: Center(
-          child: widget.child,
+        body: Container(
+          alignment: Alignment.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ClipRRect(
+                borderRadius: widget.borderRadius,
+                child: Container(
+                  width: MediaQuery.of(context).size.width - 40 * 2,
+                  color: widget.color,
+                  child: widget.child,
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-/// 自定义的提示框
-class PromptDialog extends StatefulWidget {
-  final String? titleString;
-  final Widget? title;
-  final Widget? content;
-
+class BottomButton extends StatelessWidget {
   final String? positiveText;
   final String? negativeText;
 
@@ -199,10 +220,7 @@ class PromptDialog extends StatefulWidget {
   final GestureTapCallback? onPositiveTap;
   final GestureTapCallback? onNegativeTap;
 
-  PromptDialog({
-    this.titleString,
-    this.title,
-    this.content,
+  BottomButton({
     this.onPositiveTap,
     this.onNegativeTap,
     this.positiveStyle,
@@ -212,54 +230,34 @@ class PromptDialog extends StatefulWidget {
   });
 
   @override
-  State<StatefulWidget> createState() => _PromptDialog();
-}
-
-class _PromptDialog extends State<PromptDialog> {
-  @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.all(Radius.circular(10)),
-      child: Container(
-        width: MediaQuery.of(context).size.width - 40 * 2,
-        padding: EdgeInsets.only(top: 20),
-        color: Colors.white,
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          widget.title ?? Text(widget.titleString ?? '', style: TextStyle(fontSize: 16)),
-          widget.content == null
-              ? SizedBox(width: 0, height: 16)
-              : Flexible(
-                  child: Padding(
-                    child: widget.content,
-                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-                  ),
-                ),
-          divider(color: Color(0xffbababa), height: 0.5),
-          Row(children: [
-            Expanded(
-              child: TapLayout(
-                onTap: () {
-                  Navigator.of(context).pop();
-                  if (widget.onNegativeTap != null) widget.onNegativeTap!();
-                },
-                height: 45.0,
-                child: Text(widget.negativeText ?? S.of.cancel, style: widget.negativeStyle),
-              ),
+    return Column(
+      children: [
+        divider(color: Color(0xffbababa), height: 0.5),
+        Row(children: [
+          Expanded(
+            child: TapLayout(
+              height: 45.0,
+              onTap: () {
+                Navigator.of(context).pop();
+                if (onNegativeTap != null) onNegativeTap!();
+              },
+              child: Text(negativeText ?? S.of.cancel, style: negativeStyle),
             ),
-            Container(height: 45.0, width: 0.5, color: Color(0xffbababa)),
-            Expanded(
-              child: TapLayout(
-                onTap: () {
-                  Navigator.of(context).pop();
-                  if (widget.onPositiveTap != null) widget.onPositiveTap!();
-                },
-                height: 45.0,
-                child: Text(widget.positiveText ?? S.of.confirm, style: widget.positiveStyle),
-              ),
+          ),
+          Container(height: 45.0, width: 0.5, color: Color(0xffbababa)),
+          Expanded(
+            child: TapLayout(
+              height: 45.0,
+              onTap: () {
+                Navigator.of(context).pop();
+                if (onPositiveTap != null) onPositiveTap!();
+              },
+              child: Text(positiveText ?? S.of.confirm, style: positiveStyle),
             ),
-          ])
-        ]),
-      ),
+          ),
+        ])
+      ],
     );
   }
 }

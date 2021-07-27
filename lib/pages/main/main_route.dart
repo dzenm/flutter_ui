@@ -9,8 +9,8 @@ import 'package:flutter_ui/pages/common/web_view_page.dart';
 import 'package:flutter_ui/pages/main/main_page.dart';
 
 class MainRoute extends BaseRoute {
-  static const String notFound = "/common/notFound";
-  static const String webView = "/common/webView";
+  static const String notFound = "/main/notFound";
+  static const String webView = "/main/webView";
   static const String main = "/main";
 
   @override

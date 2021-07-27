@@ -22,6 +22,8 @@ class LoadingView extends StatefulWidget {
 }
 
 class _LoadingViewState extends State<LoadingView> {
+  bool isTap = false;
+
   @override
   Widget build(BuildContext context) {
     double size = widget.loadingProgressSize ?? (widget.vertical ? 48 : 24);
@@ -46,9 +48,10 @@ class _LoadingViewState extends State<LoadingView> {
   }
 
   List<Widget> _loadingView(double size) {
+    LoadingState state = widget.loadingState;
     return [
       Offstage(
-        offstage: widget.loadingState != LoadingState.loading,
+        offstage: state != LoadingState.loading,
         child: Container(
           width: size,
           height: size,
@@ -56,7 +59,7 @@ class _LoadingViewState extends State<LoadingView> {
         ),
       ),
       SizedBox(width: 16, height: 32),
-      Text(loadingText(widget.loadingState)),
+      Text(loadingText(state)),
     ];
   }
 
@@ -74,7 +77,7 @@ class _LoadingViewState extends State<LoadingView> {
         return '加载成功';
       case LoadingState.error:
         return '加载失败';
-      case LoadingState.complete:
+      case LoadingState.end:
         return '滑动到最底部了';
     }
   }
@@ -85,8 +88,8 @@ enum LoadingState {
   none, // 什么都不做
   loading, // 加载中，正在请求数据
   empty, // 加载为空数据
-  more, // 加载部分页数，还有更多页面可以加载
   success, // 加载成功
   error, // 加载错误
-  complete, // 加载数据完成，没有数据可以加载
+  more, // 底部显示，加载部分页数，还有更多页面可以加载
+  end, // 底部显示，加载数据完成，没有数据可以加载
 }
