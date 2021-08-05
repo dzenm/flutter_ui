@@ -60,6 +60,7 @@
             android:value="2" />
 
         <service android:name=".MediaService" />
+        <activity android:name="com.apptreesoftware.barcodescan.BarcodeScannerActivity"/>
 
     </application>
 </manifest>

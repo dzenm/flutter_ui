@@ -15,7 +15,9 @@ import 'package:flutter_ui/base/widgets/common_widget.dart';
 import 'package:flutter_ui/base/widgets/single_text_layout.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/entities/user_entity.dart';
+import 'package:flutter_ui/pages/common/photo_preview_page.dart';
 import 'package:flutter_ui/pages/login/login_route.dart';
+import 'package:flutter_ui/pages/main/main_route.dart';
 import 'package:flutter_ui/utils/sp_util.dart';
 
 /// 设置页面
@@ -65,7 +67,7 @@ class _SettingPageState extends State<SettingPage> {
               TapLayout(
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: () => showToast('设置头像'),
+                onTap: () => showPreviewPhotoPage(context, [Assets.image('a.jpg'), Assets.image('a.jpg'), Assets.image('a.jpg')]),
                 child: SingleTextLayout(
                   icon: Icons.error,
                   title: S.of.avatar,
@@ -171,7 +173,14 @@ class _SettingPageState extends State<SettingPage> {
                     cancel();
                   });
                 },
-                child: SingleTextLayout(title: S.of.exit, isShowForward: true),
+                child: SingleTextLayout(
+                  image: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Image.asset(Assets.image('a.jpg'), fit: BoxFit.cover, width: 24, height: 24),
+                  ),
+                  title: S.of.exit,
+                  isShowForward: true,
+                ),
               ),
             ],
           ),

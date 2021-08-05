@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_ui/base/naughty/naughty.dart';
 import 'package:flutter_ui/base/res/strings.dart';
-import 'package:flutter_ui/base/widgets/common_widget.dart';
+import 'package:flutter_ui/base/widgets/badge_view.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/models/main_model.dart';
 
@@ -29,6 +30,8 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    Naughty.getInstance.init(context);
+    Naughty.getInstance.show();
     return Scaffold(
       body: PageView(
         controller: _pageController,
@@ -77,7 +80,7 @@ class _MainPageState extends State<MainPage> {
               child: Stack(
                 alignment: Alignment.center,
                 clipBehavior: Clip.none,
-                children: [Positioned(left: 16, top: 2, child: badgeView(count: badgeCount))],
+                children: [Positioned(left: 16, top: 2, child: BadgeView(count: badgeCount))],
               ),
             ),
             // 图标和文字充满Stack并居中显示

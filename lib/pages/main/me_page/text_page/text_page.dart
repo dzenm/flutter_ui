@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/res/assets.dart';
+import 'package:flutter_ui/base/widgets/badge_view.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/common_widget.dart';
 import 'package:flutter_ui/base/widgets/menu_Item.dart';
@@ -109,7 +110,7 @@ class _TextPageState extends State<TextPage> {
                     height: 50.0,
                     padding: EdgeInsets.symmetric(horizontal: 16),
                     onTap: () => showToast('点击设置'),
-                    child: SingleTextLayout(title: '设置', isShowForward: true, prefix: badgeView(count: 10)),
+                    child: SingleTextLayout(title: '设置', isShowForward: true, prefix: BadgeView(count: 10)),
                   ),
                   TapLayout(
                     height: 50.0,
@@ -205,7 +206,7 @@ class _TextPageState extends State<TextPage> {
           ),
         ),
       ),
-      event: BackEvent.unsavedPrompt,
+      behavior: BackBehavior.prompt,
       isChanged: text != newText,
     );
   }

@@ -70,6 +70,7 @@ class _TapLayoutState extends State<TapLayout> {
       margin: widget.margin,
       child: Material(
         color: Colors.transparent,
+        animationDuration: Duration(milliseconds: widget.delay - 100),
         child: Ink(
           decoration: BoxDecoration(
             color: color,

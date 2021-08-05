@@ -23,6 +23,7 @@ class BannerView extends StatefulWidget {
   final ItemClick? onTap;
 
   BannerView({
+    Key? key,
     this.width,
     this.height = 200,
     this.children = const <Widget>[],
@@ -33,7 +34,7 @@ class BannerView extends StatefulWidget {
     this.titles,
     this.indicator,
     this.onTap,
-  });
+  }) : super(key: key);
 
   State<StatefulWidget> createState() => _BannerViewState();
 }

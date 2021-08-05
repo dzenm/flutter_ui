@@ -14,13 +14,14 @@ class RefreshListView extends StatefulWidget {
   final bool isShowFooterLoading;
 
   RefreshListView({
+    Key? key,
     this.isInit = false,
     this.loadingState = LoadingState.none,
     required this.itemCount,
     required this.builder,
     required this.refresh,
     this.isShowFooterLoading = false,
-  });
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _RefreshListViewState();

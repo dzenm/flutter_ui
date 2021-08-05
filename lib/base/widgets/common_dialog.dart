@@ -221,13 +221,14 @@ class BottomButton extends StatelessWidget {
   final GestureTapCallback? onNegativeTap;
 
   BottomButton({
+    Key? key,
     this.onPositiveTap,
     this.onNegativeTap,
     this.positiveStyle,
     this.negativeStyle,
     this.positiveText,
     this.negativeText,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

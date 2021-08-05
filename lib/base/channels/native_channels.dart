@@ -14,7 +14,7 @@ class NativeChannels {
   static const START_NAUGHTY_ACTIVITY_CHANNEL = 'android/channel/startNaughtyActivity';
 
   // 点击返回键回退到手机桌面而不是结束当前页面
-  static Future<bool> backToDesktop() async {
+  static Future<bool> onBackToDesktop() async {
     final channel = MethodChannel(BACK_TO_DESKTOP_CHANNEL);
     // 通知安卓返回,到手机桌面
     try {

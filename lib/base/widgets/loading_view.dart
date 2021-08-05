@@ -11,11 +11,12 @@ class LoadingView extends StatefulWidget {
   final bool vertical;
 
   LoadingView({
+    Key? key,
     this.loadingState = LoadingState.none,
     this.loadingProgressSize,
     this.vertical = true,
     this.onTap,
-  });
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _LoadingViewState();

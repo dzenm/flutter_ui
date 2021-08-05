@@ -38,6 +38,8 @@ class S implements WidgetsLocalizations {
       'navigationBar': 'NavigationBar',
       'charConvert': '字符转化',
       'httpRequest': 'Http请求',
+      'qr': '二维码',
+      'citySelected': '城市选择',
       'listAndRefresh': '列表和刷新',
       'verifyPhone': '验证手机号',
       'notificationSwitch': '通知开关',
@@ -81,6 +83,8 @@ class S implements WidgetsLocalizations {
       'navigationBar': 'NavigationBar',
       'charConvert': 'Character Convert',
       'httpRequest': 'Http Request',
+      'qr': 'QR',
+      'citySelected': 'City Selected',
       'listAndRefresh': 'List And Refresh',
       'notificationSwitch': 'Notification Switch',
       'verifyPhone': 'Verify Phone',
@@ -135,6 +139,10 @@ class S implements WidgetsLocalizations {
   String get charConvert => _getValues('charConvert');
 
   String get httpRequest => _getValues('httpRequest');
+
+  String get qr => _getValues('qr');
+
+  String get citySelected => _getValues('citySelected');
 
   String get listAndRefresh => _getValues('listAndRefresh');
 

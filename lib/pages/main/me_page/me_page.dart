@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/base/models/local_model.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/router/navigator_manager.dart';
 import 'package:flutter_ui/pages/main/main_route.dart';
@@ -46,35 +45,48 @@ class _MePageState extends State<MePage> with AutomaticKeepAliveClientMixin {
         child: text(S.of.navigationBar),
         textColor: Colors.white,
         color: Colors.blue,
-        onPressed: () => NavigatorManager.navigateTo(context, MeRouter.floatNavigator),
+        onPressed: () => NavigatorManager.navigateTo(context, MeRouter.floatNavigatorPage),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: text(S.of.charConvert),
         textColor: Colors.white,
         color: Colors.blue,
-        onPressed: () => NavigatorManager.navigateTo(context, MeRouter.convert),
+        onPressed: () => NavigatorManager.navigateTo(context, MeRouter.convertPage),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: text(S.of.httpRequest),
         textColor: Colors.white,
         color: Colors.blue,
-        onPressed: () => NavigatorManager.navigateTo(context, MeRouter.http),
+        onPressed: () => NavigatorManager.navigateTo(context, MeRouter.httpPage),
       ),
-      SizedBox(height: 8),
       MaterialButton(
-        child: text(S.of.pageIsNotFound),
+        child: text(S.of.httpRequest),
         textColor: Colors.white,
         color: Colors.blue,
-        onPressed: () => NavigatorManager.navigateTo(context, MainRoute.notFound),
+        onPressed: () => NavigatorManager.navigateTo(context, MeRouter.httpPage),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: text(S.of.listAndRefresh),
         textColor: Colors.white,
         color: Colors.blue,
-        onPressed: () => NavigatorManager.navigateTo(context, MeRouter.list),
+        onPressed: () => NavigatorManager.navigateTo(context, MeRouter.listPage),
+      ),
+      SizedBox(height: 8),
+      MaterialButton(
+        child: text(S.of.qr),
+        textColor: Colors.white,
+        color: Colors.blue,
+        onPressed: () => NavigatorManager.navigateTo(context, MeRouter.qrPage),
+      ),
+      SizedBox(height: 8),
+      MaterialButton(
+        child: text(S.of.citySelected),
+        textColor: Colors.white,
+        color: Colors.blue,
+        onPressed: () => NavigatorManager.navigateTo(context, MeRouter.citySelectedPage),
       ),
       SizedBox(height: 8),
       MaterialButton(
@@ -83,7 +95,7 @@ class _MePageState extends State<MePage> with AutomaticKeepAliveClientMixin {
         color: Colors.blue,
         onPressed: () => NavigatorManager.navigateTo(context, MeRouter.settingPage),
       ),
-      Text(LocalModel.of.value),
+
     ];
   }
 

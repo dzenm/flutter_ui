@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import 'common_widget.dart';
+import 'badge_view.dart';
 
 /// 单行文本布局
 class SingleTextLayout extends StatefulWidget {
   final IconData? icon; // 标题图标
   final Color? iconColor; // 标题图标颜色
 
+  final Widget? image; // 标题图像
   final String? title; // 标题文本
   final Color? titleColor; // 标题文本颜色
 
@@ -33,6 +34,7 @@ class SingleTextLayout extends StatefulWidget {
     Key? key,
     this.icon,
     this.iconColor,
+    this.image,
     this.title,
     this.titleColor,
     this.prefix,
@@ -65,7 +67,7 @@ class _SingleTextLayoutState extends State<SingleTextLayout> {
             Row(children: [
               // 标题图标
               _titleIcon(),
-              if (widget.icon != null && widget.title != null) SizedBox(width: 8),
+              if ((widget.icon != null || widget.image != null) && widget.title != null) SizedBox(width: 8),
               // 标题文本
               _titleText(),
               if (widget.title != null && widget.prefix != null) SizedBox(width: 8),
@@ -86,16 +88,21 @@ class _SingleTextLayoutState extends State<SingleTextLayout> {
       Offstage(offstage: widget.suffix == null, child: widget.suffix),
       if (widget.suffix != null && widget.isShowForward) SizedBox(width: 8),
       // 小红点
-      badgeView(count: widget.badgeCount),
+      BadgeView(count: widget.badgeCount),
       // 下一级图标
       _forwardIcon(),
     ]);
   }
 
   Widget _titleIcon() {
+    Widget? child = widget.icon != null
+        ? Icon(widget.icon, color: widget.iconColor, size: widget.fontSize + 4)
+        : widget.image != null
+            ? widget.image
+            : Container();
     return Offstage(
-      offstage: widget.icon == null,
-      child: Icon(widget.icon, color: widget.iconColor, size: widget.fontSize + 4),
+      offstage: widget.icon == null && widget.image == null,
+      child: child,
     );
   }
 

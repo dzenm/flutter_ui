@@ -20,8 +20,8 @@ class SingleEditLayout extends StatefulWidget {
 
   SingleEditLayout(
     this.title, {
-    this.onChanged,
     Key? key,
+    this.onChanged,
     this.titleColor,
     this.textColor,
     this.hintText,
@@ -69,13 +69,7 @@ class _SingleEditLayoutState extends State<SingleEditLayout> {
 
           // 输入文本
           Expanded(
-            child: textField(focusNode, widget.fontSize, widget.hintText ?? '', (value) => _onChanged(value),
-                enabled: widget.enabled,
-                textColor: widget.textColor,
-                keyboardType: widget.keyboardType,
-                inputFormatters: inputFormatters.isNotEmpty ? inputFormatters : null,
-                maxLength: widget.maxLength,
-                controller: widget.controller),
+            child: textField(focusNode, widget.fontSize, widget.hintText ?? '', (value) => _onChanged(value), enabled: widget.enabled, textColor: widget.textColor, keyboardType: widget.keyboardType, inputFormatters: inputFormatters.isNotEmpty ? inputFormatters : null, maxLength: widget.maxLength, controller: widget.controller),
           ),
 
           // 输入最大文本数量的提示

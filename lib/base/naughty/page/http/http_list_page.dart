@@ -28,11 +28,11 @@ class _HTTPListPageState extends State<HTTPListPage> {
   void initState() {
     super.initState();
     Naughty.getInstance.dismiss();
-    getData();
+    _getData();
   }
 
   //列表要展示的数据
-  Future getData() async {
+  Future _getData() async {
     await Future.delayed(Duration(seconds: 0), () {
       setState(() => _list = Naughty.getInstance.data);
     });
@@ -55,10 +55,17 @@ class _HTTPListPageState extends State<HTTPListPage> {
             onSelected: (Item item) {
               if (item.index == 0) {
                 NavigatorManager.push(DBListPage());
+              } else if (item.index == 1) {
+              } else if (item.index == 2) {
+              } else if (item.index == 3) {
+                Naughty.getInstance.data.clear();
+                _getData();
+              } else if (item.index == 4) {
+                Navigator.pop(context);
               }
             },
             itemBuilder: (BuildContext context) {
-              return _items.map((value) => PopupMenuItem<Item>(value: value, child: Text(value.title ?? ''))).toList();
+              return _items.map((value) => PopupMenuItem(value: value, child: Text(value.title ?? ''))).toList();
             },
           )
         ],
@@ -190,6 +197,6 @@ class _HTTPListPageState extends State<HTTPListPage> {
 
   // 下拉刷新方法,为_list重新赋值
   Future<Null> _onRefresh() async {
-    await getData();
+    await _getData();
   }
 }

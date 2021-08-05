@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationUtil {
@@ -8,12 +11,33 @@ class NotificationUtil {
     String? body,
     SelectNotificationCallback? onTap,
   }) async {
-    AndroidInitializationSettings android = new AndroidInitializationSettings('@mipmap/ic_launcher');
-    final InitializationSettings initializationSettings = InitializationSettings(android: android);
-    _notifications.initialize(initializationSettings, onSelectNotification: onTap);
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails('id', 'flutter', 'a new notification', importance: Importance.max, priority: Priority.high, ticker: 'ticker');
-    const NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
-    await _notifications.show(0, title, body, platformChannelSpecifics, payload: 'payload');
+    _notifications.initialize(
+      InitializationSettings(
+        android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+        iOS: IOSInitializationSettings(onDidReceiveLocalNotification: onDidReceiveLocalNotification),
+      ),
+      onSelectNotification: onTap,
+    );
+    await _notifications.show(
+      0,
+      title,
+      body,
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          'id',
+          'flutter',
+          'a new notification',
+          importance: Importance.max,
+          priority: Priority.high,
+          ticker: 'ticker',
+        ),
+        iOS: IOSNotificationDetails(),
+      ),
+      payload: 'payload',
+    );
+  }
+
+  static Future onDidReceiveLocalNotification(int id, String? title, String? body, String? payload) async {
+    // 展示通知内容的 dialog.
   }
 }

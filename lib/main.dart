@@ -5,6 +5,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_ui/base/log/handle_error.dart';
 import 'package:flutter_ui/base/models/local_model.dart';
@@ -34,6 +35,8 @@ class Application {
 
   factory Application() => getInstance;
 
+  static FlutterLocalNotificationsPlugin notifications = FlutterLocalNotificationsPlugin();
+
   // 初始化
   void init() async {
     Log.d('═══════════════════════════════ 开始初始化 ════════════════════════════════════');
@@ -48,6 +51,15 @@ class Application {
 
     /// 初始化SharedPreferences
     await SpUtil.getInstance.init();
+
+    /// 初始化通知
+    const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
+    final IOSInitializationSettings initializationSettingsIOS = IOSInitializationSettings();
+    final InitializationSettings initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsIOS,
+    );
+    notifications.initialize(initializationSettings);
 
     Log.d('结束: ${DateTime.now().millisecondsSinceEpoch}');
     Log.d('═══════════════════════════════ 结束初始化 ════════════════════════════════════');
@@ -105,7 +117,7 @@ class Application {
             S.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate
+            GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: S.supportedLocales,
           builder: BotToastInit(),

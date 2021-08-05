@@ -62,7 +62,10 @@ class _ListPageState extends State<ListPage> {
     ArticleEntity article = articleList[index] ?? ArticleEntity();
     String title = article.title ?? '';
     return TapLayout(
-      onTap: () => NavigatorManager.navigateTo(context, MainRoute.webView + '?title=${Uri.decodeComponent(title)}&url=${Uri.decodeComponent(article.link ?? '')}'),
+      onTap: () => NavigatorManager.navigateTo(
+        context,
+        MainRoute.webView + '?title=${Uri.encodeComponent(title)}&url=${Uri.encodeComponent(article.link ?? '')}',
+      ),
       child: ListTile(
         title: Text(title),
       ),
