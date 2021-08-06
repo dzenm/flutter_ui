@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
+import 'package:flutter_ui/main.dart';
 import 'package:photo_view/photo_view.dart';
 
-void showPreviewPhotoPage(BuildContext context, List<String> url) {
-  Navigator.of(context).push(CustomerPageRoute(PhotoPreviewPage(url), style: AnimatorStyle.fade));
+void showPreviewPhotoPage(List<String> url) {
+  Navigator.of(Application.getContext).push(
+    CustomerPageRoute(PhotoPreviewPage(url), style: AnimatorStyle.fade),
+  );
 }
 
 /// 图片预览页面

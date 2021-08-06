@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../main.dart';
 
 class MainModel with ChangeNotifier {
-  static MainModel get of => Provider.of<MainModel>(navigator.currentContext!, listen: false);
+  static MainModel get of => Provider.of<MainModel>(Application.getContext, listen: false);
 
   int _homeCount = -1;
 

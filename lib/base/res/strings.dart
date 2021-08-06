@@ -20,7 +20,7 @@ class S implements WidgetsLocalizations {
 
   // static S of(BuildContext context) => Localizations.of(context, S);
 
-  static S get of => Localizations.of(navigator.currentContext!, S);
+  static S get of => Localizations.of(Application.getContext, S);
 
   @override
   TextDirection get textDirection => TextDirection.ltr;

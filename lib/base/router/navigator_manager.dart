@@ -9,7 +9,7 @@ import '../../main.dart';
 
 /// 路由跳转工具类
 class NavigatorManager {
-  static NavigatorState get _state => navigator.currentState!;
+  static NavigatorState get _state => Application.rootState.currentState!;
 
   static void navigateTo(
     BuildContext context,

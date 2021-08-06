@@ -61,12 +61,6 @@ class _MePageState extends State<MePage> with AutomaticKeepAliveClientMixin {
         color: Colors.blue,
         onPressed: () => NavigatorManager.navigateTo(context, MeRouter.httpPage),
       ),
-      MaterialButton(
-        child: text(S.of.httpRequest),
-        textColor: Colors.white,
-        color: Colors.blue,
-        onPressed: () => NavigatorManager.navigateTo(context, MeRouter.httpPage),
-      ),
       SizedBox(height: 8),
       MaterialButton(
         child: text(S.of.listAndRefresh),

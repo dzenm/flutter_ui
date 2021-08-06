@@ -67,7 +67,7 @@ class _SettingPageState extends State<SettingPage> {
               TapLayout(
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: () => showPreviewPhotoPage(context, [Assets.image('a.jpg'), Assets.image('a.jpg'), Assets.image('a.jpg')]),
+                onTap: () => showPreviewPhotoPage([Assets.image('a.jpg'), Assets.image('a.jpg'), Assets.image('a.jpg')]),
                 child: SingleTextLayout(
                   icon: Icons.error,
                   title: S.of.avatar,

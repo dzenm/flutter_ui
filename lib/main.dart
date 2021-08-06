@@ -25,8 +25,6 @@ import 'models/me_model.dart';
 
 void main() => Application.getInstance.init();
 
-GlobalKey<NavigatorState> navigator = new GlobalKey<NavigatorState>();
-
 class Application {
   // 私有构造方法
   Application._internal();
@@ -36,6 +34,10 @@ class Application {
   factory Application() => getInstance;
 
   static FlutterLocalNotificationsPlugin notifications = FlutterLocalNotificationsPlugin();
+
+  static GlobalKey<NavigatorState> rootState = GlobalKey<NavigatorState>();
+
+  static BuildContext get getContext => rootState.currentContext!;
 
   // 初始化
   void init() async {
@@ -93,7 +95,7 @@ class Application {
       child: Consumer<LocalModel>(builder: (context, res, widget) {
         Map theme = themeColorModel[res.theme]!;
         return MaterialApp(
-          navigatorKey: navigator,
+          navigatorKey: rootState,
           debugShowCheckedModeBanner: false,
           // 设置主题，读取LocalModel的值，改变LocalModel的theme值会通过provider刷新页面
           theme: ThemeData(

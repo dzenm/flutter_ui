@@ -4,5 +4,5 @@ import 'package:provider/provider.dart';
 
 class MeModel with ChangeNotifier {
   static MeModel get of =>
-      Provider.of<MeModel>(navigator.currentContext!, listen: false);
+      Provider.of<MeModel>(Application.getContext, listen: false);
 }
