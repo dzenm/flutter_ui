@@ -20,11 +20,12 @@ class HTTPItemPage extends StatefulWidget {
 
 class _HTTPItemPageState extends State<HTTPItemPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  List<String> _titles = ['RESPONSE', 'REQUEST'];
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: _titles.length, vsync: this);
   }
 
   @override
@@ -32,16 +33,22 @@ class _HTTPItemPageState extends State<HTTPItemPage> with SingleTickerProviderSt
     return Scaffold(
       appBar: AppBar(
         title: Row(children: [
-          Text(widget.entity.method ?? ''),
+          Text('${widget.entity.method}'),
           SizedBox(width: 8),
-          Expanded(child: Text(widget.entity.path ?? '', maxLines: 1, overflow: TextOverflow.ellipsis)),
+          Expanded(
+            child: Text('${widget.entity.path}', maxLines: 1, overflow: TextOverflow.ellipsis),
+          ),
         ]),
         bottom: TabBar(
           controller: _tabController,
           indicatorColor: Colors.white,
           labelColor: Colors.white,
-          unselectedLabelColor: Colors.grey,
-          tabs: [Tab(text: 'RESPONSE'), Tab(text: 'REQUEST')],
+          isScrollable: true,
+          indicatorSize: TabBarIndicatorSize.label,
+          unselectedLabelColor: Colors.grey.shade300,
+          tabs: _titles.map((title) {
+            return Text(title, style: TextStyle(fontSize: 14));
+          }).toList(),
         ),
       ),
       body: TabBarView(

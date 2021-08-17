@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/router/navigator_manager.dart';
-import 'package:flutter_ui/pages/main/main_route.dart';
+import 'package:flutter_ui/pages/main/me_page/me_model.dart';
 import 'package:flutter_ui/pages/main/me_page/me_router.dart';
 
 // 子页面
@@ -31,7 +31,6 @@ class _MePageState extends State<MePage> with AutomaticKeepAliveClientMixin {
     );
   }
 
-  //
   List<Widget> childrenButtons() {
     return [
       MaterialButton(
@@ -89,7 +88,8 @@ class _MePageState extends State<MePage> with AutomaticKeepAliveClientMixin {
         color: Colors.blue,
         onPressed: () => NavigatorManager.navigateTo(context, MeRouter.settingPage),
       ),
-
+      SizedBox(height: 8),
+      Text(MeModel.of.value),
     ];
   }
 

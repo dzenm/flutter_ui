@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
-import '../main.dart';
+import '../../main.dart';
 
 class MainModel with ChangeNotifier {
-  static MainModel get of => Provider.of<MainModel>(Application.getContext, listen: false);
+  static MainModel get of => Provider.of<MainModel>(Application.context, listen: false);
 
   int _homeCount = -1;
 

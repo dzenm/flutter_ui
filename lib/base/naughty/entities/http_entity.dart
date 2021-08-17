@@ -5,10 +5,10 @@ class HTTPEntity {
   String size = '0 B';
 
   // request
-  String? method;
-  String? url;
-  String? baseUrl;
-  String? path;
+  String? method = 'Unknown';
+  String? url = 'Unknown';
+  String? baseUrl = 'Unknown';
+  String? path = 'Unknown';
 
   Map<String, dynamic>? requestExtra;
   Map<String, dynamic>? requestQueryParameters;
@@ -16,17 +16,17 @@ class HTTPEntity {
   dynamic? requestBody;
 
   // response
-  int? statusCode;
-  String? realUrl;
-  String? responseType;
-  int? maxRedirects;
-  String? listFormat;
-  int? sendTimeout;
-  int? connectTimeout;
-  int? receiveTimeout;
-  bool? followRedirects;
-  bool? receiveDataWhenStatusError;
-  bool? isRedirect;
+  int? statusCode = -1;
+  String? realUrl  = 'Unknown';
+  String? responseType = 'Unknown';
+  int? maxRedirects = 0;
+  String? listFormat = 'Unknown';
+  int? sendTimeout = 0;
+  int? connectTimeout = 0;
+  int? receiveTimeout = 0;
+  bool? followRedirects = true;
+  bool? receiveDataWhenStatusError = true;
+  bool? isRedirect = true;
 
   Map<String, dynamic>? responseExtra;
   Map<String, dynamic>? responseHeader;

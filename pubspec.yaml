@@ -27,6 +27,7 @@ dependencies:
     sdk: flutter
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
+
   ########################################## UI ##########################################
   # Toast https://pub.flutter-io.cn/packages/bot_toast
   bot_toast: ^4.0.1
@@ -69,6 +70,8 @@ dependencies:
   image_picker: ^0.8.2
   # 图片预览控件 [最新版0.12.0 https://pub.flutter-io.cn/packages/photo_view ]
   photo_view: ^0.12.0
+  # 图片缓存 [最新版3.1.0 https://pub.flutter-io.cn/packages/cached_network_image ]
+  cached_network_image: ^3.1.0
 
   ########################################## 文件 ########################################
   # sql https://pub.dev/packages/sqflite
@@ -77,8 +80,8 @@ dependencies:
   shared_preferences: ^2.0.6
   # 路径选择 https://pub.dev/packages/path_provider
   path_provider: ^2.0.2
-  ########################################## 基础 ########################################
 
+  ########################################## 基础 ########################################
   # 路由管理 https://pub.flutter-io.cn/packages/fluro
   fluro: ^2.0.3
   # 状态管理 https://pub.dev/packages/provider
@@ -103,8 +106,7 @@ dependencies:
   cookie_jar: 3.0.1
   # 监测网络状态 https://pub.dev/packages/connectivity
   connectivity: ^3.0.6
-  # 网络请求 https://pub.dev/packages/dio_http_cache#-installing-tab-
-  #  dio_http_cache: ^0.2.11
+
   ########################################## 工具 ########################################
   # 扫描二维码 https://pub.flutter-io.cn/packages/scan
   scan: ^1.4.3
@@ -113,10 +115,7 @@ dependencies:
 
   #  # 屏幕参数适配 https://pub.dev/packages/flutter_screenutil
   #  flutter_screenutil: ^4.0.4+1
-  #  # 处理键盘事件 https://pub.flutter-io.cn/packages/keyboard_actions
-  #  keyboard_actions: ^3.4.0
-  #  # 图片缓存 https://pub.flutter-io.cn/packages/cached_network_image
-  #  cached_network_image: ^3.0.0
+
   #  # 时间格式转换 https://pub.dev/packages/date_format
   #  date_format: 2.0.2
   #  # 网页打开工具 https://pub.dev/packages/url_launcher#-readme-tab-

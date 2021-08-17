@@ -15,10 +15,11 @@ import 'package:flutter_ui/base/widgets/common_widget.dart';
 import 'package:flutter_ui/base/widgets/single_text_layout.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/entities/user_entity.dart';
-import 'package:flutter_ui/pages/common/photo_preview_page.dart';
-import 'package:flutter_ui/pages/login/login_route.dart';
-import 'package:flutter_ui/pages/main/main_route.dart';
+import 'package:flutter_ui/pages/common/preview_photo_page.dart';
 import 'package:flutter_ui/utils/sp_util.dart';
+
+import '../../../root_route.dart';
+import '../me_model.dart';
 
 /// 设置页面
 class SettingPage extends StatefulWidget {
@@ -67,7 +68,7 @@ class _SettingPageState extends State<SettingPage> {
               TapLayout(
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: () => showPreviewPhotoPage([Assets.image('a.jpg'), Assets.image('a.jpg'), Assets.image('a.jpg')]),
+                onTap: () => showPreviewPhotoPage(["https://www.wanandroid.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png", Assets.image('a.jpg'), Assets.image('a.jpg')]),
                 child: SingleTextLayout(
                   icon: Icons.error,
                   title: S.of.avatar,
@@ -82,7 +83,7 @@ class _SettingPageState extends State<SettingPage> {
               TapLayout(
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: () => showToast(S.of.phone),
+                onTap: () => MeModel.of.setValue('new value'),
                 child: SingleTextLayout(icon: Icons.phone_android, title: S.of.phone, text: _user.id.toString(), isTextLeft: false, isShowForward: true),
               ),
               TapLayout(
@@ -95,7 +96,6 @@ class _SettingPageState extends State<SettingPage> {
                 child: SingleTextLayout(
                   icon: Icons.verified,
                   title: S.of.verifyPhone,
-                  isTextLeft: false,
                   isShowForward: true,
                   badgeCount: 0,
                 ),
@@ -261,7 +261,7 @@ class _SettingPageState extends State<SettingPage> {
       SpUtil.setToken(null);
       SpUtil.setUser(null);
 
-      NavigatorManager.navigateTo(context, LoginRoute.login, clearStack: true);
+      NavigatorManager.navigateTo(context, RootRoute.login, clearStack: true);
     });
   }
 }

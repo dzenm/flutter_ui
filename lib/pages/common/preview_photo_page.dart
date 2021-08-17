@@ -4,25 +4,46 @@ import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/main.dart';
 import 'package:photo_view/photo_view.dart';
 
-void showPreviewPhotoPage(List<String> url) {
-  Navigator.of(Application.getContext).push(
-    CustomerPageRoute(PhotoPreviewPage(url), style: AnimatorStyle.fade),
+typedef DownloadCallback = void Function(String url);
+
+void showPreviewPhotoPage(
+  List<String> url, {
+  ImageProvider<Object>? imageProvider,
+  bool canDownload = true,
+  DownloadCallback? download,
+}) {
+  Navigator.of(Application.context).push(
+    CustomerPageRoute(
+      PreviewPhotoPage(
+        url,
+        imageProvider: imageProvider,
+        canDownload: canDownload,
+        download: download,
+      ),
+      style: AnimatorStyle.fade,
+    ),
   );
 }
 
 /// 图片预览页面
-class PhotoPreviewPage extends StatefulWidget {
+class PreviewPhotoPage extends StatefulWidget {
   final List<String> url;
+  final ImageProvider<Object>? imageProvider;
+  final bool canDownload;
+  final DownloadCallback? download;
 
-  PhotoPreviewPage(
-    this.url,
-  );
+  PreviewPhotoPage(
+    this.url, {
+    this.imageProvider,
+    this.canDownload = true,
+    this.download,
+  });
 
   @override
-  State<StatefulWidget> createState() => _PhotoPreviewPageState();
+  State<StatefulWidget> createState() => _PreviewPhotoPageState();
 }
 
-class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
+class _PreviewPhotoPageState extends State<PreviewPhotoPage> {
   List<String> _list = [];
   int _currentIndex = 0;
 
@@ -41,6 +62,14 @@ class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
         child: Stack(alignment: Alignment.center, children: [
           _buildPageView(),
           _buildIndicator(),
+          Positioned(
+            bottom: 80,
+            right: 40,
+            child: Offstage(
+              offstage: !widget.canDownload,
+              child: _buildDownloadPhoto(),
+            ),
+          ),
         ]),
       ),
     );
@@ -62,12 +91,25 @@ class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
       onPageChanged: (index) => setState(() => _currentIndex = index),
       children: _list.map((url) {
         return PhotoView(
-          imageProvider: _isNetworkImage(url) ? AssetImage(url) : AssetImage(url),
+          imageProvider: widget.imageProvider ?? _imageProvider(url),
           maxScale: 2.0,
           minScale: 0.0,
         );
       }).toList(),
     );
+  }
+
+  /// 加载图片
+  ImageProvider<Object> _imageProvider(String url) {
+    if (_isNetworkImage(url)) {
+      return NetworkImage(url);
+    }
+    return AssetImage(url);
+  }
+
+  /// 是否是网络图片
+  bool _isNetworkImage(String url) {
+    return url.startsWith('https://') || url.startsWith('http://');
   }
 
   /// 创建指示器
@@ -86,9 +128,19 @@ class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
     );
   }
 
-  /// 是否是网络图片
-  bool _isNetworkImage(String url) {
-    return url.startsWith('https://') || url.startsWith('http://');
+  Widget _buildDownloadPhoto() {
+    return TapLayout(
+      width: 32,
+      height: 32,
+      onTap: () {
+        if (widget.download != null) {
+          widget.download!(_list[_currentIndex]);
+        }
+      },
+      background: Colors.white38,
+      borderRadius: BorderRadius.all(Radius.circular(8)),
+      child: Icon(Icons.download_rounded, size: 24, color: Colors.white),
+    );
   }
 }
 

@@ -19,9 +19,9 @@ import 'package:provider/provider.dart';
 
 import 'base/log/log.dart';
 import 'base/widgets/will_pop_scope_route.dart';
-import 'models/home_model.dart';
-import 'models/main_model.dart';
-import 'models/me_model.dart';
+import 'pages/main/home_page/home_model.dart';
+import 'pages/main/main_model.dart';
+import 'pages/main/me_page/me_model.dart';
 
 void main() => Application.getInstance.init();
 
@@ -35,9 +35,9 @@ class Application {
 
   static FlutterLocalNotificationsPlugin notifications = FlutterLocalNotificationsPlugin();
 
-  static GlobalKey<NavigatorState> rootState = GlobalKey<NavigatorState>();
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-  static BuildContext get getContext => rootState.currentContext!;
+  static BuildContext get context => navigatorKey.currentContext!;
 
   // 初始化
   void init() async {
@@ -95,7 +95,7 @@ class Application {
       child: Consumer<LocalModel>(builder: (context, res, widget) {
         Map theme = themeColorModel[res.theme]!;
         return MaterialApp(
-          navigatorKey: rootState,
+          navigatorKey: navigatorKey,
           debugShowCheckedModeBanner: false,
           // 设置主题，读取LocalModel的值，改变LocalModel的theme值会通过provider刷新页面
           theme: ThemeData(

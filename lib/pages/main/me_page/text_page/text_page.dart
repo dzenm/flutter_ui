@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/res/assets.dart';
+import 'package:flutter_ui/base/res/strings.dart';
+import 'package:flutter_ui/base/router/navigator_manager.dart';
 import 'package:flutter_ui/base/widgets/badge_view.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/common_widget.dart';
@@ -13,6 +15,9 @@ import 'package:flutter_ui/base/widgets/single_edit_layout.dart';
 import 'package:flutter_ui/base/widgets/single_text_layout.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/base/widgets/will_pop_scope_route.dart';
+import 'package:flutter_ui/pages/main/me_page/me_model.dart';
+
+import '../me_router.dart';
 
 class TextPage extends StatefulWidget {
   @override
@@ -109,14 +114,14 @@ class _TextPageState extends State<TextPage> {
                   TapLayout(
                     height: 50.0,
                     padding: EdgeInsets.symmetric(horizontal: 16),
-                    onTap: () => showToast('点击设置'),
-                    child: SingleTextLayout(title: '设置', isShowForward: true, prefix: BadgeView(count: 10)),
+                    onTap: () => NavigatorManager.navigateTo(context, MeRouter.settingPage),
+                    child: SingleTextLayout(title: S.of.setting, isShowForward: true, prefix: BadgeView(count: 10)),
                   ),
                   TapLayout(
                     height: 50.0,
                     padding: EdgeInsets.symmetric(horizontal: 16),
-                    onTap: () => showToast('编辑手机号码'),
-                    child: SingleTextLayout(title: '手机号码', text: '17601487212', isTextLeft: false, isShowForward: true),
+                    onTap: () => MeModel.of.setValue('new value'),
+                    child: SingleTextLayout(title: S.of.phone, text: '17601487212', isTextLeft: false, isShowForward: true),
                   ),
                   TapLayout(
                     height: 50.0,
@@ -159,7 +164,7 @@ class _TextPageState extends State<TextPage> {
                     onTap: () => showPromptDialog(context, title: Text('设置头像'), content: Text('输入内容'), onPositiveTap: () => showToast('修改成功')),
                     child: SingleTextLayout(
                       icon: Icons.person,
-                      title: '头像',
+                      title: S.of.avatar,
                       isTextLeft: false,
                       suffix: ClipRRect(
                         borderRadius: BorderRadius.circular(16),
@@ -171,13 +176,13 @@ class _TextPageState extends State<TextPage> {
                   TapLayout(
                     height: 50.0,
                     padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: SingleTextLayout(title: '通知开关', suffix: CupertinoSwitch(value: switchState, onChanged: (value) => setState(() => switchState = value))),
+                    child: SingleTextLayout(title: S.of.notificationSwitch, suffix: CupertinoSwitch(value: switchState, onChanged: (value) => setState(() => switchState = value))),
                   ),
                   TapLayout(
                     height: 50.0,
                     padding: EdgeInsets.symmetric(horizontal: 16),
                     onTap: () => showSelectImageBottomSheet(context),
-                    child: SingleTextLayout(title: '通知开关: ', text: '查看通知内容'),
+                    child: SingleTextLayout(title: S.of.notificationSwitch, text: '查看通知内容'),
                   ),
                   TapLayout(
                     height: 60.0,
@@ -185,8 +190,11 @@ class _TextPageState extends State<TextPage> {
                     onTap: () => showListBottomSheet(context, data, (int index) {
                       Navigator.pop(context);
                     }),
-                    child: SingleTextLayout(title: '登录记录', summary: '查看最近所有的登录记录', badgeCount: 0, isShowForward: true),
+                    child: SingleTextLayout(title: S.of.loginRecord, summary: '查看最近所有的登录记录', badgeCount: 0, isShowForward: true),
                   ),
+                  SizedBox(height: 8),
+                  Text(MeModel.of.value),
+                  SizedBox(height: 8),
                   TapLayout(
                     height: 48.0,
                     isRipple: false,
@@ -197,7 +205,7 @@ class _TextPageState extends State<TextPage> {
                     //   Navigator.pop(context);
                     // }),
                     child: Row(
-                      children: [Text('登录')],
+                      children: [Text(S.of.login)],
                     ),
                   ),
                 ],

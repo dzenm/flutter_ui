@@ -4,7 +4,7 @@ import 'package:flutter_ui/base/naughty/naughty.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/widgets/badge_view.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
-import 'package:flutter_ui/models/main_model.dart';
+import 'package:flutter_ui/pages/main/main_model.dart';
 
 import 'home_page/home_page.dart';
 import 'me_page/me_page.dart';

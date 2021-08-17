@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/naughty/entities/http_entity.dart';
-import 'package:flutter_ui/base/naughty/naughty.dart';
 import 'package:flutter_ui/base/naughty/page/db/db_list_page.dart';
-import 'package:flutter_ui/base/naughty/page/http/http_item_page.dart';
 import 'package:flutter_ui/base/router/navigator_manager.dart';
 import 'package:flutter_ui/base/widgets/menu_Item.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
+
+import '../../naughty.dart';
+import 'http_item_page.dart';
 
 /// naughty 主页
 class HTTPListPage extends StatefulWidget {

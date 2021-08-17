@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/base/naughty/entities/http_entity.dart';
 import 'package:flutter_ui/base/res/assets.dart';
 import 'package:flutter_ui/base/router/navigator_manager.dart';
 import 'package:flutter_ui/base/widgets/floating_button.dart';
 
+import 'entities/http_entity.dart';
 import 'page/http/http_list_page.dart';
 
 /// 悬浮窗

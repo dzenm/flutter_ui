@@ -7,7 +7,7 @@ import 'package:flutter_ui/base/widgets/loading_view.dart';
 import 'package:flutter_ui/base/widgets/refresh_list_view.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/entities/article_entity.dart';
-import 'package:flutter_ui/pages/main/main_route.dart';
+import 'package:flutter_ui/pages/root_route.dart';
 
 class ListPage extends StatefulWidget {
   @override
@@ -64,7 +64,7 @@ class _ListPageState extends State<ListPage> {
     return TapLayout(
       onTap: () => NavigatorManager.navigateTo(
         context,
-        MainRoute.webView + '?title=${Uri.encodeComponent(title)}&url=${Uri.encodeComponent(article.link ?? '')}',
+        RootRoute.webView + '?title=${Uri.encodeComponent(title)}&url=${Uri.encodeComponent(article.link ?? '')}',
       ),
       child: ListTile(
         title: Text(title),
