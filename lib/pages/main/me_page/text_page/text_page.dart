@@ -4,6 +4,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/res/assets.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/router/navigator_manager.dart';
@@ -25,6 +26,7 @@ class TextPage extends StatefulWidget {
 }
 
 class _TextPageState extends State<TextPage> {
+  String _tag = 'TextPage';
   TextEditingController _controller = new TextEditingController(text: "初始化");
   String text = '';
   String newText = '';
@@ -41,7 +43,31 @@ class _TextPageState extends State<TextPage> {
   @override
   void initState() {
     super.initState();
-    newText = text = _controller.text;
+    Log.d('initState', tag: _tag);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    Log.d('didChangeDependencies', tag: _tag);
+  }
+
+  @override
+  void didUpdateWidget(covariant TextPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    Log.d('didUpdateWidget', tag: _tag);
+  }
+
+  @override
+  void deactivate() {
+    super.deactivate();
+    Log.d('deactivate', tag: _tag);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    Log.d('dispose', tag: _tag);
   }
 
   @override

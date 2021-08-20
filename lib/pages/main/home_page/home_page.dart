@@ -19,6 +19,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
+  String _tag = 'HomePage';
+
   List<String> _titles = [];
   List<String> _images = [];
   List<String> _urls = [];
@@ -29,6 +31,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   @override
   void initState() {
     super.initState();
+    Log.d('initState', tag: _tag);
 
     // titles.add(
     //     '''近日，北大全校教师干部大会刚刚召开，63岁的林建华卸任北大校长；原北大党委书记郝平接替林建华，成为新校长。曾在北京任职多年、去年担任山西高院院长的邱水平回到北大，担任党委书记。图为2018年5月4日，北京大学举行建校120周年纪念大会，时任北京大学校长林建华（右）与时任北京大学党委书记郝平（左）''');
@@ -40,6 +43,30 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     // images.add("http://n.sinaimg.cn/news/1_img/vcg/2b0c102b/107/w1024h683/20181024/kZj2-hmuuiyw6863420.jpg");
     // images.add("http://n.sinaimg.cn/news/1_img/vcg/2b0c102b/105/w1024h681/20181024/tOiL-hmuuiyw6863462.jpg");
     _getData();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    Log.d('didChangeDependencies', tag: _tag);
+  }
+
+  @override
+  void didUpdateWidget(covariant HomePage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    Log.d('didUpdateWidget', tag: _tag);
+  }
+
+  @override
+  void deactivate() {
+    super.deactivate();
+    Log.d('deactivate', tag: _tag);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    Log.d('dispose', tag: _tag);
   }
 
   @override

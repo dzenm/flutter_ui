@@ -22,13 +22,15 @@ class TapLayout extends StatefulWidget {
   final Gradient? gradient;
   final DecorationImage? decorationImage;
   final BorderRadius? borderRadius;
+  final bool isCircle; //是否为圆形
+
   final bool isRipple; // true为点击有波纹效果，false为点击有背景效果
 
   final int delay;
 
   TapLayout({
     Key? key,
-    @required this.child,
+    this.child,
     this.onTap,
     this.onDoubleTap,
     this.onLongPress,
@@ -39,11 +41,12 @@ class TapLayout extends StatefulWidget {
     this.alignment = Alignment.center,
     this.foreground,
     this.background = Colors.transparent,
+    this.decorationImage,
     this.border,
+    this.borderRadius,
     this.boxShadow,
     this.gradient,
-    this.decorationImage,
-    this.borderRadius,
+    this.isCircle = false,
     this.isRipple = true,
     this.delay = 150,
   });
@@ -74,12 +77,12 @@ class _TapLayoutState extends State<TapLayout> {
         child: Ink(
           decoration: BoxDecoration(
             color: color,
-            borderRadius: widget.borderRadius,
-            shape: BoxShape.rectangle,
-            border: widget.border,
-            boxShadow: widget.boxShadow,
             image: widget.decorationImage,
+            border: widget.border,
+            borderRadius: widget.borderRadius,
+            boxShadow: widget.boxShadow,
             gradient: widget.gradient,
+            shape: widget.isCircle ? BoxShape.circle : BoxShape.rectangle,
           ),
           child: InkResponse(
             onTap: () async {

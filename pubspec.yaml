@@ -85,7 +85,7 @@ dependencies:
   # 路由管理 https://pub.flutter-io.cn/packages/fluro
   fluro: ^2.0.3
   # 状态管理 https://pub.dev/packages/provider
-  provider: ^5.0.0
+  provider: ^6.0.0
   # 时间格式化 https://pub.dev/packages/intl
   intl: ^0.17.0
 

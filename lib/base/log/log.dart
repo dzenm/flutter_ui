@@ -46,13 +46,28 @@ class Log {
     }
     if (debuggable) {
       if (sLevel <= level) {
-        _print(tag, stag, message);
+        _printLongMsg(level, _handlerMessage(tag, stag, message));
       }
     }
   }
 
-  static void _print(String tag, String stag, dynamic message) {
-    StringBuffer sb = new StringBuffer();
+  // 打印长日志
+  static void _printLongMsg(int level, dynamic msg) {
+    int len = msg.length;
+    if (len > MAX_LENGTH) {
+      for (int i = 0; i < len;) {
+        int start = i;
+        i = i + MAX_LENGTH;
+        _println(level, msg.substring(start, min(i, len)));
+      }
+    } else {
+      _println(level, msg);
+    }
+  }
+
+  // 处理消息的内容
+  static String _handlerMessage(String tag, String stag, dynamic message) {
+    StringBuffer sb = StringBuffer();
     sb.write(DateTime.now());
     sb.write(' ');
     sb.write(stag);
@@ -60,19 +75,44 @@ class Log {
     sb.write((tag.isEmpty) ? sTag : tag);
     sb.write('  ');
     sb.write(message);
-    _printLongMsg(sb.toString());
+    return sb.toString();
   }
 
-  static void _printLongMsg(dynamic msg) {
-    int len = msg.length;
-    if (len > MAX_LENGTH) {
-      for (int i = 0; i < len;) {
-        int start = i;
-        i = i + MAX_LENGTH;
-        print(msg.substring(start, min(i, len)));
-      }
-    } else {
-      print(msg);
+  // 换行打印
+  static void _println(int level, String message, {bool isDefaultColor = false}) {
+    String prefix = _handlerPrefixTextColor(level, isDefaultColor);
+    String suffix = _handlerSuffixTextColor(level, isDefaultColor);
+    String msg = prefix + message + suffix;
+    print(msg);
+  }
+
+  // 处理前缀文本颜色
+  static String _handlerPrefixTextColor(int level, bool isDefaultColor) {
+    if (isDefaultColor) return '';
+    switch (level) {
+      case _INFO:
+        return '\x1B[35m ';
+      case _DEBUG:
+        return '\x1B[35m ';
+      case _ERROR:
+        return '\x1B[31m ';
+      default:
+        return '';
+    }
+  }
+
+  // 处理后缀文本颜色
+  static String _handlerSuffixTextColor(int level, bool isDefaultColor) {
+    if (isDefaultColor) return '';
+    switch (level) {
+      case _INFO:
+        return ' \x1B[0m';
+      case _DEBUG:
+        return ' \x1B[0m';
+      case _ERROR:
+        return ' \x1B[0m';
+      default:
+        return '';
     }
   }
 }

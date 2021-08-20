@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -47,4 +50,66 @@ Widget multipleTextView(String msg) {
       children: [Expanded(child: Text(msg))],
     ),
   );
+}
+
+networkImage(
+  String? url, {
+  int? version,
+  Widget? placeholder,
+  BoxFit? fit,
+  double? width,
+  double? height,
+}) {
+  String currentUrl = '';
+  if (url != null && url.length > 0) {
+    currentUrl = '$url?${version ?? 0}';
+  }
+  return CachedNetworkImage(
+    imageUrl: currentUrl,
+    fit: fit,
+    width: width,
+    height: height,
+    placeholder: placeholder != null
+        ? (_, url) {
+            return placeholder;
+          }
+        : null,
+    errorWidget: placeholder != null
+        ? (_, url, error) {
+            return placeholder;
+          }
+        : null,
+  );
+}
+
+imagePlaceholder({required double width, double? height}) {
+  return Container(
+    width: width,
+    height: height ?? width,
+    color: Color(0xffafafaf),
+    alignment: Alignment.center,
+    child: Icon(
+      Icons.ac_unit_outlined,
+      size: width * 0.5,
+      color: Colors.white,
+    ),
+  );
+}
+
+class FileImageExt extends FileImage {
+  late int fileSize;
+
+  FileImageExt(File file, {double scale = 1.0}) : super(file, scale: scale) {
+    fileSize = file.existsSync() ? file.lengthSync() : 0; //l 文件不存在兼容
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    if (other.runtimeType != runtimeType) return false;
+    final FileImageExt typedOther = other;
+    return file.path == typedOther.file.path && scale == typedOther.scale && fileSize == typedOther.fileSize;
+  }
+
+  @override
+  int get hashCode => super.hashCode;
 }

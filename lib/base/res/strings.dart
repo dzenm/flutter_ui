@@ -48,6 +48,11 @@ class S implements WidgetsLocalizations {
       'followSystem': '跟随系统',
       'loginRecord': '登录记录',
       'checkUpgrade': '检查更新',
+      'loadEmpty': '加载为空',
+      'loadMore': '加载更多',
+      'loadSuccess': '加载成功',
+      'loadFailed': '加载失败',
+      'loadEnd': '滑动到最底部了',
       // 通用文本
       'login': '登录',
       'register': '注册',
@@ -71,6 +76,7 @@ class S implements WidgetsLocalizations {
       'camera': '拍照',
       'gallery': '相册',
       'unknown': '未知',
+      'none': '',
     },
     'en': {
       // 登录注册，个人中心，设置模块
@@ -93,6 +99,11 @@ class S implements WidgetsLocalizations {
       'followSystem': 'Follow System',
       'loginRecord': 'Login Record',
       'checkUpgrade': 'Check Upgrade',
+      'loadEmpty': 'Load Empty',
+      'loadMore': 'Load More',
+      'loadSuccess': 'Load Success',
+      'loadFailed': 'Load Failed',
+      'loadEnd': 'Load To Bottom',
       // 通用文本
       'login': 'Login',
       'register': 'Register',
@@ -116,6 +127,7 @@ class S implements WidgetsLocalizations {
       'camera': 'Camera',
       'gallery': 'Gallery',
       'unknown': 'Unknown',
+      'none': '',
     },
   };
 
@@ -164,6 +176,16 @@ class S implements WidgetsLocalizations {
 
   String get gallery => _getValues('gallery');
 
+  String get loadEmpty => _getValues('loadEmpty');
+
+  String get loadMore => _getValues('loadMore');
+
+  String get loadSuccess => _getValues('loadSuccess');
+
+  String get loadFailed => _getValues('loadFailed');
+
+  String get loadEnd => _getValues('loadEnd');
+
   // 通用文本
   String get login => _getValues('login');
 
@@ -204,6 +226,8 @@ class S implements WidgetsLocalizations {
   String get cancel => _getValues('cancel');
 
   String get unknown => _getValues('unknown');
+
+  String get none => _getValues('none');
 }
 
 /// 资源加载委托工具

@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/http/api_client.dart';
+import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/models/local_model.dart';
 import 'package:flutter_ui/base/res/assets.dart';
 import 'package:flutter_ui/base/res/colors.dart';
@@ -28,6 +29,8 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
+  String _tag = 'SettingPage';
+
   bool switchState = true;
   String _colorKey = '';
   late Locale _locale;
@@ -36,6 +39,8 @@ class _SettingPageState extends State<SettingPage> {
   @override
   void initState() {
     super.initState();
+    Log.d('initState', tag: _tag);
+
     _colorKey = LocalModel.of.theme;
     _locale = LocalModel.of.locale;
     String user = SpUtil.getUser();
@@ -44,6 +49,30 @@ class _SettingPageState extends State<SettingPage> {
     } else {
       _user = UserEntity();
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    Log.d('didChangeDependencies', tag: _tag);
+  }
+
+  @override
+  void didUpdateWidget(covariant SettingPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    Log.d('didUpdateWidget', tag: _tag);
+  }
+
+  @override
+  void deactivate() {
+    super.deactivate();
+    Log.d('deactivate', tag: _tag);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    Log.d('dispose', tag: _tag);
   }
 
   @override

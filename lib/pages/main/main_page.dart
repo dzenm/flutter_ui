@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/naughty/naughty.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/widgets/badge_view.dart';
@@ -17,6 +18,8 @@ class MainPage extends StatefulWidget {
 
 // 主页的状态
 class _MainPageState extends State<MainPage> {
+  String _tag = 'MainPage';
+
   // 页面管理控制器
   final PageController _pageController = PageController(initialPage: 0);
 
@@ -26,6 +29,32 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
+    Log.d('initState', tag: _tag);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    Log.d('didChangeDependencies', tag: _tag);
+  }
+
+  @override
+  void didUpdateWidget(covariant MainPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    Log.d('didUpdateWidget', tag: _tag);
+  }
+
+  @override
+  void deactivate() {
+    super.deactivate();
+    Log.d('deactivate', tag: _tag);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+    Log.d('dispose', tag: _tag);
   }
 
   @override
@@ -36,7 +65,6 @@ class _MainPageState extends State<MainPage> {
       body: PageView(
         controller: _pageController,
         physics: NeverScrollableScrollPhysics(),
-        onPageChanged: (index) => setState(() => {_itemIndex = index}),
         children: [HomePage(S.of.home), MePage(S.of.me)],
       ),
       bottomNavigationBar: BottomAppBar(
@@ -55,7 +83,7 @@ class _MainPageState extends State<MainPage> {
 
   // 底部app bar item
   Widget _bottomAppBarItemView(IconData icon, String title, int index, {int badgeCount = 0}) {
-    Color color = _itemIndex == index ? Colors.green : Colors.grey.shade500;
+    Color color = _itemIndex == index ? Colors.blue : Colors.grey.shade500;
     double width = 56, height = 56;
     // 平分整个宽度
     return Expanded(

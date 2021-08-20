@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/entities/page_entity.dart';
 import 'package:flutter_ui/base/http/api_client.dart';
+import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/router/navigator_manager.dart';
-import 'package:flutter_ui/base/widgets/loading_view.dart';
+import 'package:flutter_ui/base/widgets/state_view.dart';
 import 'package:flutter_ui/base/widgets/refresh_list_view.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/entities/article_entity.dart';
@@ -33,7 +34,7 @@ class _ListPageState extends State<ListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('列表和刷新', style: TextStyle(color: Colors.white)),
+        title: Text(S.of.listAndRefresh, style: TextStyle(color: Colors.white)),
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,
@@ -99,7 +100,7 @@ class _ListPageState extends State<ListPage> {
           if (!_isInit) _isInit = true;
         });
       },
-      failed: (e) => setState(() => _loadingState = LoadingState.error),
+      failed: (e) => setState(() => _loadingState = LoadingState.failed),
     );
   }
 }

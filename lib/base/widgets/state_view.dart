@@ -1,16 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/base/res/strings.dart';
 
 import 'tap_layout.dart';
 
 /// ListView加载底部数据的View
-class LoadingView extends StatefulWidget {
+class StateView extends StatefulWidget {
   final LoadingState loadingState;
   final double? loadingProgressSize;
   final GestureTapCallback? onTap;
   final bool vertical;
 
-  LoadingView({
+  StateView({
     Key? key,
     this.loadingState = LoadingState.none,
     this.loadingProgressSize,
@@ -19,10 +20,10 @@ class LoadingView extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _LoadingViewState();
+  State<StatefulWidget> createState() => _StateViewState();
 }
 
-class _LoadingViewState extends State<LoadingView> {
+class _StateViewState extends State<StateView> {
   bool isTap = false;
 
   @override
@@ -37,18 +38,18 @@ class _LoadingViewState extends State<LoadingView> {
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: _loadingView(size),
+                children: _stateView(size),
               )
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: _loadingView(size),
+                children: _stateView(size),
               ),
       ),
     );
   }
 
-  List<Widget> _loadingView(double size) {
+  List<Widget> _stateView(double size) {
     LoadingState state = widget.loadingState;
     return [
       Offstage(
@@ -67,19 +68,19 @@ class _LoadingViewState extends State<LoadingView> {
   String loadingText(LoadingState state) {
     switch (state) {
       case LoadingState.none:
-        return '';
+        return S.of.none;
       case LoadingState.loading:
-        return '正在加载中...';
+        return S.of.loading;
       case LoadingState.empty:
-        return '加载为空';
+        return S.of.loadEmpty;
       case LoadingState.more:
-        return '加载更多';
+        return S.of.loadMore;
       case LoadingState.success:
-        return '加载成功';
-      case LoadingState.error:
-        return '加载失败';
+        return S.of.loadSuccess;
+      case LoadingState.failed:
+        return S.of.loadFailed;
       case LoadingState.end:
-        return '滑动到最底部了';
+        return S.of.loadEnd;
     }
   }
 }
@@ -90,7 +91,7 @@ enum LoadingState {
   loading, // 加载中，正在请求数据
   empty, // 加载为空数据
   success, // 加载成功
-  error, // 加载错误
+  failed, // 加载错误
   more, // 底部显示，加载部分页数，还有更多页面可以加载
   end, // 底部显示，加载数据完成，没有数据可以加载
 }

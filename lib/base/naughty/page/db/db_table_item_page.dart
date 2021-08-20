@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/db/sql_manager.dart';
 import 'package:flutter_ui/base/entities/column_entity.dart';
-import 'package:flutter_ui/base/widgets/loading_view.dart';
+import 'package:flutter_ui/base/widgets/state_view.dart';
 
 /// 数据库表列表展示页面
 class DBTableItemPage extends StatefulWidget {
@@ -62,7 +62,7 @@ class _DBTableItemPageState extends State<DBTableItemPage> {
                 }).toList(),
               ),
             ))
-          : Center(child: LoadingView(loadingState: _loadingState)),
+          : StateView(loadingState: _loadingState),
     );
   }
 }

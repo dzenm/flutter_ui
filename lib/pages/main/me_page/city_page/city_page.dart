@@ -7,7 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/res/assets.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
-import 'package:flutter_ui/base/widgets/loading_view.dart';
+import 'package:flutter_ui/base/widgets/state_view.dart';
 import 'package:lpinyin/lpinyin.dart';
 
 class CitySelectedPage extends StatefulWidget {
@@ -76,7 +76,7 @@ class _CitySelectedPageState extends State<CitySelectedPage> {
       appBar: AppBar(title: Text(S.of.citySelected, style: TextStyle(color: Colors.white))),
       body: SafeArea(
         child: _loadingState == LoadingState.loading
-            ? LoadingView(loadingState: _loadingState)
+            ? StateView(loadingState: _loadingState)
             : Column(
                 children: [
                   Container(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import 'loading_view.dart';
+import 'state_view.dart';
 
 typedef RefreshFunction = Future<void> Function(bool refresh);
 
@@ -59,7 +59,7 @@ class _RefreshListViewState extends State<RefreshListView> {
               controller: _controller,
             ),
           )
-        : LoadingView(
+        : StateView(
             loadingState: widget.loadingState,
             onTap: () => _onRefresh(),
           );
@@ -70,7 +70,7 @@ class _RefreshListViewState extends State<RefreshListView> {
     if (index < widget.itemCount) {
       return widget.builder(context, index);
     }
-    return LoadingView(loadingState: widget.loadingState, vertical: false, onTap: () => _loadingMore());
+    return StateView(loadingState: widget.loadingState, vertical: false, onTap: () => _loadingMore());
   }
 
   /// 第一次加载数据
