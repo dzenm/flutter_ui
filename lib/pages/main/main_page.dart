@@ -66,6 +66,7 @@ class _MainPageState extends State<MainPage> {
         controller: _pageController,
         physics: NeverScrollableScrollPhysics(),
         children: [HomePage(S.of.home), MePage(S.of.me)],
+        onPageChanged: (int index) => setState(() => _itemIndex = index),
       ),
       bottomNavigationBar: BottomAppBar(
         // shape: CircularNotchedRectangle(),
@@ -91,12 +92,9 @@ class _MainPageState extends State<MainPage> {
       // 给item设置点击事件
       child: TapLayout(
         height: height,
-        onTap: () => {
-          setState(() {
-            _itemIndex = index;
-            _pageController.jumpToPage(index);
-          })
-        },
+        onTap: () => setState(() {
+          if (_itemIndex != index) _pageController.jumpToPage(index);
+        }),
         child: Container(
           width: width,
           height: height,

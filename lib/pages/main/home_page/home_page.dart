@@ -6,6 +6,7 @@ import 'package:flutter_ui/base/widgets/banner_view.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/entities/article_entity.dart';
 import 'package:flutter_ui/entities/banner_entity.dart';
+import 'package:provider/provider.dart';
 
 //子页面
 //代码中设置了一个内部的_title变量，这个变量是从主页面传递过来的，然后根据传递过来的具体值显示在APP的标题栏和屏幕中间。

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/base/router/navigator_manager.dart';
+import 'package:flutter_ui/base/router/route_manager.dart';
 
 import 'tap_layout.dart';
 
@@ -90,7 +90,7 @@ class _TopAppbarState extends State<TopAppbar> {
 
   void _popThis(BuildContext context) {
     if (Navigator.of(context).canPop()) {
-      NavigatorManager.pop(result: '');
+      RouteManager.pop('');
     }
   }
 }

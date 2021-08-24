@@ -18,7 +18,7 @@ class CitySelectedPage extends StatefulWidget {
 class _CitySelectedPageState extends State<CitySelectedPage> {
   List<CityModel> cityList = [];
   List<CityModel> _hotCityList = [];
-  LoadingState _loadingState = LoadingState.loading;
+  LoadState _loadingState = LoadState.loading;
 
   @override
   void initState() {
@@ -45,7 +45,7 @@ class _CitySelectedPageState extends State<CitySelectedPage> {
       List list = countyMap['china'];
       list.forEach((v) => cityList.add(CityModel.fromJson(v)));
       _handleList(cityList);
-      setState(() => _loadingState = LoadingState.success);
+      setState(() => _loadingState = LoadState.success);
     });
   }
 
@@ -75,8 +75,8 @@ class _CitySelectedPageState extends State<CitySelectedPage> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(title: Text(S.of.citySelected, style: TextStyle(color: Colors.white))),
       body: SafeArea(
-        child: _loadingState == LoadingState.loading
-            ? StateView(loadingState: _loadingState)
+        child: _loadingState == LoadState.loading
+            ? StateView(state: _loadingState)
             : Column(
                 children: [
                   Container(

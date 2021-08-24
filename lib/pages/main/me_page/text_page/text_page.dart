@@ -7,7 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/res/assets.dart';
 import 'package:flutter_ui/base/res/strings.dart';
-import 'package:flutter_ui/base/router/navigator_manager.dart';
+import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/base/widgets/badge_view.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/common_widget.dart';
@@ -17,8 +17,7 @@ import 'package:flutter_ui/base/widgets/single_text_layout.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/base/widgets/will_pop_scope_route.dart';
 import 'package:flutter_ui/pages/main/me_page/me_model.dart';
-
-import '../me_router.dart';
+import 'package:flutter_ui/pages/main/me_page/setting_page/setting_page.dart';
 
 class TextPage extends StatefulWidget {
   @override
@@ -140,7 +139,7 @@ class _TextPageState extends State<TextPage> {
                   TapLayout(
                     height: 50.0,
                     padding: EdgeInsets.symmetric(horizontal: 16),
-                    onTap: () => NavigatorManager.navigateTo(context, MeRouter.settingPage),
+                    onTap: () => RouteManager.push(SettingPage()),
                     child: SingleTextLayout(title: S.of.setting, isShowForward: true, prefix: BadgeView(count: 10)),
                   ),
                   TapLayout(

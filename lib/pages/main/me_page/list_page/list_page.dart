@@ -3,12 +3,13 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/entities/page_entity.dart';
 import 'package:flutter_ui/base/http/api_client.dart';
 import 'package:flutter_ui/base/res/strings.dart';
-import 'package:flutter_ui/base/router/navigator_manager.dart';
-import 'package:flutter_ui/base/widgets/state_view.dart';
+import 'package:flutter_ui/base/router/route_manager.dart';
+import 'package:flutter_ui/base/widgets/footer_state.dart';
 import 'package:flutter_ui/base/widgets/refresh_list_view.dart';
+import 'package:flutter_ui/base/widgets/state_view.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/entities/article_entity.dart';
-import 'package:flutter_ui/pages/root_route.dart';
+import 'package:flutter_ui/pages/common/web_view_page.dart';
 
 class ListPage extends StatefulWidget {
   @override
@@ -18,14 +19,14 @@ class ListPage extends StatefulWidget {
 class _ListPageState extends State<ListPage> {
   List<ArticleEntity?> articleList = [];
   int _page = 0; // 加载的页数
-  LoadingState _loadingState = LoadingState.loading;
-  bool _isInit = false;
+  LoadState _loadState = LoadState.loading;
+  FooterState _footerState = FooterState.loading;
 
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration(milliseconds: 500), () {
-      _loadingState = LoadingState.none;
+      _loadState = LoadState.none;
       _getArticle(isReset: true);
     });
   }
@@ -45,8 +46,8 @@ class _ListPageState extends State<ListPage> {
           children: [
             Expanded(
               child: RefreshListView(
-                isInit: _isInit,
-                loadingState: _loadingState,
+                loadState: _loadState,
+                footerState: _footerState,
                 itemCount: articleList.length,
                 builder: _renderArticleItem,
                 refresh: _onRefresh,
@@ -63,10 +64,7 @@ class _ListPageState extends State<ListPage> {
     ArticleEntity article = articleList[index] ?? ArticleEntity();
     String title = article.title ?? '';
     return TapLayout(
-      onTap: () => NavigatorManager.navigateTo(
-        context,
-        RootRoute.webView + '?title=${Uri.encodeComponent(title)}&url=${Uri.encodeComponent(article.link ?? '')}',
-      ),
+      onTap: () => RouteManager.push(WebViewPage(title: title, url: article.link ?? '')),
       child: ListTile(
         title: Text(title),
       ),
@@ -78,8 +76,8 @@ class _ListPageState extends State<ListPage> {
 
   // 根据页数获取文章
   void _getArticle({bool isReset = false}) {
-    if (_loadingState == LoadingState.loading) return;
-    setState(() => _loadingState = LoadingState.loading);
+    if (_footerState == FooterState.loading) return;
+    setState(() => _footerState = FooterState.loading);
 
     _page = isReset ? 0 : _page;
     ApiClient.getInstance.request(
@@ -90,17 +88,20 @@ class _ListPageState extends State<ListPage> {
         List<ArticleEntity?> list = (data['datas'] as List<dynamic>).map((e) => ArticleEntity.fromJson(e)).toList();
         setState(() {
           if (_page == pageEntity.total) {
-            _loadingState = LoadingState.end;
+            _footerState = FooterState.end;
             return;
           } else {
             isReset ? articleList = list : articleList.addAll(list);
             ++_page;
-            _loadingState = LoadingState.more;
+            _footerState = FooterState.more;
           }
-          if (!_isInit) _isInit = true;
+          if (_loadState != LoadState.success) _loadState = LoadState.success;
         });
       },
-      failed: (e) => setState(() => _loadingState = LoadingState.failed),
+      failed: (e) => setState(() {
+        if (_loadState != LoadState.success) _loadState = LoadState.failed;
+        _footerState = FooterState.failed;
+      }),
     );
   }
 }

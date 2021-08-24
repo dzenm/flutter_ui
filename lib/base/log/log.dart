@@ -79,7 +79,7 @@ class Log {
   }
 
   // 换行打印
-  static void _println(int level, String message, {bool isDefaultColor = false}) {
+  static void _println(int level, String message, {bool isDefaultColor = true}) {
     String prefix = _handlerPrefixTextColor(level, isDefaultColor);
     String suffix = _handlerSuffixTextColor(level, isDefaultColor);
     String msg = prefix + message + suffix;

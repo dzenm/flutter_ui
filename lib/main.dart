@@ -11,7 +11,6 @@ import 'package:flutter_ui/base/log/handle_error.dart';
 import 'package:flutter_ui/base/models/local_model.dart';
 import 'package:flutter_ui/base/res/colors.dart';
 import 'package:flutter_ui/base/res/strings.dart';
-import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/pages/login/login_page.dart';
 import 'package:flutter_ui/pages/main/main_page.dart';
 import 'package:flutter_ui/utils/sp_util.dart';
@@ -47,9 +46,6 @@ class Application {
 
     /// 确保初始化
     WidgetsFlutterBinding.ensureInitialized();
-
-    /// 初始化路由设置
-    RouteManager.registerConfigureRoutes();
 
     /// 初始化SharedPreferences
     await SpUtil.getInstance.init();
@@ -105,14 +101,15 @@ class Application {
               brightness: Brightness.dark,
             ),
             floatingActionButtonTheme: FloatingActionButtonThemeData(backgroundColor: theme['primaryColor']),
-            pageTransitionsTheme: PageTransitionsTheme(
-              builders: <TargetPlatform, PageTransitionsBuilder>{
-                TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-                TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-              },
-            ),
+            // pageTransitionsTheme: PageTransitionsTheme(
+            //   builders: <TargetPlatform, PageTransitionsBuilder>{
+            //     TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+            //     TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+            //   },
+            // ),
           ),
-
+          // 初始路由
+          initialRoute: '/',
           // 设置语言，读取LocalModel的值，改变LocalModel的locale值会通过provider刷新页面
           locale: res.locale,
           localizationsDelegates: [

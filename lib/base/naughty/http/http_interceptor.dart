@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_ui/base/naughty/entities/http_entity.dart';
 import 'package:flutter_ui/base/naughty/page/http/http_list_page.dart';
-import 'package:flutter_ui/base/router/navigator_manager.dart';
+import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/base/utils/notification_util.dart';
 import 'package:flutter_ui/base/utils/str_util.dart';
 import 'package:intl/intl.dart';
@@ -23,7 +23,7 @@ class HttpInterceptor extends Interceptor {
     Naughty.getInstance.data.insert(0, entity);
 
     String body = '${options.method}  ${options.path}';
-    NotificationUtil.showNotification(body: body, onTap: (payload) async => NavigatorManager.push(HTTPListPage()));
+    NotificationUtil.showNotification(body: body, onTap: (payload) async => RouteManager.push(HTTPListPage()));
     handler.next(options);
   }
 

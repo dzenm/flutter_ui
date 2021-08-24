@@ -2,9 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/res/strings.dart';
-import 'package:flutter_ui/base/router/navigator_manager.dart';
+import 'package:flutter_ui/base/router/route_manager.dart';
+import 'package:flutter_ui/pages/main/me_page/city_page/city_page.dart';
+import 'package:flutter_ui/pages/main/me_page/convert_page/convert_page.dart';
+import 'package:flutter_ui/pages/main/me_page/float_navigation_page/float_navigation_page.dart';
+import 'package:flutter_ui/pages/main/me_page/http_page/http_page.dart';
+import 'package:flutter_ui/pages/main/me_page/list_page/list_page.dart';
 import 'package:flutter_ui/pages/main/me_page/me_model.dart';
-import 'package:flutter_ui/pages/main/me_page/me_router.dart';
+import 'package:flutter_ui/pages/main/me_page/qr_page/qr_page.dart';
+import 'package:flutter_ui/pages/main/me_page/setting_page/setting_page.dart';
+import 'package:flutter_ui/pages/main/me_page/text_page/text_page.dart';
 
 // 子页面
 class MePage extends StatefulWidget {
@@ -73,56 +80,56 @@ class _MePageState extends State<MePage> with AutomaticKeepAliveClientMixin {
         child: text(S.of.textAndInput),
         textColor: Colors.white,
         color: Colors.blue,
-        onPressed: () => NavigatorManager.navigateTo(context, MeRouter.textPage),
+        onPressed: () => RouteManager.push(TextPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: text(S.of.navigationBar),
         textColor: Colors.white,
         color: Colors.blue,
-        onPressed: () => NavigatorManager.navigateTo(context, MeRouter.floatNavigatorPage),
+        onPressed: () => RouteManager.push(FloatNavigationPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: text(S.of.charConvert),
         textColor: Colors.white,
         color: Colors.blue,
-        onPressed: () => NavigatorManager.navigateTo(context, MeRouter.convertPage),
+        onPressed: () => RouteManager.push(ConvertPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: text(S.of.httpRequest),
         textColor: Colors.white,
         color: Colors.blue,
-        onPressed: () => NavigatorManager.navigateTo(context, MeRouter.httpPage),
+        onPressed: () => RouteManager.push(HTTPListPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: text(S.of.listAndRefresh),
         textColor: Colors.white,
         color: Colors.blue,
-        onPressed: () => NavigatorManager.navigateTo(context, MeRouter.listPage),
+        onPressed: () => RouteManager.push(ListPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: text(S.of.qr),
         textColor: Colors.white,
         color: Colors.blue,
-        onPressed: () => NavigatorManager.navigateTo(context, MeRouter.qrPage),
+        onPressed: () => RouteManager.push(QRPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: text(S.of.citySelected),
         textColor: Colors.white,
         color: Colors.blue,
-        onPressed: () => NavigatorManager.navigateTo(context, MeRouter.citySelectedPage),
+        onPressed: () => RouteManager.push(CitySelectedPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: text(S.of.setting),
         textColor: Colors.white,
         color: Colors.blue,
-        onPressed: () => NavigatorManager.navigateTo(context, MeRouter.settingPage),
+        onPressed: () => RouteManager.push(SettingPage()),
       ),
       SizedBox(height: 8),
       Text(MeModel.of.value),

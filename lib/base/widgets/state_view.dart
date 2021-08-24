@@ -4,19 +4,21 @@ import 'package:flutter_ui/base/res/strings.dart';
 
 import 'tap_layout.dart';
 
-/// ListView加载底部数据的View
+/// 状态展示
 class StateView extends StatefulWidget {
-  final LoadingState loadingState;
-  final double? loadingProgressSize;
+  final Widget? child;
+  final LoadState state;
   final GestureTapCallback? onTap;
-  final bool vertical;
+  final Widget? title;
+  final Widget? image;
 
   StateView({
     Key? key,
-    this.loadingState = LoadingState.none,
-    this.loadingProgressSize,
-    this.vertical = true,
+    this.child,
+    this.state = LoadState.none,
     this.onTap,
+    this.title,
+    this.image,
   }) : super(key: key);
 
   @override
@@ -24,74 +26,65 @@ class StateView extends StatefulWidget {
 }
 
 class _StateViewState extends State<StateView> {
-  bool isTap = false;
-
   @override
   Widget build(BuildContext context) {
-    double size = widget.loadingProgressSize ?? (widget.vertical ? 48 : 24);
     return Offstage(
-      offstage: widget.loadingState == LoadingState.none,
-      child: TapLayout(
-        height: widget.vertical ? null : 56,
-        onTap: widget.onTap,
-        child: widget.vertical
-            ? Column(
+      offstage: widget.state == LoadState.none,
+      child: widget.state == LoadState.success
+          ? widget.child
+          : TapLayout(
+              height: 56,
+              onTap: widget.onTap,
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: _stateView(size),
-              )
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: _stateView(size),
+                children: _stateView(56),
               ),
-      ),
+            ),
     );
   }
 
   List<Widget> _stateView(double size) {
-    LoadingState state = widget.loadingState;
+    LoadState state = widget.state;
     return [
       Offstage(
-        offstage: state != LoadingState.loading,
+        offstage: state != LoadState.loading,
         child: Container(
           width: size,
           height: size,
           child: CircularProgressIndicator(),
         ),
       ),
+      Offstage(
+        offstage: state != LoadState.empty || state != LoadState.failed,
+        child: widget.image,
+      ),
       SizedBox(width: 16, height: 32),
-      Text(loadingText(state)),
+      widget.title == null ? Text(stateText(state)) : widget.title!,
     ];
   }
 
-  String loadingText(LoadingState state) {
+  String stateText(LoadState state) {
     switch (state) {
-      case LoadingState.none:
+      case LoadState.none:
         return S.of.none;
-      case LoadingState.loading:
+      case LoadState.loading:
         return S.of.loading;
-      case LoadingState.empty:
+      case LoadState.empty:
         return S.of.loadEmpty;
-      case LoadingState.more:
-        return S.of.loadMore;
-      case LoadingState.success:
+      case LoadState.success:
         return S.of.loadSuccess;
-      case LoadingState.failed:
+      case LoadState.failed:
         return S.of.loadFailed;
-      case LoadingState.end:
-        return S.of.loadEnd;
     }
   }
 }
 
 /// 加载数据的状态
-enum LoadingState {
+enum LoadState {
   none, // 什么都不做
   loading, // 加载中，正在请求数据
   empty, // 加载为空数据
   success, // 加载成功
   failed, // 加载错误
-  more, // 底部显示，加载部分页数，还有更多页面可以加载
-  end, // 底部显示，加载数据完成，没有数据可以加载
 }

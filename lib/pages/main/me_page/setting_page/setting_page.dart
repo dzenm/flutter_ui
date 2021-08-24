@@ -10,16 +10,16 @@ import 'package:flutter_ui/base/models/local_model.dart';
 import 'package:flutter_ui/base/res/assets.dart';
 import 'package:flutter_ui/base/res/colors.dart';
 import 'package:flutter_ui/base/res/strings.dart';
-import 'package:flutter_ui/base/router/navigator_manager.dart';
+import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/common_widget.dart';
 import 'package:flutter_ui/base/widgets/single_text_layout.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/entities/user_entity.dart';
 import 'package:flutter_ui/pages/common/preview_photo_page.dart';
+import 'package:flutter_ui/pages/login/login_page.dart';
 import 'package:flutter_ui/utils/sp_util.dart';
 
-import '../../../root_route.dart';
 import '../me_model.dart';
 
 /// 设置页面
@@ -290,7 +290,7 @@ class _SettingPageState extends State<SettingPage> {
       SpUtil.setToken(null);
       SpUtil.setUser(null);
 
-      NavigatorManager.navigateTo(context, RootRoute.login, clearStack: true);
+      RouteManager.push(LoginPage(), clearStack: true);
     });
   }
 }

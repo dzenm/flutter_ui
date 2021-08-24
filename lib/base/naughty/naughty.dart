@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/res/assets.dart';
-import 'package:flutter_ui/base/router/navigator_manager.dart';
+import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/base/widgets/floating_button.dart';
 
 import 'entities/http_entity.dart';
@@ -40,7 +40,7 @@ class Naughty {
         builder: (BuildContext context) =>
             _child ??
             FloatingButton(
-              onTap: () => NavigatorManager.push(HTTPListPage()),
+              onTap: () => RouteManager.push(HTTPListPage()),
               imageProvider: AssetImage(Assets.image(('vnote.png'))),
             ) // DragLayout(
         );
