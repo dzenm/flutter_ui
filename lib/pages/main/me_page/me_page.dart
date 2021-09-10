@@ -3,15 +3,20 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
-import 'package:flutter_ui/pages/main/me_page/city_page/city_page.dart';
-import 'package:flutter_ui/pages/main/me_page/convert_page/convert_page.dart';
-import 'package:flutter_ui/pages/main/me_page/float_navigation_page/float_navigation_page.dart';
-import 'package:flutter_ui/pages/main/me_page/http_page/http_page.dart';
-import 'package:flutter_ui/pages/main/me_page/list_page/list_page.dart';
-import 'package:flutter_ui/pages/main/me_page/me_model.dart';
-import 'package:flutter_ui/pages/main/me_page/qr_page/qr_page.dart';
-import 'package:flutter_ui/pages/main/me_page/setting_page/setting_page.dart';
-import 'package:flutter_ui/pages/main/me_page/text_page/text_page.dart';
+import 'package:flutter_ui/base/widgets/keyboard/keyboard_main.dart';
+
+import 'city_page/city_page.dart';
+import 'convert_page/convert_page.dart';
+import 'drag_list_page/drag_list_page.dart';
+import 'float_navigation_page/float_navigation_page.dart';
+import 'http_page/http_page.dart';
+import 'list_page/list_page.dart';
+import 'me_model.dart';
+import 'qr_page/qr_page.dart';
+import 'setting_page/setting_page.dart';
+import 'state_page/state_page.dart';
+import 'text_page/text_page.dart';
+import 'video_page/video_page.dart';
 
 // 子页面
 class MePage extends StatefulWidget {
@@ -67,76 +72,108 @@ class _MePageState extends State<MePage> with AutomaticKeepAliveClientMixin {
         brightness: Brightness.dark,
         title: Text(widget._title, style: TextStyle(color: Colors.white)),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(children: childrenButtons()),
+      body: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        child: SingleChildScrollView(
+          child: Column(children: childrenButtons()),
+        ),
       ),
     );
   }
 
   List<Widget> childrenButtons() {
     return [
+      SizedBox(height: 16),
       MaterialButton(
-        child: text(S.of.textAndInput),
+        child: _text(S.of.textAndInput),
         textColor: Colors.white,
         color: Colors.blue,
         onPressed: () => RouteManager.push(TextPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
-        child: text(S.of.navigationBar),
+        child: _text(S.of.navigationBar),
         textColor: Colors.white,
         color: Colors.blue,
         onPressed: () => RouteManager.push(FloatNavigationPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
-        child: text(S.of.charConvert),
+        child: _text(S.of.charConvert),
         textColor: Colors.white,
         color: Colors.blue,
         onPressed: () => RouteManager.push(ConvertPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
-        child: text(S.of.httpRequest),
+        child: _text(S.of.httpRequest),
         textColor: Colors.white,
         color: Colors.blue,
         onPressed: () => RouteManager.push(HTTPListPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
-        child: text(S.of.listAndRefresh),
+        child: _text(S.of.listAndRefresh),
         textColor: Colors.white,
         color: Colors.blue,
         onPressed: () => RouteManager.push(ListPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
-        child: text(S.of.qr),
+        child: _text(S.of.dragList),
+        textColor: Colors.white,
+        color: Colors.blue,
+        onPressed: () => RouteManager.push(DragListPage()),
+      ),
+      SizedBox(height: 8),
+      MaterialButton(
+        child: _text(S.of.videoPlay),
+        textColor: Colors.white,
+        color: Colors.blue,
+        onPressed: () => RouteManager.push(VideoPage()),
+      ),
+      SizedBox(height: 8),
+      MaterialButton(
+        child: _text(S.of.qr),
         textColor: Colors.white,
         color: Colors.blue,
         onPressed: () => RouteManager.push(QRPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
-        child: text(S.of.citySelected),
+        child: _text(S.of.citySelected),
         textColor: Colors.white,
         color: Colors.blue,
         onPressed: () => RouteManager.push(CitySelectedPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
-        child: text(S.of.setting),
+        child: _text(S.of.setting),
         textColor: Colors.white,
         color: Colors.blue,
         onPressed: () => RouteManager.push(SettingPage()),
       ),
       SizedBox(height: 8),
+      MaterialButton(
+        child: _text(S.of.state),
+        textColor: Colors.white,
+        color: Colors.blue,
+        onPressed: () => RouteManager.push(StatePage()),
+      ),
+      SizedBox(height: 8),
+      MaterialButton(
+        child: _text(S.of.state),
+        textColor: Colors.white,
+        color: Colors.blue,
+        onPressed: () => RouteManager.push(main_keyboard ()),
+      ),
+      SizedBox(height: 8),
       Text(MeModel.of.value),
+      SizedBox(height: 16),
     ];
   }
 
-  Widget text(String text) {
+  Widget _text(String text) {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text(text)]);
   }
 }

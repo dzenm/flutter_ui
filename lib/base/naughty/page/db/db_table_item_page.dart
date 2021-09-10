@@ -21,20 +21,19 @@ class DBTableItemPage extends StatefulWidget {
 class _DBTableItemPageState extends State<DBTableItemPage> {
   List<Map<String, dynamic>> _list = [];
   List<ColumnEntity> _columns = [];
-  LoadState _loadingState = LoadState.none;
+  StateController _controller = StateController();
 
   @override
   void initState() {
     super.initState();
 
-    setState(() => _loadingState = LoadState.loading);
     Future.delayed(Duration(milliseconds: 500), getData);
   }
 
   Future<void> getData() async {
     _columns = await SqlManager.getInstance.getTableColumn(widget.dbName, widget.tableName);
     _list = await SqlManager.getInstance.where(widget.tableName);
-    setState(() => _loadingState = LoadState.success);
+    setState(() => _controller.loadComplete());
   }
 
   @override
@@ -44,24 +43,26 @@ class _DBTableItemPageState extends State<DBTableItemPage> {
         title: Text(widget.tableName),
       ),
       body: StateView(
-        state: _loadingState,
+        controller: _controller,
         child: SingleChildScrollView(
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            child: DataTable(
-              dataRowHeight: 20,
-              headingRowHeight: 32,
-              horizontalMargin: 0,
-              columnSpacing: 5,
-              showBottomBorder: true,
-              columns: _columns.map((column) => DataColumn(label: Text('${column.name}'))).toList(),
-              rows: _list.map((Map<String, dynamic> item) {
-                return DataRow(
-                    cells: _columns.map((column) {
-                  return DataCell(Text('${item[column.name].toString()}'));
-                }).toList());
-              }).toList(),
-            ),
+            child: _controller.isLoadMore()
+                ? DataTable(
+                    dataRowHeight: 20,
+                    headingRowHeight: 32,
+                    horizontalMargin: 0,
+                    columnSpacing: 5,
+                    showBottomBorder: true,
+                    columns: _columns.map((column) => DataColumn(label: Text('${column.name}'))).toList(),
+                    rows: _list.map((Map<String, dynamic> item) {
+                      return DataRow(
+                          cells: _columns.map((column) {
+                        return DataCell(Text('${item[column.name].toString()}'));
+                      }).toList());
+                    }).toList(),
+                  )
+                : null,
           ),
         ),
       ),

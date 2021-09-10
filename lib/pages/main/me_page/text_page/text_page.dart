@@ -11,6 +11,7 @@ import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/base/widgets/badge_view.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/common_widget.dart';
+import 'package:flutter_ui/base/widgets/license_keyboard.dart';
 import 'package:flutter_ui/base/widgets/menu_Item.dart';
 import 'package:flutter_ui/base/widgets/single_edit_layout.dart';
 import 'package:flutter_ui/base/widgets/single_text_layout.dart';
@@ -103,6 +104,7 @@ class _TextPageState extends State<TextPage> {
                     maxLength: 12,
                     fontSize: 14,
                     horizontalPadding: 0,
+                    keyboardType: LicenseKeyboard.inputType,
                   ),
                   Container(
                     color: Colors.blue,

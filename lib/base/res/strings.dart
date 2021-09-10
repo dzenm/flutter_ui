@@ -38,9 +38,10 @@ class S implements WidgetsLocalizations {
       'navigationBar': 'NavigationBar',
       'charConvert': '字符转化',
       'httpRequest': 'Http请求',
-      'qr': '二维码',
       'citySelected': '城市选择',
       'listAndRefresh': '列表和刷新',
+      'dragList': '拖拽列表',
+      'videoPlay': '视频播放',
       'verifyPhone': '验证手机号',
       'notificationSwitch': '通知开关',
       'selectTheme': '选择主题',
@@ -51,8 +52,11 @@ class S implements WidgetsLocalizations {
       'loadEmpty': '加载为空',
       'loadMore': '加载更多',
       'loadSuccess': '加载成功',
+      'loadComplete': '加载完成',
       'loadFailed': '加载失败',
       'loadEnd': '滑动到最底部了',
+      'vlcVideoPlay': 'Vlc视频播放器',
+      'ijkVideoPlay': 'Ijk视频播放器',
       // 通用文本
       'login': '登录',
       'register': '注册',
@@ -70,11 +74,13 @@ class S implements WidgetsLocalizations {
       'exit': '退出',
       'home': '首页',
       'me': '我',
+      'state': '状态',
       'loading': '加载中',
       'confirm': '确定',
       'cancel': '取消',
       'camera': '拍照',
       'gallery': '相册',
+      'qr': '二维码',
       'unknown': '未知',
       'none': '',
     },
@@ -89,9 +95,10 @@ class S implements WidgetsLocalizations {
       'navigationBar': 'NavigationBar',
       'charConvert': 'Character Convert',
       'httpRequest': 'Http Request',
-      'qr': 'QR',
       'citySelected': 'City Selected',
       'listAndRefresh': 'List And Refresh',
+      'dragList': 'Drag List',
+      'videoPlay': 'Video Play',
       'notificationSwitch': 'Notification Switch',
       'verifyPhone': 'Verify Phone',
       'selectTheme': 'Select Theme',
@@ -102,8 +109,10 @@ class S implements WidgetsLocalizations {
       'loadEmpty': 'Load Empty',
       'loadMore': 'Load More',
       'loadSuccess': 'Load Success',
+      'loadComplete': 'Load Complete',
       'loadFailed': 'Load Failed',
       'loadEnd': 'Load To Bottom',
+      'ijkVideoPlay': 'Ijk Video Play',
       // 通用文本
       'login': 'Login',
       'register': 'Register',
@@ -121,11 +130,13 @@ class S implements WidgetsLocalizations {
       'exit': 'Exit',
       'home': 'Home',
       'me': 'Me',
+      'state': 'State',
       'loading': 'Loading',
       'confirm': 'Confirm',
       'cancel': 'Cancel',
       'camera': 'Camera',
       'gallery': 'Gallery',
+      'qr': 'QR',
       'unknown': 'Unknown',
       'none': '',
     },
@@ -152,11 +163,13 @@ class S implements WidgetsLocalizations {
 
   String get httpRequest => _getValues('httpRequest');
 
-  String get qr => _getValues('qr');
-
   String get citySelected => _getValues('citySelected');
 
   String get listAndRefresh => _getValues('listAndRefresh');
+
+  String get dragList => _getValues('dragList');
+
+  String get videoPlay => _getValues('videoPlay');
 
   String get notificationSwitch => _getValues('notificationSwitch');
 
@@ -182,9 +195,15 @@ class S implements WidgetsLocalizations {
 
   String get loadSuccess => _getValues('loadSuccess');
 
+  String get loadComplete => _getValues('loadComplete');
+
   String get loadFailed => _getValues('loadFailed');
 
   String get loadEnd => _getValues('loadEnd');
+
+  String get vlcVideoPlay => _getValues('vlcVideoPlay');
+
+  String get ijkVideoPlay => _getValues('ijkVideoPlay');
 
   // 通用文本
   String get login => _getValues('login');
@@ -219,11 +238,15 @@ class S implements WidgetsLocalizations {
 
   String get me => _getValues('me');
 
+  String get state => _getValues('state');
+
   String get loading => _getValues('loading');
 
   String get confirm => _getValues('confirm');
 
   String get cancel => _getValues('cancel');
+
+  String get qr => _getValues('qr');
 
   String get unknown => _getValues('unknown');
 

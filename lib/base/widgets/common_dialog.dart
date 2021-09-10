@@ -37,7 +37,15 @@ CancelFunc loadingDialog({String? loadingTxt, bool isVertical = true}) {
     toastBuilder: (_) => Container(
       padding: EdgeInsets.symmetric(vertical: 30, horizontal: 40),
       decoration: BoxDecoration(color: Colors.black54, borderRadius: BorderRadius.all(Radius.circular(8))),
-      child: isVertical ? Column(mainAxisSize: MainAxisSize.min, children: widgets) : Row(mainAxisSize: MainAxisSize.min, children: widgets),
+      child: isVertical
+          ? Column(
+              mainAxisSize: MainAxisSize.min,
+              children: widgets,
+            )
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              children: widgets,
+            ),
     ),
   );
 }
@@ -131,17 +139,17 @@ void showPromptDialog(
     builder: (context) {
       return DialogWrapper(
         isTouchOutsideDismiss: isTouchOutsideDismiss,
-        child: Column(mainAxisSize: MainAxisSize.min,children: [
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
           SizedBox(height: 20),
           title ?? Text(titleString ?? '', style: TextStyle(fontSize: 16)),
           content == null
               ? SizedBox(width: 0, height: 16)
               : Flexible(
-            child: Padding(
-              child: content,
-              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-            ),
-          ),
+                  child: Padding(
+                    child: content,
+                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                  ),
+                ),
           BottomButton(
             positiveText: positiveText,
             negativeText: negativeText,

@@ -18,7 +18,7 @@ class CitySelectedPage extends StatefulWidget {
 class _CitySelectedPageState extends State<CitySelectedPage> {
   List<CityModel> cityList = [];
   List<CityModel> _hotCityList = [];
-  LoadState _loadingState = LoadState.loading;
+  StateController _controller = StateController();
 
   @override
   void initState() {
@@ -45,7 +45,7 @@ class _CitySelectedPageState extends State<CitySelectedPage> {
       List list = countyMap['china'];
       list.forEach((v) => cityList.add(CityModel.fromJson(v)));
       _handleList(cityList);
-      setState(() => _loadingState = LoadState.success);
+      setState(() => _controller.loadComplete());
     });
   }
 
@@ -75,54 +75,55 @@ class _CitySelectedPageState extends State<CitySelectedPage> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(title: Text(S.of.citySelected, style: TextStyle(color: Colors.white))),
       body: SafeArea(
-        child: _loadingState == LoadState.loading
-            ? StateView(state: _loadingState)
-            : Column(
-                children: [
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.only(left: 15.0),
-                    height: 50.0,
-                    child: Text("当前城市: 成都市"),
-                  ),
-                  Expanded(
-                    child: AzListView(
-                      data: cityList,
-                      itemCount: cityList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return getListItem(cityList[index]);
-                      },
-                      padding: EdgeInsets.zero,
-                      susItemBuilder: (BuildContext context, int index) {
-                        CityModel model = cityList[index];
-                        if ('↑' == model.getSuspensionTag()) {
-                          return Container();
-                        }
-                        return getSusItem(cityList[index].getSuspensionTag());
-                      },
-                      physics: BouncingScrollPhysics(),
-                      indexBarData: ['↑', '★', ...kIndexBarData],
-                      indexBarOptions: IndexBarOptions(
-                        needRebuild: true,
-                        ignoreDragCancel: true,
-                        downTextStyle: TextStyle(fontSize: 12, color: Colors.white),
-                        downItemDecoration: BoxDecoration(shape: BoxShape.circle, color: Colors.green),
-                        indexHintWidth: 120 / 2,
-                        indexHintHeight: 100 / 2,
-                        indexHintDecoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage(Assets.icon('ic_bubble_gray.png')),
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                        indexHintAlignment: Alignment.centerRight,
-                        indexHintChildAlignment: Alignment(-0.25, 0.0),
-                        indexHintOffset: Offset(-20, 0),
+        child: StateView(
+          controller: _controller,
+          child: Column(
+            children: [
+              Container(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.only(left: 15.0),
+                height: 50.0,
+                child: Text("当前城市: 成都市"),
+              ),
+              Expanded(
+                child: AzListView(
+                  data: cityList,
+                  itemCount: cityList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return getListItem(cityList[index]);
+                  },
+                  padding: EdgeInsets.zero,
+                  susItemBuilder: (BuildContext context, int index) {
+                    CityModel model = cityList[index];
+                    if ('↑' == model.getSuspensionTag()) {
+                      return Container();
+                    }
+                    return getSusItem(cityList[index].getSuspensionTag());
+                  },
+                  physics: BouncingScrollPhysics(),
+                  indexBarData: ['↑', '★', ...kIndexBarData],
+                  indexBarOptions: IndexBarOptions(
+                    needRebuild: true,
+                    ignoreDragCancel: true,
+                    downTextStyle: TextStyle(fontSize: 12, color: Colors.white),
+                    downItemDecoration: BoxDecoration(shape: BoxShape.circle, color: Colors.green),
+                    indexHintWidth: 120 / 2,
+                    indexHintHeight: 100 / 2,
+                    indexHintDecoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(Assets.icon('ic_bubble_gray.png')),
+                        fit: BoxFit.contain,
                       ),
                     ),
-                  )
-                ],
-              ),
+                    indexHintAlignment: Alignment.centerRight,
+                    indexHintChildAlignment: Alignment(-0.25, 0.0),
+                    indexHintOffset: Offset(-20, 0),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

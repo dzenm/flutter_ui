@@ -1,27 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import 'footer_state.dart';
 import 'state_view.dart';
 
 typedef RefreshFunction = Future<void> Function(bool refresh);
 
 class RefreshListView extends StatefulWidget {
-  final LoadState loadState; // 加载状态
-  final FooterState footerState; // 加载状态
+  final StateController controller; // 加载状态控制器
   final int itemCount; // item数量
   final IndexedWidgetBuilder builder; // 子item样式
   final RefreshFunction refresh; // refresh为true表示下拉刷新的回调, 为false表示上拉加载更多的回调
-  final bool isShowFooterLoading;
 
   RefreshListView({
     Key? key,
-    this.loadState = LoadState.none,
-    this.footerState = FooterState.none,
+    required this.controller,
     required this.itemCount,
     required this.builder,
     required this.refresh,
-    this.isShowFooterLoading = false,
   }) : super(key: key);
 
   @override
@@ -52,13 +47,13 @@ class _RefreshListViewState extends State<RefreshListView> {
   Widget build(BuildContext context) {
     // 初始时，显示加载状态，如加载成功后隐藏页面并显示数据，之后显示加载更多
     return StateView(
-      state: widget.loadState,
+      controller: widget.controller,
       onTap: () => _onRefresh(),
       child: RefreshIndicator(
         onRefresh: _onRefresh,
         child: ListView.builder(
           itemBuilder: _renderItem,
-          itemCount: widget.isShowFooterLoading ? widget.itemCount + 1 : widget.itemCount,
+          itemCount: widget.controller.state == LoadState.none ? widget.itemCount : widget.itemCount + 1,
           controller: _controller,
         ),
       ),
@@ -70,7 +65,7 @@ class _RefreshListViewState extends State<RefreshListView> {
     if (index < widget.itemCount) {
       return widget.builder(context, index);
     }
-    return FooterView(state: widget.footerState, onTap: () => _loadingMore());
+    return FooterStateView(controller: widget.controller, onTap: () => _loadingMore());
   }
 
   /// 第一次加载数据
@@ -80,6 +75,7 @@ class _RefreshListViewState extends State<RefreshListView> {
 
   /// 加载更多的数据
   Future<void> _loadingMore() async {
+    setState(() => widget.controller.loading());
     widget.refresh(false);
   }
 }

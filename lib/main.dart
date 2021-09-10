@@ -17,6 +17,7 @@ import 'package:flutter_ui/utils/sp_util.dart';
 import 'package:provider/provider.dart';
 
 import 'base/log/log.dart';
+import 'base/widgets/license_keyboard.dart';
 import 'base/widgets/will_pop_scope_route.dart';
 import 'pages/main/home_page/home_model.dart';
 import 'pages/main/main_model.dart';
@@ -49,6 +50,8 @@ class Application {
 
     /// 初始化SharedPreferences
     await SpUtil.getInstance.init();
+
+    LicenseKeyboard.register();
 
     /// 初始化通知
     const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('app_icon');

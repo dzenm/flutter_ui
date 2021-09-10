@@ -69,7 +69,6 @@ class _MainPageState extends State<MainPage> {
         onPageChanged: (int index) => setState(() => _itemIndex = index),
       ),
       bottomNavigationBar: BottomAppBar(
-        // shape: CircularNotchedRectangle(),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           mainAxisSize: MainAxisSize.max,

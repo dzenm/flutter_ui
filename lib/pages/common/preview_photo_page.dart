@@ -9,16 +9,14 @@ typedef DownloadCallback = void Function(String url);
 void showPreviewPhotoPage(
   List<String> url, {
   ImageProvider<Object>? imageProvider,
-  bool canDownload = true,
-  DownloadCallback? download,
+  DownloadCallback? onDownload,
 }) {
   Navigator.of(Application.context).push(
     CustomerPageRoute(
       PreviewPhotoPage(
         url,
         imageProvider: imageProvider,
-        canDownload: canDownload,
-        download: download,
+        onDownload: onDownload,
       ),
       style: AnimatorStyle.fade,
     ),
@@ -29,14 +27,12 @@ void showPreviewPhotoPage(
 class PreviewPhotoPage extends StatefulWidget {
   final List<String> url;
   final ImageProvider<Object>? imageProvider;
-  final bool canDownload;
-  final DownloadCallback? download;
+  final DownloadCallback? onDownload;
 
   PreviewPhotoPage(
     this.url, {
     this.imageProvider,
-    this.canDownload = true,
-    this.download,
+    this.onDownload,
   });
 
   @override
@@ -55,22 +51,19 @@ class _PreviewPhotoPageState extends State<PreviewPhotoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: TapLayout(
-        onTap: () => Navigator.pop(context),
-        onLongPress: () => {},
-        child: Stack(alignment: Alignment.center, children: [
-          _buildPageView(),
-          _buildIndicator(),
-          Positioned(
-            bottom: 80,
-            right: 40,
-            child: Offstage(
-              offstage: !widget.canDownload,
-              child: _buildDownloadPhoto(),
-            ),
+    return SafeArea(
+      child: PhotoViewGestureDetectorScope(
+        axis: Axis.horizontal,
+        child: Container(
+          child: TapLayout(
+            onLongPress: () => {},
+            child: Stack(alignment: Alignment.center, children: [
+              _buildPageView(),
+              _buildIndicator(),
+              _buildDownloadPhoto(),
+            ]),
           ),
-        ]),
+        ),
       ),
     );
   }
@@ -92,8 +85,12 @@ class _PreviewPhotoPageState extends State<PreviewPhotoPage> {
       children: _list.map((url) {
         return PhotoView(
           imageProvider: widget.imageProvider ?? _imageProvider(url),
-          maxScale: 2.0,
-          minScale: 0.0,
+          initialScale: PhotoViewComputedScale.contained,
+          minScale: PhotoViewComputedScale.contained,
+          maxScale: PhotoViewComputedScale.contained * 2,
+          gestureDetectorBehavior: HitTestBehavior.translucent,
+          scaleStateChangedCallback: (isZoom) {},
+          onTapUp: (context, details, controllerValue) => Navigator.pop(context),
         );
       }).toList(),
     );
@@ -115,7 +112,7 @@ class _PreviewPhotoPageState extends State<PreviewPhotoPage> {
   /// 创建指示器
   Widget _buildIndicator() {
     return Positioned(
-      bottom: 80,
+      bottom: 40,
       child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
         Offstage(
           offstage: _list.length <= 1,
@@ -129,17 +126,24 @@ class _PreviewPhotoPageState extends State<PreviewPhotoPage> {
   }
 
   Widget _buildDownloadPhoto() {
-    return TapLayout(
-      width: 32,
-      height: 32,
-      onTap: () {
-        if (widget.download != null) {
-          widget.download!(_list[_currentIndex]);
-        }
-      },
-      background: Colors.white38,
-      borderRadius: BorderRadius.all(Radius.circular(8)),
-      child: Icon(Icons.download_rounded, size: 24, color: Colors.white),
+    return Positioned(
+      bottom: 40,
+      right: 40,
+      child: Offstage(
+        offstage: widget.onDownload == null,
+        child: TapLayout(
+          width: 32,
+          height: 32,
+          onTap: () {
+            if (widget.onDownload != null) {
+              widget.onDownload!(_list[_currentIndex]);
+            }
+          },
+          background: Colors.white38,
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+          child: Icon(Icons.download_rounded, size: 24, color: Colors.white),
+        ),
+      ),
     );
   }
 }
@@ -169,7 +173,7 @@ class CustomerPageRoute extends PageRouteBuilder {
             } else if (style == AnimatorStyle.scale) {
               //缩放的动画效果
               return ScaleTransition(
-                scale: Tween(begin: 0.0, end: 1.0) //设置缩放比例
+                scale: Tween(begin: 0.7, end: 1.0) //设置缩放比例
                     .animate(CurvedAnimation(parent: animation, curve: Curves.linear)),
                 child: child,
               );

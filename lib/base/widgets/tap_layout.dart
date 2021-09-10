@@ -85,13 +85,11 @@ class _TapLayoutState extends State<TapLayout> {
             shape: widget.isCircle ? BoxShape.circle : BoxShape.rectangle,
           ),
           child: InkResponse(
-            onTap: () async {
-              Future.delayed(Duration(milliseconds: widget.delay), () {
-                if (widget.onTap != null) {
-                  widget.onTap!();
-                }
-              });
-            },
+            onTap: () async => Future.delayed(Duration(milliseconds: widget.delay), () {
+              if (widget.onTap != null) {
+                widget.onTap!();
+              }
+            }),
             onLongPress: widget.onLongPress,
             onDoubleTap: widget.onDoubleTap,
             onHighlightChanged: (value) => setState(() => _isTouchDown = value),

@@ -4,7 +4,6 @@ import 'package:flutter_ui/base/entities/page_entity.dart';
 import 'package:flutter_ui/base/http/api_client.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
-import 'package:flutter_ui/base/widgets/footer_state.dart';
 import 'package:flutter_ui/base/widgets/refresh_list_view.dart';
 import 'package:flutter_ui/base/widgets/state_view.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
@@ -19,16 +18,12 @@ class ListPage extends StatefulWidget {
 class _ListPageState extends State<ListPage> {
   List<ArticleEntity?> articleList = [];
   int _page = 0; // 加载的页数
-  LoadState _loadState = LoadState.loading;
-  FooterState _footerState = FooterState.loading;
+  StateController _controller = StateController();
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(milliseconds: 500), () {
-      _loadState = LoadState.none;
-      _getArticle(isReset: true);
-    });
+    _getArticle(isReset: true);
   }
 
   @override
@@ -46,12 +41,10 @@ class _ListPageState extends State<ListPage> {
           children: [
             Expanded(
               child: RefreshListView(
-                loadState: _loadState,
-                footerState: _footerState,
+                controller: _controller,
                 itemCount: articleList.length,
                 builder: _renderArticleItem,
                 refresh: _onRefresh,
-                isShowFooterLoading: true,
               ),
             )
           ],
@@ -76,32 +69,27 @@ class _ListPageState extends State<ListPage> {
 
   // 根据页数获取文章
   void _getArticle({bool isReset = false}) {
-    if (_footerState == FooterState.loading) return;
-    setState(() => _footerState = FooterState.loading);
-
-    _page = isReset ? 0 : _page;
-    ApiClient.getInstance.request(
-      apiServices.article(_page.toString()),
-      isShowDialog: false,
-      success: (data) {
-        PageEntity pageEntity = PageEntity.fromJson(data);
-        List<ArticleEntity?> list = (data['datas'] as List<dynamic>).map((e) => ArticleEntity.fromJson(e)).toList();
-        setState(() {
-          if (_page == pageEntity.total) {
-            _footerState = FooterState.end;
-            return;
-          } else {
-            isReset ? articleList = list : articleList.addAll(list);
-            ++_page;
-            _footerState = FooterState.more;
-          }
-          if (_loadState != LoadState.success) _loadState = LoadState.success;
-        });
-      },
-      failed: (e) => setState(() {
-        if (_loadState != LoadState.success) _loadState = LoadState.failed;
-        _footerState = FooterState.failed;
-      }),
-    );
+    Future.delayed(Duration(milliseconds: isReset ? 500 : 0), () {
+      _page = isReset ? 0 : _page;
+      ApiClient.getInstance.request(
+        apiServices.article(_page.toString()),
+        isShowDialog: false,
+        success: (data) {
+          PageEntity pageEntity = PageEntity.fromJson(data);
+          List<ArticleEntity?> list = (data['datas'] as List<dynamic>).map((e) => ArticleEntity.fromJson(e)).toList();
+          setState(() {
+            _controller.loadComplete();
+            if (_page == pageEntity.total) {
+              _controller.loadEmpty();
+            } else {
+              isReset ? articleList = list : articleList.addAll(list);
+              ++_page;
+              _controller.loadMore();
+            }
+          });
+        },
+        failed: (e) => setState(() => _controller.loadFailed()),
+      );
+    });
   }
 }

@@ -72,7 +72,10 @@ dependencies:
   photo_view: ^0.12.0
   # 图片缓存 [最新版3.1.0 https://pub.flutter-io.cn/packages/cached_network_image ]
   cached_network_image: ^3.1.0
-
+  # 视频播放 [最新版2.1.14 https://pub.flutter-io.cn/packages/video_player ]
+  video_player: ^2.1.14
+  # 视频播放 [最新版2.1.14 https://pub.flutter-io.cn/packages/fijkplayer ]
+  fijkplayer: ^0.10.0
   ########################################## 文件 ########################################
   # sql https://pub.dev/packages/sqflite
   sqflite: ^2.0.0+3
@@ -90,10 +93,10 @@ dependencies:
   ########################################## 原生 ########################################
   # 通知栏通知提醒 https://pub.flutter-io.cn/packages/flutter_local_notifications
   flutter_local_notifications: ^5.0.0
-  # 获取版本信息 https://pub.dev/packages/package_info
-  package_info: ^2.0.0
-  # 获取安卓iOS设备信息 https://pub.flutter-io.cn/packages/device_info
-  device_info: ^2.0.0
+  # 获取版本信息 https://pub.dev/packages/package_info_plus
+  package_info_plus: 1.0.6
+  # 获取安卓iOS设备信息 https://pub.flutter-io.cn/packages/device_info_plus
+  device_info_plus: 2.1.0
 
   ########################################## 网络 ########################################
   # HTTP请求 https://pub.flutter-io.cn/packages/retrofit
@@ -143,6 +146,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/image/
+    - assets/video/
     - assets/file/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

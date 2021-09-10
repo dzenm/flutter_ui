@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:device_info/device_info.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/utils/file_util.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 /// 启动flutter APP
 typedef StartFlutterAPP = void Function();
@@ -139,9 +139,7 @@ class HandleError {
     // 处理异常信息栈
     List<String> list = stackTrace.toString().split('\n');
     for (int i = 0; i < list.length; i++) {
-      if (list[i].contains('dart:async/zone.dart') ||
-          list[i].contains('package:flutter/src/rendering/binding.dart') ||
-          list[i].contains('package:flutter/src/widgets/framework.dart')) {
+      if (list[i].contains('dart:async/zone.dart') || list[i].contains('package:flutter/src/rendering/binding.dart') || list[i].contains('package:flutter/src/widgets/framework.dart')) {
         break;
       }
       handleMsg('${list[i]}');

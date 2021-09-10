@@ -41,7 +41,7 @@ class Naughty {
             _child ??
             FloatingButton(
               onTap: () => RouteManager.push(HTTPListPage()),
-              imageProvider: AssetImage(Assets.image(('vnote.png'))),
+              imageProvider: AssetImage(Assets.image(('ic_vnote.png'))),
             ) // DragLayout(
         );
     if (_context != null && _overlayEntry != null) {

@@ -44,6 +44,7 @@ class _HTTPItemPageState extends State<HTTPItemPage> with SingleTickerProviderSt
           indicatorColor: Colors.white,
           labelColor: Colors.white,
           isScrollable: true,
+          labelPadding: EdgeInsets.all(8),
           indicatorSize: TabBarIndicatorSize.label,
           unselectedLabelColor: Colors.grey.shade300,
           tabs: _titles.map((title) {
