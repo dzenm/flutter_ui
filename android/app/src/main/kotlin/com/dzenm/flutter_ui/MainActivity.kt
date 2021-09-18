@@ -73,6 +73,19 @@ class MainActivity : FlutterActivity() {
                 result.success("启动新的Activity, 回调Flutter的结果")
             }
         }
+
+        // flutter启动Android新Activity
+        val homeActivityChannel = "android/channel/homeActivity" // 通讯名称, 跳转页面对应的事件
+        MethodChannel(messenger, homeActivityChannel).setMethodCallHandler { methodCall, result ->
+            if (methodCall.method == "startHomeActivity") {
+                Log.d(TAG, "启动HomeActivity")
+                if (methodCall.arguments != null) {
+                    val title = methodCall.argument<String>("title")
+                }
+                startActivity(Intent(this, HomeActivity::class.java))
+                result.success("启动HomeActivity")
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -51,12 +51,12 @@ CancelFunc loadingDialog({String? loadingTxt, bool isVertical = true}) {
 }
 
 /// 选择图片对话框
-void showSelectImageBottomSheet(BuildContext context, {Function? onCameraClick, Function? onGalleryClick}) {
+void showSelectImageBottomSheet(BuildContext context, {Function? onCameraTap, Function? onGalleryTap}) {
   showListBottomSheet(context, [S.of.camera, S.of.gallery], (item) async {
     if (item == 0) {
-      if (onCameraClick != null) onCameraClick();
+      if (onCameraTap != null) onCameraTap();
     } else if (item == 1) {
-      if (onGalleryClick != null) onGalleryClick();
+      if (onGalleryTap != null) onGalleryTap();
     }
   });
 }
@@ -121,6 +121,7 @@ void showListBottomSheet(BuildContext context, List<String> items, ItemClickCall
   );
 }
 
+/// 提示对话框
 void showPromptDialog(
   BuildContext context, {
   bool isTouchOutsideDismiss = false,
@@ -140,17 +141,17 @@ void showPromptDialog(
       return DialogWrapper(
         isTouchOutsideDismiss: isTouchOutsideDismiss,
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          SizedBox(height: 20),
-          title ?? Text(titleString ?? '', style: TextStyle(fontSize: 16)),
+          SizedBox(height: content == null ? 36 : 20),
+          title ?? Text(titleString ?? '', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           content == null
-              ? SizedBox(width: 0, height: 16)
+              ? SizedBox(width: 0, height: 36)
               : Flexible(
                   child: Padding(
                     child: content,
-                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 24),
                   ),
                 ),
-          BottomButton(
+          CupertinoDialogButton(
             positiveText: positiveText,
             negativeText: negativeText,
             positiveStyle: positiveStyle,
@@ -166,7 +167,7 @@ void showPromptDialog(
 
 /// Dialog设置是否可以点击外部取消显示
 class DialogWrapper extends StatefulWidget {
-  final bool isTouchOutsideDismiss; // 点击弹窗外部，关闭弹窗，默认为true true：可以关闭 false：不可以关闭
+  final bool isTouchOutsideDismiss; // 点击弹窗外部，关闭弹窗，默认为true， true：可以关闭 false：不可以关闭
   final GestureTapCallback? dismissCallback; // 弹窗关闭回调
   final Widget? child;
   final Color color;
@@ -178,7 +179,7 @@ class DialogWrapper extends StatefulWidget {
     this.dismissCallback,
     this.child,
     this.color = Colors.white,
-    this.borderRadius = const BorderRadius.all(Radius.circular(10)),
+    this.borderRadius = const BorderRadius.all(Radius.circular(16)),
   }) : super(key: key);
 
   @override
@@ -218,7 +219,8 @@ class _DialogWrapperState extends State<DialogWrapper> {
   }
 }
 
-class BottomButton extends StatelessWidget {
+/// 底部按钮区域
+class CupertinoDialogButton extends StatelessWidget {
   final String? positiveText;
   final String? negativeText;
 
@@ -228,7 +230,7 @@ class BottomButton extends StatelessWidget {
   final GestureTapCallback? onPositiveTap;
   final GestureTapCallback? onNegativeTap;
 
-  BottomButton({
+  CupertinoDialogButton({
     Key? key,
     this.onPositiveTap,
     this.onNegativeTap,
@@ -247,26 +249,88 @@ class BottomButton extends StatelessWidget {
           Expanded(
             child: TapLayout(
               height: 45.0,
+              isRipple: false,
               onTap: () {
                 Navigator.of(context).pop();
                 if (onNegativeTap != null) onNegativeTap!();
               },
-              child: Text(negativeText ?? S.of.cancel, style: negativeStyle),
+              child: Text(negativeText ?? S.of.cancel, style: negativeStyle ?? TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
             ),
           ),
           Container(height: 45.0, width: 0.5, color: Color(0xffbababa)),
           Expanded(
             child: TapLayout(
               height: 45.0,
+              isRipple: false,
               onTap: () {
                 Navigator.of(context).pop();
                 if (onPositiveTap != null) onPositiveTap!();
               },
-              child: Text(positiveText ?? S.of.confirm, style: positiveStyle),
+              child: Text(positiveText ?? S.of.confirm, style: positiveStyle ?? TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
             ),
           ),
         ])
       ],
+    );
+  }
+}
+
+/// 列表显示的dialog
+class ListDialog extends Dialog {
+  final List<String> list;
+  final ItemClickCallback? onTap;
+
+  ListDialog({
+    required this.list,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      type: MaterialType.transparency,
+      child: Center(
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 40),
+          child: ClipRRect(
+            borderRadius: BorderRadius.all(Radius.circular(2)),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: _buildListView(context),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 创建List
+  List<Widget> _buildListView(BuildContext context) {
+    List<Widget> listView = [];
+    listView.add(Container(color: Colors.white, height: 8));
+    for (int i = 0; i < list.length; i++) {
+      listView.add(_buildItemView(context, i));
+    }
+    listView.add(Container(color: Colors.white, height: 8));
+    return listView;
+  }
+
+  /// 创建Item
+  Widget _buildItemView(BuildContext context, int index) {
+    return TapLayout(
+      background: Colors.white,
+      isRipple: false,
+      child: Container(
+        height: 48,
+        alignment: Alignment.centerLeft,
+        margin: EdgeInsets.symmetric(horizontal: 24),
+        width: double.infinity,
+        child: Text(list[index]),
+      ),
+      onTap: () {
+        if (onTap != null) onTap!(index);
+        Navigator.pop(context, list[index]);
+      },
     );
   }
 }

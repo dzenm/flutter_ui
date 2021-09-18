@@ -104,6 +104,21 @@ class _HTTPListPageState extends State<HTTPListPage> {
               onTap: () => {},
               width: 100.0,
             ),
+            TapLayout(
+              width: MediaQuery.of(context).size.width,
+              height: 50.0,
+              isRipple: false,
+              borderRadius: BorderRadius.all(Radius.circular(16)),
+              background: Colors.red,
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              onTap: () => showToast('下一级'),
+              child: SingleTextLayout(
+                title: '进入下一级',
+                titleColor: Colors.white,
+                forwardColor: Colors.white,
+                isShowForward: true,
+              ),
+            ),
             SizedBox(height: 16),
             Expanded(
                 child: SingleChildScrollView(

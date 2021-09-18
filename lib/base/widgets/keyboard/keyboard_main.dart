@@ -5,17 +5,14 @@ import 'keyboard_widget.dart';
 import 'pay_password.dart';
 
 /// 支付密码  +  自定义键盘
-
 class main_keyboard extends StatefulWidget {
   static final String sName = "enter";
 
   @override
-  State<StatefulWidget> createState() {
-    return new keyboardState();
-  }
+  State<StatefulWidget> createState() => _LicenseKeyboardState();
 }
 
-class keyboardState extends State<main_keyboard> {
+class _LicenseKeyboardState extends State<main_keyboard> {
   String pwdData = '';
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -24,51 +21,50 @@ class keyboardState extends State<main_keyboard> {
 
   @override
   void initState() {
+    super.initState();
     _showBottomSheetCallback = _showBottomSheet;
   }
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       key: _scaffoldKey,
       body: _buildContent(context),
     );
   }
 
   Widget _buildContent(BuildContext c) {
-    return new Container(
-      width: double.maxFinite,
+    return Container(
       height: 300.0,
-      color: Color(0xffffffff),
-      child: new Column(
-        children: <Widget>[
-          new Padding(
+      color: Colors.white,
+      child: Column(
+        children: [
+          Padding(
             padding: const EdgeInsets.only(top: 50.0),
-            child: new Text(
+            child: Text(
               '请在此输入新支付密码',
-              style: new TextStyle(fontSize: 18.0, color: Color(0xff333333)),
+              style: TextStyle(fontSize: 18.0, color: Color(0xff333333)),
             ),
           ),
-
           ///密码框
-          new Padding(
+          Padding(
             padding: const EdgeInsets.only(top: 15.0),
             child: _buildPwd(pwdData),
           ),
 
-//          new Padding(
+//          Padding(
 //            padding: const EdgeInsets.only(top: 20.0),
-//            child: new Text(
+//            child: Text(
 //              '不是登录密码或连续数字',
-//              style: new TextStyle(fontSize: 12.0, color: Color(0xff999999)),
+//              style: TextStyle(fontSize: 12.0, color: Color(0xff999999)),
 //            ),
 //          ),
 
-//          new Padding(
+//          Padding(
 //            padding: const EdgeInsets.only(top: 30.0), //0xffff0303
-//            child: new Text(
+//            child: Text(
 //              '密码输入错误，还可输入2次，超出将锁定账户。',
-//              style: new TextStyle(fontSize: 12.0, color: Color(0xffffffff)),
+//              style: TextStyle(fontSize: 12.0, color: Color(0xffffffff)),
 //            ),
 //          ),
         ],
@@ -105,8 +101,9 @@ class keyboardState extends State<main_keyboard> {
       // disable the button
       _showBottomSheetCallback = null;
     });
-    _scaffoldKey.currentState?.showBottomSheet<void>((BuildContext context) {
-          return new MyKeyboard(_onKeyDown);
+    _scaffoldKey.currentState
+        ?.showBottomSheet<void>((BuildContext context) {
+          return MyKeyboard(_onKeyDown);
         })
         .closed
         .whenComplete(() {
@@ -120,12 +117,12 @@ class keyboardState extends State<main_keyboard> {
   }
 
   Widget _buildPwd(var pwd) {
-    return new GestureDetector(
-      child: new Container(
+    return GestureDetector(
+      child: Container(
         width: 250.0,
         height: 40.0,
 //      color: Colors.white,
-        child: new CustomJPasswordField(pwd),
+        child: CustomJPasswordField(pwd),
       ),
       onTap: () {
         _showBottomSheetCallback!();

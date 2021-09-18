@@ -51,8 +51,6 @@ class Application {
     /// 初始化SharedPreferences
     await SpUtil.getInstance.init();
 
-    LicenseKeyboard.register();
-
     /// 初始化通知
     const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
     final IOSInitializationSettings initializationSettingsIOS = IOSInitializationSettings();

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -60,13 +62,28 @@ class _TapLayoutState extends State<TapLayout> {
 
   @override
   Widget build(BuildContext context) {
-    final Color? color = widget.onTap == null
-        ? widget.background
-        : widget.isRipple
-            ? widget.background
-            : _isTouchDown
-                ? widget.foreground ?? Theme.of(context).highlightColor
-                : widget.background;
+    final Color? color = widget.isRipple
+        ? null
+        : _isTouchDown
+            ? widget.foreground ?? Theme.of(context).highlightColor
+            : widget.background;
+
+    double? radius = widget.isRipple ? null : 0.0;
+    BoxShape shape = widget.isCircle ? BoxShape.circle : BoxShape.rectangle;
+    Color? foreground = widget.isRipple && widget.onTap != null ? widget.foreground : Colors.transparent;
+
+    Decoration decoration(Color? color) {
+      return BoxDecoration(
+        color: color,
+        image: widget.decorationImage,
+        border: widget.border,
+        borderRadius: widget.borderRadius,
+        boxShadow: widget.boxShadow,
+        gradient: widget.gradient,
+        shape: shape,
+      );
+    }
+
     return Container(
       width: widget.width,
       height: widget.height,
@@ -75,15 +92,7 @@ class _TapLayoutState extends State<TapLayout> {
         color: Colors.transparent,
         animationDuration: Duration(milliseconds: widget.delay - 100),
         child: Ink(
-          decoration: BoxDecoration(
-            color: color,
-            image: widget.decorationImage,
-            border: widget.border,
-            borderRadius: widget.borderRadius,
-            boxShadow: widget.boxShadow,
-            gradient: widget.gradient,
-            shape: widget.isCircle ? BoxShape.circle : BoxShape.rectangle,
-          ),
+          decoration: decoration(widget.background),
           child: InkResponse(
             onTap: () async => Future.delayed(Duration(milliseconds: widget.delay), () {
               if (widget.onTap != null) {
@@ -94,14 +103,15 @@ class _TapLayoutState extends State<TapLayout> {
             onDoubleTap: widget.onDoubleTap,
             onHighlightChanged: (value) => setState(() => _isTouchDown = value),
             borderRadius: widget.borderRadius,
-            radius: widget.isRipple ? null : 0.0,
-            highlightShape: BoxShape.rectangle,
+            radius: radius,
+            highlightShape: shape,
             highlightColor: Colors.transparent,
-            splashColor: widget.isRipple && widget.onTap != null ? widget.foreground : Colors.transparent,
+            splashColor: foreground,
             containedInkWell: true,
             // 不要在这里设置背景色，否则会遮挡水波纹效果,如果设置的话尽量设置Material下面的color来实现背景色
             child: Container(
               // 设置child 居中
+              decoration: decoration(color),
               alignment: widget.alignment,
               padding: widget.padding,
               child: widget.child,

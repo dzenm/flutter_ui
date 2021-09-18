@@ -29,12 +29,15 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
 
   ########################################## UI ##########################################
-  # Toast https://pub.flutter-io.cn/packages/bot_toast
-  bot_toast: ^4.0.1
   # 图片 https://pub.flutter-io.cn/packages/cupertino_icons
   cupertino_icons: ^1.0.3
+  # Toast https://pub.flutter-io.cn/packages/bot_toast
+  bot_toast: ^4.0.1
   # WebView https://pub.dev/packages/webview_flutter
   webview_flutter: ^2.0.9
+  # 城市选择列表 https://pub.flutter-io.cn/packages/azlistview
+  azlistview: ^2.0.0-nullsafety.0
+
   #  # 下拉刷新 https://pub.flutter-io.cn/packages/pull_to_refresh
   #  pull_to_refresh: ^1.6.4
   #  # EChart 图表（缩放手势冲突） https://pub.flutter-io.cn/packages/flutter_echarts
@@ -60,9 +63,6 @@ dependencies:
   # 图表 （没有图例） https://pub.flutter-io.cn/packages/charts_flutter#-installing-tab-
   # charts_flutter: ^0.10.0
   #  multi_image_picker: ^4.6.1
-
-  # 城市选择列表 https://pub.flutter-io.cn/packages/azlistview
-  azlistview: ^2.0.0-nullsafety.0
 
   ########################################## 音视频 ######################################
   transparent_image: ^0.1.0

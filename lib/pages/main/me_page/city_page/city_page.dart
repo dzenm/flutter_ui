@@ -37,7 +37,7 @@ class _CitySelectedPageState extends State<CitySelectedPage> {
     });
   }
 
-  void loadData() async {
+  void loadData() {
     //加载城市列表
     rootBundle.loadString(Assets.file('china.json')).then((value) {
       cityList.clear();
@@ -141,10 +141,7 @@ class _CitySelectedPageState extends State<CitySelectedPage> {
       child: Text(
         '$tag',
         softWrap: false,
-        style: TextStyle(
-          fontSize: 14.0,
-          color: Color(0xFF666666),
-        ),
+        style: TextStyle(fontSize: 14.0, color: Color(0xFF666666)),
       ),
     );
   }

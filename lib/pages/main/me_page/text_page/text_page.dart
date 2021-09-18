@@ -188,7 +188,8 @@ class _TextPageState extends State<TextPage> {
                   TapLayout(
                     height: 50.0,
                     padding: EdgeInsets.symmetric(horizontal: 16),
-                    onTap: () => showPromptDialog(context, title: Text('设置头像'), content: Text('输入内容'), onPositiveTap: () => showToast('修改成功')),
+                    // onTap: () => showPromptDialog(context, titleString: '确定要退出系统了吗？', onPositiveTap: () => showToast('修改成功')),
+                    onTap: () => showPromptDialog(context, titleString: '昵称', content: Text('这是设置好的昵称'), onPositiveTap: () => showToast('修改成功')),
                     child: SingleTextLayout(
                       icon: Icons.person,
                       title: S.of.avatar,
@@ -228,9 +229,16 @@ class _TextPageState extends State<TextPage> {
                     background: Colors.red,
                     borderRadius: BorderRadius.all(Radius.circular(8)),
                     padding: EdgeInsets.symmetric(horizontal: 16),
-                    // onTap: () => showListBottomSheet(context, data, (int index) {
-                    //   Navigator.pop(context);
-                    // }),
+                    onTap: () => showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return ListDialog(
+                            list: list,
+                            onTap: (index) {
+
+                            },
+                          );
+                        }),
                     child: Row(
                       children: [Text(S.of.login)],
                     ),
@@ -245,6 +253,13 @@ class _TextPageState extends State<TextPage> {
       isChanged: text != newText,
     );
   }
+
+  List<String> list = [
+    "补材料申请",
+    "面签申请",
+    "暂停申请",
+    "提醒",
+  ];
 
   List<String> data = [
     '设置备注和标签',

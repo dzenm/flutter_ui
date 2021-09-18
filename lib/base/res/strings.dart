@@ -81,6 +81,9 @@ class S implements WidgetsLocalizations {
       'camera': '拍照',
       'gallery': '相册',
       'qr': '二维码',
+      'navigation': '导航',
+      'walk': '步行',
+      'keyword': '键盘',
       'unknown': '未知',
       'none': '',
     },
@@ -112,6 +115,7 @@ class S implements WidgetsLocalizations {
       'loadComplete': 'Load Complete',
       'loadFailed': 'Load Failed',
       'loadEnd': 'Load To Bottom',
+      'vlcVideoPlay': 'Vlc Video Play',
       'ijkVideoPlay': 'Ijk Video Play',
       // 通用文本
       'login': 'Login',
@@ -137,6 +141,9 @@ class S implements WidgetsLocalizations {
       'camera': 'Camera',
       'gallery': 'Gallery',
       'qr': 'QR',
+      'navigation': 'Navigation',
+      'walk': 'Walk',
+      'keyword': 'Keyword',
       'unknown': 'Unknown',
       'none': '',
     },
@@ -247,6 +254,12 @@ class S implements WidgetsLocalizations {
   String get cancel => _getValues('cancel');
 
   String get qr => _getValues('qr');
+
+  String get navigation => _getValues('navigation');
+
+  String get walk => _getValues('walk');
+
+  String get keyword => _getValues('keyword');
 
   String get unknown => _getValues('unknown');
 

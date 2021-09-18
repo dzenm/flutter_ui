@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_ui/base/channels/native_channels.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
@@ -162,10 +163,17 @@ class _MePageState extends State<MePage> with AutomaticKeepAliveClientMixin {
       ),
       SizedBox(height: 8),
       MaterialButton(
-        child: _text(S.of.state),
+        child: _text(S.of.keyword),
         textColor: Colors.white,
         color: Colors.blue,
-        onPressed: () => RouteManager.push(main_keyboard ()),
+        onPressed: () => RouteManager.push(main_keyboard()),
+      ),
+      SizedBox(height: 8),
+      MaterialButton(
+        child: _text(S.of.navigation),
+        textColor: Colors.white,
+        color: Colors.blue,
+        onPressed: () => NativeChannels.startHomeActivity(),
       ),
       SizedBox(height: 8),
       Text(MeModel.of.value),
