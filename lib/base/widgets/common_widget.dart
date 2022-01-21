@@ -8,14 +8,14 @@ import 'package:flutter/widgets.dart';
 // 分割线
 Widget divider({
   bool isVertical = false,
-  double height = 0.5,
+  double height = 0.1,
   double left = 0,
   double right = 0,
   double width = 0,
-  Color color = Colors.black12,
+  Color? color,
 }) {
   return Container(
-    color: color,
+    color: color ?? Color(0xFFEFEFEF),
     child: isVertical
         ? SizedBox()
         : Divider(

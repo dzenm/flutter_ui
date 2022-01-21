@@ -36,6 +36,7 @@ class HandleError {
   // await HandleError().catchFlutterError(() => runApp(_initPage()));
   Future catchFlutterError(StartFlutterAPP startFlutterAPP, {String? fileName, HandleMsg? handleMsg}) async {
     if (!kReleaseMode) {
+      /// debug模式下进行异常捕获并输出
       FlutterError.onError = (FlutterErrorDetails details) async {
         if (details.stack != null) {
           Zone.current.handleUncaughtError(details.exception, details.stack!);
@@ -77,7 +78,7 @@ class HandleError {
       Log.e('║                                                                            ║');
       Log.e('╚════════════════════════════════════════════════════════════════════════════╝');
 
-      String msg = await _handleErrorConvertText(error, stackTrace);
+      String msg = await _convertErrorToText(error, stackTrace);
       // 保存为文件
       fileName = fileName ?? 'crash_${DateTime.now()}.log';
       await FileUtil.getInstance.save(fileName!, msg, dir: crashParent).then((value) async {
@@ -94,9 +95,9 @@ class HandleError {
   }
 
   // 处理错误转化为文本信息
-  Future<String> _handleErrorConvertText(dynamic error, StackTrace stackTrace) async {
+  Future<String> _convertErrorToText(dynamic error, StackTrace stackTrace) async {
     StringBuffer sb = new StringBuffer();
-    await _handleInfo(error, stackTrace, (msg) {
+    await _collectInfo(error, stackTrace, (msg) {
       // 打印在控制台
       Log.e('║$interval$msg');
       // 转化为文本
@@ -106,20 +107,20 @@ class HandleError {
   }
 
   // 收集信息
-  Future<Null> _handleInfo(dynamic error, StackTrace stackTrace, HandleMsg handleMsg) async {
+  Future<Null> _collectInfo(dynamic error, StackTrace stackTrace, HandleMsg handleMsg) async {
     // APP信息
     PackageInfo info = await PackageInfo.fromPlatform();
-    Map<String, dynamic> appInfo = _appInfo(info);
+    Map<String, dynamic> appInfo = _collectAppInfo(info);
 
     // 设备信息
     Map<String, dynamic>? deviceInfo;
     DeviceInfoPlugin infoPlugin = DeviceInfoPlugin();
     if (Platform.isAndroid) {
       AndroidDeviceInfo info = await infoPlugin.androidInfo;
-      deviceInfo = _androidInfo(info);
+      deviceInfo = _collectAndroidInfo(info);
     } else if (Platform.isIOS) {
       IosDeviceInfo info = await infoPlugin.iosInfo;
-      deviceInfo = _iOSInfo(info);
+      deviceInfo = _collectIOSInfo(info);
     }
 
     // 处理手机信息
@@ -139,7 +140,9 @@ class HandleError {
     // 处理异常信息栈
     List<String> list = stackTrace.toString().split('\n');
     for (int i = 0; i < list.length; i++) {
-      if (list[i].contains('dart:async/zone.dart') || list[i].contains('package:flutter/src/rendering/binding.dart') || list[i].contains('package:flutter/src/widgets/framework.dart')) {
+      if (list[i].contains('dart:async/zone.dart')
+          || list[i].contains('package:flutter/src/rendering/binding.dart')
+          || list[i].contains('package:flutter/src/widgets/framework.dart')) {
         break;
       }
       handleMsg('${list[i]}');
@@ -148,7 +151,7 @@ class HandleError {
   }
 
   // APP信息
-  Map<String, dynamic> _appInfo(PackageInfo info) => {
+  Map<String, dynamic> _collectAppInfo(PackageInfo info) => {
         'appName': info.appName, // APP名称
         'packageName': info.packageName, // 包名
         'version': info.version, // 版本名
@@ -156,7 +159,7 @@ class HandleError {
       };
 
   // 安卓设备信息
-  Map<String, dynamic> _androidInfo(AndroidDeviceInfo info) => {
+  Map<String, dynamic> _collectAndroidInfo(AndroidDeviceInfo info) => {
         'version.securityPatch': info.version.securityPatch,
         'version.sdkInt': info.version.sdkInt,
         'version.release': info.version.release,
@@ -186,7 +189,7 @@ class HandleError {
       };
 
   // iOS设备信息
-  Map<String, dynamic> _iOSInfo(IosDeviceInfo info) => {
+  Map<String, dynamic> _collectIOSInfo(IosDeviceInfo info) => {
         'name': info.name,
         'systemName': info.systemName,
         'systemVersion': info.systemVersion,

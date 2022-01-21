@@ -62,41 +62,61 @@ void showSelectImageBottomSheet(BuildContext context, {Function? onCameraTap, Fu
 }
 
 /// 列表选择对话框
-void showListBottomSheet(BuildContext context, List<String> items, ItemClickCallback? onTap, {double height = 45.0}) {
+void showListBottomSheet(BuildContext context, List<String> items, ItemClickCallback? onTap, {double height = 45.0, bool isMaterial = false}) {
   List<String> data = [];
   items.forEach((item) => data.add(item));
+  if (!isMaterial) data.add('divider');
   data.add(S.of.cancel);
 
   double realHeight = (items.length + 1) * height;
 
   Widget _child(int index) {
-    return TapLayout(
-      height: height,
-      onTap: () {
-        Navigator.pop(context);
-        if (onTap != null && index < data.length - 1) onTap(index);
-      },
-      child: Container(alignment: Alignment.center, child: Text(data[index])),
+    BorderRadius? borderRadius;
+    if (!isMaterial) {
+      if (index == items.length) return SizedBox(height: 4); // 取消按钮和列表按钮之间的分隔条
+      borderRadius = items.length == 1 // item只有一个按钮
+          ? BorderRadius.all(Radius.circular(8))
+          : index == 0 || index == data.length - 1 // item的第一个按钮和取消按钮
+              ? BorderRadius.vertical(top: Radius.circular(8))
+              : index == items.length - 1 // item的最后一个按钮
+                  ? BorderRadius.vertical(bottom: Radius.circular(8))
+                  : null;
+    }
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: borderRadius,
+      ),
+      child: TapLayout(
+        height: height,
+        borderRadius: borderRadius,
+        onTap: () {
+          if (onTap != null && index < items.length) onTap(index);
+          Navigator.pop(context);
+        },
+        child: Column(children: [
+          Expanded(child: Container(alignment: Alignment.center, child: Text(data[index]))),
+          if (!isMaterial && index < items.length - 1) divider(),
+        ]),
+      ),
     );
   }
 
-  Widget _listView() {
-    return ListView.builder(
-      itemCount: data.length,
-      shrinkWrap: true,
-      itemBuilder: (BuildContext context, int index) => _child(index),
-    );
-  }
-
-  Widget _columns() {
+  Widget _children() {
     int index = -1;
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: data.map((e) {
-        index++;
-        return _child(index);
-      }).toList(),
-    );
+    return realHeight > MediaQuery.of(context).size.width / 2
+        ? ListView.builder(
+            itemCount: data.length,
+            shrinkWrap: true,
+            itemBuilder: (BuildContext context, int index) => _child(index),
+          )
+        : Column(
+            mainAxisSize: MainAxisSize.min,
+            children: data.map((e) {
+              index++;
+              return _child(index);
+            }).toList(),
+          );
   }
 
   showModalBottomSheet(
@@ -109,12 +129,12 @@ void showListBottomSheet(BuildContext context, List<String> items, ItemClickCall
           maxHeight: MediaQuery.of(context).size.height / 2,
           minHeight: height,
         ),
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
         width: MediaQuery.of(context).size.width,
         child: PhysicalModel(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(5),
+          color: isMaterial ? Colors.white : Colors.transparent,
           clipBehavior: Clip.antiAlias,
-          child: realHeight > MediaQuery.of(context).size.width / 2 ? _listView() : _columns(),
+          child: _children(),
         ),
       );
     },
@@ -244,7 +264,7 @@ class CupertinoDialogButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        divider(color: Color(0xffbababa), height: 0.5),
+        divider(color: Color(0xFFBABABA), height: 0.5),
         Row(children: [
           Expanded(
             child: TapLayout(
@@ -257,7 +277,7 @@ class CupertinoDialogButton extends StatelessWidget {
               child: Text(negativeText ?? S.of.cancel, style: negativeStyle ?? TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
             ),
           ),
-          Container(height: 45.0, width: 0.5, color: Color(0xffbababa)),
+          Container(color: Color(0xFFBABABA), height: 45.0, width: 0.5),
           Expanded(
             child: TapLayout(
               height: 45.0,

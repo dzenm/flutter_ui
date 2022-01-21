@@ -1,6 +1,5 @@
 class Sql {
   static const String tableBannerSql = '''
-  
         CREATE TABLE IF NOT EXISTS t_banner(
           id INTEGER PRIMARY KEY NOT NULL, 
           "desc" TEXT, 
@@ -13,7 +12,6 @@ class Sql {
         );''';
 
   static const String tableArticleSql = '''
-  
         CREATE TABLE IF NOT EXISTS t_article(
           id INTEGER PRIMARY KEY NOT NULL, 
           apkLink TEXT,

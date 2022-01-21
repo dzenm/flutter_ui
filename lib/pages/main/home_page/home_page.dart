@@ -104,7 +104,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
         //   _images.add(element.imagePath ?? '');
         //   _urls.add(element.url ?? '');
       });
-      await bean.insertItem(list);
+      await bean.insert(list);
       await bean.where(bean);
     });
   }
@@ -114,7 +114,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
       ArticleEntity bean = ArticleEntity();
 
       List<ArticleEntity?> list = (data["datas"] as List<dynamic>).map((e) => bean.fromJson(e)).toList();
-      await bean.insertItem(list);
+      await bean.insert(list);
       await bean.where(bean, where: {'chapterName': '鸿洋'});
       await bean.delete(bean, where: {'id': '18744'});
       await bean.where(bean);

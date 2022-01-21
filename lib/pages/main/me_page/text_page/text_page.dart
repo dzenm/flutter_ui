@@ -16,7 +16,7 @@ import 'package:flutter_ui/base/widgets/menu_Item.dart';
 import 'package:flutter_ui/base/widgets/single_edit_layout.dart';
 import 'package:flutter_ui/base/widgets/single_text_layout.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
-import 'package:flutter_ui/base/widgets/will_pop_scope_route.dart';
+import 'package:flutter_ui/base/widgets/will_pop_view.dart';
 import 'package:flutter_ui/pages/main/me_page/me_model.dart';
 import 'package:flutter_ui/pages/main/me_page/setting_page/setting_page.dart';
 
@@ -72,7 +72,7 @@ class _TextPageState extends State<TextPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScopeRoute(
+    return WillPopView(
       Scaffold(
         appBar: AppBar(
           title: Text('文本和输入框', style: TextStyle(color: Colors.white)),
@@ -251,6 +251,7 @@ class _TextPageState extends State<TextPage> {
       ),
       behavior: BackBehavior.prompt,
       isChanged: text != newText,
+      builder: buildBackPromptDialog,
     );
   }
 

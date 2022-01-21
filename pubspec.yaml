@@ -113,7 +113,6 @@ dependencies:
   scan: ^1.4.3
   # 汉字转拼音 https://pub.flutter-io.cn/packages/lpinyin
   lpinyin: ^2.0.1
-
   #  # 屏幕参数适配 https://pub.dev/packages/flutter_screenutil
   #  flutter_screenutil: ^4.0.4+1
 

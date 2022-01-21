@@ -12,11 +12,13 @@ class Log {
 
   static const String _TAG = 'Log';
 
-  static const int _INFO = 4;
-  static const int _DEBUG = 5;
   static const int _ERROR = 6;
+  static const int _WARM = 5;
+  static const int _INFO = 4;
+  static const int _DEBUG = 3;
+  static const int _VERBOSE = 2;
 
-  static int sLevel = _DEBUG;
+  static int sLevel = _VERBOSE;
 
   static bool debuggable = true; // 是否是debug模式
   static String sTag = _TAG;
@@ -27,12 +29,20 @@ class Log {
     sTag = tag;
   }
 
-  static void i(dynamic message, {String tag = ''}) {
-    _printLog(tag, 'I', _INFO, message);
+  static void v(dynamic message, {String tag = ''}) {
+    _printLog(tag, 'V', _VERBOSE, message);
   }
 
   static void d(dynamic message, {String tag = ''}) {
     _printLog(tag, 'D', _DEBUG, message);
+  }
+
+  static void i(dynamic message, {String tag = ''}) {
+    _printLog(tag, 'I', _INFO, message);
+  }
+
+  static void w(dynamic message, {String tag = ''}) {
+    _printLog(tag, 'W', _WARM, message);
   }
 
   static void e(dynamic message, {String tag = ''}) {
@@ -90,9 +100,13 @@ class Log {
   static String _handlerPrefixTextColor(int level, bool isDefaultColor) {
     if (isDefaultColor) return '';
     switch (level) {
-      case _INFO:
+      case _VERBOSE:
         return '\x1B[35m ';
       case _DEBUG:
+        return '\x1B[35m ';
+      case _INFO:
+        return '\x1B[35m ';
+      case _WARM:
         return '\x1B[35m ';
       case _ERROR:
         return '\x1B[31m ';
@@ -105,9 +119,13 @@ class Log {
   static String _handlerSuffixTextColor(int level, bool isDefaultColor) {
     if (isDefaultColor) return '';
     switch (level) {
-      case _INFO:
+      case _VERBOSE:
         return ' \x1B[0m';
       case _DEBUG:
+        return ' \x1B[0m';
+      case _INFO:
+        return ' \x1B[0m';
+      case _WARM:
         return ' \x1B[0m';
       case _ERROR:
         return ' \x1B[0m';

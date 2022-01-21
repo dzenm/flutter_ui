@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/log/log.dart';
-import 'package:flutter_ui/base/widgets/will_pop_scope_route.dart';
+import 'package:flutter_ui/base/widgets/will_pop_view.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 /// WebView内容改变时的回调
@@ -39,7 +39,7 @@ class _WebViewPageState extends State<WebViewPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScopeRoute(
+    return WillPopView(
       Scaffold(
         appBar: AppBar(title: Text(_title, style: TextStyle(color: Colors.white))),
         body: SafeArea(

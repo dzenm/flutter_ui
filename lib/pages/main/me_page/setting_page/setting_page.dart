@@ -149,7 +149,7 @@ class _SettingPageState extends State<SettingPage> {
                   suffix: Container(
                     height: 24,
                     width: 24,
-                    color: themeColorModel[_colorKey]!['primaryColor'],
+                    color: themeModel[_colorKey]?.primary,
                     child: SizedBox(height: 24, width: 24),
                   ),
                 ),
@@ -229,8 +229,8 @@ class _SettingPageState extends State<SettingPage> {
             child: Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: themeColorModel.keys.map((key) {
-                Color? value = themeColorModel[key]!['primaryColor'];
+              children: themeModel.keys.map((key) {
+                Color? value = themeModel[key]?.primary;
                 return InkWell(
                   onTap: () {
                     setState(() => _colorKey = key);

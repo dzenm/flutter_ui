@@ -103,7 +103,7 @@ class LoggerInterceptor extends Interceptor {
     if (responseHeader) {
       _print('extra: ${response.extra}');
       if (response.isRedirect == true) {
-        _printKV('redirect', response.realUri);
+        _print('redirect: ${response.realUri}');
       }
 
       _print('headers:');

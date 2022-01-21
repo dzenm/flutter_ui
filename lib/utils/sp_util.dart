@@ -26,7 +26,7 @@ class SpUtil {
 
   Future init() async {
     _prefs = await SharedPreferences.getInstance();
-    Log.d('SP初始化${_prefs != null ? '成功' : '失败'}');
+    Log.d('初始化 SharedPreferences ${_prefs != null ? '成功' : '失败'}');
   }
 
   // 获取用户信息

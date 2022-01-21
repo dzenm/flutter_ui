@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/base/db/sql_manager.dart';
+import 'package:flutter_ui/base/db/database_manager.dart';
 import 'package:flutter_ui/base/entities/column_entity.dart';
 import 'package:flutter_ui/base/widgets/state_view.dart';
 
@@ -31,8 +31,8 @@ class _DBTableItemPageState extends State<DBTableItemPage> {
   }
 
   Future<void> getData() async {
-    _columns = await SqlManager.getInstance.getTableColumn(widget.dbName, widget.tableName);
-    _list = await SqlManager.getInstance.where(widget.tableName);
+    _columns = await DatabaseManager().getTableColumn(widget.dbName, widget.tableName);
+    _list = await DatabaseManager().where(widget.tableName);
     setState(() => _controller.loadComplete());
   }
 

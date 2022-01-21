@@ -10,19 +10,11 @@ import 'package:flutter_ui/http/api_services.dart';
 import '../log/log.dart';
 import 'log_interceptor.dart';
 
-typedef Success = void Function(dynamic? data);
+typedef Success = void Function(dynamic data);
 
 typedef Failed = void Function(HttpError e);
 
 ApiServices apiServices = ApiClient.getInstance._apiServices;
-
-/// HTTP请求错误信息的处理
-class HttpError {
-  int code;
-  String msg;
-
-  HttpError(this.code, this.msg);
-}
 
 /// HTTP请求
 class ApiClient {
@@ -80,48 +72,56 @@ class ApiClient {
     bool isShowToast = true,
   }) async {
     CancelFunc? cancel = isShowDialog ? loadingDialog() : null;
+    HttpError? error;
     try {
       // 没有网络
       await future.then((data) {
-        _dismissDialog(cancel);
         // 根据前后端协议
         if (data.errorCode == 0) {
           if (success != null) {
             success(data.data);
           }
         } else if (data.errorCode == -1001) {
-          Log.d('HTTP请求/未登录: ${data.errorCode}, ${data.errorMsg}');
-          _handleError(failed, HandleHttpError.handle(code: data.errorCode, msg: data.errorMsg), isShowToast);
+          error = HandleHttpError.handle(code: data.errorCode, msg: data.errorMsg);
         } else if (data.errorCode == -1) {
-          Log.d('HTTP请求/接口错误: ${data.errorCode}, ${data.errorMsg}');
-          _handleError(failed, HandleHttpError.handle(code: data.errorCode, msg: data.errorMsg), isShowToast);
+          error = HandleHttpError.handle(code: data.errorCode, msg: data.errorMsg);
         }
       }).catchError((err) {
-        _dismissDialog(cancel);
-        Log.d('HTTP请求/异步时捕获的异常信息: ${err.toString()}');
-        _handleError(failed, HandleHttpError.handle(error: err), isShowToast);
+        error = HandleHttpError.handle(error: err);
       }, test: (_) => true);
     } catch (err) {
-      _dismissDialog(cancel);
-      Log.d('HTTP请求/捕获的异常信息: ${err.toString()}');
-      _handleError(failed, HandleHttpError.handle(error: err), isShowToast);
+      error = HandleHttpError.handle(error: err);
     }
+    _dismissDialog(cancel);
+    _handleError(failed, error, isShowToast);
   }
 
   // 处理错误
-  void _handleError(Failed? failed, HttpError error, bool isShowToast) {
+  void _handleError(Failed? failed, HttpError? error, bool isShowToast) {
+    if (error == null) {
+      return;
+    }
     if (isShowToast) {
       showToast('${error.msg.isEmpty ? 'No Message' : error.msg} ${error.code}');
     }
     if (failed != null) {
       failed(error);
     }
+    Log.d('HTTP请求错误: code=${error.code}, msg=${error.msg}');
   }
 
   // 关闭提示框
   void _dismissDialog(CancelFunc? cancel) {
     if (cancel != null) cancel();
   }
+}
+
+/// HTTP请求错误信息的处理
+class HttpError {
+  int code;
+  String msg;
+
+  HttpError(this.code, this.msg);
 }
 
 /// 异常处理
