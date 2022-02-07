@@ -33,7 +33,7 @@ class NativeChannels {
         final bool out = await channel.invokeMethod('backToDesktop');
         return Future.value(out);
       } on PlatformException catch (e) {
-        print(e.message);
+        Log.e(e.message);
       }
       return Future.value(false);
     }
@@ -50,7 +50,7 @@ class NativeChannels {
         Log.d('服务返回数据: $data', tag: TAG);
         return Future.value(true);
       } on PlatformException catch (e) {
-        print(e.message);
+        Log.e(e.message);
       }
       return Future.value(false);
     }
@@ -68,7 +68,7 @@ class NativeChannels {
         Log.d('NaughtyActivity数据: $out', tag: TAG);
         return Future.value(true);
       } on PlatformException catch (e) {
-        print(e.message);
+        Log.e(e.message);
       }
     }
     return Future.value(false);
@@ -85,7 +85,7 @@ class NativeChannels {
         Log.d('HomeActivity数据: $out', tag: TAG);
         return Future.value(true);
       } on PlatformException catch (e) {
-        print(e.message);
+        Log.e(e.message);
       }
     }
     return Future.value(false);
@@ -102,7 +102,7 @@ class NativeChannels {
         Log.d('NaviDrivingActivity数据: $out', tag: TAG);
         return Future.value(true);
       } on PlatformException catch (e) {
-        print(e.message);
+        Log.e(e.message);
       }
     }
     return Future.value(false);
@@ -119,7 +119,7 @@ class NativeChannels {
         Log.d('NaviDrivingActivity数据: $out', tag: TAG);
         return Future.value(true);
       } on PlatformException catch (e) {
-        print(e.message);
+        Log.e(e.message);
       }
     }
     return Future.value(false);

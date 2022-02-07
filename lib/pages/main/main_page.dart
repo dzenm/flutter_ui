@@ -17,7 +17,7 @@ class MainPage extends StatefulWidget {
 }
 
 // 主页的状态
-class _MainPageState extends State<MainPage> {
+class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   String _tag = 'MainPage';
 
   // 页面管理控制器
@@ -26,9 +26,17 @@ class _MainPageState extends State<MainPage> {
   // 选中页面的索引
   int _itemIndex = 0;
 
+  // 感知生命周期变化
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    Log.d('didChangeAppLifecycleState: $state', tag: _tag);
+  }
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance?.addObserver(this);
     Log.d('initState', tag: _tag);
   }
 
@@ -53,6 +61,7 @@ class _MainPageState extends State<MainPage> {
   @override
   void dispose() {
     _pageController.dispose();
+    WidgetsBinding.instance?.removeObserver(this);
     super.dispose();
     Log.d('dispose', tag: _tag);
   }
@@ -65,7 +74,10 @@ class _MainPageState extends State<MainPage> {
       body: PageView(
         controller: _pageController,
         physics: NeverScrollableScrollPhysics(),
-        children: [HomePage(S.of.home), MePage(S.of.me)],
+        children: [
+          HomePage(S.of.home),
+          MePage(S.of.me),
+        ],
         onPageChanged: (int index) => setState(() => _itemIndex = index),
       ),
       bottomNavigationBar: BottomAppBar(
@@ -73,8 +85,18 @@ class _MainPageState extends State<MainPage> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           mainAxisSize: MainAxisSize.max,
           children: [
-            _bottomAppBarItemView(Icons.home, S.of.home, 0, badgeCount: MainModel.of.homeCount),
-            _bottomAppBarItemView(Icons.person, S.of.me, 1, badgeCount: MainModel.of.meCount),
+            _bottomNavigationBarItemView(
+              index: 0,
+              title: S.of.home,
+              icon: Icons.home,
+              badgeCount: MainModel.of.homeCount,
+            ),
+            _bottomNavigationBarItemView(
+              index: 1,
+              title: S.of.me,
+              icon: Icons.person,
+              badgeCount: MainModel.of.meCount,
+            ),
           ],
         ),
       ),
@@ -82,7 +104,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   // 底部app bar item
-  Widget _bottomAppBarItemView(IconData icon, String title, int index, {int badgeCount = 0}) {
+  Widget _bottomNavigationBarItemView({required int index, required String title, required IconData icon, int badgeCount = 0, GestureTapCallback? onTap}) {
     Color color = _itemIndex == index ? Colors.blue : Colors.grey.shade500;
     double width = 56, height = 56;
     // 平分整个宽度
@@ -91,9 +113,10 @@ class _MainPageState extends State<MainPage> {
       // 给item设置点击事件
       child: TapLayout(
         height: height,
-        onTap: () => setState(() {
-          if (_itemIndex != index) _pageController.jumpToPage(index);
-        }),
+        onTap: () {
+          if (_itemIndex != index) setState(() => _pageController.jumpToPage(index));
+          if (onTap != null) onTap();
+        },
         child: Container(
           width: width,
           height: height,

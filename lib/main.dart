@@ -66,7 +66,11 @@ class Application {
     Log.d('═══════════════════════════════ 结束初始化 ════════════════════════════════════');
 
     // 运行flutter时全局异常捕获
-    await HandleError().catchFlutterError(() => _runMaterialApp(WillPopView(_getFirstPage())));
+    await HandleError().catchFlutterError(
+      () => _runMaterialApp(
+        WillPopView(behavior: BackBehavior.background, child: _getFirstPage()),
+      ),
+    );
   }
 
   /// 运行第一个页面，设置最顶层的共享数据

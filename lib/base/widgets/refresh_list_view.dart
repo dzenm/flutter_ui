@@ -48,11 +48,11 @@ class _RefreshListViewState extends State<RefreshListView> {
     // 初始时，显示加载状态，如加载成功后隐藏页面并显示数据，之后显示加载更多
     return StateView(
       controller: widget.controller,
-      onTap: () => _onRefresh(),
+      onTap: () => _refresh(),
       child: RefreshIndicator(
-        onRefresh: _onRefresh,
+        onRefresh: _refresh,
         child: ListView.builder(
-          itemBuilder: _renderItem,
+          itemBuilder: _buildItem,
           itemCount: widget.controller.state == LoadState.none ? widget.itemCount : widget.itemCount + 1,
           controller: _controller,
         ),
@@ -61,7 +61,7 @@ class _RefreshListViewState extends State<RefreshListView> {
   }
 
   /// 渲染列表的item, 处理底部加载更多的情况
-  Widget _renderItem(BuildContext context, int index) {
+  Widget _buildItem(BuildContext context, int index) {
     if (index < widget.itemCount) {
       return widget.builder(context, index);
     }
@@ -69,7 +69,7 @@ class _RefreshListViewState extends State<RefreshListView> {
   }
 
   /// 第一次加载数据
-  Future<void> _onRefresh() async {
+  Future<void> _refresh() async {
     widget.refresh(true);
   }
 

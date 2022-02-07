@@ -13,7 +13,5 @@ abstract class BaseDB with DBDao {
   Map<String, dynamic> toJson();
 
   // 表名
-  String getTableName() {
-    return 't_' + '$runtimeType'.toLowerCase().replaceAll('entity', '');
-  }
+  String getTableName() => 't_${runtimeType.toString().toLowerCase().replaceAll('entity', '')}';
 }

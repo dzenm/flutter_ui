@@ -40,7 +40,11 @@ class _WebViewPageState extends State<WebViewPage> {
   @override
   Widget build(BuildContext context) {
     return WillPopView(
-      Scaffold(
+      behavior: BackBehavior.custom,
+      onWillPop: () async {
+        return _controller != null && !(await _controller!.canGoBack());
+      },
+      child: Scaffold(
         appBar: AppBar(title: Text(_title, style: TextStyle(color: Colors.white))),
         body: SafeArea(
           child: FlutterWebView(
@@ -52,10 +56,6 @@ class _WebViewPageState extends State<WebViewPage> {
           ),
         ),
       ),
-      behavior: BackBehavior.custom,
-      onWillPop: () async {
-        return _controller != null && !(await _controller!.canGoBack());
-      },
     );
   }
 }

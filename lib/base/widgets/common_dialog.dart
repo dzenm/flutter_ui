@@ -314,9 +314,12 @@ class ListDialog extends Dialog {
           margin: EdgeInsets.symmetric(horizontal: 40),
           child: ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(2)),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: _buildListView(context),
+            child: Container(
+              color: Colors.white,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: _buildListView(context),
+              ),
             ),
           ),
         ),

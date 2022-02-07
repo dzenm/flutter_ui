@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/channels/native_channels.dart';
 
 /// 点击返回时, 存在未保存的内容时弹出的提示框
-Widget buildBackPromptDialog(BuildContext context) {
+Widget buildPromptBackDialog(BuildContext context) {
   return AlertDialog(
     title: Text('保存提示'),
     content: Text('是否将当前页面保存?'),
@@ -24,21 +24,36 @@ Widget buildBackPromptDialog(BuildContext context) {
   );
 }
 
+/// 返回时提示退出
+/// 设置提示框，默认实现[buildPromptBackDialog]
+Future<bool> promptBack(BuildContext context, {bool isChanged = false, bool isShowDialog = true, WidgetBuilder? builder}) async {
+  if (isChanged && isShowDialog) {
+    if (builder != null) {
+      showDialog<bool>(
+        context: context,
+        builder: builder,
+      ).then((value) {
+        // 为true点击确定，false点击取消
+        if (value ?? true) {
+          Navigator.pop(context);
+        }
+      });
+    }
+  }
+  return !isChanged; // 根据isChanged的值决定调用系统返回键的处理
+}
+
 /// 监听返回键的动作
 class WillPopView extends StatefulWidget {
   final Widget child; //如果对返回键进行监听，必须放在最顶层
   final BackBehavior behavior; //返回键的行为
-  final WillPopCallback? onWillPop;///仅对[BackBehavior.custom]生效，自定义返回键的行为
-  final bool isChanged; ///仅对[BackBehavior.prompt]生效，页面数据是否发生变化，false调用系统返回键，true弹出[builder]提示框
-  final WidgetBuilder? builder ; ///仅对[BackBehavior.prompt]生效，设置提示框，默认实现[buildBackPromptDialog]
+  final WillPopCallback? onWillPop;
 
-  WillPopView(
-    this.child, {
+  WillPopView({
     Key? key,
-    this.behavior = BackBehavior.background,
+    required this.child,
+    this.behavior = BackBehavior.custom,
     this.onWillPop,
-    this.isChanged = false,
-    this.builder,
   }) : super(key: key);
 
   @override
@@ -58,6 +73,8 @@ class _WillPopViewState extends State<WillPopView> {
   // 返回键事件，返回true，执行Navigator.pop(context)，返回false，则不执行
   Future<bool> _onWillPop() async {
     switch (widget.behavior) {
+      case BackBehavior.custom:
+        return widget.onWillPop == null ? Future.value(true) : widget.onWillPop!();
       case BackBehavior.background:
         await NativeChannels.onBackToDesktop();
         return false;
@@ -76,43 +93,13 @@ class _WillPopViewState extends State<WillPopView> {
           // 退出app
           exit(0);
         }
-      case BackBehavior.prompt:
-        return _promptBack(widget.isChanged);
-      case BackBehavior.custom:
-        return widget.onWillPop == null ? Future.value(true) : widget.onWillPop!();
     }
-  }
-
-  // 返回时提示退出
-  Future<bool> _promptBack(bool isChanged) async {
-    if (isChanged) {
-      if (widget.builder != null) {
-        showDialog<bool>(
-          context: context,
-          builder: widget.builder!,
-        ).then((value) {
-          // 为true点击确定，false点击取消
-          if (value ?? true) {
-            Navigator.pop(context);
-          }
-        });
-      }
-    }
-    return !isChanged; // 根据isChanged的值决定调用系统返回键的处理
   }
 }
 
 /// 返回行为
 enum BackBehavior {
-  /// 点击返回键使页面处于后台运行,不销毁页面
-  background,
-
-  /// 双击返回键退出页面
-  doubleTap,
-
-  /// 退出前的提示
-  prompt,
-
-  /// 自定义返回键执行的方式
-  custom,
+  custom, // 自定义返回键执行的方式
+  background, // 点击返回键使页面处于后台运行,不销毁页面
+  doubleTap, // 双击返回键退出页面
 }

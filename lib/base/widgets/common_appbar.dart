@@ -90,7 +90,7 @@ class _TopAppbarState extends State<TopAppbar> {
 
   void _popThis(BuildContext context) {
     if (Navigator.of(context).canPop()) {
-      RouteManager.pop('');
+      RouteManager.pop();
     }
   }
 }

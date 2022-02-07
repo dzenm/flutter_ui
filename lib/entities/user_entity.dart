@@ -1,4 +1,6 @@
-class UserEntity {
+import 'package:flutter_ui/base/db/db_model.dart';
+
+class UserEntity extends BaseDB {
   bool? admin;
   List<dynamic>? chapterTops;
   int? coinCount;
@@ -46,4 +48,7 @@ class UserEntity {
         'type': type,
         'username': username,
       };
+
+  @override
+  BaseDB fromJson(Map<String, dynamic> json) => UserEntity.fromJson(json);
 }

@@ -73,7 +73,8 @@ class _TextPageState extends State<TextPage> {
   @override
   Widget build(BuildContext context) {
     return WillPopView(
-      Scaffold(
+      onWillPop: () => promptBack(context, isChanged: text != newText, builder: buildPromptBackDialog),
+      child: Scaffold(
         appBar: AppBar(
           title: Text('文本和输入框', style: TextStyle(color: Colors.white)),
           actions: [
@@ -234,9 +235,7 @@ class _TextPageState extends State<TextPage> {
                         builder: (BuildContext context) {
                           return ListDialog(
                             list: list,
-                            onTap: (index) {
-
-                            },
+                            onTap: (index) {},
                           );
                         }),
                     child: Row(
@@ -249,9 +248,6 @@ class _TextPageState extends State<TextPage> {
           ),
         ),
       ),
-      behavior: BackBehavior.prompt,
-      isChanged: text != newText,
-      builder: buildBackPromptDialog,
     );
   }
 
