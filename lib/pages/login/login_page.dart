@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(S.of.login, style: TextStyle(color: Colors.white))),
+      appBar: AppBar(title: Text(S.of(context).login, style: TextStyle(color: Colors.white))),
       body: SingleChildScrollView(
         child: Padding(padding: EdgeInsets.only(top: 100), child: _body()),
       ),
@@ -64,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
           controller: usernameController,
           decoration: InputDecoration(
             icon: Icon(Icons.person),
-            labelText: S.of.username,
+            labelText: S.of(context).username,
             suffixIcon: IconButton(
               splashColor: Colors.transparent,
               icon: Icon(Icons.close),
@@ -80,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
           controller: passwordController,
           decoration: InputDecoration(
             icon: Icon(Icons.admin_panel_settings),
-            labelText: S.of.password,
+            labelText: S.of(context).password,
             suffixIcon: IconButton(
               splashColor: Colors.transparent,
               icon: Icon(_isShowPwd ? Icons.visibility : Icons.visibility_off, size: 20),
@@ -102,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
               borderRadius: BorderRadius.all(Radius.circular(2)),
               background: _isDisableLoginButton ? Colors.blue.shade200 : Colors.blue,
               onTap: _isDisableLoginButton ? null : _loginPressed,
-              child: Text(S.of.login, style: TextStyle(color: Colors.white)),
+              child: Text(S.of(context).login, style: TextStyle(color: Colors.white)),
             ),
           ),
         ]),

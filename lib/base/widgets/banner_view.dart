@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_ui/base/log/log.dart';
 
 /// Item的点击事件
 typedef void ItemClick(int position);
@@ -43,23 +44,56 @@ class _BannerViewState extends State<BannerView> {
   List<Widget> _children = []; // 内部加两个⻚⾯ +B(A,B)+A
   PageController _pageController = PageController();
   Timer? _timer;
+  int _realLength = 0;
   int _curPageIndex = 0;
 
   @override
   void initState() {
     super.initState();
 
-    _init();
+    _resetPage();
   }
 
-  void _init() {
-    if (widget.children.length == 0) {
+  @override
+  void didUpdateWidget(covariant BannerView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // 更改children状态，需要重新初始化。
+    if (isUpdate(oldWidget.children, widget.children)) {
+      _resetPage();
+    }
+    if (oldWidget.autoPlay != widget.autoPlay) {
+      if (widget.autoPlay) {
+        _autoPlayPage();
+      } else {
+        _timer?.cancel();
+      }
+    }
+  }
+
+  bool isUpdate(List oldList, List newList) {
+    if (oldList.length != newList.length) {
+      return true;
+    }
+    for (int i = 0; i < oldList.length; i++) {
+      if (oldList[i] != newList[i]) {
+        Log.d('更改children状态: old=${oldList[i]}\n, new=${newList[i]}');
+        return true;
+      }
+    }
+    return false;
+  }
+
+  void _resetPage() {
+    _realLength = widget.children.length;
+    if (_realLength == 0) {
       return;
     }
+    _children.clear();
     _children.addAll(widget.children);
 
     // 定时器完成⾃动翻⻚
-    if (widget.children.length > 1) {
+    if (_realLength > 1) {
       // 如果⼤于⼀⻚，则会在前后都加⼀⻚
       _children.insert(0, widget.children.last);
       _children.add(widget.children.first);
@@ -67,15 +101,16 @@ class _BannerViewState extends State<BannerView> {
       // 初始⻚要是1
       _curPageIndex = 1;
       _autoPlayPage();
-    }
 
-    ///初始⻚⾯ 指定
-    _pageController.jumpToPage(_curPageIndex);
+      // 初始⻚⾯ 指定
+      Future.delayed(Duration.zero, () => _pageController.jumpToPage(_curPageIndex));
+    }
   }
 
   // 自动更换页面
   void _autoPlayPage() {
-    if (widget.autoPlay && widget.children.length > 1) {
+    if (widget.autoPlay && _realLength > 1) {
+      _timer?.cancel();
       _timer = Timer.periodic(widget.switchDuration, _nextPage);
     }
   }
@@ -95,30 +130,37 @@ class _BannerViewState extends State<BannerView> {
   }
 
   @override
-  Widget build(BuildContext context) => Container(
-        width: widget.width,
-        height: widget.height,
-        child: Stack(
-          children: [
-            _bannerView(),
-            _indicator(),
-            _titleView(),
-          ],
-        ),
-      );
+  Widget build(BuildContext context) {
+    return Container(
+      width: widget.width,
+      height: widget.height,
+      child: Stack(
+        children: [
+          _bannerView(),
+          _indicator(),
+          _titleView(),
+        ],
+      ),
+    );
+  }
 
   // Banner页面
   Widget _bannerView() {
     return _listener(PageView.builder(
       itemCount: _children.length,
       controller: _pageController,
-      onPageChanged: _onPageChanged,
+      onPageChanged: (int index) {
+        if (_realLength > 1) {
+          // 需要更新下下标
+          setState(() => _curPageIndex = index);
+        }
+      },
       itemBuilder: (context, index) {
         return Material(
           child: InkWell(
             child: _children[index],
             onTap: () {
-              if (_children.length > 0 && widget.onTap != null) {
+              if (_children.length > 1 && widget.onTap != null) {
                 widget.onTap!(_curPageIndex - 1);
               }
             },
@@ -126,12 +168,6 @@ class _BannerViewState extends State<BannerView> {
         );
       },
     ));
-  }
-
-  // 切换到新⻚⾯的时候 获取新页面的索引
-  void _onPageChanged(int index) {
-    // 需要更新下下标
-    setState(() => _curPageIndex = index);
   }
 
   // 监听页面的切换
@@ -158,8 +194,8 @@ class _BannerViewState extends State<BannerView> {
   // 一组指示器布局
   Widget _indicator() {
     List<Widget> indicators = [];
-    for (int i = 0; i < widget.children.length; i++) {
-      Widget child = widget.indicator == null ? _createIndicator(_getRealIndex(), i) : widget.indicator!(_getRealIndex(), i);
+    for (int i = 0; i < _realLength; i++) {
+      Widget child = (widget.indicator ?? _createIndicator)(_getRealIndex(), i);
       indicators.add(child);
     }
     return Align(
@@ -219,7 +255,7 @@ class _BannerViewState extends State<BannerView> {
 
   // 获取实际页面的索引
   int _getRealIndex({bool isStartZero = true}) {
-    if (widget.children.length == 0) {
+    if (_realLength <= 1) {
       return 0;
     }
     int index = _curPageIndex;

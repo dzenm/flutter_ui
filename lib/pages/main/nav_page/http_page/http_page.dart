@@ -91,13 +91,13 @@ class _HTTPListPageState extends State<HTTPListPage> {
             ]),
             SizedBox(height: 16),
             WrapButton(
-              text: S.of.login,
+              text: S.of(context).login,
               margin: EdgeInsets.only(bottom: 10.0),
               width: 100.0,
               onTap: () => {showToast('hello')},
             ),
             WrapButton(
-              text: S.of.register,
+              text: S.of(context).register,
               color: Colors.white,
               style: TextStyle(fontSize: 15.0, color: Color.fromRGBO(8, 191, 98, 1.0)),
               margin: EdgeInsets.only(top: 10.0),

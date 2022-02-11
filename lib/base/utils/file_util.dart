@@ -14,10 +14,7 @@ class FileUtil {
   /// 此方法返回本地文件地址
   Future<Directory> getParent({String? dir}) async {
     // 获取文档目录的路径
-    Directory? packageDir = await getExternalStorageDirectory();
-    if (packageDir == null) {
-      return Directory('/storage/emulated/0');
-    }
+    Directory? packageDir = await getApplicationDocumentsDirectory();
     Directory parent = Directory('${packageDir.path}${dir == null ? '' : '/$dir'}');
     if (!parent.existsSync()) {
       await parent.create();
@@ -40,7 +37,7 @@ class FileUtil {
   }
 
   /// 保存text到本地文件里面
-  Future<bool> save(String fileName, String text, {String? dir}) async {
+  Future<String?> save(String fileName, String text, {String? dir}) async {
     try {
       Directory parent = await getParent(dir: dir);
       File file = File('${parent.path}/$fileName');
@@ -51,10 +48,10 @@ class FileUtil {
       slink.write('$text');
       slink.close();
       Log.d('保存文件成功: ${file.path}');
-      return Future.value(true);
+      return Future.value(file.path);
     } catch (e) {
       Log.d('保存文件错误: $e');
-      return Future.value(false);
+      return Future.value(null);
     }
   }
 

@@ -1,6 +1,6 @@
-import 'package:flutter_ui/base/db/db_model.dart';
+import 'package:flutter_ui/base/db/db_base_model.dart';
 
-class ArticleEntity extends BaseDB {
+class ArticleEntity extends DBBaseModel {
   String? apkLink;
   int? audit;
   String? author;

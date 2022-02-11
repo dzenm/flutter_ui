@@ -22,7 +22,7 @@ class _DragListPageState extends State<DragListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of.dragList, style: TextStyle(color: Colors.white)),
+        title: Text(S.of(context).dragList, style: TextStyle(color: Colors.white)),
       ),
       body: Container(
         padding: EdgeInsets.all(16),

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/http/api_client.dart';
 import 'package:flutter_ui/base/log/log.dart';
-import 'package:flutter_ui/base/models/local_model.dart';
+import 'package:flutter_ui/base/res/local_model.dart';
 import 'package:flutter_ui/base/res/assets.dart';
 import 'package:flutter_ui/base/res/colors.dart';
 import 'package:flutter_ui/base/res/strings.dart';
@@ -20,7 +20,7 @@ import 'package:flutter_ui/pages/common/preview_photo_page.dart';
 import 'package:flutter_ui/pages/login/login_page.dart';
 import 'package:flutter_ui/utils/sp_util.dart';
 
-import '../me_model.dart';
+import '../nav_model.dart';
 
 /// 设置页面
 class SettingPage extends StatefulWidget {
@@ -29,7 +29,7 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
-  String _tag = 'SettingPage';
+  static const String _TAG = 'SettingPage';
 
   bool switchState = true;
   String _colorKey = '';
@@ -39,7 +39,7 @@ class _SettingPageState extends State<SettingPage> {
   @override
   void initState() {
     super.initState();
-    Log.d('initState', tag: _tag);
+    Log.d('initState', tag: _TAG);
 
     _colorKey = LocalModel.of.theme;
     _locale = LocalModel.of.locale;
@@ -54,32 +54,32 @@ class _SettingPageState extends State<SettingPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    Log.d('didChangeDependencies', tag: _tag);
+    Log.d('didChangeDependencies', tag: _TAG);
   }
 
   @override
   void didUpdateWidget(covariant SettingPage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    Log.d('didUpdateWidget', tag: _tag);
+    Log.d('didUpdateWidget', tag: _TAG);
   }
 
   @override
   void deactivate() {
     super.deactivate();
-    Log.d('deactivate', tag: _tag);
+    Log.d('deactivate', tag: _TAG);
   }
 
   @override
   void dispose() {
     super.dispose();
-    Log.d('dispose', tag: _tag);
+    Log.d('dispose', tag: _TAG);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of.setting, style: TextStyle(color: Colors.white)),
+        title: Text(S.of(context).setting, style: TextStyle(color: Colors.white)),
       ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
@@ -91,8 +91,8 @@ class _SettingPageState extends State<SettingPage> {
                 isRipple: false,
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: () => showToast(S.of.username),
-                child: SingleTextLayout(icon: Icons.person, title: S.of.username, text: _user.username, isTextLeft: false, isShowForward: true),
+                onTap: () => showToast(S.of(context).username),
+                child: SingleTextLayout(icon: Icons.person, title: S.of(context).username, text: _user.username, isTextLeft: false, isShowForward: true),
               ),
               TapLayout(
                 height: 50.0,
@@ -100,7 +100,7 @@ class _SettingPageState extends State<SettingPage> {
                 onTap: () => showPreviewPhotoPage(["https://www.wanandroid.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png", Assets.image('a.jpg'), Assets.image('a.jpg')]),
                 child: SingleTextLayout(
                   icon: Icons.error,
-                  title: S.of.avatar,
+                  title: S.of(context).avatar,
                   isTextLeft: false,
                   suffix: ClipRRect(
                     borderRadius: BorderRadius.circular(16),
@@ -112,8 +112,8 @@ class _SettingPageState extends State<SettingPage> {
               TapLayout(
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: () => MeModel.of.setValue('new value'),
-                child: SingleTextLayout(icon: Icons.phone_android, title: S.of.phone, text: _user.id.toString(), isTextLeft: false, isShowForward: true),
+                onTap: () => NavModel.of.setValue('new value'),
+                child: SingleTextLayout(icon: Icons.phone_android, title: S.of(context).phone, text: _user.id.toString(), isTextLeft: false, isShowForward: true),
               ),
               TapLayout(
                 height: 50.0,
@@ -124,7 +124,7 @@ class _SettingPageState extends State<SettingPage> {
                 },
                 child: SingleTextLayout(
                   icon: Icons.verified,
-                  title: S.of.verifyPhone,
+                  title: S.of(context).verifyPhone,
                   isShowForward: true,
                   badgeCount: 0,
                 ),
@@ -134,7 +134,7 @@ class _SettingPageState extends State<SettingPage> {
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: SingleTextLayout(
                   icon: Icons.notifications_on_sharp,
-                  title: S.of.notificationSwitch,
+                  title: S.of(context).notificationSwitch,
                   suffix: CupertinoSwitch(value: switchState, onChanged: (value) => setState(() => switchState = value)),
                 ),
               ),
@@ -144,7 +144,7 @@ class _SettingPageState extends State<SettingPage> {
                 onTap: _selectedTheme,
                 child: SingleTextLayout(
                   icon: Icons.color_lens,
-                  title: S.of.theme,
+                  title: S.of(context).theme,
                   isShowForward: true,
                   suffix: Container(
                     height: 24,
@@ -160,7 +160,7 @@ class _SettingPageState extends State<SettingPage> {
                 onTap: _selectedLanguage,
                 child: SingleTextLayout(
                   icon: Icons.language,
-                  title: S.of.language,
+                  title: S.of(context).language,
                   isShowForward: true,
                   text: _convertLocale(_locale),
                   isTextLeft: false,
@@ -171,7 +171,7 @@ class _SettingPageState extends State<SettingPage> {
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 onTap: () => LocalModel.of.setValue('new value'),
-                child: SingleTextLayout(title: S.of.loginRecord, badgeCount: 0, isShowForward: true),
+                child: SingleTextLayout(title: S.of(context).loginRecord, badgeCount: 0, isShowForward: true),
               ),
               TapLayout(
                 height: 50.0,
@@ -183,14 +183,14 @@ class _SettingPageState extends State<SettingPage> {
                     cancel();
                   });
                 },
-                child: SingleTextLayout(title: S.of.checkUpgrade, badgeCount: 100, isShowForward: true),
+                child: SingleTextLayout(title: S.of(context).checkUpgrade, badgeCount: 100, isShowForward: true),
               ),
               divider(height: 8),
               TapLayout(
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 onTap: _logout,
-                child: SingleTextLayout(title: S.of.logout, isShowForward: true),
+                child: SingleTextLayout(title: S.of(context).logout, isShowForward: true),
               ),
               TapLayout(
                 height: 50.0,
@@ -207,7 +207,7 @@ class _SettingPageState extends State<SettingPage> {
                     borderRadius: BorderRadius.circular(16),
                     child: Image.asset(Assets.image('a.jpg'), fit: BoxFit.cover, width: 24, height: 24),
                   ),
-                  title: S.of.exit,
+                  title: S.of(context).exit,
                   isShowForward: true,
                 ),
               ),
@@ -223,7 +223,7 @@ class _SettingPageState extends State<SettingPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(S.of.selectTheme),
+          title: Text(S.of(context).selectTheme),
           content: Padding(
             padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
             child: Wrap(
@@ -257,7 +257,7 @@ class _SettingPageState extends State<SettingPage> {
       context: context,
       builder: (context) {
         return SimpleDialog(
-          title: Text(S.of.selectLanguage),
+          title: Text(S.of(context).selectLanguage),
           children: S.supportedLocales.map((value) {
             return SimpleDialogOption(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -276,11 +276,11 @@ class _SettingPageState extends State<SettingPage> {
 
   String _convertLocale(Locale locale) {
     if (locale.languageCode == 'zh') {
-      return S.of.chinese;
+      return S.of(context).chinese;
     } else if (locale.languageCode == 'en') {
-      return S.of.english;
+      return S.of(context).english;
     }
-    return S.of.followSystem;
+    return S.of(context).followSystem;
   }
 
   void _logout() {

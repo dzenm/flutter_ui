@@ -175,21 +175,21 @@ class StateController extends ChangeNotifier {
   String stateText() {
     switch (initialState) {
       case LoadState.none:
-        return S.of.none;
+        return S.from.none;
       case LoadState.loading:
-        return S.of.loading;
+        return S.from.loading;
       case LoadState.empty:
-        return S.of.loadEmpty;
+        return S.from.loadEmpty;
       case LoadState.success:
-        return S.of.loadSuccess;
+        return S.from.loadSuccess;
       case LoadState.complete:
-        return S.of.loadComplete;
+        return S.from.loadComplete;
       case LoadState.failed:
-        return S.of.loadFailed;
+        return S.from.loadFailed;
       case LoadState.more:
-        return S.of.loadMore;
+        return S.from.loadMore;
       case LoadState.end:
-        return S.of.loadEnd;
+        return S.from.loadEnd;
     }
   }
 

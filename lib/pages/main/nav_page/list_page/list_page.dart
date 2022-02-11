@@ -30,7 +30,7 @@ class _ListPageState extends State<ListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of.listAndRefresh, style: TextStyle(color: Colors.white)),
+        title: Text(S.of(context).listAndRefresh, style: TextStyle(color: Colors.white)),
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,

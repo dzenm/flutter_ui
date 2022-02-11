@@ -21,7 +21,7 @@ CancelFunc showToast(String text, {int seconds = 2}) {
 
 /// 加载中对话框
 CancelFunc loadingDialog({String? loadingTxt, bool isVertical = true}) {
-  loadingTxt ??= S.of.loading;
+  loadingTxt ??= S.from.loading;
   List<Widget> widgets = [
     SizedBox(width: 30, height: 30, child: CircularProgressIndicator(strokeWidth: 2, backgroundColor: Colors.white)),
     SizedBox(width: 20, height: 20),
@@ -52,7 +52,7 @@ CancelFunc loadingDialog({String? loadingTxt, bool isVertical = true}) {
 
 /// 选择图片对话框
 void showSelectImageBottomSheet(BuildContext context, {Function? onCameraTap, Function? onGalleryTap}) {
-  showListBottomSheet(context, [S.of.camera, S.of.gallery], (item) async {
+  showListBottomSheet(context, [S.from.camera, S.from.gallery], (item) async {
     if (item == 0) {
       if (onCameraTap != null) onCameraTap();
     } else if (item == 1) {
@@ -66,7 +66,7 @@ void showListBottomSheet(BuildContext context, List<String> items, ItemClickCall
   List<String> data = [];
   items.forEach((item) => data.add(item));
   if (!isMaterial) data.add('divider');
-  data.add(S.of.cancel);
+  data.add(S.from.cancel);
 
   double realHeight = (items.length + 1) * height;
 
@@ -274,7 +274,7 @@ class CupertinoDialogButton extends StatelessWidget {
                 Navigator.of(context).pop();
                 if (onNegativeTap != null) onNegativeTap!();
               },
-              child: Text(negativeText ?? S.of.cancel, style: negativeStyle ?? TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+              child: Text(negativeText ?? S.from.cancel, style: negativeStyle ?? TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
             ),
           ),
           Container(color: Color(0xFFBABABA), height: 45.0, width: 0.5),
@@ -286,7 +286,7 @@ class CupertinoDialogButton extends StatelessWidget {
                 Navigator.of(context).pop();
                 if (onPositiveTap != null) onPositiveTap!();
               },
-              child: Text(positiveText ?? S.of.confirm, style: positiveStyle ?? TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+              child: Text(positiveText ?? S.from.confirm, style: positiveStyle ?? TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
             ),
           ),
         ])

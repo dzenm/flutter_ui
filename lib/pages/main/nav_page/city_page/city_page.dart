@@ -73,7 +73,7 @@ class _CitySelectedPageState extends State<CitySelectedPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(title: Text(S.of.citySelected, style: TextStyle(color: Colors.white))),
+      appBar: AppBar(title: Text(S.of(context).citySelected, style: TextStyle(color: Colors.white))),
       body: SafeArea(
         child: StateView(
           controller: _controller,

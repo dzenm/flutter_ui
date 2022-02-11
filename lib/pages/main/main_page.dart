@@ -9,6 +9,7 @@ import 'package:flutter_ui/pages/main/main_model.dart';
 
 import 'home_page/home_page.dart';
 import 'me_page/me_page.dart';
+import 'nav_page/nav_page.dart';
 
 // 主页
 class MainPage extends StatefulWidget {
@@ -18,7 +19,7 @@ class MainPage extends StatefulWidget {
 
 // 主页的状态
 class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
-  String _tag = 'MainPage';
+  static const String _TAG = 'MainPage';
 
   // 页面管理控制器
   final PageController _pageController = PageController(initialPage: 0);
@@ -30,32 +31,32 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    Log.d('didChangeAppLifecycleState: $state', tag: _tag);
+    Log.d('didChangeAppLifecycleState: $state', tag: _TAG);
   }
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addObserver(this);
-    Log.d('initState', tag: _tag);
+    Log.d('initState', tag: _TAG);
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    Log.d('didChangeDependencies', tag: _tag);
+    Log.d('didChangeDependencies', tag: _TAG);
   }
 
   @override
   void didUpdateWidget(covariant MainPage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    Log.d('didUpdateWidget', tag: _tag);
+    Log.d('didUpdateWidget', tag: _TAG);
   }
 
   @override
   void deactivate() {
     super.deactivate();
-    Log.d('deactivate', tag: _tag);
+    Log.d('deactivate', tag: _TAG);
   }
 
   @override
@@ -63,7 +64,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     _pageController.dispose();
     WidgetsBinding.instance?.removeObserver(this);
     super.dispose();
-    Log.d('dispose', tag: _tag);
+    Log.d('dispose', tag: _TAG);
   }
 
   @override
@@ -75,25 +76,32 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
         controller: _pageController,
         physics: NeverScrollableScrollPhysics(),
         children: [
-          HomePage(S.of.home),
-          MePage(S.of.me),
+          HomePage(S.of(context).home),
+          NavPage(S.of(context).nav),
+          MePage(S.of(context).me),
         ],
-        onPageChanged: (int index) => setState(() => _itemIndex = index),
+        onPageChanged: (index) => setState(() => _itemIndex = index),
       ),
       bottomNavigationBar: BottomAppBar(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           mainAxisSize: MainAxisSize.max,
           children: [
-            _bottomNavigationBarItemView(
+            _buildBottomNavigationBarItemView(
               index: 0,
-              title: S.of.home,
+              title: S.of(context).home,
               icon: Icons.home,
               badgeCount: MainModel.of.homeCount,
             ),
-            _bottomNavigationBarItemView(
+            _buildBottomNavigationBarItemView(
               index: 1,
-              title: S.of.me,
+              title: S.of(context).nav,
+              icon: Icons.airplay_rounded,
+              badgeCount: MainModel.of.navCount,
+            ),
+            _buildBottomNavigationBarItemView(
+              index: 2,
+              title: S.of(context).me,
               icon: Icons.person,
               badgeCount: MainModel.of.meCount,
             ),
@@ -103,8 +111,14 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     );
   }
 
-  // 底部app bar item
-  Widget _bottomNavigationBarItemView({required int index, required String title, required IconData icon, int badgeCount = 0, GestureTapCallback? onTap}) {
+  // NavigationBar item
+  Widget _buildBottomNavigationBarItemView({
+    required int index,
+    required String title,
+    required IconData icon,
+    int badgeCount = 0,
+    GestureTapCallback? onTap,
+  }) {
     Color color = _itemIndex == index ? Colors.blue : Colors.grey.shade500;
     double width = 56, height = 56;
     // 平分整个宽度

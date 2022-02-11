@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/pages/main/me_page/video_page/ijk_video_page.dart';
+
+import 'ijk_video_page.dart';
 
 class IjkListVideoPage extends StatefulWidget {
   @override

@@ -18,7 +18,7 @@ import 'package:flutter_ui/base/widgets/single_text_layout.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/base/widgets/will_pop_view.dart';
 import 'package:flutter_ui/pages/main/me_page/me_model.dart';
-import 'package:flutter_ui/pages/main/me_page/setting_page/setting_page.dart';
+import 'package:flutter_ui/pages/main/nav_page/setting_page/setting_page.dart';
 
 class TextPage extends StatefulWidget {
   @override
@@ -26,7 +26,7 @@ class TextPage extends StatefulWidget {
 }
 
 class _TextPageState extends State<TextPage> {
-  String _tag = 'TextPage';
+  static const String _TAG = 'TextPage';
   TextEditingController _controller = new TextEditingController(text: "初始化");
   String text = '';
   String newText = '';
@@ -43,31 +43,32 @@ class _TextPageState extends State<TextPage> {
   @override
   void initState() {
     super.initState();
-    Log.d('initState', tag: _tag);
+
+    Log.d('initState', tag: _TAG);
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    Log.d('didChangeDependencies', tag: _tag);
+    Log.d('didChangeDependencies', tag: _TAG);
   }
 
   @override
   void didUpdateWidget(covariant TextPage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    Log.d('didUpdateWidget', tag: _tag);
+    Log.d('didUpdateWidget', tag: _TAG);
   }
 
   @override
   void deactivate() {
     super.deactivate();
-    Log.d('deactivate', tag: _tag);
+    Log.d('deactivate', tag: _TAG);
   }
 
   @override
   void dispose() {
     super.dispose();
-    Log.d('dispose', tag: _tag);
+    Log.d('dispose', tag: _TAG);
   }
 
   @override
@@ -143,13 +144,13 @@ class _TextPageState extends State<TextPage> {
                     height: 50.0,
                     padding: EdgeInsets.symmetric(horizontal: 16),
                     onTap: () => RouteManager.push(SettingPage()),
-                    child: SingleTextLayout(title: S.of.setting, isShowForward: true, prefix: BadgeView(count: 10)),
+                    child: SingleTextLayout(title: S.of(context).setting, isShowForward: true, prefix: BadgeView(count: 10)),
                   ),
                   TapLayout(
                     height: 50.0,
                     padding: EdgeInsets.symmetric(horizontal: 16),
                     onTap: () => MeModel.of.setValue('new value'),
-                    child: SingleTextLayout(title: S.of.phone, text: '17601487212', isTextLeft: false, isShowForward: true),
+                    child: SingleTextLayout(title: S.of(context).phone, text: '17601487212', isTextLeft: false, isShowForward: true),
                   ),
                   TapLayout(
                     height: 50.0,
@@ -193,7 +194,7 @@ class _TextPageState extends State<TextPage> {
                     onTap: () => showPromptDialog(context, titleString: '昵称', content: Text('这是设置好的昵称'), onPositiveTap: () => showToast('修改成功')),
                     child: SingleTextLayout(
                       icon: Icons.person,
-                      title: S.of.avatar,
+                      title: S.of(context).avatar,
                       isTextLeft: false,
                       suffix: ClipRRect(
                         borderRadius: BorderRadius.circular(16),
@@ -205,13 +206,13 @@ class _TextPageState extends State<TextPage> {
                   TapLayout(
                     height: 50.0,
                     padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: SingleTextLayout(title: S.of.notificationSwitch, suffix: CupertinoSwitch(value: switchState, onChanged: (value) => setState(() => switchState = value))),
+                    child: SingleTextLayout(title: S.of(context).notificationSwitch, suffix: CupertinoSwitch(value: switchState, onChanged: (value) => setState(() => switchState = value))),
                   ),
                   TapLayout(
                     height: 50.0,
                     padding: EdgeInsets.symmetric(horizontal: 16),
                     onTap: () => showSelectImageBottomSheet(context),
-                    child: SingleTextLayout(title: S.of.notificationSwitch, text: '查看通知内容'),
+                    child: SingleTextLayout(title: S.of(context).notificationSwitch, text: '查看通知内容'),
                   ),
                   TapLayout(
                     height: 60.0,
@@ -219,7 +220,7 @@ class _TextPageState extends State<TextPage> {
                     onTap: () => showListBottomSheet(context, data, (int index) {
                       Navigator.pop(context);
                     }),
-                    child: SingleTextLayout(title: S.of.loginRecord, summary: '查看最近所有的登录记录', badgeCount: 0, isShowForward: true),
+                    child: SingleTextLayout(title: S.of(context).loginRecord, summary: '查看最近所有的登录记录', badgeCount: 0, isShowForward: true),
                   ),
                   SizedBox(height: 8),
                   Text(MeModel.of.value),
@@ -239,7 +240,7 @@ class _TextPageState extends State<TextPage> {
                           );
                         }),
                     child: Row(
-                      children: [Text(S.of.login)],
+                      children: [Text(S.of(context).login)],
                     ),
                   ),
                 ],

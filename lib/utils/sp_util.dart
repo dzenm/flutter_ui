@@ -11,11 +11,11 @@ class SpUtil {
 
   static SharedPreferences? _prefs;
 
-  static const String TAG = 'SP数据';
+  static const String _TAG = 'SP数据';
 
-  static const String _USER_INFO = 'user_info';
+  static const String _USER_INFO = 'u_user_info';
 
-  static const String _IS_LOGIN = 'is_login';
+  static const String _IS_LOGIN = 'u_is_login';
   static const String _USER_USER = 'u_user';
   static const String _USER_USERNAME = 'u_username';
   static const String _USER_USER_ID = 'u_user_id';
@@ -31,129 +31,113 @@ class SpUtil {
 
   // 获取用户信息
   static String getUserInfo() {
-    String user = getString(_USER_INFO);
-    Log.d('getUserInfo=$user', tag: TAG);
-    return user;
+    return getString(_USER_INFO);
   }
 
   // 保存用户信息
   static void setUserInfo(String? user) {
-    Log.d('setUserInfo=$user', tag: TAG);
     setString(_USER_INFO, user);
   }
 
   // 是否登录信息
   static bool getIsLogin() {
-    bool isLogin = getBool(_IS_LOGIN);
-    Log.d('getIsLogin=$isLogin', tag: TAG);
-    return isLogin;
+    return getBool(_IS_LOGIN);
   }
 
   // 保存登录信息
   static void setIsLogin(bool? isLogin) {
-    Log.d('setIsLogin=$isLogin', tag: TAG);
     setBool(_IS_LOGIN, isLogin);
   }
 
   // 获取用户信息
   static String getUser() {
-    String user = getString(_USER_USER);
-    Log.d('getUser=$user', tag: TAG);
-    return user;
+    return getString(_USER_USER);
   }
 
   // 保存用户信息
   static void setUser(String? user) {
-    Log.d('setUser=$user', tag: TAG);
     setString(_USER_USER, user);
   }
 
 // 获取用户名
   static String getUsername() {
-    String username = getString(_USER_USERNAME);
-    Log.d('getUsername=$username', tag: TAG);
-    return username;
+    return getString(_USER_USERNAME);
   }
 
   // 保存用户名
   static void setUsername(String? username) {
-    Log.d('setUsername=$username', tag: TAG);
     setString(_USER_USERNAME, username);
   }
 
   // 获取登录用户ID
   static String getUserId() {
-    String id = getString(_USER_USER_ID);
-    Log.d('getUserId=$id', tag: TAG);
-    return id;
+    return getString(_USER_USER_ID);
   }
 
   // 保存登录用户ID
   static void setUserId(String? userId) {
-    Log.d('setUserId=$userId', tag: TAG);
     setString(_USER_USER_ID, userId);
   }
 
   // 获取登录用户token
   static String getToken() {
-    String token = getString(_USER_TOKEN);
-    Log.d('getToken=$token', tag: TAG);
-    return token;
+    return getString(_USER_TOKEN);
   }
 
   // 保存登录用户token
   static void setToken(String? token) {
-    Log.d('setToken=$token', tag: TAG);
     setString(_USER_TOKEN, token);
   }
 
   // 获取主题样式
   static String getTheme() {
     String theme = getString(_SETTING_THEME);
-    Log.d('getTheme=$theme', tag: TAG);
     return theme.isEmpty ? 'blue' : theme;
   }
 
   // 保存主题样式
   static void setTheme(String? theme) {
-    Log.d('setTheme=$theme', tag: TAG);
     setString(_SETTING_THEME, theme);
   }
 
   // 获取语言设置
   static String getLocale() {
     String locale = getString(_SETTING_LOCALE);
-    Log.d('getLocale=$locale', tag: TAG);
     return locale.isEmpty ? 'zh' : locale;
   }
 
   // 保存语言设置
   static void setLocale(String? locale) {
-    Log.d('setLocale=$locale', tag: TAG);
     setString(_SETTING_LOCALE, locale);
   }
 
   static String getString(String key) {
-    return _prefs?.getString(key) ?? '';
+    String? value = _prefs?.getString(key);
+    Log.d('get $key=$value', tag: _TAG);
+    return value ?? '';
   }
 
   static void setString(String key, String? value) {
-    _prefs?.setString(key, value ?? '');
+    _prefs?.setString(key, value ?? '').then((res) => Log.d('$key=$value', tag: _TAG));
   }
 
   static int getInt(String key) {
-    return _prefs?.getInt(key) ?? 0;
+    int? value = _prefs?.getInt(key);
+    Log.d('get $key=$value', tag: _TAG);
+    return value ?? 0;
   }
 
   static void setInt(String key, int? value) {
-    _prefs?.setInt(key, value ?? 0);
+    _prefs?.setInt(key, value ?? 0).then((res) => Log.d('$key=$value', tag: _TAG));
   }
 
   static bool getBool(String key) {
-    return _prefs?.getBool(key) ?? false;
+    bool? value = _prefs?.getBool(key);
+    Log.d('get $key=$value', tag: _TAG);
+    return value ?? false;
   }
 
   static void setBool(String key, bool? value) {
-    _prefs?.setBool(key, value ?? false);
+    _prefs?.setBool(key, value ?? false).then((res) => Log.d('$key=$value', tag: _TAG));
   }
 }

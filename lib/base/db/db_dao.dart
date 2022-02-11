@@ -3,10 +3,12 @@ import 'package:flutter_ui/base/entities/table_entity.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'database_manager.dart';
-import 'db_model.dart';
+import 'db_base_model.dart';
 
 /// 数据库操作(增删改查), 在model中使用with混入即可。
 class DBDao {
+  Future<Database> get({String? dbName}) async => await DatabaseManager().getDatabase(dbName: dbName);
+
   Future<void> drop() async => await DatabaseManager().delete();
 
   Future<void> close() async => await DatabaseManager().close();
@@ -21,15 +23,15 @@ class DBDao {
     return await DatabaseManager().isTableExist(tableName, dbName: dbName);
   }
 
-  Future<List<TableEntity>> getTableList({String? dbName}) async {
-    return await DatabaseManager().getTableList(dbName: dbName);
-  }
-
   Future<List<ColumnEntity>> getTableColumn(String dbName, String tableName) async {
     return await DatabaseManager().getTableColumn(dbName, tableName);
   }
 
-  Future<void> insert<T extends BaseDB>(
+  Future<List<TableEntity>> getTableList({String? dbName}) async {
+    return await DatabaseManager().getTableList(dbName: dbName);
+  }
+
+  Future<void> insert<T extends DBBaseModel>(
     dynamic data, {
     ConflictAlgorithm? conflictAlgorithm,
   }) async {
@@ -49,7 +51,7 @@ class DBDao {
     }
   }
 
-  Future<int> delete<T extends BaseDB>(
+  Future<int> delete<T extends DBBaseModel>(
     T? data, {
     Map<String, String>? where,
   }) async {
@@ -60,7 +62,7 @@ class DBDao {
     );
   }
 
-  Future<int> update<T extends BaseDB>(
+  Future<int> update<T extends DBBaseModel>(
     T? data,
     Map<String, String> where, {
     ConflictAlgorithm? conflictAlgorithm,
@@ -74,7 +76,7 @@ class DBDao {
     );
   }
 
-  Future<List<BaseDB>> where<T extends BaseDB>(
+  Future<List<DBBaseModel>> where<T extends DBBaseModel>(
     T? data, {
     Map<String, String>? where,
   }) async {

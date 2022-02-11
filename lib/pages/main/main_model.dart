@@ -31,6 +31,31 @@ class MainModel with ChangeNotifier {
     notifyListeners();
   }
 
+  int _navCount = 0;
+
+  int get navCount => _navCount;
+
+  void changeNavCount(int count) {
+    _navCount = count;
+    notifyListeners();
+  }
+
+  void addNavCount(int count) {
+    if (_navCount + count > 0) {
+      _navCount += count;
+    }
+    notifyListeners();
+  }
+
+  void reduceNavCount(int count) {
+    if (_navCount - count < 0) {
+      _navCount = -1;
+    } else {
+      _navCount -= count;
+    }
+    notifyListeners();
+  }
+
   int _meCount = 5;
 
   int get meCount => _meCount;

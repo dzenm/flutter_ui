@@ -33,7 +33,7 @@ class _VlcVideoPageState extends State<VlcVideoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of.vlcVideoPlay, style: TextStyle(color: Colors.white)),
+        title: Text(S.of(context).vlcVideoPlay, style: TextStyle(color: Colors.white)),
       ),
       body: Container(
         alignment: Alignment.center,

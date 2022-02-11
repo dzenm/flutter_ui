@@ -1,7 +1,7 @@
-import 'package:flutter_ui/base/db/db_model.dart';
+import 'package:flutter_ui/base/db/db_base_model.dart';
 
 /// 轮播图
-class BannerEntity extends BaseDB {
+class BannerEntity extends DBBaseModel {
   String? desc;
   int? id;
   String? imagePath;

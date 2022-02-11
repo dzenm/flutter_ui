@@ -4,8 +4,8 @@ import 'package:flutter_ui/base/res/assets.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/base/widgets/license_view.dart';
-import 'package:flutter_ui/pages/main/me_page/video_page/ijk_list_video_page.dart';
 
+import 'ijk_list_video_page.dart';
 import 'ijk_video_page.dart';
 import 'vlc_video_page.dart';
 
@@ -19,7 +19,7 @@ class _VideoPageState extends State<VideoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of.videoPlay, style: TextStyle(color: Colors.white)),
+        title: Text(S.of(context).videoPlay, style: TextStyle(color: Colors.white)),
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 16),
@@ -32,21 +32,21 @@ class _VideoPageState extends State<VideoPage> {
     return [
       SizedBox(height: 8),
       MaterialButton(
-        child: _text(S.of.vlcVideoPlay),
+        child: _text(S.of(context).vlcVideoPlay),
         textColor: Colors.white,
         color: Colors.blue,
         onPressed: () => RouteManager.push(VlcVideoPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
-        child: _text(S.of.ijkVideoPlay),
+        child: _text(S.of(context).ijkVideoPlay),
         textColor: Colors.white,
         color: Colors.blue,
         onPressed: () => RouteManager.push(IjkVideoPage(url: 'asset:///' + Assets.video('butterfly.mp4'))),
       ),
       SizedBox(height: 8),
       MaterialButton(
-        child: _text(S.of.videoPlay),
+        child: _text(S.of(context).videoPlay),
         textColor: Colors.white,
         color: Colors.blue,
         onPressed: () => RouteManager.push(IjkListVideoPage()),
@@ -57,7 +57,7 @@ class _VideoPageState extends State<VideoPage> {
         controller: _controller,
       ),
       MaterialButton(
-        child: _text(S.of.videoPlay),
+        child: _text(S.of(context).videoPlay),
         textColor: Colors.white,
         color: Colors.blue,
         onPressed: () => setState(() => _controller.setSelect(_controller.select + 1)),

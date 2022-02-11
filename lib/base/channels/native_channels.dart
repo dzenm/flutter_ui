@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_ui/base/log/log.dart';
 
 class NativeChannels {
-  static const String TAG = 'NativeChannels';
+  static const String _TAG = 'NativeChannels';
 
   // 管理返回键操作渠道
   static const BACK_TO_DESKTOP_CHANNEL = 'android/channel/backToDesktop';
@@ -47,7 +47,7 @@ class NativeChannels {
       // 通知安卓返回,到手机桌面
       try {
         final String data = await channel.invokeMethod('startVideoService');
-        Log.d('服务返回数据: $data', tag: TAG);
+        Log.d('服务返回数据: $data', tag: _TAG);
         return Future.value(true);
       } on PlatformException catch (e) {
         Log.e(e.message);
@@ -65,7 +65,7 @@ class NativeChannels {
         // 通知安卓返回,到手机桌面
         Map<String, dynamic> result = {'message': '我从Flutter页面回来了'};
         final String out = await channel.invokeMethod('startNaughtyActivity');
-        Log.d('NaughtyActivity数据: $out', tag: TAG);
+        Log.d('NaughtyActivity数据: $out', tag: _TAG);
         return Future.value(true);
       } on PlatformException catch (e) {
         Log.e(e.message);
@@ -82,7 +82,7 @@ class NativeChannels {
         // 通知安卓返回,到手机桌面
         Map<String, dynamic> result = {'message': '我从Flutter页面回来了'};
         final String out = await channel.invokeMethod('startHomeActivity');
-        Log.d('HomeActivity数据: $out', tag: TAG);
+        Log.d('HomeActivity数据: $out', tag: _TAG);
         return Future.value(true);
       } on PlatformException catch (e) {
         Log.e(e.message);
@@ -99,7 +99,7 @@ class NativeChannels {
         // 通知安卓返回,到手机桌面
         Map<String, dynamic> result = {'message': '我从Flutter页面回来了'};
         final String out = await channel.invokeMethod('startNaviDrivingActivity');
-        Log.d('NaviDrivingActivity数据: $out', tag: TAG);
+        Log.d('NaviDrivingActivity数据: $out', tag: _TAG);
         return Future.value(true);
       } on PlatformException catch (e) {
         Log.e(e.message);
@@ -116,7 +116,7 @@ class NativeChannels {
         // 通知安卓返回,到手机桌面
         Map<String, dynamic> result = {'message': '我从Flutter页面回来了'};
         final String out = await channel.invokeMethod('startWalkNaviActivity');
-        Log.d('NaviDrivingActivity数据: $out', tag: TAG);
+        Log.d('NaviDrivingActivity数据: $out', tag: _TAG);
         return Future.value(true);
       } on PlatformException catch (e) {
         Log.e(e.message);

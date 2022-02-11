@@ -1,32 +1,45 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_ui/main.dart';
 
-/// 设置语言包
+/// 语言包
 class S implements WidgetsLocalizations {
   // 当前显示的语言类型
   final Locale _locale;
 
   S(this._locale);
 
-  // 创建语言包配置
-  static const GeneratedLocalizationsDelegate delegate = GeneratedLocalizationsDelegate();
+  // 语言包填充数据的widget
+  static const List<LocalizationsDelegate> localizationsDelegates = [
+    GeneratedLocalizationsDelegate(), // 需要设置多语言的本地值
+    GlobalMaterialLocalizations.delegate, // Material库widget
+    GlobalWidgetsLocalizations.delegate, // Widgets库widget
+    GlobalCupertinoLocalizations.delegate, // Cupertino库widget
+  ];
 
-  // 支持的语言包
+  // 语言包，可以指定国家编码
   static const List<Locale> supportedLocales = [
     Locale('zh'),
     Locale('en'),
   ];
 
-  // static S of(BuildContext context) => Localizations.of(context, S);
+  // 保证切换语言时页面能自动刷新所有页面，一定要传对应页面的context，否则不起作用
+  static S of(BuildContext context) => Localizations.of(context, S);
 
-  static S get of => Localizations.of(Application.context, S);
+  // 在一些没有context页面时，使用全局的context。
+  static S get from => of(Application.context);
 
-  @override
-  TextDirection get textDirection => TextDirection.ltr;
+  // 根据key获取当前语言包的value
+  String _getValues(String key) {
+    // 获取当前语言包
+    String languageCode = _locale.languageCode;
+    Map _getLanguage = _languageValues[languageCode]!;
+    return _getLanguage[key] ?? _getLanguage['unknown']!;
+  }
 
   // 语言包
-  static Map<String, Map<String, String>> localizedValues = {
+  Map<String, Map<String, String>> _languageValues = {
     'zh': {
       // 登录注册模块
       // 主页模块
@@ -73,6 +86,7 @@ class S implements WidgetsLocalizations {
       'logout': '注销',
       'exit': '退出',
       'home': '首页',
+      'nav': '导航',
       'me': '我',
       'state': '状态',
       'loading': '加载中',
@@ -133,6 +147,7 @@ class S implements WidgetsLocalizations {
       'logout': 'Logout',
       'exit': 'Exit',
       'home': 'Home',
+      'nav': 'Nav',
       'me': 'Me',
       'state': 'State',
       'loading': 'Loading',
@@ -148,10 +163,6 @@ class S implements WidgetsLocalizations {
       'none': '',
     },
   };
-
-  Map<String, String> get _getLanguages => localizedValues[_locale.languageCode]!;
-
-  String _getValues(String key) => _getLanguages[key] ?? _getLanguages['unknown']!;
 
   // 登录注册模块
   // 主页模块
@@ -245,6 +256,8 @@ class S implements WidgetsLocalizations {
 
   String get me => _getValues('me');
 
+  String get nav => _getValues('nav');
+
   String get state => _getValues('state');
 
   String get loading => _getValues('loading');
@@ -264,6 +277,9 @@ class S implements WidgetsLocalizations {
   String get unknown => _getValues('unknown');
 
   String get none => _getValues('none');
+
+  @override
+  TextDirection get textDirection => TextDirection.ltr;
 }
 
 /// 资源加载委托工具
@@ -280,10 +296,8 @@ class GeneratedLocalizationsDelegate extends LocalizationsDelegate<S> {
 
   /// 当前环境的Locale，是否在我们支持的语言范围
   @override
-  bool isSupported(Locale locale) => _isSupported(locale, true);
-
-  /// Returns true if the specified locale is supported, false otherwise.
-  bool _isSupported(Locale locale, bool withCountry) {
+  bool isSupported(Locale locale) {
+    bool withCountry = true;
     for (Locale supportedLocale in S.supportedLocales) {
       // Language must always match both locales.
       if (supportedLocale.languageCode != locale.languageCode) {

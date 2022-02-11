@@ -10,7 +10,7 @@ import 'package:flutter_ui/base/utils/file_util.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 /// 启动flutter APP
-typedef StartFlutterAPP = void Function();
+typedef RunFlutterAPP = void Function();
 
 /// 处理字符串
 typedef HandleMsg = void Function(String msg);
@@ -33,10 +33,9 @@ class HandleError {
   static const String crashParent = 'crash';
 
   // 捕获flutter运行时的错误
-  // await HandleError().catchFlutterError(() => runApp(_initPage()));
-  Future catchFlutterError(StartFlutterAPP startFlutterAPP, {String? fileName, HandleMsg? handleMsg}) async {
-    if (!kReleaseMode) {
-      /// debug模式下进行异常捕获并输出
+  Future catchFlutterError(RunFlutterAPP runFlutterAPP, {String? fileName, HandleMsg? handleMsg}) async {
+    if (true) {
+      // debug模式下进行异常捕获并输出
       FlutterError.onError = (FlutterErrorDetails details) async {
         if (details.stack != null) {
           Zone.current.handleUncaughtError(details.exception, details.stack!);
@@ -65,13 +64,15 @@ class HandleError {
     // };
 
     runZonedGuarded<Future<void>>(() async {
+      // 在这里启动Flutter APP之后，所有的异常信息才能捕获成功
       Log.d('╔════════════════════════════════════════════════════════════════════════════╗');
       Log.d('║                                                                            ║');
       Log.d('║                Start Flutter APP                                           ║');
       Log.d('║                                                                            ║');
       Log.d('╚════════════════════════════════════════════════════════════════════════════╝');
-      startFlutterAPP();
+      runFlutterAPP();
     }, (dynamic error, StackTrace stackTrace) async {
+      // 出现异常后，在这里处理异常
       Log.e('╔════════════════════════════════════════════════════════════════════════════╗');
       Log.e('║                                                                            ║');
       Log.e('║                Handle Flutter Error                                        ║');
@@ -81,14 +82,10 @@ class HandleError {
       String msg = await _convertErrorToText(error, stackTrace);
       // 保存为文件
       fileName = fileName ?? 'crash_${DateTime.now()}.log';
-      await FileUtil.getInstance.save(fileName!, msg, dir: crashParent).then((value) async {
-        if (value) {
+      await FileUtil.getInstance.save(fileName!, msg, dir: crashParent).then((String? filePath) async {
+        if (filePath != null && handleMsg != null) {
           // 处理文件
-          Directory dir = await FileUtil.getInstance.getParent(dir: crashParent);
-          File file = File('${dir.path}/$fileName');
-          if (handleMsg != null) {
-            handleMsg(file.path);
-          }
+          handleMsg(filePath);
         }
       });
     });
@@ -110,97 +107,50 @@ class HandleError {
   Future<Null> _collectInfo(dynamic error, StackTrace stackTrace, HandleMsg handleMsg) async {
     // APP信息
     PackageInfo info = await PackageInfo.fromPlatform();
-    Map<String, dynamic> appInfo = _collectAppInfo(info);
+    Map<String, dynamic> appInfo = {
+      'appName': info.appName,
+      'packageName': info.packageName,
+      'version': info.version,
+      'buildNumber': info.buildNumber,
+      'buildSignature': info.buildSignature,
+    };
 
     // 设备信息
     Map<String, dynamic>? deviceInfo;
     DeviceInfoPlugin infoPlugin = DeviceInfoPlugin();
     if (Platform.isAndroid) {
       AndroidDeviceInfo info = await infoPlugin.androidInfo;
-      deviceInfo = _collectAndroidInfo(info);
+      deviceInfo = info.toMap();
     } else if (Platform.isIOS) {
       IosDeviceInfo info = await infoPlugin.iosInfo;
-      deviceInfo = _collectIOSInfo(info);
+      deviceInfo = info.toMap();
     }
 
-    // 处理手机信息
+    // 处理APP和设备信息
     Log.e('╔══════════════════════════════ Phone Info ══════════════════════════════════╗');
     handleMsg('APP Info');
-    appInfo.forEach((key, value) => handleMsg('$interval$key: $value'));
+    appInfo.forEach((key, value) => handleMsg('$key: $value'));
     handleMsg('Device Info');
-    deviceInfo?.forEach((key, value) => handleMsg('$interval$key: $value'));
-    Log.e('╚════════════════════════════════════════════════════════════════════════════╝');
+    deviceInfo?.forEach((key, value) => handleMsg('$key: $value'));
 
     // 处理异常信息
+    Log.e('║══════════════════════════════ Error Info ═══════════════════════════════════');
     handleMsg('\n');
-    handleMsg('$error');
+    handleMsg('$interval$error');
     handleMsg('\n');
 
-    Log.e('╔══════════════════════════════ Error Info ══════════════════════════════════╗');
     // 处理异常信息栈
+    Log.e('║══════════════════════════════ Stack Trace ══════════════════════════════════');
     List<String> list = stackTrace.toString().split('\n');
     for (int i = 0; i < list.length; i++) {
-      if (list[i].contains('dart:async/zone.dart')
-          || list[i].contains('package:flutter/src/rendering/binding.dart')
-          || list[i].contains('package:flutter/src/widgets/framework.dart')) {
+      String zone = 'dart:async/zone.dart';
+      String binding = 'package:flutter/src/rendering/binding.dart';
+      String framework = 'package:flutter/src/widgets/framework.dart';
+      if (list[i].contains(zone) || list[i].contains(binding) || list[i].contains(framework) || i > 100) {
         break;
       }
       handleMsg('${list[i]}');
     }
     Log.e('╚════════════════════════════════════════════════════════════════════════════╝');
   }
-
-  // APP信息
-  Map<String, dynamic> _collectAppInfo(PackageInfo info) => {
-        'appName': info.appName, // APP名称
-        'packageName': info.packageName, // 包名
-        'version': info.version, // 版本名
-        'buildNumber': info.buildNumber, // 版本号
-      };
-
-  // 安卓设备信息
-  Map<String, dynamic> _collectAndroidInfo(AndroidDeviceInfo info) => {
-        'version.securityPatch': info.version.securityPatch,
-        'version.sdkInt': info.version.sdkInt,
-        'version.release': info.version.release,
-        'version.previewSdkInt': info.version.previewSdkInt,
-        'version.incremental': info.version.incremental,
-        'version.codename': info.version.codename,
-        'version.baseOS': info.version.baseOS,
-        'board': info.board,
-        'bootloader': info.bootloader,
-        'brand': info.brand,
-        'device': info.device,
-        'display': info.display,
-        'fingerprint': info.fingerprint,
-        'hardware': info.hardware,
-        'host': info.host,
-        'id': info.id,
-        'manufacturer': info.manufacturer,
-        'model': info.model,
-        'product': info.product,
-        'supported32BitAbis': info.supported32BitAbis,
-        'supported64BitAbis': info.supported64BitAbis,
-        'supportedAbis': info.supportedAbis,
-        'tags': info.tags,
-        'type': info.type,
-        'isPhysicalDevice': info.isPhysicalDevice,
-        'androidId': info.androidId
-      };
-
-  // iOS设备信息
-  Map<String, dynamic> _collectIOSInfo(IosDeviceInfo info) => {
-        'name': info.name,
-        'systemName': info.systemName,
-        'systemVersion': info.systemVersion,
-        'model': info.model,
-        'localizedModel': info.localizedModel,
-        'identifierForVendor': info.identifierForVendor,
-        'isPhysicalDevice': info.isPhysicalDevice,
-        'utsname.sysname:': info.utsname.sysname,
-        'utsname.nodename:': info.utsname.nodename,
-        'utsname.release:': info.utsname.release,
-        'utsname.version:': info.utsname.version,
-        'utsname.machine:': info.utsname.machine,
-      };
 }

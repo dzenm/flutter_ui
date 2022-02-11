@@ -6,21 +6,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_ui/base/log/handle_error.dart';
-import 'package:flutter_ui/base/models/local_model.dart';
+import 'package:flutter_ui/base/res/local_model.dart';
 import 'package:flutter_ui/base/res/colors.dart';
 import 'package:flutter_ui/base/res/strings.dart';
-import 'package:flutter_ui/pages/login/login_page.dart';
-import 'package:flutter_ui/pages/main/main_page.dart';
 import 'package:flutter_ui/utils/sp_util.dart';
 import 'package:provider/provider.dart';
 
 import 'base/log/log.dart';
 import 'base/widgets/will_pop_view.dart';
+import 'pages/login/login_page.dart';
 import 'pages/main/home_page/home_model.dart';
 import 'pages/main/main_model.dart';
+import 'pages/main/main_page.dart';
 import 'pages/main/me_page/me_model.dart';
+import 'pages/main/nav_page/nav_model.dart';
 
 void main() => Application.getInstance.init();
 
@@ -67,25 +67,25 @@ class Application {
 
     // 运行flutter时全局异常捕获
     await HandleError().catchFlutterError(
-      () => _runMaterialApp(
-        WillPopView(behavior: BackBehavior.background, child: _getFirstPage()),
-      ),
+      () => _runMyApp(WillPopView(behavior: BackBehavior.background, child: _getFirstPage())),
     );
   }
 
   /// 运行第一个页面，设置最顶层的共享数据
-  Future _runMaterialApp(Widget child) async {
+  Future _runMyApp(Widget child) async {
     runApp(MultiProvider(
       // 共享状态管理
       providers: [
         ChangeNotifierProvider(create: (context) => LocalModel()),
         ChangeNotifierProvider(create: (context) => MainModel()),
         ChangeNotifierProvider(create: (context) => HomeModel()),
+        ChangeNotifierProvider(create: (context) => NavModel()),
         ChangeNotifierProvider(create: (context) => MeModel()),
       ],
-      // Page必须放在MaterialApp中运行
+      //全局主题、语言设置
       child: Consumer<LocalModel>(builder: (context, res, widget) {
         AppTheme theme = themeModel[res.theme]!;
+        // Page必须放在MaterialApp中运行
         return MaterialApp(
           navigatorKey: navigatorKey,
           debugShowCheckedModeBanner: false,
@@ -110,12 +110,9 @@ class Application {
           initialRoute: '/',
           // 设置语言，读取LocalModel的值，改变LocalModel的locale值会通过provider刷新页面
           locale: res.locale,
-          localizationsDelegates: [
-            S.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
+          // 国际化的Widget
+          localizationsDelegates: S.localizationsDelegates,
+          // 国际化语言包
           supportedLocales: S.supportedLocales,
           builder: BotToastInit(),
           navigatorObservers: [BotToastNavigatorObserver()],
