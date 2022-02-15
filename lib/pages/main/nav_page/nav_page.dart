@@ -5,7 +5,6 @@ import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/base/widgets/keyboard/keyboard_main.dart';
-import 'package:flutter_ui/pages/main/nav_page/nav_model.dart';
 
 import 'city_page/city_page.dart';
 import 'convert_page/convert_page.dart';
@@ -13,6 +12,7 @@ import 'drag_list_page/drag_list_page.dart';
 import 'float_navigation_page/float_navigation_page.dart';
 import 'http_page/http_page.dart';
 import 'list_page/list_page.dart';
+import 'load_image_page/load_image_page.dart';
 import 'qr_page/qr_page.dart';
 import 'setting_page/setting_page.dart';
 import 'state_page/state_page.dart';
@@ -31,10 +31,6 @@ class NavPage extends StatefulWidget {
 
 class _NavPageState extends State<NavPage> with AutomaticKeepAliveClientMixin {
   static const String _TAG = 'NavPage';
-
-  List<String> _titles = [];
-  List<String> _images = [];
-  List<String> _urls = [];
 
   @override
   bool get wantKeepAlive => true;
@@ -180,7 +176,12 @@ class _NavPageState extends State<NavPage> with AutomaticKeepAliveClientMixin {
         onPressed: () => NativeChannels.startHomeActivity(),
       ),
       SizedBox(height: 8),
-      Text(NavModel.of.value),
+      MaterialButton(
+        child: _text(S.of(context).loadImage),
+        textColor: Colors.white,
+        color: Colors.blue,
+        onPressed: () => RouteManager.push(LoadImagePage()),
+      ),
       SizedBox(height: 16),
     ];
   }

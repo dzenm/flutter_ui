@@ -11,60 +11,65 @@ import 'package:flutter_ui/base/widgets/state_view.dart';
 import 'package:lpinyin/lpinyin.dart';
 
 class CitySelectedPage extends StatefulWidget {
+  CitySelectedPage();
+
   @override
   State<StatefulWidget> createState() => _CitySelectedPageState();
 }
 
 class _CitySelectedPageState extends State<CitySelectedPage> {
-  List<CityModel> cityList = [];
-  List<CityModel> _hotCityList = [];
+  static const String _TOP = '↑';
+  static const String _STAR = '★';
+  static const String _END = '#';
+
+  List<CityModel> _cityList = [];
+  List<CityModel> _hotCityList = [
+    CityModel(name: '北京市', tagIndex: _STAR),
+    CityModel(name: '广州市', tagIndex: _STAR),
+    CityModel(name: '成都市', tagIndex: _STAR),
+    CityModel(name: '深圳市', tagIndex: _STAR),
+    CityModel(name: '杭州市', tagIndex: _STAR),
+    CityModel(name: '武汉市', tagIndex: _STAR),
+  ];
   StateController _controller = StateController();
 
   @override
   void initState() {
     super.initState();
-    _hotCityList.add(CityModel(name: '北京市', tagIndex: '★'));
-    _hotCityList.add(CityModel(name: '广州市', tagIndex: '★'));
-    _hotCityList.add(CityModel(name: '成都市', tagIndex: '★'));
-    _hotCityList.add(CityModel(name: '深圳市', tagIndex: '★'));
-    _hotCityList.add(CityModel(name: '杭州市', tagIndex: '★'));
-    _hotCityList.add(CityModel(name: '武汉市', tagIndex: '★'));
-    cityList.addAll(_hotCityList);
-    SuspensionUtil.setShowSuspensionStatus(cityList);
 
     Future.delayed(Duration(milliseconds: 500), () {
       loadData();
     });
   }
 
-  void loadData() {
+  void loadData() async {
     //加载城市列表
-    rootBundle.loadString(Assets.file('china.json')).then((value) {
-      cityList.clear();
+    await rootBundle.loadString(Assets.file('china.json')).then((value) {
+      _cityList.clear();
       Map countyMap = json.decode(value);
       List list = countyMap['china'];
-      list.forEach((v) => cityList.add(CityModel.fromJson(v)));
-      _handleList(cityList);
+      list.forEach((v) => _cityList.add(CityModel.fromJson(v)));
+      _handleCityPinyin(_cityList);
       setState(() => _controller.loadComplete());
     });
   }
 
-  void _handleList(List<CityModel> list) {
+  void _handleCityPinyin(List<CityModel> list) {
     if (list.isEmpty) return;
     for (int i = 0, length = list.length; i < length; i++) {
       String pinyin = PinyinHelper.getPinyinE(list[i].name);
       String tag = pinyin.substring(0, 1).toUpperCase();
       list[i].namePinyin = pinyin;
-      list[i].tagIndex = RegExp('[A-Z]').hasMatch(tag) ? tag : '#';
+      list[i].tagIndex = RegExp('[A-Z]').hasMatch(tag) ? tag : _END;
     }
     // A-Z sort.
     SuspensionUtil.sortListBySuspensionTag(list);
 
-    // add hotCityList.
-    cityList.insertAll(0, _hotCityList);
+    // add hot_cityList.
+    _cityList.insertAll(0, _hotCityList);
 
     // show sus tag.
-    SuspensionUtil.setShowSuspensionStatus(cityList);
+    SuspensionUtil.setShowSuspensionStatus(_cityList);
 
     setState(() {});
   }
@@ -87,21 +92,21 @@ class _CitySelectedPageState extends State<CitySelectedPage> {
               ),
               Expanded(
                 child: AzListView(
-                  data: cityList,
-                  itemCount: cityList.length,
+                  data: _cityList,
+                  itemCount: _cityList.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return getListItem(cityList[index]);
+                    return getListItem(_cityList[index]);
                   },
                   padding: EdgeInsets.zero,
                   susItemBuilder: (BuildContext context, int index) {
-                    CityModel model = cityList[index];
-                    if ('↑' == model.getSuspensionTag()) {
+                    CityModel model = _cityList[index];
+                    if (_TOP == model.getSuspensionTag()) {
                       return Container();
                     }
-                    return getSusItem(cityList[index].getSuspensionTag());
+                    return getSusItem(_cityList[index].getSuspensionTag());
                   },
                   physics: BouncingScrollPhysics(),
-                  indexBarData: ['↑', '★', ...kIndexBarData],
+                  indexBarData: [_TOP, _STAR, ...kIndexBarData],
                   indexBarOptions: IndexBarOptions(
                     needRebuild: true,
                     ignoreDragCancel: true,
@@ -129,8 +134,8 @@ class _CitySelectedPageState extends State<CitySelectedPage> {
   }
 
   Widget getSusItem(String tag, {double susHeight = 40}) {
-    if (tag == '★') {
-      tag = '★ 热门城市';
+    if (tag == _STAR) {
+      tag = '$_STAR 热门城市';
     }
     return Container(
       height: susHeight,
@@ -139,7 +144,7 @@ class _CitySelectedPageState extends State<CitySelectedPage> {
       color: Color(0xFFF3F4F5),
       alignment: Alignment.centerLeft,
       child: Text(
-        '$tag',
+        tag,
         softWrap: false,
         style: TextStyle(fontSize: 14.0, color: Color(0xFF666666)),
       ),
@@ -150,7 +155,7 @@ class _CitySelectedPageState extends State<CitySelectedPage> {
     return ListTile(
       title: Text(model.name),
       onTap: () {
-        showToast('onItemClick : ${model.name}');
+        showToast('onItemClick : ${model.toString()}');
       },
     );
   }
@@ -172,7 +177,7 @@ class CityModel extends ISuspensionBean {
   Map<String, dynamic> toJson() => {'name': name};
 
   @override
-  String getSuspensionTag() => tagIndex!;
+  String getSuspensionTag() => tagIndex ?? '*';
 
   @override
   String toString() => json.encode(this);
