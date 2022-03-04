@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_ui/base/widgets/keyboard/custom_keyword_board.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 
 typedef DefaultView = Widget Function(int index);
@@ -53,12 +54,29 @@ class _LicenseViewState extends State<LicenseView> {
   Widget build(BuildContext context) {
     return Container(
       height: 50,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: widget.list.length,
-        itemBuilder: (context, index) {
-          return _buildItem(index);
-        },
+      child: Stack(
+        children: [
+          TextField(
+            textAlign: TextAlign.center,
+            keyboardType: CustomKeywordBoard.license,
+            cursorWidth: 0,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              textBaseline: TextBaseline.alphabetic,
+            ),
+            onChanged: (v) {
+              setState(() {});
+            },
+          ),
+          ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: widget.list.length,
+            itemBuilder: (context, index) {
+              return _buildItem(index);
+            },
+          )
+        ],
       ),
     );
   }
@@ -72,9 +90,13 @@ class _LicenseViewState extends State<LicenseView> {
       foreground: Colors.transparent,
       borderRadius: BorderRadius.all(Radius.circular(8)),
       background: widget.controller.select == index ? Colors.grey.shade200 : Colors.white,
-      border: Border.all(color: Colors.grey.shade200),
+      border: Border.all(color: Colors.grey.shade300, width: 0.5),
       margin: EdgeInsets.symmetric(horizontal: 2),
-      onTap: () => setState(() => widget.controller.setSelect(index)),
+      onTap: () {
+        if (widget.controller.select < widget.list.length) {
+          setState(() => widget.controller.setSelect(index));
+        }
+      },
       child: Text(widget.list[index], style: TextStyle(color: Colors.grey.shade400)),
     );
   }

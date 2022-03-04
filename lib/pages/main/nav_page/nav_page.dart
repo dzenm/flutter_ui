@@ -4,13 +4,13 @@ import 'package:flutter_ui/base/channels/native_channels.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
-import 'package:flutter_ui/base/widgets/keyboard/keyboard_main.dart';
 
 import 'city_page/city_page.dart';
 import 'convert_page/convert_page.dart';
 import 'drag_list_page/drag_list_page.dart';
 import 'float_navigation_page/float_navigation_page.dart';
 import 'http_page/http_page.dart';
+import 'keyword_board/keyword_board_page.dart';
 import 'list_page/list_page.dart';
 import 'load_image_page/load_image_page.dart';
 import 'qr_page/qr_page.dart';
@@ -166,7 +166,7 @@ class _NavPageState extends State<NavPage> with AutomaticKeepAliveClientMixin {
         child: _text(S.of(context).keyword),
         textColor: Colors.white,
         color: Colors.blue,
-        onPressed: () => RouteManager.push(main_keyboard()),
+        onPressed: () => RouteManager.push(KeywordBoardPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(

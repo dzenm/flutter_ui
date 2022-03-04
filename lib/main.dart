@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:bot_toast/bot_toast.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -14,6 +13,9 @@ import 'package:flutter_ui/utils/sp_util.dart';
 import 'package:provider/provider.dart';
 
 import 'base/log/log.dart';
+import 'base/widgets/keyboard/keyboard_root.dart';
+import 'base/widgets/keyboard/mocks/mock_binding.dart';
+import 'base/widgets/keyboard/number_keyboard.dart';
 import 'base/widgets/will_pop_view.dart';
 import 'pages/login/login_page.dart';
 import 'pages/main/home_page/home_model.dart';
@@ -45,7 +47,7 @@ class Application {
     Log.d('Application是否单例: ${Application.getInstance == Application()}');
 
     Log.d('初始化 WidgetsFlutterBinding ...');
-    WidgetsFlutterBinding.ensureInitialized();
+    MockBinding.ensureInitialized();
 
     Log.d('初始化 SharedPreferences ...');
     await SpUtil.getInstance.init();
@@ -62,6 +64,7 @@ class Application {
     Log.d('初始化 iOS设置 ...');
     _initIOSSettings();
 
+    NumberKeyboard.register();
     Log.d('结束: ${DateTime.now().millisecondsSinceEpoch}');
     Log.d('═══════════════════════════════ 结束初始化 ════════════════════════════════════');
 
@@ -73,7 +76,7 @@ class Application {
 
   /// 运行第一个页面，设置最顶层的共享数据
   Future _runMyApp(Widget child) async {
-    runApp(MultiProvider(
+    Widget widget = MultiProvider(
       // 共享状态管理
       providers: [
         ChangeNotifierProvider(create: (context) => LocalModel()),
@@ -119,7 +122,9 @@ class Application {
           home: child,
         );
       }),
-    ));
+    );
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    runMockApp(KeyboardRootWidget(child: widget));
   }
 
   /// 初始化阿里云推送

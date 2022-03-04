@@ -122,6 +122,7 @@ dependencies:
   #  url_launcher: ^6.0.3
   #  # Flutter 常用工具类库（本地化 屏幕适配） https://pub.flutter-io.cn/packages/flustars
   #  flustars: ^2.0.1
+  back_button_interceptor: 5.0.0
 
 dev_dependencies:
   flutter_test:

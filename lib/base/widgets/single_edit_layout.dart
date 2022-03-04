@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 
 /// 单行输入框布局
 class SingleEditLayout extends StatefulWidget {
