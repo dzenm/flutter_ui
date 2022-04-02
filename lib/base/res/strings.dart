@@ -39,7 +39,7 @@ class S implements WidgetsLocalizations {
   }
 
   // 语言包
-  Map<String, Map<String, String>> _languageValues = {
+  final Map<String, Map<String, String>> _languageValues = {
     'zh': {
       // 登录注册模块
       // 主页模块
@@ -301,7 +301,6 @@ class GeneratedLocalizationsDelegate extends LocalizationsDelegate<S> {
   /// 当前环境的Locale，是否在我们支持的语言范围
   @override
   bool isSupported(Locale locale) {
-    bool withCountry = true;
     for (Locale supportedLocale in S.supportedLocales) {
       // Language must always match both locales.
       if (supportedLocale.languageCode != locale.languageCode) {
@@ -310,11 +309,6 @@ class GeneratedLocalizationsDelegate extends LocalizationsDelegate<S> {
 
       // If country code matches, return this locale.
       if (supportedLocale.countryCode == locale.countryCode) {
-        return true;
-      }
-
-      // If no country requirement is requested, check if this locale has no country.
-      if (!withCountry && (supportedLocale.countryCode == null || supportedLocale.countryCode!.isEmpty)) {
         return true;
       }
     }

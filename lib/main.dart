@@ -5,14 +5,14 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_ui/base/log/handle_error.dart';
-import 'package:flutter_ui/base/res/local_model.dart';
-import 'package:flutter_ui/base/res/colors.dart';
-import 'package:flutter_ui/base/res/strings.dart';
-import 'package:flutter_ui/utils/sp_util.dart';
 import 'package:provider/provider.dart';
 
+import 'base/log/handle_error.dart';
 import 'base/log/log.dart';
+import 'base/model/local_model.dart';
+import 'base/res/colors.dart';
+import 'base/res/strings.dart';
+import 'base/utils/sp_util.dart';
 import 'base/widgets/keyboard/keyboard_root.dart';
 import 'base/widgets/keyboard/mocks/mock_binding.dart';
 import 'base/widgets/keyboard/number_keyboard.dart';
@@ -76,8 +76,53 @@ class Application {
 
   /// 运行第一个页面，设置最顶层的共享数据
   Future _runMyApp(Widget child) async {
-    Widget widget = MultiProvider(
-      // 共享状态管理
+    //全局主题、语言设置
+    Widget consumerApp = Consumer<LocalModel>(builder: (context, res, widget) {
+      // Page必须放在MaterialApp中运行
+      AppTheme theme = themeModel[res.theme]!;
+      // ScreenUtil.setContext(context);
+      return MaterialApp(
+        navigatorKey: navigatorKey,
+        debugShowCheckedModeBanner: false,
+        // 设置主题，读取LocalModel的值，改变LocalModel的theme值会通过provider刷新页面
+        theme: ThemeData(
+          primaryColor: theme.primary,
+          appBarTheme: AppBarTheme(
+            backgroundColor: theme.primary,
+            systemOverlayStyle: SystemUiOverlayStyle.light,
+          ),
+          floatingActionButtonTheme: FloatingActionButtonThemeData(
+            backgroundColor: theme.primary,
+          ),
+          // pageTransitionsTheme: PageTransitionsTheme(
+          //   builders: <TargetPlatform, PageTransitionsBuilder>{
+          //     TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+          //     TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+          //   },
+          // ),
+        ),
+        // 初始路由
+        initialRoute: '/',
+        // 设置语言，读取LocalModel的值，改变LocalModel的locale值会通过provider刷新页面
+        locale: res.locale,
+        // 国际化的Widget
+        localizationsDelegates: S.localizationsDelegates,
+        // 国际化语言包
+        supportedLocales: S.supportedLocales,
+        builder: BotToastInit(),
+        navigatorObservers: [BotToastNavigatorObserver()],
+        home: child,
+      );
+    });
+    // 全局适配屏幕
+    // Widget screenUtilApp = ScreenUtilInit(
+    //   designSize: const Size(414, 896),
+    //   minTextAdapt: true,
+    //   splitScreenMode: true,
+    //   builder: () => consumerApp,
+    // );
+    // 共享状态管理
+    Widget providerApp = MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => LocalModel()),
         ChangeNotifierProvider(create: (context) => MainModel()),
@@ -85,46 +130,10 @@ class Application {
         ChangeNotifierProvider(create: (context) => NavModel()),
         ChangeNotifierProvider(create: (context) => MeModel()),
       ],
-      //全局主题、语言设置
-      child: Consumer<LocalModel>(builder: (context, res, widget) {
-        AppTheme theme = themeModel[res.theme]!;
-        // Page必须放在MaterialApp中运行
-        return MaterialApp(
-          navigatorKey: navigatorKey,
-          debugShowCheckedModeBanner: false,
-          // 设置主题，读取LocalModel的值，改变LocalModel的theme值会通过provider刷新页面
-          theme: ThemeData(
-            primaryColor: theme.primary,
-            scaffoldBackgroundColor: theme.background,
-            appBarTheme: AppBarTheme(
-              brightness: Brightness.dark,
-            ),
-            floatingActionButtonTheme: FloatingActionButtonThemeData(
-              backgroundColor: theme.primary,
-            ),
-            // pageTransitionsTheme: PageTransitionsTheme(
-            //   builders: <TargetPlatform, PageTransitionsBuilder>{
-            //     TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-            //     TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-            //   },
-            // ),
-          ),
-          // 初始路由
-          initialRoute: '/',
-          // 设置语言，读取LocalModel的值，改变LocalModel的locale值会通过provider刷新页面
-          locale: res.locale,
-          // 国际化的Widget
-          localizationsDelegates: S.localizationsDelegates,
-          // 国际化语言包
-          supportedLocales: S.supportedLocales,
-          builder: BotToastInit(),
-          navigatorObservers: [BotToastNavigatorObserver()],
-          home: child,
-        );
-      }),
+      child: consumerApp,
     );
     SystemChannels.textInput.invokeMethod('TextInput.hide');
-    runMockApp(KeyboardRootWidget(child: widget));
+    runMockApp(KeyboardRootWidget(child: providerApp));
   }
 
   /// 初始化阿里云推送

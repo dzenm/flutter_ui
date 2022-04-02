@@ -16,10 +16,13 @@ typedef Failed = void Function(HttpError e);
 
 ApiServices apiServices = ApiClient.getInstance._apiServices;
 
+///
+/// Created by a0010 on 2022/3/22 09:38
 /// HTTP请求
+///
 class ApiClient {
-  static const int _CONNECT_TIMEOUT = 20000;
-  static const int _RECEIVE_TIMEOUT = 20000;
+  static const int _connectTimeout = 20000;
+  static const int _receiveTimeout = 20000;
 
   static final ApiClient getInstance = ApiClient._internal();
 
@@ -37,8 +40,8 @@ class ApiClient {
     token = token ?? '';
 
     Dio dio = Dio(BaseOptions(
-      connectTimeout: _CONNECT_TIMEOUT,
-      receiveTimeout: _RECEIVE_TIMEOUT,
+      connectTimeout: _connectTimeout,
+      receiveTimeout: _receiveTimeout,
       // 不使用http状态码判断状态，使用AdapterInterceptor来处理（适用于标准REST风格）
       validateStatus: (status) => true,
       baseUrl: baseUrl,
@@ -127,47 +130,47 @@ class HttpError {
 /// 异常处理
 class HandleHttpError {
   /// code
-  static const int success_code = 200;
-  static const int success_not_content_code = 204;
+  static const int successCode = 200;
+  static const int successNotContentCode = 204;
 
-  static const int unauthorized_code = 401;
-  static const int forbidden_code = 403;
-  static const int not_found_code = 404;
+  static const int unauthorizedCode = 401;
+  static const int forbiddenCode = 403;
+  static const int notFoundCode = 404;
 
-  static const int socket_error_code = 1001;
-  static const int http_error_code = 1002;
-  static const int parse_error_code = 1003;
-  static const int net_error_code = 1004;
+  static const int socketErrorCode = 1001;
+  static const int httpErrorCode = 1002;
+  static const int parseErrorCode = 1003;
+  static const int netErrorCode = 1004;
 
-  static const int timeout_error_code = 1006;
-  static const int send_error_code = 1007;
-  static const int receive_error_code = 1008;
-  static const int cancel_error_code = 1009;
+  static const int timeoutErrorCode = 1006;
+  static const int sendErrorCode = 1007;
+  static const int receiveErrorCode = 1008;
+  static const int cancelErrorCode = 1009;
 
-  static const int unknown_error_code = 1109;
+  static const int unknownErrorCode = 1109;
 
-  static const int runtime_error_code = 1120;
+  static const int runtimeErrorCode = 1120;
 
   /// msg
-  static const String success_msg = '';
-  static const String success_not_content_msg = '';
-  static const String unauthorized_msg = '未经授权';
-  static const String forbidden_msg = '禁止访问';
-  static const String not_found_msg = '未找到内容';
+  static const String successMsg = '';
+  static const String successNotContentMsg = '';
+  static const String unauthorizedMsg = '未经授权';
+  static const String forbiddenMsg = '禁止访问';
+  static const String notFoundMsg = '未找到内容';
 
-  static const String socket_error_msg = '网络异常，请检查你的网络';
-  static const String http_error_msg = '服务器异常';
-  static const String parse_error_msg = '数据解析错误';
-  static const String net_error_msg = '网络异常，请检查你的网络';
+  static const String socketErrorMsg = '网络异常，请检查你的网络';
+  static const String httpErrorMsg = '服务器异常';
+  static const String parseErrorMsg = '数据解析错误';
+  static const String netErrorMsg = '网络异常，请检查你的网络';
 
-  static const String timeout_error_msg = '连接超时';
-  static const String send_error_msg = '请求超时';
-  static const String receive_error_msg = '响应超时';
-  static const String cancel_error_msg = '取消请求';
+  static const String timeoutErrorMsg = '连接超时';
+  static const String sendErrorMsg = '请求超时';
+  static const String receiveErrorMsg = '响应超时';
+  static const String cancelErrorMsg = '取消请求';
 
-  static const String unknown_error_msg = '未知异常';
+  static const String unknownErrorMsg = '未知异常';
 
-  static const String runtime_error_msg = '运行时的错误';
+  static const String runtimeErrorMsg = '运行时的错误';
 
   // 处理异常
   static HttpError handle({error, int code = 0, String msg = ''}) {
@@ -177,30 +180,27 @@ class HandleHttpError {
       if (error.type == DioErrorType.other || error.type == DioErrorType.response) {
         dynamic e = error.error;
         if (e is SocketException) {
-          return HttpError(socket_error_code, socket_error_msg);
+          return HttpError(socketErrorCode, socketErrorMsg);
+        } else if (e is HttpException) {
+          return HttpError(httpErrorCode, httpErrorMsg);
+        } else if (e is FormatException) {
+          return HttpError(parseErrorCode, parseErrorMsg);
         }
-        if (e is HttpException) {
-          return HttpError(http_error_code, http_error_msg);
-        }
-        if (e is FormatException) {
-          return HttpError(parse_error_code, parse_error_msg);
-        }
-        return HttpError(net_error_code, net_error_msg);
+        return HttpError(netErrorCode, '$netErrorMsg ${error.toString()}');
       } else if (error.type == DioErrorType.connectTimeout) {
-        return HttpError(timeout_error_code, timeout_error_msg);
+        return HttpError(timeoutErrorCode, timeoutErrorMsg);
       } else if (error.type == DioErrorType.sendTimeout) {
-        return HttpError(send_error_code, send_error_msg);
+        return HttpError(sendErrorCode, sendErrorMsg);
       } else if (error.type == DioErrorType.receiveTimeout) {
-        return HttpError(receive_error_code, receive_error_msg);
+        return HttpError(receiveErrorCode, receiveErrorMsg);
       } else if (error.type == DioErrorType.cancel) {
-        return HttpError(cancel_error_code, cancel_error_msg);
-      } else {
-        return HttpError(unknown_error_code, unknown_error_msg);
+        return HttpError(cancelErrorCode, cancelErrorMsg);
       }
+      return HttpError(unknownErrorCode, '$unknownErrorMsg ${error.toString()}');
     } else if (error != null) {
-      return HttpError(runtime_error_code, runtime_error_msg);
+      return HttpError(runtimeErrorCode, '$runtimeErrorMsg ${error.toString()}');
     } else {
-      return HttpError(unknown_error_code, unknown_error_msg);
+      return HttpError(unknownErrorCode, '$unknownErrorMsg ${error.toString()}');
     }
   }
 }

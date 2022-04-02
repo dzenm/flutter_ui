@@ -1,7 +1,7 @@
 import 'package:flutter_ui/base/entities/column_entity.dart';
 import 'package:flutter_ui/base/entities/table_entity.dart';
 import 'package:flutter_ui/base/log/log.dart';
-import 'package:flutter_ui/utils/sp_util.dart';
+import 'package:flutter_ui/base/utils/sp_util.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -12,7 +12,7 @@ typedef UpgradeDatabase = Future<void> Function(Database db, int oldVersion, int
 
 /// 数据库管理，包括打开，关闭，创建，升级，增删改查。
 class DatabaseManager {
-  static const String _TAG = 'DatabaseManager';
+  static const String _tag = 'DatabaseManager';
 
   DatabaseManager._internal();
 
@@ -26,29 +26,33 @@ class DatabaseManager {
   Future<Database> getDatabase({String? dbName}) async {
     if (_database == null) {
       String path = await getPath(dbName: dbName ?? getDBName());
-      _database = await openDatabase(path, version: Sql.DbVersion, onCreate: _onCreate, onUpgrade: _onUpgrade);
+      _database = await openDatabase(path, version: Sql.dbVersion, onCreate: _onCreate, onUpgrade: _onUpgrade);
     }
     return _database!;
   }
 
   /// 当数据库不存在时调用并进行创建, 只在创建第一次时调用
   void _onCreate(Database db, int version) {
-    Log.d('创建数据库 initVersion=$version', tag: _TAG);
+    Log.d('创建数据库 initVersion=$version', tag: _tag);
 
-    Sql.tables.forEach((sql) => _createTable(db, sql: sql));
+    for (String sql in Sql.tables) {
+      _createTable(db, sql: sql);
+    }
   }
 
   /// 当数据库版本变化时调用并进行升级，所有数据库变动均需通过代码更新
   void _onUpgrade(Database db, int oldVersion, int newVersion) {
-    Log.d('升级数据库 oldVersion=$oldVersion, newVersion=$newVersion', tag: _TAG);
+    Log.d('升级数据库 oldVersion=$oldVersion, newVersion=$newVersion', tag: _tag);
 
-    Sql.upgrades.forEach((upgradeDatabase) => upgradeDatabase(db, oldVersion, newVersion));
+    for (UpgradeDatabase upgradeDatabase in Sql.upgrades) {
+      upgradeDatabase(db, oldVersion, newVersion);
+    }
   }
 
   /// 删除数据库
   Future<void> delete() async {
     String path = await getPath();
-    await deleteDatabase(path).then((value) => Log.d('删除数据库成功', tag: _TAG));
+    await deleteDatabase(path).then((value) => Log.d('删除数据库成功', tag: _tag));
   }
 
   /// 关闭数据库
@@ -68,15 +72,15 @@ class DatabaseManager {
   Future<String> getPath({String? dbName}) async {
     String databasesPath = await getDatabasesPath();
     dbName = dbName ?? getDBName();
-    Log.d('数据库路径=$databasesPath, 数据库名称=$dbName', tag: _TAG);
+    Log.d('数据库路径=$databasesPath, 数据库名称=$dbName', tag: _tag);
     return join(databasesPath, dbName);
   }
 
   /// 判断表是否存在
   Future<bool> isTableExist(String tableName, {String? dbName}) async {
     Database db = await getDatabase(dbName: dbName);
-    List list = await db.rawQuery("${Sql.SelectAllTable} AND NAME='$tableName'");
-    return list.length > 0;
+    List list = await db.rawQuery("${Sql.selectAllTable} AND NAME='$tableName'");
+    return list.isNotEmpty;
   }
 
   /// 如果表不存在，进行创建表
@@ -89,14 +93,14 @@ class DatabaseManager {
 
   /// 创建新表, 参数[tableName] 和 [columnString] 通过拼接一起使用, 参数[sql]通过自定义创建新表。
   Future<void> _createTable(Database db, {String? tableName, String? columnString, String? sql}) async {
-    String sqlString = sql ?? '${Sql.CreateTable} $tableName ($columnString)';
-    await db.execute(sqlString).then((value) => Log.d('创建${tableName ?? '新'}表: $sqlString', tag: _TAG));
+    String sqlString = sql ?? '${Sql.createTable} $tableName ($columnString)';
+    await db.execute(sqlString).then((value) => Log.d('创建${tableName ?? '新'}表: $sqlString', tag: _tag));
   }
 
   /// 获取数据库中表的所有列结构的数据
   Future<List<ColumnEntity>> getTableColumn(String dbName, String tableName) async {
     Database db = await getDatabase(dbName: dbName);
-    List list = await db.rawQuery('${Sql.PragmaTable}($tableName)');
+    List list = await db.rawQuery('${Sql.pragmaTable}($tableName)');
     Log.d('查询表列名: $list');
     return list.map((e) => ColumnEntity.fromJson(e)).toList();
   }
@@ -104,7 +108,7 @@ class DatabaseManager {
   /// 获取数据中所有表的数据
   Future<List<TableEntity>> getTableList({String? dbName}) async {
     Database db = await getDatabase(dbName: dbName);
-    List<dynamic> list = await db.rawQuery(Sql.SelectAllTable);
+    List<dynamic> list = await db.rawQuery(Sql.selectAllTable);
     Log.d('查询所有表: $list');
     return list.map((element) => TableEntity.fromJson(element)).toList();
   }
@@ -123,7 +127,7 @@ class DatabaseManager {
       values,
       conflictAlgorithm: conflictAlgorithm ?? ConflictAlgorithm.replace,
     );
-    Log.d('表$tableName新增数据 id=$id, data=$values ', tag: _TAG);
+    Log.d('表$tableName新增数据 id=$id, data=$values ', tag: _tag);
     return id;
   }
 
@@ -147,7 +151,7 @@ class DatabaseManager {
         where: whereString.toString(),
         whereArgs: whereArgs,
       );
-      Log.d('表$tableName 符合 ${params.toString()} 条件共删除数据$count条', tag: _TAG);
+      Log.d('表$tableName 符合 ${params.toString()} 条件共删除数据$count条', tag: _tag);
     }
     return count;
   }
@@ -174,7 +178,7 @@ class DatabaseManager {
       whereArgs: whereArgs,
       conflictAlgorithm: conflictAlgorithm ?? ConflictAlgorithm.replace,
     );
-    Log.d('表$tableName 符合 ${params.toString()} 条件共更新数据$count条', tag: _TAG);
+    Log.d('表$tableName 符合 ${params.toString()} 条件共更新数据$count条', tag: _tag);
     return count;
   }
 
@@ -189,7 +193,7 @@ class DatabaseManager {
 
     if (where == null) {
       list = await db.query(tableName);
-      Log.d('表$tableName查询数据${list.length}条, data=$list', tag: _TAG);
+      Log.d('表$tableName查询数据${list.length}条, data=$list', tag: _tag);
     } else {
       StringBuffer paramsString = StringBuffer();
       StringBuffer whereString = StringBuffer();
@@ -201,7 +205,7 @@ class DatabaseManager {
         where: whereString.toString(),
         whereArgs: whereArgs,
       );
-      Log.d('表$tableName 符合 ${paramsString.toString()} 条件共查询数据${list.length}条, data=$list', tag: _TAG);
+      Log.d('表$tableName 符合 ${paramsString.toString()} 条件共查询数据${list.length}条, data=$list', tag: _tag);
     }
 
     // map转换为List集合

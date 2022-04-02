@@ -1,8 +1,8 @@
 class Assets {
-  static final String imagePath = 'assets/image/';
-  static final String iconPath = 'assets/icon/';
-  static final String videoPath = 'assets/video/';
-  static final String filePath = 'assets/file/';
+  static const String imagePath = 'assets/images/';
+  static const String iconPath = 'assets/icons/';
+  static const String videoPath = 'assets/videos/';
+  static const String filePath = 'assets/files/';
 
   static String image(String imageName) => imagePath + imageName;
 

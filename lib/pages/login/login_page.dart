@@ -6,10 +6,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_ui/base/http/api_client.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
+import 'package:flutter_ui/base/utils/sp_util.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/entities/user_entity.dart';
 import 'package:flutter_ui/pages/main/main_page.dart';
-import 'package:flutter_ui/utils/sp_util.dart';
 
 class LoginPage extends StatefulWidget {
   @override

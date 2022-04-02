@@ -1,7 +1,9 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_ui/base/utils/sp_util.dart';
 import 'package:flutter_ui/main.dart';
-import 'package:flutter_ui/utils/sp_util.dart';
 import 'package:provider/provider.dart';
+
+import '../res/colors.dart';
 
 class LocalModel with ChangeNotifier {
   static LocalModel get of => Provider.of<LocalModel>(Application.context, listen: false);
@@ -10,6 +12,8 @@ class LocalModel with ChangeNotifier {
   String _theme = SpUtil.getTheme();
 
   String get theme => _theme;
+
+  static AppTheme get color => themeModel[LocalModel.of.theme]!;
 
   setTheme(String theme) {
     _theme = theme;

@@ -4,17 +4,17 @@ import 'package:sqflite/sqflite.dart';
 import 'database_manager.dart';
 
 class Sql {
-  static const String _TAG = 'DatabaseManager';
+  static const String _tag = 'DatabaseManager';
 
-  static const DbVersion = 3;
+  static const dbVersion = 3;
 
-  static const String CreateTable = 'CREATE TABLE IF NOT EXISTS';
-  static const String PragmaTable = 'PRAGMA table_info';
-  static const String SelectAllTable = "SELECT * FROM sqlite_master WHERE TYPE='table'";
+  static const String createTable = 'CREATE TABLE IF NOT EXISTS';
+  static const String pragmaTable = 'PRAGMA table_info';
+  static const String selectAllTable = "SELECT * FROM sqlite_master WHERE TYPE='table'";
 
   static const List<String> tables = [
-    CreateBannerTable,
-    CreateArticleTable,
+    createBannerTable,
+    createArticleTable,
   ];
 
   static const List<UpgradeDatabase> upgrades = [
@@ -24,8 +24,8 @@ class Sql {
 
   ///============================== 0 创建表SQL ================================
 
-  static const String CreateBannerTable = '''
-        $CreateTable t_banner(
+  static const String createBannerTable = '''
+        $createTable t_banner(
           id INTEGER PRIMARY KEY NOT NULL, 
           "desc" TEXT, 
           imagePath TEXT, 
@@ -36,8 +36,8 @@ class Sql {
           url TEXT
         );''';
 
-  static const String CreateArticleTable = '''
-        $CreateTable t_article(
+  static const String createArticleTable = '''
+        $createTable t_article(
           id INTEGER PRIMARY KEY NOT NULL, 
           apkLink TEXT,
           audit INTEGER,
@@ -124,7 +124,7 @@ class Sql {
       Batch batch = db.batch();
       batch.execute(sql);
       await batch.commit();
-      Log.d('Database onUpgrade_1_2: $sql', tag: _TAG);
+      Log.d('Database onUpgrade_1_2: $sql', tag: _tag);
     }
   }
 
@@ -135,7 +135,7 @@ class Sql {
       Batch batch = db.batch();
       batch.execute(sql);
       await batch.commit();
-      Log.d('Database onUpgrade_2_3: $sql', tag: _TAG);
+      Log.d('Database onUpgrade_2_3: $sql', tag: _tag);
     }
   }
 }

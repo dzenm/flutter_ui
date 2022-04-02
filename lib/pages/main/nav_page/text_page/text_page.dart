@@ -79,13 +79,25 @@ class _TextPageState extends State<TextPage> {
           appBar: AppBar(
             title: Text('文本和输入框', style: TextStyle(color: Colors.white)),
             actions: [
-              PopupMenuButton<Item>(
+              PopupMenuButton(
                 elevation: 4.0,
                 onSelected: (Item item) {
                   showToast(item.title ?? '');
                 },
                 itemBuilder: (BuildContext context) {
-                  return _items.map((value) => PopupMenuItem<Item>(value: value, child: Text(value.title ?? ''))).toList();
+                  return _items.map((value) {
+                    return PopupMenuItem(
+                      value: value,
+                      child: Row(children: [
+                        SizedBox(
+                          width: 32,
+                          height: 32,
+                          child: Icon(Icons.map),
+                        ),
+                        Text(value.title ?? ''),
+                      ]),
+                    );
+                  }).toList();
                 },
               )
             ],

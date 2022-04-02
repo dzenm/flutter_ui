@@ -6,6 +6,7 @@ import 'package:flutter_ui/base/res/strings.dart';
 
 import 'common_widget.dart';
 import 'tap_layout.dart';
+import 'will_pop_view.dart';
 
 typedef ItemClickCallback = void Function(int index);
 
@@ -144,7 +145,7 @@ void showListBottomSheet(BuildContext context, List<String> items, ItemClickCall
 /// 提示对话框
 void showPromptDialog(
   BuildContext context, {
-  bool isTouchOutsideDismiss = false,
+  bool touchOutsideDismiss = false,
   String? titleString,
   Widget? title,
   Widget? content,
@@ -159,7 +160,7 @@ void showPromptDialog(
     context: context,
     builder: (context) {
       return DialogWrapper(
-        isTouchOutsideDismiss: isTouchOutsideDismiss,
+        touchOutsideDismiss: touchOutsideDismiss,
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           SizedBox(height: content == null ? 36 : 20),
           title ?? Text(titleString ?? '', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
@@ -186,8 +187,9 @@ void showPromptDialog(
 }
 
 /// Dialog设置是否可以点击外部取消显示
-class DialogWrapper extends StatefulWidget {
-  final bool isTouchOutsideDismiss; // 点击弹窗外部，关闭弹窗，默认为true， true：可以关闭 false：不可以关闭
+class DialogWrapper extends StatelessWidget {
+  final bool touchOutsideDismiss; // 点击弹窗外部关闭弹窗，默认为true， true：可以关闭 false：不可以关闭
+  final bool backDismiss; // 点击返回键关闭弹窗，默认为true， true：关闭弹窗 false：不可以关闭弹窗
   final GestureTapCallback? dismissCallback; // 弹窗关闭回调
   final Widget? child;
   final Color color;
@@ -195,7 +197,8 @@ class DialogWrapper extends StatefulWidget {
 
   const DialogWrapper({
     Key? key,
-    this.isTouchOutsideDismiss = false,
+    this.touchOutsideDismiss = false,
+    this.backDismiss = true,
     this.dismissCallback,
     this.child,
     this.color = Colors.white,
@@ -203,35 +206,30 @@ class DialogWrapper extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _DialogWrapperState();
-}
-
-class _DialogWrapperState extends State<DialogWrapper> {
-  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.isTouchOutsideDismiss
-          ? widget.dismissCallback == null
-              ? () => Navigator.of(context).pop()
-              : widget.dismissCallback
-          : null,
-      behavior: HitTestBehavior.opaque,
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Container(
-          alignment: Alignment.center,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ClipRRect(
-                borderRadius: widget.borderRadius,
-                child: Container(
-                  width: MediaQuery.of(context).size.width - 40 * 2,
-                  color: widget.color,
-                  child: widget.child,
-                ),
-              )
-            ],
+    return WillPopView(
+      behavior: BackBehavior.custom,
+      onWillPop: () => Future.value(backDismiss),
+      child: GestureDetector(
+        onTap: touchOutsideDismiss ? dismissCallback ?? () => Navigator.of(context).pop() : null,
+        behavior: HitTestBehavior.opaque,
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          resizeToAvoidBottomInset: false, // 防止软键盘弹出像素溢出
+          body: Container(
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ClipRRect(
+                  borderRadius: borderRadius,
+                  child: Container(
+                    color: color,
+                    child: child,
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

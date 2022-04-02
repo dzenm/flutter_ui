@@ -15,6 +15,8 @@ typedef RunFlutterAPP = void Function();
 /// 处理字符串
 typedef HandleMsg = void Function(String msg);
 
+///
+/// Created by a0010 on 2022/3/22 09:38
 /// 全局处理错误信息
 ///
 /// 在pubspec.yaml添加下列依赖
@@ -93,7 +95,7 @@ class HandleError {
 
   // 处理错误转化为文本信息
   Future<String> _convertErrorToText(dynamic error, StackTrace stackTrace) async {
-    StringBuffer sb = new StringBuffer();
+    StringBuffer sb = StringBuffer();
     await _collectInfo(error, stackTrace, (msg) {
       // 打印在控制台
       Log.e('║$interval$msg');
@@ -104,7 +106,7 @@ class HandleError {
   }
 
   // 收集信息
-  Future<Null> _collectInfo(dynamic error, StackTrace stackTrace, HandleMsg handleMsg) async {
+  Future<void> _collectInfo(dynamic error, StackTrace stackTrace, HandleMsg handleMsg) async {
     // APP信息
     PackageInfo info = await PackageInfo.fromPlatform();
     Map<String, dynamic> appInfo = {

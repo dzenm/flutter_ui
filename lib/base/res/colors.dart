@@ -29,7 +29,7 @@ class GrayTheme extends AppTheme {
   Color get primary => Colors.grey;
 
   @override
-  Color get secondary => super.secondary;
+  Color get secondary => Colors.transparent;
 
   @override
   Color get background => Colors.white;
@@ -40,7 +40,7 @@ class BlueTheme extends AppTheme {
   Color get primary => Colors.blue;
 
   @override
-  Color get secondary => super.secondary;
+  Color get secondary => Colors.transparent;
 
   @override
   Color get background => Colors.white;
@@ -51,7 +51,7 @@ class BlueAccentTheme extends AppTheme {
   Color get primary => Colors.blueAccent;
 
   @override
-  Color get secondary => super.secondary;
+  Color get secondary => Colors.transparent;
 
   @override
   Color get background => Colors.white;
@@ -62,7 +62,7 @@ class CyanTheme extends AppTheme {
   Color get primary => Colors.cyan;
 
   @override
-  Color get secondary => super.secondary;
+  Color get secondary => Colors.transparent;
 
   @override
   Color get background => Colors.white;
@@ -73,7 +73,7 @@ class PurpleTheme extends AppTheme {
   Color get primary => Colors.purple;
 
   @override
-  Color get secondary => super.secondary;
+  Color get secondary => Colors.transparent;
 
   @override
   Color get background => Colors.white;
@@ -84,7 +84,7 @@ class DeepPurpleAccentTheme extends AppTheme {
   Color get primary => Colors.deepPurpleAccent;
 
   @override
-  Color get secondary => super.secondary;
+  Color get secondary => Colors.transparent;
 
   @override
   Color get background => Colors.white;
@@ -95,7 +95,7 @@ class DeepOrangeAccentTheme extends AppTheme {
   Color get primary => Colors.deepOrange;
 
   @override
-  Color get secondary => super.secondary;
+  Color get secondary => Colors.transparent;
 
   @override
   Color get background => Colors.white;
@@ -106,7 +106,7 @@ class GreenTheme extends AppTheme {
   Color get primary => Colors.green;
 
   @override
-  Color get secondary => super.secondary;
+  Color get secondary => Colors.transparent;
 
   @override
   Color get background => Colors.white;
@@ -117,7 +117,7 @@ class OrangeTheme extends AppTheme {
   Color get primary => Colors.orange;
 
   @override
-  Color get secondary => super.secondary;
+  Color get secondary => Colors.transparent;
 
   @override
   Color get background => Colors.orangeAccent;
@@ -128,7 +128,7 @@ class PinkTheme extends AppTheme {
   Color get primary => Colors.pink;
 
   @override
-  Color get secondary => super.secondary;
+  Color get secondary => Colors.transparent;
 
   @override
   Color get background => Colors.orangeAccent;
@@ -139,7 +139,7 @@ class RedTheme extends AppTheme {
   Color get primary => Colors.red;
 
   @override
-  Color get secondary => super.secondary;
+  Color get secondary => Colors.transparent;
 
   @override
   Color get background => Colors.deepOrange;
@@ -150,7 +150,7 @@ class TealTheme extends AppTheme {
   Color get primary => Colors.teal;
 
   @override
-  Color get secondary => super.secondary;
+  Color get secondary => Colors.transparent;
 
   @override
   Color get background => Colors.white;
@@ -161,7 +161,7 @@ class BlackTheme extends AppTheme {
   Color get primary => Colors.black;
 
   @override
-  Color get secondary => super.secondary;
+  Color get secondary => Colors.transparent;
 
   @override
   Color get background => Colors.white;

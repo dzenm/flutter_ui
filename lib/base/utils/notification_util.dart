@@ -1,10 +1,7 @@
-import 'dart:io';
-
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationUtil {
-  static FlutterLocalNotificationsPlugin _notifications = FlutterLocalNotificationsPlugin();
+  static final FlutterLocalNotificationsPlugin _notifications = FlutterLocalNotificationsPlugin();
 
   static Future<void> showNotification({
     String? title,
@@ -12,7 +9,7 @@ class NotificationUtil {
     SelectNotificationCallback? onTap,
   }) async {
     _notifications.initialize(
-      InitializationSettings(
+      const InitializationSettings(
         android: AndroidInitializationSettings('@mipmap/ic_launcher'),
         iOS: IOSInitializationSettings(onDidReceiveLocalNotification: onDidReceiveLocalNotification),
       ),
@@ -22,11 +19,10 @@ class NotificationUtil {
       0,
       title,
       body,
-      NotificationDetails(
+      const NotificationDetails(
         android: AndroidNotificationDetails(
           'id',
           'flutter',
-          'a new notification',
           importance: Importance.max,
           priority: Priority.high,
           ticker: 'ticker',

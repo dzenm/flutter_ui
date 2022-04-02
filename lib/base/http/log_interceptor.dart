@@ -4,9 +4,12 @@ import 'package:dio/dio.dart';
 
 import '../log/log.dart';
 
+///
+/// Created by a0010 on 2022/3/22 09:38
 /// 网络请求[dio.Interceptor], 网络请求信息输出到控制台.
-/// // log interceptor
-//  dio.interceptors.add(LoggerInterceptor());
+/// log interceptor
+/// dio.interceptors.add(LoggerInterceptor());
+///
 class LoggerInterceptor extends Interceptor {
   LoggerInterceptor({
     this.request = true,
@@ -58,6 +61,7 @@ class LoggerInterceptor extends Interceptor {
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+    _handleRequest(options);
     handler.next(options);
   }
 

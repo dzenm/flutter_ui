@@ -45,7 +45,7 @@ class FileUtil {
         await file.create();
       }
       IOSink slink = file.openWrite(mode: FileMode.append);
-      slink.write('$text');
+      slink.write(text);
       slink.close();
       Log.d('保存文件成功: ${file.path}');
       return Future.value(file.path);

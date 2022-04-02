@@ -3,26 +3,30 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_ui/base/log/log.dart';
 
+///
+/// Created by a0010 on 2022/3/22 09:38
+/// 与原生进行通信的通道
+///
 class NativeChannels {
   static const String _TAG = 'NativeChannels';
 
   // 管理返回键操作渠道
-  static const BACK_TO_DESKTOP_CHANNEL = 'android/channel/backToDesktop';
+  static const BACK_TO_DESKTOP_CHANNEL = 'channel/android/backToDesktop';
 
   // 启动服务渠道
-  static const START_VIDEO_SERVICE_SERVICE = 'android/channel/startVideoService';
+  static const START_VIDEO_SERVICE_SERVICE = 'channel/android/startVideoService';
 
   // 启动NaughtyActivity渠道
-  static const START_NAUGHTY_ACTIVITY_CHANNEL = 'android/channel/startNaughtyActivity';
+  static const START_NAUGHTY_ACTIVITY_CHANNEL = 'channel/android/startNaughtyActivity';
 
   // 启动HomeActivity渠道
-  static const START_HOME_ACTIVITY_CHANNEL = 'android/channel/homeActivity';
+  static const START_HOME_ACTIVITY_CHANNEL = 'channel/android/homeActivity';
 
   // 启动NaviDrivingActivity渠道
-  static const START_NAVI_DRIVING_ACTIVITY_CHANNEL = 'android/channel/naviDrivingActivity';
+  static const START_NAVI_DRIVING_ACTIVITY_CHANNEL = 'channel/android/naviDrivingActivity';
 
   // 启动WalkNaviActivity渠道
-  static const START_WALK_NAVI_ACTIVITY_CHANNEL = 'android/channel/walkNaviActivity';
+  static const START_WALK_NAVI_ACTIVITY_CHANNEL = 'channel/android/walkNaviActivity';
 
   // 点击返回键回退到手机桌面而不是结束当前页面
   static Future<bool> onBackToDesktop() async {

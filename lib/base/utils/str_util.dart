@@ -3,7 +3,10 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 
+///
+/// Created by a0010 on 2022/3/22 09:38
 /// 字符串工具类
+///
 class StrUtil {
   /// 获取文件名通过路径或者文件
   static String getFileName(dynamic file) {
@@ -67,7 +70,7 @@ class StrUtil {
       str = message.toString();
     }
     try {
-      return JsonEncoder.withIndent('  ').convert(json.decode(str));
+      return const JsonEncoder.withIndent('  ').convert(json.decode(str));
     } catch (e) {
       return str;
     }

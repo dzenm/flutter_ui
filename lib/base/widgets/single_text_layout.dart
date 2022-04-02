@@ -70,7 +70,7 @@ class _SingleTextLayoutState extends State<SingleTextLayout> {
               if ((widget.icon != null || widget.image != null) && widget.title != null) SizedBox(width: 8),
               // 标题文本
               _titleText(),
-              if (widget.title != null && widget.prefix != null) SizedBox(width: 8),
+              if (widget.prefix != null) SizedBox(width: 8),
               // 前缀布局
               Offstage(offstage: widget.prefix == null, child: widget.prefix),
               if ((widget.icon != null || widget.title != null) && !widget.isDense) SizedBox(width: 16),
@@ -88,18 +88,14 @@ class _SingleTextLayoutState extends State<SingleTextLayout> {
       Offstage(offstage: widget.suffix == null, child: widget.suffix),
       if (widget.suffix != null && widget.isShowForward) SizedBox(width: 8),
       // 小红点
-      BadgeView(count: widget.badgeCount),
+      Offstage(offstage: widget.badgeCount < 0, child: BadgeView(count: widget.badgeCount)),
       // 下一级图标
       _forwardIcon(),
     ]);
   }
 
   Widget _titleIcon() {
-    Widget? child = widget.icon != null
-        ? Icon(widget.icon, color: widget.iconColor, size: widget.fontSize + 4)
-        : widget.image != null
-            ? widget.image
-            : Container();
+    Widget? child = widget.icon != null ? Icon(widget.icon, color: widget.iconColor, size: widget.fontSize + 4) : widget.image ?? Container();
     return Offstage(
       offstage: widget.icon == null && widget.image == null,
       child: child,
@@ -110,7 +106,7 @@ class _SingleTextLayoutState extends State<SingleTextLayout> {
     return Offstage(
       offstage: widget.title == null,
       child: Text(
-        widget.title!,
+        widget.title ?? '',
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: TextStyle(

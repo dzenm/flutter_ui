@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/channels/native_channels.dart';
 
 /// 点击返回时, 存在未保存的内容时弹出的提示框

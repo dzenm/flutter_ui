@@ -1,7 +1,4 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 /// 可点击布局
 class TapLayout extends StatefulWidget {
@@ -72,27 +69,26 @@ class _TapLayoutState extends State<TapLayout> {
     BoxShape shape = widget.isCircle ? BoxShape.circle : BoxShape.rectangle;
     Color? foreground = widget.isRipple && widget.onTap != null ? widget.foreground : Colors.transparent;
 
-    Decoration decoration(Color? color) {
-      return BoxDecoration(
-        color: color,
-        image: widget.decorationImage,
-        border: widget.border,
-        borderRadius: widget.borderRadius,
-        boxShadow: widget.boxShadow,
-        gradient: widget.gradient,
-        shape: shape,
-      );
-    }
-
     return Container(
       width: widget.width,
       height: widget.height,
       margin: widget.margin,
+      // 设置形状
+      clipBehavior: Clip.hardEdge,
+      decoration: BoxDecoration(
+        boxShadow: widget.boxShadow,
+        borderRadius: widget.borderRadius,
+        shape: shape,
+      ),
       child: Material(
         color: Colors.transparent,
         animationDuration: Duration(milliseconds: widget.delay - 100),
         child: Ink(
-          decoration: decoration(widget.background),
+          decoration: BoxDecoration(
+            color: widget.background,
+            gradient: widget.gradient,
+            border: widget.border,
+          ),
           child: InkResponse(
             onTap: () async => Future.delayed(Duration(milliseconds: widget.delay), () {
               if (widget.onTap != null) {
@@ -110,8 +106,12 @@ class _TapLayoutState extends State<TapLayout> {
             containedInkWell: true,
             // 不要在这里设置背景色，否则会遮挡水波纹效果,如果设置的话尽量设置Material下面的color来实现背景色
             child: Container(
+              decoration: BoxDecoration(
+                color: color,
+                image: widget.decorationImage,
+                borderRadius: widget.borderRadius,
+              ),
               // 设置child 居中
-              decoration: decoration(color),
               alignment: widget.alignment,
               padding: widget.padding,
               child: widget.child,
