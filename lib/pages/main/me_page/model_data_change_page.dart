@@ -5,12 +5,12 @@ import 'package:provider/provider.dart';
 ///
 /// Created by a0010 on 2022/3/30 16:41
 ///
-class TestPage extends StatefulWidget {
+class ModelDataChangePage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _TestPageState();
+  State<StatefulWidget> createState() => _ModelDataChangePageState();
 }
 
-class _TestPageState extends State<TestPage> {
+class _ModelDataChangePageState extends State<ModelDataChangePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -37,7 +37,8 @@ dependencies:
   webview_flutter: 3.0.1
   # 城市选择列表 https://pub.flutter-io.cn/packages/azlistview
   azlistview: 2.0.0
-
+  # 输入框扩展 https://pub.flutter-io.cn/packages/extended_text_field
+  extended_text_field: 9.0.3
   #  # 下拉刷新 https://pub.flutter-io.cn/packages/pull_to_refresh
   #  pull_to_refresh: ^1.6.4
   #  # EChart 图表（缩放手势冲突） https://pub.flutter-io.cn/packages/flutter_echarts
@@ -124,6 +125,7 @@ dependencies:
   #  # Flutter 常用工具类库（本地化 屏幕适配） https://pub.flutter-io.cn/packages/flustars
   #  flustars: ^2.0.1
   back_button_interceptor: 5.0.2
+  flutter_html: ^3.0.0-alpha.3
 
 dev_dependencies:
   flutter_test:

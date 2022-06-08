@@ -3,7 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
 
-import 'tab_page.dart';
+import 'medicine_page/chinese_medicine_page.dart';
+import 'model_data_listen_page.dart';
 
 // 我的页面
 class MePage extends StatefulWidget {
@@ -68,6 +69,7 @@ class _MePageState extends State<MePage> with AutomaticKeepAliveClientMixin {
     );
   }
 
+  // 药
   List<Widget> childrenButtons() {
     return [
       SizedBox(height: 16),
@@ -75,7 +77,14 @@ class _MePageState extends State<MePage> with AutomaticKeepAliveClientMixin {
         child: Text('进入下一个页面'),
         textColor: Colors.white,
         color: Colors.blue,
-        onPressed: () => RouteManager.push(TabPage()),
+        onPressed: () => RouteManager.push(ModelDataListenPage()),
+      ),
+      SizedBox(height: 16),
+      MaterialButton(
+        child: Text('中药药方'),
+        textColor: Colors.white,
+        color: Colors.blue,
+        onPressed: () => RouteManager.push(ChineseMedicinePage(medicineName: '金银花',)),
       ),
     ];
   }

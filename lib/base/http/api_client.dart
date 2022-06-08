@@ -14,7 +14,9 @@ typedef Success = void Function(dynamic data);
 
 typedef Failed = void Function(HttpError e);
 
-ApiServices apiServices = ApiClient.getInstance._apiServices;
+ApiServices apiServices = ApiClient.getInstance._api[ApiClient.getInstance._baseUrls[0]]!;
+
+ApiServices api(int index) => ApiClient.getInstance._api[ApiClient.getInstance._baseUrls[index]]!;
 
 ///
 /// Created by a0010 on 2022/3/22 09:38
@@ -26,29 +28,26 @@ class ApiClient {
 
   static final ApiClient getInstance = ApiClient._internal();
 
-  late ApiServices _apiServices;
+  Map<String, ApiServices> _api = {};
+  List<String> _baseUrls = ['https://www.wanandroid.com/', 'http://api.tianapi.com/'];
 
   // 构造方法
   ApiClient._internal() {
-    _createDio();
+    _baseUrls.forEach((url) => _createApiServices(baseUrl: url));
   }
 
-  /// 创建dio
+  /// 创建ApiServices
   /// baseUrl必须使用 "", 不能使用 ''
-  void _createDio({String? baseUrl, String? token}) {
-    baseUrl = baseUrl ?? "https://www.wanandroid.com/";
-    token = token ?? '';
-
+  void _createApiServices({required String? baseUrl}) {
     Dio dio = Dio(BaseOptions(
       connectTimeout: _connectTimeout,
       receiveTimeout: _receiveTimeout,
       // 不使用http状态码判断状态，使用AdapterInterceptor来处理（适用于标准REST风格）
       validateStatus: (status) => true,
-      baseUrl: baseUrl,
+      baseUrl: baseUrl!,
       headers: {
         'Accept': 'application/json,*/*',
         'Content-Type': 'application/json',
-        'token': token,
       },
     ));
 
@@ -63,7 +62,10 @@ class ApiClient {
     // 通过悬浮窗查看Http请求数据
     dio.interceptors.add(HttpInterceptor());
     // dio.interceptors.add(CookieManager(PersistCookieJar()));
-    _apiServices = ApiServices(dio, baseUrl: baseUrl);
+    ApiServices? api = _api[baseUrl];
+    if (api == null) {
+      _api[baseUrl] = ApiServices(dio, baseUrl: baseUrl);
+    }
   }
 
   // 发起http请求

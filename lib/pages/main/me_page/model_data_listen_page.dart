@@ -4,18 +4,17 @@ import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/pages/main/me_page/me_model.dart';
 import 'package:provider/provider.dart';
 
-import 'test_page.dart';
+import 'model_data_change_page.dart';
 
 ///
 /// Created by a0010 on 2022/3/30 16:17
 ///
-
-class TabPage extends StatefulWidget {
+class ModelDataListenPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _TabPageState();
+  State<StatefulWidget> createState() => _ModelDataListenPageState();
 }
 
-class _TabPageState extends State<TabPage> {
+class _ModelDataListenPageState extends State<ModelDataListenPage> {
   static const String _TAG = 'TabPage';
 
   @override
@@ -31,7 +30,7 @@ class _TabPageState extends State<TabPage> {
   }
 
   @override
-  void didUpdateWidget(covariant TabPage oldWidget) {
+  void didUpdateWidget(covariant ModelDataListenPage oldWidget) {
     super.didUpdateWidget(oldWidget);
     Log.d('didUpdateWidget', tag: _TAG);
   }
@@ -72,7 +71,7 @@ class _TabPageState extends State<TabPage> {
         child: Text('进入下一个页面'),
         textColor: Colors.white,
         color: Colors.blue,
-        onPressed: () => RouteManager.push(TestPage()),
+        onPressed: () => RouteManager.push(ModelDataChangePage()),
       ),
       SizedBox(height: 16),
       ParentWidget(),

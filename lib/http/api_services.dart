@@ -32,4 +32,7 @@ abstract class ApiServices {
 
   @GET('banner/json')
   Future<DataEntity> banner();
+
+  @GET('zhongyao/index')
+  Future<DataEntity> getZhongYao(@Query('key') String key, @Query('word') String word, );
 }

@@ -1,4 +1,5 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:extended_text_field/extended_text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/base/log/log.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/base/widgets/badge_view.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/common_widget.dart';
+import 'package:flutter_ui/base/widgets/extend_text/my_special_text_span_builder.dart';
 import 'package:flutter_ui/base/widgets/keyboard/custom_keyword_board.dart';
 import 'package:flutter_ui/base/widgets/keyboard/keyboard_media_query.dart';
 import 'package:flutter_ui/base/widgets/menu_Item.dart';
@@ -128,6 +130,11 @@ class _TextPageState extends State<TextPage> {
                       child: Row(children: [Text(newText, maxLines: 4, style: TextStyle(color: Colors.white))]),
                     ),
                     SizedBox(height: 8),
+                    titleView('输入框的特殊表情: '),
+                    Text('特殊小技巧，试试输入\'[a]\', \'[b]\', \'[c]\', \'[d]\', \'[e]\'', style: TextStyle(fontSize: 10),),
+                    ExtendedTextField(
+                      specialTextSpanBuilder: MySpecialTextSpanBuilder(showAtBackground: true, type: BuilderType.extendedTextField),
+                    ),
                     divider(),
                     SizedBox(height: 24),
                     titleView('自适应宽度使用: '),
