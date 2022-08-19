@@ -16,10 +16,19 @@ class _VlcVideoPageState extends State<VlcVideoPage> {
 
     // _controller = VlcPlayerController.network(
     //   'https://media.w3.org/2010/05/sintel/trailer.mp4',
-    //   hwAcc: HwAcc.FULL,
+    //   hwAcc: HwAcc.full,
     //   autoPlay: true,
     //   options: VlcPlayerOptions(),
     // );
+    // _controller = VlcPlayerController.asset(
+    //   Assets.video('butterfly.mp4'),
+    //   hwAcc: HwAcc.full,
+    //   autoPlay: false,
+    //   options: VlcPlayerOptions(),
+    // );
+    // _controller?.addListener(() {
+    //   Log.d('视频播放状态: ${_controller?.value.playingState}');
+    // });
   }
 
   @override
@@ -35,21 +44,21 @@ class _VlcVideoPageState extends State<VlcVideoPage> {
       appBar: AppBar(
         title: Text(S.of(context).vlcVideoPlay, style: TextStyle(color: Colors.white)),
       ),
-      body: Container(
-        alignment: Alignment.center,
-        // child: VlcPlayer(
-        //   controller: _controller!,
-        //   aspectRatio: 16 / 9,
-        //   placeholder: Center(
-        //     child: Stack(
-        //       children: [
-        //         Image.asset(Assets.image('a.png')),
-        //         CircularProgressIndicator(),
-        //       ],
-        //     ),
-        //   ),
-        // ),
-      ),
+      // body: Container(
+      //   alignment: Alignment.center,
+      //   child: VlcPlayer(
+      //     controller: _controller!,
+      //     aspectRatio: 16 / 9,
+      //     placeholder: Center(
+      //       child: Stack(
+      //         children: [
+      //           Image.asset(Assets.image('a.jpg')),
+      //           CircularProgressIndicator(),
+      //         ],
+      //       ),
+      //     ),
+      //   ),
+      // ),
     );
   }
 }

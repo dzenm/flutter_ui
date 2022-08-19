@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ui/base/http/api_client.dart';
@@ -125,7 +124,6 @@ class _LoginPageState extends State<LoginPage> {
       SpUtil.setUsername(user.username);
       SpUtil.setUserId(user.id.toString());
       SpUtil.setToken(user.token);
-
       _pushMainPage();
     });
   }

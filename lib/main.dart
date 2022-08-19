@@ -68,6 +68,7 @@ class Application {
     Log.d('结束: ${DateTime.now().millisecondsSinceEpoch}');
     Log.d('═══════════════════════════════ 结束初始化 ════════════════════════════════════');
 
+
     // 运行flutter时全局异常捕获
     await HandleError().catchFlutterError(
       () => _runMyApp(WillPopView(behavior: BackBehavior.background, child: _getFirstPage())),

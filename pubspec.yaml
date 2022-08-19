@@ -74,10 +74,13 @@ dependencies:
   photo_view: 0.13.0
   # 图片缓存 [最新版3.2.0 https://pub.flutter-io.cn/packages/cached_network_image ]
   cached_network_image: 3.2.0
-  # 视频播放 [最新版2.3.0 https://pub.flutter-io.cn/packages/video_player ]
-  video_player: 2.3.0
-  # 视频播放 [最新版0.10.1 https://pub.flutter-io.cn/packages/fijkplayer ]
-  fijkplayer: ^0.10.1
+#  # 视频播放 [最新版2.3.0 https://pub.flutter-io.cn/packages/video_player ]
+#  video_player: 2.3.0
+#  # 视频播放 [最新版0.10.1 https://pub.flutter-io.cn/packages/fijkplayer ]
+#  fijkplayer: ^0.10.1
+#  flutter_vlc_player: ^7.1.5
+  image: ^3.0.0
+  screenshot: ^1.2.3
   ########################################## 文件 ########################################
   # sql https://pub.dev/packages/sqflite
   sqflite: 2.0.2

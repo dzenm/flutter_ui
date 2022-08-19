@@ -15,6 +15,7 @@ import 'package:flutter_ui/base/widgets/keyboard/keyboard_media_query.dart';
 import 'package:flutter_ui/base/widgets/menu_Item.dart';
 import 'package:flutter_ui/base/widgets/single_edit_layout.dart';
 import 'package:flutter_ui/base/widgets/single_text_layout.dart';
+import 'package:flutter_ui/base/widgets/slide_verify_view.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/base/widgets/will_pop_view.dart';
 import 'package:flutter_ui/pages/main/me_page/me_model.dart';
@@ -137,6 +138,17 @@ class _TextPageState extends State<TextPage> {
                     ),
                     divider(),
                     SizedBox(height: 24),
+                    titleView('输入框的特殊表情: '),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                      child: SlideVerifyView(
+                        slideColor: Colors.green,
+                        backgroundColor: Color(0xFFE5E5E5),
+                        borderColor: Color(0xFFE5E5E5),
+                        onChanged: () async => showToast('验证成功'),
+                      ),
+                    ),
+                    SizedBox(height: 24),
                     titleView('自适应宽度使用: '),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -168,7 +180,7 @@ class _TextPageState extends State<TextPage> {
                     TapLayout(
                       height: 50.0,
                       padding: EdgeInsets.symmetric(horizontal: 16),
-                      onTap: () => MeModel.of.setValue('new value'),
+                      // onTap: () => MeModel.of.setValue('new value'),
                       child: SingleTextLayout(title: S.of(context).phone, text: '17601487212', isTextLeft: false, isShowForward: true),
                     ),
                     TapLayout(
@@ -242,7 +254,7 @@ class _TextPageState extends State<TextPage> {
                       child: SingleTextLayout(title: S.of(context).loginRecord, summary: '查看最近所有的登录记录', badgeCount: 0, isShowForward: true),
                     ),
                     SizedBox(height: 8),
-                    Text(MeModel.of.value),
+                    // Text(MeModel.of.value),
                     SizedBox(height: 8),
                     TapLayout(
                       height: 48.0,

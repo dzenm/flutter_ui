@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/pages/main/me_page/me_model.dart';
@@ -17,10 +18,15 @@ class ModelDataListenPage extends StatefulWidget {
 class _ModelDataListenPageState extends State<ModelDataListenPage> {
   static const String _TAG = 'TabPage';
 
+  Person? person;
+
   @override
   void initState() {
     super.initState();
     Log.d('initState', tag: _TAG);
+    Future.delayed(Duration.zero, () {
+      person = Provider.of<MeModel>(context, listen: false).persons[0];
+    });
   }
 
   @override
@@ -52,8 +58,8 @@ class _ModelDataListenPageState extends State<ModelDataListenPage> {
     Log.d('page: build', tag: _TAG);
     return Scaffold(
       appBar: AppBar(
-        brightness: Brightness.dark,
         title: Text('测试', style: TextStyle(color: Colors.white)),
+        systemOverlayStyle: SystemUiOverlayStyle.light,
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 16),
@@ -78,17 +84,18 @@ class _ModelDataListenPageState extends State<ModelDataListenPage> {
       SizedBox(height: 16),
       ChildWidget(),
       SizedBox(height: 16),
+      _myWidget(),
+      SizedBox(height: 16),
       MaterialButton(
-        child: Text('初始化'),
+        child: Text('修改数据'),
         textColor: Colors.white,
         color: Colors.blue,
         onPressed: () {
-          context.read<MeModel>().setMap({
-            'parent1': 'parent init',
-            'parent2': 'parent init',
-            'child1': 'child1 init',
-            'child2': 'child2 init',
-          });
+          person?.name = '1.修改后的名字';
+          person?.age = 32;
+          person?.address = '3.修改后的地址';
+          context.read<MeModel>().updatePerson(0, person!);
+          // Provider.of<MeModel>(context, listen: false).updatePerson(0, person!);
         },
       ),
       SizedBox(height: 16),
@@ -97,25 +104,43 @@ class _ModelDataListenPageState extends State<ModelDataListenPage> {
         textColor: Colors.white,
         color: Colors.blue,
         onPressed: () {
-          context.read<MeModel>().setChildValue('child修改数据');
         },
       ),
     ];
   }
+
+  Widget _myWidget() {
+    Log.d('_myWidget widget: build', tag: _TAG);
+    // Person person = Provider.of<MeModel>(context, listen: true).persons[0];
+    return Column(children: [
+      Text('myWidget: ${person?.name}'),
+      SizedBox(width: 16),
+      Text('myWidget: ${person?.address}'),
+      SizedBox(width: 16),
+      Text('myWidget: ${person?.age}'),
+    ]);
+  }
 }
 
 class ParentWidget extends StatefulWidget {
+
   @override
   State<StatefulWidget> createState() => _ParentWidgetState();
 }
 
 class _ParentWidgetState extends State<ParentWidget> {
+
   @override
   Widget build(BuildContext context) {
     Log.d('父widget: build', tag: 'ParentWidget');
-    return Row(children: [
-      Text('父widget1: ${context.select<MeModel, String>((model) => model.entity['parent1'])}'),
-      Text('父widget2: ${context.select<MeModel, String>((model) => model.entity['parent2'])}'),
+    // Person person = Provider.of<MeModel>(context, listen: true).persons[0];
+    Person person = context.watch<MeModel>().persons[0];
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text('父widget: ${person.name}'),
+      SizedBox(width: 16),
+      Text('父widget: ${person.address}'),
+      SizedBox(width: 16),
+      Text('父widget: ${person.age}'),
     ]);
   }
 }
@@ -126,13 +151,27 @@ class ChildWidget extends StatefulWidget {
 }
 
 class _ChildWidgetState extends State<ChildWidget> {
+
+  Person? person;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () {
+      // person = Provider.of<MeModel>(context, listen: true).persons[0];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Log.d('子widget: build', tag: 'ChildWidget');
-    Map<String, dynamic> map = context.select<MeModel, Map<String, dynamic>>((model) => model.entity);
-    return Row(children: [
-      Text('子widget1: ${map['child1']}'),
-      Text('子widget2: ${map['child2']}'),
+    Person person = Provider.of<MeModel>(context, listen: false).persons[0];
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text('子widget: ${person.name}'),
+      SizedBox(width: 16),
+      Text('子widget: ${person.address}'),
+      SizedBox(width: 16),
+      Text('子widget: ${person.age}'),
     ]);
   }
 }

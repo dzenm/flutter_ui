@@ -1,15 +1,12 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter_ui/base/log/log.dart';
+import 'package:flutter_ui/base/utils/sp_util.dart';
 
-import '../log/log.dart';
-
-///
-/// Created by a0010 on 2022/3/22 09:38
 /// 网络请求[dio.Interceptor], 网络请求信息输出到控制台.
-/// log interceptor
-/// dio.interceptors.add(LoggerInterceptor());
-///
+/// // log interceptor
+//  dio.interceptors.add(LoggerInterceptor());
 class LoggerInterceptor extends Interceptor {
   LoggerInterceptor({
     this.request = true,
@@ -18,9 +15,9 @@ class LoggerInterceptor extends Interceptor {
     this.responseHeader = true,
     this.responseBody = true,
     this.error = true,
-    this.isFormat = true,
-    this.isDecorate = true,
-    this.logPrint = Log.d,
+    this.isFormat = false,
+    this.isDecorate = false,
+    this.logPrint,
   });
 
   /// Print request [Options]
@@ -53,44 +50,57 @@ class LoggerInterceptor extends Interceptor {
   ///```dart
   ///  var file=File("./log.txt");
   ///  var sink=file.openWrite();
-  ///  dio.interceptors.add(LogInterceptor(logPrint: sink.writeln));
+  ///  dio.interceptors.add(LoggerInterceptor(logPrint: sink.writeln));
   ///  ...
   ///  await sink.close();
   ///```
-  void Function(Object object) logPrint;
+  void Function(Object object)? logPrint;
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
-    _handleRequest(options);
+    options.headers['authorization'] = SpUtil.getToken();
     handler.next(options);
   }
 
+  // 处理请求配置信息
   void _handleRequest(RequestOptions options) {
-    logPrint('╔══════════════════════════════ Request ═════════════════════════════════════╗');
-    _print('${options.method}  ${options.uri}');
+    bool existRequest = request || requestHeader || requestBody;
+    if (existRequest) {
+      if (isDecorate) {
+        _logPrint('╔══════════════════════════════ Request ═════════════════════════════════════╗');
+      } else {
+        _logPrint('----------------------------------- Request ------------------------------------------');
+      }
+      _print('${options.method}  ${options.uri}');
+    }
 
     //options.headers;
     if (request) {
-      _printKV('responseType', options.responseType.toString());
-      _printKV('maxRedirects', options.maxRedirects);
-      _printKV('listFormat', options.listFormat.toString());
-      _printKV('sendTimeout', options.sendTimeout);
-      _printKV('connectTimeout', options.connectTimeout);
-      _printKV('receiveTimeout', options.receiveTimeout);
-      _printKV('followRedirects', options.followRedirects);
-      _printKV('receiveDataWhenStatusError', options.receiveDataWhenStatusError);
-      _printKV('extra', options.extra);
-      _printKV('queryParameters', options.queryParameters);
+      Map<String, dynamic> map = {
+        'responseType': options.responseType.toString(),
+        'maxRedirects': options.maxRedirects,
+        'listFormat': options.listFormat.toString(),
+        'sendTimeout': options.sendTimeout,
+        'connectTimeout': options.connectTimeout,
+        'receiveTimeout': options.receiveTimeout,
+        'followRedirects': options.followRedirects,
+        'receiveDataWhenStatusError': options.receiveDataWhenStatusError,
+        'extra': options.extra,
+        'queryParameters': options.queryParameters,
+      };
+      _printMap(map);
     }
     if (requestHeader) {
       _print('headers:');
-      options.headers.forEach((key, val) => _printKV('$key', val));
+      _printMap(options.headers);
     }
     if (requestBody) {
       _print('body:');
       _printJson(options.data.toString());
     }
-    logPrint('╚════════════════════════════════════════════════════════════════════════════╝');
+    if (existRequest && isDecorate) {
+      _logPrint('╚════════════════════════════════════════════════════════════════════════════╝');
+    }
   }
 
   @override
@@ -100,24 +110,34 @@ class LoggerInterceptor extends Interceptor {
     handler.next(response);
   }
 
+  // 处理请求响应信息
   void _handleResponse(Response response) {
-    logPrint('╔══════════════════════════════ Response ════════════════════════════════════╗');
-    _print('${response.statusCode}  ${response.requestOptions.uri}  ${response.statusMessage}');
-
+    bool existResponse = responseHeader || responseBody;
+    if (existResponse) {
+      if (isDecorate) {
+        _logPrint('╔══════════════════════════════ Response ════════════════════════════════════╗');
+      } else {
+        _logPrint('----------------------------------- Response -----------------------------------------');
+      }
+      _print('${response.statusCode}  ${response.requestOptions.uri}  ${response.statusMessage}');
+    }
     if (responseHeader) {
       _print('extra: ${response.extra}');
       if (response.isRedirect == true) {
-        _print('redirect: ${response.realUri}');
+        _printMap({'redirect': response.realUri});
       }
-
       _print('headers:');
-      response.headers.forEach((key, val) => _printKV('$key', val.join('\r\n\t')));
+      Map<String, dynamic> headers = {};
+      response.headers.forEach((key, val) => headers['$key'] = val.join('\r\n\t'));
+      _printMap(headers);
     }
     if (responseBody) {
       _print('body:');
       _printJson(response.toString());
     }
-    logPrint('╚════════════════════════════════════════════════════════════════════════════╝');
+    if (existResponse && isDecorate) {
+      _logPrint('╚════════════════════════════════════════════════════════════════════════════╝');
+    }
   }
 
   @override
@@ -126,28 +146,48 @@ class LoggerInterceptor extends Interceptor {
     handler.next(err);
   }
 
+  // 处理请求错误信息
   void _handleError(DioError err) {
     if (error) {
-      logPrint('╔══════════════════════════════ DioError ════════════════════════════════════╗');
-      _print('$err');
-      logPrint('╚════════════════════════════════════════════════════════════════════════════╝');
+      if (isDecorate) {
+        _logPrint('╔══════════════════════════════ DioError ════════════════════════════════════╗');
+      } else {
+        _logPrint('----------------------------------- DioError -----------------------------------------');
+      }
+      _print('${err.message}');
+      if (isDecorate) {
+        _logPrint('╚════════════════════════════════════════════════════════════════════════════╝');
+      }
     }
   }
 
   /// 打印Json字符串
-  void _printJson(String msg) => convert(msg).toString().split('\n').forEach((val) => _print('$interval$val'));
-
-  /// 打印键值对
-  void _printKV(String key, Object? val) => _print('$interval$key: $val');
-
-  void _print(String msg) => logPrint((isDecorate && msg.isNotEmpty ? '║$interval' : '') + msg);
-
-  /// 转成json格式字符串
-  String convert(String msg) {
+  void _printJson(String msg) {
+    String jsonString = msg;
     try {
-      return JsonEncoder.withIndent('  ').convert(json.decode(msg));
+      if (isFormat) {
+        /// 转成json格式字符串
+        jsonString = JsonEncoder.withIndent('  ').convert(json.decode(msg));
+      }
     } catch (e) {
-      return msg;
+      print(e);
+    }
+    List<String> list = jsonString.toString().split('\n');
+    list.forEach((val) => _print('$interval$val'));
+  }
+
+  /// 打印map
+  void _printMap(Map<String, dynamic> map) {
+    map.forEach((key, value) => _print('$interval$key: $value'));
+  }
+
+  /// 打印日志，修饰打印的日志样式
+  void _print(String msg) => _logPrint((isDecorate && msg.isNotEmpty ? '║$interval' : '') + msg);
+
+  // 日志打印
+  void _logPrint(String msg) {
+    if (logPrint != null) {
+      logPrint!(msg);
     }
   }
 }

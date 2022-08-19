@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_ui/base/http/api_client.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/widgets/banner_view.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/entities/article_entity.dart';
 import 'package:flutter_ui/entities/banner_entity.dart';
+import 'package:flutter_ui/models/article_model.dart';
+import 'package:provider/provider.dart';
+import 'package:provider/src/provider.dart';
 
 // 主页面
 class HomePage extends StatefulWidget {
@@ -71,7 +74,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      appBar: AppBar(brightness: Brightness.dark, title: Text(widget._title, style: TextStyle(color: Colors.white))),
+      appBar: AppBar(title: Text(widget._title, style: TextStyle(color: Colors.white)), systemOverlayStyle: SystemUiOverlayStyle.light),
       body: Container(
         child: Column(children: [
           BannerView(
@@ -114,8 +117,8 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     ApiClient.getInstance.request(apiServices.article(number), success: (data) async {
       ArticleEntity bean = ArticleEntity();
 
-      List<ArticleEntity?> list = (data["datas"] as List<dynamic>).map((e) => bean.fromJson(e)).toList();
-      await bean.insert(list);
+      List<ArticleEntity> list = (data["datas"] as List<dynamic>).map((e) => bean.fromJson(e)).toList();
+      context.select<ArticleModel, void>((value) => value.updateArticles(list));
       await bean.where(bean, where: {'chapterName': '鸿洋'});
       await bean.delete(bean, where: {'id': '18744'});
       await bean.where(bean);

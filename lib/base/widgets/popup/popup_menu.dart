@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 
-import 'popup_view.dart';
+import 'popup_dialog.dart';
 
 class PopupMenu extends StatelessWidget {
   final List<Widget> children;
+  final Color? dividerColor;
+  final double? dividerHeight;
 
-  const PopupMenu({Key? key, this.children = const []}) : super(key: key);
+  const PopupMenu({
+    Key? key,
+    this.children = const [],
+    this.dividerColor = Colors.white,
+    this.dividerHeight = 1.0,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,8 +21,8 @@ class PopupMenu extends StatelessWidget {
       shrinkWrap: true,
       itemBuilder: (context, int i) {
         if (i.isOdd) {
-          // 在每一列之前，添加一个1像素高的分隔线widget
-          return const Divider(height: 1.0);
+          // 在每一列之前，添加一个分隔线widget
+          return Divider(height: dividerHeight, color: dividerColor);
         }
         final int index = i ~/ 2;
         return children[index];
@@ -55,9 +62,9 @@ class PopupItemState extends State<PopupItem> {
     List<Widget> widgets = [];
     if (widget.leading != null) {
       widgets.add(Container(
-        padding: const EdgeInsets.only(left: 5.0, right: 5.0),
-        width: 35.0,
-        height: 35.0,
+        padding: const EdgeInsets.all(8),
+        width: 36.0,
+        height: 36.0,
         child: IconTheme(data: const IconThemeData(color: Color(0xff007aff), size: 20.0), child: widget.leading!),
       ));
     }

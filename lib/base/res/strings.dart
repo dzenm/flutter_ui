@@ -71,6 +71,7 @@ class S implements WidgetsLocalizations {
       'vlcVideoPlay': 'Vlc视频播放器',
       'ijkVideoPlay': 'Ijk视频播放器',
       'loadImage': '加载图片',
+      'imageEditor': '图片编辑',
       // 通用文本
       'login': '登录',
       'register': '注册',
@@ -133,6 +134,7 @@ class S implements WidgetsLocalizations {
       'vlcVideoPlay': 'Vlc Video Play',
       'ijkVideoPlay': 'Ijk Video Play',
       'loadImage': 'Load Image',
+      'imageEditor': 'Image Editor',
       // 通用文本
       'login': 'Login',
       'register': 'Register',
@@ -226,6 +228,8 @@ class S implements WidgetsLocalizations {
   String get ijkVideoPlay => _getValues('ijkVideoPlay');
 
   String get loadImage => _getValues('loadImage');
+
+  String get imageEditor => _getValues('imageEditor');
 
   // 通用文本
   String get login => _getValues('login');

@@ -7,30 +7,40 @@ import 'db_base_model.dart';
 
 /// 数据库操作(增删改查), 在model中使用with混入即可。
 class DBDao {
+
+  /// 根据数据库名返回数据库的实例
   Future<Database> get({String? dbName}) async => await DatabaseManager().getDatabase(dbName: dbName);
 
+  /// 删除数据库
   Future<void> drop() async => await DatabaseManager().delete();
 
+  /// 关闭数据库
   Future<void> close() async => await DatabaseManager().close();
 
+  /// 获取数据库名称
   String getDBName() => DatabaseManager().getDBName();
 
+  /// 获取数据库所在的绝对路径
   Future<String> getPath({String? dbName}) async {
     return await DatabaseManager().getPath(dbName: dbName);
   }
 
+  /// 判断数据库中的表是否存在
   Future<bool> isTableExist(String tableName, {String? dbName}) async {
     return await DatabaseManager().isTableExist(tableName, dbName: dbName);
   }
 
+  /// 获取数据库中表每一列的字段名称
   Future<List<ColumnEntity>> getTableColumn(String dbName, String tableName) async {
     return await DatabaseManager().getTableColumn(dbName, tableName);
   }
 
+  /// 获取数据库中的所有表
   Future<List<TableEntity>> getTableList({String? dbName}) async {
     return await DatabaseManager().getTableList(dbName: dbName);
   }
 
+  /// 插入数据
   Future<void> insert<T extends DBBaseModel>(
     dynamic data, {
     ConflictAlgorithm? conflictAlgorithm,
@@ -51,6 +61,7 @@ class DBDao {
     }
   }
 
+  /// 删除数据
   Future<int> delete<T extends DBBaseModel>(
     T? data, {
     Map<String, String>? where,
@@ -62,6 +73,7 @@ class DBDao {
     );
   }
 
+  /// 更新数据
   Future<int> update<T extends DBBaseModel>(
     T? data,
     Map<String, String> where, {
@@ -76,6 +88,7 @@ class DBDao {
     );
   }
 
+  /// 查询数据
   Future<List<DBBaseModel>> where<T extends DBBaseModel>(
     T? data, {
     Map<String, String>? where,

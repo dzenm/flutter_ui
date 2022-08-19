@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_ui/pages/main/me_page/me_model.dart';
 import 'package:provider/provider.dart';
 
@@ -11,12 +12,14 @@ class ModelDataChangePage extends StatefulWidget {
 }
 
 class _ModelDataChangePageState extends State<ModelDataChangePage> {
+  Person? person;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        brightness: Brightness.dark,
         title: Text('测试', style: TextStyle(color: Colors.white)),
+        systemOverlayStyle: SystemUiOverlayStyle.light,
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 16),
@@ -28,6 +31,7 @@ class _ModelDataChangePageState extends State<ModelDataChangePage> {
   }
 
   List<Widget> childrenButtons() {
+    person = context.read<MeModel>().persons[0];
     return [
       SizedBox(height: 16),
       MaterialButton(
@@ -35,7 +39,10 @@ class _ModelDataChangePageState extends State<ModelDataChangePage> {
         textColor: Colors.white,
         color: Colors.blue,
         onPressed: () {
-          context.read<MeModel>().setChildValue('child init');
+          person?.name = '修改后的名字';
+          person?.age = 30;
+          person?.address = '修改后的地址';
+          context.read<MeModel>().updatePerson(0, person!);
         },
       ),
     ];

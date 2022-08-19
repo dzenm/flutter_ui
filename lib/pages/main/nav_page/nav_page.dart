@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/channels/native_channels.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
+import 'package:flutter_ui/base/widgets/popup/popup_dialog.dart';
 
 import 'city_page/city_page.dart';
 import 'convert_page/convert_page.dart';
 import 'drag_list_page/drag_list_page.dart';
 import 'float_navigation_page/float_navigation_page.dart';
 import 'http_page/http_page.dart';
+import 'image_editor/image_editor_page.dart';
 import 'keyword_board/keyword_board_page.dart';
 import 'list_page/list_page.dart';
 import 'load_image_page/load_image_page.dart';
@@ -182,11 +183,41 @@ class _NavPageState extends State<NavPage> with AutomaticKeepAliveClientMixin {
         color: Colors.blue,
         onPressed: () => RouteManager.push(LoadImagePage()),
       ),
+      SizedBox(height: 8),
+      PopupView(
+        direction: PopupDirection.leftTop,
+        onTap: () => true,
+        margin: const EdgeInsets.symmetric(horizontal: 12),
+        width: MediaQuery.of(context).size.width,
+        elevation: 5,
+        boxShadow: const [
+          BoxShadow(
+              color: Colors.black12, blurRadius: 5.0, offset: Offset(2.0, 2.0))
+        ],
+        barrierColor: const Color(0x01FFFFFF),
+        child: MaterialButton(
+          child: _text(S.of(context).imageEditor),
+          textColor: Colors.white,
+          color: Colors.blue,
+          onPressed: () => RouteManager.push(ImageEditorPage()),
+        ),
+        popupDialogBuilder: (context) {
+          return Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(4)),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: Text('PopupWindow 测试'),
+          );
+        },
+      ),
       SizedBox(height: 16),
     ];
   }
 
   Widget _text(String text) {
-    return Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text(text)]);
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.center, children: [Text(text)]);
   }
 }
