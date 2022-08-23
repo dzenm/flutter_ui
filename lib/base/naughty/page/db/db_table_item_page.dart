@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/db/database_manager.dart';
 import 'package:flutter_ui/base/entities/column_entity.dart';
 import 'package:flutter_ui/base/widgets/state_view.dart';

@@ -1,76 +1,87 @@
 import 'package:flutter_ui/base/log/log.dart';
-import 'package:sqflite/sqflite.dart';
 
 import 'database_manager.dart';
 
 class Sql {
   static const String _tag = 'DatabaseManager';
 
-  static const dbVersion = 3;
+  /// 数据库版本
+  static const dbVersion = 4;
 
+  /// 常用数据库语句
   static const String createTable = 'CREATE TABLE IF NOT EXISTS';
   static const String pragmaTable = 'PRAGMA table_info';
   static const String selectAllTable = "SELECT * FROM sqlite_master WHERE TYPE='table'";
 
-  static const List<String> tables = [
+  /// 创建数据表的语句
+  static const List<String> createTables = [
     createBannerTable,
     createArticleTable,
   ];
 
+  /// 更新数据库的语句
   static const List<UpgradeDatabase> upgrades = [
     _onUpgrade_1_2,
     _onUpgrade_2_3,
+    _onUpgrade_3_4,
   ];
 
   ///============================== 0 创建表SQL ================================
 
-  static const String createBannerTable = '''
-        $createTable t_banner(
-          id INTEGER PRIMARY KEY NOT NULL, 
-          "desc" TEXT, 
-          imagePath TEXT, 
-          isVisible INTEGER, 
-          "order" INTEGER, 
-          title TEXT, 
-          type INTEGER, 
-          url TEXT
-        );''';
+  static const String createUserTable = '''$createTable t_user(
+    id INTEGER PRIMARY KEY NOT NULL, 
+    username TEXT, 
+    password TEXT, 
+    sex INTEGER, 
+    age INTEGER, 
+    address TEXT
+  );''';
 
-  static const String createArticleTable = '''
-        $createTable t_article(
-          id INTEGER PRIMARY KEY NOT NULL, 
-          apkLink TEXT,
-          audit INTEGER,
-          author TEXT,
-          canEdit BIT,
-          chapterId INTEGER,
-          chapterName TEXT,
-          collect BIT,
-          courseId INTEGER,
-          "desc" TEXT,
-          descMd TEXT,
-          envelopePic TEXT,
-          fresh BIT,
-          host TEXT,
-          link TEXT,
-          niceDate TEXT,
-          niceShareDate TEXT,
-          origin TEXT,
-          prefix TEXT,
-          projectLink TEXT,
-          publishTime INTEGER,
-          realSuperChapterId INTEGER,
-          selfVisible INTEGER,
-          shareDate INTEGER,
-          shareUser TEXT,
-          superChapterId INTEGER,
-          superChapterName TEXT,
-          title TEXT,
-          type INTEGER,
-          userId INTEGER,
-          visible INTEGER,
-          zan INTEGER
-        );''';
+  static const String createBannerTable = '''$createTable t_banner(
+    id INTEGER PRIMARY KEY NOT NULL, 
+    "desc" TEXT, 
+    imagePath TEXT, 
+    isVisible INTEGER, 
+    "order" INTEGER, 
+    title TEXT, 
+    type INTEGER, 
+    url TEXT
+  );''';
+
+  static const String createArticleTable = '''$createTable t_article(
+    id INTEGER PRIMARY KEY NOT NULL, 
+    apkLink TEXT,
+    audit INTEGER,
+    author TEXT,
+    canEdit BIT,
+    chapterId INTEGER,
+    chapterName TEXT,
+    collect BIT,
+    courseId INTEGER,
+    "desc" TEXT,
+    descMd TEXT,
+    envelopePic TEXT,
+    fresh BIT,
+    host TEXT,
+    link TEXT,
+    niceDate TEXT,
+    niceShareDate TEXT,
+    origin TEXT,
+    prefix TEXT,
+    projectLink TEXT,
+    publishTime INTEGER,
+    realSuperChapterId INTEGER,
+    selfVisible INTEGER,
+    shareDate INTEGER,
+    shareUser TEXT,
+    superChapterId INTEGER,
+    superChapterName TEXT,
+    title TEXT,
+    type INTEGER,
+    userId INTEGER,
+    visible INTEGER,
+    zan INTEGER
+  );''';
 
   ///============================== 1 升级数据库 ===============================
   // – 修改表名
@@ -118,24 +129,31 @@ class Sql {
   // – ALTER TABLE t_test ADD INDEX index_name ( a, b, c )
 
   // 数据库版本1升级到版本2
-  static Future<void> _onUpgrade_1_2(Database db, int oldVersion, int newVersion) async {
+  static String? _onUpgrade_1_2(int oldVersion, int newVersion) {
     if (newVersion > 1 && oldVersion <= 1) {
-      String sql = 'ALTER TABLE t_banner ADD content TEXT DEFAULT ""';
-      Batch batch = db.batch();
-      batch.execute(sql);
-      await batch.commit();
-      Log.d('Database onUpgrade_1_2: $sql', tag: _tag);
+      Log.i('Database onUpgrade_1_2: $createUserTable', tag: _tag);
+      return createUserTable;
     }
+    return null;
   }
 
   // 数据库版本2升级到版本3
-  static Future<void> _onUpgrade_2_3(Database db, int oldVersion, int newVersion) async {
+  static String? _onUpgrade_2_3(int oldVersion, int newVersion) {
     if (newVersion > 2 && oldVersion <= 2) {
       String sql = 'ALTER TABLE t_banner ADD flutter TEXT DEFAULT ""';
-      Batch batch = db.batch();
-      batch.execute(sql);
-      await batch.commit();
-      Log.d('Database onUpgrade_2_3: $sql', tag: _tag);
+      Log.i('Database onUpgrade_2_3: $sql', tag: _tag);
+      return sql;
     }
+    return null;
+  }
+
+  // 数据库版本3升级到版本4
+  static String? _onUpgrade_3_4(int oldVersion, int newVersion) {
+    if (newVersion > 3 && oldVersion <= 4) {
+      String sql = 'ALTER TABLE t_user ADD content TEXT DEFAULT ""';
+      Log.i('Database onUpgrade_3_4: $sql', tag: _tag);
+      return sql;
+    }
+    return null;
   }
 }

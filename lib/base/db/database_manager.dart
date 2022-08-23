@@ -8,7 +8,7 @@ import 'package:sqflite/sqflite.dart';
 import 'db_sql.dart';
 
 /// 数据库升级
-typedef UpgradeDatabase = Future<void> Function(Database db, int oldVersion, int newVersion);
+typedef UpgradeDatabase = String? Function(int oldVersion, int newVersion);
 
 /// 数据库管理，包括打开，关闭，创建，升级，增删改查。
 class DatabaseManager {
@@ -32,47 +32,54 @@ class DatabaseManager {
   }
 
   /// 当数据库不存在时调用并进行创建, 只在创建第一次时调用
-  void _onCreate(Database db, int version) {
-    Log.d('创建数据库 initVersion=$version', tag: _tag);
+  void _onCreate(Database db, int version) async {
+    Log.i('创建数据库 initVersion=$version', tag: _tag);
 
-    for (String sql in Sql.tables) {
-      _createTable(db, sql: sql);
+    // 创建数据表
+    for (String sql in Sql.createTables) {
+      await _createTable(db, sql: sql);
     }
   }
 
   /// 当数据库版本变化时调用并进行升级，所有数据库变动均需通过代码更新
-  void _onUpgrade(Database db, int oldVersion, int newVersion) {
-    Log.d('升级数据库 oldVersion=$oldVersion, newVersion=$newVersion', tag: _tag);
+  void _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    Log.i('升级数据库 oldVersion=$oldVersion, newVersion=$newVersion', tag: _tag);
 
+    Batch batch = db.batch();
     for (UpgradeDatabase upgradeDatabase in Sql.upgrades) {
-      upgradeDatabase(db, oldVersion, newVersion);
+      String? sql = upgradeDatabase(oldVersion, newVersion);
+      if (sql != null) {
+        batch.execute(sql);
+      }
     }
+    await batch.commit();
   }
 
   /// 删除数据库
-  Future<void> delete() async {
+  Future<void> drop() async {
     String path = await getPath();
-    await deleteDatabase(path).then((value) => Log.d('删除数据库成功', tag: _tag));
+    await deleteDatabase(path).then((value) => Log.i('删除数据库成功', tag: _tag));
   }
 
   /// 关闭数据库
   Future<void> close() async {
     // 如果数据库存在，而且数据库没有关闭，关闭数据库
     if (_database != null && _database!.isOpen) {
-      await _database!.close().then((value) => _database = null);
+      await _database?.close().then((value) => _database = null);
+      Log.i('关闭数据库', tag: _tag);
     }
   }
 
   /// 获取数据库名称
   String getDBName() {
-    return "db_${SpUtil.getUserId()}.db";
+    return 'db_${SpUtil.getUserId()}.db';
   }
 
   /// 获取数据库的路径
   Future<String> getPath({String? dbName}) async {
     String databasesPath = await getDatabasesPath();
     dbName = dbName ?? getDBName();
-    Log.d('数据库路径=$databasesPath, 数据库名称=$dbName', tag: _tag);
+    Log.i('数据库路径=$databasesPath, 数据库名称=$dbName', tag: _tag);
     return join(databasesPath, dbName);
   }
 
@@ -94,14 +101,14 @@ class DatabaseManager {
   /// 创建新表, 参数[tableName] 和 [columnString] 通过拼接一起使用, 参数[sql]通过自定义创建新表。
   Future<void> _createTable(Database db, {String? tableName, String? columnString, String? sql}) async {
     String sqlString = sql ?? '${Sql.createTable} $tableName ($columnString)';
-    await db.execute(sqlString).then((value) => Log.d('创建${tableName ?? '新'}表: $sqlString', tag: _tag));
+    await db.execute(sqlString).then((value) => Log.i('创建${tableName ?? '新'}表: $sqlString', tag: _tag));
   }
 
   /// 获取数据库中表的所有列结构的数据
   Future<List<ColumnEntity>> getTableColumn(String dbName, String tableName) async {
     Database db = await getDatabase(dbName: dbName);
     List list = await db.rawQuery('${Sql.pragmaTable}($tableName)');
-    Log.d('查询表列名: $list');
+    Log.i('查询表列名: $list');
     return list.map((e) => ColumnEntity.fromJson(e)).toList();
   }
 
@@ -109,7 +116,7 @@ class DatabaseManager {
   Future<List<TableEntity>> getTableList({String? dbName}) async {
     Database db = await getDatabase(dbName: dbName);
     List<dynamic> list = await db.rawQuery(Sql.selectAllTable);
-    Log.d('查询所有表: $list');
+    Log.i('查询所有表: $list');
     return list.map((element) => TableEntity.fromJson(element)).toList();
   }
 
@@ -127,7 +134,7 @@ class DatabaseManager {
       values,
       conflictAlgorithm: conflictAlgorithm ?? ConflictAlgorithm.replace,
     );
-    Log.d('表$tableName新增数据 id=$id, data=$values ', tag: _tag);
+    Log.i('表$tableName新增数据 id=$id, data=$values ', tag: _tag);
     return id;
   }
 
@@ -151,7 +158,7 @@ class DatabaseManager {
         where: whereString.toString(),
         whereArgs: whereArgs,
       );
-      Log.d('表$tableName 符合 ${params.toString()} 条件共删除数据$count条', tag: _tag);
+      Log.i('表$tableName 符合 ${params.toString()} 条件共删除数据$count条', tag: _tag);
     }
     return count;
   }
@@ -178,7 +185,7 @@ class DatabaseManager {
       whereArgs: whereArgs,
       conflictAlgorithm: conflictAlgorithm ?? ConflictAlgorithm.replace,
     );
-    Log.d('表$tableName 符合 ${params.toString()} 条件共更新数据$count条', tag: _tag);
+    Log.i('表$tableName 符合 ${params.toString()} 条件共更新数据$count条', tag: _tag);
     return count;
   }
 
@@ -193,7 +200,7 @@ class DatabaseManager {
 
     if (where == null) {
       list = await db.query(tableName);
-      Log.d('表$tableName查询数据${list.length}条, data=$list', tag: _tag);
+      Log.i('表$tableName查询数据${list.length}条, data=$list', tag: _tag);
     } else {
       StringBuffer paramsString = StringBuffer();
       StringBuffer whereString = StringBuffer();
@@ -205,7 +212,7 @@ class DatabaseManager {
         where: whereString.toString(),
         whereArgs: whereArgs,
       );
-      Log.d('表$tableName 符合 ${paramsString.toString()} 条件共查询数据${list.length}条, data=$list', tag: _tag);
+      Log.i('表$tableName 符合 ${paramsString.toString()} 条件共查询数据${list.length}条, data=$list', tag: _tag);
     }
 
     // map转换为List集合

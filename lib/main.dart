@@ -5,6 +5,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_ui/models/article_model.dart';
 import 'package:provider/provider.dart';
 
 import 'base/log/handle_error.dart';
@@ -130,6 +131,7 @@ class Application {
         ChangeNotifierProvider(create: (context) => HomeModel()),
         ChangeNotifierProvider(create: (context) => NavModel()),
         ChangeNotifierProvider(create: (context) => MeModel()),
+        ChangeNotifierProvider(create: (context) => ArticleModel()),
       ],
       child: consumerApp,
     );

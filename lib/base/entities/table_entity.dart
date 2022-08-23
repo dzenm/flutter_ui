@@ -1,5 +1,11 @@
 /// 查询表结构
-/// {type: table, name: android_metadata, tbl_name: android_metadata, rootpage: 3, sql: CREATE TABLE android_metadata (locale TEXT)}
+/// {
+///   type: table,
+///   name: android_metadata,
+///   tbl_name: android_metadata,
+///   rootpage: 3,
+///   sql: CREATE TABLE android_metadata (locale TEXT)
+/// }
 class TableEntity {
   String? type;
   String? name;

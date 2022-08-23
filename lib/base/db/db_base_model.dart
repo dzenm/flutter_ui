@@ -12,6 +12,6 @@ abstract class DBBaseModel with DBDao {
   // 将实体类转化为map类型数据
   Map<String, dynamic> toJson();
 
-  // 表名
+  // 表名，获取运行时的当前文件名称，转成小写字母，并将entity后缀删除
   String getTableName() => 't_${runtimeType.toString().toLowerCase().replaceAll('entity', '')}';
 }

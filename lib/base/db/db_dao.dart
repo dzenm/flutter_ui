@@ -9,13 +9,13 @@ import 'db_base_model.dart';
 class DBDao {
 
   /// 根据数据库名返回数据库的实例
-  Future<Database> get({String? dbName}) async => await DatabaseManager().getDatabase(dbName: dbName);
+  Future<Database> getDatabase({String? dbName}) async => await DatabaseManager().getDatabase(dbName: dbName);
 
   /// 删除数据库
-  Future<void> drop() async => await DatabaseManager().delete();
+  Future<void> dropDatabase() async => await DatabaseManager().drop();
 
   /// 关闭数据库
-  Future<void> close() async => await DatabaseManager().close();
+  Future<void> closeDatabase() async => await DatabaseManager().close();
 
   /// 获取数据库名称
   String getDBName() => DatabaseManager().getDBName();

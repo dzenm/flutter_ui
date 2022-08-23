@@ -1,6 +1,12 @@
 /// 数据库表列名
-/// {cid: 0, name: id, type: INTEGER, notnull: 1, dflt_value: null, pk: 1}
-/// {cid: 1, name: desc, type: TEXT, notnull: 0, dflt_value: null, pk: 0}
+/// {
+///   cid: 0,
+///   name: id,
+///   type: INTEGER,
+///   notnull: 1,
+///   dflt_value: null,
+///   pk: 1
+/// },
 class ColumnEntity {
   int? cid;
   String? name;

@@ -118,7 +118,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
       ArticleEntity bean = ArticleEntity();
 
       List<ArticleEntity> list = (data["datas"] as List<dynamic>).map((e) => bean.fromJson(e)).toList();
-      context.select<ArticleModel, void>((value) => value.updateArticles(list));
+      context.read<ArticleModel>().updateArticles(list);
       await bean.where(bean, where: {'chapterName': '鸿洋'});
       await bean.delete(bean, where: {'id': '18744'});
       await bean.where(bean);
