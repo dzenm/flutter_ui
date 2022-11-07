@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/base/entities/page_entity.dart';
-import 'package:flutter_ui/base/http/api_client.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/base/widgets/refresh_list_view.dart';
 import 'package:flutter_ui/base/widgets/state_view.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/entities/article_entity.dart';
+import 'package:flutter_ui/http/http_manager.dart';
+import 'package:flutter_ui/models/article_model.dart';
 import 'package:flutter_ui/pages/common/web_view_page.dart';
+import 'package:provider/provider.dart';
 
 class ListPage extends StatefulWidget {
   @override
@@ -16,9 +16,8 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> {
-  List<ArticleEntity?> articleList = [];
-  int _page = 0; // 加载的页数
   StateController _controller = StateController();
+  int _page = 0; // 加载的页数
 
   @override
   void initState() {
@@ -28,6 +27,7 @@ class _ListPageState extends State<ListPage> {
 
   @override
   Widget build(BuildContext context) {
+    List<ArticleEntity> articleList = context.watch<ArticleModel>().articles;
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).listAndRefresh, style: TextStyle(color: Colors.white)),
@@ -43,7 +43,9 @@ class _ListPageState extends State<ListPage> {
               child: RefreshListView(
                 controller: _controller,
                 itemCount: articleList.length,
-                builder: _renderArticleItem,
+                builder: (BuildContext context, int index) {
+                  return _buildArticleItem(articleList, index);
+                },
                 refresh: _onRefresh,
               ),
             )
@@ -53,8 +55,8 @@ class _ListPageState extends State<ListPage> {
     );
   }
 
-  Widget _renderArticleItem(BuildContext context, int index) {
-    ArticleEntity article = articleList[index] ?? ArticleEntity();
+  Widget _buildArticleItem(List<ArticleEntity> articleList, int index) {
+    ArticleEntity article = articleList[index];
     String title = article.title ?? '';
     return TapLayout(
       onTap: () => RouteManager.push(WebViewPage(title: title, url: article.link ?? '')),
@@ -71,24 +73,21 @@ class _ListPageState extends State<ListPage> {
   void _getArticle({bool isReset = false}) {
     Future.delayed(Duration(milliseconds: isReset ? 500 : 0), () {
       _page = isReset ? 0 : _page;
-      ApiClient.getInstance.request(
-        apiServices.article(_page.toString()),
+      HttpManager.getInstance.getArticleList(
+        page: _page,
         isShowDialog: false,
-        success: (data) {
-          PageEntity pageEntity = PageEntity.fromJson(data);
-          List<ArticleEntity?> list = (data['datas'] as List<dynamic>).map((e) => ArticleEntity.fromJson(e)).toList();
-          setState(() {
-            _controller.loadComplete();
-            if (_page == pageEntity.total) {
-              _controller.loadEmpty();
-            } else {
-              isReset ? articleList = list : articleList.addAll(list);
-              ++_page;
-              _controller.loadMore();
-            }
-          });
+        success: (list, total) {
+          _controller.loadComplete();
+          if (_page == total) {
+            _controller.loadEmpty();
+          } else {
+            context.read<ArticleModel>().updateArticles(list);
+            ++_page;
+            _controller.loadMore();
+          }
+          setState(() {});
         },
-        failed: (e) => setState(() => _controller.loadFailed()),
+        failed: (error) => setState(() => _controller.loadFailed()),
       );
     });
   }

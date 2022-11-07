@@ -1,16 +1,22 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/main.dart';
-import 'package:provider/provider.dart';
 
-class MeModel with ChangeNotifier {
-  static MeModel get of => Provider.of<MeModel>(Application.context, listen: false);
-
+class MeModel extends ChangeNotifier {
   List<Person> persons = [Person('dinzhenyan', 24, 'JiangSu')];
 
   void updatePerson(int index, Person person) {
     persons[index] = person;
     notifyListeners();
   }
+
+  String _ip = 'IP';
+
+  String get ip => _ip;
+
+  void updateIP(String ip) {
+    _ip = ip;
+    notifyListeners();
+  }
+
 }
 
 class Person {

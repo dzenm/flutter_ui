@@ -3,6 +3,8 @@ package com.dzenm.flutter_ui
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import com.dzenm.flutter_ui.study.JavaStudy
+import com.dzenm.flutter_ui.study.KotlinStudy
 import io.flutter.Log
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -96,6 +98,9 @@ class MainActivity : FlutterActivity() {
         val appLinkIntent = intent
         val appLinkAction = appLinkIntent.action
         val appLinkData = appLinkIntent.data
+
+        JavaStudy.main()
+        KotlinStudy.main()
     }
 
     override fun onDestroy() {

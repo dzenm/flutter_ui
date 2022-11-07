@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/http/api_client.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/utils/str_util.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
-import 'package:flutter_ui/base/widgets/wrap_button.dart';
 import 'package:flutter_ui/base/widgets/single_text_layout.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
+import 'package:flutter_ui/base/widgets/wrap_button.dart';
+import 'package:flutter_ui/entities/article_entity.dart';
+import 'package:flutter_ui/http/http_manager.dart';
+import 'package:flutter_ui/models/article_model.dart';
+import 'package:provider/provider.dart';
 
 class HTTPListPage extends StatefulWidget {
   @override
@@ -14,12 +17,13 @@ class HTTPListPage extends StatefulWidget {
 }
 
 class _HTTPListPageState extends State<HTTPListPage> {
-  String _text = '';
   bool isShowDialog = true;
   bool isShowToast = true;
 
   @override
   Widget build(BuildContext context) {
+    List<ArticleEntity> list = context.watch<ArticleModel>().articles;
+    String text = StrUtil.formatToJson(list);
     return Scaffold(
       appBar: AppBar(
         title: Text('HTTP请求', style: TextStyle(color: Colors.white)),
@@ -55,18 +59,6 @@ class _HTTPListPageState extends State<HTTPListPage> {
                       suffix: CupertinoSwitch(value: isShowToast, onChanged: (value) => setState(() => isShowToast = value)),
                     ),
                   ),
-                  TapLayout(
-                    width: MediaQuery.of(context).size.width,
-                    height: 50.0,
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    onTap: () => showToast('下一级'),
-                    child: SingleTextLayout(
-                      title: '进入下一级',
-                      titleColor: Colors.white,
-                      forwardColor: Colors.white,
-                      isShowForward: true,
-                    ),
-                  ),
                 ]),
               ),
             ),
@@ -82,7 +74,7 @@ class _HTTPListPageState extends State<HTTPListPage> {
               SizedBox(width: 16),
               Expanded(
                 child: MaterialButton(
-                  onPressed: () => setState(() => _text = ''),
+                  onPressed: () => context.read<ArticleModel>().clear(),
                   child: Text('清空数据', style: TextStyle(color: Colors.white)),
                   color: Colors.blueGrey,
                 ),
@@ -90,41 +82,30 @@ class _HTTPListPageState extends State<HTTPListPage> {
               ),
             ]),
             SizedBox(height: 16),
-            WrapButton(
-              text: S.of(context).login,
-              margin: EdgeInsets.only(bottom: 10.0),
-              width: 100.0,
-              onTap: () => {showToast('hello')},
-            ),
-            WrapButton(
-              text: S.of(context).register,
-              color: Colors.white,
-              style: TextStyle(fontSize: 15.0, color: Color.fromRGBO(8, 191, 98, 1.0)),
-              margin: EdgeInsets.only(top: 10.0),
-              onTap: () => {},
-              width: 100.0,
-            ),
-            TapLayout(
-              width: MediaQuery.of(context).size.width,
-              height: 50.0,
-              isRipple: false,
-              borderRadius: BorderRadius.all(Radius.circular(16)),
-              background: Colors.red,
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              onTap: () => showToast('下一级'),
-              child: SingleTextLayout(
-                title: '进入下一级',
-                titleColor: Colors.white,
-                forwardColor: Colors.white,
-                isShowForward: true,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                WrapButton(
+                  text: S.of(context).login,
+                  width: 100.0,
+                  onTap: () => {showToast('hello')},
+                ),
+                WrapButton(
+                  text: S.of(context).register,
+                  color: Colors.white,
+                  style: TextStyle(fontSize: 15.0, color: Color.fromRGBO(8, 191, 98, 1.0)),
+                  onTap: () => {},
+                  width: 100.0,
+                ),
+              ],
             ),
             SizedBox(height: 16),
             Expanded(
-                child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: Center(child: Text(_text)),
-            )),
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Center(child: Text(text)),
+              ),
+            ),
           ]),
         ),
       ),
@@ -132,8 +113,13 @@ class _HTTPListPageState extends State<HTTPListPage> {
   }
 
   void _getArticle() {
-    ApiClient.getInstance.request(apiServices.article('0'), isShowDialog: isShowDialog, isShowToast: isShowToast, success: (data) {
-      setState(() => _text = StrUtil.formatToJson(data));
-    });
+    HttpManager.getInstance.getArticleList(
+      page: 0,
+      isShowDialog: isShowDialog,
+      isShowToast: isShowToast,
+      success: (list, total) {
+        context.read<ArticleModel>().updateArticles(list);
+      },
+    );
   }
 }

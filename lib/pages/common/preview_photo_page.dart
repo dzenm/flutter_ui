@@ -5,6 +5,7 @@ import 'package:photo_view/photo_view.dart';
 
 typedef DownloadCallback = void Function(String url);
 
+/// 跳转图片预览页面
 void showPreviewPhotoPage(
   List<String> url, {
   ImageProvider<Object>? imageProvider,

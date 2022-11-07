@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/http/api_client.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/model/local_model.dart';
@@ -19,8 +18,9 @@ import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/entities/user_entity.dart';
 import 'package:flutter_ui/pages/common/preview_photo_page.dart';
 import 'package:flutter_ui/pages/login/login_page.dart';
+import 'package:provider/provider.dart';
 
-import '../nav_model.dart';
+import '../study_model.dart';
 
 /// 设置页面
 class SettingPage extends StatefulWidget {
@@ -32,23 +32,15 @@ class _SettingPageState extends State<SettingPage> {
   static const String _TAG = 'SettingPage';
 
   bool switchState = true;
-  String _colorKey = '';
-  late Locale _locale;
-  late UserEntity _user;
+  UserEntity _user = UserEntity();
 
   @override
   void initState() {
     super.initState();
     Log.d('initState', tag: _TAG);
 
-    _colorKey = LocalModel.of.theme;
-    _locale = LocalModel.of.locale;
     String user = SpUtil.getUser();
-    if (user.length > 0) {
-      _user = UserEntity.fromJson(jsonDecode(user));
-    } else {
-      _user = UserEntity();
-    }
+    _user = UserEntity.fromJson(jsonDecode(user));
   }
 
   @override
@@ -77,6 +69,8 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
+    AppTheme appTheme = context.watch<LocalModel>().appTheme;
+    Locale locale = context.watch<LocalModel>().locale;
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).setting, style: TextStyle(color: Colors.white)),
@@ -87,17 +81,29 @@ class _SettingPageState extends State<SettingPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // 展示用户名
               TapLayout(
                 isRipple: false,
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 onTap: () => showToast(S.of(context).username),
-                child: SingleTextLayout(icon: Icons.person, title: S.of(context).username, text: _user.username, isTextLeft: false, isShowForward: true),
+                child: SingleTextLayout(
+                  icon: Icons.person,
+                  title: S.of(context).username,
+                  text: _user.username,
+                  isTextLeft: false,
+                  isShowForward: true,
+                ),
               ),
+              // 展示用户头像
               TapLayout(
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: () => showPreviewPhotoPage(["https://www.wanandroid.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png", Assets.image('a.jpg'), Assets.image('a.jpg')]),
+                onTap: () => showPreviewPhotoPage([
+                  "https://www.wanandroid.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png",
+                  Assets.image('a.jpg'),
+                  Assets.image('a.jpg'),
+                ]),
                 child: SingleTextLayout(
                   icon: Icons.error,
                   title: S.of(context).avatar,
@@ -109,11 +115,18 @@ class _SettingPageState extends State<SettingPage> {
                   isShowForward: true,
                 ),
               ),
+              // 展示用户ID
               TapLayout(
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: () => NavModel.of.setValue('new value'),
-                child: SingleTextLayout(icon: Icons.phone_android, title: S.of(context).phone, text: _user.id.toString(), isTextLeft: false, isShowForward: true),
+                onTap: () => context.read<StudyModel>().setValue('new value'),
+                child: SingleTextLayout(
+                  icon: Icons.phone_android,
+                  title: S.of(context).phone,
+                  text: _user.id.toString(),
+                  isTextLeft: false,
+                  isShowForward: true,
+                ),
               ),
               TapLayout(
                 height: 50.0,
@@ -141,7 +154,7 @@ class _SettingPageState extends State<SettingPage> {
               TapLayout(
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: _selectedTheme,
+                onTap: () => _selectedTheme(),
                 child: SingleTextLayout(
                   icon: Icons.color_lens,
                   title: S.of(context).theme,
@@ -149,7 +162,7 @@ class _SettingPageState extends State<SettingPage> {
                   suffix: Container(
                     height: 24,
                     width: 24,
-                    color: themeModel[_colorKey]?.primary,
+                    color: appTheme.primary,
                     child: SizedBox(height: 24, width: 24),
                   ),
                 ),
@@ -162,7 +175,7 @@ class _SettingPageState extends State<SettingPage> {
                   icon: Icons.language,
                   title: S.of(context).language,
                   isShowForward: true,
-                  text: _convertLocale(_locale),
+                  text: _convertLocale(locale),
                   isTextLeft: false,
                 ),
               ),
@@ -170,7 +183,7 @@ class _SettingPageState extends State<SettingPage> {
               TapLayout(
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: () => LocalModel.of.setValue('new value'),
+                onTap: () => context.read<LocalModel>().setValue('new value'),
                 child: SingleTextLayout(title: S.of(context).loginRecord, badgeCount: 0, isShowForward: true),
               ),
               TapLayout(
@@ -219,6 +232,7 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   void _selectedTheme() {
+    // String theme = context.watch<LocalModel>().theme;
     showDialog<bool>(
       context: context,
       builder: (context) {
@@ -233,15 +247,15 @@ class _SettingPageState extends State<SettingPage> {
                 Color? value = themeModel[key]?.primary;
                 return InkWell(
                   onTap: () {
-                    setState(() => _colorKey = key);
-                    LocalModel.of.setTheme(key);
+                    context.read<LocalModel>().setTheme(key);
+                    showToast('修改成功');
                     Navigator.pop(context);
                   },
                   child: Container(
                     width: 40,
                     height: 40,
                     color: value,
-                    child: _colorKey == key ? Icon(Icons.done, color: Colors.white) : null,
+                    child: '' == key ? Icon(Icons.done, color: Colors.white) : null,
                   ),
                 );
               }).toList(),
@@ -263,8 +277,8 @@ class _SettingPageState extends State<SettingPage> {
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               child: Text(_convertLocale(value)),
               onPressed: () {
-                setState(() => _locale = value);
-                LocalModel.of.setLocale(value);
+                context.read<LocalModel>().setLocale(value);
+                showToast('修改成功');
                 Navigator.pop(context);
               },
             );
@@ -285,11 +299,7 @@ class _SettingPageState extends State<SettingPage> {
 
   void _logout() {
     ApiClient.getInstance.request(apiServices.logout(), success: (data) {
-      SpUtil.setIsLogin(false);
-      SpUtil.setUserId(null);
-      SpUtil.setToken(null);
-      SpUtil.setUser(null);
-
+      SpUtil.resetUser();
       RouteManager.push(LoginPage(), clearStack: true);
     });
   }

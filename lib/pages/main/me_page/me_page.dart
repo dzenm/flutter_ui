@@ -1,16 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/log/log.dart';
+import 'package:flutter_ui/base/model/local_model.dart';
+import 'package:flutter_ui/base/res/colors.dart';
+import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
+import 'package:flutter_ui/base/utils/device_util.dart';
+import 'package:flutter_ui/base/widgets/single_text_layout.dart';
+import 'package:flutter_ui/base/widgets/tap_layout.dart';
+import 'package:flutter_ui/pages/main/me_page/me_model.dart';
+import 'package:flutter_ui/pages/study/setting_page/setting_page.dart';
+import 'package:flutter_ui/pages/study/study_page.dart';
+import 'package:provider/provider.dart';
 
 import 'medicine_page/chinese_medicine_page.dart';
 import 'model_data_listen_page.dart';
 
 // 我的页面
 class MePage extends StatefulWidget {
-  final String _title;
+  final String title;
 
-  MePage(this._title);
+  MePage({required this.title});
 
   @override
   _MePageState createState() => _MePageState();
@@ -26,6 +35,12 @@ class _MePageState extends State<MePage> with AutomaticKeepAliveClientMixin {
   void initState() {
     super.initState();
     Log.d('initState', tag: _TAG);
+    Future.delayed(Duration.zero, () => getData());
+  }
+
+  void getData() async {
+    String ip = await DeviceUtil.getIP();
+    context.read<MeModel>().updateIP(ip);
   }
 
   @override
@@ -55,37 +70,94 @@ class _MePageState extends State<MePage> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
+    AppTheme? theme = context.watch<LocalModel>().appTheme;
+    double? statusBarHeight = MediaQuery.of(context).padding.top;
+
     return Scaffold(
-      appBar: AppBar(
-        brightness: Brightness.dark,
-        title: Text(widget._title, style: TextStyle(color: Colors.white)),
-      ),
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        child: SingleChildScrollView(
-          child: Column(children: childrenButtons()),
-        ),
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          // toolbar背景色块
+          Column(children: [
+            SizedBox(
+              height: statusBarHeight + kToolbarHeight,
+              child: Container(color: theme.primary),
+            ),
+            Expanded(child: Container(color: theme.divide)),
+          ]),
+          // body
+          SingleChildScrollView(
+            physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()), // 上拉下拉弹簧效果
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: SingleChildScrollView(
+                child: Column(children: childrenButtons(theme, statusBarHeight)),
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
 
   // 药
-  List<Widget> childrenButtons() {
+  List<Widget> childrenButtons(AppTheme? theme, double statusBarHeight) {
+    String ip = context.watch<MeModel>().ip;
     return [
-      SizedBox(height: 16),
-      MaterialButton(
-        child: Text('进入下一个页面'),
-        textColor: Colors.white,
-        color: Colors.blue,
-        onPressed: () => RouteManager.push(ModelDataListenPage()),
-      ),
-      SizedBox(height: 16),
-      MaterialButton(
-        child: Text('中药药方'),
-        textColor: Colors.white,
-        color: Colors.blue,
-        onPressed: () => RouteManager.push(ChineseMedicinePage(medicineName: '金银花',)),
-      ),
+      SizedBox(height: statusBarHeight + 16),
+      Row(children: [
+        Expanded(
+          child: Container(
+            decoration: BoxDecoration(
+              color: theme?.background,
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: Column(children: [
+              SizedBox(height: 16),
+              MaterialButton(
+                child: Text('进入下一个页面'),
+                textColor: theme?.background,
+                color: theme?.primary,
+                onPressed: () => RouteManager.push(ModelDataListenPage()),
+              ),
+              SizedBox(height: 16),
+              MaterialButton(
+                child: Text('药'),
+                textColor: theme?.background,
+                color: theme?.primary,
+                onPressed: () => RouteManager.push(ChineseMedicinePage(
+                  medicineName: '金银花',
+                )),
+              ),
+              Text('$ip'),
+              TapLayout(
+                height: 50.0,
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                onTap: () => RouteManager.push(StudyPage()),
+                child: SingleTextLayout(
+                  icon: Icons.real_estate_agent_sharp,
+                  title: '学习主页',
+                  isTextLeft: false,
+                  isShowForward: true,
+                ),
+              ),
+              TapLayout(
+                height: 50.0,
+                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(5), bottomRight: Radius.circular(5)),
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                onTap: () => RouteManager.push(SettingPage()),
+                child: SingleTextLayout(
+                  icon: Icons.settings,
+                  title: S.of(context).setting,
+                  isTextLeft: false,
+                  isShowForward: true,
+                ),
+              ),
+            ]),
+          ),
+        )
+      ]),
     ];
   }
 }

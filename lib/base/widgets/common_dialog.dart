@@ -1,7 +1,7 @@
+import 'dart:async';
+
 import 'package:bot_toast/bot_toast.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 
 import 'common_widget.dart';
@@ -21,23 +21,30 @@ CancelFunc showToast(String text, {int seconds = 2}) {
 }
 
 /// 加载中对话框
-CancelFunc loadingDialog({String? loadingTxt, bool isVertical = true}) {
+CancelFunc loadingDialog({String? loadingTxt, bool isVertical = true, bool light = false}) {
   loadingTxt ??= S.from.loading;
   List<Widget> widgets = [
-    SizedBox(width: 30, height: 30, child: CircularProgressIndicator(strokeWidth: 2, backgroundColor: Colors.white)),
+    SizedBox(
+      width: 30,
+      height: 30,
+      child: CircularProgressIndicator(strokeWidth: 2, backgroundColor: Colors.white),
+    ),
     SizedBox(width: 20, height: 20),
     Text(loadingTxt, style: TextStyle(color: Colors.white, fontSize: 16)),
   ];
   return BotToast.showCustomLoading(
     align: Alignment.center,
-    backgroundColor: Colors.black26,
+    backgroundColor: light ? Colors.black26 : Colors.transparent,
     ignoreContentClick: true,
     clickClose: false,
     allowClick: false,
     crossPage: false,
     toastBuilder: (_) => Container(
       padding: EdgeInsets.symmetric(vertical: 30, horizontal: 40),
-      decoration: BoxDecoration(color: Colors.black54, borderRadius: BorderRadius.all(Radius.circular(8))),
+      decoration: BoxDecoration(
+        color: Colors.black54,
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+      ),
       child: isVertical
           ? Column(
               mainAxisSize: MainAxisSize.min,
@@ -63,7 +70,13 @@ void showSelectImageBottomSheet(BuildContext context, {Function? onCameraTap, Fu
 }
 
 /// 列表选择对话框
-void showListBottomSheet(BuildContext context, List<String> items, ItemClickCallback? onTap, {double height = 45.0, bool isMaterial = false}) {
+void showListBottomSheet(
+  BuildContext context,
+  List<String> items,
+  ItemClickCallback? onTap, {
+  double height = 45.0,
+  bool isMaterial = false,
+}) {
   List<String> data = [];
   items.forEach((item) => data.add(item));
   if (!isMaterial) data.add('divider');
@@ -217,6 +230,7 @@ class DialogWrapper extends StatelessWidget {
           backgroundColor: Colors.transparent,
           resizeToAvoidBottomInset: false, // 防止软键盘弹出像素溢出
           body: Container(
+            padding: EdgeInsets.symmetric(horizontal: 32),
             alignment: Alignment.center,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

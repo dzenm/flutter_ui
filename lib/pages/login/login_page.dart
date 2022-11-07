@@ -119,7 +119,7 @@ class _LoginPageState extends State<LoginPage> {
     FocusScope.of(context).unfocus();
     ApiClient.getInstance.request(apiServices.login(_username, _password), success: (data) {
       UserEntity user = UserEntity.fromJson(data);
-      SpUtil.setIsLogin(true);
+      SpUtil.setUserLoginState(true);
       SpUtil.setUser(jsonEncode(user));
       SpUtil.setUsername(user.username);
       SpUtil.setUserId(user.id.toString());

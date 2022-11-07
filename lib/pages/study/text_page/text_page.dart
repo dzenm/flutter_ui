@@ -18,8 +18,7 @@ import 'package:flutter_ui/base/widgets/single_text_layout.dart';
 import 'package:flutter_ui/base/widgets/slide_verify_view.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/base/widgets/will_pop_view.dart';
-import 'package:flutter_ui/pages/main/me_page/me_model.dart';
-import 'package:flutter_ui/pages/main/nav_page/setting_page/setting_page.dart';
+import 'package:flutter_ui/pages/study/setting_page/setting_page.dart';
 
 class TextPage extends StatefulWidget {
   @override

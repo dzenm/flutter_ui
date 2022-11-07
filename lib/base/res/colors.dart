@@ -22,6 +22,8 @@ class AppTheme {
   Color get secondary => Colors.transparent;
 
   Color get background => Colors.transparent;
+
+  Color get divide => Colors.transparent;
 }
 
 class GrayTheme extends AppTheme {
@@ -33,6 +35,9 @@ class GrayTheme extends AppTheme {
 
   @override
   Color get background => Colors.white;
+
+  @override
+  Color get divide => Color(0xFFEFEFEF);
 }
 
 class BlueTheme extends AppTheme {
@@ -44,6 +49,9 @@ class BlueTheme extends AppTheme {
 
   @override
   Color get background => Colors.white;
+
+  @override
+  Color get divide => Color(0xFFEFEFEF);
 }
 
 class BlueAccentTheme extends AppTheme {
@@ -55,6 +63,9 @@ class BlueAccentTheme extends AppTheme {
 
   @override
   Color get background => Colors.white;
+
+  @override
+  Color get divide => Color(0xFFEFEFEF);
 }
 
 class CyanTheme extends AppTheme {
@@ -66,6 +77,9 @@ class CyanTheme extends AppTheme {
 
   @override
   Color get background => Colors.white;
+
+  @override
+  Color get divide => Color(0xFFEFEFEF);
 }
 
 class PurpleTheme extends AppTheme {
@@ -77,6 +91,9 @@ class PurpleTheme extends AppTheme {
 
   @override
   Color get background => Colors.white;
+
+  @override
+  Color get divide => Color(0xFFEFEFEF);
 }
 
 class DeepPurpleAccentTheme extends AppTheme {
@@ -88,6 +105,9 @@ class DeepPurpleAccentTheme extends AppTheme {
 
   @override
   Color get background => Colors.white;
+
+  @override
+  Color get divide => Color(0xFFEFEFEF);
 }
 
 class DeepOrangeAccentTheme extends AppTheme {
@@ -99,6 +119,9 @@ class DeepOrangeAccentTheme extends AppTheme {
 
   @override
   Color get background => Colors.white;
+
+  @override
+  Color get divide => Color(0xFFEFEFEF);
 }
 
 class GreenTheme extends AppTheme {
@@ -110,6 +133,9 @@ class GreenTheme extends AppTheme {
 
   @override
   Color get background => Colors.white;
+
+  @override
+  Color get divide => Color(0xFFEFEFEF);
 }
 
 class OrangeTheme extends AppTheme {
@@ -121,6 +147,9 @@ class OrangeTheme extends AppTheme {
 
   @override
   Color get background => Colors.orangeAccent;
+
+  @override
+  Color get divide => Color(0xFFEFEFEF);
 }
 
 class PinkTheme extends AppTheme {
@@ -132,6 +161,9 @@ class PinkTheme extends AppTheme {
 
   @override
   Color get background => Colors.orangeAccent;
+
+  @override
+  Color get divide => Color(0xFFEFEFEF);
 }
 
 class RedTheme extends AppTheme {
@@ -143,6 +175,9 @@ class RedTheme extends AppTheme {
 
   @override
   Color get background => Colors.deepOrange;
+
+  @override
+  Color get divide => Color(0xFFEFEFEF);
 }
 
 class TealTheme extends AppTheme {
@@ -154,6 +189,9 @@ class TealTheme extends AppTheme {
 
   @override
   Color get background => Colors.white;
+
+  @override
+  Color get divide => Color(0xFFEFEFEF);
 }
 
 class BlackTheme extends AppTheme {
@@ -165,4 +203,7 @@ class BlackTheme extends AppTheme {
 
   @override
   Color get background => Colors.white;
+
+  @override
+  Color get divide => Color(0xFFEFEFEF);
 }

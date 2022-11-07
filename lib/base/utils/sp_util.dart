@@ -16,20 +16,31 @@ class SpUtil {
 
   static const String _tag = 'SP数据';
 
-  static const String _userInfo = 'u_user_info';
-
-  static const String _isLogin = 'u_is_login';
+  /// 用户登录相关的信息
+  static const String _userInfo = 'u_info'; // 登录的用户信息
+  static const String _userLoginState = 'u_login_state'; // 登录状态的信息
   static const String _user = 'u_user';
-  static const String _userName = 'u_username';
-  static const String _userId = 'u_user_id';
-  static const String _userToken = 'u_token';
+  static const String _userName = 'u_name'; // 登录的用户名
+  static const String _userId = 'u_id'; // 登录的用户ID
+  static const String _userToken = 'u_token'; // 登录的token信息
 
-  static const String _settingTheme = 's_theme';
-  static const String _settingLocale = 's_locale';
+  /// APP设置相关的信息
+  static const String _settingTheme = 's_theme'; // APP展示的主题
+  static const String _settingLocale = 's_locale'; // APP展示的语言
 
   Future init() async {
     _prefs = await SharedPreferences.getInstance();
     Log.d('初始化 SharedPreferences ${_prefs != null ? '成功' : '失败'}');
+  }
+
+  // 登录状态信息
+  static bool getUserLoginState() {
+    return getBool(_userLoginState);
+  }
+
+  // 保存登录状态信息
+  static void setUserLoginState(bool? isLogin) {
+    setBool(_userLoginState, isLogin);
   }
 
   // 获取用户信息
@@ -42,16 +53,6 @@ class SpUtil {
     setString(_userInfo, user);
   }
 
-  // 是否登录信息
-  static bool getIsLogin() {
-    return getBool(_isLogin);
-  }
-
-  // 保存登录信息
-  static void setIsLogin(bool? isLogin) {
-    setBool(_isLogin, isLogin);
-  }
-
   // 获取用户信息
   static String getUser() {
     return getString(_user);
@@ -62,7 +63,7 @@ class SpUtil {
     setString(_user, user);
   }
 
-// 获取用户名
+  // 获取用户名
   static String getUsername() {
     return getString(_userName);
   }
@@ -90,6 +91,15 @@ class SpUtil {
   // 保存登录用户token
   static void setToken(String? token) {
     setString(_userToken, token);
+  }
+
+  // 重置登录用户信息
+  static void resetUser() {
+    remove(_userInfo);
+    remove(_userLoginState);
+    remove(_user);
+    remove(_userId);
+    remove(_userToken);
   }
 
   // 获取主题样式
@@ -142,5 +152,10 @@ class SpUtil {
 
   static void setBool(String key, bool? value) {
     _prefs?.setBool(key, value ?? false).then((res) => Log.d('$key=$value', tag: _tag));
+  }
+
+  static void remove(String key) {
+    Log.d('remove $key=$key', tag: _tag);
+    _prefs?.remove(key);
   }
 }

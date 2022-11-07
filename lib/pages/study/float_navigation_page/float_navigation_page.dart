@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/widgets/float_navigation_bar.dart';
 
 class FloatNavigationPage extends StatefulWidget {

@@ -12,7 +12,7 @@ import 'log_interceptor.dart';
 
 typedef Success = void Function(dynamic data);
 
-typedef Failed = void Function(HttpError e);
+typedef Failed = void Function(HttpError error);
 
 ApiServices apiServices = ApiClient.getInstance._api[ApiClient.getInstance._baseUrls[0]]!;
 
@@ -29,7 +29,10 @@ class ApiClient {
   static final ApiClient getInstance = ApiClient._internal();
 
   Map<String, ApiServices> _api = {};
-  List<String> _baseUrls = ['https://www.wanandroid.com/', 'http://api.tianapi.com/'];
+  List<String> _baseUrls = [
+    'https://www.wanandroid.com/',
+    'http://api.tianapi.com/',
+  ];
 
   // 构造方法
   ApiClient._internal() {
@@ -58,7 +61,10 @@ class ApiClient {
       };
     };
     // log interceptor
-    dio.interceptors.add(LoggerInterceptor());
+    dio.interceptors.add(LoggerInterceptor(
+      isFormat: true,
+      logPrint: Log.d,
+    ));
     // 通过悬浮窗查看Http请求数据
     dio.interceptors.add(HttpInterceptor());
     // dio.interceptors.add(CookieManager(PersistCookieJar()));
@@ -75,8 +81,9 @@ class ApiClient {
     Failed? failed,
     bool isShowDialog = true,
     bool isShowToast = true,
+    CancelFunc? loading,
   }) async {
-    CancelFunc? cancel = isShowDialog ? loadingDialog() : null;
+    CancelFunc? cancel = isShowDialog ? loading ?? loadingDialog() : null;
     HttpError? error;
     try {
       // 没有网络

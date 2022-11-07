@@ -5,7 +5,6 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_ui/models/article_model.dart';
 import 'package:provider/provider.dart';
 
 import 'base/log/handle_error.dart';
@@ -18,11 +17,15 @@ import 'base/widgets/keyboard/keyboard_root.dart';
 import 'base/widgets/keyboard/mocks/mock_binding.dart';
 import 'base/widgets/keyboard/number_keyboard.dart';
 import 'base/widgets/will_pop_view.dart';
+import 'math_util.dart';
+import 'models/article_model.dart';
+import 'models/banner_model.dart';
 import 'pages/login/login_page.dart';
 import 'pages/main/home_page/home_model.dart';
 import 'pages/main/main_model.dart';
 import 'pages/main/main_page.dart';
 import 'pages/main/me_page/me_model.dart';
+import 'pages/study/study_model.dart';
 import 'pages/main/nav_page/nav_model.dart';
 
 void main() => Application.getInstance.init();
@@ -65,14 +68,15 @@ class Application {
     Log.d('初始化 iOS设置 ...');
     _initIOSSettings();
 
+    MathUtil.main();
+
     NumberKeyboard.register();
     Log.d('结束: ${DateTime.now().millisecondsSinceEpoch}');
     Log.d('═══════════════════════════════ 结束初始化 ════════════════════════════════════');
 
-
     // 运行flutter时全局异常捕获
     await HandleError().catchFlutterError(
-      () => _runMyApp(WillPopView(behavior: BackBehavior.background, child: _getFirstPage())),
+      () => _runMyApp(WillPopView(behavior: BackBehavior.background, child: _startPage())),
     );
   }
 
@@ -81,7 +85,7 @@ class Application {
     //全局主题、语言设置
     Widget consumerApp = Consumer<LocalModel>(builder: (context, res, widget) {
       // Page必须放在MaterialApp中运行
-      AppTheme theme = themeModel[res.theme]!;
+      AppTheme? theme = res.appTheme;
       // ScreenUtil.setContext(context);
       return MaterialApp(
         navigatorKey: navigatorKey,
@@ -111,7 +115,16 @@ class Application {
         localizationsDelegates: S.localizationsDelegates,
         // 国际化语言包
         supportedLocales: S.supportedLocales,
-        builder: BotToastInit(),
+        builder: (context, child) {
+          final botToastBuilder = BotToastInit();
+          Widget toastWidget = botToastBuilder(context, child);
+          Widget fontWidget = MediaQuery(
+            //设置文字大小不随系统设置改变
+            data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+            child: toastWidget,
+          );
+          return fontWidget;
+        },
         navigatorObservers: [BotToastNavigatorObserver()],
         home: child,
       );
@@ -132,6 +145,8 @@ class Application {
         ChangeNotifierProvider(create: (context) => NavModel()),
         ChangeNotifierProvider(create: (context) => MeModel()),
         ChangeNotifierProvider(create: (context) => ArticleModel()),
+        ChangeNotifierProvider(create: (context) => BannerModel()),
+        ChangeNotifierProvider(create: (context) => StudyModel()),
       ],
       child: consumerApp,
     );
@@ -145,7 +160,7 @@ class Application {
   /// 初始化系统通知
   void _initSystemNotification() {
     notifications.initialize(InitializationSettings(
-      android: AndroidInitializationSettings('app_icon'),
+      android: AndroidInitializationSettings('ic_launcher'),
       iOS: IOSInitializationSettings(),
     ));
   }
@@ -159,7 +174,7 @@ class Application {
         // 全局设置透明
         statusBarBrightness: Brightness.light,
         // light:黑色图标 dark：白色图标, 在此处设置statusBarIconBrightness为全局设置
-        statusBarIconBrightness: Brightness.light, // light:黑色图标 dark：白色图标, 在此处设置statusBarIconBrightness为全局设置
+        statusBarIconBrightness: Brightness.light,
       ));
     }
   }
@@ -170,8 +185,8 @@ class Application {
   }
 
   /// 获取第一个页面
-  Widget _getFirstPage() {
+  Widget _startPage() {
     Log.d('启动页面: ${DateTime.now().millisecondsSinceEpoch}');
-    return SpUtil.getIsLogin() ? MainPage() : LoginPage();
+    return SpUtil.getUserLoginState() ? MainPage() : LoginPage();
   }
 }

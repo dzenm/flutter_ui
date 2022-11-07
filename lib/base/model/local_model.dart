@@ -1,28 +1,30 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_ui/base/res/colors.dart';
 import 'package:flutter_ui/base/utils/sp_util.dart';
-import 'package:flutter_ui/main.dart';
-import 'package:provider/provider.dart';
 
-import '../res/colors.dart';
+class LocalModel extends ChangeNotifier {
+  LocalModel() {
+    _theme = SpUtil.getTheme();
+    _locale = Locale(SpUtil.getLocale());
+  }
 
-class LocalModel with ChangeNotifier {
-  static LocalModel get of => Provider.of<LocalModel>(Application.context, listen: false);
-
-  // 主题设置
-  String _theme = SpUtil.getTheme();
+  /// 主题设置
+  late String _theme;
 
   String get theme => _theme;
 
-  static AppTheme get color => themeModel[LocalModel.of.theme]!;
-
-  setTheme(String theme) {
+  void setTheme(String theme) {
     _theme = theme;
     SpUtil.setTheme(theme);
     notifyListeners();
   }
 
-  // 语言设置
-  Locale _locale = Locale(SpUtil.getLocale());
+  ///
+  AppTheme get appTheme => themeModel[_theme]!;
+
+  /// 语言设置
+  late Locale _locale;
 
   Locale get locale => _locale;
 

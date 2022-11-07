@@ -1,83 +1,56 @@
-import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_ui/base/res/strings.dart';
 
-import '../../main.dart';
+class MainModel extends ChangeNotifier {
+  /// 主页底部按钮的标题
+  List<String> _titles = [];
 
-class MainModel with ChangeNotifier {
-  static MainModel get of => Provider.of<MainModel>(Application.context, listen: false);
-
-  int _homeCount = -1;
-
-  int get homeCount => _homeCount;
-
-  void changeHomeCount(int count) {
-    _homeCount = count;
-    notifyListeners();
+  void init(BuildContext context) {
+    _titles = [
+      S.of(context).home,
+      S.of(context).nav,
+      S.of(context).me,
+    ];
   }
 
-  void addHomeCount(int count) {
-    if (_homeCount + count > 0) {
-      _homeCount += count;
+  List<String> get titles => _titles;
+
+  String title(int index) => _titles[index];
+
+  /// 主页底部按钮的图标
+  List<IconData> _icons = [
+    Icons.home,
+    Icons.airplay_rounded,
+    Icons.person,
+  ];
+
+  IconData icon(int index) => _icons[index];
+
+  /// 主页底部小红点的数量
+  List<int> _badgeLists = [0, 65, 8];
+
+  int badgeCount(int index) => _badgeLists[index];
+
+  void addCount(int index, int count) {
+    if (_badgeLists[index] + count > 0) {
+      _badgeLists[index] += count;
     }
     notifyListeners();
   }
 
-  void reduceHomeCount(int count) {
-    if (_homeCount - count < 0) {
-      _homeCount = -1;
-    } else {
-      _homeCount -= count;
-    }
+  void reduceCount(int index, int count) {
+    int totalCount = _badgeLists[index] - count;
+    _badgeLists[index] = totalCount < 0 ? -1 : totalCount;
     notifyListeners();
   }
 
-  int _navCount = 0;
+  /// 主页选中的item索引
+  int _selectItemIndex = 0;
 
-  int get navCount => _navCount;
+  int get selectItemIndex => _selectItemIndex;
 
-  void changeNavCount(int count) {
-    _navCount = count;
-    notifyListeners();
-  }
-
-  void addNavCount(int count) {
-    if (_navCount + count > 0) {
-      _navCount += count;
-    }
-    notifyListeners();
-  }
-
-  void reduceNavCount(int count) {
-    if (_navCount - count < 0) {
-      _navCount = -1;
-    } else {
-      _navCount -= count;
-    }
-    notifyListeners();
-  }
-
-  int _meCount = 5;
-
-  int get meCount => _meCount;
-
-  void changeMeCount(int count) {
-    _meCount = count;
-    notifyListeners();
-  }
-
-  void addMeCount(int count) {
-    if (_meCount + count > 0) {
-      _meCount += count;
-    }
-    notifyListeners();
-  }
-
-  void reduceMeCount(int count) {
-    if (_meCount - count < 0) {
-      _meCount = -1;
-    } else {
-      _meCount -= count;
-    }
+  void updateSelectItemIndex(int selectItemIndex) {
+    _selectItemIndex = selectItemIndex;
     notifyListeners();
   }
 }
