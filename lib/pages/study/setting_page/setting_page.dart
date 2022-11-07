@@ -232,7 +232,7 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   void _selectedTheme() {
-    // String theme = context.watch<LocalModel>().theme;
+    String theme = context.read<LocalModel>().theme;
     showDialog<bool>(
       context: context,
       builder: (context) {
@@ -255,7 +255,7 @@ class _SettingPageState extends State<SettingPage> {
                     width: 40,
                     height: 40,
                     color: value,
-                    child: '' == key ? Icon(Icons.done, color: Colors.white) : null,
+                    child: theme == key ? Icon(Icons.done, color: Colors.white) : null,
                   ),
                 );
               }).toList(),
