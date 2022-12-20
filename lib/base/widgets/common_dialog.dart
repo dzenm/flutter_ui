@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/base/res/strings.dart';
+import 'package:flutter_ui/base/widgets/upgrade_dialog.dart';
 
 import 'common_widget.dart';
 import 'tap_layout.dart';
@@ -368,4 +369,24 @@ class ListDialog extends Dialog {
       },
     );
   }
+}
+
+// 应用升级提示框
+void showAppUpgradeDialog(BuildContext context, {String? version, List<String> desc = const [], GestureTapCallback? onTap}) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return DialogWrapper(
+        color: Colors.transparent,
+        touchOutsideDismiss: false,
+        backDismiss: false,
+        borderRadius: const BorderRadius.all(Radius.circular(4)),
+        child: UpgradeDialog(
+          version: 'v$version',
+          desc: desc,
+          onTap: onTap,
+        ),
+      );
+    },
+  );
 }

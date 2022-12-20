@@ -160,8 +160,8 @@ class Application {
   /// 初始化系统通知
   void _initSystemNotification() {
     notifications.initialize(InitializationSettings(
-      android: AndroidInitializationSettings('ic_launcher'),
-      iOS: IOSInitializationSettings(),
+      android: AndroidInitializationSettings('icon_launcher'),
+      iOS: DarwinInitializationSettings(),
     ));
   }
 

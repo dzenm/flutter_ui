@@ -1,15 +1,16 @@
-import 'dart:ui';
+import 'dart:ui' as ui;
 
 import 'package:flutter/services.dart';
+
+import 'mock_binding.dart';
 
 class MockBinaryMessenger extends BinaryMessenger {
   /// Creates a [MockBinaryMessenger] instance.
   ///
-  /// The [delegate] instance must not be null.
-  MockBinaryMessenger(this.delegate) : assert(delegate != null);
+  MockBinaryMessenger(this.mockBinding);
 
-  /// The delegate [BinaryMessenger].
-  final BinaryMessenger delegate;
+  /// 用于获取delegate
+  final MockBinding mockBinding;
 
   // The handlers for messages from the engine (including fake
   // messages sent by handlePlatformMessage).
@@ -46,7 +47,7 @@ class MockBinaryMessenger extends BinaryMessenger {
   Future<ByteData?> handlePlatformMessage(
     String channel,
     ByteData? data,
-    PlatformMessageResponseCallback? callback,
+    ui.PlatformMessageResponseCallback? callback,
   ) {
     Future<ByteData?>? result;
     if (_inboundHandlers.containsKey(channel)) result = _inboundHandlers[channel]!(data);
@@ -63,10 +64,10 @@ class MockBinaryMessenger extends BinaryMessenger {
   void setMessageHandler(String channel, MessageHandler? handler) {
     if (handler == null) {
       _inboundHandlers.remove(channel);
-      delegate.setMessageHandler(channel, null);
+      mockBinding.superDefaultBinaryMessenger.setMessageHandler(channel, null);
     } else {
       _inboundHandlers[channel] = handler; // used to handle fake messages sent via handlePlatformMessage
-      delegate.setMessageHandler(channel, handler); // used to handle real messages from the engine
+      mockBinding.superDefaultBinaryMessenger.setMessageHandler(channel, handler); // used to handle real messages from the engine
     }
   }
 
@@ -90,7 +91,7 @@ class MockBinaryMessenger extends BinaryMessenger {
     if (handler != null) {
       resultFuture = handler(message);
     } else {
-      resultFuture = delegate.send(channel, message);
+      resultFuture = mockBinding.superDefaultBinaryMessenger.send(channel, message);
     }
     if (resultFuture != null) {
       _pendingMessages.add(resultFuture);

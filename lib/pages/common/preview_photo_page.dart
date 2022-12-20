@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/main.dart';
 import 'package:photo_view/photo_view.dart';
@@ -90,7 +91,7 @@ class _PreviewPhotoPageState extends State<PreviewPhotoPage> {
           maxScale: PhotoViewComputedScale.contained * 2,
           gestureDetectorBehavior: HitTestBehavior.translucent,
           scaleStateChangedCallback: (isZoom) {},
-          onTapUp: (context, details, controllerValue) => Navigator.pop(context),
+          onTapUp: (context, details, controllerValue) => RouteManager.pop(context),
         );
       }).toList(),
     );

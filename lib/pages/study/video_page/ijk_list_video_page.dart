@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'ijk_video_page.dart';
 
@@ -39,7 +40,9 @@ class _IjkListVideoPageState extends State<IjkListVideoPage> {
         child: AppBar(
           leading: null,
           backgroundColor: Colors.transparent,
-          brightness: Brightness.dark,
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarBrightness: Brightness.dark,
+          ),
         ),
         preferredSize: Size.fromHeight(0),
       ),

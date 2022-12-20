@@ -1,5 +1,11 @@
 package com.dzenm.flutter_ui.study
 
+import java.util.*
+
+class Node(var `val`: Int) {
+    var children: List<Node?> = listOf()
+}
+
 class KotlinStudy {
 
     companion object {
@@ -19,6 +25,16 @@ class KotlinStudy {
             println("Kotlin小堆排序前：" + arr3.contentToString())
             heapSort(arr3)
             println("Kotlin小堆排序后：" + arr3.contentToString())
+            for (i in arr1.indices) {
+                val list = mutableListOf<Int>()
+                list.add(1)
+
+                val root = Node(1)
+            }
+
+            val stack = Stack<Int>()
+            val list = mutableListOf<Int>()
+
         }
 
         private fun mergeSort(arr: IntArray, temp: IntArray, lo: Int, hi: Int) {
@@ -28,6 +44,7 @@ class KotlinStudy {
                 mergeSort(arr, temp, mid + 1, hi)
                 merge(arr, temp, lo, hi, mid + 1)
             }
+
         }
 
         private fun merge(arr: IntArray, temp: IntArray, lo: Int, hi: Int, mid: Int) {
@@ -91,5 +108,30 @@ class KotlinStudy {
             }
             arr[i] = temp
         }
+    }
+
+    fun preorder(root: Node?): List<Int> {
+        val list = mutableListOf<Int>()
+        val stack = Stack<Node>()
+        if (root == null) return list
+
+        stack.add(root)
+        while (stack.isNotEmpty()) {
+            val node = stack.peek()
+            list.add(node.`val`)
+            stack.pop()
+            var i = node.children.size - 1
+            while (i >= 0) {
+                val child = node.children[i--]
+                if (child != null) stack.add(child)
+            }
+        }
+        list.reverse()
+        val deque = ArrayDeque<Node>()
+        val size = deque.size
+        for (i in 0 until size) {
+
+        }
+        return list
     }
 }

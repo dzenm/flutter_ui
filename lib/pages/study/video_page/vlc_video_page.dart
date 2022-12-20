@@ -136,7 +136,6 @@ VlcPlayerController createPlayController({required String url}) {
 Widget createPlayVideoView({VlcPlayerController? controller, String? thumbPath}) {
   if (controller == null) return Container();
   Log.d('播放视频：controller=$controller');
-  bool _buffering = true;
   bool _init = false;
   controller.addListener(() {
     Log.d('播放视频：addListener=$controller');

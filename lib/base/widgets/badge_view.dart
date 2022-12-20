@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 // 徽章标签
 class BadgeView extends StatefulWidget {

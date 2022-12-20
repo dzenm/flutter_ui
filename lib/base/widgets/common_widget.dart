@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 
 // 分割线
 Widget divider({
@@ -97,17 +95,19 @@ imagePlaceholder({required double width, double? height}) {
 }
 
 class FileImageExt extends FileImage {
-  late int fileSize;
-
-  FileImageExt(File file, {double scale = 1.0}) : super(file, scale: scale) {
-    fileSize = file.existsSync() ? file.lengthSync() : 0; //l 文件不存在兼容
-  }
+  FileImageExt(File file, {double scale = 1.0}) : super(file, scale: scale);
 
   @override
   bool operator ==(dynamic other) {
     if (other.runtimeType != runtimeType) return false;
     final FileImageExt typedOther = other;
-    return file.path == typedOther.file.path && scale == typedOther.scale && fileSize == typedOther.fileSize;
+    int fileSize = file.existsSync() ? file.lengthSync() : 0; //l 文件不存在兼容
+    return file.path == typedOther.file.path && scale == typedOther.scale && fileSize == typedOther.fileSize();
+  }
+
+  /// 文件不存在兼容
+  int fileSize() {
+    return file.existsSync() ? file.lengthSync() : 0;
   }
 
   @override

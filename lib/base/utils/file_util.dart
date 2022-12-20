@@ -193,11 +193,11 @@ class FileUtil {
   /// 清理内存图片缓存:
   //clear all of image  in memory
   static clearMemoryImageCache() {
-    PaintingBinding.instance?.imageCache?.clear();
+    PaintingBinding.instance.imageCache.clear();
   }
 
   // get ImageCache
   static getMemoryImageCache() {
-    return PaintingBinding.instance?.imageCache;
+    return PaintingBinding.instance.imageCache;
   }
 }

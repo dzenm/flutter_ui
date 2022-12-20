@@ -1,10 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/res/assets.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/widgets/common_widget.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 class LoadImagePage extends StatefulWidget {
   LoadImagePage();
@@ -48,17 +46,6 @@ class _LoadImagePageState extends State<LoadImagePage> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _imageWrapper(String imageUrl) {
-    return SizedBox(
-      width: 150,
-      child: CachedNetworkImage(
-        imageUrl: imageUrl,
-        placeholder: (context, url) => Image.asset('images/image-default.png'),
-        errorWidget: (context, url, error) => Image.asset('images/image-failed.png'),
       ),
     );
   }

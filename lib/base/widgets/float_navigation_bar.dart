@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 /// 用法：
 /// class FloatNavigationPage extends StatefulWidget {

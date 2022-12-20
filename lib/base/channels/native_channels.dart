@@ -69,7 +69,7 @@ class NativeChannels {
         // 通知安卓返回,到手机桌面
         Map<String, dynamic> result = {'message': '我从Flutter页面回来了'};
         final String out = await channel.invokeMethod('startNaughtyActivity');
-        Log.d('NaughtyActivity数据: $out', tag: _TAG);
+        Log.d('NaughtyActivity数据: out=$out, result=$result', tag: _TAG);
         return Future.value(true);
       } on PlatformException catch (e) {
         Log.e(e.message);
@@ -86,7 +86,7 @@ class NativeChannels {
         // 通知安卓返回,到手机桌面
         Map<String, dynamic> result = {'message': '我从Flutter页面回来了'};
         final String out = await channel.invokeMethod('startHomeActivity');
-        Log.d('HomeActivity数据: $out', tag: _TAG);
+        Log.d('HomeActivity数据: out=$out, result=$result', tag: _TAG);
         return Future.value(true);
       } on PlatformException catch (e) {
         Log.e(e.message);
@@ -103,7 +103,7 @@ class NativeChannels {
         // 通知安卓返回,到手机桌面
         Map<String, dynamic> result = {'message': '我从Flutter页面回来了'};
         final String out = await channel.invokeMethod('startNaviDrivingActivity');
-        Log.d('NaviDrivingActivity数据: $out', tag: _TAG);
+        Log.d('NaviDrivingActivity数据: out=$out, result=$result', tag: _TAG);
         return Future.value(true);
       } on PlatformException catch (e) {
         Log.e(e.message);
@@ -120,7 +120,7 @@ class NativeChannels {
         // 通知安卓返回,到手机桌面
         Map<String, dynamic> result = {'message': '我从Flutter页面回来了'};
         final String out = await channel.invokeMethod('startWalkNaviActivity');
-        Log.d('NaviDrivingActivity数据: $out', tag: _TAG);
+        Log.d('NaviDrivingActivity数据: out=$out, result=$result', tag: _TAG);
         return Future.value(true);
       } on PlatformException catch (e) {
         Log.e(e.message);

@@ -44,9 +44,6 @@ class _SlideVerifyViewState extends State<SlideVerifyView> with TickerProviderSt
   /// 滑动块宽度
   double _sliderWidth = 64;
 
-  /// 验证是否通过，滑动到最右方为通过
-  bool _verifySuccess = false;
-
   /// 是否允许拖动
   bool _enableSlide = true;
 
@@ -89,7 +86,6 @@ class _SlideVerifyViewState extends State<SlideVerifyView> with TickerProviderSt
         if (_sliderDistance > _width - _sliderWidth) {
           _sliderDistance = _width - _sliderWidth;
           _enableSlide = false;
-          _verifySuccess = true;
           widget.onChanged();
         }
         setState(() {});

@@ -249,7 +249,7 @@ class _SettingPageState extends State<SettingPage> {
                   onTap: () {
                     context.read<LocalModel>().setTheme(key);
                     showToast('修改成功');
-                    Navigator.pop(context);
+                    RouteManager.pop(context);
                   },
                   child: Container(
                     width: 40,
@@ -279,7 +279,7 @@ class _SettingPageState extends State<SettingPage> {
               onPressed: () {
                 context.read<LocalModel>().setLocale(value);
                 showToast('修改成功');
-                Navigator.pop(context);
+                RouteManager.pop(context);
               },
             );
           }).toList(),

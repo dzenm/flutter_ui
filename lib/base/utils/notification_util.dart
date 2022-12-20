@@ -6,14 +6,13 @@ class NotificationUtil {
   static Future<void> showNotification({
     String? title,
     String? body,
-    SelectNotificationCallback? onTap,
+    DidReceiveBackgroundNotificationResponseCallback? onTap,
   }) async {
     _notifications.initialize(
       const InitializationSettings(
         android: AndroidInitializationSettings('@mipmap/ic_launcher'),
-        iOS: IOSInitializationSettings(onDidReceiveLocalNotification: onDidReceiveLocalNotification),
+        iOS: DarwinInitializationSettings(onDidReceiveLocalNotification: onDidReceiveLocalNotification),
       ),
-      onSelectNotification: onTap,
     );
     await _notifications.show(
       0,
@@ -27,7 +26,7 @@ class NotificationUtil {
           priority: Priority.high,
           ticker: 'ticker',
         ),
-        iOS: IOSNotificationDetails(),
+        iOS: DarwinNotificationDetails(),
       ),
       payload: 'payload',
     );

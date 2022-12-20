@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_ui/base/log/log.dart';
 
 // 分类页面
@@ -52,7 +53,9 @@ class _NavPageState extends State<NavPage> with AutomaticKeepAliveClientMixin {
     super.build(context);
     return Scaffold(
       appBar: AppBar(
-        brightness: Brightness.dark,
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarBrightness: Brightness.dark,
+        ),
         title: Text(widget.title, style: TextStyle(color: Colors.white)),
       ),
       body: Container(

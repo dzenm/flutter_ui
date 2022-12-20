@@ -49,9 +49,9 @@ class RouteManager {
   }
 
   // 将堆栈的顶部元素进行删除，回退到上一个界面
-  static void pop([dynamic result]) {
-    FocusScope.of(_state.context).unfocus();
-    _state.pop(result);
+  static void pop(BuildContext context, [dynamic result]) {
+    FocusScope.of(context).unfocus();
+    Navigator.pop(context, result);
   }
 
   static PageRoute _getPageRoute(Widget page, bool isMaterial, Object? arguments) {
@@ -76,7 +76,11 @@ class RouteManager {
     }
     StringBuffer bufferStr = StringBuffer();
     params.forEach((key, value) {
-      bufferStr..write(key)..write("=")..write(Uri.encodeComponent(value))..write("&");
+      bufferStr
+        ..write(key)
+        ..write("=")
+        ..write(Uri.encodeComponent(value))
+        ..write("&");
     });
     String paramStr = bufferStr.toString();
     paramStr = paramStr.substring(0, paramStr.length - 1);

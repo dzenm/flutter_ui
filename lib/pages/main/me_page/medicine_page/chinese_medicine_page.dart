@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_ui/base/db/db_base_model.dart';
 import 'package:flutter_ui/base/http/api_client.dart';
 import 'package:flutter_ui/base/log/log.dart';
@@ -18,7 +17,7 @@ class ChineseMedicinePage extends StatefulWidget {
 }
 
 class _ChineseMedicinePageState extends State<ChineseMedicinePage> {
-  final String _KEY = 'e5c1639a4fc97a080daaff94e08bd1ca';
+  final String _key = 'e5c1639a4fc97a080daaff94e08bd1ca';
   List<MedicineEntity> _list = [];
 
   @override
@@ -55,7 +54,7 @@ class _ChineseMedicinePageState extends State<ChineseMedicinePage> {
   }
 
   void getZhongyao() {
-    ApiClient.getInstance.request(api(1).getZhongYao(_KEY, widget.medicineName), success: (data) {
+    ApiClient.getInstance.request(api(1).getZhongYao(_key, widget.medicineName), success: (data) {
       Log.d('len=${_list.length}');
       _list = (data as List<dynamic>).map((e) => MedicineEntity.fromJson(e)).toList();
       setState(() {});

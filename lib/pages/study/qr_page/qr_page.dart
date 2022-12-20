@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/res/strings.dart';
+import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:image_picker/image_picker.dart';
@@ -81,6 +81,6 @@ class _QRPageState extends State<QRPage> {
 
   void _getResult(String result) {
     showToast(result);
-    Navigator.pop(context);
+    RouteManager.pop(context);
   }
 }

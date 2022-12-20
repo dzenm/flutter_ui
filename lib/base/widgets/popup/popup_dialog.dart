@@ -499,7 +499,6 @@ class _PopupContextRenderObject extends RenderShiftedBox {
 
   @override
   void paint(PaintingContext context, Offset offset) {
-    // TODO: implement paint
     Matrix4 transform = Matrix4.identity();
 
     PopupDirection calcDirection = _calcDirection(attachRect, size, direction);

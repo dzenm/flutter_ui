@@ -22,14 +22,8 @@ class _CitySelectedPageState extends State<CitySelectedPage> {
   static const String _END = '#';
 
   List<CityModel> _cityList = [];
-  List<CityModel> _hotCityList = [
-    CityModel(name: '北京市', tagIndex: _STAR),
-    CityModel(name: '广州市', tagIndex: _STAR),
-    CityModel(name: '成都市', tagIndex: _STAR),
-    CityModel(name: '深圳市', tagIndex: _STAR),
-    CityModel(name: '杭州市', tagIndex: _STAR),
-    CityModel(name: '武汉市', tagIndex: _STAR),
-  ];
+  List<String> _hotCities = ['北京市', '广州市', '成都市', '深圳市', '杭州市', '武汉市'];
+
   StateController _controller = StateController();
 
   @override
@@ -65,7 +59,8 @@ class _CitySelectedPageState extends State<CitySelectedPage> {
     SuspensionUtil.sortListBySuspensionTag(list);
 
     // add hot_cityList.
-    _cityList.insertAll(0, _hotCityList);
+    List<CityModel> hotCities = _hotCities.map((city) => CityModel(name: city, tagIndex: _STAR)).toList();
+    _cityList.insertAll(0, hotCities);
 
     // show sus tag.
     SuspensionUtil.setShowSuspensionStatus(_cityList);

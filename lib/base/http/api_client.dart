@@ -59,6 +59,7 @@ class ApiClient {
       client.badCertificateCallback = (X509Certificate cert, String host, int port) {
         return true;
       };
+      return client;
     };
     // log interceptor
     dio.interceptors.add(LoggerInterceptor(
@@ -93,10 +94,12 @@ class ApiClient {
           if (success != null) {
             success(data.data);
           }
-        } else if (data.errorCode == -1001) {
-          error = HandleHttpError.handle(code: data.errorCode, msg: data.errorMsg);
-        } else if (data.errorCode == -1) {
-          error = HandleHttpError.handle(code: data.errorCode, msg: data.errorMsg);
+        } else {
+          if (data.errorCode == -1001) {
+            error = HandleHttpError.handle(code: data.errorCode, msg: data.errorMsg);
+          } else if (data.errorCode == -1) {
+            error = HandleHttpError.handle(code: data.errorCode, msg: data.errorMsg);
+          }
         }
       }).catchError((err) {
         error = HandleHttpError.handle(error: err);

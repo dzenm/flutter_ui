@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
 
 import 'tap_layout.dart';
@@ -61,10 +60,10 @@ class _TopAppbarState extends State<TopAppbar> {
 //      Text(widget.title),
       centerTitle: widget.centerTitle,
       elevation: widget.elevation,
-      brightness: widget.brightness,
-      textTheme: TextTheme(
-        headline6: TextStyle(fontSize: 18.0, color: widget.titleColor, fontWeight: FontWeight.bold),
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarBrightness: widget.brightness
       ),
+      titleTextStyle: TextStyle(fontSize: 18.0, color: widget.titleColor, fontWeight: FontWeight.bold),
       actions: widget.action != null ? [widget.action!] : null,
     );
   }
@@ -90,7 +89,7 @@ class _TopAppbarState extends State<TopAppbar> {
 
   void _popThis(BuildContext context) {
     if (Navigator.of(context).canPop()) {
-      RouteManager.pop();
+      RouteManager.pop(context);
     }
   }
 }

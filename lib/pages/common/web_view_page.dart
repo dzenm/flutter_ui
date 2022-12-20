@@ -132,12 +132,13 @@ class _FlutterWebViewState extends State<FlutterWebView> {
         onPageFinished: (url) {
           setState(() => _isLoading = false);
           //调用JS得到实际高度
-          _controller?.evaluateJavascript("document.documentElement.clientHeight;").then((result) {
+          _controller?.runJavascript("document.documentElement.clientHeight;").then((result) {
             setState(() {
-              double _height = double.parse(result);
-              Log.d("高度: $_height");
+              // double _height = double.parse(result);
+              // Log.d("高度: $_height");
             });
           });
+
         },
         onProgress: (value) {
           setState(() => _progressValue = value / 100);

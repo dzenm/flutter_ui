@@ -1,6 +1,9 @@
 package com.dzenm.flutter_ui.study;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Stack;
 
 public class JavaStudy {
 
@@ -13,7 +16,6 @@ public class JavaStudy {
         ListNode node = head;
         while (node != null) {
             System.out.println(node.value);
-            node = node.next;
         }
     }
 
@@ -33,8 +35,8 @@ public class JavaStudy {
         System.out.println("Java小堆排序前：" + Arrays.toString(arr3));
         heapSort(arr3);
         System.out.println("Java小堆排序后：" + Arrays.toString(arr3));
+        dp();
     }
-
 
 
     static void quickSort(int[] arr, int lo, int hi) {
@@ -103,4 +105,41 @@ public class JavaStudy {
         arr[i] = temp;
     }
 
+    static void dp() {
+        int[] dp = new int[20];
+        dp[0] = 1;
+        dp[1] = 2;
+        dp[2] = 3;
+        for (int i = 3; i < dp.length; i++) {
+            dp[i] = dp[i - 1] + dp[i - 2] + dp[i - 3];
+        }
+
+        for (int i = dp.length - 1; i >= 0; i--) {
+            if ((i + 1) % 5 == 0) {
+                System.out.println();
+            }
+            System.out.print(dp[i] + ",");
+        }
+    }
+
+    void testNode(Node root) {
+        List<Integer> list = new ArrayList<>();
+        Stack<Node> stack = new Stack<>();
+        stack.add(root);
+        while (!stack.empty()) {
+            if (stack.peek() == null) {
+                stack.pop();
+            } else if (stack.peek() != null) {
+                stack.add(stack.peek().left);
+            } else {
+
+            }
+        }
+    }
+
+    static class Node {
+        Node left;
+        Node right;
+        int val;
+    }
 }

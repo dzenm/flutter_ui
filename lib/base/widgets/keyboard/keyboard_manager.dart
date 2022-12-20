@@ -1,9 +1,9 @@
 import 'dart:async';
-import 'dart:ui';
+import 'dart:ui' as ui;
 
 import 'package:back_button_interceptor/back_button_interceptor.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 
 import 'keyboard_controller.dart';
 import 'keyboard_root.dart';
@@ -40,7 +40,7 @@ class CoolKeyboard {
     if (!(ServicesBinding.instance is MockBinding)) {
       throw Exception('CoolKeyboard can only be used in MockBinding');
     }
-    var mockBinding = ServicesBinding.instance! as MockBinding;
+    var mockBinding = ServicesBinding.instance as MockBinding;
     var mockBinaryMessenger = mockBinding.defaultBinaryMessenger as MockBinaryMessenger;
     mockBinaryMessenger.setMockMessageHandler("flutter/textinput", _textInputHanlde);
     isInterceptor = true;
@@ -130,12 +130,12 @@ class CoolKeyboard {
 
   static void _updateEditingState() {
     var callbackMethodCall = MethodCall("TextInputClient.updateEditingState", [_keyboardController!.client.connectionId, _keyboardController!.value.toJSON()]);
-    ServicesBinding.instance!.defaultBinaryMessenger.handlePlatformMessage("flutter/textinput", _codec.encodeMethodCall(callbackMethodCall), (data) {});
+    WidgetsBinding.instance.defaultBinaryMessenger.handlePlatformMessage("flutter/textinput", _codec.encodeMethodCall(callbackMethodCall), (data) {});
   }
 
   static Future<ByteData?> _sendPlatformMessage(String channel, ByteData message) {
     final Completer<ByteData?> completer = Completer<ByteData?>();
-    window.sendPlatformMessage(channel, message, (ByteData? reply) {
+    ui.window.sendPlatformMessage(channel, message, (ByteData? reply) {
       try {
         completer.complete(reply);
       } catch (exception, stack) {
@@ -170,7 +170,7 @@ class CoolKeyboard {
       if (_currentKeyboard != null && keyboardHeightNotifier.value != 0) {
         if (!isUpdate) {
           isUpdate = true;
-          // WidgetsBinding.instance!.addPostFrameCallback((_) {
+          // WidgetsBinding.instance.addPostFrameCallback((_) {
           //   _keyboardController!.addText('1');
           // });
         }
@@ -239,7 +239,7 @@ class CoolKeyboard {
 
   static sendPerformAction(TextInputAction action) {
     var callbackMethodCall = MethodCall("TextInputClient.performAction", [_keyboardController!.client.connectionId, action.toString()]);
-    ServicesBinding.instance!.defaultBinaryMessenger.handlePlatformMessage("flutter/textinput", _codec.encodeMethodCall(callbackMethodCall), (data) {});
+    WidgetsBinding.instance.defaultBinaryMessenger.handlePlatformMessage("flutter/textinput", _codec.encodeMethodCall(callbackMethodCall), (data) {});
   }
 
   static updateKeyboardHeight() {
@@ -338,12 +338,7 @@ class CKTextInputType extends TextInputType {
   final String name;
   final String? params;
 
-  const CKTextInputType({
-    required this.name,
-    bool? signed,
-    bool? decimal,
-    this.params,
-  }) : super.numberWithOptions(signed: signed, decimal: decimal);
+  const CKTextInputType({required this.name, bool? signed, bool? decimal, this.params}) : super.numberWithOptions(signed: signed, decimal: decimal);
 
   @override
   Map<String, dynamic> toJson() {
@@ -392,9 +387,10 @@ class KeyboardPageState extends State<KeyboardPage> {
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
 
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _height = widget.height;
       setState(() => {});
     });
@@ -438,13 +434,13 @@ class KeyboardPageState extends State<KeyboardPage> {
   }
 
   update() {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() => {});
     });
   }
 
   updateHeight(double height) {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       this._height = height;
       setState(() => {});
     });

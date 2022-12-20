@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
@@ -19,21 +18,21 @@ abstract class OnPhotoPickerClickListener {
 
 //九宫格图片选择布局
 class PhotoGridPicker extends StatefulWidget {
-  List<dynamic> _images; //图片列表
+  final List<dynamic> _images; //图片列表
   final int maxNum; //最多可选择图片数量
   final bool withAdd; //布局最后一个是否为添加
   final OnPhotoPickerClickListener? onImageGridClickListener;
-  GlobalKey<GridPickerState>? key;
-  bool videoSingle; //视频是否只有一个
-  double marginHorizontal;
-  double marginTop;
-  double marginBottom;
-  double itemSpace; //每张图片的间距
-  double screenWidth;
-  int columnCount;
-  bool addCircle; //添加布局是否为圆形
-  bool addStroke; //添加布局是否描边
-  bool linkVoice; //是否关联图片（朋友圈使用）
+  final GlobalKey<GridPickerState>? key;
+  final bool videoSingle; //视频是否只有一个
+  final double marginHorizontal;
+  final double marginTop;
+  final double marginBottom;
+  final double itemSpace; //每张图片的间距
+  final double screenWidth;
+  final int columnCount;
+  final bool addCircle; //添加布局是否为圆形
+  final bool addStroke; //添加布局是否描边
+  final bool linkVoice; //是否关联图片（朋友圈使用）
 
   PhotoGridPicker(
     this._images, {

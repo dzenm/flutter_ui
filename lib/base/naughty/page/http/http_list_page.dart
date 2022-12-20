@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/base/naughty/entities/http_entity.dart';
 import 'package:flutter_ui/base/naughty/page/db/db_list_page.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
@@ -62,7 +61,7 @@ class _HTTPListPageState extends State<HTTPListPage> {
                 Naughty.getInstance.data.clear();
                 _getData();
               } else if (item.index == 4) {
-                Navigator.pop(context);
+                RouteManager.pop(context);
               }
             },
             itemBuilder: (BuildContext context) {

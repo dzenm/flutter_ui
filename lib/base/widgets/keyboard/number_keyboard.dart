@@ -8,7 +8,7 @@ class NumberKeyboard extends StatelessWidget {
 
   static double getHeight(BuildContext ctx) {
     MediaQueryData mediaQuery = MediaQuery.of(ctx);
-    return mediaQuery.size.width / 3 / 3 * 4;
+    return mediaQuery.size.width / 3 / 2 * 4;
   }
 
   final KeyboardController controller;
@@ -37,7 +37,7 @@ class NumberKeyboard extends StatelessWidget {
             decoration: BoxDecoration(
               color: Color(0xffafafaf),
             ),
-            child: GridView.count(childAspectRatio: 3 / 1, mainAxisSpacing: 0.5, crossAxisSpacing: 0.5, padding: EdgeInsets.all(0.0), crossAxisCount: 3, children: <Widget>[
+            child: GridView.count(childAspectRatio: 2 / 1, mainAxisSpacing: 0.5, crossAxisSpacing: 0.5, padding: EdgeInsets.all(0.0), crossAxisCount: 3, children: <Widget>[
               buildButton('1'),
               buildButton('2'),
               buildButton('3'),
@@ -47,20 +47,18 @@ class NumberKeyboard extends StatelessWidget {
               buildButton('7'),
               buildButton('8'),
               buildButton('9'),
-              buildButton('.'),
-              // Container(
-              //   color: Color(0xFFd3d6dd),
-              //   child: GestureDetector(
-              //     behavior: HitTestBehavior.translucent,
-              //     child: Center(
-              //       child: Icon(Icons.expand_more),
-              //     ),
-              //     onTap: () {
-              //
-              //       controller.doneAction();
-              //     },
-              //   ),
-              // ),
+              Container(
+                color: Color(0xFFd3d6dd),
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  child: Center(
+                    child: Icon(Icons.expand_more),
+                  ),
+                  onTap: () {
+                    controller.doneAction();
+                  },
+                ),
+              ),
               buildButton('0'),
               Container(
                 color: Color(0xFFd3d6dd),
@@ -88,22 +86,9 @@ class NumberKeyboard extends StatelessWidget {
           child: Text(title),
         ),
         onTap: () {
-          if (forbidEdit()) {
-            return;
-          }
           controller.addText(value ?? title);
         },
       ),
     );
-  }
-
-  bool forbidEdit() {
-    String text = controller.text;
-    int index = text.indexOf('.');
-    int len = text.length;
-    if (index > 0 && len - index > 2) {
-      return true;
-    }
-    return false;
   }
 }

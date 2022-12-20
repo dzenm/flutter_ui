@@ -1,9 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/base/log/log.dart';
-import 'package:flutter_ui/base/widgets/tap_layout.dart';
+import 'package:flutter/services.dart';
 
 class VideoPlayerView extends StatefulWidget {
   final String url;
@@ -22,7 +18,6 @@ class VideoPlayerView extends StatefulWidget {
 
 class _VideoPlayerViewState extends State<VideoPlayerView> {
   // FijkPlayer _player = FijkPlayer();
-  bool _videoInit = false;
 
   @override
   void initState() {
@@ -71,16 +66,16 @@ class _VideoPlayerViewState extends State<VideoPlayerView> {
     );
   }
 
-  ImageProvider _imageProvider() {
-    String thumbUrl = widget.thumbUrl;
-    if (thumbUrl.startsWith('http://') || thumbUrl.startsWith('https://')) {
-      return NetworkImage(thumbUrl);
-    } else if (thumbUrl.startsWith('assets/')) {
-      return AssetImage(thumbUrl);
-    } else {
-      return FileImage(File(thumbUrl));
-    }
-  }
+  // ImageProvider _imageProvider() {
+  //   String thumbUrl = widget.thumbUrl;
+  //   if (thumbUrl.startsWith('http://') || thumbUrl.startsWith('https://')) {
+  //     return NetworkImage(thumbUrl);
+  //   } else if (thumbUrl.startsWith('assets/')) {
+  //     return AssetImage(thumbUrl);
+  //   } else {
+  //     return FileImage(File(thumbUrl));
+  //   }
+  // }
 }
 
 class IjkVideoPage extends StatefulWidget {
@@ -112,7 +107,9 @@ class _IjkVideoPageState extends State<IjkVideoPage> {
           child: AppBar(
             leading: null,
             backgroundColor: Colors.transparent,
-            brightness: Brightness.dark,
+            systemOverlayStyle: SystemUiOverlayStyle(
+              statusBarBrightness: Brightness.dark,
+            ),
           ),
           preferredSize: Size.fromHeight(0)),
       body: VideoPlayerView(

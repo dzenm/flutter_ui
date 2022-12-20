@@ -56,13 +56,15 @@ class LoggerInterceptor extends Interceptor {
   ///```
   void Function(Object object)? logPrint;
 
+  StringBuffer _logs = StringBuffer();
+
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     options.headers['authorization'] = SpUtil.getToken();
     handler.next(options);
   }
 
-  // 处理请求配置信息
+  /// 处理请求配置信息
   void _handleRequest(RequestOptions options) {
     bool existRequest = request || requestHeader || requestBody;
     if (existRequest) {
@@ -110,8 +112,9 @@ class LoggerInterceptor extends Interceptor {
     handler.next(response);
   }
 
-  // 处理请求响应信息
-  void _handleResponse(Response response) {
+  /// 处理请求响应信息
+  void _handleResponse(Response? response) {
+    if (response == null) return;
     bool existResponse = responseHeader || responseBody;
     if (existResponse) {
       if (isDecorate) {
@@ -142,11 +145,14 @@ class LoggerInterceptor extends Interceptor {
 
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) async {
+    _handleRequest(err.requestOptions);
+    _handleResponse(err.response);
     _handleError(err);
+    _handleErrorLog(_logs.toString());
     handler.next(err);
   }
 
-  // 处理请求错误信息
+  /// 处理请求错误信息
   void _handleError(DioError err) {
     if (error) {
       if (isDecorate) {
@@ -184,10 +190,15 @@ class LoggerInterceptor extends Interceptor {
   /// 打印日志，修饰打印的日志样式
   void _print(String msg) => _logPrint((isDecorate && msg.isNotEmpty ? '║$interval' : '') + msg);
 
-  // 日志打印
+  /// 日志打印
   void _logPrint(String msg) {
     if (logPrint != null) {
-      logPrint!(msg);
+      // logPrint!(msg);
+      _logs.write('\n$msg');
     }
+  }
+
+  void _handleErrorLog(String msg) {
+    Log.d(msg);
   }
 }

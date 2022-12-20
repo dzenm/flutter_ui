@@ -248,7 +248,7 @@ class _TextPageState extends State<TextPage> {
                       height: 60.0,
                       padding: EdgeInsets.symmetric(horizontal: 16),
                       onTap: () => showListBottomSheet(context, data, (int index) {
-                        Navigator.pop(context);
+                        RouteManager.pop(context);
                       }),
                       child: SingleTextLayout(title: S.of(context).loginRecord, summary: '查看最近所有的登录记录', badgeCount: 0, isShowForward: true),
                     ),

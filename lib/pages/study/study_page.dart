@@ -6,6 +6,7 @@ import 'package:flutter_ui/base/model/local_model.dart';
 import 'package:flutter_ui/base/res/colors.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
+import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/picker_list_view.dart';
 import 'package:flutter_ui/base/widgets/popup/popup_dialog.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +16,6 @@ import 'convert_page/convert_page.dart';
 import 'drag_list_page/drag_list_page.dart';
 import 'float_navigation_page/float_navigation_page.dart';
 import 'http_page/http_page.dart';
-import 'image_editor/image_editor_page.dart';
 import 'keyword_board/keyword_board_page.dart';
 import 'list_page/list_page.dart';
 import 'load_image_page/load_image_page.dart';
@@ -168,9 +168,19 @@ class _StudyPageState extends State<StudyPage> {
         ),
       ),
       SizedBox(height: 8),
+      MaterialButton(
+        child: _text(S.of(context).navigation),
+        textColor: Colors.white,
+        color: appTheme.primary,
+        onPressed: () => showAppUpgradeDialog(
+          context,
+          version: '12',
+          desc: ['升级了'],
+        ),
+      ),
+      SizedBox(height: 8),
       PopupView(
         direction: PopupDirection.leftTop,
-        onTap: () => true,
         margin: const EdgeInsets.symmetric(horizontal: 12),
         width: MediaQuery.of(context).size.width,
         elevation: 5,
@@ -180,7 +190,7 @@ class _StudyPageState extends State<StudyPage> {
           child: _text(S.of(context).imageEditor),
           textColor: Colors.white,
           color: appTheme.primary,
-          onPressed: () => RouteManager.push(ImageEditorPage()),
+          onPressed: () {},
         ),
         popupDialogBuilder: (context) {
           return Container(

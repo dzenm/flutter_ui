@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 import 'keyboard_manager.dart';
 import 'keyboard_media_query.dart';
@@ -12,39 +12,53 @@ class KeyboardRootWidget extends StatefulWidget {
   const KeyboardRootWidget({Key? key, required this.child, this.textDirection = TextDirection.ltr}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => KeyboardRootState();
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return KeyboardRootState();
+  }
 }
 
 class KeyboardRootState extends State<KeyboardRootWidget> {
-  WidgetBuilder? _keyboardBuilder;
+  WidgetBuilder? _keyboardbuilder;
 
-  bool get hasKeyboard => _keyboardBuilder != null;
+  bool get hasKeyboard => _keyboardbuilder != null;
+
+  // List<OverlayEntry> _initialEntries = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // _initialEntries.add(this.initChild());
+  }
 
   @override
   Widget build(BuildContext context) {
-    return KeyboardMediaQuery(
-      child: Builder(builder: (context) {
-        CoolKeyboard.init(this, context);
+    // TODO: implement build
+    return KeyboardMediaQuery(child: Builder(builder: (context) {
+      CoolKeyboard.init(this, context);
 
-        List<Widget> children = [widget.child];
-        if (_keyboardBuilder != null) {
-          children.add(Builder(builder: _keyboardBuilder!));
-        }
-        return Directionality(
+      List<Widget> children = [widget.child];
+      if (_keyboardbuilder != null) {
+        children.add(Builder(
+          builder: _keyboardbuilder!,
+        ));
+      }
+      return Directionality(
           textDirection: widget.textDirection,
-          child: Stack(children: children),
-        );
-      }),
-    );
+          child: Stack(
+            children: children,
+          ));
+    }));
   }
 
-  setKeyboard(WidgetBuilder keyboardBuilder) {
-    setState(() => _keyboardBuilder = keyboardBuilder);
+  setKeyboard(WidgetBuilder keyboardbuilder) {
+    this._keyboardbuilder = keyboardbuilder;
+    setState(() {});
   }
 
   clearKeyboard() {
-    if (this._keyboardBuilder != null) {
-      this._keyboardBuilder = null;
+    if (this._keyboardbuilder != null) {
+      this._keyboardbuilder = null;
       setState(() {});
     }
   }
