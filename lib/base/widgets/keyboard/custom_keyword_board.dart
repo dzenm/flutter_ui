@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/base/widgets/tap_layout.dart';
 
+import '../tap_layout.dart';
 import 'keyboard_controller.dart';
 import 'keyboard_manager.dart';
 

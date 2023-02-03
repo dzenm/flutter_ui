@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/db/database_manager.dart';
-import 'package:flutter_ui/base/entities/table_entity.dart';
-import 'package:flutter_ui/base/naughty/page/db/db_table_item_page.dart';
-import 'package:flutter_ui/base/router/route_manager.dart';
-import 'package:flutter_ui/base/utils/str_util.dart';
-import 'package:flutter_ui/base/widgets/tap_layout.dart';
 
+import '../../../db/database_manager.dart';
+import '../../../entities/table_entity.dart';
+import '../../../router/route_manager.dart';
+import '../../../utils/str_util.dart';
+import '../../../widgets/tap_layout.dart';
+import 'db_table_item_page.dart';
 /// 数据库表列表展示页面
 class DBTableListPage extends StatefulWidget {
   final String dbName;

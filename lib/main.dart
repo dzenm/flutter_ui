@@ -10,8 +10,8 @@ import 'package:provider/provider.dart';
 import 'base/log/handle_error.dart';
 import 'base/log/log.dart';
 import 'base/model/local_model.dart';
-import 'base/res/colors.dart';
 import 'base/res/strings.dart';
+import 'base/res/theme/app_theme.dart';
 import 'base/utils/sp_util.dart';
 import 'base/widgets/keyboard/keyboard_root.dart';
 import 'base/widgets/keyboard/mocks/mock_binding.dart';
@@ -25,8 +25,8 @@ import 'pages/main/home_page/home_model.dart';
 import 'pages/main/main_model.dart';
 import 'pages/main/main_page.dart';
 import 'pages/main/me_page/me_model.dart';
-import 'pages/study/study_model.dart';
 import 'pages/main/nav_page/nav_model.dart';
+import 'pages/study/study_model.dart';
 
 void main() => Application.getInstance.init();
 

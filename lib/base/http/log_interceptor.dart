@@ -1,8 +1,9 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:flutter_ui/base/log/log.dart';
-import 'package:flutter_ui/base/utils/sp_util.dart';
+
+import '../log/log.dart';
+import '../utils/sp_util.dart';
 
 /// 网络请求[dio.Interceptor], 网络请求信息输出到控制台.
 /// // log interceptor

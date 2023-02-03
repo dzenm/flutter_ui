@@ -3,8 +3,9 @@
 ///
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/log/log.dart';
-import 'package:flutter_ui/base/res/strings.dart';
+
+import '../log/log.dart';
+import '../res/strings.dart';
 
 typedef SelectedChanged = void Function(String item);
 

@@ -1,7 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_ui/main.dart';
+
+import '../../main.dart';
+import 'lang/lang.dart';
+import 'lang/lang_en.dart';
+import 'lang/lang_zh.dart';
 
 /// 语言包
 class S implements WidgetsLocalizations {
@@ -25,266 +29,19 @@ class S implements WidgetsLocalizations {
   ];
 
   // 保证切换语言时页面能自动刷新所有页面，一定要传对应页面的context，否则不起作用
-  static S of(BuildContext context) => Localizations.of(context, S);
+  static Lang of(BuildContext context) => (Localizations.of(context, S) as S)._getLang();
 
   // 在一些没有context页面时，使用全局的context。
-  static S get from => of(Application.context);
+  static Lang get from => of(Application.context);
 
-  // 根据key获取当前语言包的value
-  String _getValues(String key) {
-    // 获取当前语言包
-    String languageCode = _locale.languageCode;
-    Map _getLanguage = _languageValues[languageCode]!;
-    return _getLanguage[key] ?? _getLanguage['unknown']!;
+  Lang _getLang() {
+    return _langMap[_locale.languageCode]!;
   }
 
-  // 语言包
-  final Map<String, Map<String, String>> _languageValues = {
-    'zh': {
-      // 登录注册模块
-      // 主页模块
-      // 未找到路由模块
-      'pageIsNotFound': '页面未找到',
-      'pageIsNotFoundPleaseCheckIt': '页面未找到，请检查是否注册',
-      // 其他模块
-      'textAndInput': '文本和输入框',
-      'navigationBar': 'NavigationBar',
-      'charConvert': '字符转化',
-      'httpRequest': 'Http请求',
-      'citySelected': '城市选择',
-      'listAndRefresh': '列表和刷新',
-      'dragList': '拖拽列表',
-      'videoPlay': '视频播放',
-      'verifyPhone': '验证手机号',
-      'notificationSwitch': '通知开关',
-      'selectTheme': '选择主题',
-      'selectLanguage': '选择语言',
-      'followSystem': '跟随系统',
-      'loginRecord': '登录记录',
-      'checkUpgrade': '检查更新',
-      'loadEmpty': '加载为空',
-      'loadMore': '加载更多',
-      'loadSuccess': '加载成功',
-      'loadComplete': '加载完成',
-      'loadFailed': '加载失败',
-      'loadEnd': '滑动到最底部了',
-      'vlcVideoPlay': 'Vlc视频播放器',
-      'ijkVideoPlay': 'Ijk视频播放器',
-      'loadImage': '加载图片',
-      'imageEditor': '图片编辑',
-      // 通用文本
-      'login': '登录',
-      'register': '注册',
-      'username': '用户名',
-      'phone': '手机号',
-      'avatar': '头像',
-      'email': '邮箱',
-      'password': '密码',
-      'setting': '设置',
-      'theme': '主题',
-      'language': '语言',
-      'chinese': '简体中文',
-      'english': '美国英语',
-      'logout': '注销',
-      'exit': '退出',
-      'home': '首页',
-      'nav': '导航',
-      'me': '我',
-      'state': '状态',
-      'loading': '加载中',
-      'confirm': '确定',
-      'cancel': '取消',
-      'camera': '拍照',
-      'gallery': '相册',
-      'qr': '二维码',
-      'navigation': '导航',
-      'walk': '步行',
-      'keyword': '键盘',
-      'unknown': '未知',
-      'none': '',
-    },
-    'en': {
-      // 登录注册，个人中心，设置模块
-      // 主页模块
-      // 未找到路由模块
-      'pageIsNotFound': 'Page is not found',
-      'pageIsNotFoundPleaseCheckIt': 'Page is not found, please check it',
-      // 其他模块
-      'textAndInput': 'Text And Input',
-      'navigationBar': 'NavigationBar',
-      'charConvert': 'Character Convert',
-      'httpRequest': 'Http Request',
-      'citySelected': 'City Selected',
-      'listAndRefresh': 'List And Refresh',
-      'dragList': 'Drag List',
-      'videoPlay': 'Video Play',
-      'notificationSwitch': 'Notification Switch',
-      'verifyPhone': 'Verify Phone',
-      'selectTheme': 'Select Theme',
-      'selectLanguage': 'Select Language',
-      'followSystem': 'Follow System',
-      'loginRecord': 'Login Record',
-      'checkUpgrade': 'Check Upgrade',
-      'loadEmpty': 'Load Empty',
-      'loadMore': 'Load More',
-      'loadSuccess': 'Load Success',
-      'loadComplete': 'Load Complete',
-      'loadFailed': 'Load Failed',
-      'loadEnd': 'Load To Bottom',
-      'vlcVideoPlay': 'Vlc Video Play',
-      'ijkVideoPlay': 'Ijk Video Play',
-      'loadImage': 'Load Image',
-      'imageEditor': 'Image Editor',
-      // 通用文本
-      'login': 'Login',
-      'register': 'Register',
-      'username': 'Username',
-      'phone': 'Phone',
-      'avatar': 'Avatar',
-      'email': 'Email',
-      'password': 'Password',
-      'setting': 'Setting',
-      'theme': 'Theme',
-      'language': 'Language',
-      'chinese': 'Chinese',
-      'english': 'English',
-      'logout': 'Logout',
-      'exit': 'Exit',
-      'home': 'Home',
-      'nav': 'Nav',
-      'me': 'Me',
-      'state': 'State',
-      'loading': 'Loading',
-      'confirm': 'Confirm',
-      'cancel': 'Cancel',
-      'camera': 'Camera',
-      'gallery': 'Gallery',
-      'qr': 'QR',
-      'navigation': 'Navigation',
-      'walk': 'Walk',
-      'keyword': 'Keyword',
-      'unknown': 'Unknown',
-      'none': '',
-    },
+  Map<String, Lang> _langMap = {
+    'zh': LangZh(),
+    'en': LangEn(),
   };
-
-  // 登录注册模块
-  // 主页模块
-
-  // 未找到路由模块
-  String get pageIsNotFound => _getValues('pageIsNotFoundPleaseCheckIt');
-
-  String get pageIsNotFoundPleaseCheckIt => _getValues('pageIsNotFoundPleaseCheckIt');
-
-  // 其他模块
-  String get textAndInput => _getValues('textAndInput');
-
-  String get navigationBar => _getValues('navigationBar');
-
-  String get charConvert => _getValues('charConvert');
-
-  String get httpRequest => _getValues('httpRequest');
-
-  String get citySelected => _getValues('citySelected');
-
-  String get listAndRefresh => _getValues('listAndRefresh');
-
-  String get dragList => _getValues('dragList');
-
-  String get videoPlay => _getValues('videoPlay');
-
-  String get notificationSwitch => _getValues('notificationSwitch');
-
-  String get verifyPhone => _getValues('verifyPhone');
-
-  String get selectTheme => _getValues('selectTheme');
-
-  String get selectLanguage => _getValues('selectLanguage');
-
-  String get followSystem => _getValues('followSystem');
-
-  String get loginRecord => _getValues('loginRecord');
-
-  String get checkUpgrade => _getValues('checkUpgrade');
-
-  String get camera => _getValues('camera');
-
-  String get gallery => _getValues('gallery');
-
-  String get loadEmpty => _getValues('loadEmpty');
-
-  String get loadMore => _getValues('loadMore');
-
-  String get loadSuccess => _getValues('loadSuccess');
-
-  String get loadComplete => _getValues('loadComplete');
-
-  String get loadFailed => _getValues('loadFailed');
-
-  String get loadEnd => _getValues('loadEnd');
-
-  String get vlcVideoPlay => _getValues('vlcVideoPlay');
-
-  String get ijkVideoPlay => _getValues('ijkVideoPlay');
-
-  String get loadImage => _getValues('loadImage');
-
-  String get imageEditor => _getValues('imageEditor');
-
-  // 通用文本
-  String get login => _getValues('login');
-
-  String get register => _getValues('register');
-
-  String get username => _getValues('username');
-
-  String get password => _getValues('password');
-
-  String get phone => _getValues('phone');
-
-  String get avatar => _getValues('avatar');
-
-  String get email => _getValues('email');
-
-  String get setting => _getValues('setting');
-
-  String get theme => _getValues('theme');
-
-  String get language => _getValues('language');
-
-  String get chinese => _getValues('chinese');
-
-  String get english => _getValues('english');
-
-  String get logout => _getValues('logout');
-
-  String get exit => _getValues('exit');
-
-  String get home => _getValues('home');
-
-  String get me => _getValues('me');
-
-  String get nav => _getValues('nav');
-
-  String get state => _getValues('state');
-
-  String get loading => _getValues('loading');
-
-  String get confirm => _getValues('confirm');
-
-  String get cancel => _getValues('cancel');
-
-  String get qr => _getValues('qr');
-
-  String get navigation => _getValues('navigation');
-
-  String get walk => _getValues('walk');
-
-  String get keyword => _getValues('keyword');
-
-  String get unknown => _getValues('unknown');
-
-  String get none => _getValues('none');
 
   @override
   TextDirection get textDirection => TextDirection.ltr;

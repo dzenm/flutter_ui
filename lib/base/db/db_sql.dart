@@ -1,5 +1,4 @@
-import 'package:flutter_ui/base/log/log.dart';
-
+import '../log/log.dart';
 import 'database_manager.dart';
 
 class Sql {

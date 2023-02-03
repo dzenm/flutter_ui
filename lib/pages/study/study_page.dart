@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_ui/base/channels/native_channels.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/model/local_model.dart';
-import 'package:flutter_ui/base/res/colors.dart';
 import 'package:flutter_ui/base/res/strings.dart';
+import 'package:flutter_ui/base/res/theme/app_theme.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/picker_list_view.dart';
@@ -41,6 +41,7 @@ class _StudyPageState extends State<StudyPage> {
     return Scaffold(
       appBar: AppBar(
         systemOverlayStyle: SystemUiOverlayStyle.light,
+        title: Text(S.of(context).studyMainPage),
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 16),
@@ -140,7 +141,7 @@ class _StudyPageState extends State<StudyPage> {
       ),
       SizedBox(height: 8),
       MaterialButton(
-        child: _text(S.of(context).navigation),
+        child: _text(S.of(context).nav),
         textColor: Colors.white,
         color: appTheme.primary,
         onPressed: () => NativeChannels.startHomeActivity(),
@@ -154,7 +155,15 @@ class _StudyPageState extends State<StudyPage> {
       ),
       SizedBox(height: 8),
       MaterialButton(
-        child: _text(S.of(context).navigation),
+        child: _text(S.of(context).userContact),
+        textColor: Colors.white,
+        color: appTheme.primary,
+        onPressed: () => {},
+        // onPressed: () => RouteManager.push(PeopleListPage()),
+      ),
+      SizedBox(height: 8),
+      MaterialButton(
+        child: _text(S.of(context).listDialog),
         textColor: Colors.white,
         color: appTheme.primary,
         onPressed: () => showListDialog(
@@ -169,7 +178,7 @@ class _StudyPageState extends State<StudyPage> {
       ),
       SizedBox(height: 8),
       MaterialButton(
-        child: _text(S.of(context).navigation),
+        child: _text(S.of(context).upgradeDialog),
         textColor: Colors.white,
         color: appTheme.primary,
         onPressed: () => showAppUpgradeDialog(

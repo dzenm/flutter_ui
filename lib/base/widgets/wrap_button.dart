@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/widgets/tap_layout.dart';
+
+import 'tap_layout.dart';
 
 class WrapButton extends StatelessWidget {
   final double? width;

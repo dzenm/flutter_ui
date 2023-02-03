@@ -1,3 +1,4 @@
+
 import 'package:flutter_ui/base/db/db_base_model.dart';
 
 class ArticleEntity extends DBBaseModel {

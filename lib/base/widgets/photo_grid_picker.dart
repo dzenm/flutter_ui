@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/log/log.dart';
-import 'package:flutter_ui/base/widgets/tap_layout.dart';
 
+import '../log/log.dart';
 import 'common_widget.dart';
+import 'tap_layout.dart';
 
 abstract class OnPhotoPickerClickListener {
 //  void onCameraClick();

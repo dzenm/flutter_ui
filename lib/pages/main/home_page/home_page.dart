@@ -77,19 +77,21 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   }
 
   void _getData() async {
-    await _getBanner();
-    await _getArticle(1);
-    await _getTopArticle();
+    Log.d('开始加载网络数据...');
+    Future.wait([_getBanner(), _getArticle(1), _getTopArticle()]).then((value) {
+      Log.d('网络数据执行完成...');
+    });
+    Log.d('结束加载网络数据...');
   }
 
   Future<void> _getBanner() async {
-    HttpManager.getInstance.banner(success: (list) {
+    await HttpManager.getInstance.banner(success: (list) {
       context.read<BannerModel>().updateBanner(list);
     });
   }
 
   Future<void> _getArticle(int number) async {
-    HttpManager.getInstance.getArticleList(
+    await HttpManager.getInstance.getArticleList(
       page: 0,
       success: (list, total) {
         context.read<ArticleModel>().updateArticles(list);
@@ -98,7 +100,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   }
 
   Future<void> _getTopArticle() async {
-    HttpManager.getInstance.getLopArticleList(
+    await HttpManager.getInstance.getLopArticleList(
       success: (list) {
         context.read<ArticleModel>().updateArticles(list);
       },

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/widgets/keyboard/custom_keyword_board.dart';
-import 'package:flutter_ui/base/widgets/tap_layout.dart';
+
+import 'keyboard/custom_keyword_board.dart';
+import 'tap_layout.dart';
 
 typedef DefaultView = Widget Function(int index);
 

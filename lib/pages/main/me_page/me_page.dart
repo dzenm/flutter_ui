@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/model/local_model.dart';
-import 'package:flutter_ui/base/res/colors.dart';
 import 'package:flutter_ui/base/res/strings.dart';
+import 'package:flutter_ui/base/res/theme/app_theme.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/base/utils/device_util.dart';
 import 'package:flutter_ui/base/widgets/single_text_layout.dart';

@@ -1,12 +1,12 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_ui/base/naughty/entities/http_entity.dart';
-import 'package:flutter_ui/base/naughty/page/http/http_list_page.dart';
-import 'package:flutter_ui/base/router/route_manager.dart';
-import 'package:flutter_ui/base/utils/notification_util.dart';
-import 'package:flutter_ui/base/utils/str_util.dart';
 import 'package:intl/intl.dart';
 
+import '../../router/route_manager.dart';
+import '../../utils/notification_util.dart';
+import '../../utils/str_util.dart';
+import '../entities/http_entity.dart';
 import '../naughty.dart';
+import '../page/http/http_list_page.dart';
 
 
 /// HTTP请求信息拦截

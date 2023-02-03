@@ -3,11 +3,10 @@ import 'dart:io';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_ui/base/naughty/http/http_interceptor.dart';
-import 'package:flutter_ui/base/widgets/common_dialog.dart';
-import 'package:flutter_ui/http/api_services.dart';
-
+import '../../http/api_services.dart';
 import '../log/log.dart';
+import '../naughty/http/http_interceptor.dart';
+import '../widgets/common_dialog.dart';
 import 'log_interceptor.dart';
 
 typedef Success = void Function(dynamic data);

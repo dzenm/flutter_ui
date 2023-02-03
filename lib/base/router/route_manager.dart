@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/log/log.dart';
 
 import '../../main.dart';
+import '../log/log.dart';
 
 /// 路由管理工具类
 class RouteManager {

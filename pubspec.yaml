@@ -34,7 +34,7 @@ dependencies:
   # Toast https://pub.flutter-io.cn/packages/bot_toast
   bot_toast: 4.0.3
   # WebView https://pub.dev/packages/webview_flutter
-  webview_flutter: 3.0.4
+  webview_flutter: 4.0.2
   # 城市选择列表 https://pub.flutter-io.cn/packages/azlistview
   azlistview: 2.0.0
   # 输入框扩展 https://pub.flutter-io.cn/packages/extended_text_field
@@ -69,7 +69,7 @@ dependencies:
   # 图片选择器 [最新版0.8.4+10 https://pub.flutter-io.cn/packages/image_picker ]
   transparent_image: 2.0.0
   # 图片选择器 [最新版0.8.4+10 https://pub.flutter-io.cn/packages/image_picker ]
-  image_picker: 0.8.6
+  image_picker: 0.8.6+1
   # 图片预览控件 [最新版0.13.0 https://pub.flutter-io.cn/packages/photo_view ]
   photo_view: 0.14.0
   # 图片缓存 [最新版3.2.0 https://pub.flutter-io.cn/packages/cached_network_image ]
@@ -82,28 +82,30 @@ dependencies:
   image: 3.2.2
   screenshot: ^1.2.3
   # vlc视频播放器插件 [最新版7.1.5 https://pub.flutter-io.cn/packages/flutter_vlc_player ]
-  flutter_vlc_player: 7.1.5
+  flutter_vlc_player: 7.2.0
   ########################################## 文件 ########################################
   # sql https://pub.dev/packages/sqflite
-  sqflite: 2.2.0+3
+  sqflite: 2.2.4+1
   # 本地化存储 https://pub.dev/packages/shared_preferences
-  shared_preferences: 2.0.15
+  shared_preferences: 2.0.17
   # 路径选择 https://pub.dev/packages/path_provider
-  path_provider: 2.0.11
+  path_provider: 2.0.12
 
   ########################################## 基础 ########################################
   # 状态管理 https://pub.dev/packages/provider
-  provider: 6.0.4
+  provider: 6.0.5
   # 时间格式化 https://pub.dev/packages/intl
   intl: 0.17.0
 
   ########################################## 原生 ########################################
   # 通知栏通知提醒 https://pub.flutter-io.cn/packages/flutter_local_notifications
-  flutter_local_notifications: 12.0.4
+  flutter_local_notifications: 10.0.0
   # 获取版本信息 https://pub.dev/packages/package_info_plus
   package_info_plus: 3.0.2
   # 获取安卓iOS设备信息 https://pub.flutter-io.cn/packages/device_info_plus
   device_info_plus: 8.0.0
+  # 操作系统通讯录 https://pub.flutter-io.cn/packages/flutter_contacts
+  flutter_contacts: 1.1.5+1
 
   ########################################## 网络 ########################################
   # HTTP请求 https://pub.flutter-io.cn/packages/retrofit

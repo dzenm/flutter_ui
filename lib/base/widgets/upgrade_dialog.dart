@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/model/local_model.dart';
-import 'package:flutter_ui/base/res/colors.dart';
-import 'package:flutter_ui/base/router/route_manager.dart';
-import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:provider/provider.dart';
+
+import '../model/local_model.dart';
+import '../res/theme/app_theme.dart';
+import '../router/route_manager.dart';
+import 'tap_layout.dart';
 
 ///
 /// Created by a0010 on 2022/3/28 16:28

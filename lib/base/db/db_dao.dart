@@ -1,7 +1,7 @@
-import 'package:flutter_ui/base/entities/column_entity.dart';
-import 'package:flutter_ui/base/entities/table_entity.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../entities/column_entity.dart';
+import '../entities/table_entity.dart';
 import 'database_manager.dart';
 import 'db_base_model.dart';
 

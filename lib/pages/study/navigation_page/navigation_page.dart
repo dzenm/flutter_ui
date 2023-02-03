@@ -12,7 +12,7 @@ class _NavigationPageState extends State<NavigationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).navigation, style: TextStyle(color: Colors.white)),
+        title: Text(S.of(context).nav, style: TextStyle(color: Colors.white)),
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 16),

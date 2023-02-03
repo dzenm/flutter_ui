@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/res/strings.dart';
 
+import '../res/strings.dart';
 import 'tap_layout.dart';
 
 /// 状态展示
@@ -57,7 +57,7 @@ class _StateViewState extends State<StateView> {
         child: widget.image,
       ),
       SizedBox(width: 16, height: 32),
-      widget.title == null ? Text(widget.controller.stateText()) : widget.title!,
+      widget.title == null ? Text(widget.controller.stateText(context)) : widget.title!,
     ];
   }
 }
@@ -111,7 +111,7 @@ class _FooterViewState extends State<FooterStateView> {
         ),
       ),
       SizedBox(width: 16, height: 32),
-      widget.title == null ? Text(widget.controller.stateText()) : widget.title!,
+      widget.title == null ? Text(widget.controller.stateText(context)) : widget.title!,
     ];
   }
 }
@@ -171,24 +171,24 @@ class StateController extends ChangeNotifier {
     notifyListeners();
   }
 
-  String stateText() {
+  String stateText(BuildContext context) {
     switch (initialState) {
       case LoadState.none:
-        return S.from.none;
+        return S.of(context).none;
       case LoadState.loading:
-        return S.from.loading;
+        return S.of(context).loading;
       case LoadState.empty:
-        return S.from.loadEmpty;
+        return S.of(context).loadEmpty;
       case LoadState.success:
-        return S.from.loadSuccess;
+        return S.of(context).loadSuccess;
       case LoadState.complete:
-        return S.from.loadComplete;
+        return S.of(context).loadComplete;
       case LoadState.failed:
-        return S.from.loadFailed;
+        return S.of(context).loadFailed;
       case LoadState.more:
-        return S.from.loadMore;
+        return S.of(context).loadMore;
       case LoadState.end:
-        return S.from.loadEnd;
+        return S.of(context).loadEnd;
     }
   }
 

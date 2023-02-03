@@ -9,6 +9,7 @@ import 'package:flutter_ui/base/model/local_model.dart';
 import 'package:flutter_ui/base/res/assets.dart';
 import 'package:flutter_ui/base/res/colors.dart';
 import 'package:flutter_ui/base/res/strings.dart';
+import 'package:flutter_ui/base/res/theme/app_theme.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/base/utils/sp_util.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
@@ -243,8 +244,8 @@ class _SettingPageState extends State<SettingPage> {
             child: Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: themeModel.keys.map((key) {
-                Color? value = themeModel[key]?.primary;
+              children: C.getKeys().map((key) {
+                Color? value = C.getTheme(key).primary;
                 return InkWell(
                   onTap: () {
                     context.read<LocalModel>().setTheme(key);

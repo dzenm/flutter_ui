@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/base/router/route_manager.dart';
 
+import '../router/route_manager.dart';
 import 'tap_layout.dart';
 
 /// appbar封装

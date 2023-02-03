@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/naughty/entities/http_entity.dart';
-import 'package:flutter_ui/base/naughty/page/db/db_list_page.dart';
-import 'package:flutter_ui/base/router/route_manager.dart';
-import 'package:flutter_ui/base/widgets/menu_Item.dart';
-import 'package:flutter_ui/base/widgets/tap_layout.dart';
-
+import '../../../router/route_manager.dart';
+import '../../../widgets/menu_Item.dart';
+import '../../../widgets/tap_layout.dart';
+import '../../entities/http_entity.dart';
 import '../../naughty.dart';
+import '../db/db_list_page.dart';
 import 'http_item_page.dart';
 
 /// naughty 主页

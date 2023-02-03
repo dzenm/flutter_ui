@@ -125,16 +125,16 @@ public class JavaStudy {
     void testNode(Node root) {
         List<Integer> list = new ArrayList<>();
         Stack<Node> stack = new Stack<>();
-        stack.add(root);
-        while (!stack.empty()) {
-            if (stack.peek() == null) {
-                stack.pop();
-            } else if (stack.peek() != null) {
-                stack.add(stack.peek().left);
-            } else {
-
-            }
-        }
+//        stack.add(root);
+//        while (!stack.empty()) {
+//            if (stack.peek() == null) {
+//                stack.pop();
+//            } else if (stack.peek() != null) {
+//                stack.add(stack.peek().left);
+//            } else {
+//
+//            }
+//        }
     }
 
     static class Node {

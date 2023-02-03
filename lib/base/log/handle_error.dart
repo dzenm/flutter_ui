@@ -5,9 +5,10 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ui/base/log/log.dart';
-import 'package:flutter_ui/base/utils/file_util.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+
+import '../utils/file_util.dart';
+import 'log.dart';
 
 /// 启动flutter APP
 typedef RunFlutterAPP = void Function();
@@ -115,7 +116,7 @@ class HandleError {
     Log.e('║══════════════════════════════ Error Info ═══════════════════════════════════');
     List<String> list = getAppError(error, stackTrace);
     list.forEach((msg) {
-      if (msg == '') {
+      if (msg == '@分割线@') {
         Log.e('║══════════════════════════════ Stack Trace ══════════════════════════════════');
       } else {
         write(msg);

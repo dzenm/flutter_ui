@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/log/log.dart';
+
+import '../log/log.dart';
 
 /// Item的点击事件
 typedef void ItemClick(int position);

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/db/database_manager.dart';
-import 'package:flutter_ui/base/entities/column_entity.dart';
-import 'package:flutter_ui/base/widgets/state_view.dart';
 
+import '../../../db/database_manager.dart';
+import '../../../entities/column_entity.dart';
+import '../../../widgets/state_view.dart';
 /// 数据库表列表展示页面
 class DBTableItemPage extends StatefulWidget {
   final String dbName;

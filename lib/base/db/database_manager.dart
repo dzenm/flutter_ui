@@ -1,10 +1,10 @@
-import 'package:flutter_ui/base/entities/column_entity.dart';
-import 'package:flutter_ui/base/entities/table_entity.dart';
-import 'package:flutter_ui/base/log/log.dart';
-import 'package:flutter_ui/base/utils/sp_util.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../entities/column_entity.dart';
+import '../entities/table_entity.dart';
+import '../log/log.dart';
+import '../utils/sp_util.dart';
 import 'db_sql.dart';
 
 /// 数据库升级
