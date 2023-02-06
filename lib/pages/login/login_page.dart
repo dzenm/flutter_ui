@@ -129,6 +129,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _pushMainPage() {
-    RouteManager.push(MainPage(), clearStack: true);
+    RouteManager.push(context, MainPage(), clearStack: true);
   }
 }

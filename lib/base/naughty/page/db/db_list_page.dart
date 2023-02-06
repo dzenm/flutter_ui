@@ -70,7 +70,7 @@ class _DBListPageState extends State<DBListPage> {
         ),
         child: TapLayout(
           borderRadius: BorderRadius.all(Radius.circular(7)),
-          onTap: () => RouteManager.push(DBTableListPage(_list[index])),
+          onTap: () => RouteManager.push(context, DBTableListPage(_list[index])),
           child: Padding(
             padding: EdgeInsets.all(16),
             child: Column(

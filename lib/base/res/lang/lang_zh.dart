@@ -182,6 +182,9 @@ class LangZh extends Lang {
   String get keyword => '键盘';
 
   @override
+  String get router => '路由';
+
+  @override
   String get unknown => '未知';
 
   @override

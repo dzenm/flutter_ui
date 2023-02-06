@@ -182,6 +182,9 @@ class LangEn extends Lang {
   String get keyword => 'Keyword';
 
   @override
+  String get router => 'Router';
+
+  @override
   String get unknown => 'Unknown';
 
   @override

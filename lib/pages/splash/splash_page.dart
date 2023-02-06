@@ -10,7 +10,7 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
-    Future.delayed(Duration.zero, () => RouteManager.push(MainPage(), clearStack: true));
+    Future.delayed(Duration.zero, () => RouteManager.push(context, MainPage()));
     return Scaffold(body: Text(''));
   }
 }

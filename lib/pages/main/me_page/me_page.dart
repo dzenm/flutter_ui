@@ -119,14 +119,14 @@ class _MePageState extends State<MePage> with AutomaticKeepAliveClientMixin {
                 child: Text('进入下一个页面'),
                 textColor: theme?.background,
                 color: theme?.primary,
-                onPressed: () => RouteManager.push(ModelDataListenPage()),
+                onPressed: () => RouteManager.push(context, ModelDataListenPage()),
               ),
               SizedBox(height: 16),
               MaterialButton(
                 child: Text('药'),
                 textColor: theme?.background,
                 color: theme?.primary,
-                onPressed: () => RouteManager.push(ChineseMedicinePage(
+                onPressed: () => RouteManager.push(context, ChineseMedicinePage(
                   medicineName: '金银花',
                 )),
               ),
@@ -134,7 +134,7 @@ class _MePageState extends State<MePage> with AutomaticKeepAliveClientMixin {
               TapLayout(
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: () => RouteManager.push(StudyPage()),
+                onTap: () => RouteManager.push(context, StudyPage()),
                 child: SingleTextLayout(
                   icon: Icons.real_estate_agent_sharp,
                   title: '学习主页',
@@ -146,7 +146,7 @@ class _MePageState extends State<MePage> with AutomaticKeepAliveClientMixin {
                 height: 50.0,
                 borderRadius: BorderRadius.only(bottomLeft: Radius.circular(5), bottomRight: Radius.circular(5)),
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: () => RouteManager.push(SettingPage()),
+                onTap: () => RouteManager.push(context, SettingPage()),
                 child: SingleTextLayout(
                   icon: Icons.settings,
                   title: S.of(context).setting,

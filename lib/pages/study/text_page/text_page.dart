@@ -173,7 +173,7 @@ class _TextPageState extends State<TextPage> {
                     TapLayout(
                       height: 50.0,
                       padding: EdgeInsets.symmetric(horizontal: 16),
-                      onTap: () => RouteManager.push(SettingPage()),
+                      onTap: () => RouteManager.push(context, SettingPage()),
                       child: SingleTextLayout(title: S.of(context).setting, isShowForward: true, prefix: BadgeView(count: 10)),
                     ),
                     TapLayout(

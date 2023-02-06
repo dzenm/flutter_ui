@@ -59,7 +59,7 @@ class _ListPageState extends State<ListPage> {
     ArticleEntity article = articleList[index];
     String title = article.title ?? '';
     return TapLayout(
-      onTap: () => RouteManager.push(WebViewPage(title: title, url: article.link ?? '')),
+      onTap: () => RouteManager.push(context, WebViewPage(title: title, url: article.link ?? '')),
       child: ListTile(
         title: Text(title),
       ),

@@ -301,7 +301,7 @@ class _SettingPageState extends State<SettingPage> {
   void _logout() {
     ApiClient.getInstance.request(apiServices.logout(), success: (data) {
       SpUtil.resetUser();
-      RouteManager.push(LoginPage(), clearStack: true);
+      RouteManager.push(context, LoginPage(), clearStack: true);
     });
   }
 }

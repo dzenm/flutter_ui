@@ -20,6 +20,7 @@ import 'keyword_board/keyword_board_page.dart';
 import 'list_page/list_page.dart';
 import 'load_image_page/load_image_page.dart';
 import 'qr_page/qr_page.dart';
+import 'router/router_page.dart';
 import 'setting_page/setting_page.dart';
 import 'state_page/state_page.dart';
 import 'text_page/text_page.dart';
@@ -60,84 +61,84 @@ class _StudyPageState extends State<StudyPage> {
         child: _text(S.of(context).textAndInput),
         textColor: Colors.white,
         color: appTheme.primary,
-        onPressed: () => RouteManager.push(TextPage()),
+        onPressed: () => RouteManager.push(context, TextPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: _text(S.of(context).navigationBar),
         textColor: Colors.white,
         color: appTheme.primary,
-        onPressed: () => RouteManager.push(FloatNavigationPage()),
+        onPressed: () => RouteManager.push(context, FloatNavigationPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: _text(S.of(context).charConvert),
         textColor: Colors.white,
         color: appTheme.primary,
-        onPressed: () => RouteManager.push(ConvertPage()),
+        onPressed: () => RouteManager.push(context, ConvertPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: _text(S.of(context).httpRequest),
         textColor: Colors.white,
         color: appTheme.primary,
-        onPressed: () => RouteManager.push(HTTPListPage()),
+        onPressed: () => RouteManager.push(context, HTTPListPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: _text(S.of(context).listAndRefresh),
         textColor: Colors.white,
         color: appTheme.primary,
-        onPressed: () => RouteManager.push(ListPage()),
+        onPressed: () => RouteManager.push(context, ListPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: _text(S.of(context).dragList),
         textColor: Colors.white,
         color: appTheme.primary,
-        onPressed: () => RouteManager.push(DragListPage()),
+        onPressed: () => RouteManager.push(context, DragListPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: _text(S.of(context).videoPlay),
         textColor: Colors.white,
         color: appTheme.primary,
-        onPressed: () => RouteManager.push(VideoPage()),
+        onPressed: () => RouteManager.push(context, VideoPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: _text(S.of(context).qr),
         textColor: Colors.white,
         color: appTheme.primary,
-        onPressed: () => RouteManager.push(QRPage()),
+        onPressed: () => RouteManager.push(context, QRPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: _text(S.of(context).citySelected),
         textColor: Colors.white,
         color: appTheme.primary,
-        onPressed: () => RouteManager.push(CitySelectedPage()),
+        onPressed: () => RouteManager.push(context, CitySelectedPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: _text(S.of(context).setting),
         textColor: Colors.white,
         color: appTheme.primary,
-        onPressed: () => RouteManager.push(SettingPage()),
+        onPressed: () => RouteManager.push(context, SettingPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: _text(S.of(context).state),
         textColor: Colors.white,
         color: appTheme.primary,
-        onPressed: () => RouteManager.push(StatePage()),
+        onPressed: () => RouteManager.push(context, StatePage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: _text(S.of(context).keyword),
         textColor: Colors.white,
         color: appTheme.primary,
-        onPressed: () => RouteManager.push(KeywordBoardPage()),
+        onPressed: () => RouteManager.push(context, KeywordBoardPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
@@ -151,7 +152,7 @@ class _StudyPageState extends State<StudyPage> {
         child: _text(S.of(context).loadImage),
         textColor: Colors.white,
         color: appTheme.primary,
-        onPressed: () => RouteManager.push(LoadImagePage()),
+        onPressed: () => RouteManager.push(context, LoadImagePage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
@@ -159,7 +160,7 @@ class _StudyPageState extends State<StudyPage> {
         textColor: Colors.white,
         color: appTheme.primary,
         onPressed: () => {},
-        // onPressed: () => RouteManager.push(PeopleListPage()),
+        // onPressed: () => RouteManager.push(context, PeopleListPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
@@ -186,6 +187,13 @@ class _StudyPageState extends State<StudyPage> {
           version: '12',
           desc: ['升级了'],
         ),
+      ),
+      SizedBox(height: 8),
+      MaterialButton(
+        child: _text(S.of(context).router),
+        textColor: Colors.white,
+        color: appTheme.primary,
+        onPressed: () => RouteManager.push(context, RouterPage()),
       ),
       SizedBox(height: 8),
       PopupView(

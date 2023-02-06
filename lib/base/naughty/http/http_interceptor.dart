@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_ui/main.dart';
 import 'package:intl/intl.dart';
 
 import '../../router/route_manager.dart';
@@ -23,7 +24,7 @@ class HttpInterceptor extends Interceptor {
     Naughty.getInstance.data.insert(0, entity);
 
     String body = '${options.method}  ${options.path}';
-    NotificationUtil.showNotification(body: body, onTap: (payload) async => RouteManager.push(HTTPListPage()));
+    NotificationUtil.showNotification(body: body, onTap: (payload) async => RouteManager.push(Application.context, HTTPListPage()));
     handler.next(options);
   }
 

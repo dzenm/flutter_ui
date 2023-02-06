@@ -77,7 +77,7 @@ class _ModelDataListenPageState extends State<ModelDataListenPage> {
         child: Text('进入下一个页面'),
         textColor: Colors.white,
         color: Colors.blue,
-        onPressed: () => RouteManager.push(ModelDataChangePage()),
+        onPressed: () => RouteManager.push(context, ModelDataChangePage()),
       ),
       SizedBox(height: 16),
       ParentWidget(),

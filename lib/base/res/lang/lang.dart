@@ -122,6 +122,8 @@ class Lang {
 
   String get keyword => '';
 
+  String get router => '';
+
   String get unknown => '';
 
   String get none => '';
