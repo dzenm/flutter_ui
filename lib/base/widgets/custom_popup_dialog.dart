@@ -2,17 +2,12 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-
-enum PopupDirection { leftTop, top, rightTop, leftBottom, bottom, rightBottom, topLeft, left, bottomLeft, topRight, right, bottomRight }
+import 'package:flutter_ui/base/log/log.dart';
 
 typedef BoolCallback = bool Function();
 
-double get _screenWidth => MediaQueryData.fromWindow(window).size.width;
-
-double get _screenHeight => MediaQueryData.fromWindow(window).size.height;
-
 /// 显示弹出窗口所在的widget
-class PopupView extends StatelessWidget {
+class CustomPopupView extends StatelessWidget {
   final Widget child;
   final WidgetBuilder? popupDialogBuilder;
   final double? width;
@@ -30,7 +25,7 @@ class PopupView extends StatelessWidget {
   final Duration transitionDuration;
   final PopupDirection direction;
 
-  PopupView({
+  CustomPopupView({
     Key? key,
     required this.child,
     this.popupDialogBuilder,
@@ -58,8 +53,10 @@ class PopupView extends StatelessWidget {
       child: child,
       behavior: HitTestBehavior.translucent,
       onLongPress: () {
+        Log.d('展示dialog');
         if (onLongPress == null) {
           if (onTap != null) {
+            Log.d('展示dialog');
             _showPopupDialog(context);
           }
         } else {
@@ -101,7 +98,7 @@ class PopupView extends StatelessWidget {
               parent: animation,
               curve: Curves.easeOut,
             ),
-            child: PopupDialog(
+            child: CustomPopupDialog(
               child: body,
               doubleAnimation: animation,
               attachRect: Rect.fromLTWH(offset.dx, offset.dy, bounds.width, bounds.height),
@@ -131,7 +128,7 @@ class PopupView extends StatelessWidget {
 }
 
 /// 弹出窗口
-class PopupDialog extends StatefulWidget {
+class CustomPopupDialog extends StatefulWidget {
   final Widget child;
   final Animation<double> doubleAnimation;
   final Rect attachRect;
@@ -141,7 +138,7 @@ class PopupDialog extends StatefulWidget {
   final double radius;
   final PopupDirection direction;
 
-  const PopupDialog({
+  const CustomPopupDialog({
     Key? key,
     required this.child,
     required this.doubleAnimation,
@@ -153,23 +150,8 @@ class PopupDialog extends StatefulWidget {
     required this.direction,
   }) : super(key: key);
 
-  BoxConstraints _getConstraints() {
-    // 设置显示的最大范围
-    BoxConstraints temp = BoxConstraints(maxHeight: _screenHeight * 2 / 3, maxWidth: 150.0);
-    if (constraints != null) {
-      BoxConstraints boxConstraints = constraints!;
-      temp = temp.copyWith(
-        minWidth: boxConstraints.minWidth.isFinite ? boxConstraints.minWidth : null,
-        minHeight: boxConstraints.minHeight.isFinite ? boxConstraints.minHeight : null,
-        maxWidth: boxConstraints.maxWidth.isFinite ? boxConstraints.maxWidth : null,
-        maxHeight: boxConstraints.maxHeight.isFinite ? boxConstraints.maxHeight : null,
-      );
-    }
-    return temp.copyWith(maxHeight: temp.maxHeight + _PopupViewState._arrowHeight);
-  }
-
   @override
-  _PopupViewState createState() => _PopupViewState();
+  _CustomPopupDialogState createState() => _CustomPopupDialogState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -180,9 +162,11 @@ class PopupDialog extends StatefulWidget {
   }
 }
 
-class _PopupViewState extends State<PopupDialog> with TickerProviderStateMixin {
+class _CustomPopupDialogState extends State<CustomPopupDialog> with TickerProviderStateMixin {
   static const double _arrowWidth = 12.0;
   static const double _arrowHeight = 8.0;
+  static double _screenWidth = MediaQueryData.fromWindow(window).size.width;
+  static double _screenHeight = MediaQueryData.fromWindow(window).size.height;
 
   @override
   Widget build(BuildContext context) {
@@ -190,7 +174,7 @@ class _PopupViewState extends State<PopupDialog> with TickerProviderStateMixin {
       _PopupPosition(
         attachRect: widget.attachRect,
         scale: widget.doubleAnimation,
-        constraints: widget._getConstraints(),
+        constraints: _getConstraints(),
         direction: widget.direction,
         child: _PopupBackground(
           attachRect: widget.attachRect,
@@ -203,6 +187,21 @@ class _PopupViewState extends State<PopupDialog> with TickerProviderStateMixin {
         ),
       )
     ]);
+  }
+
+  BoxConstraints _getConstraints() {
+    // 设置显示的最大范围
+    BoxConstraints constraints = BoxConstraints(maxHeight: _screenHeight * 2 / 3, maxWidth: 150.0);
+    if (widget.constraints != null) {
+      BoxConstraints boxConstraints = widget.constraints!;
+      constraints = constraints.copyWith(
+        minWidth: boxConstraints.minWidth.isFinite ? boxConstraints.minWidth : null,
+        minHeight: boxConstraints.minHeight.isFinite ? boxConstraints.minHeight : null,
+        maxWidth: boxConstraints.maxWidth.isFinite ? boxConstraints.maxWidth : null,
+        maxHeight: boxConstraints.maxHeight.isFinite ? boxConstraints.maxHeight : null,
+      );
+    }
+    return constraints.copyWith(maxHeight: constraints.maxHeight + _arrowHeight);
   }
 }
 
@@ -302,7 +301,7 @@ class _PopupPositionRenderObject extends RenderShiftedBox {
         calcDirection == PopupDirection.rightBottom) {
       double bodyLeft = 0.0;
       // 上下
-      if (attachRect.left > size.width / 2 && _screenWidth - attachRect.right > size.width / 2) {
+      if (attachRect.left > size.width / 2 && _CustomPopupDialogState._screenWidth - attachRect.right > size.width / 2) {
         //判断是否可以在中间
         bodyLeft = attachRect.left + attachRect.width / 2 - size.width / 2;
       } else if (attachRect.left < size.width / 2) {
@@ -310,7 +309,7 @@ class _PopupPositionRenderObject extends RenderShiftedBox {
         bodyLeft = 0.0;
       } else {
         //靠右
-        bodyLeft = _screenWidth - 0.0 - size.width;
+        bodyLeft = _CustomPopupDialogState._screenWidth - 0.0 - size.width;
       }
 
       if (calcDirection == PopupDirection.leftBottom || calcDirection == PopupDirection.bottom || calcDirection == PopupDirection.rightBottom) {
@@ -320,7 +319,7 @@ class _PopupPositionRenderObject extends RenderShiftedBox {
       }
     } else {
       double bodyTop = 0.0;
-      if (attachRect.top > size.height / 2 && _screenHeight - attachRect.bottom > size.height / 2) {
+      if (attachRect.top > size.height / 2 && _CustomPopupDialogState._screenHeight - attachRect.bottom > size.height / 2) {
         //判断是否可以在中间
         bodyTop = attachRect.top + attachRect.height / 2 - size.height / 2;
       } else if (attachRect.top < size.height / 2) {
@@ -328,7 +327,7 @@ class _PopupPositionRenderObject extends RenderShiftedBox {
         bodyTop = 10.0;
       } else {
         //靠右
-        bodyTop = _screenHeight - 10.0 - size.height;
+        bodyTop = _CustomPopupDialogState._screenHeight - 10.0 - size.height;
       }
 
       if (calcDirection == PopupDirection.topRight || calcDirection == PopupDirection.right || calcDirection == PopupDirection.bottomRight) {
@@ -464,27 +463,27 @@ class _PopupContextRenderObject extends RenderShiftedBox {
     BoxConstraints childConstraints;
 
     if (_isVertical()) {
-      childConstraints = BoxConstraints(maxHeight: constraints.maxHeight - _PopupViewState._arrowHeight).enforce(constraints);
+      childConstraints = BoxConstraints(maxHeight: constraints.maxHeight - _CustomPopupDialogState._arrowHeight).enforce(constraints);
     } else {
-      childConstraints = BoxConstraints(maxWidth: constraints.maxWidth - _PopupViewState._arrowHeight).enforce(constraints);
+      childConstraints = BoxConstraints(maxWidth: constraints.maxWidth - _CustomPopupDialogState._arrowHeight).enforce(constraints);
     }
 
     child!.layout(childConstraints, parentUsesSize: true);
 
     // 根据箭头指向的方向，测量控件的大小
     if (_isVertical()) {
-      size = Size(child!.size.width, child!.size.height + _PopupViewState._arrowHeight);
+      size = Size(child!.size.width, child!.size.height + _CustomPopupDialogState._arrowHeight);
     } else {
-      size = Size(child!.size.width + _PopupViewState._arrowHeight, child!.size.height);
+      size = Size(child!.size.width + _CustomPopupDialogState._arrowHeight, child!.size.height);
     }
 
     // 获取箭头的指向
     PopupDirection calcDirection = _calcDirection(attachRect, size, direction);
     final BoxParentData childParentData = child!.parentData as BoxParentData;
     if (calcDirection == PopupDirection.leftBottom || direction == PopupDirection.bottom || direction == PopupDirection.rightBottom) {
-      childParentData.offset = const Offset(0.0, _PopupViewState._arrowHeight);
+      childParentData.offset = const Offset(0.0, _CustomPopupDialogState._arrowHeight);
     } else if (direction == PopupDirection.topRight || direction == PopupDirection.right || direction == PopupDirection.bottomRight) {
-      childParentData.offset = const Offset(_PopupViewState._arrowHeight, 0.0);
+      childParentData.offset = const Offset(_CustomPopupDialogState._arrowHeight, 0.0);
     }
   }
 
@@ -513,64 +512,64 @@ class _PopupContextRenderObject extends RenderShiftedBox {
     // 用于 leftTop和leftBottom 居左时相对左边(即X轴)的偏移量
     double offsetLeft = 20.0;
     // 用于 top和bottom 居中时相对左边(即X轴)的偏移量
-    double offsetHorizontalCenter = attachRect.left + attachRect.width / 2 - _PopupViewState._arrowWidth / 2 - offset.dx;
+    double offsetHorizontalCenter = attachRect.left + attachRect.width / 2 - _CustomPopupDialogState._arrowWidth / 2 - offset.dx;
     // 用于 rightTop和rightBottom 居右时相对左边(即X轴)的偏移量
     double offsetRight = child!.size.width - offsetLeft;
     // 用于 topLeft和topRight 居上时相对上边(即Y轴)的偏移量
     double offsetTop = 20.0;
     // 用于 left和right 居中时相对上边(即Y轴)的偏移量
-    double offsetVerticalCenter = attachRect.top + attachRect.height / 2 - _PopupViewState._arrowWidth / 2 - offset.dy;
+    double offsetVerticalCenter = attachRect.top + attachRect.height / 2 - _CustomPopupDialogState._arrowWidth / 2 - offset.dy;
     // 用于 bottomLeft和bottomRight 居下时相对上边(即X轴)的偏移量
     double offsetBottom = child!.size.height - offsetTop;
 
     switch (calcDirection) {
       case PopupDirection.leftTop: // 顶部的左边
-        arrowRect = Rect.fromLTWH(offsetLeft, child!.size.height, _PopupViewState._arrowWidth, _PopupViewState._arrowHeight);
-        translation = Offset(offsetLeft + _PopupViewState._arrowWidth / 2, size.height);
+        arrowRect = Rect.fromLTWH(offsetLeft, child!.size.height, _CustomPopupDialogState._arrowWidth, _CustomPopupDialogState._arrowHeight);
+        translation = Offset(offsetLeft + _CustomPopupDialogState._arrowWidth / 2, size.height);
         break;
       case PopupDirection.top: //正上方
-        arrowRect = Rect.fromLTWH(offsetHorizontalCenter, child!.size.height, _PopupViewState._arrowWidth, _PopupViewState._arrowHeight);
-        translation = Offset(offsetHorizontalCenter + _PopupViewState._arrowWidth / 2, size.height);
+        arrowRect = Rect.fromLTWH(offsetHorizontalCenter, child!.size.height, _CustomPopupDialogState._arrowWidth, _CustomPopupDialogState._arrowHeight);
+        translation = Offset(offsetHorizontalCenter + _CustomPopupDialogState._arrowWidth / 2, size.height);
         break;
       case PopupDirection.rightTop: //顶部的右边
-        arrowRect = Rect.fromLTWH(offsetRight, child!.size.height, _PopupViewState._arrowWidth, _PopupViewState._arrowHeight);
-        translation = Offset(offsetRight + _PopupViewState._arrowWidth / 2, size.height);
+        arrowRect = Rect.fromLTWH(offsetRight, child!.size.height, _CustomPopupDialogState._arrowWidth, _CustomPopupDialogState._arrowHeight);
+        translation = Offset(offsetRight + _CustomPopupDialogState._arrowWidth / 2, size.height);
         break;
       case PopupDirection.topLeft:
-        arrowRect = Rect.fromLTWH(child!.size.width, offsetTop, _PopupViewState._arrowHeight, _PopupViewState._arrowWidth);
-        translation = Offset(size.width, offsetTop + _PopupViewState._arrowWidth / 2);
+        arrowRect = Rect.fromLTWH(child!.size.width, offsetTop, _CustomPopupDialogState._arrowHeight, _CustomPopupDialogState._arrowWidth);
+        translation = Offset(size.width, offsetTop + _CustomPopupDialogState._arrowWidth / 2);
         break;
       case PopupDirection.left:
-        arrowRect = Rect.fromLTWH(child!.size.width, offsetVerticalCenter, _PopupViewState._arrowHeight, _PopupViewState._arrowWidth);
-        translation = Offset(size.width, offsetVerticalCenter + _PopupViewState._arrowWidth / 2);
+        arrowRect = Rect.fromLTWH(child!.size.width, offsetVerticalCenter, _CustomPopupDialogState._arrowHeight, _CustomPopupDialogState._arrowWidth);
+        translation = Offset(size.width, offsetVerticalCenter + _CustomPopupDialogState._arrowWidth / 2);
         break;
       case PopupDirection.bottomLeft:
-        arrowRect = Rect.fromLTWH(child!.size.width, offsetBottom, _PopupViewState._arrowHeight, _PopupViewState._arrowWidth);
-        translation = Offset(size.width, offsetBottom + _PopupViewState._arrowWidth / 2);
+        arrowRect = Rect.fromLTWH(child!.size.width, offsetBottom, _CustomPopupDialogState._arrowHeight, _CustomPopupDialogState._arrowWidth);
+        translation = Offset(size.width, offsetBottom + _CustomPopupDialogState._arrowWidth / 2);
         break;
       case PopupDirection.leftBottom:
-        arrowRect = Rect.fromLTWH(offsetLeft, 0, _PopupViewState._arrowWidth, _PopupViewState._arrowHeight);
-        translation = Offset(offsetLeft + _PopupViewState._arrowWidth / 2, 0);
+        arrowRect = Rect.fromLTWH(offsetLeft, 0, _CustomPopupDialogState._arrowWidth, _CustomPopupDialogState._arrowHeight);
+        translation = Offset(offsetLeft + _CustomPopupDialogState._arrowWidth / 2, 0);
         break;
       case PopupDirection.bottom:
-        arrowRect = Rect.fromLTWH(offsetHorizontalCenter, 0, _PopupViewState._arrowWidth, _PopupViewState._arrowHeight);
-        translation = Offset(offsetHorizontalCenter + _PopupViewState._arrowWidth / 2, 0);
+        arrowRect = Rect.fromLTWH(offsetHorizontalCenter, 0, _CustomPopupDialogState._arrowWidth, _CustomPopupDialogState._arrowHeight);
+        translation = Offset(offsetHorizontalCenter + _CustomPopupDialogState._arrowWidth / 2, 0);
         break;
       case PopupDirection.rightBottom:
-        arrowRect = Rect.fromLTWH(offsetRight, 0, _PopupViewState._arrowWidth, _PopupViewState._arrowHeight);
-        translation = Offset(offsetRight + _PopupViewState._arrowWidth / 2, 0);
+        arrowRect = Rect.fromLTWH(offsetRight, 0, _CustomPopupDialogState._arrowWidth, _CustomPopupDialogState._arrowHeight);
+        translation = Offset(offsetRight + _CustomPopupDialogState._arrowWidth / 2, 0);
         break;
       case PopupDirection.topRight:
-        arrowRect = Rect.fromLTWH(0, offsetTop, _PopupViewState._arrowHeight, _PopupViewState._arrowWidth);
-        translation = Offset(0, offsetTop + _PopupViewState._arrowWidth / 2);
+        arrowRect = Rect.fromLTWH(0, offsetTop, _CustomPopupDialogState._arrowHeight, _CustomPopupDialogState._arrowWidth);
+        translation = Offset(0, offsetTop + _CustomPopupDialogState._arrowWidth / 2);
         break;
       case PopupDirection.right:
-        arrowRect = Rect.fromLTWH(0, offsetVerticalCenter, _PopupViewState._arrowHeight, _PopupViewState._arrowWidth);
-        translation = Offset(0, offsetVerticalCenter + _PopupViewState._arrowWidth / 2);
+        arrowRect = Rect.fromLTWH(0, offsetVerticalCenter, _CustomPopupDialogState._arrowHeight, _CustomPopupDialogState._arrowWidth);
+        translation = Offset(0, offsetVerticalCenter + _CustomPopupDialogState._arrowWidth / 2);
         break;
       case PopupDirection.bottomRight:
-        arrowRect = Rect.fromLTWH(0, offsetBottom, _PopupViewState._arrowHeight, _PopupViewState._arrowWidth);
-        translation = Offset(0, offsetBottom + _PopupViewState._arrowWidth / 2);
+        arrowRect = Rect.fromLTWH(0, offsetBottom, _CustomPopupDialogState._arrowHeight, _CustomPopupDialogState._arrowWidth);
+        translation = Offset(0, offsetBottom + _CustomPopupDialogState._arrowWidth / 2);
         break;
     }
 
@@ -681,20 +680,135 @@ class _PopupContextRenderObject extends RenderShiftedBox {
   }
 }
 
+/// 计算Popup展示的方向
 PopupDirection _calcDirection(Rect attachRect, Size size, PopupDirection direction) {
   if (direction == PopupDirection.leftTop || direction == PopupDirection.leftBottom) {
-    return (attachRect.top < size.height + _PopupViewState._arrowHeight) ? PopupDirection.leftBottom : PopupDirection.leftTop; // 判断上下位置够不够
+    return (attachRect.top < size.height + _CustomPopupDialogState._arrowHeight) ? PopupDirection.leftBottom : PopupDirection.leftTop; // 判断上下位置够不够
   } else if (direction == PopupDirection.top || direction == PopupDirection.bottom) {
-    return (attachRect.top < size.height + _PopupViewState._arrowHeight) ? PopupDirection.bottom : PopupDirection.top;
+    return (attachRect.top < size.height + _CustomPopupDialogState._arrowHeight) ? PopupDirection.bottom : PopupDirection.top;
   } else if (direction == PopupDirection.rightTop || direction == PopupDirection.rightBottom) {
-    return (attachRect.top < size.height + _PopupViewState._arrowHeight) ? PopupDirection.rightBottom : PopupDirection.rightTop;
+    return (attachRect.top < size.height + _CustomPopupDialogState._arrowHeight) ? PopupDirection.rightBottom : PopupDirection.rightTop;
   } else if (direction == PopupDirection.topLeft || direction == PopupDirection.topRight) {
-    return (attachRect.left < size.width + _PopupViewState._arrowHeight) ? PopupDirection.topRight : PopupDirection.topLeft; // 判断左右位置够不够
+    return (attachRect.left < size.width + _CustomPopupDialogState._arrowHeight) ? PopupDirection.topRight : PopupDirection.topLeft; // 判断左右位置够不够
   } else if (direction == PopupDirection.left || direction == PopupDirection.right) {
-    return (attachRect.left < size.width + _PopupViewState._arrowHeight) ? PopupDirection.right : PopupDirection.left;
+    return (attachRect.left < size.width + _CustomPopupDialogState._arrowHeight) ? PopupDirection.right : PopupDirection.left;
   } else if (direction == PopupDirection.bottomLeft || direction == PopupDirection.bottomRight) {
-    return (attachRect.left < size.width + _PopupViewState._arrowHeight) ? PopupDirection.bottomRight : PopupDirection.bottomLeft;
+    return (attachRect.left < size.width + _CustomPopupDialogState._arrowHeight) ? PopupDirection.bottomRight : PopupDirection.bottomLeft;
   } else {
     return PopupDirection.bottom;
+  }
+}
+
+enum PopupDirection {
+  leftTop,
+  top,
+  rightTop,
+  leftBottom,
+  bottom,
+  rightBottom,
+  topLeft,
+  left,
+  bottomLeft,
+  topRight,
+  right,
+  bottomRight,
+}
+
+
+class PopupMenu extends StatelessWidget {
+  final List<Widget> children;
+  final Color? dividerColor;
+  final double? dividerHeight;
+
+  const PopupMenu({
+    Key? key,
+    this.children = const [],
+    this.dividerColor = Colors.white,
+    this.dividerHeight = 1.0,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: children.length * 2 - 1,
+      shrinkWrap: true,
+      itemBuilder: (context, int i) {
+        if (i.isOdd) {
+          // 在每一列之前，添加一个分隔线widget
+          return Divider(height: dividerHeight, color: dividerColor);
+        }
+        final int index = i ~/ 2;
+        return children[index];
+      },
+      padding: const EdgeInsets.all(0.0),
+    );
+  }
+}
+
+class PopupItem extends StatefulWidget {
+  final Widget? leading;
+  final Widget child;
+  final BoolCallback? onTap;
+  final bool isTapClosePopup;
+  final Color activeBackground;
+  final Color background;
+
+  const PopupItem({
+    Key? key,
+    this.leading,
+    required this.child,
+    this.onTap,
+    this.background = Colors.white,
+    this.activeBackground = const Color(0xFFd9d9d9),
+    this.isTapClosePopup = true,
+  }) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => PopupItemState();
+}
+
+class PopupItemState extends State<PopupItem> {
+  bool isDown = false;
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> widgets = [];
+    if (widget.leading != null) {
+      widgets.add(Container(
+        padding: const EdgeInsets.all(8),
+        width: 36.0,
+        height: 36.0,
+        child: IconTheme(data: const IconThemeData(color: Color(0xff007aff), size: 20.0), child: widget.leading!),
+      ));
+    }
+    widgets.add(Expanded(child: DefaultTextStyle(style: const TextStyle(color: Color(0xff007aff)), child: widget.child)));
+    return GestureDetector(
+      onTapDown: (detail) {
+        setState(() => isDown = true);
+      },
+      onTapUp: (detail) {
+        if (isDown) {
+          setState(() => isDown = false);
+          if (widget.onTap != null && widget.onTap!()) {
+            return;
+          }
+          if (widget.isTapClosePopup) {
+            Navigator.of(context).pop();
+          }
+        }
+      },
+      onTapCancel: () {
+        if (isDown) {
+          setState(() => isDown = false);
+        }
+      },
+      child: Container(
+        color: isDown ? widget.activeBackground : widget.background,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 2.5, bottom: 2.5),
+          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: widgets),
+        ),
+      ),
+    );
   }
 }

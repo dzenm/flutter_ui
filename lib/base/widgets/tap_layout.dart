@@ -29,7 +29,7 @@ class TapLayout extends StatefulWidget {
 
   TapLayout({
     Key? key,
-    this.child,
+    required this.child,
     this.onTap,
     this.onDoubleTap,
     this.onLongPress,
