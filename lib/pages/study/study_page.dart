@@ -7,9 +7,8 @@ import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/res/theme/app_theme.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
-import 'package:flutter_ui/base/widgets/picker_list_view.dart';
 import 'package:flutter_ui/base/widgets/custom_popup_dialog.dart';
-import 'package:flutter_ui/base/widgets/tap_layout.dart';
+import 'package:flutter_ui/base/widgets/picker_list_view.dart';
 import 'package:provider/provider.dart';
 
 import 'city_page/city_page.dart';
@@ -17,7 +16,6 @@ import 'convert_page/convert_page.dart';
 import 'drag_list_page/drag_list_page.dart';
 import 'float_navigation_page/float_navigation_page.dart';
 import 'http_page/http_page.dart';
-import 'image_editor/image_editor_page.dart';
 import 'keyword_board/keyword_board_page.dart';
 import 'list_page/list_page.dart';
 import 'load_image_page/load_image_page.dart';
@@ -204,7 +202,7 @@ class _StudyPageState extends State<StudyPage> {
           data: ['测试一', '测试二', '测试三', '测试四', '测试五'],
           onSelectedChanged: (item) {
             _selectedItem = item;
-            Log.d('选中的回调: $_selectedItem');
+            Log.i('选中的回调: $_selectedItem');
           },
         ),
       ),

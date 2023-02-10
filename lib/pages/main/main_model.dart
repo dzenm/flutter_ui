@@ -45,12 +45,12 @@ class MainModel extends ChangeNotifier {
   }
 
   /// 主页选中的item索引
-  int _selectItemIndex = 0;
+  int _selectIndex = 0;
 
-  int get selectItemIndex => _selectItemIndex;
+  int get selectIndex => _selectIndex;
 
-  void updateSelectItemIndex(int selectItemIndex) {
-    _selectItemIndex = selectItemIndex;
+  void updateSelectIndex(int selectIndex) {
+    _selectIndex = selectIndex;
     notifyListeners();
   }
 }

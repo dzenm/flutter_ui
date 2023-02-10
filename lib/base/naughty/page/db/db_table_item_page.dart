@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../db/database_manager.dart';
+import '../../../db/db_manager.dart';
 import '../../../entities/column_entity.dart';
 import '../../../widgets/state_view.dart';
 /// 数据库表列表展示页面
@@ -30,8 +30,8 @@ class _DBTableItemPageState extends State<DBTableItemPage> {
   }
 
   Future<void> getData() async {
-    _columns = await DatabaseManager().getTableColumn(widget.dbName, widget.tableName);
-    _list = await DatabaseManager().where(widget.tableName);
+    _columns = await DBManager().getTableColumn(widget.dbName, widget.tableName);
+    _list = await DBManager().where(widget.tableName);
     setState(() => _controller.loadComplete());
   }
 

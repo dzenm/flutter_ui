@@ -26,7 +26,7 @@ class TextPage extends StatefulWidget {
 }
 
 class _TextPageState extends State<TextPage> {
-  static const String _TAG = 'TextPage';
+  static const String _tag = 'TextPage';
   TextEditingController _controller = new TextEditingController(text: "初始化");
   String text = '';
   String newText = '';
@@ -44,31 +44,31 @@ class _TextPageState extends State<TextPage> {
   void initState() {
     super.initState();
 
-    Log.d('initState', tag: _TAG);
+    Log.i('initState', tag: _tag);
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    Log.d('didChangeDependencies', tag: _TAG);
+    Log.i('didChangeDependencies', tag: _tag);
   }
 
   @override
   void didUpdateWidget(covariant TextPage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    Log.d('didUpdateWidget', tag: _TAG);
+    Log.i('didUpdateWidget', tag: _tag);
   }
 
   @override
   void deactivate() {
     super.deactivate();
-    Log.d('deactivate', tag: _TAG);
+    Log.i('deactivate', tag: _tag);
   }
 
   @override
   void dispose() {
     super.dispose();
-    Log.d('dispose', tag: _TAG);
+    Log.i('dispose', tag: _tag);
   }
 
   @override

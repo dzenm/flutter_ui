@@ -18,7 +18,7 @@ class MainPage extends StatefulWidget {
 
 // 主页的状态
 class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
-  static const String _TAG = 'MainPage';
+  static const String _tag = 'MainPage';
 
   // 页面管理控制器
   final PageController _pageController = PageController(initialPage: 0);
@@ -27,32 +27,32 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    Log.d('didChangeAppLifecycleState: $state', tag: _TAG);
+    Log.i('didChangeAppLifecycleState: $state', tag: _tag);
   }
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    Log.d('initState', tag: _TAG);
+    Log.i('initState', tag: _tag);
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    Log.d('didChangeDependencies', tag: _TAG);
+    Log.i('didChangeDependencies', tag: _tag);
   }
 
   @override
   void didUpdateWidget(covariant MainPage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    Log.d('didUpdateWidget', tag: _TAG);
+    Log.i('didUpdateWidget', tag: _tag);
   }
 
   @override
   void deactivate() {
     super.deactivate();
-    Log.d('deactivate', tag: _TAG);
+    Log.i('deactivate', tag: _tag);
   }
 
   @override
@@ -60,12 +60,12 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     _pageController.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
-    Log.d('dispose', tag: _TAG);
+    Log.i('dispose', tag: _tag);
   }
 
   @override
   Widget build(BuildContext context) {
-    Log.d('build', tag: _TAG);
+    Log.i('build', tag: _tag);
     Naughty.getInstance
       ..init(context)
       ..show();
@@ -91,9 +91,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   /// Page widget
   List<Widget> _buildListPage(List<String> titles) {
     return [
-      HomePage(
-        title: titles[0],
-      ),
+      HomePage(title: titles[0]),
       NavPage(title: titles[1]),
       MePage(title: titles[2]),
     ];
@@ -101,14 +99,14 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
 
   /// BottomNavigationBar widget
   List<Widget> _buildBottomNavigationBar(List<String> titles) {
-    int index = -1;
+    int index = 0;
     return titles.map((title) {
-      index++;
-      return BottomNavigationBarItemView(index: index, controller: _pageController);
+      return BottomNavigationBarItemView(index: index++, controller: _pageController);
     }).toList(); // bottomNavigation list
   }
 }
 
+/// 底部Item布局
 class BottomNavigationBarItemView extends StatefulWidget {
   final int index;
   final PageController controller;
@@ -125,16 +123,18 @@ class BottomNavigationBarItemView extends StatefulWidget {
 }
 
 class _BottomNavigationBarItemViewState extends State<BottomNavigationBarItemView> {
+  static const String _tag = 'BottomNavigationBarItemView';
+
   @override
   Widget build(BuildContext context) {
-    Log.d('build', tag: 'BottomNavigationBarItemView');
     int index = widget.index; // item索引
-    int selectItemIndex = context.watch<MainModel>().selectItemIndex; // 当前选中的索引
+    int selectIndex = context.watch<MainModel>().selectIndex; // 当前选中的索引
     int badgeCount = context.watch<MainModel>().badgeCount(index); // 图标的数量
     IconData icon = context.watch<MainModel>().icon(index); // item图标
     String title = context.watch<MainModel>().title(index); // item标题
+    Log.i('build: selectIndex=$selectIndex, index=$index, title=$title, badgeCount=$badgeCount', tag: _tag);
 
-    Color color = selectItemIndex == index ? Colors.blue : Colors.grey.shade500;
+    Color color = selectIndex == index ? Colors.blue : Colors.grey.shade500;
     double width = 56, height = 56;
     // 平分整个宽度
     return Expanded(
@@ -143,8 +143,8 @@ class _BottomNavigationBarItemViewState extends State<BottomNavigationBarItemVie
       child: TapLayout(
         height: height,
         onTap: () {
-          if (selectItemIndex != index) {
-            context.read<MainModel>().updateSelectItemIndex(index);
+          if (selectIndex != index) {
+            context.read<MainModel>().updateSelectIndex(index);
             widget.controller.jumpToPage(index);
           }
           if (widget.onTap != null) widget.onTap!();

@@ -22,6 +22,7 @@ ApiServices api(int index) => ApiClient.getInstance._api[ApiClient.getInstance._
 /// HTTP请求
 ///
 class ApiClient {
+  static const String _tag = 'ApiClient';
   static const int _connectTimeout = 20000;
   static const int _receiveTimeout = 20000;
 
@@ -121,7 +122,7 @@ class ApiClient {
     if (failed != null) {
       failed(error);
     }
-    Log.d('HTTP请求错误: code=${error.code}, msg=${error.msg}');
+    Log.d('HTTP请求错误: code=${error.code}, msg=${error.msg}', tag: _tag);
   }
 
   // 关闭提示框

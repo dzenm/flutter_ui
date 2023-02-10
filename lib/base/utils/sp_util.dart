@@ -15,7 +15,7 @@ class SpUtil {
 
   static SharedPreferences? _prefs;
 
-  static const String _tag = 'SP数据';
+  static const String _tag = 'SpUtil';
 
   /// 用户登录相关的信息
   static const String _userInfo = 'u_info'; // 登录的用户信息
@@ -31,7 +31,7 @@ class SpUtil {
 
   Future init() async {
     _prefs = await SharedPreferences.getInstance();
-    Log.d('初始化 SharedPreferences ${_prefs != null ? '成功' : '失败'}');
+    Log.i('初始化 SharedPreferences ${_prefs != null ? '成功' : '失败'}', tag: _tag);
   }
 
   // 登录状态信息
@@ -127,32 +127,32 @@ class SpUtil {
 
   static String getString(String key) {
     String? value = _prefs?.getString(key);
-    Log.d('get $key=$value', tag: _tag);
+    Log.i('get $key=$value', tag: _tag);
     return value ?? '';
   }
 
   static void setString(String key, String? value) {
-    _prefs?.setString(key, value ?? '').then((res) => Log.d('$key=$value', tag: _tag));
+    _prefs?.setString(key, value ?? '').then((res) => Log.i('$key=$value', tag: _tag));
   }
 
   static int getInt(String key) {
     int? value = _prefs?.getInt(key);
-    Log.d('get $key=$value', tag: _tag);
+    Log.i('get $key=$value', tag: _tag);
     return value ?? 0;
   }
 
   static void setInt(String key, int? value) {
-    _prefs?.setInt(key, value ?? 0).then((res) => Log.d('$key=$value', tag: _tag));
+    _prefs?.setInt(key, value ?? 0).then((res) => Log.i('$key=$value', tag: _tag));
   }
 
   static bool getBool(String key) {
     bool? value = _prefs?.getBool(key);
-    Log.d('get $key=$value', tag: _tag);
+    Log.i('get $key=$value', tag: _tag);
     return value ?? false;
   }
 
   static void setBool(String key, bool? value) {
-    _prefs?.setBool(key, value ?? false).then((res) => Log.d('$key=$value', tag: _tag));
+    _prefs?.setBool(key, value ?? false).then((res) => Log.i('$key=$value', tag: _tag));
   }
 
   static void remove(String key) {

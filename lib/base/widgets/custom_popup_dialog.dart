@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_ui/base/log/log.dart';
 
 typedef BoolCallback = bool Function();
 
@@ -53,10 +52,8 @@ class CustomPopupView extends StatelessWidget {
       child: child,
       behavior: HitTestBehavior.translucent,
       onLongPress: () {
-        Log.d('展示dialog');
         if (onLongPress == null) {
           if (onTap != null) {
-            Log.d('展示dialog');
             _showPopupDialog(context);
           }
         } else {
@@ -713,7 +710,6 @@ enum PopupDirection {
   right,
   bottomRight,
 }
-
 
 class PopupMenu extends StatelessWidget {
   final List<Widget> children;

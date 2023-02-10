@@ -26,7 +26,7 @@ class MePage extends StatefulWidget {
 }
 
 class _MePageState extends State<MePage> with AutomaticKeepAliveClientMixin {
-  static const String _TAG = 'MePage';
+  static const String _tag = 'MePage';
 
   @override
   bool get wantKeepAlive => true;
@@ -34,7 +34,7 @@ class _MePageState extends State<MePage> with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
-    Log.d('initState', tag: _TAG);
+    Log.i('initState', tag: _tag);
     Future.delayed(Duration.zero, () => getData());
   }
 
@@ -46,30 +46,31 @@ class _MePageState extends State<MePage> with AutomaticKeepAliveClientMixin {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    Log.d('didChangeDependencies', tag: _TAG);
+    Log.i('didChangeDependencies', tag: _tag);
   }
 
   @override
   void didUpdateWidget(covariant MePage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    Log.d('didUpdateWidget', tag: _TAG);
+    Log.i('didUpdateWidget', tag: _tag);
   }
 
   @override
   void deactivate() {
     super.deactivate();
-    Log.d('deactivate', tag: _TAG);
+    Log.i('deactivate', tag: _tag);
   }
 
   @override
   void dispose() {
     super.dispose();
-    Log.d('dispose', tag: _TAG);
+    Log.i('dispose', tag: _tag);
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    Log.i('build', tag: _tag);
 
     AppTheme? theme = context.watch<LocalModel>().appTheme;
     double? statusBarHeight = MediaQuery.of(context).padding.top;

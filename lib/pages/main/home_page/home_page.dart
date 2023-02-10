@@ -19,7 +19,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
-  static const String _TAG = 'HomePage';
+  static const String _tag = 'HomePage';
 
   @override
   bool get wantKeepAlive => true;
@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   @override
   void initState() {
     super.initState();
-    Log.d('initState', tag: _TAG);
+    Log.i('initState', tag: _tag);
 
     _getData();
   }
@@ -35,31 +35,31 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    Log.d('didChangeDependencies', tag: _TAG);
+    Log.i('didChangeDependencies', tag: _tag);
   }
 
   @override
   void didUpdateWidget(covariant HomePage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    Log.d('didUpdateWidget', tag: _TAG);
+    Log.i('didUpdateWidget', tag: _tag);
   }
 
   @override
   void deactivate() {
     super.deactivate();
-    Log.d('deactivate', tag: _TAG);
+    Log.i('deactivate', tag: _tag);
   }
 
   @override
   void dispose() {
     super.dispose();
-    Log.d('dispose', tag: _TAG);
+    Log.i('dispose', tag: _tag);
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    Log.d('build', tag: _TAG);
+    Log.i('build', tag: _tag);
 
     return Scaffold(
       appBar: AppBar(
@@ -77,11 +77,15 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   }
 
   void _getData() async {
-    Log.d('开始加载网络数据...');
-    Future.wait([_getBanner(), _getArticle(1), _getTopArticle()]).then((value) {
-      Log.d('网络数据执行完成...');
+    Log.d('开始加载网络数据...', tag: _tag);
+    await Future.wait([
+      _getBanner(),
+      _getArticle(1),
+      _getTopArticle(),
+    ]).then((value) {
+      Log.d('网络数据执行完成...', tag: _tag);
     });
-    Log.d('结束加载网络数据...');
+    Log.d('结束加载网络数据...', tag: _tag);
   }
 
   Future<void> _getBanner() async {
@@ -109,9 +113,11 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
 }
 
 class Banner extends StatelessWidget {
+  static const String _tag = 'Banner';
+
   @override
   Widget build(BuildContext context) {
-    Log.d('build', tag: 'Banner');
+    Log.i('build', tag: _tag);
 
     List<String> titles = context.watch<BannerModel>().titles;
     List<String> images = context.watch<BannerModel>().images;

@@ -16,14 +16,14 @@ class ModelDataListenPage extends StatefulWidget {
 }
 
 class _ModelDataListenPageState extends State<ModelDataListenPage> {
-  static const String _TAG = 'TabPage';
+  static const String _tag = 'TabPage';
 
   Person? person;
 
   @override
   void initState() {
     super.initState();
-    Log.d('initState', tag: _TAG);
+    Log.i('initState', tag: _tag);
     Future.delayed(Duration.zero, () {
       person = Provider.of<MeModel>(context, listen: false).persons[0];
     });
@@ -32,30 +32,30 @@ class _ModelDataListenPageState extends State<ModelDataListenPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    Log.d('didChangeDependencies', tag: _TAG);
+    Log.i('didChangeDependencies', tag: _tag);
   }
 
   @override
   void didUpdateWidget(covariant ModelDataListenPage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    Log.d('didUpdateWidget', tag: _TAG);
+    Log.i('didUpdateWidget', tag: _tag);
   }
 
   @override
   void deactivate() {
     super.deactivate();
-    Log.d('deactivate', tag: _TAG);
+    Log.i('deactivate', tag: _tag);
   }
 
   @override
   void dispose() {
     super.dispose();
-    Log.d('dispose', tag: _TAG);
+    Log.i('dispose', tag: _tag);
   }
 
   @override
   Widget build(BuildContext context) {
-    Log.d('page: build', tag: _TAG);
+    Log.i('page: build', tag: _tag);
     return Scaffold(
       appBar: AppBar(
         title: Text('测试', style: TextStyle(color: Colors.white)),
@@ -110,7 +110,7 @@ class _ModelDataListenPageState extends State<ModelDataListenPage> {
   }
 
   Widget _myWidget() {
-    Log.d('_myWidget widget: build', tag: _TAG);
+    Log.i('_myWidget widget: build', tag: _tag);
     // Person person = Provider.of<MeModel>(context, listen: true).persons[0];
     return Column(children: [
       Text('myWidget: ${person?.name}'),
@@ -132,7 +132,7 @@ class _ParentWidgetState extends State<ParentWidget> {
 
   @override
   Widget build(BuildContext context) {
-    Log.d('父widget: build', tag: 'ParentWidget');
+    Log.i('父widget: build', tag: 'ParentWidget');
     // Person person = Provider.of<MeModel>(context, listen: true).persons[0];
     Person person = context.watch<MeModel>().persons[0];
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -164,7 +164,7 @@ class _ChildWidgetState extends State<ChildWidget> {
 
   @override
   Widget build(BuildContext context) {
-    Log.d('子widget: build', tag: 'ChildWidget');
+    Log.i('子widget: build', tag: 'ChildWidget');
     Person person = Provider.of<MeModel>(context, listen: false).persons[0];
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text('子widget: ${person.name}'),

@@ -30,7 +30,7 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
-  static const String _TAG = 'SettingPage';
+  static const String _tag = 'SettingPage';
 
   bool switchState = true;
   UserEntity _user = UserEntity();
@@ -38,7 +38,7 @@ class _SettingPageState extends State<SettingPage> {
   @override
   void initState() {
     super.initState();
-    Log.d('initState', tag: _TAG);
+    Log.i('initState', tag: _tag);
 
     String user = SpUtil.getUser();
     _user = UserEntity.fromJson(jsonDecode(user));
@@ -47,25 +47,25 @@ class _SettingPageState extends State<SettingPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    Log.d('didChangeDependencies', tag: _TAG);
+    Log.i('didChangeDependencies', tag: _tag);
   }
 
   @override
   void didUpdateWidget(covariant SettingPage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    Log.d('didUpdateWidget', tag: _TAG);
+    Log.d('didUpdateWidget', tag: _tag);
   }
 
   @override
   void deactivate() {
     super.deactivate();
-    Log.d('deactivate', tag: _TAG);
+    Log.d('deactivate', tag: _tag);
   }
 
   @override
   void dispose() {
     super.dispose();
-    Log.d('dispose', tag: _TAG);
+    Log.d('dispose', tag: _tag);
   }
 
   @override

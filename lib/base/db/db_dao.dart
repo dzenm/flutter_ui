@@ -2,42 +2,42 @@ import 'package:sqflite/sqflite.dart';
 
 import '../entities/column_entity.dart';
 import '../entities/table_entity.dart';
-import 'database_manager.dart';
+import 'db_manager.dart';
 import 'db_base_model.dart';
 
 /// 数据库操作(增删改查), 在model中使用with混入即可。
 class DBDao {
 
   /// 根据数据库名返回数据库的实例
-  Future<Database> getDatabase({String? dbName}) async => await DatabaseManager().getDatabase(dbName: dbName);
+  Future<Database> getDatabase({String? dbName}) async => await DBManager().getDatabase(dbName: dbName);
 
   /// 删除数据库
-  Future<void> dropDatabase() async => await DatabaseManager().drop();
+  Future<void> dropDatabase() async => await DBManager().drop();
 
   /// 关闭数据库
-  Future<void> closeDatabase() async => await DatabaseManager().close();
+  Future<void> closeDatabase() async => await DBManager().close();
 
   /// 获取数据库名称
-  String getDBName() => DatabaseManager().getDBName();
+  String getDBName() => DBManager().getDBName();
 
   /// 获取数据库所在的绝对路径
   Future<String> getPath({String? dbName}) async {
-    return await DatabaseManager().getPath(dbName: dbName);
+    return await DBManager().getPath(dbName: dbName);
   }
 
   /// 判断数据库中的表是否存在
   Future<bool> isTableExist(String tableName, {String? dbName}) async {
-    return await DatabaseManager().isTableExist(tableName, dbName: dbName);
+    return await DBManager().isTableExist(tableName, dbName: dbName);
   }
 
   /// 获取数据库中表每一列的字段名称
   Future<List<ColumnEntity>> getTableColumn(String dbName, String tableName) async {
-    return await DatabaseManager().getTableColumn(dbName, tableName);
+    return await DBManager().getTableColumn(dbName, tableName);
   }
 
   /// 获取数据库中的所有表
   Future<List<TableEntity>> getTableList({String? dbName}) async {
-    return await DatabaseManager().getTableList(dbName: dbName);
+    return await DBManager().getTableList(dbName: dbName);
   }
 
   /// 插入数据
@@ -47,13 +47,13 @@ class DBDao {
   }) async {
     if (data == null) return;
     if (data is List) {
-      data.forEach((element) async => await DatabaseManager().insertItem(
+      data.forEach((element) async => await DBManager().insertItem(
             element.getTableName(),
             element.toJson(),
             conflictAlgorithm: conflictAlgorithm,
           ));
     } else if (data is T) {
-      await DatabaseManager().insertItem(
+      await DBManager().insertItem(
         data.getTableName(),
         data.toJson(),
         conflictAlgorithm: conflictAlgorithm,
@@ -67,7 +67,7 @@ class DBDao {
     Map<String, String>? where,
   }) async {
     if (data == null) return 0;
-    return DatabaseManager().deleteItem(
+    return DBManager().deleteItem(
       data.getTableName(),
       where: where,
     );
@@ -80,7 +80,7 @@ class DBDao {
     ConflictAlgorithm? conflictAlgorithm,
   }) async {
     if (data == null) return 0;
-    return DatabaseManager().updateItem(
+    return DBManager().updateItem(
       data.getTableName(),
       data.toJson(),
       where,
@@ -94,7 +94,7 @@ class DBDao {
     Map<String, String>? where,
   }) async {
     if (data == null) return [];
-    return DatabaseManager()
+    return DBManager()
         .where(
           data.getTableName(),
           where: where,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../db/database_manager.dart';
+import '../../../db/db_manager.dart';
 import '../../../entities/table_entity.dart';
 import '../../../router/route_manager.dart';
 import '../../../utils/str_util.dart';
@@ -46,7 +46,7 @@ class _DBTableListPageState extends State<DBTableListPage> {
   //列表要展示的数据
   Future getData() async {
     await Future.delayed(Duration(seconds: 0), () async {
-      _list = await DatabaseManager().getTableList(dbName: widget.dbName);
+      _list = await DBManager().getTableList(dbName: widget.dbName);
       setState(() => {});
     });
   }

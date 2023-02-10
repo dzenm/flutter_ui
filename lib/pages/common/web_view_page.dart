@@ -122,7 +122,7 @@ class _FlutterWebViewState extends State<FlutterWebView> {
             },
             onNavigationRequest: (NavigationRequest request) {
               if (request.url.startsWith('myapp://')) {
-                Log.d('即将打开 ${request.url}');
+                Log.i('即将打开 ${request.url}');
                 return NavigationDecision.prevent;
               }
               return NavigationDecision.navigate;

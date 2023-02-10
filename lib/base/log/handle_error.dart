@@ -34,6 +34,7 @@ class HandleError {
   factory HandleError() => getInstance;
 
   static const String crashParent = 'crash';
+  static const String _tag = 'HandleError';
 
   // 捕获flutter运行时的错误
   Future catchFlutterError(RunFlutterAPP runFlutterAPP, {String? fileName, HandleMsg? handleMsg}) async {
@@ -69,19 +70,14 @@ class HandleError {
 
     runZonedGuarded(() async {
       // 在这里启动Flutter APP之后，所有的异常信息才能捕获成功
-      Log.d('╔════════════════════════════════════════════════════════════════════════════╗');
-      Log.d('║                                                                            ║');
-      Log.d('║                Start Flutter APP                                           ║');
-      Log.d('║                                                                            ║');
-      Log.d('╚════════════════════════════════════════════════════════════════════════════╝');
       runFlutterAPP();
     }, (dynamic error, StackTrace stackTrace) async {
       // 出现异常后，在这里处理异常
-      Log.e('╔════════════════════════════════════════════════════════════════════════════╗');
-      Log.e('║                                                                            ║');
-      Log.e('║                Handle Flutter Error                                        ║');
-      Log.e('║                                                                            ║');
-      Log.e('╚════════════════════════════════════════════════════════════════════════════╝');
+      Log.e('╔════════════════════════════════════════════════════════════════════════════╗', tag: _tag);
+      Log.e('║                                                                            ║', tag: _tag);
+      Log.e('║                Handle Flutter Error                                        ║', tag: _tag);
+      Log.e('║                                                                            ║', tag: _tag);
+      Log.e('╚════════════════════════════════════════════════════════════════════════════╝', tag: _tag);
 
       // 将错误转为文本信息并保存为文件
       _convertToText(error, stackTrace).then((msg) => saveTextToFile(msg, handleMsg: handleMsg));
@@ -110,14 +106,14 @@ class HandleError {
     }
 
     Map<String, dynamic> info = await getAppInfo();
-    Log.e('╔══════════════════════════════ Phone Info ══════════════════════════════════╗');
+    Log.e('╔══════════════════════════════ Phone Info ══════════════════════════════════╗, tag: _tag');
     info.forEach((key, value) => write('$key: $value'));
 
-    Log.e('║══════════════════════════════ Error Info ═══════════════════════════════════');
+    Log.e('║══════════════════════════════ Error Info ═══════════════════════════════════, tag: _tag');
     List<String> list = getAppError(error, stackTrace);
     list.forEach((msg) {
       if (msg == '@分割线@') {
-        Log.e('║══════════════════════════════ Stack Trace ══════════════════════════════════');
+        Log.e('║══════════════════════════════ Stack Trace ══════════════════════════════════, tag: _tag');
       } else {
         write(msg);
       }
@@ -142,10 +138,10 @@ class HandleError {
     DeviceInfoPlugin infoPlugin = DeviceInfoPlugin();
     if (Platform.isAndroid) {
       AndroidDeviceInfo info = await infoPlugin.androidInfo;
-      deviceInfo = info.toMap();
+      deviceInfo = info.data;
     } else if (Platform.isIOS) {
       IosDeviceInfo info = await infoPlugin.iosInfo;
-      deviceInfo = info.toMap();
+      deviceInfo = info.data;
     }
 
     Map<String, dynamic> res = {};

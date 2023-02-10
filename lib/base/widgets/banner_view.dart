@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../log/log.dart';
-
 /// Item的点击事件
 typedef void ItemClick(int position);
 
@@ -77,7 +75,6 @@ class _BannerViewState extends State<BannerView> {
     }
     for (int i = 0; i < oldList.length; i++) {
       if (oldList[i] != newList[i]) {
-        Log.d('更改children状态: old=${oldList[i]}\n, new=${newList[i]}');
         return true;
       }
     }

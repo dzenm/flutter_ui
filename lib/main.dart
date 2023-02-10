@@ -44,40 +44,47 @@ class Application {
 
   static BuildContext get context => navigatorKey.currentContext!;
 
+  static const String _tag = 'Application';
+
   /// 初始化
   void init() async {
-    Log.d('═══════════════════════════════ 开始初始化 ════════════════════════════════════');
-    Log.d('启动: ${DateTime.now().millisecondsSinceEpoch}');
-    Log.d('Application是否单例: ${Application.getInstance == Application()}');
+    Log.i('═══════════════════════════════ 开始初始化 ════════════════════════════════════', tag: _tag);
+    Log.i('启动: ${DateTime.now().millisecondsSinceEpoch}', tag: _tag);
+    Log.i('Application是否单例: ${Application.getInstance == Application()}', tag: _tag);
 
-    Log.d('初始化 WidgetsFlutterBinding ...');
+    Log.i('初始化 WidgetsFlutterBinding ...', tag: _tag);
     MockBinding.ensureInitialized();
 
-    Log.d('初始化 SharedPreferences ...');
+    Log.i('初始化 SharedPreferences ...', tag: _tag);
     await SpUtil.getInstance.init();
 
-    Log.d('初始化 阿里云推送 ...');
+    Log.i('初始化 阿里云推送 ...', tag: _tag);
     _initAliYunPush();
 
-    Log.d('初始化 系统通知 ...');
+    Log.i('初始化 系统通知 ...', tag: _tag);
     _initSystemNotification();
 
-    Log.d('初始化 Android设置 ...');
+    Log.i('初始化 Android设置 ...', tag: _tag);
     _initAndroidSettings();
 
-    Log.d('初始化 iOS设置 ...');
+    Log.i('初始化 iOS设置 ...', tag: _tag);
     _initIOSSettings();
 
     MathUtil.main();
 
     NumberKeyboard.register();
-    Log.d('结束: ${DateTime.now().millisecondsSinceEpoch}');
-    Log.d('═══════════════════════════════ 结束初始化 ════════════════════════════════════');
+    Log.i('结束: ${DateTime.now().millisecondsSinceEpoch}', tag: _tag);
+    Log.i('═══════════════════════════════ 结束初始化 ════════════════════════════════════', tag: _tag);
 
     // 运行flutter时全局异常捕获
-    await HandleError().catchFlutterError(
-      () => _runMyApp(WillPopView(behavior: BackBehavior.background, child: _startPage())),
-    );
+    await HandleError().catchFlutterError(() {
+      Log.i('╔════════════════════════════════════════════════════════════════════════════╗', tag: _tag);
+      Log.i('║                                                                            ║', tag: _tag);
+      Log.i('║                Start Flutter APP                                           ║', tag: _tag);
+      Log.i('║                                                                            ║', tag: _tag);
+      Log.i('╚════════════════════════════════════════════════════════════════════════════╝', tag: _tag);
+      _runMyApp(WillPopView(behavior: BackBehavior.background, child: _startPage()));
+    });
   }
 
   /// 运行第一个页面，设置最顶层的共享数据
@@ -86,7 +93,6 @@ class Application {
     Widget consumerApp = Consumer<LocalModel>(builder: (context, res, widget) {
       // Page必须放在MaterialApp中运行
       AppTheme? theme = res.appTheme;
-      // ScreenUtil.setContext(context);
       return MaterialApp(
         navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
@@ -186,7 +192,7 @@ class Application {
 
   /// 获取第一个页面
   Widget _startPage() {
-    Log.d('启动页面: ${DateTime.now().millisecondsSinceEpoch}');
+    Log.i('启动页面: ${DateTime.now().millisecondsSinceEpoch}', tag: _tag);
     return SpUtil.getUserLoginState() ? MainPage() : LoginPage();
   }
 }

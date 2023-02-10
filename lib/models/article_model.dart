@@ -18,6 +18,7 @@ class ArticleModel extends ChangeNotifier {
     List list = await _entity.where(_entity);
     List<ArticleEntity> articles = list.map((e) => e as ArticleEntity).toList();
     _allArticleList = articles;
+    notifyListeners();
   }
 
   List<ArticleEntity> get articles {
