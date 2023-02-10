@@ -1,4 +1,3 @@
-
 import 'package:flutter_ui/base/db/db_base_model.dart';
 
 class ArticleEntity extends DBBaseModel {
@@ -109,4 +108,10 @@ class ArticleEntity extends DBBaseModel {
 
   @override
   ArticleEntity fromJson(Map<String, dynamic> json) => ArticleEntity.fromJson(json);
+
+  @override
+  String get primaryKey => 'id';
+
+  @override
+  String get primaryValue => '$id';
 }

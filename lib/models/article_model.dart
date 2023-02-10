@@ -30,10 +30,26 @@ class ArticleModel extends ChangeNotifier {
     return articles;
   }
 
+  ArticleEntity? getArticle(int index) => articles.isEmpty ? null : articles[index];
+
   void updateArticles(List<ArticleEntity> articles) {
     _allArticleList.addAll(articles);
     // 保存article到数据库
     _entity.insert(articles);
+    notifyListeners();
+  }
+
+  void updateArticle(ArticleEntity article) {
+    int index = _allArticleList.indexOf(article);
+    if (index != -1) {
+      _allArticleList.insert(index, article);
+      // 更新article数据
+      _entity.update(article);
+    } else {
+      _allArticleList.add(article);
+      // 保存article数据
+      _entity.insert(article);
+    }
     notifyListeners();
   }
 

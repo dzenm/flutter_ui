@@ -56,6 +56,7 @@ class TapLayout extends StatefulWidget {
 
 class _TapLayoutState extends State<TapLayout> {
   bool _isTouchDown = false;
+  int _tapTime = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -91,9 +92,13 @@ class _TapLayoutState extends State<TapLayout> {
           ),
           child: InkResponse(
             onTap: () async => Future.delayed(Duration(milliseconds: widget.delay), () {
-              if (widget.onTap != null) {
-                widget.onTap!();
-              }
+              int currentTime = DateTime.now().millisecondsSinceEpoch;
+              if (currentTime - _tapTime > 500) {
+                if (widget.onTap != null) {
+                  widget.onTap!();
+                }
+              } else {}
+              _tapTime = currentTime;
             }),
             onLongPress: widget.onLongPress,
             onDoubleTap: widget.onDoubleTap,

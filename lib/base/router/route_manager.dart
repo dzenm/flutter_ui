@@ -38,7 +38,7 @@ class RouteManager {
     bool isMaterial = false,
     Object? args,
   }) {
-    Log.i("打开新页面: $routeName, args=${jsonEncode(args)}");
+    Log.i('打开新页面: $routeName${args == null ? '' : ', args=${jsonEncode(args)}'}');
     if (clearStack) {
       // 打开指定页面(同时指定到当前页面会被销毁)，例：A->B->C->D，由D页面进入A页面，B、C、D页面被销毁，打开A页面
       return Navigator.pushNamedAndRemoveUntil(context, routeName, (route) => route.settings.name == routeName, arguments: args);
@@ -64,7 +64,7 @@ class RouteManager {
 
   /// 创建默认的页面跳转动画
   static PageRoute _buildDefaultRoute(Widget page, bool isMaterial, Object? args) {
-    Log.i("打开新页面: RouterSettingsName=${page.toStringShort()}, args=${jsonEncode(args)}");
+    Log.i("打开新页面: RouterSettingsName=${page.toStringShort()}${args == null ? '' : ', args=${jsonEncode(args)}'}");
     // return FadeRoute(builder: (context) => page);
     if (isMaterial) {
       return createMaterialRoute(page, args: args);

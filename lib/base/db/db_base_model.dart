@@ -13,5 +13,9 @@ abstract class DBBaseModel with DBDao {
   Map<String, dynamic> toJson();
 
   // 表名，获取运行时的当前文件名称，转成小写字母，并将entity后缀删除
-  String getTableName() => 't_${runtimeType.toString().toLowerCase().replaceAll('entity', '')}';
+  String get tableName => 't_${runtimeType.toString().toLowerCase().replaceAll('entity', '')}';
+
+  String get primaryKey => '';
+
+  String get primaryValue => '';
 }

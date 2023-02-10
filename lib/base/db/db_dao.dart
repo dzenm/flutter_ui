@@ -2,12 +2,11 @@ import 'package:sqflite/sqflite.dart';
 
 import '../entities/column_entity.dart';
 import '../entities/table_entity.dart';
-import 'db_manager.dart';
 import 'db_base_model.dart';
+import 'db_manager.dart';
 
 /// 数据库操作(增删改查), 在model中使用with混入即可。
 class DBDao {
-
   /// 根据数据库名返回数据库的实例
   Future<Database> getDatabase({String? dbName}) async => await DBManager().getDatabase(dbName: dbName);
 
@@ -48,13 +47,13 @@ class DBDao {
     if (data == null) return;
     if (data is List) {
       data.forEach((element) async => await DBManager().insertItem(
-            element.getTableName(),
+            element.tableName,
             element.toJson(),
             conflictAlgorithm: conflictAlgorithm,
           ));
     } else if (data is T) {
       await DBManager().insertItem(
-        data.getTableName(),
+        data.tableName,
         data.toJson(),
         conflictAlgorithm: conflictAlgorithm,
       );
@@ -68,22 +67,22 @@ class DBDao {
   }) async {
     if (data == null) return 0;
     return DBManager().deleteItem(
-      data.getTableName(),
+      data.tableName,
       where: where,
     );
   }
 
   /// 更新数据
   Future<int> update<T extends DBBaseModel>(
-    T? data,
-    Map<String, String> where, {
+    T? data, {
+    Map<String, dynamic>? where,
     ConflictAlgorithm? conflictAlgorithm,
   }) async {
     if (data == null) return 0;
     return DBManager().updateItem(
-      data.getTableName(),
+      data.tableName,
       data.toJson(),
-      where,
+      where: where ?? {data.primaryKey: data.primaryValue},
       conflictAlgorithm: conflictAlgorithm,
     );
   }
@@ -96,7 +95,7 @@ class DBDao {
     if (data == null) return [];
     return DBManager()
         .where(
-          data.getTableName(),
+          data.tableName,
           where: where,
         )
         .then((value) => value.map((e) => data.fromJson(e)).toList());

@@ -49,6 +49,10 @@ class MainModel extends ChangeNotifier {
 
   int get selectIndex => _selectIndex;
 
+  bool isSelected(int index) {
+    return _selectIndex == index;
+  }
+
   void updateSelectIndex(int selectIndex) {
     _selectIndex = selectIndex;
     notifyListeners();

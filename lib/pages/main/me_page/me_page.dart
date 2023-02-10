@@ -25,11 +25,8 @@ class MePage extends StatefulWidget {
   _MePageState createState() => _MePageState();
 }
 
-class _MePageState extends State<MePage> with AutomaticKeepAliveClientMixin {
+class _MePageState extends State<MePage> {
   static const String _tag = 'MePage';
-
-  @override
-  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -69,7 +66,6 @@ class _MePageState extends State<MePage> with AutomaticKeepAliveClientMixin {
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     Log.i('build', tag: _tag);
 
     AppTheme? theme = context.watch<LocalModel>().appTheme;
@@ -115,23 +111,26 @@ class _MePageState extends State<MePage> with AutomaticKeepAliveClientMixin {
               borderRadius: BorderRadius.circular(5),
             ),
             child: Column(children: [
-              SizedBox(height: 16),
+              SizedBox(height: 8),
               MaterialButton(
-                child: Text('进入下一个页面'),
+                child: _text('进入下一个页面'),
+                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                 textColor: theme?.background,
                 color: theme?.primary,
                 onPressed: () => RouteManager.push(context, ModelDataListenPage()),
               ),
-              SizedBox(height: 16),
               MaterialButton(
-                child: Text('药'),
+                child: _text('药'),
+                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                 textColor: theme?.background,
                 color: theme?.primary,
-                onPressed: () => RouteManager.push(context, ChineseMedicinePage(
-                  medicineName: '金银花',
-                )),
+                onPressed: () => RouteManager.push(
+                  context,
+                  ChineseMedicinePage(medicineName: '金银花'),
+                ),
               ),
               Text('$ip'),
+              SizedBox(height: 8),
               TapLayout(
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
@@ -160,5 +159,9 @@ class _MePageState extends State<MePage> with AutomaticKeepAliveClientMixin {
         )
       ]),
     ];
+  }
+
+  Widget _text(String text) {
+    return Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text(text)]);
   }
 }

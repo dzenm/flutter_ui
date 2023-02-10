@@ -168,8 +168,8 @@ class DBManager {
   /// 更新数据，更新对应key和value表中的数据
   Future<int> updateItem(
     String tableName,
-    Map<String, dynamic> values,
-    Map<String, String> where, {
+    Map<String, dynamic> values, {
+    Map<String, dynamic>? where,
     ConflictAlgorithm? conflictAlgorithm,
   }) async {
     Database db = await getDatabase();
@@ -221,8 +221,8 @@ class DBManager {
     return list;
   }
 
-  void _handleMap(Map<String, String> whereMap, List<String> whereArgs, StringBuffer where, StringBuffer paramsString) {
-    whereMap.forEach((key, value) {
+  void _handleMap(Map<String, dynamic>? whereMap, List<String> whereArgs, StringBuffer where, StringBuffer paramsString) {
+    whereMap?.forEach((key, value) {
       if (where.isNotEmpty) where.write(',');
       where.write('$key = ?');
       whereArgs.add(value);

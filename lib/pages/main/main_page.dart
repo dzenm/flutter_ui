@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/naughty/naughty.dart';
 import 'package:flutter_ui/base/widgets/badge_view.dart';
+import 'package:flutter_ui/base/widgets/keep_alive_wrapper.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/pages/main/main_model.dart';
 import 'package:provider/provider.dart';
@@ -33,8 +34,15 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     Log.i('initState', tag: _tag);
+
+    WidgetsBinding.instance.addObserver(this);
+
+    Future.delayed(Duration.zero, () {
+      Naughty.getInstance
+        ..init(context)
+        ..show();
+    });
   }
 
   @override
@@ -66,11 +74,8 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     Log.i('build', tag: _tag);
-    Naughty.getInstance
-      ..init(context)
-      ..show();
-
     context.watch<MainModel>().init(context);
+
     List<String> titles = context.watch<MainModel>().titles;
     return Scaffold(
       body: PageView(
@@ -91,9 +96,9 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   /// Page widget
   List<Widget> _buildListPage(List<String> titles) {
     return [
-      HomePage(title: titles[0]),
-      NavPage(title: titles[1]),
-      MePage(title: titles[2]),
+      KeepAliveWrapper(child: HomePage(title: titles[0])),
+      KeepAliveWrapper(child: NavPage(title: titles[1])),
+      KeepAliveWrapper(child: MePage(title: titles[2])),
     ];
   }
 
@@ -128,13 +133,13 @@ class _BottomNavigationBarItemViewState extends State<BottomNavigationBarItemVie
   @override
   Widget build(BuildContext context) {
     int index = widget.index; // item索引
-    int selectIndex = context.watch<MainModel>().selectIndex; // 当前选中的索引
     int badgeCount = context.watch<MainModel>().badgeCount(index); // 图标的数量
     IconData icon = context.watch<MainModel>().icon(index); // item图标
     String title = context.watch<MainModel>().title(index); // item标题
-    Log.i('build: selectIndex=$selectIndex, index=$index, title=$title, badgeCount=$badgeCount', tag: _tag);
+    bool isSelected = context.watch<MainModel>().isSelected(index); // 是否是选中的索引
+    Log.d('build: isSelected=$isSelected, index=$index, title=$title, badgeCount=$badgeCount', tag: _tag);
 
-    Color color = selectIndex == index ? Colors.blue : Colors.grey.shade500;
+    Color color = isSelected ? Colors.blue : Colors.grey.shade500;
     double width = 56, height = 56;
     // 平分整个宽度
     return Expanded(
@@ -143,9 +148,10 @@ class _BottomNavigationBarItemViewState extends State<BottomNavigationBarItemVie
       child: TapLayout(
         height: height,
         onTap: () {
-          if (selectIndex != index) {
+          if (!isSelected) {
             context.read<MainModel>().updateSelectIndex(index);
             widget.controller.jumpToPage(index);
+            // widget.controller.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
           }
           if (widget.onTap != null) widget.onTap!();
         },

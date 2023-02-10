@@ -18,11 +18,8 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
+class _HomePageState extends State<HomePage> {
   static const String _tag = 'HomePage';
-
-  @override
-  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -58,7 +55,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     Log.i('build', tag: _tag);
 
     return Scaffold(
@@ -112,7 +108,12 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   }
 }
 
-class Banner extends StatelessWidget {
+class Banner extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _BannerState();
+}
+
+class _BannerState extends State<Banner> {
   static const String _tag = 'Banner';
 
   @override
