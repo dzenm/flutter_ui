@@ -46,7 +46,7 @@ class _DBTableItemPageState extends State<DBTableItemPage> {
         child: SingleChildScrollView(
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            child: _controller.isLoadMore()
+            child: _controller.init
                 ? DataTable(
                     dataRowHeight: 20,
                     headingRowHeight: 32,

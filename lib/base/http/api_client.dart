@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_ui/base/config/build_config.dart';
+import 'package:flutter_ui/base/entities/data_entity.dart';
+
 import '../../http/api_services.dart';
 import '../log/log.dart';
 import '../naughty/http/http_interceptor.dart';
@@ -63,8 +66,8 @@ class ApiClient {
     };
     // log interceptor
     dio.interceptors.add(LoggerInterceptor(
-      isFormat: true,
-      logPrint: Log.d,
+      formatJson: true,
+      logPrint: (text) => log(text.toString()),
     ));
     // 通过悬浮窗查看Http请求数据
     dio.interceptors.add(HttpInterceptor());
@@ -87,23 +90,17 @@ class ApiClient {
     CancelFunc? cancel = isShowDialog ? loading ?? loadingDialog() : null;
     HttpError? error;
     try {
-      // 没有网络
-      await future.then((data) {
-        // 根据前后端协议
-        if (data.errorCode == 0) {
-          if (success != null) {
-            success(data.data);
-          }
-        } else {
-          if (data.errorCode == -1001) {
-            error = HandleHttpError.handle(code: data.errorCode, msg: data.errorMsg);
-          } else if (data.errorCode == -1) {
-            error = HandleHttpError.handle(code: data.errorCode, msg: data.errorMsg);
-          }
-        }
-      }).catchError((err) {
-        error = HandleHttpError.handle(error: err);
-      }, test: (_) => true);
+      DataEntity data = await future;
+      // 根据前后端协议
+      if (data.errorCode == 0) {
+        if (success != null) success(data.data);
+      } else if (data.errorCode == -1) {
+        error = HandleHttpError.handle(code: data.errorCode, msg: data.errorMsg);
+      } else if (data.errorCode == -1001) {
+        error = HandleHttpError.handle(code: data.errorCode, msg: data.errorMsg);
+      } else {
+        error = HandleHttpError.handle(code: data.errorCode, msg: data.errorMsg);
+      }
     } catch (err) {
       error = HandleHttpError.handle(error: err);
     }
@@ -122,12 +119,18 @@ class ApiClient {
     if (failed != null) {
       failed(error);
     }
-    Log.d('HTTP请求错误: code=${error.code}, msg=${error.msg}', tag: _tag);
+    log('HTTP请求错误: code=${error.code}, msg=${error.msg}');
   }
 
   // 关闭提示框
   void _dismissDialog(CancelFunc? cancel) {
     if (cancel != null) cancel();
+  }
+
+  void log(String text) {
+    if (BuildConfig.showHTTPLog) {
+      Log.d(text, tag: _tag);
+    }
   }
 }
 
@@ -185,8 +188,8 @@ class HandleHttpError {
   static const String runtimeErrorMsg = '运行时的错误';
 
   // 处理异常
-  static HttpError handle({error, int code = 0, String msg = ''}) {
-    if (code != 0 && msg.isNotEmpty) {
+  static HttpError handle({error, int? code = 0, String? msg = ''}) {
+    if (code! != 0 && msg!.isNotEmpty) {
       return HttpError(code, msg);
     } else if (error != null && error is DioError) {
       if (error.type == DioErrorType.other || error.type == DioErrorType.response) {

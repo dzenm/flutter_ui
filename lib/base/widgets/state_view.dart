@@ -28,36 +28,45 @@ class _StateViewState extends State<StateView> {
   @override
   Widget build(BuildContext context) {
     return Offstage(
-      offstage: widget.controller.state == LoadState.none,
-      child: widget.controller.isLoadMore() && widget.child != null
+      offstage: widget.controller.none,
+      child: widget.controller.init && widget.child != null
           ? widget.child
           : TapLayout(
-              onTap: widget.controller.isLoading() ? null : widget.onTap,
+              onTap: widget.controller.load ? null : widget.onTap,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: _stateView(56),
+                children: _stateView(context, widget.controller, 56, widget.title, image: widget.image),
               ),
             ),
     );
   }
 
-  List<Widget> _stateView(double size) {
+  static List<Widget> _stateView(
+    BuildContext context,
+    StateController controller,
+    double size,
+    Widget? title, {
+    Widget? image,
+  }) {
     return [
+      // 加载进度提示
       Offstage(
-        offstage: !widget.controller.isLoading(),
+        offstage: !controller.load,
         child: Container(
           width: size,
           height: size,
           child: CircularProgressIndicator(),
         ),
       ),
+      // 加载不成功的图片展示
       Offstage(
-        offstage: widget.controller.state != LoadState.empty && widget.controller.state != LoadState.failed,
-        child: widget.image,
+        offstage: !(!controller.more && (controller.empty || controller.failed)),
+        child: image,
       ),
       SizedBox(width: 16, height: 32),
-      widget.title == null ? Text(widget.controller.stateText(context)) : widget.title!,
+      // 加载展示的文本信息
+      title == null ? Text(controller.stateText(context)) : title,
     ];
   }
 }
@@ -87,47 +96,36 @@ class _FooterViewState extends State<FooterStateView> {
   @override
   Widget build(BuildContext context) {
     return Offstage(
-      offstage: widget.controller.state == LoadState.none || !widget.controller.isLoadMore(),
+      offstage: !widget.controller.init || widget.controller.none,
       child: TapLayout(
         height: 56,
         onTap: widget.onTap,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: _stateView(widget.loadingProgressSize),
+          children: _StateViewState._stateView(
+            context,
+            widget.controller,
+            widget.loadingProgressSize,
+            widget.title,
+          ),
         ),
       ),
     );
-  }
-
-  List<Widget> _stateView(double size) {
-    return [
-      Offstage(
-        offstage: !widget.controller.isLoading(),
-        child: Container(
-          width: size,
-          height: size,
-          child: CircularProgressIndicator(),
-        ),
-      ),
-      SizedBox(width: 16, height: 32),
-      widget.title == null ? Text(widget.controller.stateText(context)) : widget.title!,
-    ];
   }
 }
 
 /// 状态控制器
 class StateController extends ChangeNotifier {
   LoadState initialState;
-  bool _isInit = false;
   bool isShowFooterState;
+  bool _isInit = false;
+  bool _isMore = false;
 
   StateController({
     this.initialState = LoadState.loading,
     this.isShowFooterState = true,
   });
-
-  LoadState get state => initialState;
 
   void loadNone() {
     initialState = LoadState.none;
@@ -140,11 +138,7 @@ class StateController extends ChangeNotifier {
   }
 
   void loadEmpty() {
-    if (isShowFooterState) {
-      initialState = !_isInit ? LoadState.empty : LoadState.end;
-    } else {
-      initialState = LoadState.empty;
-    }
+    initialState = _isMore && isShowFooterState ? LoadState.end : LoadState.empty;
     notifyListeners();
   }
 
@@ -159,15 +153,22 @@ class StateController extends ChangeNotifier {
   }
 
   void loadComplete() {
-    if (initialState != LoadState.complete && !_isInit) {
-      initialState = LoadState.complete;
-      _isInit = true;
-    }
+    if (_isInit) return;
+    _isInit = true;
+    initialState = LoadState.complete;
     notifyListeners();
   }
 
   void loadMore() {
+    if (!_isInit) return;
+    _isMore = true;
     initialState = LoadState.more;
+    notifyListeners();
+  }
+
+  void reset() {
+    _isInit = false;
+    _isMore = false;
     notifyListeners();
   }
 
@@ -192,9 +193,19 @@ class StateController extends ChangeNotifier {
     }
   }
 
-  bool isLoadMore() => _isInit;
+  LoadState get state => initialState;
 
-  bool isLoading() => initialState == LoadState.loading;
+  bool get none => initialState == LoadState.none;
+
+  bool get init => _isInit;
+
+  bool get load => initialState == LoadState.loading;
+
+  bool get empty => initialState == LoadState.empty;
+
+  bool get failed => initialState == LoadState.failed;
+
+  bool get more => _isMore;
 }
 
 /// 加载数据的状态

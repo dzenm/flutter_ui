@@ -52,7 +52,7 @@ class _RefreshListViewState extends State<RefreshListView> {
         onRefresh: _refresh,
         child: ListView.builder(
           itemBuilder: _buildItem,
-          itemCount: widget.controller.state == LoadState.none ? widget.itemCount : widget.itemCount + 1,
+          itemCount: !widget.controller.init ? widget.itemCount : widget.itemCount + 1,
           controller: _controller,
         ),
       ),

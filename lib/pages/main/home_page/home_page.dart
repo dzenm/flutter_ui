@@ -108,12 +108,7 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class Banner extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _BannerState();
-}
-
-class _BannerState extends State<Banner> {
+class Banner extends StatelessWidget {
   static const String _tag = 'Banner';
 
   @override

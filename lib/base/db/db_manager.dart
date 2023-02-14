@@ -1,3 +1,4 @@
+import 'package:flutter_ui/base/config/build_config.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -21,8 +22,6 @@ class DBManager {
   factory DBManager() => getInstance;
 
   Database? _database;
-
-  bool showDBLog = true;
 
   /// 获取当前数据库对象, 未指定数据库名称时默认为用户名，切换数据库操作时要先关闭再重新打开。
   Future<Database> getDatabase({String? dbName}) async {
@@ -230,5 +229,5 @@ class DBManager {
     });
   }
 
-  void log(String text) => showDBLog ? Log.i(text, tag: _tag) : null;
+  void log(String text) => BuildConfig.showDBLog ? Log.i(text, tag: _tag) : null;
 }

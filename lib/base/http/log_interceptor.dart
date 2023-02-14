@@ -16,8 +16,8 @@ class LoggerInterceptor extends Interceptor {
     this.responseHeader = true,
     this.responseBody = true,
     this.error = true,
-    this.isFormat = false,
-    this.isDecorate = false,
+    this.formatJson = false,
+    this.decorate = true,
     this.logPrint,
   });
 
@@ -40,10 +40,10 @@ class LoggerInterceptor extends Interceptor {
   bool error;
 
   /// format json
-  bool isFormat;
+  bool formatJson;
 
   /// 添加装饰
-  bool isDecorate;
+  bool decorate;
 
   /// Log printer; defaults print log to console.
   /// In flutter, you'd better use debugPrint.
@@ -57,8 +57,6 @@ class LoggerInterceptor extends Interceptor {
   ///```
   void Function(Object object)? logPrint;
 
-  StringBuffer _logs = StringBuffer();
-
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     options.headers['authorization'] = SpUtil.getToken();
@@ -69,7 +67,7 @@ class LoggerInterceptor extends Interceptor {
   void _handleRequest(RequestOptions options) {
     bool existRequest = request || requestHeader || requestBody;
     if (existRequest) {
-      if (isDecorate) {
+      if (decorate) {
         _logPrint('╔══════════════════════════════ Request ═════════════════════════════════════╗');
       } else {
         _logPrint('----------------------------------- Request ------------------------------------------');
@@ -91,17 +89,17 @@ class LoggerInterceptor extends Interceptor {
         'extra': options.extra,
         'queryParameters': options.queryParameters,
       };
-      _printMap(map);
+      _print(map);
     }
     if (requestHeader) {
       _print('headers:');
-      _printMap(options.headers);
+      _print(options.headers);
     }
     if (requestBody) {
       _print('body:');
-      _printJson(options.data.toString());
+      _print(options.data.toString(), isJson: true);
     }
-    if (existRequest && isDecorate) {
+    if (existRequest && decorate) {
       _logPrint('╚════════════════════════════════════════════════════════════════════════════╝');
     }
   }
@@ -118,7 +116,7 @@ class LoggerInterceptor extends Interceptor {
     if (response == null) return;
     bool existResponse = responseHeader || responseBody;
     if (existResponse) {
-      if (isDecorate) {
+      if (decorate) {
         _logPrint('╔══════════════════════════════ Response ════════════════════════════════════╗');
       } else {
         _logPrint('----------------------------------- Response -----------------------------------------');
@@ -128,18 +126,18 @@ class LoggerInterceptor extends Interceptor {
     if (responseHeader) {
       _print('extra: ${response.extra}');
       if (response.isRedirect == true) {
-        _printMap({'redirect': response.realUri});
+        _print({'redirect': response.realUri});
       }
       _print('headers:');
       Map<String, dynamic> headers = {};
       response.headers.forEach((key, val) => headers['$key'] = val.join('\r\n\t'));
-      _printMap(headers);
+      _print(headers);
     }
     if (responseBody) {
       _print('body:');
-      _printJson(response.toString());
+      _print(response.toString(), isJson: true);
     }
-    if (existResponse && isDecorate) {
+    if (existResponse && decorate) {
       _logPrint('╚════════════════════════════════════════════════════════════════════════════╝');
     }
   }
@@ -149,57 +147,53 @@ class LoggerInterceptor extends Interceptor {
     _handleRequest(err.requestOptions);
     _handleResponse(err.response);
     _handleError(err);
-    _handleErrorLog(_logs.toString());
     handler.next(err);
   }
 
   /// 处理请求错误信息
   void _handleError(DioError err) {
     if (error) {
-      if (isDecorate) {
+      if (decorate) {
         _logPrint('╔══════════════════════════════ DioError ════════════════════════════════════╗');
       } else {
         _logPrint('----------------------------------- DioError -----------------------------------------');
       }
       _print('${err.message}');
-      if (isDecorate) {
+      if (decorate) {
         _logPrint('╚════════════════════════════════════════════════════════════════════════════╝');
       }
     }
   }
 
-  /// 打印Json字符串
-  void _printJson(String msg) {
-    String jsonString = msg;
-    try {
-      if (isFormat) {
-        /// 转成json格式字符串
-        jsonString = JsonEncoder.withIndent('  ').convert(json.decode(msg));
+  // 输出信息
+  void _print(dynamic msg, {bool isJson = false}) {
+    if (msg is Map) {
+      // 打印map
+      msg.forEach((key, value) => _print('$interval$key: $value'));
+    } else if (msg is String) {
+      // 打印json
+      if (isJson) {
+        String jsonString = msg;
+        try {
+          if (formatJson) {
+            jsonString = JsonEncoder.withIndent(interval).convert(json.decode(msg));
+          }
+        } catch (e) {
+          print(e);
+        }
+        jsonString.split('\n').forEach((val) => _print('$interval$val'));
+      } else {
+        // 打印普通文本，修饰打印的日志样式
+        String text = (decorate && msg.isNotEmpty ? '║$interval' : '') + msg;
+        _logPrint(text);
       }
-    } catch (e) {
-      print(e);
     }
-    List<String> list = jsonString.toString().split('\n');
-    list.forEach((val) => _print('$interval$val'));
   }
-
-  /// 打印map
-  void _printMap(Map<String, dynamic> map) {
-    map.forEach((key, value) => _print('$interval$key: $value'));
-  }
-
-  /// 打印日志，修饰打印的日志样式
-  void _print(String msg) => _logPrint((isDecorate && msg.isNotEmpty ? '║$interval' : '') + msg);
 
   /// 日志打印
   void _logPrint(String msg) {
     if (logPrint != null) {
-      // logPrint!(msg);
-      _logs.write('\n$msg');
+      logPrint!(msg);
     }
-  }
-
-  void _handleErrorLog(String msg) {
-    Log.d(msg);
   }
 }
