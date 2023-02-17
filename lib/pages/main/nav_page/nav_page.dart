@@ -63,8 +63,8 @@ class _NavPageState extends State<NavPage> {
   @override
   Widget build(BuildContext context) {
     Log.i('build', tag: _tag);
-    AppTheme? theme = context.watch<LocalModel>().appTheme;
 
+    AppTheme? theme = context.watch<LocalModel>().appTheme;
     return Scaffold(
       appBar: AppBar(
         systemOverlayStyle: SystemUiOverlayStyle(
@@ -159,6 +159,7 @@ class ArticleItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Log.i('build', tag: _tag);
+
     ArticleEntity? article = context.watch<ArticleModel>().getArticle(index);
     String title = article?.title ?? '';
     return TapLayout(

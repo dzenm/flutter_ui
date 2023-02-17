@@ -49,13 +49,13 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(title: Text(S.of(context).login, style: TextStyle(color: Colors.white))),
       body: SingleChildScrollView(
-        child: Padding(padding: EdgeInsets.only(top: 100), child: _body()),
+        child: Padding(padding: EdgeInsets.only(top: 100), child: _buildBody()),
       ),
     );
   }
 
   // 主体页面结构
-  Widget _body() {
+  Widget _buildBody() {
     return Container(
       padding: EdgeInsets.all(24),
       child: Column(mainAxisSize: MainAxisSize.min, children: [

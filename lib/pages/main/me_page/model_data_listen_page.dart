@@ -64,13 +64,13 @@ class _ModelDataListenPageState extends State<ModelDataListenPage> {
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: SingleChildScrollView(
-          child: Column(children: childrenButtons()),
+          child: Column(children: _buildChildrenButtons()),
         ),
       ),
     );
   }
 
-  List<Widget> childrenButtons() {
+  List<Widget> _buildChildrenButtons() {
     return [
       SizedBox(height: 16),
       MaterialButton(
@@ -84,7 +84,7 @@ class _ModelDataListenPageState extends State<ModelDataListenPage> {
       SizedBox(height: 16),
       ChildWidget(),
       SizedBox(height: 16),
-      _myWidget(),
+      _buildMyWidget(),
       SizedBox(height: 16),
       MaterialButton(
         child: Text('修改数据'),
@@ -109,7 +109,7 @@ class _ModelDataListenPageState extends State<ModelDataListenPage> {
     ];
   }
 
-  Widget _myWidget() {
+  Widget _buildMyWidget() {
     Log.i('_myWidget widget: build', tag: _tag);
     // Person person = Provider.of<MeModel>(context, listen: true).persons[0];
     return Column(children: [

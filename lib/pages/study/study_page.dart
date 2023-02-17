@@ -47,14 +47,14 @@ class _StudyPageState extends State<StudyPage> {
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: SingleChildScrollView(
-          child: Column(children: childrenButtons()),
+          child: Column(children: _buildChildrenButtons()),
         ),
       ),
     );
   }
 
-  List<Widget> childrenButtons() {
-    AppTheme appTheme = context.watch<LocalModel>().appTheme;
+  List<Widget> _buildChildrenButtons() {
+    AppTheme theme = context.watch<LocalModel>().appTheme;
     return [
       SizedBox(height: 16),
       CustomPopupView(
@@ -65,14 +65,16 @@ class _StudyPageState extends State<StudyPage> {
         boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 5.0, offset: Offset(2.0, 2.0))],
         barrierColor: const Color(0x01FFFFFF),
         child: Container(
-          width: 200,
-          height: 40,
+          height: 36,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: appTheme.primary,
-            borderRadius: BorderRadius.all(Radius.circular(8)),
+            color: theme.primary,
+            borderRadius: BorderRadius.all(Radius.circular(2)),
           ),
-          child: Text('展示Dialog'),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [Text('展示Dialog', style: TextStyle(color: theme.background, fontWeight: FontWeight.w600))],
+          ),
         ),
         popupDialogBuilder: (context) {
           return Container(
@@ -89,105 +91,105 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         child: _text(S.of(context).textAndInput),
         textColor: Colors.white,
-        color: appTheme.primary,
+        color: theme.primary,
         onPressed: () => RouteManager.push(context, TextPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: _text(S.of(context).navigationBar),
         textColor: Colors.white,
-        color: appTheme.primary,
+        color: theme.primary,
         onPressed: () => RouteManager.push(context, FloatNavigationPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: _text(S.of(context).charConvert),
         textColor: Colors.white,
-        color: appTheme.primary,
+        color: theme.primary,
         onPressed: () => RouteManager.push(context, ConvertPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: _text(S.of(context).httpRequest),
         textColor: Colors.white,
-        color: appTheme.primary,
+        color: theme.primary,
         onPressed: () => RouteManager.push(context, HTTPListPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: _text(S.of(context).listAndRefresh),
         textColor: Colors.white,
-        color: appTheme.primary,
+        color: theme.primary,
         onPressed: () => RouteManager.push(context, ListPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: _text(S.of(context).dragList),
         textColor: Colors.white,
-        color: appTheme.primary,
+        color: theme.primary,
         onPressed: () => RouteManager.push(context, DragListPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: _text(S.of(context).videoPlay),
         textColor: Colors.white,
-        color: appTheme.primary,
+        color: theme.primary,
         onPressed: () => RouteManager.push(context, VideoPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: _text(S.of(context).qr),
         textColor: Colors.white,
-        color: appTheme.primary,
+        color: theme.primary,
         onPressed: () => RouteManager.push(context, QRPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: _text(S.of(context).citySelected),
         textColor: Colors.white,
-        color: appTheme.primary,
+        color: theme.primary,
         onPressed: () => RouteManager.push(context, CitySelectedPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: _text(S.of(context).setting),
         textColor: Colors.white,
-        color: appTheme.primary,
+        color: theme.primary,
         onPressed: () => RouteManager.push(context, SettingPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: _text(S.of(context).state),
         textColor: Colors.white,
-        color: appTheme.primary,
+        color: theme.primary,
         onPressed: () => RouteManager.push(context, StatePage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: _text(S.of(context).keyword),
         textColor: Colors.white,
-        color: appTheme.primary,
+        color: theme.primary,
         onPressed: () => RouteManager.push(context, KeywordBoardPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: _text(S.of(context).nav),
         textColor: Colors.white,
-        color: appTheme.primary,
+        color: theme.primary,
         onPressed: () => NativeChannels.startHomeActivity(),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: _text(S.of(context).loadImage),
         textColor: Colors.white,
-        color: appTheme.primary,
+        color: theme.primary,
         onPressed: () => RouteManager.push(context, LoadImagePage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
         child: _text(S.of(context).userContact),
         textColor: Colors.white,
-        color: appTheme.primary,
+        color: theme.primary,
         onPressed: () => {},
         // onPressed: () => RouteManager.push(context, PeopleListPage()),
       ),
@@ -195,7 +197,7 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         child: _text(S.of(context).listDialog),
         textColor: Colors.white,
-        color: appTheme.primary,
+        color: theme.primary,
         onPressed: () => showListDialog(
           context: context,
           selectedItem: _selectedItem,
@@ -210,7 +212,7 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         child: _text(S.of(context).upgradeDialog),
         textColor: Colors.white,
-        color: appTheme.primary,
+        color: theme.primary,
         onPressed: () => CommonDialog.showAppUpgradeDialog(
           context,
           version: '12',
@@ -221,7 +223,7 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         child: _text(S.of(context).router),
         textColor: Colors.white,
-        color: appTheme.primary,
+        color: theme.primary,
         onPressed: () => RouteManager.push(context, RouterPage()),
       ),
       SizedBox(height: 16),

@@ -24,13 +24,13 @@ class _ModelDataChangePageState extends State<ModelDataChangePage> {
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: SingleChildScrollView(
-          child: Column(children: childrenButtons()),
+          child: Column(children: _buildChildrenButtons()),
         ),
       ),
     );
   }
 
-  List<Widget> childrenButtons() {
+  List<Widget> _buildChildrenButtons() {
     person = context.read<MeModel>().persons[0];
     return [
       SizedBox(height: 16),

@@ -89,7 +89,7 @@ class _CitySelectedPageState extends State<CitySelectedPage> {
                   data: _cityList,
                   itemCount: _cityList.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return getListItem(_cityList[index]);
+                    return _buildListItem(_cityList[index]);
                   },
                   padding: EdgeInsets.zero,
                   susItemBuilder: (BuildContext context, int index) {
@@ -97,7 +97,7 @@ class _CitySelectedPageState extends State<CitySelectedPage> {
                     if (_TOP == model.getSuspensionTag()) {
                       return Container();
                     }
-                    return getSusItem(_cityList[index].getSuspensionTag());
+                    return _buildSusItem(_cityList[index].getSuspensionTag());
                   },
                   physics: BouncingScrollPhysics(),
                   indexBarData: [_TOP, _STAR, ...kIndexBarData],
@@ -127,7 +127,7 @@ class _CitySelectedPageState extends State<CitySelectedPage> {
     );
   }
 
-  Widget getSusItem(String tag, {double susHeight = 40}) {
+  Widget _buildSusItem(String tag, {double susHeight = 40}) {
     if (tag == _STAR) {
       tag = '$_STAR 热门城市';
     }
@@ -145,7 +145,7 @@ class _CitySelectedPageState extends State<CitySelectedPage> {
     );
   }
 
-  Widget getListItem(CityModel model) {
+  Widget _buildListItem(CityModel model) {
     return ListTile(
       title: Text(model.name),
       onTap: () {

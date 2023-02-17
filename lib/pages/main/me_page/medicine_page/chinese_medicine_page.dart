@@ -29,6 +29,7 @@ class _ChineseMedicinePageState extends State<ChineseMedicinePage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: Text('中药药方', style: TextStyle(color: Colors.white)),

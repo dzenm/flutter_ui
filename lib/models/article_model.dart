@@ -14,6 +14,7 @@ class ArticleModel extends ChangeNotifier {
     _getAllArticles();
   }
 
+  /// 获取所有的文章数据
   void _getAllArticles() async {
     List list = await _entity.where(_entity);
     List<ArticleEntity> articles = list.map((e) => e as ArticleEntity).toList();
@@ -21,14 +22,15 @@ class ArticleModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<ArticleEntity> get articles {
-    List<ArticleEntity> topArticleList = _allArticleList.where((article) => article.type == 1).toList();
-    List<ArticleEntity> articleList = _allArticleList.where((article) => article.type == 0).toList();
-    List<ArticleEntity> articles = []
-      ..addAll(topArticleList)
-      ..addAll(articleList);
-    return articles;
-  }
+  ///
+  List<ArticleEntity> get topArticles => _allArticleList.where((article) => article.type == 1).toList();
+
+  List<ArticleEntity> get articleList => _allArticleList.where((article) => article.type == 0).toList();
+
+  /// 分类整理展示所有的文章数据
+  List<ArticleEntity> get articles => []
+    ..addAll(topArticles)
+    ..addAll(articleList);
 
   ArticleEntity? getArticle(int index) => articles.isEmpty ? null : articles[index];
 

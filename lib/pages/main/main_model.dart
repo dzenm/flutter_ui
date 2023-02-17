@@ -57,4 +57,8 @@ class MainModel extends ChangeNotifier {
     _selectIndex = selectIndex;
     notifyListeners();
   }
+
+  void clear() {
+    _selectIndex = 0;
+  }
 }

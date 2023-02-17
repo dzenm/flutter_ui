@@ -67,6 +67,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   void dispose() {
     _pageController.dispose();
     WidgetsBinding.instance.removeObserver(this);
+
     super.dispose();
     Log.i('dispose', tag: _tag);
   }
@@ -74,14 +75,15 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     Log.i('build', tag: _tag);
-    context.watch<MainModel>().init(context);
+
+    context.read<MainModel>().init(context);
 
     List<String> titles = context.watch<MainModel>().titles;
     return Scaffold(
       body: PageView(
         controller: _pageController,
         physics: NeverScrollableScrollPhysics(),
-        children: _buildListPage(titles),
+        children: _buildTabPage(titles),
       ),
       bottomNavigationBar: BottomAppBar(
         child: Row(
@@ -94,7 +96,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   }
 
   /// Page widget
-  List<Widget> _buildListPage(List<String> titles) {
+  List<Widget> _buildTabPage(List<String> titles) {
     return [
       KeepAliveWrapper(child: HomePage(title: titles[0])),
       KeepAliveWrapper(child: NavPage(title: titles[1])),
@@ -147,6 +149,7 @@ class _BottomNavigationBarItemViewState extends State<BottomNavigationBarItemVie
       // 给item设置点击事件
       child: TapLayout(
         height: height,
+        foreground: Colors.transparent,
         onTap: () {
           if (!isSelected) {
             context.read<MainModel>().updateSelectIndex(index);

@@ -19,6 +19,7 @@ import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/entities/user_entity.dart';
 import 'package:flutter_ui/pages/common/preview_photo_page.dart';
 import 'package:flutter_ui/pages/login/login_page.dart';
+import 'package:flutter_ui/pages/main/main_model.dart';
 import 'package:provider/provider.dart';
 
 import '../study_model.dart';
@@ -301,6 +302,7 @@ class _SettingPageState extends State<SettingPage> {
   void _logout() {
     HttpClient.getInstance.request(apiServices.logout(), success: (data) {
       SpUtil.resetUser();
+      context.read<MainModel>().clear();
       RouteManager.push(context, LoginPage(), clearStack: true);
     });
   }

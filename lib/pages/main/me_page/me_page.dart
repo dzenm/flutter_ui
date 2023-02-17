@@ -89,7 +89,14 @@ class _MePageState extends State<MePage> {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: SingleChildScrollView(
-                child: Column(children: childrenButtons(theme, statusBarHeight)),
+                padding: EdgeInsets.only(top: statusBarHeight + 16),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: theme.background,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Column(children: buildChildrenButtons(theme, statusBarHeight)),
+                ),
               ),
             ),
           )
@@ -99,69 +106,53 @@ class _MePageState extends State<MePage> {
   }
 
   // 药
-  List<Widget> childrenButtons(AppTheme? theme, double statusBarHeight) {
+  List<Widget> buildChildrenButtons(AppTheme? theme, double statusBarHeight) {
     String ip = context.watch<MeModel>().ip;
     return [
-      SizedBox(height: statusBarHeight + 16),
-      Row(children: [
-        Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              color: theme?.background,
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: Column(children: [
-              SizedBox(height: 8),
-              MaterialButton(
-                child: _text('进入下一个页面'),
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                textColor: theme?.background,
-                color: theme?.primary,
-                onPressed: () => RouteManager.push(context, ModelDataListenPage()),
-              ),
-              MaterialButton(
-                child: _text('药'),
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                textColor: theme?.background,
-                color: theme?.primary,
-                onPressed: () => RouteManager.push(
-                  context,
-                  ChineseMedicinePage(medicineName: '金银花'),
-                ),
-              ),
-              Text('$ip'),
-              SizedBox(height: 8),
-              TapLayout(
-                height: 50.0,
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: () => RouteManager.push(context, StudyPage()),
-                child: SingleTextLayout(
-                  icon: Icons.real_estate_agent_sharp,
-                  title: '学习主页',
-                  isTextLeft: false,
-                  isShowForward: true,
-                ),
-              ),
-              TapLayout(
-                height: 50.0,
-                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(5), bottomRight: Radius.circular(5)),
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: () => RouteManager.push(context, SettingPage()),
-                child: SingleTextLayout(
-                  icon: Icons.settings,
-                  title: S.of(context).setting,
-                  isTextLeft: false,
-                  isShowForward: true,
-                ),
-              ),
-            ]),
-          ),
-        )
-      ]),
+      SizedBox(height: 8),
+      TapLayout(
+        height: 50.0,
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        onTap: () => RouteManager.push(context, ModelDataListenPage()),
+        child: SingleTextLayout(
+          title: '进入下一个页面',
+          isShowForward: true,
+        ),
+      ),
+      SizedBox(height: 8),
+      TapLayout(
+        height: 50.0,
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        onTap: () => RouteManager.push(context, ChineseMedicinePage(medicineName: '金银花')),
+        child: SingleTextLayout(
+          title: 'Chinese Medicine',
+          isShowForward: true,
+        ),
+      ),
+      SizedBox(height: 8),
+      Text('$ip'),
+      SizedBox(height: 8),
+      TapLayout(
+        height: 50.0,
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        onTap: () => RouteManager.push(context, StudyPage()),
+        child: SingleTextLayout(
+          icon: Icons.real_estate_agent_sharp,
+          title: '学习主页',
+          isShowForward: true,
+        ),
+      ),
+      TapLayout(
+        height: 50.0,
+        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(5), bottomRight: Radius.circular(5)),
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        onTap: () => RouteManager.push(context, SettingPage()),
+        child: SingleTextLayout(
+          icon: Icons.settings,
+          title: S.of(context).setting,
+          isShowForward: true,
+        ),
+      ),
     ];
-  }
-
-  Widget _text(String text) {
-    return Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text(text)]);
   }
 }

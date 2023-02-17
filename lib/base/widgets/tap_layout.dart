@@ -82,7 +82,8 @@ class _TapLayoutState extends State<TapLayout> {
         shape: shape,
       ),
       child: Material(
-        color: Colors.transparent,
+        // 不要在这里设置背景色，否则会遮挡水波纹效果,如果设置的话尽量设置Material下面的color来实现背景色
+      color: Colors.transparent,
         animationDuration: Duration(milliseconds: widget.delay - 100),
         child: Ink(
           decoration: BoxDecoration(
@@ -109,7 +110,6 @@ class _TapLayoutState extends State<TapLayout> {
             highlightColor: Colors.transparent,
             splashColor: foreground,
             containedInkWell: true,
-            // 不要在这里设置背景色，否则会遮挡水波纹效果,如果设置的话尽量设置Material下面的color来实现背景色
             child: Container(
               decoration: BoxDecoration(
                 color: color,
