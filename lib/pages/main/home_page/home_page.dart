@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ui/base/log/log.dart';
@@ -74,37 +75,41 @@ class _HomePageState extends State<HomePage> {
 
   void _getData() async {
     Log.d('开始加载网络数据...', tag: _tag);
+    CancelFunc cancel = CommonDialog.loading();
     await Future.wait([
       _getBanner(),
       _getArticle(1),
       _getTopArticle(),
     ]).then((value) {
+      cancel();
       Log.d('网络数据执行完成...', tag: _tag);
     });
     Log.d('结束加载网络数据...', tag: _tag);
   }
 
   Future<void> _getBanner() async {
-    await HttpManager.getInstance.banner(success: (list) {
-      context.read<BannerModel>().updateBanner(list);
-    });
+    await HttpManager.getInstance.banner(
+        isShowDialog: false,
+        success: (list) {
+          context.read<BannerModel>().updateBanner(list);
+        });
   }
 
   Future<void> _getArticle(int number) async {
     await HttpManager.getInstance.getArticleList(
-      page: 0,
-      success: (list, total) {
-        context.read<ArticleModel>().updateArticles(list);
-      },
-    );
+        page: 0,
+        isShowDialog: false,
+        success: (list, total) {
+          context.read<ArticleModel>().updateArticles(list);
+        });
   }
 
   Future<void> _getTopArticle() async {
     await HttpManager.getInstance.getLopArticleList(
-      success: (list) {
-        context.read<ArticleModel>().updateArticles(list);
-      },
-    );
+        isShowDialog: false,
+        success: (list) {
+          context.read<ArticleModel>().updateArticles(list);
+        });
   }
 }
 
@@ -121,7 +126,7 @@ class Banner extends StatelessWidget {
       titles: titles,
       children: images.map((value) => Image.network(value, fit: BoxFit.cover)).toList(),
       onTap: (index) {
-        showToast(index.toString());
+        CommonDialog.showToast(index.toString());
       },
     );
   }

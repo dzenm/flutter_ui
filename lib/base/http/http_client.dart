@@ -16,20 +16,20 @@ typedef Success = void Function(dynamic data);
 
 typedef Failed = void Function(HttpError error);
 
-ApiServices apiServices = ApiClient.getInstance._api[ApiClient.getInstance._baseUrls[0]]!;
+ApiServices apiServices = HttpClient.getInstance._api[HttpClient.getInstance._baseUrls[0]]!;
 
-ApiServices api(int index) => ApiClient.getInstance._api[ApiClient.getInstance._baseUrls[index]]!;
+ApiServices api(int index) => HttpClient.getInstance._api[HttpClient.getInstance._baseUrls[index]]!;
 
 ///
 /// Created by a0010 on 2022/3/22 09:38
 /// HTTP请求
 ///
-class ApiClient {
-  static const String _tag = 'ApiClient';
+class HttpClient {
+  static const String _tag = 'HttpClient';
   static const int _connectTimeout = 20000;
   static const int _receiveTimeout = 20000;
 
-  static final ApiClient getInstance = ApiClient._internal();
+  static final HttpClient getInstance = HttpClient._internal();
 
   Map<String, ApiServices> _api = {};
   List<String> _baseUrls = [
@@ -38,7 +38,7 @@ class ApiClient {
   ];
 
   // 构造方法
-  ApiClient._internal() {
+  HttpClient._internal() {
     _baseUrls.forEach((url) => _createApiServices(baseUrl: url));
   }
 
@@ -58,7 +58,7 @@ class ApiClient {
     ));
 
     // 不验证https证书
-    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (HttpClient client) {
+    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (client) {
       client.badCertificateCallback = (X509Certificate cert, String host, int port) {
         return true;
       };
@@ -72,10 +72,8 @@ class ApiClient {
     // 通过悬浮窗查看Http请求数据
     dio.interceptors.add(HttpInterceptor());
     // dio.interceptors.add(CookieManager(PersistCookieJar()));
-    ApiServices? api = _api[baseUrl];
-    if (api == null) {
-      _api[baseUrl] = ApiServices(dio, baseUrl: baseUrl);
-    }
+
+    _api[baseUrl] ??= ApiServices(dio, baseUrl: baseUrl);
   }
 
   // 发起http请求
@@ -87,22 +85,22 @@ class ApiClient {
     bool isShowToast = true,
     CancelFunc? loading,
   }) async {
-    CancelFunc? cancel = isShowDialog ? loading ?? loadingDialog() : null;
+    CancelFunc? cancel = isShowDialog ? loading ?? CommonDialog.loading() : null;
     HttpError? error;
     try {
       DataEntity data = await future;
       // 根据前后端协议
-      if (data.errorCode == 0) {
+      if (data.errorCode == 0 || data.errorCode == 200) {
         if (success != null) success(data.data);
       } else if (data.errorCode == -1) {
-        error = HandleHttpError.handle(code: data.errorCode, msg: data.errorMsg);
+        error = _HttpError.handle(code: data.errorCode, msg: data.errorMsg);
       } else if (data.errorCode == -1001) {
-        error = HandleHttpError.handle(code: data.errorCode, msg: data.errorMsg);
+        error = _HttpError.handle(code: data.errorCode, msg: data.errorMsg);
       } else {
-        error = HandleHttpError.handle(code: data.errorCode, msg: data.errorMsg);
+        error = _HttpError.handle(code: data.errorCode, msg: data.errorMsg);
       }
     } catch (err) {
-      error = HandleHttpError.handle(error: err);
+      error = _HttpError.handle(error: err);
     }
     _dismissDialog(cancel);
     _handleError(failed, error, isShowToast);
@@ -114,7 +112,7 @@ class ApiClient {
       return;
     }
     if (isShowToast) {
-      showToast('${error.msg.isEmpty ? 'No Message' : error.msg} ${error.code}');
+      CommonDialog.showToast('${error.msg.isEmpty ? 'No Message' : error.msg} ${error.code}');
     }
     if (failed != null) {
       failed(error);
@@ -143,7 +141,7 @@ class HttpError {
 }
 
 /// 异常处理
-class HandleHttpError {
+class _HttpError {
   /// code
   static const int successCode = 200;
   static const int successNotContentCode = 204;
@@ -188,8 +186,10 @@ class HandleHttpError {
   static const String runtimeErrorMsg = '运行时的错误';
 
   // 处理异常
-  static HttpError handle({error, int? code = 0, String? msg = ''}) {
-    if (code! != 0 && msg!.isNotEmpty) {
+  static HttpError handle({error, int? code, String? msg}) {
+    code ??= 0;
+    msg ??= '';
+    if (code != 0 && msg.isNotEmpty) {
       return HttpError(code, msg);
     } else if (error != null && error is DioError) {
       if (error.type == DioErrorType.other || error.type == DioErrorType.response) {

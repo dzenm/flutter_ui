@@ -11,193 +11,227 @@ import 'will_pop_view.dart';
 
 typedef ItemClickCallback = void Function(int index);
 
-/// toast弹出提示框
-CancelFunc showToast(String text, {int seconds = 2}) {
-  return BotToast.showText(
-    text: text,
-    onlyOne: true,
-    duration: Duration(seconds: seconds),
-    textStyle: TextStyle(fontSize: 14, color: Colors.white),
-  );
-}
+class CommonDialog {
+  /// toast弹出提示框
+  static CancelFunc showToast(String text, {int seconds = 2}) {
+    return BotToast.showText(
+      text: text,
+      onlyOne: true,
+      duration: Duration(seconds: seconds),
+      textStyle: TextStyle(fontSize: 14, color: Colors.white),
+    );
+  }
 
-/// 加载中对话框
-CancelFunc loadingDialog({String? loadingTxt, bool isVertical = true, bool light = false}) {
-  loadingTxt ??= S.from.loading;
-  List<Widget> widgets = [
-    SizedBox(
-      width: 30,
-      height: 30,
-      child: CircularProgressIndicator(strokeWidth: 2, backgroundColor: Colors.white),
-    ),
-    SizedBox(width: 20, height: 20),
-    Text(loadingTxt, style: TextStyle(color: Colors.white, fontSize: 16)),
-  ];
-  return BotToast.showCustomLoading(
-    align: Alignment.center,
-    backgroundColor: light ? Colors.black26 : Colors.transparent,
-    ignoreContentClick: true,
-    clickClose: false,
-    allowClick: false,
-    crossPage: false,
-    toastBuilder: (_) => Container(
-      padding: EdgeInsets.symmetric(vertical: 30, horizontal: 40),
-      decoration: BoxDecoration(
-        color: Colors.black54,
-        borderRadius: BorderRadius.all(Radius.circular(8)),
+  /// 加载中对话框
+  static CancelFunc loading({String? loadingTxt, bool isVertical = true, bool light = false}) {
+    loadingTxt ??= S.from.loading;
+    List<Widget> widgets = [
+      SizedBox(
+        width: 30,
+        height: 30,
+        child: CircularProgressIndicator(strokeWidth: 2, backgroundColor: Colors.white),
       ),
-      child: isVertical
-          ? Column(
-              mainAxisSize: MainAxisSize.min,
-              children: widgets,
-            )
-          : Row(
-              mainAxisSize: MainAxisSize.min,
-              children: widgets,
-            ),
-    ),
-  );
-}
-
-/// 选择图片对话框
-void showSelectImageBottomSheet(BuildContext context, {Function? onCameraTap, Function? onGalleryTap}) {
-  showListBottomSheet(context, [S.of(context).camera, S.of(context).gallery], (item) async {
-    if (item == 0) {
-      if (onCameraTap != null) onCameraTap();
-    } else if (item == 1) {
-      if (onGalleryTap != null) onGalleryTap();
-    }
-  });
-}
-
-/// 列表选择对话框
-void showListBottomSheet(
-  BuildContext context,
-  List<String> items,
-  ItemClickCallback? onTap, {
-  double height = 45.0,
-  bool isMaterial = false,
-}) {
-  List<String> data = [];
-  items.forEach((item) => data.add(item));
-  if (!isMaterial) data.add('divider');
-  data.add(S.of(context).cancel);
-
-  double realHeight = (items.length + 1) * height;
-
-  Widget _child(int index) {
-    BorderRadius? borderRadius;
-    if (!isMaterial) {
-      if (index == items.length) return SizedBox(height: 4); // 取消按钮和列表按钮之间的分隔条
-      borderRadius = items.length == 1 // item只有一个按钮
-          ? BorderRadius.all(Radius.circular(8))
-          : index == 0 || index == data.length - 1 // item的第一个按钮和取消按钮
-              ? BorderRadius.vertical(top: Radius.circular(8))
-              : index == items.length - 1 // item的最后一个按钮
-                  ? BorderRadius.vertical(bottom: Radius.circular(8))
-                  : null;
-    }
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: borderRadius,
-      ),
-      child: TapLayout(
-        height: height,
-        borderRadius: borderRadius,
-        onTap: () {
-          if (onTap != null && index < items.length) onTap(index);
-          Navigator.pop(context);
-        },
-        child: Column(children: [
-          Expanded(child: Container(alignment: Alignment.center, child: Text(data[index]))),
-          if (!isMaterial && index < items.length - 1) divider(),
-        ]),
+      SizedBox(width: 20, height: 20),
+      Text(loadingTxt, style: TextStyle(color: Colors.white, fontSize: 16)),
+    ];
+    return BotToast.showCustomLoading(
+      align: Alignment.center,
+      backgroundColor: light ? Colors.black26 : Colors.transparent,
+      ignoreContentClick: true,
+      clickClose: false,
+      allowClick: false,
+      crossPage: false,
+      toastBuilder: (_) => Container(
+        padding: EdgeInsets.symmetric(vertical: 30, horizontal: 40),
+        decoration: BoxDecoration(
+          color: Colors.black54,
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+        child: isVertical
+            ? Column(
+                mainAxisSize: MainAxisSize.min,
+                children: widgets,
+              )
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                children: widgets,
+              ),
       ),
     );
   }
 
-  Widget _children() {
-    int index = -1;
-    return realHeight > MediaQuery.of(context).size.width / 2
-        ? ListView.builder(
-            itemCount: data.length,
-            shrinkWrap: true,
-            itemBuilder: (BuildContext context, int index) => _child(index),
-          )
-        : Column(
-            mainAxisSize: MainAxisSize.min,
-            children: data.map((e) {
-              index++;
-              return _child(index);
-            }).toList(),
-          );
+  /// 选择图片对话框
+  static Future<void> showSelectImageBottomSheet(
+    BuildContext context, {
+    Function? onCameraTap,
+    Function? onGalleryTap,
+  }) async {
+    return await showListBottomSheet(context, [
+      S.of(context).camera,
+      S.of(context).gallery,
+    ], (item) async {
+      if (item == 0) {
+        if (onCameraTap != null) onCameraTap();
+      } else if (item == 1) {
+        if (onGalleryTap != null) onGalleryTap();
+      }
+    });
   }
 
-  showModalBottomSheet(
-    context: context,
-    backgroundColor: Colors.transparent,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-    builder: (builder) {
-      return Container(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height / 2,
-          minHeight: height,
-        ),
-        padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
-        width: MediaQuery.of(context).size.width,
-        child: PhysicalModel(
-          color: isMaterial ? Colors.white : Colors.transparent,
-          clipBehavior: Clip.antiAlias,
-          child: _children(),
-        ),
-      );
-    },
-  );
-}
+  /// 列表选择对话框
+  static Future<void> showListBottomSheet(
+    BuildContext context,
+    List<String> items,
+    ItemClickCallback? onTap, {
+    double height = 45.0,
+    bool isMaterial = false,
+  }) async {
+    List<String> data = [];
+    items.forEach((item) => data.add(item));
+    if (!isMaterial) data.add('CommonWidget.divider');
+    data.add(S.of(context).cancel);
 
-/// 提示对话框
-void showPromptDialog(
-  BuildContext context, {
-  bool touchOutsideDismiss = false,
-  String? titleString,
-  Widget? title,
-  Widget? content,
-  String? positiveText,
-  String? negativeText,
-  TextStyle? positiveStyle,
-  TextStyle? negativeStyle,
-  GestureTapCallback? onPositiveTap,
-  GestureTapCallback? onNegativeTap,
-}) {
-  showDialog(
-    context: context,
-    builder: (context) {
-      return DialogWrapper(
-        touchOutsideDismiss: touchOutsideDismiss,
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          SizedBox(height: content == null ? 36 : 20),
-          title ?? Text(titleString ?? '', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-          content == null
-              ? SizedBox(width: 0, height: 36)
-              : Flexible(
-                  child: Padding(
-                    child: content,
-                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 24),
-                  ),
-                ),
-          CupertinoDialogButton(
-            positiveText: positiveText,
-            negativeText: negativeText,
-            positiveStyle: positiveStyle,
-            negativeStyle: negativeStyle,
-            onPositiveTap: onPositiveTap,
-            onNegativeTap: onNegativeTap,
-          )
-        ]),
+    double realHeight = (items.length + 1) * height;
+
+    Widget _child(int index) {
+      BorderRadius? borderRadius;
+      if (!isMaterial) {
+        if (index == items.length) return SizedBox(height: 4); // 取消按钮和列表按钮之间的分隔条
+        borderRadius = items.length == 1 // item只有一个按钮
+            ? BorderRadius.all(Radius.circular(8))
+            : index == 0 || index == data.length - 1 // item的第一个按钮和取消按钮
+                ? BorderRadius.vertical(top: Radius.circular(8))
+                : index == items.length - 1 // item的最后一个按钮
+                    ? BorderRadius.vertical(bottom: Radius.circular(8))
+                    : null;
+      }
+      return Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: borderRadius,
+        ),
+        child: TapLayout(
+          height: height,
+          borderRadius: borderRadius,
+          onTap: () {
+            if (onTap != null && index < items.length) onTap(index);
+            Navigator.pop(context);
+          },
+          child: Column(children: [
+            Expanded(child: Container(alignment: Alignment.center, child: Text(data[index]))),
+            if (!isMaterial && index < items.length - 1) CommonWidget.divider(),
+          ]),
+        ),
       );
-    },
-  );
+    }
+
+    Widget _children() {
+      int index = -1;
+      return realHeight > MediaQuery.of(context).size.width / 2
+          ? ListView.builder(
+              itemCount: data.length,
+              shrinkWrap: true,
+              itemBuilder: (BuildContext context, int index) => _child(index),
+            )
+          : Column(
+              mainAxisSize: MainAxisSize.min,
+              children: data.map((e) {
+                index++;
+                return _child(index);
+              }).toList(),
+            );
+    }
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      builder: (builder) {
+        return Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height / 2,
+            minHeight: height,
+          ),
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+          width: MediaQuery.of(context).size.width,
+          child: PhysicalModel(
+            color: isMaterial ? Colors.white : Colors.transparent,
+            clipBehavior: Clip.antiAlias,
+            child: _children(),
+          ),
+        );
+      },
+    );
+  }
+
+  /// 提示对话框
+  static Future<T> showPromptDialog<T>(
+    BuildContext context, {
+    bool touchOutsideDismiss = false,
+    String? titleString,
+    Widget? title,
+    Widget? content,
+    String? positiveText,
+    String? negativeText,
+    TextStyle? positiveStyle,
+    TextStyle? negativeStyle,
+    GestureTapCallback? onPositiveTap,
+    GestureTapCallback? onNegativeTap,
+  }) async {
+    return await showDialog(
+      context: context,
+      builder: (context) {
+        return DialogWrapper(
+          touchOutsideDismiss: touchOutsideDismiss,
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            SizedBox(height: content == null ? 36 : 20),
+            title ?? Text(titleString ?? '', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            content == null
+                ? SizedBox(width: 0, height: 36)
+                : Flexible(
+                    child: Padding(
+                      child: content,
+                      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 24),
+                    ),
+                  ),
+            CupertinoDialogButton(
+              positiveText: positiveText,
+              negativeText: negativeText,
+              positiveStyle: positiveStyle,
+              negativeStyle: negativeStyle,
+              onPositiveTap: onPositiveTap,
+              onNegativeTap: onNegativeTap,
+            )
+          ]),
+        );
+      },
+    );
+  }
+
+  // 应用升级提示框
+  static Future<T> showAppUpgradeDialog<T>(
+    BuildContext context, {
+    String? version,
+    List<String> desc = const [],
+    GestureTapCallback? onTap,
+  }) async {
+    return await showDialog(
+      context: context,
+      builder: (context) {
+        return DialogWrapper(
+          color: Colors.transparent,
+          touchOutsideDismiss: false,
+          backDismiss: false,
+          borderRadius: const BorderRadius.all(Radius.circular(4)),
+          child: UpgradeDialog(
+            version: 'v$version',
+            desc: desc,
+            onTap: onTap,
+          ),
+        );
+      },
+    );
+  }
 }
 
 /// Dialog设置是否可以点击外部取消显示
@@ -277,7 +311,7 @@ class CupertinoDialogButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        divider(color: Color(0xFFBABABA), height: 0.5),
+        CommonWidget.divider(color: Color(0xFFBABABA), height: 0.5),
         Row(children: [
           Expanded(
             child: TapLayout(
@@ -369,24 +403,4 @@ class ListDialog extends Dialog {
       },
     );
   }
-}
-
-// 应用升级提示框
-void showAppUpgradeDialog(BuildContext context, {String? version, List<String> desc = const [], GestureTapCallback? onTap}) {
-  showDialog(
-    context: context,
-    builder: (context) {
-      return DialogWrapper(
-        color: Colors.transparent,
-        touchOutsideDismiss: false,
-        backDismiss: false,
-        borderRadius: const BorderRadius.all(Radius.circular(4)),
-        child: UpgradeDialog(
-          version: 'v$version',
-          desc: desc,
-          onTap: onTap,
-        ),
-      );
-    },
-  );
 }

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/http/api_client.dart';
+import 'package:flutter_ui/base/http/http_client.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/model/local_model.dart';
 import 'package:flutter_ui/base/res/assets.dart';
@@ -87,7 +87,7 @@ class _SettingPageState extends State<SettingPage> {
                 isRipple: false,
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: () => showToast(S.of(context).username),
+                onTap: () => CommonDialog.showToast(S.of(context).username),
                 child: SingleTextLayout(
                   icon: Icons.person,
                   title: S.of(context).username,
@@ -133,7 +133,7 @@ class _SettingPageState extends State<SettingPage> {
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 onTap: () {
-                  CancelFunc cancel = loadingDialog();
+                  CancelFunc cancel = CommonDialog.loading();
                   Future.delayed(Duration(seconds: 1), () => cancel());
                 },
                 child: SingleTextLayout(
@@ -180,7 +180,7 @@ class _SettingPageState extends State<SettingPage> {
                   isTextLeft: false,
                 ),
               ),
-              divider(height: 8),
+              CommonWidget.divider(height: 8),
               TapLayout(
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
@@ -191,15 +191,15 @@ class _SettingPageState extends State<SettingPage> {
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 onTap: () {
-                  CancelFunc cancel = loadingDialog();
+                  CancelFunc cancel = CommonDialog.loading();
                   Future.delayed(Duration(seconds: 1), () {
-                    showToast('已是最新版本');
+                    CommonDialog.showToast('已是最新版本');
                     cancel();
                   });
                 },
                 child: SingleTextLayout(title: S.of(context).checkUpgrade, badgeCount: 100, isShowForward: true),
               ),
-              divider(height: 8),
+              CommonWidget.divider(height: 8),
               TapLayout(
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
@@ -210,9 +210,9 @@ class _SettingPageState extends State<SettingPage> {
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 onTap: () {
-                  CancelFunc cancel = loadingDialog();
+                  CancelFunc cancel = CommonDialog.loading();
                   Future.delayed(Duration(seconds: 1), () {
-                    showToast('退出成功');
+                    CommonDialog.showToast('退出成功');
                     cancel();
                   });
                 },
@@ -249,7 +249,7 @@ class _SettingPageState extends State<SettingPage> {
                 return InkWell(
                   onTap: () {
                     context.read<LocalModel>().setTheme(key);
-                    showToast('修改成功');
+                    CommonDialog.showToast('修改成功');
                     RouteManager.pop(context);
                   },
                   child: Container(
@@ -279,7 +279,7 @@ class _SettingPageState extends State<SettingPage> {
               child: Text(_convertLocale(value)),
               onPressed: () {
                 context.read<LocalModel>().setLocale(value);
-                showToast('修改成功');
+                CommonDialog.showToast('修改成功');
                 RouteManager.pop(context);
               },
             );
@@ -299,7 +299,7 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   void _logout() {
-    ApiClient.getInstance.request(apiServices.logout(), success: (data) {
+    HttpClient.getInstance.request(apiServices.logout(), success: (data) {
       SpUtil.resetUser();
       RouteManager.push(context, LoginPage(), clearStack: true);
     });

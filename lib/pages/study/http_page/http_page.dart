@@ -88,7 +88,7 @@ class _HTTPListPageState extends State<HTTPListPage> {
                 WrapButton(
                   text: S.of(context).login,
                   width: 100.0,
-                  onTap: () => {showToast('hello')},
+                  onTap: () => {CommonDialog.showToast('hello')},
                 ),
                 WrapButton(
                   text: S.of(context).register,

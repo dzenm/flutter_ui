@@ -65,9 +65,9 @@ class _HTTPItemPageState extends State<HTTPItemPage> with SingleTickerProviderSt
   Widget _listView(Map<String, dynamic> data) {
     List<Widget> list = [];
     Widget interval = SizedBox(height: 8);
-    list.add(_titleView('  Headers'));
+    list.add(titleView('  Headers'));
     list.add(interval);
-    list.add(divider());
+    list.add(CommonWidget.divider());
     list.add(interval);
     data.forEach((key, value) {
       if (key != 'Body') {
@@ -77,9 +77,9 @@ class _HTTPItemPageState extends State<HTTPItemPage> with SingleTickerProviderSt
       }
     });
     list.add(interval);
-    list.add(_titleView('  Body'));
+    list.add(titleView('  Body'));
     list.add(interval);
-    list.add(divider());
+    list.add(CommonWidget.divider());
     list.add(interval);
     list.add(Text(data['Body'].toString()));
     return Container(
@@ -111,7 +111,7 @@ class _HTTPItemPageState extends State<HTTPItemPage> with SingleTickerProviderSt
             alignment: Alignment.centerLeft,
             onTap: () {
               StrUtil.copy(value);
-              showToast('复制成功: $value');
+              CommonDialog.showToast('复制成功: $value');
             },
           ),
         ),
@@ -120,7 +120,7 @@ class _HTTPItemPageState extends State<HTTPItemPage> with SingleTickerProviderSt
   }
 
   // 标题布局
-  Widget _titleView(String title) {
+  Widget titleView(String title) {
     return Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold));
   }
 }

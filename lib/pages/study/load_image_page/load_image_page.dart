@@ -25,20 +25,20 @@ class _LoadImagePageState extends State<LoadImagePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 8),
-              titleView('Image.network'),
+              CommonWidget.titleView('Image.network'),
               SizedBox(height: 8),
               Image.network(
                 'https://www.wanandroid.com/blogimgs/62c1bd68-b5f3-4a3c-a649-7ca8c7dfabe6.png',
               ),
               SizedBox(height: 8),
-              titleView('FadeInImage.assetNetwork'),
+              CommonWidget.titleView('FadeInImage.assetNetwork'),
               SizedBox(height: 8),
               FadeInImage.assetNetwork(
                 placeholder: Assets.image(('ic_vnote.png')),
                 image: 'https://www.wanandroid.com/blogimgs/62c1bd68-b5f3-4a3c-a649-7ca8c7dfabe6.png',
               ),
               SizedBox(height: 8),
-              titleView('CachedNetworkImage'),
+              CommonWidget.titleView('CachedNetworkImage'),
               SizedBox(height: 8),
               CachedNetworkImage(
                 imageUrl: 'https://www.wanandroid.com/blogimgs/62c1bd68-b5f3-4a3c-a649-7ca8c7dfabe6.png',

@@ -134,7 +134,7 @@ class FileUtil {
   static Future<Null> requestPermission(FileSystemEntity file) async {
     // PermissionStatus status = await Permission.storage.status;
     // if (status != PermissionStatus.granted) {
-    //   showToast("请先开启读写权限");
+    //   CommonDialog.showToast("请先开启读写权限");
     //   return;
     // }
     await delDir(file);

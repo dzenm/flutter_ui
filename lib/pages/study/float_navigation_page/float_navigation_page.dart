@@ -44,7 +44,7 @@ class _FloatNavigationPageState extends State<FloatNavigationPage> {
           child: MaterialButton(
             onPressed: () {
               CustomPopupWindow.showList(context, targetKey, ['全选', '复制', '粘贴'], onItemTap: (index) {
-                showToast('第${index + 1}个Item');
+                CommonDialog.showToast('第${index + 1}个Item');
               });
             },
             color: Colors.amberAccent,

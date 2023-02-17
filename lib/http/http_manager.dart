@@ -1,5 +1,5 @@
 import 'package:flutter_ui/base/entities/page_entity.dart';
-import 'package:flutter_ui/base/http/api_client.dart';
+import 'package:flutter_ui/base/http/http_client.dart';
 import 'package:flutter_ui/entities/article_entity.dart';
 import 'package:flutter_ui/entities/banner_entity.dart';
 import 'package:flutter_ui/http/api_services.dart';
@@ -11,20 +11,21 @@ class HttpManager {
   factory HttpManager() => getInstance;
 
   HttpManager._internal() {
-    _apiClient = ApiClient.getInstance;
+    _httpClient = HttpClient.getInstance;
     _apiServices = apiServices;
   }
 
   static final HttpManager getInstance = HttpManager._internal();
 
-  late ApiClient _apiClient;
+  late HttpClient _httpClient;
   late ApiServices _apiServices;
 
   /// 获取Banner请求，并保存banner请求数据
   Future<void> banner({
     void Function(List<BannerEntity> list)? success,
+    bool isShowDialog = true,
   }) async {
-    await _apiClient.request(_apiServices.banner(), success: (data) async {
+    await _httpClient.request(_apiServices.banner(), isShowDialog: isShowDialog, success: (data) async {
       BannerEntity entity = BannerEntity();
       List<BannerEntity> list = (data as List<dynamic>).map((e) => entity.fromJson(e)).toList();
 
@@ -40,7 +41,7 @@ class HttpManager {
     bool isShowDialog = true,
     bool isShowToast = true,
   }) async {
-    await ApiClient.getInstance.request(apiServices.articleList(page), isShowDialog: isShowDialog, isShowToast: isShowToast, success: (data) async {
+    await HttpClient.getInstance.request(apiServices.articleList(page), isShowDialog: isShowDialog, isShowToast: isShowToast, success: (data) async {
       PageEntity pageEntity = PageEntity.fromJson(data);
 
       List<ArticleEntity> list = (data["datas"] as List<dynamic>).map((e) => ArticleEntity().fromJson(e)).toList();
@@ -58,7 +59,7 @@ class HttpManager {
     void Function(HttpError error)? failed,
     bool isShowDialog = true,
   }) async {
-    await ApiClient.getInstance.request(apiServices.topArticleList(), isShowDialog: isShowDialog, success: (data) async {
+    await HttpClient.getInstance.request(apiServices.topArticleList(), isShowDialog: isShowDialog, success: (data) async {
       List<ArticleEntity> list = (data as List<dynamic>).map((e) => ArticleEntity().fromJson(e)).toList();
       if (success != null) success(list);
     }, failed: (error) {

@@ -80,7 +80,7 @@ class _QRPageState extends State<QRPage> {
   }
 
   void _getResult(String result) {
-    showToast(result);
+    CommonDialog.showToast(result);
     RouteManager.pop(context);
   }
 }

@@ -149,7 +149,7 @@ class _CitySelectedPageState extends State<CitySelectedPage> {
     return ListTile(
       title: Text(model.name),
       onTap: () {
-        showToast('onItemClick : ${model.toString()}');
+        CommonDialog.showToast('onItemClick : ${model.toString()}');
       },
     );
   }

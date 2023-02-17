@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/base/http/api_client.dart';
+import 'package:flutter_ui/base/http/http_client.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/base/utils/sp_util.dart';
@@ -117,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
   // 登录按钮点击事件
   void _loginPressed() {
     FocusScope.of(context).unfocus();
-    ApiClient.getInstance.request(apiServices.login(_username, _password), success: (data) {
+    HttpClient.getInstance.request(apiServices.login(_username, _password), success: (data) {
       UserEntity user = UserEntity.fromJson(data);
       SpUtil.setUserLoginState(true);
       SpUtil.setUser(jsonEncode(user));

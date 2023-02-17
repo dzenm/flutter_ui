@@ -10,9 +10,9 @@ class DataEntity<T> {
   DataEntity({this.errorCode = 200, this.errorMsg, this.data});
 
   DataEntity.fromJson(Map<String, dynamic> json) {
-    errorCode = json['errorCode'];
-    errorMsg = json['errorMsg'];
-    data = json['data'];
+    errorCode = json['errorCode'] ?? json['code'];
+    errorMsg = json['errorMsg'] ?? json['msg'] ?? json['message'];
+    data = json['data'] ?? json;
   }
 
   Map<String, dynamic> toJson() => {

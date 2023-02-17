@@ -211,7 +211,7 @@ class _StudyPageState extends State<StudyPage> {
         child: _text(S.of(context).upgradeDialog),
         textColor: Colors.white,
         color: appTheme.primary,
-        onPressed: () => showAppUpgradeDialog(
+        onPressed: () => CommonDialog.showAppUpgradeDialog(
           context,
           version: '12',
           desc: ['升级了'],

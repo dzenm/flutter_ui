@@ -84,7 +84,7 @@ class _TextPageState extends State<TextPage> {
               PopupMenuButton(
                 elevation: 4.0,
                 onSelected: (Item item) {
-                  showToast(item.title ?? '');
+                  CommonDialog.showToast(item.title ?? '');
                 },
                 itemBuilder: (BuildContext context) {
                   return _items.map((value) {
@@ -112,7 +112,7 @@ class _TextPageState extends State<TextPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    titleView('无边框带字数控制的输入框: '),
+                    CommonWidget.titleView('无边框带字数控制的输入框: '),
                     SingleEditLayout(
                       '账户',
                       onChanged: (value) => setState(() => newText = value),
@@ -130,25 +130,25 @@ class _TextPageState extends State<TextPage> {
                       child: Row(children: [Text(newText, maxLines: 4, style: TextStyle(color: Colors.white))]),
                     ),
                     SizedBox(height: 8),
-                    titleView('输入框的特殊表情: '),
+                    CommonWidget.titleView('输入框的特殊表情: '),
                     Text('特殊小技巧，试试输入\'[a]\', \'[b]\', \'[c]\', \'[d]\', \'[e]\'', style: TextStyle(fontSize: 10),),
                     ExtendedTextField(
                       specialTextSpanBuilder: MySpecialTextSpanBuilder(showAtBackground: true, type: BuilderType.extendedTextField),
                     ),
-                    divider(),
+                    CommonWidget.divider(),
                     SizedBox(height: 24),
-                    titleView('输入框的特殊表情: '),
+                    CommonWidget.titleView('输入框的特殊表情: '),
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                       child: SlideVerifyView(
                         slideColor: Colors.green,
                         backgroundColor: Color(0xFFE5E5E5),
                         borderColor: Color(0xFFE5E5E5),
-                        onChanged: () async => showToast('验证成功'),
+                        onChanged: () async => CommonDialog.showToast('验证成功'),
                       ),
                     ),
                     SizedBox(height: 24),
-                    titleView('自适应宽度使用: '),
+                    CommonWidget.titleView('自适应宽度使用: '),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -167,9 +167,9 @@ class _TextPageState extends State<TextPage> {
                       ],
                     ),
                     SizedBox(height: 8),
-                    divider(),
+                    CommonWidget.divider(),
                     SizedBox(height: 24),
-                    titleView('设置页面常用单行布局: '),
+                    CommonWidget.titleView('设置页面常用单行布局: '),
                     TapLayout(
                       height: 50.0,
                       padding: EdgeInsets.symmetric(horizontal: 16),
@@ -185,7 +185,7 @@ class _TextPageState extends State<TextPage> {
                     TapLayout(
                       height: 50.0,
                       padding: EdgeInsets.symmetric(horizontal: 16),
-                      onTap: () => showPromptDialog(
+                      onTap: () => CommonDialog.showPromptDialog(
                         context,
                         titleString: '立即开通',
                         content: Column(
@@ -205,7 +205,7 @@ class _TextPageState extends State<TextPage> {
                       height: 50.0,
                       padding: EdgeInsets.symmetric(horizontal: 16),
                       onTap: () {
-                        CancelFunc cancel = loadingDialog();
+                        CancelFunc cancel = CommonDialog.loading();
                         Future.delayed(Duration(seconds: 1), () => cancel());
                         setState(() => isChanged = true);
                       },
@@ -220,8 +220,8 @@ class _TextPageState extends State<TextPage> {
                     TapLayout(
                       height: 50.0,
                       padding: EdgeInsets.symmetric(horizontal: 16),
-                      // onTap: () => showPromptDialog(context, titleString: '确定要退出系统了吗？', onPositiveTap: () => showToast('修改成功')),
-                      onTap: () => showPromptDialog(context, titleString: '昵称', content: Text('这是设置好的昵称'), onPositiveTap: () => showToast('修改成功')),
+                      // onTap: () => CommonDialog.showPromptDialog(context, titleString: '确定要退出系统了吗？', onPositiveTap: () => CommonDialog.CommonDialog.showToast('修改成功')),
+                      onTap: () => CommonDialog.showPromptDialog(context, titleString: '昵称', content: Text('这是设置好的昵称'), onPositiveTap: () => CommonDialog.showToast('修改成功')),
                       child: SingleTextLayout(
                         icon: Icons.person,
                         title: S.of(context).avatar,
@@ -241,13 +241,13 @@ class _TextPageState extends State<TextPage> {
                     TapLayout(
                       height: 50.0,
                       padding: EdgeInsets.symmetric(horizontal: 16),
-                      onTap: () => showSelectImageBottomSheet(context),
+                      onTap: () => CommonDialog.showSelectImageBottomSheet(context),
                       child: SingleTextLayout(title: S.of(context).notificationSwitch, text: '查看通知内容'),
                     ),
                     TapLayout(
                       height: 60.0,
                       padding: EdgeInsets.symmetric(horizontal: 16),
-                      onTap: () => showListBottomSheet(context, data, (int index) {
+                      onTap: () => CommonDialog.showListBottomSheet(context, data, (int index) {
                         RouteManager.pop(context);
                       }),
                       child: SingleTextLayout(title: S.of(context).loginRecord, summary: '查看最近所有的登录记录', badgeCount: 0, isShowForward: true),

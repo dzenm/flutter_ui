@@ -135,7 +135,7 @@ class _BannerViewState extends State<BannerView> {
         children: [
           _bannerView(),
           _indicator(),
-          _titleView(),
+          titleView(),
         ],
       ),
     );
@@ -223,7 +223,7 @@ class _BannerViewState extends State<BannerView> {
   }
 
   // 标题布局
-  Widget _titleView() {
+  Widget titleView() {
     if (widget.titles == null || widget.titles!.isEmpty) return Container();
     return Align(
       alignment: Alignment.bottomCenter,

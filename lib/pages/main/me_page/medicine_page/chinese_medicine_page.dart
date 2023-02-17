@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/base/db/db_base_model.dart';
-import 'package:flutter_ui/base/http/api_client.dart';
+import 'package:flutter_ui/base/http/http_client.dart';
 import 'package:flutter_ui/base/log/log.dart';
+import 'package:flutter_ui/entities/medicine_entity.dart';
 
 ///
 /// Created by a0010 on 2022/4/15 16:23
@@ -24,7 +24,7 @@ class _ChineseMedicinePageState extends State<ChineseMedicinePage> {
   void initState() {
     super.initState();
 
-    getZhongyao();
+    _getZhongyao();
   }
 
   @override
@@ -53,34 +53,11 @@ class _ChineseMedicinePageState extends State<ChineseMedicinePage> {
     // return Html(data: html);
   }
 
-  void getZhongyao() {
-    ApiClient.getInstance.request(api(1).getZhongYao(_key, widget.medicineName), success: (data) {
+  void _getZhongyao() {
+    HttpClient.getInstance.request(api(1).getZhongYao(_key, widget.medicineName), success: (data) {
       Log.i('len=${_list.length}');
-      _list = (data as List<dynamic>).map((e) => MedicineEntity.fromJson(e)).toList();
+      _list = (data['newslist'] as List<dynamic>).map((e) => MedicineEntity.fromJson(e)).toList();
       setState(() {});
     });
   }
-}
-
-class MedicineEntity extends DBBaseModel {
-  String? title;
-  String? content;
-
-  MedicineEntity();
-
-  MedicineEntity.fromJson(Map<String, dynamic> json) {
-    title = json['title'];
-    content = json['content'];
-  }
-
-  Map<String, dynamic> toJson() => {
-        'title': title,
-        'content': content,
-      };
-
-  @override
-  MedicineEntity fromJson(Map<String, dynamic> json) => MedicineEntity.fromJson(json);
-
-  @override
-  String get primaryKey => '$title';
 }
