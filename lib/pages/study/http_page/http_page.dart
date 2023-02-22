@@ -22,7 +22,7 @@ class _HTTPListPageState extends State<HTTPListPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<ArticleEntity> list = context.watch<ArticleModel>().articles;
+    List<ArticleEntity> list = context.watch<ArticleModel>().allArticles;
     String text = StrUtil.formatToJson(list);
     return Scaffold(
       appBar: AppBar(

@@ -135,7 +135,7 @@ class _ArticleListState extends State<ArticleList> {
   Widget build(BuildContext context) {
     Log.i('build', tag: _tag);
 
-    List<ArticleEntity> articleList = context.watch<ArticleModel>().articles;
+    List<ArticleEntity> articleList = context.watch<ArticleModel>().allArticles;
     Log.i('文章数量：${articleList.length}', tag: _tag);
     return Expanded(
       child: RefreshListView(

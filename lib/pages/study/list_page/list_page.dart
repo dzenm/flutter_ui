@@ -27,7 +27,7 @@ class _ListPageState extends State<ListPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<ArticleEntity> articleList = context.watch<ArticleModel>().articles;
+    List<ArticleEntity> articleList = context.watch<ArticleModel>().allArticles;
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).listAndRefresh, style: TextStyle(color: Colors.white)),

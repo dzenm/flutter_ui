@@ -27,31 +27,11 @@ class BannerModel extends ChangeNotifier {
   }
 
   List<BannerEntity> _banners = [];
-  List<String> _titles = [];
-  List<String> _images = [];
-  List<String> _urls = [];
 
-  List<String> get titles => _titles;
+  List<BannerEntity> get banners => _banners;
 
-  List<String> get images => _images;
-
-  List<String> get urls => _urls;
-
-  void updateBanner(List<BannerEntity> list) {
-    /// 处理banner数据
-    List<String> titles = [], images = [], urls = [];
-    list.forEach((element) async {
-      titles.add(element.title ?? '');
-      images.add(element.imagePath ?? '');
-      urls.add(element.url ?? '');
-    });
-    // 重置banner数据
-    _titles.clear();
-    _titles.addAll(titles);
-    _images.clear();
-    _images.addAll(images);
-    _urls.clear();
-    _urls.addAll(urls);
+  void updateBanners(List<BannerEntity> list) {
+    _banners = list;
     // 保存banner到数据库
     _entity.insert(list);
     notifyListeners();
@@ -59,9 +39,6 @@ class BannerModel extends ChangeNotifier {
 
   void clear() {
     _banners.clear();
-    _titles.clear();
-    _images.clear();
-    _urls.clear();
     notifyListeners();
   }
 }

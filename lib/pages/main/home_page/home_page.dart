@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/widgets/banner_view.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
+import 'package:flutter_ui/entities/banner_entity.dart';
 import 'package:flutter_ui/http/http_manager.dart';
 import 'package:flutter_ui/models/article_model.dart';
 import 'package:flutter_ui/models/banner_model.dart';
@@ -91,7 +92,7 @@ class _HomePageState extends State<HomePage> {
     await HttpManager.getInstance.banner(
         isShowDialog: false,
         success: (list) {
-          context.read<BannerModel>().updateBanner(list);
+          context.read<BannerModel>().updateBanners(list);
         });
   }
 
@@ -120,11 +121,10 @@ class Banner extends StatelessWidget {
   Widget build(BuildContext context) {
     Log.i('build', tag: _tag);
 
-    List<String> titles = context.watch<BannerModel>().titles;
-    List<String> images = context.watch<BannerModel>().images;
+    List<BannerEntity> banners = context.watch<BannerModel>().banners;
     return BannerView(
-      titles: titles,
-      children: images.map((value) => Image.network(value, fit: BoxFit.cover)).toList(),
+      builder: (src) => Image.network(src ?? '', fit: BoxFit.cover),
+      data: banners.map((banner) => BannerData(title: banner.title, data: banner.imagePath)).toList(),
       onTap: (index) {
         CommonDialog.showToast(index.toString());
       },

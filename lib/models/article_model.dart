@@ -22,37 +22,39 @@ class ArticleModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  ///
+  /// 置顶的文章数据
   List<ArticleEntity> get topArticles => _allArticleList.where((article) => article.type == 1).toList();
 
-  List<ArticleEntity> get articleList => _allArticleList.where((article) => article.type == 0).toList();
+  /// 普通的文章数据
+  List<ArticleEntity> get articles => _allArticleList.where((article) => article.type == 0).toList();
 
-  /// 分类整理展示所有的文章数据
-  List<ArticleEntity> get articles => []
+  /// 所有的文章数据，置顶的排在前面，普通的排在后面
+  List<ArticleEntity> get allArticles => []
     ..addAll(topArticles)
-    ..addAll(articleList);
+    ..addAll(articles);
 
-  ArticleEntity? getArticle(int index) => articles.isEmpty ? null : articles[index];
+  ArticleEntity? getArticle(int index) => allArticles.isEmpty ? null : allArticles[index];
 
   void updateArticles(List<ArticleEntity> articles) {
-    _allArticleList.addAll(articles);
-    // 保存article到数据库
-    _entity.insert(articles);
+    articles.forEach((article) => _handleArticle(article));
     notifyListeners();
   }
 
   void updateArticle(ArticleEntity article) {
+    _handleArticle(article);
+    notifyListeners();
+  }
+
+  /// 处理文章数据
+  Future<void> _handleArticle(ArticleEntity article) async {
     int index = _allArticleList.indexOf(article);
     if (index != -1) {
       _allArticleList.insert(index, article);
-      // 更新article数据
-      _entity.update(article);
+      _entity.update(article); // 更新DB中的article数据
     } else {
       _allArticleList.add(article);
-      // 保存article数据
-      _entity.insert(article);
+      _entity.insert(article); // 保存为DB中的article数据
     }
-    notifyListeners();
   }
 
   void clear() {
