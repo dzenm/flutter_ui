@@ -39,7 +39,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
 
     Future.delayed(Duration.zero, () {
-      Naughty.getInstance
+      Naughty.instance
         ..init(context)
         ..show();
     });

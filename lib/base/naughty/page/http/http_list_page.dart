@@ -26,14 +26,14 @@ class _HTTPListPageState extends State<HTTPListPage> {
   @override
   void initState() {
     super.initState();
-    Naughty.getInstance.dismiss();
+    Naughty.instance.dismiss();
     _getData();
   }
 
   //列表要展示的数据
   Future _getData() async {
     await Future.delayed(Duration(seconds: 0), () {
-      setState(() => _list = Naughty.getInstance.data);
+      setState(() => _list = Naughty.instance.data);
     });
   }
 
@@ -44,7 +44,7 @@ class _HTTPListPageState extends State<HTTPListPage> {
 
   @override
   Widget build(BuildContext context) {
-    Naughty.getInstance.init(context);
+    Naughty.instance.init(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Debug Mode'),
@@ -57,7 +57,7 @@ class _HTTPListPageState extends State<HTTPListPage> {
               } else if (item.index == 1) {
               } else if (item.index == 2) {
               } else if (item.index == 3) {
-                Naughty.getInstance.data.clear();
+                Naughty.instance.data.clear();
                 _getData();
               } else if (item.index == 4) {
                 RouteManager.pop(context);

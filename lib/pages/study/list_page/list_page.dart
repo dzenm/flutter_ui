@@ -33,30 +33,23 @@ class _ListPageState extends State<ListPage> {
         title: Text(S.of(context).listAndRefresh, style: TextStyle(color: Colors.white)),
       ),
       body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: RefreshListView(
-                controller: _controller,
-                itemCount: articleList.length,
-                builder: (BuildContext context, int index) {
-                  return _buildArticleItem(articleList, index);
-                },
-                refresh: _onRefresh,
-              ),
-            )
-          ],
-        ),
+        child: Column(children: [
+          Expanded(
+            child: RefreshListView(
+              controller: _controller,
+              itemCount: articleList.length,
+              builder: (BuildContext context, int index) {
+                return _buildArticleItem(articleList[index], index);
+              },
+              refresh: _onRefresh,
+            ),
+          )
+        ]),
       ),
     );
   }
 
-  Widget _buildArticleItem(List<ArticleEntity> articleList, int index) {
-    ArticleEntity article = articleList[index];
+  Widget _buildArticleItem(ArticleEntity article, int index) {
     String title = article.title ?? '';
     return TapLayout(
       onTap: () => RouteManager.push(context, WebViewPage(title: title, url: article.link ?? '')),
@@ -73,14 +66,15 @@ class _ListPageState extends State<ListPage> {
   void _getArticle({bool isReset = false}) {
     Future.delayed(Duration(milliseconds: isReset ? 500 : 0), () {
       _page = isReset ? 0 : _page;
-      HttpManager.getInstance.getArticleList(
+      HttpManager.instance.getArticleList(
         page: _page,
         isShowDialog: false,
-        success: (list, total) {
-          _controller.loadComplete();
-          if (_page == total) {
-            _controller.loadEmpty();
+        success: (list, pageCount) {
+          _controller.loadComplete(); // 加载成功
+          if (_page == pageCount) {
+            _controller.loadEmpty(); // 加载完所有页面
           } else {
+            // 加载数据成功，保存数据，下次加载下一页
             context.read<ArticleModel>().updateArticles(list);
             ++_page;
             _controller.loadMore();

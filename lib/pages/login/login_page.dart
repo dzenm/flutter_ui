@@ -117,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
   // 登录按钮点击事件
   void _loginPressed() {
     FocusScope.of(context).unfocus();
-    HttpClient.getInstance.request(apiServices.login(_username, _password), success: (data) {
+    HttpClient.instance.request(apiServices.login(_username, _password), success: (data) {
       UserEntity user = UserEntity.fromJson(data);
       SpUtil.setUserLoginState(true);
       SpUtil.setUser(jsonEncode(user));

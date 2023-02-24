@@ -44,7 +44,7 @@ class _DBListPageState extends State<DBListPage> {
   //列表要展示的数据
   Future getData() async {
     await Future.delayed(Duration(seconds: 0), () async {
-      _list = await FileUtil.getInstance.getDBFiles();
+      _list = await FileUtil.instance.getDBFiles();
       setState(() => {});
     });
   }

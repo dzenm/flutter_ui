@@ -9,9 +9,9 @@ import '../log/log.dart';
 class SpUtil {
   SpUtil._internal();
 
-  static final SpUtil _getInstance = SpUtil._internal();
+  static final SpUtil _instance = SpUtil._internal();
 
-  static SpUtil get getInstance => _getInstance;
+  static SpUtil get instance => _instance;
 
   static SharedPreferences? _prefs;
 
@@ -24,6 +24,7 @@ class SpUtil {
   static const String _userName = 'u_name'; // 登录的用户名
   static const String _userId = 'u_id'; // 登录的用户ID
   static const String _userToken = 'u_token'; // 登录的token信息
+  static const String _userCookie = 'u_cookie'; // 登录的cookie信息
 
   /// APP设置相关的信息
   static const String _settingTheme = 's_theme'; // APP展示的主题
@@ -94,6 +95,16 @@ class SpUtil {
     setString(_userToken, token);
   }
 
+  // 获取登录用户cookie
+  static String getCookie() {
+    return getString(_userCookie);
+  }
+
+  // 保存登录用户cookie
+  static void setCookie(String? cookie) {
+    setString(_userCookie, cookie);
+  }
+
   // 重置登录用户信息
   static void resetUser() {
     remove(_userInfo);
@@ -101,6 +112,7 @@ class SpUtil {
     remove(_user);
     remove(_userId);
     remove(_userToken);
+    remove(_userCookie);
   }
 
   // 获取主题样式

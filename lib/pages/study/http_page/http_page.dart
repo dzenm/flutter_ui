@@ -113,11 +113,11 @@ class _HTTPListPageState extends State<HTTPListPage> {
   }
 
   void _getArticle() {
-    HttpManager.getInstance.getArticleList(
+    HttpManager.instance.getArticleList(
       page: 0,
       isShowDialog: isShowDialog,
       isShowToast: isShowToast,
-      success: (list, total) {
+      success: (list, pageCount) {
         context.read<ArticleModel>().updateArticles(list);
       },
     );

@@ -9,6 +9,7 @@ class RefreshListView extends StatefulWidget {
   final int itemCount; // item数量
   final IndexedWidgetBuilder builder; // 子item样式
   final RefreshFunction refresh; // refresh为true表示下拉刷新的回调, 为false表示上拉加载更多的回调
+  final bool showFooter;
 
   RefreshListView({
     Key? key,
@@ -16,6 +17,7 @@ class RefreshListView extends StatefulWidget {
     required this.itemCount,
     required this.builder,
     required this.refresh,
+    this.showFooter = false,
   }) : super(key: key);
 
   @override
@@ -52,7 +54,7 @@ class _RefreshListViewState extends State<RefreshListView> {
         onRefresh: _refresh,
         child: ListView.builder(
           itemBuilder: _buildItem,
-          itemCount: !widget.controller.init ? widget.itemCount : widget.itemCount + 1,
+          itemCount: !widget.showFooter ? widget.itemCount : widget.itemCount + 1,
           controller: _controller,
         ),
       ),

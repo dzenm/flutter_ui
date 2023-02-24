@@ -1,5 +1,8 @@
 import 'package:flutter_ui/base/db/db_base_model.dart';
 
+///
+/// Created by a0010 on 2023/2/23 14:26
+///
 class ArticleEntity extends DBBaseModel {
   String? apkLink;
   int? audit;

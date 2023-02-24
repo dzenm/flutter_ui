@@ -21,7 +21,7 @@ class HttpInterceptor extends Interceptor {
     entity.duration = DateTime.now().millisecondsSinceEpoch.toString();
     entity.time = DateFormat("HH:mm:ss SSS").format(DateTime.now());
     map[options] = entity;
-    Naughty.getInstance.data.insert(0, entity);
+    Naughty.instance.data.insert(0, entity);
 
     String body = '${options.method}  ${options.path}';
     NotificationUtil.showNotification(body: body, onTap: (payload) async => RouteManager.push(Application.context, HTTPListPage()));

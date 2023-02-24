@@ -12,9 +12,9 @@ import 'page/http/http_list_page.dart';
 class Naughty {
   Naughty._internal();
 
-  static final Naughty getInstance = Naughty._internal();
+  static final Naughty instance = Naughty._internal();
 
-  factory Naughty() => getInstance;
+  factory Naughty() => instance;
 
   Widget? _child;
   BuildContext? _context;

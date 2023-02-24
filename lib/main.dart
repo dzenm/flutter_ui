@@ -28,15 +28,15 @@ import 'pages/main/me_page/me_model.dart';
 import 'pages/main/nav_page/nav_model.dart';
 import 'pages/study/study_model.dart';
 
-void main() => Application.getInstance.init();
+void main() => Application.instance.init();
 
 class Application {
   /// 私有构造方法
   Application._internal();
 
-  static final Application getInstance = Application._internal();
+  static final Application instance = Application._internal();
 
-  factory Application() => getInstance;
+  factory Application() => instance;
 
   static FlutterLocalNotificationsPlugin notifications = FlutterLocalNotificationsPlugin();
 
@@ -50,13 +50,13 @@ class Application {
   void init() async {
     Log.i('═══════════════════════════════ 开始初始化 ════════════════════════════════════', tag: _tag);
     Log.i('启动: ${DateTime.now().millisecondsSinceEpoch}', tag: _tag);
-    Log.i('Application是否单例: ${Application.getInstance == Application()}', tag: _tag);
+    Log.i('Application是否单例: ${Application.instance == Application()}', tag: _tag);
 
     Log.i('初始化 WidgetsFlutterBinding ...', tag: _tag);
     MockBinding.ensureInitialized();
 
     Log.i('初始化 SharedPreferences ...', tag: _tag);
-    await SpUtil.getInstance.init();
+    await SpUtil.instance.init();
 
     Log.i('初始化 阿里云推送 ...', tag: _tag);
     _initAliYunPush();

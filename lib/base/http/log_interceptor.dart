@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 
 import '../log/log.dart';
-import '../utils/sp_util.dart';
 
 /// 网络请求[dio.Interceptor], 网络请求信息输出到控制台.
 /// // log interceptor
@@ -59,7 +58,6 @@ class LoggerInterceptor extends Interceptor {
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
-    options.headers['authorization'] = SpUtil.getToken();
     handler.next(options);
   }
 

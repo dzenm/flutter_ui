@@ -17,9 +17,9 @@ class DBManager {
 
   DBManager._internal();
 
-  static DBManager getInstance = DBManager._internal();
+  static DBManager instance = DBManager._internal();
 
-  factory DBManager() => getInstance;
+  factory DBManager() => instance;
 
   Database? _database;
 

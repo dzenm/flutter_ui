@@ -75,4 +75,20 @@ class StrUtil {
       return str;
     }
   }
+
+  /// 将string转化成list
+  static List<String> stringToList(String? s, {String pattern = ','}) {
+    List<String> list = [];
+    s?.split(pattern).forEach((cookie) => list.add(cookie));
+    return list;
+  }
+
+  /// 将string转化成list
+  static String listToString(List<String>? list, {String pattern = ','}) {
+    StringBuffer sb = StringBuffer();
+    list?.forEach((cookie) => sb
+      ..write(cookie)
+      ..write(pattern));
+    return sb.toString();
+  }
 }

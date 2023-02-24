@@ -127,7 +127,7 @@ class Sql {
   // 数据库版本1升级到版本2
   static String? _onUpgrade_1_2(int oldVersion, int newVersion) {
     if (newVersion > 1 && oldVersion <= 1) {
-      DBManager.getInstance.log('Database onUpgrade_1_2: $createUserTable');
+      DBManager.instance.log('Database onUpgrade_1_2: $createUserTable');
       return createUserTable;
     }
     return null;
@@ -137,7 +137,7 @@ class Sql {
   static String? _onUpgrade_2_3(int oldVersion, int newVersion) {
     if (newVersion > 2 && oldVersion <= 2) {
       String sql = 'ALTER TABLE t_banner ADD flutter TEXT DEFAULT ""';
-      DBManager.getInstance.log('Database onUpgrade_2_3: $sql');
+      DBManager.instance.log('Database onUpgrade_2_3: $sql');
       return sql;
     }
     return null;
@@ -147,7 +147,7 @@ class Sql {
   static String? _onUpgrade_3_4(int oldVersion, int newVersion) {
     if (newVersion > 3 && oldVersion <= 4) {
       String sql = 'ALTER TABLE t_user ADD content TEXT DEFAULT ""';
-      DBManager.getInstance.log('Database onUpgrade_3_4: $sql');
+      DBManager.instance.log('Database onUpgrade_3_4: $sql');
       return sql;
     }
     return null;

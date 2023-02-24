@@ -12,6 +12,7 @@ import 'package:flutter_ui/pages/study/setting_page/setting_page.dart';
 import 'package:flutter_ui/pages/study/study_page.dart';
 import 'package:provider/provider.dart';
 
+import 'collect/collect_page.dart';
 import 'medicine_page/chinese_medicine_page.dart';
 import 'model_data_listen_page.dart';
 
@@ -132,6 +133,16 @@ class _MePageState extends State<MePage> {
       SizedBox(height: 8),
       Text('$ip'),
       SizedBox(height: 8),
+      TapLayout(
+        height: 50.0,
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        onTap: () => RouteManager.push(context, CollectPage()),
+        child: SingleTextLayout(
+          icon: Icons.collections,
+          title: '我的收藏',
+          isShowForward: true,
+        ),
+      ),
       TapLayout(
         height: 50.0,
         padding: EdgeInsets.symmetric(horizontal: 16),

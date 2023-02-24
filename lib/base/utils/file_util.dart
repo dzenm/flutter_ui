@@ -9,9 +9,9 @@ import '../log/log.dart';
 class FileUtil {
   FileUtil._internal();
 
-  static final FileUtil getInstance = FileUtil._internal();
+  static final FileUtil instance = FileUtil._internal();
 
-  factory FileUtil() => getInstance;
+  factory FileUtil() => instance;
 
   /// 此方法返回本地文件地址
   Future<Directory> getParent({String? dir}) async {

@@ -5,6 +5,7 @@ import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_ui/base/config/build_config.dart';
 import 'package:flutter_ui/base/entities/data_entity.dart';
+import 'package:flutter_ui/base/http/cookie_interceptor.dart';
 
 import '../../http/api_services.dart';
 import '../log/log.dart';
@@ -16,9 +17,9 @@ typedef Success = void Function(dynamic data);
 
 typedef Failed = void Function(HttpError error);
 
-ApiServices apiServices = HttpClient.getInstance._api[HttpClient.getInstance._baseUrls[0]]!;
+ApiServices apiServices = HttpClient.instance._api[HttpClient.instance._baseUrls[0]]!;
 
-ApiServices api(int index) => HttpClient.getInstance._api[HttpClient.getInstance._baseUrls[index]]!;
+ApiServices api(int index) => HttpClient.instance._api[HttpClient.instance._baseUrls[index]]!;
 
 ///
 /// Created by a0010 on 2022/3/22 09:38
@@ -29,7 +30,7 @@ class HttpClient {
   static const int _connectTimeout = 20000;
   static const int _receiveTimeout = 20000;
 
-  static final HttpClient getInstance = HttpClient._internal();
+  static final HttpClient instance = HttpClient._internal();
 
   Map<String, ApiServices> _api = {};
   List<String> _baseUrls = [
@@ -69,8 +70,12 @@ class HttpClient {
       formatJson: true,
       logPrint: (text) => log(text.toString()),
     ));
+
+
     // 通过悬浮窗查看Http请求数据
     dio.interceptors.add(HttpInterceptor());
+    // cookie持久化
+    dio.interceptors.add(CookieInterceptor.instance);
     // dio.interceptors.add(CookieManager(PersistCookieJar()));
 
     _api[baseUrl] ??= ApiServices(dio, baseUrl: baseUrl);

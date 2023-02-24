@@ -89,7 +89,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _getBanner() async {
-    await HttpManager.getInstance.banner(
+    await HttpManager.instance.banner(
         isShowDialog: false,
         success: (list) {
           context.read<BannerModel>().updateBanners(list);
@@ -97,16 +97,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _getArticle(int number) async {
-    await HttpManager.getInstance.getArticleList(
+    await HttpManager.instance.getArticleList(
         page: 0,
         isShowDialog: false,
-        success: (list, total) {
+        success: (list, pageCount) {
           context.read<ArticleModel>().updateArticles(list);
         });
   }
 
   Future<void> _getTopArticle() async {
-    await HttpManager.getInstance.getLopArticleList(
+    await HttpManager.instance.getLopArticleList(
         isShowDialog: false,
         success: (list) {
           context.read<ArticleModel>().updateArticles(list);
