@@ -15,6 +15,13 @@ abstract class ApiServices {
     @Query('password') String password, // 密码
   );
 
+  /// 登录请求 [ http://192.168.2.30:8080/api/v1/login ]
+  @POST('login')
+  Future<DataEntity> testLogin(
+    @Query('username') String username, // 用户名/手机号
+    @Query('password') String password, // 密码
+  );
+
   /// 注册请求 [ https://www.wanandroid.com/user/register ]
   @POST('user/register')
   Future<DataEntity> register(

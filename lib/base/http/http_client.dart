@@ -36,6 +36,7 @@ class HttpClient {
   List<String> _baseUrls = [
     'https://www.wanandroid.com/',
     'http://api.tianapi.com/',
+    'http://192.168.2.30:8080/api/v1/',
   ];
 
   // 构造方法

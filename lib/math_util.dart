@@ -9,7 +9,8 @@ class MathUtil {
 
   void _mergeSortTest() {
     List<int> arr = [19, 85, 27, 68, 41, 65, 59, 82, 74, 41, 32, 70];
-    List<int> temp = []..length = arr.length;
+    List<int> temp = [];
+    arr.forEach((element) => temp.add(0));
     print('归并排序前： arr=$arr');
     _mergeSort(arr, temp, 0, arr.length - 1);
     print('归并排序后： arr=$arr');
