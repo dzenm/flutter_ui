@@ -15,7 +15,7 @@ class CookieInterceptor extends Interceptor {
 
   CookieInterceptor._privateConstructor();
 
-  String? _cookie = '';
+  String? _cookie;
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
