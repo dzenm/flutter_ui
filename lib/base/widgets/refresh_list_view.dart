@@ -47,17 +47,25 @@ class _RefreshListViewState extends State<RefreshListView> {
   @override
   Widget build(BuildContext context) {
     // 初始时，显示加载状态，如加载成功后隐藏页面并显示数据，之后显示加载更多
+
+    // 根据列表数量判断是否初始化
+    bool init = widget.itemCount != 0;
+    // 列表数量
+    int itemCount = widget.itemCount + (!widget.showFooter ? 0 : 1);
+
     return StateView(
       controller: widget.controller,
-      onTap: () => _refresh(),
-      child: RefreshIndicator(
-        onRefresh: _refresh,
-        child: ListView.builder(
-          itemBuilder: _buildItem,
-          itemCount: !widget.showFooter ? widget.itemCount : widget.itemCount + 1,
-          controller: _controller,
-        ),
-      ),
+      onTap: () => _refresh(init: init),
+      child: !init
+          ? null
+          : RefreshIndicator(
+              onRefresh: _refresh,
+              child: ListView.builder(
+                itemBuilder: _buildItem,
+                itemCount: itemCount,
+                controller: _controller,
+              ),
+            ),
     );
   }
 
@@ -70,7 +78,8 @@ class _RefreshListViewState extends State<RefreshListView> {
   }
 
   /// 第一次加载数据
-  Future<void> _refresh() async {
+  Future<void> _refresh({bool init = true}) async {
+    if (!init) setState(() => widget.controller.loading());
     widget.refresh(true);
   }
 

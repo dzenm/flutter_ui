@@ -111,9 +111,9 @@ dependencies:
   # HTTP请求 https://pub.flutter-io.cn/packages/retrofit
   retrofit: 3.3.1
   # cookie管理
-  dio_cookie_manager: ^2.0.0
+#  dio_cookie_manager: ^2.0.0
   # cookie持久化
-  cookie_jar: 3.0.1
+#  cookie_jar: 3.0.1
   # 监测网络状态 https://pub.dev/packages/connectivity
   connectivity: ^3.0.6
 

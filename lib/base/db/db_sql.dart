@@ -2,7 +2,7 @@ import 'db_manager.dart';
 
 class Sql {
   /// 数据库版本
-  static const dbVersion = 4;
+  static const dbVersion = 5;
 
   /// 常用数据库语句
   static const String createTable = 'CREATE TABLE IF NOT EXISTS';
@@ -11,8 +11,10 @@ class Sql {
 
   /// 创建数据表的语句
   static const List<String> createTables = [
+    createUserTable,
     createBannerTable,
     createArticleTable,
+    createWebsiteTable,
   ];
 
   /// 更新数据库的语句
@@ -20,17 +22,25 @@ class Sql {
     _onUpgrade_1_2,
     _onUpgrade_2_3,
     _onUpgrade_3_4,
+    _onUpgrade_4_5,
   ];
 
   ///============================== 0 创建表SQL ================================
 
   static const String createUserTable = '''$createTable t_user(
     id INTEGER PRIMARY KEY NOT NULL, 
-    username TEXT, 
+    admin BIT, 
+    chapterTops TEXT, 
+    coinCount INTEGER, 
+    collectIds TEXT, 
+    email TEXT, 
+    icon TEXT, 
+    nickname TEXT, 
     password TEXT, 
-    sex INTEGER, 
-    age INTEGER, 
-    address TEXT
+    publicName TEXT, 
+    token TEXT, 
+    type INTEGER, 
+    username TEXT
   );''';
 
   static const String createBannerTable = '''$createTable t_banner(
@@ -46,6 +56,7 @@ class Sql {
 
   static const String createArticleTable = '''$createTable t_article(
     id INTEGER PRIMARY KEY NOT NULL, 
+    adminAdd BIT,
     apkLink TEXT,
     audit INTEGER,
     author TEXT,
@@ -59,6 +70,7 @@ class Sql {
     envelopePic TEXT,
     fresh BIT,
     host TEXT,
+    isAdminAdd BIT,
     link TEXT,
     niceDate TEXT,
     niceShareDate TEXT,
@@ -67,6 +79,7 @@ class Sql {
     projectLink TEXT,
     publishTime INTEGER,
     realSuperChapterId INTEGER,
+    route BIT,
     selfVisible INTEGER,
     shareDate INTEGER,
     shareUser TEXT,
@@ -77,6 +90,16 @@ class Sql {
     userId INTEGER,
     visible INTEGER,
     zan INTEGER
+  );''';
+
+  static const String createWebsiteTable = '''$createTable t_website(
+    id INTEGER PRIMARY KEY NOT NULL, 
+    category TEXT, 
+    icon TEXT, 
+    link TEXT, 
+    name TEXT, 
+    "order" INTEGER, 
+    visible INTEGER
   );''';
 
   ///============================== 1 升级数据库 ===============================
@@ -146,8 +169,18 @@ class Sql {
   // 数据库版本3升级到版本4
   static String? _onUpgrade_3_4(int oldVersion, int newVersion) {
     if (newVersion > 3 && oldVersion <= 4) {
-      String sql = 'ALTER TABLE t_user ADD content TEXT DEFAULT ""';
+      String sql = 'ALTER TABLE t_banner ADD content TEXT DEFAULT ""';
       DBManager.instance.log('Database onUpgrade_3_4: $sql');
+      return sql;
+    }
+    return null;
+  }
+
+  // 数据库版本4升级到版本5
+  static String? _onUpgrade_4_5(int oldVersion, int newVersion) {
+    if (newVersion > 4 && oldVersion <= 5) {
+      String sql = '$createWebsiteTable';
+      DBManager.instance.log('Database onUpgrade_4_5: $sql');
       return sql;
     }
     return null;

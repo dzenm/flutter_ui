@@ -7,11 +7,18 @@ import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/base/utils/device_util.dart';
 import 'package:flutter_ui/base/widgets/single_text_layout.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
+import 'package:flutter_ui/entities/coin_entity.dart';
+import 'package:flutter_ui/entities/user_entity.dart';
+import 'package:flutter_ui/http/http_manager.dart';
+import 'package:flutter_ui/models/user_model.dart';
+import 'package:flutter_ui/pages/main/me_page/article/article_page.dart';
 import 'package:flutter_ui/pages/main/me_page/me_model.dart';
+import 'package:flutter_ui/pages/main/me_page/rank/rank_page.dart';
 import 'package:flutter_ui/pages/study/setting_page/setting_page.dart';
 import 'package:flutter_ui/pages/study/study_page.dart';
 import 'package:provider/provider.dart';
 
+import 'coin/coin_page.dart';
 import 'collect/collect_page.dart';
 import 'medicine_page/chinese_medicine_page.dart';
 import 'model_data_listen_page.dart';
@@ -33,12 +40,7 @@ class _MePageState extends State<MePage> {
   void initState() {
     super.initState();
     Log.i('initState', tag: _tag);
-    Future.delayed(Duration.zero, () => getData());
-  }
-
-  void getData() async {
-    String ip = await DeviceUtil.getIP();
-    context.read<MeModel>().updateIP(ip);
+    _getUserinfo();
   }
 
   @override
@@ -106,9 +108,7 @@ class _MePageState extends State<MePage> {
     );
   }
 
-  // 药
   List<Widget> buildChildrenButtons(AppTheme? theme, double statusBarHeight) {
-    String ip = context.watch<MeModel>().ip;
     return [
       SizedBox(height: 8),
       TapLayout(
@@ -131,15 +131,43 @@ class _MePageState extends State<MePage> {
         ),
       ),
       SizedBox(height: 8),
-      Text('$ip'),
-      SizedBox(height: 8),
       TapLayout(
         height: 50.0,
         padding: EdgeInsets.symmetric(horizontal: 16),
         onTap: () => RouteManager.push(context, CollectPage()),
         child: SingleTextLayout(
           icon: Icons.collections,
-          title: '我的收藏',
+          title: S.of(context).collect,
+          isShowForward: true,
+        ),
+      ),
+      TapLayout(
+        height: 50.0,
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        onTap: () => RouteManager.push(context, CoinPage()),
+        child: SingleTextLayout(
+          icon: Icons.money,
+          title: S.of(context).coin,
+          isShowForward: true,
+        ),
+      ),
+      TapLayout(
+        height: 50.0,
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        onTap: () => RouteManager.push(context, RankPage()),
+        child: SingleTextLayout(
+          icon: Icons.money,
+          title: '积分排行榜',
+          isShowForward: true,
+        ),
+      ),
+      TapLayout(
+        height: 50.0,
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        onTap: () => RouteManager.push(context, ArticlePage()),
+        child: SingleTextLayout(
+          icon: Icons.article,
+          title: '分享的文章',
           isShowForward: true,
         ),
       ),
@@ -165,5 +193,23 @@ class _MePageState extends State<MePage> {
         ),
       ),
     ];
+  }
+
+  void getData() async {
+    String ip = await DeviceUtil.getIP();
+    context.read<MeModel>().updateIP(ip);
+  }
+
+  Future<void> _getUserinfo() async {
+    await HttpManager.instance.getUserinfo(success: (data) {
+      // 用户数据
+      UserEntity user = UserEntity.fromJson(data['userInfo']);
+      int count = data['collectArticleInfo']['count'];
+      CoinEntity coin = CoinEntity.fromJson(data['coinInfo']);
+
+      context.read<UserModel>().updateUser(user);
+      context.read<UserModel>().updateCollectCount(count);
+      context.read<UserModel>().updateCoin(coin);
+    });
   }
 }

@@ -113,16 +113,22 @@ class LangZh extends Lang {
   String get username => '用户名';
 
   @override
-  String get password => '手机号';
+  String get password => '密码';
 
   @override
-  String get phone => '头像';
+  String get phone => '手机号';
 
   @override
-  String get avatar => '邮箱';
+  String get avatar => '头像';
 
   @override
-  String get email => '密码';
+  String get email => '邮箱';
+
+  @override
+  String get collect => '收藏';
+
+  @override
+  String get coin => '积分';
 
   @override
   String get setting => '设置';

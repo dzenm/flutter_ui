@@ -125,6 +125,12 @@ class LangEn extends Lang {
   String get email => 'Email';
 
   @override
+  String get collect => 'Collect';
+
+  @override
+  String get coin => 'Coin';
+
+  @override
   String get setting => 'Setting';
 
   @override

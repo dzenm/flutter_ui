@@ -2,8 +2,9 @@ import 'package:flutter_ui/base/db/db_base_model.dart';
 
 ///
 /// Created by a0010 on 2023/2/23 14:26
-///
+/// 文章
 class ArticleEntity extends DBBaseModel {
+  bool? adminAdd;
   String? apkLink;
   int? audit;
   String? author;
@@ -18,6 +19,7 @@ class ArticleEntity extends DBBaseModel {
   bool? fresh;
   String? host;
   int? id;
+  bool? isAdminAdd;
   String? link;
   String? niceDate;
   String? niceShareDate;
@@ -26,12 +28,14 @@ class ArticleEntity extends DBBaseModel {
   String? projectLink;
   int? publishTime;
   int? realSuperChapterId;
+  bool? route;
   int? selfVisible;
   int? shareDate;
   String? shareUser;
   int? superChapterId;
   String? superChapterName;
   String? title;
+  List<TagEntity> tags = [];
   int? type;
   int? userId;
   int? visible;
@@ -41,8 +45,10 @@ class ArticleEntity extends DBBaseModel {
 
   @override
   ArticleEntity.fromJson(Map<String, dynamic> json) {
+    adminAdd = json['adminAdd'] == 1;
     apkLink = json['apkLink'];
     audit = json['audit'];
+    author = json['author'];
     canEdit = json['canEdit'] == 1;
     chapterId = json['chapterId'];
     chapterName = json['chapterName'];
@@ -54,6 +60,7 @@ class ArticleEntity extends DBBaseModel {
     fresh = json['fresh'] == 1;
     host = json['host'];
     id = json['id'];
+    isAdminAdd = json['isAdminAdd'] == 1;
     link = json['link'];
     niceDate = json['niceDate'];
     niceShareDate = json['niceShareDate'];
@@ -62,12 +69,15 @@ class ArticleEntity extends DBBaseModel {
     projectLink = json['projectLink'];
     publishTime = json['publishTime'];
     realSuperChapterId = json['realSuperChapterId'];
+    route = json['route'] == 1;
     selfVisible = json['selfVisible'];
     shareDate = json['shareDate'];
     shareUser = json['shareUser'];
     superChapterId = json['superChapterId'];
     superChapterName = json['superChapterName'];
     title = json['title'];
+    /// TODO tags未保存
+    // tags = json['tags'];
     type = json['type'];
     userId = json['userId'];
     visible = json['visible'];
@@ -76,19 +86,22 @@ class ArticleEntity extends DBBaseModel {
 
   @override
   Map<String, dynamic> toJson() => {
+        'adminAdd': (adminAdd ?? false) ? 1 : 0,
         'apkLink': apkLink,
         'audit': audit,
-        'canEdit': canEdit,
+        'author': author,
+        'canEdit': (canEdit ?? false) ? 1 : 0,
         'chapterId': chapterId,
         'chapterName': chapterName,
-        'collect': collect,
+        'collect': (collect ?? false) ? 1 : 0,
         'courseId': courseId,
         'desc': desc,
         'descMd': descMd,
         'envelopePic': envelopePic,
-        'fresh': fresh,
+        'fresh': (fresh ?? false) ? 1 : 0,
         'host': host,
         'id': id,
+        'isAdminAdd': (isAdminAdd ?? false) ? 1 : 0,
         'link': link,
         'niceDate': niceDate,
         'niceShareDate': niceShareDate,
@@ -97,12 +110,14 @@ class ArticleEntity extends DBBaseModel {
         'projectLink': projectLink,
         'publishTime': publishTime,
         'realSuperChapterId': realSuperChapterId,
+        'route': (route ?? false) ? 1 : 0,
         'selfVisible': selfVisible,
         'shareDate': shareDate,
         'shareUser': shareUser,
         'superChapterId': superChapterId,
         'superChapterName': superChapterName,
         'title': title,
+        // 'tags': tags,
         'type': type,
         'userId': userId,
         'visible': visible,
@@ -117,4 +132,32 @@ class ArticleEntity extends DBBaseModel {
 
   @override
   String get primaryValue => '$id';
+}
+
+class TagEntity extends DBBaseModel {
+  String? name;
+  String? url;
+
+  TagEntity() : super();
+
+  @override
+  TagEntity.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    url = json['url'];
+  }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'url': url,
+      };
+
+  @override
+  TagEntity fromJson(Map<String, dynamic> json) => TagEntity.fromJson(json);
+
+  @override
+  String get primaryKey => 'name';
+
+  @override
+  String get primaryValue => '$name';
 }

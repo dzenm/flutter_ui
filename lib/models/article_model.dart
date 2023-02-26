@@ -33,13 +33,16 @@ class ArticleModel extends ChangeNotifier {
     ..addAll(topArticles)
     ..addAll(articles);
 
+  /// 根据索引获取文章
   ArticleEntity? getArticle(int index) => allArticles.isEmpty ? null : allArticles[index];
 
+  /// 更新文章列表
   void updateArticles(List<ArticleEntity> articles) {
     articles.forEach((article) => _handleArticle(article));
     notifyListeners();
   }
 
+  /// 更新单篇文章
   void updateArticle(ArticleEntity article) {
     _handleArticle(article);
     notifyListeners();
@@ -47,9 +50,10 @@ class ArticleModel extends ChangeNotifier {
 
   /// 处理文章数据
   Future<void> _handleArticle(ArticleEntity article) async {
-    int index = _allArticleList.indexOf(article);
-    if (index != -1) {
-      _allArticleList.insert(index, article);
+    List<ArticleEntity> list = _allArticleList.where((e) => e.id == article.id).toList();
+    if (list.isNotEmpty) {
+      int index = _allArticleList.indexOf(list.first);
+      _allArticleList[index] = article;
       _entity.update(article); // 更新DB中的article数据
     } else {
       _allArticleList.add(article);

@@ -66,7 +66,7 @@ class _StateViewState extends State<StateView> {
       ),
       SizedBox(width: 16, height: 32),
       // 加载展示的文本信息
-      title == null ? Text(controller.stateText(context)) : title,
+      title ?? Text(controller.stateText(context)),
     ];
   }
 }
@@ -95,8 +95,10 @@ class FooterStateView extends StatefulWidget {
 class _FooterViewState extends State<FooterStateView> {
   @override
   Widget build(BuildContext context) {
+    // 未初始化/为空 不展示底部状态
+    bool offstage = !widget.controller.init || widget.controller.none;
     return Offstage(
-      offstage: !widget.controller.init || widget.controller.none,
+      offstage: offstage,
       child: TapLayout(
         height: 56,
         onTap: widget.onTap,

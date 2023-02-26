@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ui/base/http/http_client.dart';
@@ -8,7 +6,9 @@ import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/base/utils/sp_util.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/entities/user_entity.dart';
+import 'package:flutter_ui/models/user_model.dart';
 import 'package:flutter_ui/pages/main/main_page.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -119,11 +119,14 @@ class _LoginPageState extends State<LoginPage> {
     FocusScope.of(context).unfocus();
     HttpClient.instance.request(apiServices.login(_username, _password), success: (data) {
       UserEntity user = UserEntity.fromJson(data);
+
+      // 先保存SP，数据库创建需要用到SP的userId
       SpUtil.setUserLoginState(true);
-      SpUtil.setUser(jsonEncode(user));
       SpUtil.setUsername(user.username);
       SpUtil.setUserId(user.id.toString());
-      SpUtil.setToken(user.token);
+
+      // 更新数据
+      context.read<UserModel>().updateUser(user);
       _pushMainPage();
     });
   }

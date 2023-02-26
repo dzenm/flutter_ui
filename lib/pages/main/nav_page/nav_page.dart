@@ -4,12 +4,6 @@ import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/model/local_model.dart';
 import 'package:flutter_ui/base/res/theme/app_theme.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
-import 'package:flutter_ui/base/widgets/refresh_list_view.dart';
-import 'package:flutter_ui/base/widgets/state_view.dart';
-import 'package:flutter_ui/base/widgets/tap_layout.dart';
-import 'package:flutter_ui/entities/article_entity.dart';
-import 'package:flutter_ui/models/article_model.dart';
-import 'package:flutter_ui/pages/common/web_view_page.dart';
 import 'package:provider/provider.dart';
 
 import 'edit_article_page.dart';
@@ -26,14 +20,11 @@ class NavPage extends StatefulWidget {
 
 class _NavPageState extends State<NavPage> {
   static const String _tag = 'NavPage';
-  StateController _controller = StateController();
 
   @override
   void initState() {
     super.initState();
     Log.i('initState', tag: _tag);
-
-    Future.delayed(Duration.zero, () => setState(() => _controller.loadComplete()));
   }
 
   @override
@@ -91,7 +82,6 @@ class _NavPageState extends State<NavPage> {
               },
             ),
             SizedBox(height: 8),
-            ArticleList(controller: _controller),
           ],
         ),
       ),
@@ -116,57 +106,5 @@ class _TopViewState extends State<TopView> {
     Log.i('build', tag: _tag);
 
     return Text(widget.text);
-  }
-}
-
-class ArticleList extends StatefulWidget {
-  final StateController controller;
-
-  ArticleList({Key? key, required this.controller}) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() => _ArticleListState();
-}
-
-class _ArticleListState extends State<ArticleList> {
-  static const String _tag = 'ArticleList';
-
-  @override
-  Widget build(BuildContext context) {
-    Log.i('build', tag: _tag);
-
-    List<ArticleEntity> articleList = context.watch<ArticleModel>().allArticles;
-    Log.i('文章数量：${articleList.length}', tag: _tag);
-    return Expanded(
-      child: RefreshListView(
-        controller: widget.controller,
-        itemCount: articleList.length,
-        builder: (BuildContext context, int index) {
-          return ArticleItem(index);
-        },
-        refresh: (state) async {},
-      ),
-    );
-  }
-}
-
-class ArticleItem extends StatelessWidget {
-  static const String _tag = 'ArticleItem';
-  final int index;
-
-  ArticleItem(this.index);
-
-  @override
-  Widget build(BuildContext context) {
-    Log.i('build', tag: _tag);
-
-    ArticleEntity? article = context.watch<ArticleModel>().getArticle(index);
-    String title = article?.title ?? '';
-    return TapLayout(
-      onTap: () => RouteManager.push(context, WebViewPage(title: title, url: article?.link ?? '')),
-      child: ListTile(
-        title: Text(title),
-      ),
-    );
   }
 }

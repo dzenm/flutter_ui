@@ -84,6 +84,10 @@ class Lang {
 
   String get email => '';
 
+  String get collect => '';
+
+  String get coin => '';
+
   String get setting => '';
 
   String get theme => '';

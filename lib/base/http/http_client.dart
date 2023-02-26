@@ -77,7 +77,6 @@ class HttpClient {
     dio.interceptors.add(HttpInterceptor());
     // cookie持久化
     dio.interceptors.add(CookieInterceptor.instance);
-    // dio.interceptors.add(CookieManager(PersistCookieJar()));
 
     _api[baseUrl] ??= ApiServices(dio, baseUrl: baseUrl);
   }

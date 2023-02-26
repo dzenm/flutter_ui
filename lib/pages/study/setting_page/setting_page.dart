@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +15,7 @@ import 'package:flutter_ui/base/widgets/common_widget.dart';
 import 'package:flutter_ui/base/widgets/single_text_layout.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/entities/user_entity.dart';
+import 'package:flutter_ui/models/user_model.dart';
 import 'package:flutter_ui/pages/common/preview_photo_page.dart';
 import 'package:flutter_ui/pages/login/login_page.dart';
 import 'package:flutter_ui/pages/main/main_model.dart';
@@ -34,15 +33,11 @@ class _SettingPageState extends State<SettingPage> {
   static const String _tag = 'SettingPage';
 
   bool switchState = true;
-  UserEntity _user = UserEntity();
 
   @override
   void initState() {
     super.initState();
     Log.i('initState', tag: _tag);
-
-    String user = SpUtil.getUser();
-    _user = UserEntity.fromJson(jsonDecode(user));
   }
 
   @override
@@ -73,6 +68,8 @@ class _SettingPageState extends State<SettingPage> {
   Widget build(BuildContext context) {
     AppTheme appTheme = context.watch<LocalModel>().appTheme;
     Locale locale = context.watch<LocalModel>().locale;
+    UserEntity user = context.watch<UserModel>().user;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).setting, style: TextStyle(color: Colors.white)),
@@ -92,7 +89,7 @@ class _SettingPageState extends State<SettingPage> {
                 child: SingleTextLayout(
                   icon: Icons.person,
                   title: S.of(context).username,
-                  text: _user.username,
+                  text: user.username,
                   isTextLeft: false,
                   isShowForward: true,
                 ),
@@ -125,7 +122,33 @@ class _SettingPageState extends State<SettingPage> {
                 child: SingleTextLayout(
                   icon: Icons.phone_android,
                   title: S.of(context).phone,
-                  text: _user.id.toString(),
+                  text: user.id.toString(),
+                  isTextLeft: false,
+                  isShowForward: true,
+                ),
+              ),
+              // 展示用户邮箱
+              TapLayout(
+                height: 50.0,
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                onTap: () => context.read<StudyModel>().setValue('new value'),
+                child: SingleTextLayout(
+                  icon: Icons.email,
+                  title: S.of(context).email,
+                  text: user.email,
+                  isTextLeft: false,
+                  isShowForward: true,
+                ),
+              ),
+              // 展示用户邮箱
+              TapLayout(
+                height: 50.0,
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                onTap: () => context.read<StudyModel>().setValue('new value'),
+                child: SingleTextLayout(
+                  icon: Icons.money,
+                  title: S.of(context).coin,
+                  text: user.coinCount.toString(),
                   isTextLeft: false,
                   isShowForward: true,
                 ),
@@ -150,7 +173,8 @@ class _SettingPageState extends State<SettingPage> {
                 child: SingleTextLayout(
                   icon: Icons.notifications_on_sharp,
                   title: S.of(context).notificationSwitch,
-                  suffix: CupertinoSwitch(value: switchState, onChanged: (value) => setState(() => switchState = value)),
+                  suffix:
+                      CupertinoSwitch(value: switchState, onChanged: (value) => setState(() => switchState = value)),
                 ),
               ),
               TapLayout(

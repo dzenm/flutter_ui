@@ -1,13 +1,12 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/utils/sp_util.dart';
 import 'package:flutter_ui/base/utils/str_util.dart';
 
 ///
 /// Created by a0010 on 2023/2/23 14:10
-///
+/// cookie持久化
 class CookieInterceptor extends Interceptor {
   static get instance => _instance;
 
@@ -56,12 +55,11 @@ class CookieInterceptor extends Interceptor {
 
   Future<void> _getCookies(RequestOptions options) async {
     _cookie = _cookie ?? SpUtil.getCookie();
-    Log.d('Cookie Len=${_cookie?.length}');
 
     // 将string类型的cookie转化成list
     List<String> cookies = StrUtil.stringToList(_cookie, pattern: '&');
 
     options.headers[HttpHeaders.cookieHeader] = cookies;
-    options.headers['token'] = SpUtil.getToken();
+    // options.headers['token'] = SpUtil.getToken();
   }
 }
