@@ -80,12 +80,12 @@ class _RefreshListViewState extends State<RefreshListView> {
   /// 第一次加载数据
   Future<void> _refresh({bool init = true}) async {
     if (!init) setState(() => widget.controller.loading());
-    widget.refresh(true);
+    await widget.refresh(true);
   }
 
   /// 加载更多的数据
   Future<void> _loadingMore() async {
     setState(() => widget.controller.loading());
-    widget.refresh(false);
+    await widget.refresh(false);
   }
 }

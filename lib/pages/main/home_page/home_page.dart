@@ -87,7 +87,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<void> _onRefresh(bool refresh) async => _getArticle(isReset: refresh);
+  Future<void> _onRefresh(bool refresh) async => await _getArticle(isReset: refresh);
 
   Future<void> _getData() async {
     Log.d('开始加载网络数据...', tag: _tag);

@@ -72,7 +72,6 @@ class HttpClient {
       logPrint: (text) => log(text.toString()),
     ));
 
-
     // 通过悬浮窗查看Http请求数据
     dio.interceptors.add(HttpInterceptor());
     // cookie持久化
@@ -148,13 +147,6 @@ class HttpError {
 /// 异常处理
 class _HttpError {
   /// code
-  static const int successCode = 200;
-  static const int successNotContentCode = 204;
-
-  static const int unauthorizedCode = 401;
-  static const int forbiddenCode = 403;
-  static const int notFoundCode = 404;
-
   static const int socketErrorCode = 1001;
   static const int httpErrorCode = 1002;
   static const int parseErrorCode = 1003;
@@ -170,12 +162,6 @@ class _HttpError {
   static const int runtimeErrorCode = 1120;
 
   /// msg
-  static const String successMsg = '';
-  static const String successNotContentMsg = '';
-  static const String unauthorizedMsg = '未经授权';
-  static const String forbiddenMsg = '禁止访问';
-  static const String notFoundMsg = '未找到内容';
-
   static const String socketErrorMsg = '网络异常，请检查你的网络';
   static const String httpErrorMsg = '服务器异常';
   static const String parseErrorMsg = '数据解析错误';
