@@ -23,12 +23,10 @@ class UserEntity extends DBBaseModel {
   UserEntity();
 
   UserEntity.fromJson(Map<String, dynamic> json) {
-    admin = json['admin'] == 1;
-    chapterTops = json['chapterTops'];
+    admin = toBool(json['admin']);
+    chapterTops = toList(json['chapterTops']).map((e) => e as dynamic).toList();
     coinCount = json['coinCount'];
-    dynamic value = json['collectIds'];
-    List<dynamic> list = value is List ? value : jsonDecode(value) as List<dynamic>;
-    collectIds = list.map((e) => e as int).toList();
+    collectIds = toList(json['collectIds']).map((e) => e as int).toList();
     email = json['email'];
     icon = json['icon'];
     id = json['id'];
@@ -41,8 +39,8 @@ class UserEntity extends DBBaseModel {
   }
 
   Map<String, dynamic> toJson() => {
-        'admin': (admin ?? false) ? 1 : 0,
-        'chapterTops': chapterTops,
+        'admin': boolToInt(admin),
+        'chapterTops': jsonEncode(chapterTops),
         'coinCount': coinCount,
         'collectIds': jsonEncode(collectIds),
         'email': email,

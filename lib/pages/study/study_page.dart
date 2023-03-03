@@ -19,6 +19,7 @@ import 'http_page/http_page.dart';
 import 'keyword_board/keyword_board_page.dart';
 import 'list_page/list_page.dart';
 import 'load_image_page/load_image_page.dart';
+import 'provider_page/provider_page.dart';
 import 'qr_page/qr_page.dart';
 import 'router/router_page.dart';
 import 'setting_page/setting_page.dart';
@@ -128,6 +129,13 @@ class _StudyPageState extends State<StudyPage> {
         textColor: Colors.white,
         color: theme.primary,
         onPressed: () => RouteManager.push(context, DragListPage()),
+      ),
+      SizedBox(height: 8),
+      MaterialButton(
+        child: _text('Provider'),
+        textColor: Colors.white,
+        color: theme.primary,
+        onPressed: () => RouteManager.push(context, ProviderPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(

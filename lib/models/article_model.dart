@@ -4,7 +4,7 @@ import 'package:flutter_ui/entities/article_entity.dart';
 ///
 /// Created by a0010 on 2022/7/28 10:56
 ///
-class ArticleModel extends ChangeNotifier {
+class ArticleModel with ChangeNotifier {
   ArticleEntity _entity = ArticleEntity();
 
   /// 数据库对应的所有数据

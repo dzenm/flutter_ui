@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-class MeModel extends ChangeNotifier {
+class MeModel with ChangeNotifier {
   List<Person> persons = [Person('dinzhenyan', 24, 'JiangSu')];
 
   void updatePerson(int index, Person person) {

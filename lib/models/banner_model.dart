@@ -4,7 +4,7 @@ import 'package:flutter_ui/entities/banner_entity.dart';
 ///
 /// Created by a0010 on 2022/10/25 11:25
 ///
-class BannerModel extends ChangeNotifier {
+class BannerModel with ChangeNotifier {
   BannerEntity _entity = BannerEntity();
 
   BannerModel() {

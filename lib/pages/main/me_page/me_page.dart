@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/model/local_model.dart';
 import 'package:flutter_ui/base/res/strings.dart';
@@ -74,6 +75,46 @@ class _MePageState extends State<MePage> {
     AppTheme? theme = context.watch<LocalModel>().appTheme;
     double? statusBarHeight = MediaQuery.of(context).padding.top;
 
+    return NestedScrollView(
+      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+        return [
+          SliverAppBar(
+            //当此值为true时 SliverAppBar 会固定在页面顶部，为false时 SliverAppBar 会随着滑动向上滑动
+            pinned: true,
+            //滚动是是否拉伸图片
+            stretch: true,
+            //展开区域的高度
+            expandedHeight: 500,
+            //当snap配置为true时，向下滑动页面，SliverAppBar（以及其中配置的flexibleSpace内容）会立即显示出来，
+            //反之当snap配置为false时，向下滑动时，只有当ListView的数据滑动到顶部时，SliverAppBar才会下拉显示出来。
+            snap: false,
+            //阴影
+            elevation: 0,
+            //背景颜色
+            // backgroundColor: headerWhite ? Colors.white : Color(0xFFF4F5F7),
+            //一个显示在 AppBar 下方的控件，高度和 AppBar 高度一样， // 可以实现一些特殊的效果，该属性通常在 SliverAppBar 中使用
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text('复仇者联盟', style: TextStyle(color: theme.background)),
+              background: Image.network(
+                'http://img.haote.com/upload/20180918/2018091815372344164.jpg',
+                fit: BoxFit.cover,
+              ),
+            ),
+            systemOverlayStyle: SystemUiOverlayStyle.dark,
+          ),
+        ];
+      },
+      physics: AlwaysScrollableScrollPhysics(),
+      body: SingleChildScrollView(
+        child: Container(
+          decoration: BoxDecoration(
+            color: theme.background,
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: Column(children: buildChildrenButtons(theme, statusBarHeight)),
+        ),
+      ),
+    );
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
@@ -90,17 +131,12 @@ class _MePageState extends State<MePage> {
           SingleChildScrollView(
             physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()), // 上拉下拉弹簧效果
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: SingleChildScrollView(
-                padding: EdgeInsets.only(top: statusBarHeight + 16),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: theme.background,
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Column(children: buildChildrenButtons(theme, statusBarHeight)),
-                ),
+              margin: EdgeInsets.only(top: statusBarHeight + 16, left: 16, right: 16),
+              decoration: BoxDecoration(
+                color: theme.background,
+                borderRadius: BorderRadius.circular(5),
               ),
+              child: Column(children: buildChildrenButtons(theme, statusBarHeight)),
             ),
           )
         ],
@@ -110,7 +146,6 @@ class _MePageState extends State<MePage> {
 
   List<Widget> buildChildrenButtons(AppTheme? theme, double statusBarHeight) {
     return [
-      SizedBox(height: 8),
       TapLayout(
         height: 50.0,
         padding: EdgeInsets.symmetric(horizontal: 16),
@@ -126,7 +161,7 @@ class _MePageState extends State<MePage> {
         padding: EdgeInsets.symmetric(horizontal: 16),
         onTap: () => RouteManager.push(context, ChineseMedicinePage(medicineName: '金银花')),
         child: SingleTextLayout(
-          title: 'Chinese Medicine',
+          title: 'Chinese',
           isShowForward: true,
         ),
       ),

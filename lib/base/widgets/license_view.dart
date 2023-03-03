@@ -78,7 +78,7 @@ class _LicenseViewState extends State<LicenseView> {
   }
 }
 
-class LicenseController extends ChangeNotifier {
+class LicenseController with ChangeNotifier {
   int _select = 0;
 
   int get select => _select;

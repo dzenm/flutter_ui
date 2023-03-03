@@ -6,7 +6,7 @@ import 'package:flutter_ui/entities/user_entity.dart';
 ///
 /// Created by a0010 on 2023/2/23 14:26
 /// 用户信息
-class UserModel extends ChangeNotifier {
+class UserModel with ChangeNotifier {
   UserEntity _user = UserEntity(); //用户信息
   int _collectCount = 0; // 收藏文章数量
   CoinEntity _coin = CoinEntity(); // 积分信息
@@ -18,6 +18,7 @@ class UserModel extends ChangeNotifier {
   /// 获取用户数据
   void _getUser() async {
     List list = await _user.where(_user, where: {'id': SpUtil.getUserId()});
+    if (list.isEmpty) return;
     _user = list.map((e) => e as UserEntity).first;
     notifyListeners();
   }

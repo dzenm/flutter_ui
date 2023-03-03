@@ -12,9 +12,7 @@ class NaviEntity extends DBBaseModel {
   NaviEntity();
 
   NaviEntity.fromJson(Map<String, dynamic> json) {
-    if (json['articles'] != null) {
-      articles = (json['articles'] as List<dynamic>).map((e) => ArticleEntity.fromJson(e)).toList();
-    }
+    articles = toList(json['articles']).map((e) => ArticleEntity.fromJson(e)).toList();
     name = json['name'];
     cid = json['cid'];
   }
@@ -24,7 +22,7 @@ class NaviEntity extends DBBaseModel {
 
   @override
   Map<String, dynamic> toJson() => {
-        'articles': articles.map((e) => e.toJson()).toList(),
+        'articles': toJsonString(articles),
         'name': name,
         'cid': cid,
       };

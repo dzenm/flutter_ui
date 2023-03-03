@@ -5,7 +5,7 @@ import '../res/colors.dart';
 import '../res/theme/app_theme.dart';
 import '../utils/sp_util.dart';
 
-class LocalModel extends ChangeNotifier {
+class LocalModel with ChangeNotifier {
   /// 初始化主题设置
   LocalModel() {
     _theme = SpUtil.getTheme();

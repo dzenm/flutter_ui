@@ -61,9 +61,17 @@ class HttpClient {
 
     // 不验证https证书
     (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (client) {
+      // config the http client
+      // client.findProxy = (uri) {
+      //  //proxy all request to localhost:8888
+      //  return "192.168.1.1:8888";
+      //};
       client.badCertificateCallback = (X509Certificate cert, String host, int port) {
+        log("验证https证书: host=$host, port=$port");
         return true;
       };
+      // you can also create a new HttpClient to dio
+      // return new HttpClient();
       return client;
     };
     // log interceptor

@@ -5,7 +5,7 @@ import 'package:flutter_ui/pages/utils/contact_util.dart';
 ///
 /// Created by a0010 on 2023/1/31 11:48
 ///
-class LocalContactModel extends ChangeNotifier {
+class LocalContactModel with ChangeNotifier {
   List<Contact> _contacts = [];
 
   Future<List<Contact>?> getContacts() async {

@@ -45,22 +45,22 @@ class ArticleEntity extends DBBaseModel {
 
   @override
   ArticleEntity.fromJson(Map<String, dynamic> json) {
-    adminAdd = json['adminAdd'] == 1;
+    adminAdd = toBool(json['adminAdd']);
     apkLink = json['apkLink'];
     audit = json['audit'];
     author = json['author'];
-    canEdit = json['canEdit'] == 1;
+    canEdit = toBool(json['canEdit']);
     chapterId = json['chapterId'];
     chapterName = json['chapterName'];
-    collect = json['collect'] == 1;
+    collect = toBool(json['collect']);
     courseId = json['courseId'];
     desc = json['desc'];
     descMd = json['descMd'];
     envelopePic = json['envelopePic'];
-    fresh = json['fresh'] == 1;
+    fresh = toBool(json['fresh']);
     host = json['host'];
     id = json['id'];
-    isAdminAdd = json['isAdminAdd'] == 1;
+    isAdminAdd = toBool(json['isAdminAdd']);
     link = json['link'];
     niceDate = json['niceDate'];
     niceShareDate = json['niceShareDate'];
@@ -69,15 +69,14 @@ class ArticleEntity extends DBBaseModel {
     projectLink = json['projectLink'];
     publishTime = json['publishTime'];
     realSuperChapterId = json['realSuperChapterId'];
-    route = json['route'] == 1;
+    route = toBool(json['route']);
     selfVisible = json['selfVisible'];
     shareDate = json['shareDate'];
     shareUser = json['shareUser'];
     superChapterId = json['superChapterId'];
     superChapterName = json['superChapterName'];
     title = json['title'];
-    /// TODO tags未保存
-    // tags = json['tags'];
+    tags = toList(json['tags']).map((e) => TagEntity.fromJson(e)).toList();
     type = json['type'];
     userId = json['userId'];
     visible = json['visible'];
@@ -86,22 +85,22 @@ class ArticleEntity extends DBBaseModel {
 
   @override
   Map<String, dynamic> toJson() => {
-        'adminAdd': (adminAdd ?? false) ? 1 : 0,
+        'adminAdd': boolToInt(adminAdd),
         'apkLink': apkLink,
         'audit': audit,
         'author': author,
-        'canEdit': (canEdit ?? false) ? 1 : 0,
+        'canEdit': boolToInt(canEdit),
         'chapterId': chapterId,
         'chapterName': chapterName,
-        'collect': (collect ?? false) ? 1 : 0,
+        'collect': boolToInt(collect),
         'courseId': courseId,
         'desc': desc,
         'descMd': descMd,
         'envelopePic': envelopePic,
-        'fresh': (fresh ?? false) ? 1 : 0,
+        'fresh': boolToInt(fresh),
         'host': host,
         'id': id,
-        'isAdminAdd': (isAdminAdd ?? false) ? 1 : 0,
+        'isAdminAdd': boolToInt(isAdminAdd),
         'link': link,
         'niceDate': niceDate,
         'niceShareDate': niceShareDate,
@@ -110,14 +109,14 @@ class ArticleEntity extends DBBaseModel {
         'projectLink': projectLink,
         'publishTime': publishTime,
         'realSuperChapterId': realSuperChapterId,
-        'route': (route ?? false) ? 1 : 0,
+        'route': boolToInt(route),
         'selfVisible': selfVisible,
         'shareDate': shareDate,
         'shareUser': shareUser,
         'superChapterId': superChapterId,
         'superChapterName': superChapterName,
         'title': title,
-        // 'tags': tags,
+        'tags': toJsonString(tags),
         'type': type,
         'userId': userId,
         'visible': visible,

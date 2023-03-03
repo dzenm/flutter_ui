@@ -25,13 +25,9 @@ class TreeEntity extends DBBaseModel {
   TreeEntity();
 
   TreeEntity.fromJson(Map<String, dynamic> json) {
-    if (json['articleList'] != null) {
-      articleList = (json['articleList'] as List<dynamic>).map((e) => ArticleEntity.fromJson(e)).toList();
-    }
+    articleList = toList(json['articleList']).map((e) => ArticleEntity.fromJson(e)).toList();
     author = json['author'];
-    if (json['children'] != null) {
-      children = (json['children'] as List<dynamic>).map((e) => TreeEntity.fromJson(e)).toList();
-    }
+    children = toList(json['children']).map((e) => TreeEntity.fromJson(e)).toList();
     courseId = json['courseId'];
     id = json['id'];
     cover = json['cover'];
@@ -42,7 +38,7 @@ class TreeEntity extends DBBaseModel {
     order = json['order'];
     parentChapterId = json['parentChapterId'];
     type = json['type'];
-    userControlSetTop = json['userControlSetTop'];
+    userControlSetTop = toBool(json['userControlSetTop']);
     visible = json['visible'];
   }
 
@@ -51,9 +47,9 @@ class TreeEntity extends DBBaseModel {
 
   @override
   Map<String, dynamic> toJson() => {
-        'articleList': articleList.map((e) => e.toJson()).toList(),
+        'articleList': toJsonString(articleList),
         'author': author,
-        'children': children.map((e) => e.toJson()).toList(),
+        'children': toJsonString(children),
         'courseId': courseId,
         'id': id,
         'cover': cover,
@@ -64,7 +60,7 @@ class TreeEntity extends DBBaseModel {
         'order': order,
         'parentChapterId': parentChapterId,
         'type': type,
-        'userControlSetTop': userControlSetTop,
+        'userControlSetTop': boolToInt(userControlSetTop),
         'visible': visible,
       };
 

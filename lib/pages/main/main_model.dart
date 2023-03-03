@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 
-class MainModel extends ChangeNotifier {
+class MainModel with ChangeNotifier {
   /// 主页底部按钮的标题
   List<String> _titles = [];
 

@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
 
-class HomeModel extends ChangeNotifier {
+class HomeModel with ChangeNotifier {
 
 }

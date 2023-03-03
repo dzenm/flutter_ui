@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/entities/website_entity.dart';
 
-class WebsiteModel extends ChangeNotifier {
+class WebsiteModel with ChangeNotifier {
   WebsiteEntity _entity = WebsiteEntity();
 
   /// 数据库对应的所有数据

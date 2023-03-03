@@ -118,7 +118,7 @@ class _FooterViewState extends State<FooterStateView> {
 }
 
 /// 状态控制器
-class StateController extends ChangeNotifier {
+class StateController with ChangeNotifier {
   LoadState initialState;
   bool isShowFooterState;
   bool _isInit = false;

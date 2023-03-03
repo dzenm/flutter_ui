@@ -86,6 +86,7 @@ class Sql {
     superChapterId INTEGER,
     superChapterName TEXT,
     title TEXT,
+    tags TEXT,
     type INTEGER,
     userId INTEGER,
     visible INTEGER,
