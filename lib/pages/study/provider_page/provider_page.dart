@@ -70,7 +70,7 @@ class _ProviderPageState extends State<ProviderPage> {
 
   List<Widget> _buildChildrenButtons() {
     return [
-      _buildMyWidget(),
+      _buildMyWidget(person: person),
       SizedBox(height: 16),
       _buildProviderWidget(),
       SizedBox(height: 16),
@@ -102,7 +102,7 @@ class _ProviderPageState extends State<ProviderPage> {
   }
 
   Widget _buildMyWidget({Person? person}) {
-    Log.i('setState: build', tag: _tag);
+    Log.i('_buildMyWidget', tag: _tag);
     String title = 'setState';
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text('$title: ${person?.name}'),
@@ -112,6 +112,7 @@ class _ProviderPageState extends State<ProviderPage> {
   }
 
   Widget _buildProviderWidget() {
+    Log.i('_buildProviderWidget', tag: _tag);
     String title = 'Provider';
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Selector<MeModel, String>(
