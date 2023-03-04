@@ -12,13 +12,14 @@ import 'home_page/home_page.dart';
 import 'me_page/me_page.dart';
 import 'nav_page/nav_page.dart';
 
-// 主页
+///
+/// Created by a0010 on 2022/7/28 10:56
+/// 主页页面
 class MainPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _MainPageState();
 }
 
-// 主页的状态
 class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   static const String _tag = 'MainPage';
 

@@ -77,10 +77,10 @@ class ListPageState<D extends DBBaseModel, T extends StatefulWidget> extends Sta
   }
 
   // 获取数据
-  List<dynamic> get data => _list;
+  List<D> get data => _list;
 
   // 更新数据
-  void updateData(List<D> list) {
+  set data(List<D> list) {
     _list.addAll(list);
   }
 
@@ -88,10 +88,10 @@ class ListPageState<D extends DBBaseModel, T extends StatefulWidget> extends Sta
   int get pageIndex => _pageIndex;
 
   // 更新请求页数下标
-  void updatePageIndex({int index = -1, bool add = false}) {
-    if (index >= 0) {
+  set pageIndex(int index) {
+    if (index < 0) {
       _pageIndex = index;
-    } else if (add) {
+    } else {
       ++_pageIndex;
     }
   }

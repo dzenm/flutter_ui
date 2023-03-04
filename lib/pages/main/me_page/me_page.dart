@@ -22,9 +22,10 @@ import 'package:provider/provider.dart';
 import 'coin/coin_page.dart';
 import 'collect/collect_page.dart';
 import 'medicine_page/chinese_medicine_page.dart';
-import 'model_data_listen_page.dart';
 
-// 我的页面
+///
+/// Created by a0010 on 2022/7/28 10:56
+/// 我的页面
 class MePage extends StatefulWidget {
   @override
   _MePageState createState() => _MePageState();
@@ -142,16 +143,6 @@ class _MePageState extends State<MePage> {
 
   List<Widget> buildChildrenButtons(AppTheme? theme, double statusBarHeight) {
     return [
-      TapLayout(
-        height: 50.0,
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => RouteManager.push(context, ModelDataListenPage()),
-        child: SingleTextLayout(
-          title: '进入下一个页面',
-          isShowForward: true,
-        ),
-      ),
-      SizedBox(height: 8),
       TapLayout(
         height: 50.0,
         padding: EdgeInsets.symmetric(horizontal: 16),

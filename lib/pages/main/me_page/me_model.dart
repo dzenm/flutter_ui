@@ -1,5 +1,8 @@
 import 'package:flutter/widgets.dart';
 
+///
+/// Created by a0010 on 2022/7/28 10:56
+/// Provider中共享的Me页面数据
 class MeModel with ChangeNotifier {
   List<Person> persons = [Person('dinzhenyan', 24, 'JiangSu')];
 
