@@ -3,11 +3,12 @@ import 'package:flutter_ui/entities/banner_entity.dart';
 
 ///
 /// Created by a0010 on 2022/10/25 11:25
-///
+/// Provider中共享的Banner数据
 class BannerModel with ChangeNotifier {
   BannerEntity _entity = BannerEntity();
 
-  BannerModel() {
+  /// 初始化Banner数据，从数据库获取所有的Banner数据
+  Future<void> init() async {
     // _titles.add('''近日，北大全校教师干部大会刚刚召开，63岁的林建华卸任北大校长；原北大党委书记郝平接替林建华，成为新校长。曾在北京任职多年、去年担任山西高院院长的邱水平回到北大，担任党委书记。图为2018年5月4日，北京大学举行建校120周年纪念大会，时任北京大学校长林建华（右）与时任北京大学党委书记郝平（左）''');
     // _titles.add('''邱水平、郝平、林建华均为“老北大人”，都曾离开北大，又重归北大任职。图为2018年5月4日，北京大学举行建校120周年纪念大会，时任北京大学党委书记郝平讲话''');
     // _titles.add('''此番卸任的林建华，亦是北大出身，历任重庆大学、浙江大学、北京大学三所“双一流”高校校长。图为2018年5月4日，北京大学举行建校120周年纪念大会，时任北京大学校长林建华讲话。''');
@@ -16,27 +17,26 @@ class BannerModel with ChangeNotifier {
     // _images.add("http://n.sinaimg.cn/news/1_img/vcg/2b0c102b/99/w1024h675/20181024/FGXD-hmuuiyw6863401.jpg");
     // _images.add("http://n.sinaimg.cn/news/1_img/vcg/2b0c102b/107/w1024h683/20181024/kZj2-hmuuiyw6863420.jpg");
     // _images.add("http://n.sinaimg.cn/news/1_img/vcg/2b0c102b/105/w1024h681/20181024/tOiL-hmuuiyw6863462.jpg");
-
-    getAllBanners();
-  }
-
-  void getAllBanners() async {
     List list = await _entity.where(_entity);
     List<BannerEntity> banners = list.map((e) => e as BannerEntity).toList();
     _banners = banners;
   }
 
+  /// 数据库对应的所有数据
   List<BannerEntity> _banners = [];
 
+  /// 获取所有Banner数据
   List<BannerEntity> get banners => _banners;
 
-  void updateBanners(List<BannerEntity> list) {
+  /// 更新所有Banner数据
+  set banners(List<BannerEntity> list) {
     _banners = list;
     // 保存banner到数据库
     _entity.insert(list);
     notifyListeners();
   }
 
+  /// 清空数据
   void clear() {
     _banners.clear();
     notifyListeners();

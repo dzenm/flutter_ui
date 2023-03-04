@@ -126,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
       SpUtil.setUserId(user.id.toString());
 
       // 更新数据
-      context.read<UserModel>().updateUser(user);
+      context.read<UserModel>().user = user;
       _pushMainPage();
     });
   }

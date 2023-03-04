@@ -1,35 +1,36 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/entities/website_entity.dart';
 
+///
+/// Created by a0010 on 2022/7/28 10:56
+/// Provider中共享的网站数据
 class WebsiteModel with ChangeNotifier {
   WebsiteEntity _entity = WebsiteEntity();
 
   /// 数据库对应的所有数据
-  List<WebsiteEntity> _allWebsiteList = [];
+  List<WebsiteEntity> _websites = [];
 
-  WebsiteModel() {
-    _getAllWebsites();
-  }
-
-  /// 获取所有的网站数据
-  void _getAllWebsites() async {
+  /// 初始化网站数据，从数据库获取所有的网站数据
+  Future<void> init() async {
     List list = await _entity.where(_entity);
     List<WebsiteEntity> articles = list.map((e) => e as WebsiteEntity).toList();
-    _allWebsiteList = articles;
+    _websites = articles;
     notifyListeners();
   }
 
   /// 所有的网站数据
-  List<WebsiteEntity> get allWebsite => _allWebsiteList;
+  List<WebsiteEntity> get websites => _websites;
 
-  WebsiteEntity? getWebsite(int index) => allWebsite.isEmpty ? null : allWebsite[index];
+  /// 根据索引获取网站数据
+  WebsiteEntity? getWebsite(int index) => websites.isEmpty ? null : websites[index];
 
+  /// 更新网站列表数据
   void updateWebsites(List<WebsiteEntity> websites) {
-    websites.forEach((website) => _handleWebsite(website));
+    Future.forEach(websites, (WebsiteEntity website) async => await _handleWebsite(website));
     notifyListeners();
   }
 
+  /// 更新单个网站数据
   void updateWebsite(WebsiteEntity website) {
     _handleWebsite(website);
     notifyListeners();
@@ -37,18 +38,19 @@ class WebsiteModel with ChangeNotifier {
 
   /// 处理网站数据
   Future<void> _handleWebsite(WebsiteEntity website) async {
-    int index = _allWebsiteList.indexOf(website);
+    int index = _websites.indexOf(website);
     if (index != -1) {
-      _allWebsiteList.insert(index, website);
-      _entity.update(website); // 更新DB中的website数据
+      _websites.insert(index, website);
+      await _entity.update(website); // 更新DB中的website数据
     } else {
-      _allWebsiteList.add(website);
-      _entity.insert(website); // 保存为DB中的website数据
+      _websites.add(website);
+      await _entity.insert(website); // 保存为DB中的website数据
     }
   }
 
+  /// 清空数据
   void clear() {
-    _allWebsiteList.clear();
+    _websites.clear();
     notifyListeners();
   }
 }

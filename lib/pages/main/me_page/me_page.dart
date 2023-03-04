@@ -26,10 +26,6 @@ import 'model_data_listen_page.dart';
 
 // 我的页面
 class MePage extends StatefulWidget {
-  final String title;
-
-  MePage({required this.title});
-
   @override
   _MePageState createState() => _MePageState();
 }
@@ -242,9 +238,9 @@ class _MePageState extends State<MePage> {
       int count = data['collectArticleInfo']['count'];
       CoinEntity coin = CoinEntity.fromJson(data['coinInfo']);
 
-      context.read<UserModel>().updateUser(user);
-      context.read<UserModel>().updateCollectCount(count);
-      context.read<UserModel>().updateCoin(coin);
+      context.read<UserModel>().user = user;
+      context.read<UserModel>().collectCount = count;
+      context.read<UserModel>().coin = coin;
     });
   }
 }

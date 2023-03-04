@@ -129,6 +129,30 @@ class HttpManager {
     });
   }
 
+  /// 获取知识体系下的文章
+  Future<void> getTreeArticleListByCid({
+    int page = 0,
+    int cid = 0,
+    void Function(List<TreeEntity> list)? success,
+    void Function(HttpError error)? failed,
+    bool isShowDialog = true,
+  }) async {
+    await HttpClient.instance.request(
+      apiServices.treeArticleListByCid(page, cid),
+      isShowDialog: isShowDialog,
+      success: (data) async {
+        List<dynamic> datas = ((data ?? []) as List<dynamic>);
+        List<TreeEntity> list = datas.map((e) => TreeEntity.fromJson(e)).toList();
+        if (success != null) success(list);
+      },
+      failed: (error) {
+        if (failed != null) {
+          failed(error);
+        }
+      },
+    );
+  }
+
   /// 获取导航数据
   Future<void> getNaviList({
     void Function(List<NaviEntity> list)? success,
@@ -186,11 +210,11 @@ class HttpManager {
   /// 根据id收藏/取消收藏article
   Future<void> collect(
     int id, {
-    bool fresh = true,
+    bool collect = true,
     bool isShowDialog = true,
     void Function()? success,
   }) async {
-    Future<dynamic> future = fresh ? apiServices.collectArticle(id) : apiServices.uncollectArticle(id);
+    Future<dynamic> future = collect ? apiServices.collectArticle(id) : apiServices.uncollectArticle(id);
     await HttpClient.instance.request(future, isShowDialog: isShowDialog, success: (data) async {
       if (success != null) success();
     });
@@ -235,15 +259,16 @@ class HttpManager {
       }
     });
   }
-/// 获取我分享的文章列表
+
+  /// 获取我分享的文章列表
   Future<void> getPrivateArticleList({
     int page = 1,
     void Function(dynamic data)? success,
     void Function(HttpError error)? failed,
     bool isShowDialog = true,
   }) async {
-    await HttpClient.instance.request(apiServices.privateArticles(page), isShowDialog: isShowDialog, success: (data) async {
-
+    await HttpClient.instance.request(apiServices.privateArticles(page), isShowDialog: isShowDialog,
+        success: (data) async {
       if (success != null) success(data);
     }, failed: (error) {
       if (failed != null) {
@@ -265,5 +290,4 @@ class HttpManager {
       }
     });
   }
-
 }

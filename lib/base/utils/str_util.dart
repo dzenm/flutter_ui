@@ -91,4 +91,11 @@ class StrUtil {
       ..write(pattern));
     return sb.toString();
   }
+
+  static String todayBefore(DateTime date) {
+    DateTime today = DateTime.now();
+    List<DateTime> list = List.generate(7, (index) => today);
+
+    return '前';
+  }
 }

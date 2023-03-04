@@ -4,16 +4,13 @@ import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/model/local_model.dart';
 import 'package:flutter_ui/base/res/theme/app_theme.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
+import 'package:flutter_ui/pages/main/main_model.dart';
 import 'package:provider/provider.dart';
 
 import 'edit_article_page.dart';
 
 // 分类页面
 class NavPage extends StatefulWidget {
-  final String title;
-
-  NavPage({Key? key, required this.title}) : super(key: key);
-
   @override
   _NavPageState createState() => _NavPageState();
 }
@@ -61,7 +58,12 @@ class _NavPageState extends State<NavPage> {
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarBrightness: Brightness.dark,
         ),
-        title: Text(widget.title, style: TextStyle(color: Colors.white)),
+        title: Selector<MainModel, String>(
+          builder: (context, value, widget) {
+            return Text(value, style: TextStyle(color: Colors.white));
+          },
+          selector: (context, model) => model.titles[1],
+        ),
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,

@@ -45,7 +45,7 @@ class _ArticlePageState extends ListPageState<ArticleEntity, ArticlePage> {
         List<dynamic> datas = (page.datas ?? []);
         List<ArticleEntity> list = datas.map((e) => ArticleEntity.fromJson(e)).toList();
 
-        context.read<UserModel>().updateCoin(coin);
+        context.read<UserModel>().coin = coin;
         controller.loadComplete(); // 加载成功
         if (pageIndex >= (page.pageCount ?? 0)) {
           controller.loadEmpty(); // 加载完所有页面

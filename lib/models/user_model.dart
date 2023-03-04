@@ -5,18 +5,14 @@ import 'package:flutter_ui/entities/user_entity.dart';
 
 ///
 /// Created by a0010 on 2023/2/23 14:26
-/// 用户信息
+/// Provider中共享的用户信息
 class UserModel with ChangeNotifier {
   UserEntity _user = UserEntity(); //用户信息
   int _collectCount = 0; // 收藏文章数量
   CoinEntity _coin = CoinEntity(); // 积分信息
 
-  UserModel() {
-    _getUser();
-  }
-
-  /// 获取用户数据
-  void _getUser() async {
+  /// 初始化用户数据，从数据库获取所有的用户数据
+  Future<void> init() async {
     List list = await _user.where(_user, where: {'id': SpUtil.getUserId()});
     if (list.isEmpty) return;
     _user = list.map((e) => e as UserEntity).first;
@@ -27,7 +23,7 @@ class UserModel with ChangeNotifier {
   UserEntity get user => _user;
 
   /// 更新当前登录的用户信息
-  void updateUser(UserEntity user) {
+  set user(UserEntity user) {
     _user = user;
     _user.insert(user);
     notifyListeners();
@@ -37,7 +33,7 @@ class UserModel with ChangeNotifier {
   int get collectCount => _collectCount;
 
   /// 更新收藏的文章数据
-  void updateCollectCount(int count) {
+  set collectCount(int count) {
     _collectCount = count;
     notifyListeners();
   }
@@ -46,8 +42,16 @@ class UserModel with ChangeNotifier {
   CoinEntity get coin => _coin;
 
   /// 更新当前的积分信息
-  void updateCoin(CoinEntity coin) {
+  set coin(CoinEntity coin) {
     _coin = coin;
+    notifyListeners();
+  }
+
+  /// 清空数据
+  void clear() {
+    _user = UserEntity();
+    _coin = CoinEntity();
+    _collectCount = 0;
     notifyListeners();
   }
 }

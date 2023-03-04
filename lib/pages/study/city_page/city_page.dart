@@ -110,7 +110,7 @@ class _CitySelectedPageState extends State<CitySelectedPage> {
                     indexHintHeight: 100 / 2,
                     indexHintDecoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage(Assets.icon('ic_bubble_gray.png')),
+                        image: AssetImage(Assets.image('ic_bubble_gray.png')),
                         fit: BoxFit.contain,
                       ),
                     ),

@@ -4,6 +4,7 @@ import 'package:flutter_ui/base/naughty/naughty.dart';
 import 'package:flutter_ui/base/widgets/badge_view.dart';
 import 'package:flutter_ui/base/widgets/keep_alive_wrapper.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
+import 'package:flutter_ui/models/provider_manager.dart';
 import 'package:flutter_ui/pages/main/main_model.dart';
 import 'package:provider/provider.dart';
 
@@ -76,40 +77,34 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     Log.i('build', tag: _tag);
 
-    context.read<MainModel>().init(context);
+    ProviderManager.init(context);
 
-    List<String> titles = context.watch<MainModel>().titles;
     return Scaffold(
       body: PageView(
         controller: _pageController,
         physics: NeverScrollableScrollPhysics(),
-        children: _buildTabPage(titles),
+        children: _buildTabPage(),
       ),
       bottomNavigationBar: BottomAppBar(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           mainAxisSize: MainAxisSize.max,
-          children: _buildBottomNavigationBar(titles),
+          children: _buildBottomNavigationBar(),
         ),
       ),
     );
   }
 
   /// Page widget
-  List<Widget> _buildTabPage(List<String> titles) {
-    return [
-      KeepAliveWrapper(child: HomePage(title: titles[0])),
-      KeepAliveWrapper(child: NavPage(title: titles[1])),
-      KeepAliveWrapper(child: MePage(title: titles[2])),
-    ];
+  List<Widget> _buildTabPage() {
+    List<Widget> list = [HomePage(), NavPage(), MePage()];
+    return List.generate(list.length, (index) => KeepAliveWrapper(child: list[index]));
   }
 
   /// BottomNavigationBar widget
-  List<Widget> _buildBottomNavigationBar(List<String> titles) {
-    int index = 0;
-    return titles.map((title) {
-      return BottomNavigationBarItemView(index: index++, controller: _pageController);
-    }).toList(); // bottomNavigation list
+  List<Widget> _buildBottomNavigationBar() {
+    int len = context.read<MainModel>().len;
+    return List.generate(len, (i) => BottomNavigationBarItemView(index: i, controller: _pageController)); // bottomNavigation list
   }
 }
 
@@ -134,14 +129,8 @@ class _BottomNavigationBarItemViewState extends State<BottomNavigationBarItemVie
 
   @override
   Widget build(BuildContext context) {
-    int index = widget.index; // item索引
-    int badgeCount = context.watch<MainModel>().badgeCount(index); // 图标的数量
-    IconData icon = context.watch<MainModel>().icon(index); // item图标
-    String title = context.watch<MainModel>().title(index); // item标题
-    bool isSelected = context.watch<MainModel>().isSelected(index); // 是否是选中的索引
-    Log.d('build: isSelected=$isSelected, index=$index, title=$title, badgeCount=$badgeCount', tag: _tag);
+    Log.d('build', tag: _tag);
 
-    Color color = isSelected ? Colors.blue : Colors.grey.shade500;
     double width = 56, height = 56;
     // 平分整个宽度
     return Expanded(
@@ -151,8 +140,10 @@ class _BottomNavigationBarItemViewState extends State<BottomNavigationBarItemVie
         height: height,
         foreground: Colors.transparent,
         onTap: () {
+          int index = widget.index;
+          bool isSelected = context.read<MainModel>().isSelected(index);
           if (!isSelected) {
-            context.read<MainModel>().updateSelectIndex(index);
+            context.read<MainModel>().selectIndex = index;
             widget.controller.jumpToPage(index);
             // widget.controller.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
           }
@@ -165,9 +156,9 @@ class _BottomNavigationBarItemViewState extends State<BottomNavigationBarItemVie
             // 图标和文字充满Stack并居中显示
             Positioned.fill(
               child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Icon(icon, color: color, size: 20),
+                _buildIcon(),
                 SizedBox(height: 2),
-                Text(title, style: TextStyle(fontSize: 10, color: color)),
+                _buildTitle(),
               ]),
             ),
             // badge固定在右上角
@@ -177,12 +168,48 @@ class _BottomNavigationBarItemViewState extends State<BottomNavigationBarItemVie
               child: Stack(
                 alignment: Alignment.center,
                 clipBehavior: Clip.none,
-                children: [Positioned(left: 16, top: 2, child: BadgeView(count: badgeCount))],
+                children: [Positioned(left: 16, top: 2, child: _buildBadge())],
               ),
             ),
           ]),
         ),
       ),
+    );
+  }
+
+  Widget _buildBadge() {
+    Log.d('build badge', tag: _tag);
+    return Selector<MainModel, int>(
+      builder: (context, value, widget) {
+        return BadgeView(count: value);
+      },
+      selector: (context, model) => model.badgeCount(widget.index),
+    );
+  }
+
+  Widget _buildIcon() {
+    Log.d('build icon', tag: _tag);
+    return Selector<MainModel, IconData>(
+      builder: (context, value, widget) {
+        // 是否是选中的索引
+        bool isSelected = context.watch<MainModel>().isSelected(this.widget.index);
+        Color color = isSelected ? Colors.blue : Colors.grey.shade500;
+        return Icon(value, color: color, size: 20);
+      },
+      selector: (context, model) => model.icon(widget.index),
+    );
+  }
+
+  Widget _buildTitle() {
+    Log.d('build title', tag: _tag);
+    return Selector<MainModel, String>(
+      builder: (context, value, widget) {
+        // 是否是选中的索引
+        bool isSelected = context.watch<MainModel>().isSelected(this.widget.index);
+        Color color = isSelected ? Colors.blue : Colors.grey.shade500;
+        return Text(value, style: TextStyle(fontSize: 10, color: color));
+      },
+      selector: (context, model) => model.title(widget.index),
     );
   }
 }
