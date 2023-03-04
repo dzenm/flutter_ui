@@ -4,7 +4,7 @@
 class BuildConfig {
   static bool showDBLog = true;
 
-  static bool showHTTPLog = true;
+  static bool showHTTPLog = false;
 
   static bool showPageLog = true;
 }

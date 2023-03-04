@@ -27,11 +27,6 @@ class ProviderManager {
     context.read<WebsiteModel>().init();
 
     context.read<MainModel>().init();
-    context.read<MainModel>().titles = [
-      S.of(context).home,
-      S.of(context).nav,
-      S.of(context).me,
-    ];
     context.read<HomeModel>().init();
     context.read<MeModel>().init();
     context.read<NavModel>().init();

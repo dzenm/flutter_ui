@@ -44,6 +44,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
       Naughty.instance
         ..init(context)
         ..show();
+      ProviderManager.init(context);
     });
   }
 
@@ -78,7 +79,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     Log.i('build', tag: _tag);
 
-    ProviderManager.init(context);
+    context.read<MainModel>().initData(context);
 
     return Scaffold(
       body: PageView(
@@ -105,7 +106,8 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   /// BottomNavigationBar widget
   List<Widget> _buildBottomNavigationBar() {
     int len = context.read<MainModel>().len;
-    return List.generate(len, (i) => BottomNavigationBarItemView(index: i, controller: _pageController)); // bottomNavigation list
+    return List.generate(
+        len, (i) => BottomNavigationBarItemView(index: i, controller: _pageController)); // bottomNavigation list
   }
 }
 

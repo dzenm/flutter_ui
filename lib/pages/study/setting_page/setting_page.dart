@@ -66,10 +66,11 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
+    Log.d('build', tag: _tag);
+
     AppTheme appTheme = context.watch<LocalModel>().appTheme;
     Locale locale = context.watch<LocalModel>().locale;
     UserEntity user = context.watch<UserModel>().user;
-
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).setting, style: TextStyle(color: Colors.white)),

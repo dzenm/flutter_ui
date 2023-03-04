@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/base/res/strings.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56
@@ -13,8 +14,17 @@ class MainModel with ChangeNotifier {
   /// 主页底部按钮的标题列表
   List<String> _titles = [];
 
+  void initData(BuildContext context) {
+    _titles = [
+      S.of(context).home,
+      S.of(context).nav,
+      S.of(context).me,
+    ];
+  }
+
   /// 初始化数据
   Future<void> init() async {
+    _len = 3;
     notifyListeners();
   }
 

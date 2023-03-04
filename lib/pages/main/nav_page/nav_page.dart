@@ -64,7 +64,7 @@ class _NavPageState extends State<NavPage> {
           builder: (context, value, widget) {
             return Text(value, style: TextStyle(color: Colors.white));
           },
-          selector: (context, model) => model.titles[1],
+          selector: (context, model) => model.title(1),
         ),
       ),
       body: Container(
