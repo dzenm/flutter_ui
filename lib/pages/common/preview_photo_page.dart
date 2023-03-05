@@ -6,24 +6,6 @@ import 'package:photo_view/photo_view.dart';
 
 typedef DownloadCallback = void Function(String url);
 
-/// 跳转图片预览页面
-void showPreviewPhotoPage(
-  List<String> url, {
-  ImageProvider<Object>? imageProvider,
-  DownloadCallback? onDownload,
-}) {
-  Navigator.of(Application.context).push(
-    CustomerPageRoute(
-      PreviewPhotoPage(
-        url,
-        imageProvider: imageProvider,
-        onDownload: onDownload,
-      ),
-      style: AnimatorStyle.fade,
-    ),
-  );
-}
-
 /// 图片预览页面
 class PreviewPhotoPage extends StatefulWidget {
   final List<String> url;
@@ -35,6 +17,24 @@ class PreviewPhotoPage extends StatefulWidget {
     this.imageProvider,
     this.onDownload,
   });
+
+  /// 跳转图片预览页面
+  static void show(
+    List<String> url, {
+    ImageProvider<Object>? imageProvider,
+    DownloadCallback? onDownload,
+  }) {
+    Navigator.of(Application.context).push(
+      CustomerPageRoute(
+        PreviewPhotoPage(
+          url,
+          imageProvider: imageProvider,
+          onDownload: onDownload,
+        ),
+        style: AnimatorStyle.fade,
+      ),
+    );
+  }
 
   @override
   State<StatefulWidget> createState() => _PreviewPhotoPageState();

@@ -8,8 +8,18 @@ class StudyModel with ChangeNotifier {
 
   String get value => _value;
 
+  /// 初始化数据
+  Future<void> init() async {
+    notifyListeners();
+  }
+
   void setValue(String value) {
     _value = value;
+    notifyListeners();
+  }
+
+  /// 清空数据
+  void clear() {
     notifyListeners();
   }
 }

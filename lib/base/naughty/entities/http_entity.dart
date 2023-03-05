@@ -21,9 +21,9 @@ class HTTPEntity {
   String? responseType = 'Unknown';
   int? maxRedirects = 0;
   String? listFormat = 'Unknown';
-  int? sendTimeout = 0;
-  int? connectTimeout = 0;
-  int? receiveTimeout = 0;
+  Duration? sendTimeout;
+  Duration? connectTimeout;
+  Duration? receiveTimeout;
   bool? followRedirects = true;
   bool? receiveDataWhenStatusError = true;
   bool? isRedirect = true;

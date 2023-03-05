@@ -21,7 +21,7 @@ import 'package:provider/provider.dart';
 
 import 'coin/coin_page.dart';
 import 'collect/collect_page.dart';
-import 'medicine_page/chinese_medicine_page.dart';
+import 'medicine_page/medicine_page.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56
@@ -146,7 +146,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => RouteManager.push(context, ChineseMedicinePage(medicineName: '金银花')),
+        onTap: () => RouteManager.push(context, MedicinePage(medicineName: '金银花')),
         child: SingleTextLayout(
           title: 'Chinese',
           isShowForward: true,

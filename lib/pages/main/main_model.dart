@@ -24,7 +24,6 @@ class MainModel with ChangeNotifier {
 
   /// 初始化数据
   Future<void> init() async {
-    _len = 3;
     notifyListeners();
   }
 

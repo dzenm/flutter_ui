@@ -69,9 +69,9 @@ class HttpInterceptor extends Interceptor {
     entity.responseType = response?.requestOptions.responseType.toString() ?? 'unknown';
     entity.maxRedirects = response?.requestOptions.maxRedirects ?? -1;
     entity.listFormat = response?.requestOptions.listFormat.toString() ?? 'unknown';
-    entity.sendTimeout = response?.requestOptions.sendTimeout ?? -1;
-    entity.connectTimeout = response?.requestOptions.connectTimeout ?? -1;
-    entity.receiveTimeout = response?.requestOptions.receiveTimeout ?? -1;
+    entity.sendTimeout = response?.requestOptions.sendTimeout;
+    entity.connectTimeout = response?.requestOptions.connectTimeout;
+    entity.receiveTimeout = response?.requestOptions.receiveTimeout;
     entity.followRedirects = response?.requestOptions.followRedirects ?? true;
     entity.receiveDataWhenStatusError = response?.requestOptions.receiveDataWhenStatusError ?? true;
     entity.isRedirect = response?.isRedirect ?? false;

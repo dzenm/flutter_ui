@@ -14,7 +14,7 @@ import 'package:flutter_ui/entities/banner_entity.dart';
 import 'package:flutter_ui/http/http_manager.dart';
 import 'package:flutter_ui/models/article_model.dart';
 import 'package:flutter_ui/models/banner_model.dart';
-import 'package:flutter_ui/models/webite_model.dart';
+import 'package:flutter_ui/models/website_model.dart';
 import 'package:flutter_ui/pages/common/web_view_page.dart';
 import 'package:flutter_ui/res/custom_icons.dart';
 import 'package:provider/provider.dart';

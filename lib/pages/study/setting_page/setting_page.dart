@@ -99,7 +99,7 @@ class _SettingPageState extends State<SettingPage> {
               TapLayout(
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: () => showPreviewPhotoPage([
+                onTap: () => PreviewPhotoPage.show([
                   "https://www.wanandroid.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png",
                   Assets.image('a.jpg'),
                   Assets.image('a.jpg'),

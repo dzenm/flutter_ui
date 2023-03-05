@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/base/config/build_config.dart';
 import 'package:flutter_ui/base/http/http_client.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/entities/medicine_entity.dart';
@@ -7,17 +8,17 @@ import 'package:flutter_ui/entities/medicine_entity.dart';
 ///
 /// Created by a0010 on 2022/4/15 16:23
 ///
-class ChineseMedicinePage extends StatefulWidget {
+class MedicinePage extends StatefulWidget {
   final String medicineName;
 
-  ChineseMedicinePage({required this.medicineName});
+  MedicinePage({required this.medicineName});
 
   @override
-  State<StatefulWidget> createState() => _ChineseMedicinePageState();
+  State<StatefulWidget> createState() => _MedicinePageState();
 }
 
-class _ChineseMedicinePageState extends State<ChineseMedicinePage> {
-  final String _key = 'e5c1639a4fc97a080daaff94e08bd1ca';
+class _MedicinePageState extends State<MedicinePage> {
+  final String _key = BuildConfig.medicineKey;
   List<MedicineEntity> _list = [];
 
   @override
@@ -29,7 +30,6 @@ class _ChineseMedicinePageState extends State<ChineseMedicinePage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: Text('中药药方', style: TextStyle(color: Colors.white)),

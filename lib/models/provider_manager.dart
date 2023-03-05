@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/models/article_model.dart';
 import 'package:flutter_ui/pages/main/home_page/home_model.dart';
 import 'package:flutter_ui/pages/main/main_model.dart';
 import 'package:flutter_ui/pages/main/me_page/me_model.dart';
 import 'package:flutter_ui/pages/main/nav_page/nav_model.dart';
+import 'package:flutter_ui/pages/study/study_model.dart';
 import 'package:provider/provider.dart';
 
 import 'banner_model.dart';
 import 'user_model.dart';
-import 'webite_model.dart';
+import 'website_model.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56
@@ -30,6 +30,7 @@ class ProviderManager {
     context.read<HomeModel>().init();
     context.read<MeModel>().init();
     context.read<NavModel>().init();
+    context.read<StudyModel>().init();
   }
 
   /// 清空所有数据
@@ -44,6 +45,7 @@ class ProviderManager {
     context.read<HomeModel>().clear();
     context.read<MeModel>().clear();
     context.read<NavModel>().clear();
+    context.read<StudyModel>().clear();
   }
 
   static ArticleModel getArticle(BuildContext context) {
@@ -76,5 +78,9 @@ class ProviderManager {
 
   static NavModel getNav(BuildContext context) {
     return context.read<NavModel>();
+  }
+
+  static StudyModel getStudy(BuildContext context) {
+    return context.read<StudyModel>();
   }
 }

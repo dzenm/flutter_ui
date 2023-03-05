@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:bot_toast/bot_toast.dart';
-import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_ui/base/config/build_config.dart';
 import 'package:flutter_ui/base/entities/data_entity.dart';
@@ -48,8 +47,8 @@ class HttpClient {
   /// baseUrl必须使用 "", 不能使用 ''
   void _createApiServices({required String? baseUrl}) {
     Dio dio = Dio(BaseOptions(
-      connectTimeout: _connectTimeout,
-      receiveTimeout: _receiveTimeout,
+      connectTimeout: Duration(milliseconds: _connectTimeout),
+      receiveTimeout: Duration(milliseconds: _receiveTimeout),
       // 不使用http状态码判断状态，使用AdapterInterceptor来处理（适用于标准REST风格）
       validateStatus: (status) => true,
       baseUrl: baseUrl!,
@@ -60,20 +59,20 @@ class HttpClient {
     ));
 
     // 不验证https证书
-    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (client) {
-      // config the http client
-      // client.findProxy = (uri) {
-      //  //proxy all request to localhost:8888
-      //  return "192.168.1.1:8888";
-      //};
-      client.badCertificateCallback = (X509Certificate cert, String host, int port) {
-        log("验证https证书: host=$host, port=$port");
-        return true;
-      };
-      // you can also create a new HttpClient to dio
-      // return new HttpClient();
-      return client;
-    };
+    // (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (client) {
+    //   // config the http client
+    //   // client.findProxy = (uri) {
+    //   //  //proxy all request to localhost:8888
+    //   //  return "192.168.1.1:8888";
+    //   //};
+    //   client.badCertificateCallback = (X509Certificate cert, String host, int port) {
+    //     log("验证https证书: host=$host, port=$port");
+    //     return true;
+    //   };
+    //   // you can also create a new HttpClient to dio
+    //   // return new HttpClient();
+    //   return client;
+    // };
     // log interceptor
     dio.interceptors.add(LoggerInterceptor(
       formatJson: true,
@@ -191,7 +190,7 @@ class _HttpError {
     if (code != 0 && msg.isNotEmpty) {
       return HttpError(code, msg);
     } else if (error != null && error is DioError) {
-      if (error.type == DioErrorType.other || error.type == DioErrorType.response) {
+      if (error.type == DioErrorType.unknown || error.type == DioErrorType.badResponse) {
         dynamic e = error.error;
         if (e is SocketException) {
           return HttpError(socketErrorCode, socketErrorMsg);
@@ -201,7 +200,7 @@ class _HttpError {
           return HttpError(parseErrorCode, parseErrorMsg);
         }
         return HttpError(netErrorCode, '$netErrorMsg ${error.toString()}');
-      } else if (error.type == DioErrorType.connectTimeout) {
+      } else if (error.type == DioErrorType.connectionTimeout) {
         return HttpError(timeoutErrorCode, timeoutErrorMsg);
       } else if (error.type == DioErrorType.sendTimeout) {
         return HttpError(sendErrorCode, sendErrorMsg);

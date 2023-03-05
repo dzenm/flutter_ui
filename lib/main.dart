@@ -21,7 +21,7 @@ import 'math_util.dart';
 import 'models/article_model.dart';
 import 'models/banner_model.dart';
 import 'models/user_model.dart';
-import 'models/webite_model.dart';
+import 'models/website_model.dart';
 import 'pages/login/login_page.dart';
 import 'pages/main/home_page/home_model.dart';
 import 'pages/main/main_model.dart';
@@ -153,9 +153,9 @@ class Application {
         ChangeNotifierProvider(create: (context) => NavModel()),
         ChangeNotifierProvider(create: (context) => MeModel()),
         ChangeNotifierProvider(create: (context) => UserModel()),
+        ChangeNotifierProvider(create: (context) => BannerModel()),
         ChangeNotifierProvider(create: (context) => ArticleModel()),
         ChangeNotifierProvider(create: (context) => WebsiteModel()),
-        ChangeNotifierProvider(create: (context) => BannerModel()),
         ChangeNotifierProvider(create: (context) => StudyModel()),
       ],
       child: consumerApp,

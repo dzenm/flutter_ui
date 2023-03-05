@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ui/base/http/http_client.dart';
+import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/base/utils/sp_util.dart';
@@ -16,6 +17,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  static const String _tag = 'LoginPage';
+
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -27,8 +30,33 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
+    Log.i('initState', tag: _tag);
 
     _initInputText();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    Log.i('didChangeDependencies', tag: _tag);
+  }
+
+  @override
+  void didUpdateWidget(covariant LoginPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    Log.i('didUpdateWidget', tag: _tag);
+  }
+
+  @override
+  void deactivate() {
+    super.deactivate();
+    Log.i('deactivate', tag: _tag);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    Log.i('dispose', tag: _tag);
   }
 
   // 初始化输入框的内容，如果本地储存账号和密码，获取并填充到输入框
@@ -46,8 +74,12 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    Log.i('build', tag: _tag);
+
     return Scaffold(
-      appBar: AppBar(title: Text(S.of(context).login, style: TextStyle(color: Colors.white))),
+      appBar: AppBar(
+        title: Text(S.of(context).login, style: TextStyle(color: Colors.white)),
+      ),
       body: SingleChildScrollView(
         child: Padding(padding: EdgeInsets.only(top: 100), child: _buildBody()),
       ),
