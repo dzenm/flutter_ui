@@ -106,8 +106,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   /// BottomNavigationBar widget
   List<Widget> _buildBottomNavigationBar() {
     int len = context.read<MainModel>().len;
-    return List.generate(
-        len, (i) => BottomNavigationBarItemView(index: i, controller: _pageController)); // bottomNavigation list
+    return List.generate(len, (i) => BottomNavigationBarItemView(index: i, controller: _pageController)); // bottomNavigation list
   }
 }
 

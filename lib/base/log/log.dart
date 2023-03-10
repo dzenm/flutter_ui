@@ -12,7 +12,7 @@ const String interval = '  ';
 class Log {
   Log._internal();
 
-  static final Log instance = Log._internal();
+  static Log _instance = Log._internal();
 
   static const String _tag = 'Log';
 
@@ -23,14 +23,14 @@ class Log {
   static const int _verbose = 2;
   static const _maxLength = 800;
 
-  static int sLevel = _verbose;
+  int _level = _verbose;
 
-  static bool debuggable = true; // 是否是debug模式
-  static String sTag = _tag;
+  bool _debuggable = true; // 是否是debug模式
+  String _myTag = _tag;
 
   static void init({bool isDebug = true, String tag = _tag}) {
-    debuggable = isDebug;
-    sTag = tag;
+    _instance._debuggable = isDebug;
+    _instance._myTag = tag;
   }
 
   static void v(dynamic message, {String tag = ''}) {
@@ -53,20 +53,21 @@ class Log {
     _printLog(tag, 'E', _error, message);
   }
 
-  static void _printLog(String tag, String stag, int level, dynamic message) {
+  static void _printLog(String tag, String levelTag, int level, dynamic message) {
     if (kReleaseMode) {
       // release模式不打印
       return;
     }
-    if (debuggable) {
-      if (sLevel <= level) {
-        _printLongMsg(level, _handlerMessage(tag, stag, message));
+    if (_instance._debuggable) {
+      if (_instance._level <= level) {
+        dynamic msg = _instance._handlerMessage(tag, levelTag, message);
+        _instance._printLongMsg(level, msg);
       }
     }
   }
 
-  // 打印长日志
-  static void _printLongMsg(int level, dynamic msg) {
+  /// 打印长日志
+  void _printLongMsg(int level, dynamic msg) {
     int len = msg.length;
     if (len > _maxLength) {
       for (int i = 0; i < len;) {
@@ -79,21 +80,31 @@ class Log {
     }
   }
 
-  // 处理消息的内容
-  static String _handlerMessage(String tag, String stag, dynamic message) {
+  /// 处理消息的内容
+  String _handlerMessage(String tag, String levelTag, dynamic message) {
+    DateTime now = DateTime.now();
+    String year = '${now.year}';
+    String month = '${now.month}'.padLeft(2, '0');
+    String day = '${now.day}'.padLeft(2, '0');
+    String hour = '${now.hour}'.padLeft(2, '0');
+    String minute = '${now.minute}'.padLeft(2, '0');
+    String second = '${now.second}'.padLeft(2, '0');
+    String millisecond = '${now.millisecond}'.padLeft(3, '0').substring(0, 3);
+    String time = '$year-$month-$day $hour:$minute:$second $millisecond';
+
     StringBuffer sb = StringBuffer();
-    sb.write(DateTime.now());
+    sb.write(time);
     sb.write(' ');
-    sb.write(stag);
+    sb.write(levelTag);
     sb.write('/');
-    sb.write((tag.isEmpty) ? sTag : tag);
+    sb.write((tag.isEmpty) ? _myTag : tag);
     sb.write('  ');
     sb.write(message);
     return sb.toString();
   }
 
-  // 换行打印
-  static void _println(int level, String message, {bool isDefaultColor = true}) {
+  /// 换行打印
+  void _println(int level, String message, {bool isDefaultColor = true}) {
     String prefix = _handlerPrefixTextColor(level, isDefaultColor);
     String suffix = _handlerSuffixTextColor(level, isDefaultColor);
     String msg = prefix + message + suffix;
@@ -102,8 +113,8 @@ class Log {
     }
   }
 
-  // 处理前缀文本颜色
-  static String _handlerPrefixTextColor(int level, bool isDefaultColor) {
+  /// 处理前缀文本颜色
+  String _handlerPrefixTextColor(int level, bool isDefaultColor) {
     if (isDefaultColor) return '';
     switch (level) {
       case _verbose:
@@ -121,8 +132,8 @@ class Log {
     }
   }
 
-  // 处理后缀文本颜色
-  static String _handlerSuffixTextColor(int level, bool isDefaultColor) {
+  /// 处理后缀文本颜色
+  String _handlerSuffixTextColor(int level, bool isDefaultColor) {
     if (isDefaultColor) return '';
     switch (level) {
       case _verbose:

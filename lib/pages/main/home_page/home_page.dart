@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/res/assets.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
+import 'package:flutter_ui/base/utils/str_util.dart';
 import 'package:flutter_ui/base/widgets/banner_view.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/refresh_list_view.dart';
@@ -339,11 +340,13 @@ class ArticleItemView extends StatelessWidget {
               ),
             ),
             // 文章分享的日期
-            Selector<ArticleModel, String>(
+            Selector<ArticleModel, int>(
               builder: (context, value, child) {
-                return Text(value);
+                return Text(
+                  StrUtil.todayBefore(DateTime.fromMillisecondsSinceEpoch(value), showTime: true),
+                );
               },
-              selector: (context, model) => model.getArticle(index)?.niceShareDate ?? '',
+              selector: (context, model) => model.getArticle(index)?.shareDate ?? 0,
             ),
             SizedBox(width: 8),
             // 文章收藏的状态
