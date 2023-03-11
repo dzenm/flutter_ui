@@ -4,60 +4,95 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../log/log.dart';
 import '../res/strings.dart';
 
-typedef SelectedChanged = void Function(String item);
-
-const double _kPickerHeight = 220.0;
-const double _kPickerTitleHeight = 44.0;
-
-void showListDialog({
-  required BuildContext context,
-  required List<String> data,
-  required String? selectedItem,
-  required SelectedChanged? onSelectedChanged,
-}) {
-  showModalBottomSheet(
-    context: context,
-    enableDrag: true,
-    builder: (context) => BottomSheet(
-      onClosing: () {},
-      builder: (context) => Container(
-        height: _kPickerHeight,
-        child: PickerListView(
-          selectedItem: selectedItem,
-          data: data,
-          onSelectedChanged: onSelectedChanged,
-        ),
-      ),
-    ),
-  );
-}
+typedef OnSelectedChanged = void Function(int index);
 
 class PickerListView extends StatefulWidget {
-  final List<String>? data;
-
   /// 选中的地址发生改变回调
-  final SelectedChanged? onSelectedChanged;
-
-  final String? selectedItem;
+  final int itemCount;
+  final IndexedWidgetBuilder builder;
+  final OnSelectedChanged? onSelectedChanged;
+  final int defaultIndex;
 
   PickerListView({
     Key? key,
-    this.data,
+    this.itemCount = 0,
+    required this.builder,
     this.onSelectedChanged,
-    this.selectedItem,
+    this.defaultIndex = 0,
   }) : super(key: key);
+
+  static Future<T?> show<T>({
+    required BuildContext context,
+    int itemCount = 0,
+    required IndexedWidgetBuilder builder,
+    OnSelectedChanged? onSelectedChanged,
+    int defaultIndex = 0,
+  }) async {
+    return await showModalBottomSheet<T>(
+      context: context,
+      enableDrag: true,
+      builder: (context) => BottomSheet(
+        onClosing: () {},
+        builder: (context) => Container(
+          child: PickerListView(
+            itemCount: itemCount,
+            builder: builder,
+            onSelectedChanged: onSelectedChanged,
+            defaultIndex: defaultIndex,
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// PickerListView.showList(
+  ///   context: context,
+  ///   list: ['测试一', '测试二', '测试三', '测试四', '测试五'],
+  ///   defaultIndex: _selectedIndex,
+  ///   onSelectedChanged: (index) {
+  ///     _selectedIndex = index;
+  ///     Log.i('选中的回调: $_selectedIndex');
+  ///   },
+  /// )
+  ///
+  static Future<T?> showList<T>({
+    required BuildContext context,
+    required List<String> list,
+    OnSelectedChanged? onSelectedChanged,
+    int defaultIndex = 0,
+  }) async {
+    Widget _buildItem(BuildContext context, int index) {
+      String item = list[index];
+      if (item.isEmpty) {
+        return Container();
+      }
+      return Container(
+        alignment: Alignment.center,
+        child: Text(item, style: const TextStyle(color: Colors.black, fontSize: 17)),
+      );
+    }
+
+    return await show<T>(
+      context: context,
+      itemCount: list.length,
+      builder: _buildItem,
+      onSelectedChanged: onSelectedChanged,
+      defaultIndex: defaultIndex,
+    );
+  }
 
   _PickerListViewState createState() => _PickerListViewState();
 }
 
 class _PickerListViewState extends State<PickerListView> {
-  List<String> list = [];
-  int _selectedIndex = 0;
-
   FixedExtentScrollController? _controller;
+
+  final double _kPickerHeight = 220.0;
+  final double _kPickerTitleHeight = 44.0;
+
+  int _selectedIndex = 0;
 
   @override
   void dispose() {
@@ -72,26 +107,17 @@ class _PickerListViewState extends State<PickerListView> {
   }
 
   void _initData() async {
-    list = widget.data ?? [];
-    if (list.isNotEmpty) {
-      _selectedIndex = list.indexOf(widget.selectedItem ?? '');
-      Log.d('初始化选中: ${widget.selectedItem}');
-    }
+    _selectedIndex = widget.defaultIndex;
     _controller = FixedExtentScrollController(initialItem: _selectedIndex);
-    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    if (list.isEmpty) {
-      return Container();
-    }
-
     return Container(
       height: _kPickerHeight,
       color: Colors.white,
       child: Column(mainAxisSize: MainAxisSize.min, children: [
-        Flexible(child: _buildButtonView()),
+        _buildButtonView(),
         Flexible(child: _buildListView()),
       ]),
     );
@@ -99,7 +125,6 @@ class _PickerListViewState extends State<PickerListView> {
 
   Widget _buildButtonView() {
     return Container(
-      height: _kPickerTitleHeight,
       decoration: BoxDecoration(color: Colors.white),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Container(
@@ -109,9 +134,7 @@ class _PickerListViewState extends State<PickerListView> {
               S.of(context).cancel,
               style: TextStyle(color: Theme.of(context).unselectedWidgetColor, fontSize: 16.0),
             ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
+            onPressed: () => Navigator.pop(context),
           ),
         ),
         Container(
@@ -122,8 +145,8 @@ class _PickerListViewState extends State<PickerListView> {
               style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 16.0),
             ),
             onPressed: () {
-              if (widget.onSelectedChanged != null && list.isNotEmpty && _selectedIndex != -1) {
-                widget.onSelectedChanged!(list[_selectedIndex]);
+              if (widget.onSelectedChanged != null) {
+                widget.onSelectedChanged!(_selectedIndex);
               }
               Navigator.pop(context);
             },
@@ -136,23 +159,12 @@ class _PickerListViewState extends State<PickerListView> {
   Widget _buildListView() {
     return CupertinoPicker.builder(
       backgroundColor: Colors.white,
-      childCount: list.length,
+      childCount: widget.itemCount,
       scrollController: _controller,
-      itemBuilder: (context, index) {
-        String item = list[index];
-        if (item.isEmpty) {
-          return Container();
-        }
-        return Container(
-          alignment: Alignment.center,
-          child: Text(item, style: const TextStyle(color: Colors.black, fontSize: 17)),
-        );
-      },
+      itemBuilder: widget.builder,
       itemExtent: 44,
       onSelectedItemChanged: (int index) {
-        setState(() {
-          _selectedIndex = index;
-        });
+        setState(() => _selectedIndex = index);
       },
     );
   }

@@ -36,7 +36,7 @@ class StudyPage extends StatefulWidget {
 }
 
 class _StudyPageState extends State<StudyPage> {
-  String? _selectedItem;
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -206,13 +206,13 @@ class _StudyPageState extends State<StudyPage> {
         child: _text(S.of(context).listDialog),
         textColor: Colors.white,
         color: theme.primary,
-        onPressed: () => showListDialog(
+        onPressed: () => PickerListView.showList(
           context: context,
-          selectedItem: _selectedItem,
-          data: ['测试一', '测试二', '测试三', '测试四', '测试五'],
-          onSelectedChanged: (item) {
-            _selectedItem = item;
-            Log.i('选中的回调: $_selectedItem');
+          list: ['测试一', '测试二', '测试三', '测试四', '测试五'],
+          defaultIndex: _selectedIndex,
+          onSelectedChanged: (index) {
+            _selectedIndex = index;
+            Log.i('选中的回调: $_selectedIndex');
           },
         ),
       ),
