@@ -4,6 +4,7 @@ import 'package:flutter_ui/base/config/build_config.dart';
 import 'package:flutter_ui/base/http/http_client.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/entities/medicine_entity.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 ///
 /// Created by a0010 on 2022/4/15 16:23
@@ -50,8 +51,7 @@ class _MedicinePageState extends State<MedicinePage> {
   }
 
   Widget _buildMedicineContent(String html) {
-    return Text(html);
-    // return Html(data: html);
+    return Html(data: html);
   }
 
   void _getZhongyao() {

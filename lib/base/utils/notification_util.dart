@@ -1,20 +1,21 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationUtil {
-  static final FlutterLocalNotificationsPlugin _notifications = FlutterLocalNotificationsPlugin();
+  static final FlutterLocalNotificationsPlugin _notificationsPlugin = FlutterLocalNotificationsPlugin();
 
   static Future<void> showNotification({
     String? title,
     String? body,
     DidReceiveBackgroundNotificationResponseCallback? onTap,
   }) async {
-    _notifications.initialize(
+    _notificationsPlugin.initialize(
       const InitializationSettings(
         android: AndroidInitializationSettings('@mipmap/ic_launcher'),
         iOS: DarwinInitializationSettings(onDidReceiveLocalNotification: onDidReceiveLocalNotification),
       ),
     );
-    await _notifications.show(
+
+    await _notificationsPlugin.show(
       0,
       title,
       body,

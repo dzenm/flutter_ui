@@ -1,14 +1,13 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_ui/main.dart';
 import 'package:intl/intl.dart';
 
+import '../../../main.dart';
 import '../../router/route_manager.dart';
 import '../../utils/notification_util.dart';
 import '../../utils/str_util.dart';
 import '../entities/http_entity.dart';
 import '../naughty.dart';
 import '../page/http/http_list_page.dart';
-
 
 /// HTTP请求信息拦截
 class HttpInterceptor extends Interceptor {
@@ -24,7 +23,10 @@ class HttpInterceptor extends Interceptor {
     Naughty.instance.data.insert(0, entity);
 
     String body = '${options.method}  ${options.path}';
-    NotificationUtil.showNotification(body: body, onTap: (payload) async => RouteManager.push(Application.context, HTTPListPage()));
+    NotificationUtil.showNotification(
+      body: body,
+      onTap: (payload) async => RouteManager.push(Application.context, HTTPListPage()),
+    );
     handler.next(options);
   }
 

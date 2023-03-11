@@ -1,7 +1,7 @@
-import 'package:flutter_ui/base/config/build_config.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../config/build_config.dart';
 import '../entities/column_entity.dart';
 import '../entities/table_entity.dart';
 import '../log/log.dart';

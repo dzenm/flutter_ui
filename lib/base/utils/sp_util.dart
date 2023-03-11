@@ -27,7 +27,9 @@ class SpUtil {
   static const String _userCookie = 'u_cookie'; // 登录的cookie信息
 
   /// APP设置相关的信息
-  static const String _settingTheme = 's_theme'; // APP展示的主题
+  static const String _settingTheme = 's_theme';
+
+  /// APP展示的主题
   static const String _settingLocale = 's_locale'; // APP展示的语言
 
   Future init() async {
@@ -35,77 +37,77 @@ class SpUtil {
     Log.i('初始化 SharedPreferences ${_prefs != null ? '成功' : '失败'}', tag: _tag);
   }
 
-  // 登录状态信息
+  /// 登录状态信息
   static bool getUserLoginState() {
     return getBool(_userLoginState);
   }
 
-  // 保存登录状态信息
+  /// 保存登录状态信息
   static void setUserLoginState(bool? isLogin) {
     setBool(_userLoginState, isLogin);
   }
 
-  // 获取用户信息
+  /// 获取用户信息
   static String getUserInfo() {
     return getString(_userInfo);
   }
 
-  // 保存用户信息
+  /// 保存用户信息
   static void setUserInfo(String? user) {
     setString(_userInfo, user);
   }
 
-  // 获取用户信息
+  /// 获取用户信息
   static String getUser() {
     return getString(_user);
   }
 
-  // 保存用户信息
+  /// 保存用户信息
   static void setUser(String? user) {
     setString(_user, user);
   }
 
-  // 获取用户名
+  /// 获取用户名
   static String getUsername() {
     return getString(_userName);
   }
 
-  // 保存用户名
+  /// 保存用户名
   static void setUsername(String? username) {
     setString(_userName, username);
   }
 
-  // 获取登录用户ID
+  /// 获取登录用户ID
   static String getUserId() {
     return getString(_userId);
   }
 
-  // 保存登录用户ID
+  /// 保存登录用户ID
   static void setUserId(String? userId) {
     setString(_userId, userId);
   }
 
-  // 获取登录用户token
+  /// 获取登录用户token
   static String getToken() {
     return getString(_userToken);
   }
 
-  // 保存登录用户token
+  /// 保存登录用户token
   static void setToken(String? token) {
     setString(_userToken, token);
   }
 
-  // 获取登录用户cookie
+  /// 获取登录用户cookie
   static String getCookie() {
     return getString(_userCookie);
   }
 
-  // 保存登录用户cookie
+  /// 保存登录用户cookie
   static void setCookie(String? cookie) {
     setString(_userCookie, cookie);
   }
 
-  // 重置登录用户信息
+  /// 重置登录用户信息
   static void resetUser() {
     remove(_userInfo);
     remove(_userLoginState);
@@ -115,24 +117,24 @@ class SpUtil {
     remove(_userCookie);
   }
 
-  // 获取主题样式
+  /// 获取主题样式
   static String getTheme() {
     String theme = getString(_settingTheme);
     return theme.isEmpty ? 'gray' : theme;
   }
 
-  // 保存主题样式
+  /// 保存主题样式
   static void setTheme(String? theme) {
     setString(_settingTheme, theme);
   }
 
-  // 获取语言设置
+  /// 获取语言设置
   static String getLocale() {
     String locale = getString(_settingLocale);
     return locale.isEmpty ? 'zh' : locale;
   }
 
-  // 保存语言设置
+  /// 保存语言设置
   static void setLocale(String? locale) {
     setString(_settingLocale, locale);
   }

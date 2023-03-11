@@ -11,7 +11,9 @@ class StrUtil {
   /// 汉字的星期日期
   static List<String> chineseCharacterWeeks = ['一', '二', '三', '四', '五', '六', '七'];
 
-  /// 获取文件名通过路径或者文件
+  /// 获取文件名通过路径或者文件，例：
+  /// path   = /data/user/0/com.dzenm.flutter_ui/databases/db_4824.db
+  /// result = db_4824.db
   static String getFileName(dynamic file) {
     String path = '';
     if (file is File) {
@@ -32,7 +34,9 @@ class StrUtil {
     return len;
   }
 
-  /// 格式化文件大小
+  /// 格式化文件大小，例：
+  /// len  = 13353
+  /// size = 133.53 B
   static String formatSize(int? len) {
     if (len == null) return '0 B';
 
@@ -79,14 +83,20 @@ class StrUtil {
     }
   }
 
-  /// 将string转化成list
+  /// 将string转化成list，例：
+  ///
+  /// str = loginUserName=FreedomEden; &token_pass=43ccc3e2db90ae005b0113683b07aabb;
+  /// &loginUserName_wanandroid_com=FreedomEden; &token_pass_wanandroid_com=43ccc3e2db90ae005b0113683b07aabb; &
+  ///
+  /// List<String> = ["loginUserName=FreedomEden; ","token_pass=43ccc3e2db90ae005b0113683b07aabb; ",
+  /// "loginUserName_wanandroid_com=FreedomEden; ","token_pass_wanandroid_com=43ccc3e2db90ae005b0113683b07aabb; ",""]
   static List<String> stringToList(String? s, {String pattern = ','}) {
     List<String> list = [];
     s?.split(pattern).forEach((cookie) => list.add(cookie));
     return list;
   }
 
-  /// 将string转化成list
+  /// 将string转化成list  @see [stringToList]
   static String listToString(List<String>? list, {String pattern = ','}) {
     StringBuffer sb = StringBuffer();
     list?.forEach((cookie) => sb
