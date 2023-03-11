@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import '../../main.dart';
+import '../../application.dart';
 import 'lang/lang.dart';
 import 'lang/lang_en.dart';
 import 'lang/lang_zh.dart';
@@ -32,7 +32,7 @@ class S implements WidgetsLocalizations {
   static Lang of(BuildContext context) => Localizations.of(context, S)._getLang();
 
   // 在一些没有context页面时，使用全局的context。
-  static Lang get from => of(Application.context);
+  static Lang get from => of(Application().context);
 
   Lang _getLang() {
     return _langMap[_locale.languageCode]!;

@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
 
-import '../../../main.dart';
+import '../../../application.dart';
 import '../../router/route_manager.dart';
 import '../../utils/notification_util.dart';
 import '../../utils/str_util.dart';
@@ -25,7 +25,7 @@ class HttpInterceptor extends Interceptor {
     String body = '${options.method}  ${options.path}';
     NotificationUtil.showNotification(
       body: body,
-      onTap: (payload) async => RouteManager.push(Application.context, HTTPListPage()),
+      onTap: (payload) async => RouteManager.push(Application().context, HTTPListPage()),
     );
     handler.next(options);
   }

@@ -34,7 +34,7 @@ class SpUtil {
 
   Future init() async {
     _prefs = await SharedPreferences.getInstance();
-    Log.i('初始化 SharedPreferences ${_prefs != null ? '成功' : '失败'}', tag: _tag);
+    return _prefs != null;
   }
 
   /// 登录状态信息

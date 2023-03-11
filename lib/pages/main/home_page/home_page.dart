@@ -78,9 +78,8 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             Banner(),
-            ArticleListView(
-              controller: _controller,
-              refresh: _onRefresh,
+            Expanded(
+              child: ArticleListView(controller: _controller, refresh: _onRefresh),
             ),
           ],
         ),
@@ -198,21 +197,19 @@ class _ArticleListViewState extends State<ArticleListView> {
   Widget build(BuildContext context) {
     Log.i('build', tag: _tag);
 
-    return Expanded(
-      child: Selector<ArticleModel, int>(
-        builder: (context, value, child) {
-          return RefreshListView(
-            controller: widget.controller,
-            itemCount: value,
-            builder: (context, index) {
-              return ArticleItemView(index);
-            },
-            refresh: widget.refresh,
-            showFooter: true,
-          );
-        },
-        selector: (context, model) => model.allArticles.length,
-      ),
+    return Selector<ArticleModel, int>(
+      builder: (context, value, child) {
+        return RefreshListView(
+          controller: widget.controller,
+          itemCount: value,
+          builder: (context, index) {
+            return ArticleItemView(index);
+          },
+          refresh: widget.refresh,
+          showFooter: true,
+        );
+      },
+      selector: (context, model) => model.allArticles.length,
     );
   }
 }
@@ -227,6 +224,7 @@ class ArticleItemView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Log.i('build', tag: _tag);
+
     return TapLayout(
       borderRadius: BorderRadius.all(Radius.circular(16)),
       background: Colors.black12,
@@ -386,13 +384,17 @@ class Banner extends StatelessWidget {
   Widget build(BuildContext context) {
     Log.i('build', tag: _tag);
 
-    List<BannerEntity> banners = context.watch<BannerModel>().banners;
-    return BannerView(
-      builder: (src) => Image.network(src ?? '', fit: BoxFit.cover),
-      data: banners.map((banner) => BannerData(title: banner.title, data: banner.imagePath)).toList(),
-      onTap: (index) {
-        CommonDialog.showToast(index.toString());
+    return Selector<BannerModel, List<BannerEntity>>(
+      builder: (context, value, widget) {
+        return BannerView(
+          builder: (src) => Image.network(src ?? '', fit: BoxFit.cover),
+          data: value.map((banner) => BannerData(title: banner.title, data: banner.imagePath)).toList(),
+          onTap: (index) {
+            CommonDialog.showToast(index.toString());
+          },
+        );
       },
+      selector: (context, model) => model.banners,
     );
   }
 }

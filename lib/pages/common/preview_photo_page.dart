@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
-import 'package:flutter_ui/main.dart';
 import 'package:photo_view/photo_view.dart';
+
+import '../../application.dart';
 
 typedef DownloadCallback = void Function(String url);
 
@@ -24,7 +25,7 @@ class PreviewPhotoPage extends StatefulWidget {
     ImageProvider<Object>? imageProvider,
     DownloadCallback? onDownload,
   }) {
-    Navigator.of(Application.context).push(
+    Navigator.of(Application().context).push(
       CustomerPageRoute(
         PreviewPhotoPage(
           url,

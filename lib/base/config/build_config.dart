@@ -8,5 +8,7 @@ class BuildConfig {
 
   static bool showPageLog = true;
 
+  static bool testApp = false;
+
   static String medicineKey = 'e5c1639a4fc97a080daaff94e08bd1ca';
 }
