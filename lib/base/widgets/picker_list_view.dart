@@ -1,6 +1,3 @@
-///
-/// Created by a0010 on 2022/8/29 11:21
-///
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -8,6 +5,9 @@ import '../res/strings.dart';
 
 typedef OnSelectedChanged = void Function(int index);
 
+///
+/// Created by a0010 on 2022/8/29 11:21
+///
 class PickerListView extends StatefulWidget {
   /// 选中的地址发生改变回调
   final int itemCount;
