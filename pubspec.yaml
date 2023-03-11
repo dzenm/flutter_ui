@@ -137,7 +137,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  retrofit_generator: 5.0.0
+  retrofit_generator: 6.0.0+1
   build_runner: 2.3.2
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

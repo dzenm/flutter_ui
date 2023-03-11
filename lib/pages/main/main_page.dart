@@ -106,7 +106,8 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   /// BottomNavigationBar widget
   List<Widget> _buildBottomNavigationBar() {
     int len = context.read<MainModel>().len;
-    return List.generate(len, (i) => BottomNavigationBarItemView(index: i, controller: _pageController)); // bottomNavigation list
+    return List.generate(
+        len, (i) => BottomNavigationBarItemView(index: i, controller: _pageController)); // bottomNavigation list
   }
 }
 
@@ -156,13 +157,7 @@ class _BottomNavigationBarItemViewState extends State<BottomNavigationBarItemVie
           height: height,
           child: Stack(alignment: Alignment.center, children: [
             // 图标和文字充满Stack并居中显示
-            Positioned.fill(
-              child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                _buildIcon(),
-                SizedBox(height: 2),
-                _buildTitle(),
-              ]),
-            ),
+            Positioned.fill(child: _builtItem()),
             // badge固定在右上角
             Positioned(
               width: width / 2,
@@ -181,6 +176,7 @@ class _BottomNavigationBarItemViewState extends State<BottomNavigationBarItemVie
 
   Widget _buildBadge() {
     Log.d('build badge', tag: _tag);
+
     return Selector<MainModel, int>(
       builder: (context, value, widget) {
         return BadgeView(count: value);
@@ -189,12 +185,23 @@ class _BottomNavigationBarItemViewState extends State<BottomNavigationBarItemVie
     );
   }
 
-  Widget _buildIcon() {
-    Log.d('build icon', tag: _tag);
+  Widget _builtItem() {
+    return Selector<MainModel, int>(
+      builder: (context, value, widget) {
+        return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          _buildIcon(value),
+          SizedBox(height: 2),
+          _buildTitle(value),
+        ]);
+      },
+      selector: (context, model) => model.selectIndex,
+    );
+  }
+
+  Widget _buildIcon(int selectIndex) {
+    bool isSelected = selectIndex == widget.index; // 是否是选中的索引
     return Selector<MainModel, IconData>(
       builder: (context, value, widget) {
-        // 是否是选中的索引
-        bool isSelected = context.watch<MainModel>().isSelected(this.widget.index);
         Color color = isSelected ? Colors.blue : Colors.grey.shade500;
         return Icon(value, color: color, size: 20);
       },
@@ -202,12 +209,10 @@ class _BottomNavigationBarItemViewState extends State<BottomNavigationBarItemVie
     );
   }
 
-  Widget _buildTitle() {
-    Log.d('build title', tag: _tag);
+  Widget _buildTitle(int selectIndex) {
+    bool isSelected = selectIndex == widget.index; // 是否是选中的索引
     return Selector<MainModel, String>(
       builder: (context, value, widget) {
-        // 是否是选中的索引
-        bool isSelected = context.watch<MainModel>().isSelected(this.widget.index);
         Color color = isSelected ? Colors.blue : Colors.grey.shade500;
         return Text(value, style: TextStyle(fontSize: 10, color: color));
       },
