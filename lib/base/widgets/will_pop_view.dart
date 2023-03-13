@@ -5,44 +5,6 @@ import 'package:flutter/material.dart';
 
 import '../channels/native_channels.dart';
 
-/// 点击返回时, 存在未保存的内容时弹出的提示框
-Widget buildPromptBackDialog(BuildContext context) {
-  return AlertDialog(
-    title: Text('保存提示'),
-    content: Text('是否将当前页面保存?'),
-    contentPadding: const EdgeInsets.fromLTRB(24.0, 8.0, 24.0, 8.0),
-    actions: [
-      TextButton(
-        child: Text('取消'),
-        onPressed: () => Navigator.pop(context, false),
-      ),
-      TextButton(
-        child: Text('确定'),
-        onPressed: () => Navigator.pop(context, true),
-      ),
-    ],
-  );
-}
-
-/// 返回时提示退出
-/// 设置提示框，默认实现[buildPromptBackDialog]
-Future<bool> promptBack(BuildContext context, {bool isChanged = false, bool isShowDialog = true, WidgetBuilder? builder}) async {
-  if (isChanged && isShowDialog) {
-    if (builder != null) {
-      showDialog<bool>(
-        context: context,
-        builder: builder,
-      ).then((value) {
-        // 为true点击确定，false点击取消
-        if (value ?? true) {
-          Navigator.pop(context);
-        }
-      });
-    }
-  }
-  return !isChanged; // 根据isChanged的值决定调用系统返回键的处理
-}
-
 /// 监听返回键的动作
 class WillPopView extends StatefulWidget {
   final Widget child; //如果对返回键进行监听，必须放在最顶层
@@ -55,6 +17,42 @@ class WillPopView extends StatefulWidget {
     this.behavior = BackBehavior.custom,
     this.onWillPop,
   }) : super(key: key);
+
+  /// 点击返回时, 存在未保存的内容时弹出的提示框
+  static Widget _buildPromptBackDialog(BuildContext context) {
+    return AlertDialog(
+      title: Text('保存提示'),
+      content: Text('是否将当前页面保存?'),
+      contentPadding: const EdgeInsets.fromLTRB(24.0, 8.0, 24.0, 8.0),
+      actions: [
+        TextButton(
+          child: Text('取消'),
+          onPressed: () => Navigator.pop(context, false),
+        ),
+        TextButton(
+          child: Text('确定'),
+          onPressed: () => Navigator.pop(context, true),
+        ),
+      ],
+    );
+  }
+
+  /// 返回时提示退出
+  /// 设置提示框，默认实现[_buildPromptBackDialog]
+  static Future<bool> promptBack(BuildContext context, {bool isChanged = false, bool isShowDialog = true, WidgetBuilder? builder}) async {
+    if (isChanged && isShowDialog) {
+      await showDialog<bool>(
+        context: context,
+        builder: builder ?? _buildPromptBackDialog,
+      ).then((value) {
+        // 为true点击确定，false点击取消
+        if (value ?? true) {
+          Navigator.pop(context);
+        }
+      });
+    }
+    return !isChanged; // 根据isChanged的值决定调用系统返回键的处理
+  }
 
   @override
   State<StatefulWidget> createState() => _WillPopViewState();

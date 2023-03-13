@@ -1,4 +1,3 @@
-import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ui/base/log/log.dart';
@@ -28,7 +27,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   static const String _tag = 'HomePage';
   StateController _controller = StateController();
   int _page = 0; // 加载的页数
@@ -66,6 +65,25 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    Log.i('didChangeAppLifecycleState：$state', tag: _tag);
+
+    // 处理APP生命周期
+    switch (state) {
+      case AppLifecycleState.inactive: // 失去焦点
+        break;
+      case AppLifecycleState.resumed: // 进入前台
+        break;
+      case AppLifecycleState.paused: // 进入后台
+        break;
+      default:
+        break;
+    }
+    // 生命周期变更
+  }
+
+  @override
   Widget build(BuildContext context) {
     Log.i('build', tag: _tag);
 
@@ -91,7 +109,6 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _getData() async {
     Log.d('开始加载网络数据...', tag: _tag);
-    CancelFunc cancel = CommonDialog.loading();
     await Future.wait([
       _getBanner(),
       _getArticle(isReset: true),
@@ -99,7 +116,7 @@ class _HomePageState extends State<HomePage> {
       // _getDataList(),
     ]).then((value) {
       Log.d('网络数据执行完成...', tag: _tag);
-    }).whenComplete(() => cancel());
+    }).whenComplete(() => null);
     Log.d('结束加载网络数据...', tag: _tag);
   }
 

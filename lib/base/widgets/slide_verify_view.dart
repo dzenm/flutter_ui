@@ -148,8 +148,6 @@ class _SlideVerifyViewState extends State<SlideVerifyView> with TickerProviderSt
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(width: 6),
-                  Icon(Icons.verified_user_outlined, size: 24, color: widget.slideColor),
                   Icon(Icons.arrow_forward_ios_rounded, size: 16, color: widget.slideColor),
 
                   /// 因为向右箭头有透明边距导致两个箭头间隔过大，因此将第二个箭头向左偏移，如果切图无边距则不用偏移

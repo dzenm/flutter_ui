@@ -76,7 +76,7 @@ class _TextPageState extends State<TextPage> {
     return KeyboardMediaQuery(
       //用于键盘弹出的时候页面可以滚动到输入框的位置
       child: WillPopView(
-        onWillPop: () => promptBack(context, isChanged: text != newText, builder: buildPromptBackDialog),
+        onWillPop: () => WillPopView.promptBack(context, isChanged: text != newText),
         child: Scaffold(
           appBar: AppBar(
             title: Text('文本和输入框', style: TextStyle(color: Colors.white)),
@@ -131,7 +131,10 @@ class _TextPageState extends State<TextPage> {
                     ),
                     SizedBox(height: 8),
                     CommonWidget.titleView('输入框的特殊表情: '),
-                    Text('特殊小技巧，试试输入\'[a]\', \'[b]\', \'[c]\', \'[d]\', \'[e]\'', style: TextStyle(fontSize: 10),),
+                    Text(
+                      '特殊小技巧，试试输入\'[a]\', \'[b]\', \'[c]\', \'[d]\', \'[e]\'',
+                      style: TextStyle(fontSize: 10),
+                    ),
                     ExtendedTextField(
                       specialTextSpanBuilder: MySpecialTextSpanBuilder(showAtBackground: true, type: BuilderType.extendedTextField),
                     ),

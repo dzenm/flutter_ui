@@ -82,8 +82,7 @@ class _TapLayoutState extends State<TapLayout> {
         shape: shape,
       ),
       child: Material(
-        // 不要在这里设置背景色，否则会遮挡水波纹效果,如果设置的话尽量设置Material下面的color来实现背景色
-      color: Colors.transparent,
+        color: Colors.transparent,
         animationDuration: Duration(milliseconds: widget.delay - 100),
         child: Ink(
           decoration: BoxDecoration(
@@ -95,10 +94,8 @@ class _TapLayoutState extends State<TapLayout> {
             onTap: () async => Future.delayed(Duration(milliseconds: widget.delay), () {
               int currentTime = DateTime.now().millisecondsSinceEpoch;
               if (currentTime - _tapTime > 500) {
-                if (widget.onTap != null) {
-                  widget.onTap!();
-                }
-              } else {}
+                if (widget.onTap != null) widget.onTap!();
+              }
               _tapTime = currentTime;
             }),
             onLongPress: widget.onLongPress,
@@ -110,6 +107,7 @@ class _TapLayoutState extends State<TapLayout> {
             highlightColor: Colors.transparent,
             splashColor: foreground,
             containedInkWell: true,
+            // 不要在这里设置背景色，否则会遮挡水波纹效果,如果设置的话尽量设置Material下面的color来实现背景色
             child: Container(
               decoration: BoxDecoration(
                 color: color,
