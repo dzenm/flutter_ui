@@ -8,24 +8,26 @@ import 'base/config/build_config.dart';
 import 'base/model/local_model.dart';
 import 'base/res/strings.dart';
 import 'base/res/theme/app_theme.dart';
-import 'base/utils/sp_util.dart';
 import 'base/widgets/keyboard/keyboard_root.dart';
 import 'base/widgets/will_pop_view.dart';
 import 'models/article_model.dart';
 import 'models/banner_model.dart';
 import 'models/user_model.dart';
 import 'models/website_model.dart';
-import 'pages/login/login_page.dart';
 import 'pages/main/home_page/home_model.dart';
 import 'pages/main/main_model.dart';
-import 'pages/main/main_page.dart';
 import 'pages/main/me_page/me_model.dart';
 import 'pages/main/nav_page/nav_model.dart';
 import 'pages/my/my_page.dart';
 import 'pages/study/study_model.dart';
 
+///
+/// Created by a0010 on 2022/7/28 10:56
+/// 全局属性配置/初始化必要的全局信息
 class AppPage extends StatelessWidget {
-  const AppPage();
+  final Widget child;
+
+  const AppPage({required this.child});
 
   // This widget is the root of your application.
   @override
@@ -36,7 +38,7 @@ class AppPage extends StatelessWidget {
     }
     return _providerApp(_rootApp(
       KeyboardRootWidget(
-        child: WillPopView(behavior: BackBehavior.background, child: _getMyApp()),
+        child: WillPopView(behavior: BackBehavior.background, child: child),
       ),
     ));
   }
@@ -109,14 +111,6 @@ class AppPage extends StatelessWidget {
           home: child,
         );
       });
-
-  /// 获取第一个页面
-  Widget _getMyApp() {
-    if (SpUtil.getUserLoginState()) {
-      return MainPage();
-    }
-    return LoginPage();
-  }
 
   Widget _easyApp() {
     return MaterialApp(

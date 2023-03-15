@@ -9,6 +9,10 @@ class NavModel with ChangeNotifier {
     notifyListeners();
   }
 
+  List<String> _tabs = ['1', '2', '3'];
+
+  List<String> get tabs => _tabs;
+
   /// 清空数据
   void clear() {
     notifyListeners();

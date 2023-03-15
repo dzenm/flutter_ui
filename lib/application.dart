@@ -11,7 +11,11 @@ import 'base/utils/sp_util.dart';
 import 'base/widgets/keyboard/mocks/mock_binding.dart';
 import 'base/widgets/keyboard/number_keyboard.dart';
 import 'math_util.dart';
+import 'pages/login/login_page.dart';
+import 'pages/main/main_page.dart';
 
+///
+/// Created by a0010 on 2022/7/28 10:56
 /// 全局的页面
 class Application {
   static const String _tag = 'Application';
@@ -66,7 +70,7 @@ class Application {
       log('║                Start Flutter APP                                           ║');
       log('║                                                                            ║');
       log('╚════════════════════════════════════════════════════════════════════════════╝');
-      runMockApp(AppPage());
+      runMockApp(AppPage(child: _initApp()));
     });
   }
 
@@ -94,6 +98,14 @@ class Application {
   /// 初始化iOS设置
   void _initIOSSettings() {
     if (!Platform.isIOS) return;
+  }
+
+  /// 获取第一个页面
+  Widget _initApp() {
+    if (SpUtil.getUserLoginState()) {
+      return MainPage();
+    }
+    return LoginPage();
   }
 
   /// 打印日志
