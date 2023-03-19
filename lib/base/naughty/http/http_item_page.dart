@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../../utils/str_util.dart';
-import '../../../widgets/common_dialog.dart';
-import '../../../widgets/common_widget.dart';
-import '../../../widgets/tap_layout.dart';
-import '../../entities/http_entity.dart';
+import '../../utils/str_util.dart';
+import '../../widgets/common_dialog.dart';
+import '../../widgets/common_widget.dart';
+import '../../widgets/tap_layout.dart';
+import '../http_entity.dart';
 /// 一个Http请求数据展示页面
 class HTTPItemPage extends StatefulWidget {
   final HTTPEntity entity;

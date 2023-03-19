@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/base/config/build_config.dart';
+import 'package:flutter_ui/base/log/build_config.dart';
 import 'package:flutter_ui/base/http/http_client.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/entities/medicine_entity.dart';

@@ -1,11 +1,12 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/pages/my/study_util.dart';
 import 'package:provider/provider.dart';
 
 import 'application.dart';
-import 'base/config/build_config.dart';
-import 'base/model/local_model.dart';
+import 'base/log/build_config.dart';
+import 'base/res/local_model.dart';
 import 'base/res/strings.dart';
 import 'base/res/theme/app_theme.dart';
 import 'base/widgets/keyboard/keyboard_root.dart';
@@ -33,7 +34,7 @@ class AppPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
-    if (BuildConfig.testApp) {
+    if (BuildConfig.isTestApp) {
       return _easyApp();
     }
     return _providerApp(_rootApp(
@@ -113,6 +114,7 @@ class AppPage extends StatelessWidget {
       });
 
   Widget _easyApp() {
+    StudyUtil.main();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(

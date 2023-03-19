@@ -1,4 +1,4 @@
-import 'package:flutter_ui/base/entities/page_entity.dart';
+import 'package:flutter_ui/base/http/page_entity.dart';
 import 'package:flutter_ui/base/http/http_client.dart';
 import 'package:flutter_ui/entities/article_entity.dart';
 import 'package:flutter_ui/entities/banner_entity.dart';

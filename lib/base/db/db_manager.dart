@@ -1,12 +1,10 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../config/build_config.dart';
-import '../entities/column_entity.dart';
-import '../entities/table_entity.dart';
 import '../log/log.dart';
-import '../utils/sp_util.dart';
+import 'column_entity.dart';
 import 'db_sql.dart';
+import 'table_entity.dart';
 
 /// 数据库升级
 typedef UpgradeDatabase = String? Function(int oldVersion, int newVersion);
@@ -23,10 +21,16 @@ class DBManager {
 
   Database? _database;
 
+  String _userId = 'userId';
+
+  set userId(String userId) {
+    _userId = userId;
+  }
+
   /// 获取当前数据库对象, 未指定数据库名称时默认为用户名，切换数据库操作时要先关闭再重新打开。
   Future<Database> getDatabase({String? dbName}) async {
     if (_database == null) {
-      String path = await getPath(dbName: dbName ?? getDBName());
+      String path = await getPath(dbName: dbName ?? currentDbName);
       _database = await openDatabase(path, version: Sql.dbVersion, onCreate: _onCreate, onUpgrade: _onUpgrade);
     }
     return _database!;
@@ -72,14 +76,12 @@ class DBManager {
   }
 
   /// 获取数据库名称
-  String getDBName() {
-    return 'db_${SpUtil.getUserId()}.db';
-  }
+  String get currentDbName => 'db_$_userId.db';
 
   /// 获取数据库的路径
   Future<String> getPath({String? dbName}) async {
     String databasesPath = await getDatabasesPath();
-    dbName = dbName ?? getDBName();
+    dbName = dbName ?? currentDbName;
     log('数据库路径=$databasesPath, 数据库名称=$dbName');
     return join(databasesPath, dbName);
   }
@@ -220,7 +222,12 @@ class DBManager {
     return list;
   }
 
-  void _handleMap(Map<String, dynamic>? whereMap, List<String> whereArgs, StringBuffer where, StringBuffer paramsString) {
+  void _handleMap(
+    Map<String, dynamic>? whereMap,
+    List<String> whereArgs,
+    StringBuffer where,
+    StringBuffer paramsString,
+  ) {
     whereMap?.forEach((key, value) {
       if (where.isNotEmpty) where.write(',');
       where.write('$key = ?');
@@ -229,5 +236,5 @@ class DBManager {
     });
   }
 
-  void log(String text) => BuildConfig.showDBLog ? Log.i(text, tag: _tag) : null;
+  void log(String text) => Log.db(text, tag: _tag);
 }

@@ -1,9 +1,9 @@
 import 'package:sqflite/sqflite.dart';
 
-import '../entities/column_entity.dart';
-import '../entities/table_entity.dart';
+import 'column_entity.dart';
 import 'db_base_model.dart';
 import 'db_manager.dart';
+import 'table_entity.dart';
 
 /// 数据库操作(增删改查), 在model中使用with混入即可。
 class DBDao {
@@ -17,7 +17,7 @@ class DBDao {
   Future<void> closeDatabase() async => await DBManager().close();
 
   /// 获取数据库名称
-  String getDBName() => DBManager().getDBName();
+  String get currentDbName => DBManager().currentDbName;
 
   /// 获取数据库所在的绝对路径
   Future<String> getPath({String? dbName}) async {

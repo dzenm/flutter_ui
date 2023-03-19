@@ -1,23 +1,22 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-import '../../../db/db_manager.dart';
-import '../../../entities/table_entity.dart';
-import '../../../router/route_manager.dart';
-import '../../../utils/str_util.dart';
-import '../../../widgets/tap_layout.dart';
-import 'db_table_item_page.dart';
-/// 数据库表列表展示页面
-class DBTableListPage extends StatefulWidget {
-  final String dbName;
+import '../../router/route_manager.dart';
+import '../../utils/file_util.dart';
+import '../../utils/str_util.dart';
+import '../../widgets/tap_layout.dart';
+import 'db_table_list_page.dart';
 
-  DBTableListPage(this.dbName);
-
+/// 数据库显示页面
+class DBListPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _DBTableListPageState();
+  State<StatefulWidget> createState() => _DBListPageState();
 }
 
-class _DBTableListPageState extends State<DBTableListPage> {
-  List<TableEntity> _list = [];
+class _DBListPageState extends State<DBListPage> {
+  List<String> _list = [];
 
   @override
   void initState() {
@@ -27,10 +26,9 @@ class _DBTableListPageState extends State<DBTableListPage> {
 
   @override
   Widget build(BuildContext context) {
-    String title = StrUtil.getFileName(widget.dbName);
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: Text('Database'),
       ),
       body: RefreshIndicator(
         onRefresh: _onRefresh,
@@ -46,7 +44,7 @@ class _DBTableListPageState extends State<DBTableListPage> {
   //列表要展示的数据
   Future getData() async {
     await Future.delayed(Duration(seconds: 0), () async {
-      _list = await DBManager().getTableList(dbName: widget.dbName);
+      _list = await FileUtil.instance.getDBFiles();
       setState(() => {});
     });
   }
@@ -72,23 +70,41 @@ class _DBTableListPageState extends State<DBTableListPage> {
         ),
         child: TapLayout(
           borderRadius: BorderRadius.all(Radius.circular(7)),
-          onTap: () => RouteManager.push(context, DBTableItemPage(widget.dbName, _list[index].name ?? '')),
+          onTap: () => RouteManager.push(context, DBTableListPage(_list[index])),
           child: Padding(
             padding: EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    _list[index].name ?? '',
-                    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black87, fontSize: 18.0),
-                  ),
-                ),
-              ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: _listChildWidget(index),
             ),
           ),
         ),
       ),
     );
+  }
+
+  List<Widget> _listChildWidget(int index) {
+    String path = _list[index];
+    String name = StrUtil.getFileName(path);
+    File file = File(path);
+    int len = file.lengthSync();
+    String size = StrUtil.formatSize(len);
+    String modifyTime = DateFormat("yyyy-MM-dd HH:mm:ss").format(file.lastModifiedSync());
+    return [
+      Text(
+        name,
+        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black87, fontSize: 18.0),
+      ),
+      SizedBox(height: 8),
+      Text(path),
+      SizedBox(height: 8),
+      Row(
+        children: [
+          Expanded(child: Text('文件大小: $size', style: TextStyle(fontSize: 13))),
+          Text('最后修改: $modifyTime', style: TextStyle(fontSize: 13)),
+        ],
+      ),
+    ];
   }
 
   // 下拉刷新方法,为_list重新赋值

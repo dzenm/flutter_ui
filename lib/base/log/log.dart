@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 
+import 'build_config.dart';
+
 // 缩进的距离
 const String interval = '  ';
 
@@ -51,6 +53,18 @@ class Log {
 
   static void e(dynamic message, {String tag = ''}) {
     _printLog(tag, 'E', _error, message);
+  }
+
+  static void http(dynamic message, {String tag = ''}) {
+    if (BuildConfig.showHTTPLog) {
+      _printLog(tag, 'HTTP', _error, message);
+    }
+  }
+
+  static void db(dynamic message, {String tag = ''}) {
+    if (BuildConfig.showDBLog) {
+      _printLog(tag, 'DB', _error, message);
+    }
   }
 
   static void _printLog(String tag, String levelTag, int level, dynamic message) {

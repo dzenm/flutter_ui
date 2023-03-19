@@ -1,13 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
 
-import '../../../application.dart';
-import '../../router/route_manager.dart';
-import '../../utils/notification_util.dart';
-import '../../utils/str_util.dart';
-import '../entities/http_entity.dart';
-import '../naughty.dart';
-import '../page/http/http_list_page.dart';
+import '../../pages/study/http_page/http_page.dart';
+import '../router/route_manager.dart';
+import '../utils/notification_util.dart';
+import '../utils/str_util.dart';
+import 'http_entity.dart';
+import 'naughty.dart';
 
 /// HTTP请求信息拦截
 class HttpInterceptor extends Interceptor {
@@ -25,7 +24,7 @@ class HttpInterceptor extends Interceptor {
     String body = '${options.method}  ${options.path}';
     NotificationUtil.showNotification(
       body: body,
-      onTap: (payload) async => RouteManager.push(Application().context, HTTPListPage()),
+      onTap: (payload) async => RouteManager.push(Naughty().context, HTTPListPage()),
     );
     handler.next(options);
   }

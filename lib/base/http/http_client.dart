@@ -4,12 +4,11 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:dio/dio.dart';
 
 import '../../http/api_services.dart';
-import '../config/build_config.dart';
-import '../entities/data_entity.dart';
 import '../log/log.dart';
-import '../naughty/http/http_interceptor.dart';
+import '../naughty/http_interceptor.dart';
 import '../widgets/common_dialog.dart';
 import 'cookie_interceptor.dart';
+import 'data_entity.dart';
 import 'log_interceptor.dart';
 
 typedef Success = void Function(dynamic data);
@@ -136,11 +135,7 @@ class HttpClient {
     if (cancel != null) cancel();
   }
 
-  void log(String text) {
-    if (BuildConfig.showHTTPLog) {
-      Log.d(text, tag: _tag);
-    }
-  }
+  void log(String text) => Log.http(text, tag: _tag);
 }
 
 /// HTTP请求错误信息的处理

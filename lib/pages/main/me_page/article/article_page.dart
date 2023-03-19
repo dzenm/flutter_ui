@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/entities/page_entity.dart';
+import 'package:flutter_ui/base/http/page_entity.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/entities/article_entity.dart';
 import 'package:flutter_ui/entities/coin_entity.dart';

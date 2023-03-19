@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import '../res/colors.dart';
-import '../res/theme/app_theme.dart';
+import 'colors.dart';
+import 'theme/app_theme.dart';
 import '../utils/sp_util.dart';
 
 class LocalModel with ChangeNotifier {

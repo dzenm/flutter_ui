@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/base/http/http_client.dart';
 import 'package:flutter_ui/base/log/log.dart';
-import 'package:flutter_ui/base/model/local_model.dart';
+import 'package:flutter_ui/base/res/local_model.dart';
 import 'package:flutter_ui/base/res/assets.dart';
 import 'package:flutter_ui/base/res/colors.dart';
 import 'package:flutter_ui/base/res/strings.dart';

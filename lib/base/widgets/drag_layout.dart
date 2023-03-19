@@ -58,7 +58,9 @@ class _DragLayoutState extends State<DragLayout> {
           // 手指按下 位置(e.globalPosition)
           onPanDown: (DragDownDetails details) => print(''),
           // 手指滑动
-          onPanUpdate: (DragUpdateDetails details) => setState(() => realPosition = _dragWidget(realPosition, details.delta)),
+          onPanUpdate: (DragUpdateDetails details) {
+            setState(() => realPosition = _dragWidget(realPosition, details.delta));
+          },
           // 手指滑动结束
           onPanEnd: (DragEndDetails details) {},
           onTap: widget.onTap,

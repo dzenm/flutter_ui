@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/base/model/local_model.dart';
+import 'package:flutter_ui/base/res/local_model.dart';
 import 'package:flutter_ui/base/res/theme/app_theme.dart';
 import 'package:flutter_ui/entities/article_entity.dart';
 import 'package:flutter_ui/models/article_model.dart';
