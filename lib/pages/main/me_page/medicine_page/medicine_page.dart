@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ui/base/log/build_config.dart';
-import 'package:flutter_ui/base/http/http_client.dart';
+import 'package:flutter_ui/base/http/https_client.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/entities/medicine_entity.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -55,7 +55,7 @@ class _MedicinePageState extends State<MedicinePage> {
   }
 
   void _getZhongyao() {
-    HttpClient.instance.request(api(1).getZhongYao(_key, widget.medicineName), success: (data) {
+    HttpsClient.instance.request(api(1).getZhongYao(_key, widget.medicineName), success: (data) {
       Log.i('len=${_list.length}');
       _list = (data['newslist'] as List<dynamic>).map((e) => MedicineEntity.fromJson(e)).toList();
       setState(() {});

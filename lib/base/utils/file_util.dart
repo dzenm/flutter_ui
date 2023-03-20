@@ -4,14 +4,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../log/log.dart';
-
 class FileUtil {
   FileUtil._internal();
 
-  static final FileUtil instance = FileUtil._internal();
+  static final FileUtil _instance = FileUtil._internal();
+
+  static FileUtil get instance => _instance;
 
   factory FileUtil() => instance;
+
+  var _logPrint;
+
+  void init({void Function(dynamic msg, {String tag})? logPrint}) {
+    _logPrint = logPrint;
+  }
 
   /// 此方法返回本地文件地址
   Future<Directory> getParent({String? dir}) async {
@@ -29,7 +35,7 @@ class FileUtil {
     if (!parent.existsSync()) {
       await parent.create();
     }
-    Log.d('获取文件夹路径: ${parent.path}');
+    log('获取文件夹路径: ${parent.path}');
     return parent;
   }
 
@@ -42,7 +48,7 @@ class FileUtil {
         files.add(element.path);
       }
     });
-    Log.d('数据库文件夹: path=$parent, fileSize=${files.length}');
+    log('数据库文件夹: path=$parent, fileSize=${files.length}');
     return files;
   }
 
@@ -57,10 +63,10 @@ class FileUtil {
       IOSink slink = file.openWrite(mode: FileMode.append);
       slink.write('$text');
       await slink.close();
-      Log.d('保存文件成功: ${file.path}');
+      log('保存文件成功: ${file.path}');
       return Future.value(file.path);
     } catch (e) {
-      Log.d('保存文件错误: $e');
+      log('保存文件错误: $e');
       return Future.value(null);
     }
   }
@@ -82,9 +88,9 @@ class FileUtil {
     File oldFile = File(oldPath);
     try {
       oldFile.copySync('$newPath');
-      Log.d('文件复制成功: from=$oldPath to=$newPath');
+      log('文件复制成功: from=$oldPath to=$newPath');
     } catch (e) {
-      Log.e('文件复制失败: $e');
+      log('文件复制失败: $e');
     }
   }
 
@@ -121,7 +127,7 @@ class FileUtil {
     Directory parent = await getParent(dir: dir);
     parent.listSync().forEach((element) async {
       await element.delete();
-      Log.d('删除成功: ${element.path}');
+      log('删除成功: ${element.path}');
     });
   }
 
@@ -158,7 +164,7 @@ class FileUtil {
   //l 循环获取缓存大小
   static Future getTotalSizeOfFilesInDir(final FileSystemEntity file) async {
     if (file is File && file.existsSync()) {
-      // Log.d("临时缓存目录路径:${file.path}");
+      // log("临时缓存目录路径:${file.path}");
 
       int length = await file.length();
       return double.parse(length.toString());
@@ -201,4 +207,6 @@ class FileUtil {
   static getMemoryImageCache() {
     return PaintingBinding.instance.imageCache;
   }
+
+  void log(String text) => _logPrint == null ? null : _logPrint!(text, tag: 'FileUtil');
 }

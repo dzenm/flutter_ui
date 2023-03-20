@@ -4,10 +4,8 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-import '../utils/file_util.dart';
 import 'log.dart';
 
 /// 启动flutter APP
@@ -22,22 +20,34 @@ typedef HandleMsg = void Function(String msg);
 ///
 /// 在pubspec.yaml添加下列依赖
 /// # 获取硬件设备信息
-//  device_info: ^0.4.0+1
-//  # 获取APP相关信息
-//  package_info: ^0.4.0+2
+///  device_info: ^0.4.0+1
+///  # 获取APP相关信息
+///  package_info: ^0.4.0+2
+///    await HandleError().catchFlutterError(() {
+///      log('╔════════════════════════════════════════════════════════════════════════════╗');
+///      log('║                                                                            ║');
+///      log('║                Start Flutter APP                                           ║');
+///      log('║                                                                            ║');
+///      log('╚════════════════════════════════════════════════════════════════════════════╝');
+///      runMockApp(AppPage(child: _initApp()));
+///    }, handleMsg: (msg) async {
+///      String logFileName = 'crash_${DateTime.now()}.log';
+///      await FileUtil.instance.save(logFileName, msg, dir: 'crash').then((String? filePath) async {});
+///    });
 class HandleError {
   // 私有构造方法
   HandleError._internal();
 
-  static final HandleError instance = HandleError._internal();
+  static final HandleError _instance = HandleError._internal();
 
-  factory HandleError() => instance;
+  static HandleError get instance => _instance;
 
-  static const String crashParent = 'crash';
+  factory HandleError() => _instance;
+
   static const String _tag = 'HandleError';
 
   // 捕获flutter运行时的错误
-  Future catchFlutterError(RunFlutterAPP runFlutterAPP, {String? fileName, HandleMsg? handleMsg}) async {
+  Future catchFlutterError(RunFlutterAPP runFlutterAPP, {HandleMsg? handleMsg}) async {
     // 进行异常捕获并输出
     FlutterError.onError = (FlutterErrorDetails details) async {
       if (handleMsg == null) {
@@ -80,18 +90,12 @@ class HandleError {
       Log.e('╚════════════════════════════════════════════════════════════════════════════╝', tag: _tag);
 
       // 将错误转为文本信息并保存为文件
-      _convertToText(error, stackTrace).then((msg) => saveTextToFile(msg, handleMsg: handleMsg));
-    });
-  }
-
-  /// 保存文本信息为文件
-  void saveTextToFile(String msg, {String? fileName, HandleMsg? handleMsg}) async {
-    String logFileName = fileName ?? 'crash_${DateTime.now()}.log';
-    await FileUtil.instance.save(logFileName, msg, dir: crashParent).then((String? filePath) async {
-      if (filePath != null && handleMsg != null) {
-        // 处理文件
-        handleMsg(filePath);
-      }
+      await _convertToText(error, stackTrace).then((msg) {
+        if (handleMsg != null) {
+          // 处理信息，可以保存文本信息为文件或者上传至服务器
+          handleMsg(msg);
+        }
+      });
     });
   }
 

@@ -1,7 +1,6 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../log/log.dart';
 import 'column_entity.dart';
 import 'db_sql.dart';
 import 'table_entity.dart';
@@ -10,21 +9,33 @@ import 'table_entity.dart';
 typedef UpgradeDatabase = String? Function(int oldVersion, int newVersion);
 
 /// 数据库管理，包括打开，关闭，创建，升级，增删改查。
+/// 如果需要打印日志，在main注册
+///   DBManager.instance.init(logPrint: Log.db);
+/// 如果需要重新设置数据库的名称
+///   DBManager.instance.userId = '123456';
 class DBManager {
-  static const String _tag = 'DBManager';
-
   DBManager._internal();
 
-  static DBManager instance = DBManager._internal();
+  static final DBManager _instance = DBManager._internal();
 
-  factory DBManager() => instance;
+  static DBManager get instance => _instance;
+
+  factory DBManager() => _instance;
 
   Database? _database;
 
+  /// 数据库名称，根据用户信息设置，如果不设置，默认使用userId
   String _userId = 'userId';
 
   set userId(String userId) {
     _userId = userId;
+  }
+
+  /// 日志打印，如果不设置，将不打印日志，如果要设置在使用数据库之前调用 [init]
+  var _logPrint;
+
+  void init({void Function(dynamic msg, {String tag})? logPrint}) {
+    _logPrint = logPrint;
   }
 
   /// 获取当前数据库对象, 未指定数据库名称时默认为用户名，切换数据库操作时要先关闭再重新打开。
@@ -236,5 +247,5 @@ class DBManager {
     });
   }
 
-  void log(String text) => Log.db(text, tag: _tag);
+  void log(String text) => _logPrint == null ? null : _logPrint!(text, tag: 'DBManager');
 }

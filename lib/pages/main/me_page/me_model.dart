@@ -8,7 +8,6 @@ class MeModel with ChangeNotifier {
 
   /// 初始化数据
   Future<void> init() async {
-    notifyListeners();
   }
 
   void updatePerson(int index, Person person) {

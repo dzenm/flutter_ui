@@ -24,7 +24,6 @@ class MainModel with ChangeNotifier {
 
   /// 初始化数据
   Future<void> init() async {
-    notifyListeners();
   }
 
   /// 获取底部按钮的标题列表

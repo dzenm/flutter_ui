@@ -55,15 +55,15 @@ class Log {
     _printLog(tag, 'E', _error, message);
   }
 
-  static void http(dynamic message, {String tag = ''}) {
+  static void h(dynamic message, {String tag = ''}) {
     if (BuildConfig.showHTTPLog) {
-      _printLog(tag, 'HTTP', _error, message);
+      _printLog(tag, 'H', _error, message);
     }
   }
 
-  static void db(dynamic message, {String tag = ''}) {
+  static void b(dynamic message, {String tag = ''}) {
     if (BuildConfig.showDBLog) {
-      _printLog(tag, 'DB', _error, message);
+      _printLog(tag, 'B', _error, message);
     }
   }
 

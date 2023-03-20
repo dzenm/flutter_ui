@@ -1,12 +1,11 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/widgets/image_editor/extension/num_extension.dart';
-import 'package:flutter_ui/base/widgets/image_editor/model/float_text_model.dart';
 
+import '../extension/num_extension.dart';
 import '../image_editor.dart';
+import '../model/float_text_model.dart';
 import 'image_editor_delegate.dart';
-
 
 ///A page for input some text to canvas.
 class TextEditorPage extends StatefulWidget {
@@ -16,8 +15,7 @@ class TextEditorPage extends StatefulWidget {
   }
 }
 
-class TextEditorPageState extends State<TextEditorPage> with LittleWidgetBinding, WindowUiBinding{
-
+class TextEditorPageState extends State<TextEditorPage> with LittleWidgetBinding, WindowUiBinding {
   static TextConfigModel get configModel => ImageEditor.uiDelegate.textConfigModel;
 
   final FocusNode _node = FocusNode();
@@ -55,15 +53,15 @@ class TextEditorPageState extends State<TextEditorPage> with LittleWidgetBinding
 
   void tapBoldBtn() {
     _fontWeight = _fontWeight == FontWeight.bold ? FontWeight.normal : FontWeight.bold;
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   @override
   void initState() {
     super.initState();
-    assert(configModel.isLegal, "TextConfigModel config size is not legal : "
+    assert(
+        configModel.isLegal,
+        "TextConfigModel config size is not legal : "
         "initSize must middle in up and bottom limit");
     selectedColor = ValueNotifier(textColorList.first.value);
     Future.delayed(const Duration(milliseconds: 160), () {
@@ -82,8 +80,7 @@ class TextEditorPageState extends State<TextEditorPage> with LittleWidgetBinding
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if(!_node.hasFocus)
-          _node.requestFocus();
+        if (!_node.hasFocus) _node.requestFocus();
       },
       child: Material(
         color: Colors.transparent,
@@ -93,8 +90,10 @@ class TextEditorPageState extends State<TextEditorPage> with LittleWidgetBinding
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                 child: Container(
-                  width: double.infinity, height: double.infinity,
-                  color: Colors.black38,),
+                  width: double.infinity,
+                  height: double.infinity,
+                  color: Colors.black38,
+                ),
               ),
             ),
             Scaffold(
@@ -110,12 +109,15 @@ class TextEditorPageState extends State<TextEditorPage> with LittleWidgetBinding
                     height: 44,
                     alignment: Alignment.center,
                     padding: EdgeInsets.only(top: 12, bottom: 12),
-                    child: Text('Cancel', style: TextStyle(color: Colors.white, fontSize: 16),),
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
                   ),
                 ),
                 actions: [
                   Padding(
-                    padding: EdgeInsets.only(top: 12, bottom: 12 , right: 16),
+                    padding: EdgeInsets.only(top: 12, bottom: 12, right: 16),
                     child: doneButtonWidget(onPressed: popWithResult),
                   ),
                 ],
@@ -136,10 +138,7 @@ class TextEditorPageState extends State<TextEditorPage> with LittleWidgetBinding
                       focusNode: _node,
                       cursorColor: configModel.cursorColor,
                       style: TextStyle(color: _textColor, fontSize: _size, fontWeight: _fontWeight),
-                      decoration: InputDecoration(
-                          isCollapsed: true,
-                          border: InputBorder.none
-                      ),
+                      decoration: InputDecoration(isCollapsed: true, border: InputBorder.none),
                     ),
                   ),
                   Expanded(child: SizedBox()),
@@ -175,14 +174,14 @@ class TextEditorPageState extends State<TextEditorPage> with LittleWidgetBinding
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: textColorList
                           .map<Widget>((e) => CircleColorWidget(
-                        color: e,
-                        valueListenable: selectedColor,
-                        onColorSelected: (color) {
-                          setState(() {
-                            selectedColor.value = color.value;
-                          });
-                        },
-                      ))
+                                color: e,
+                                valueListenable: selectedColor,
+                                onColorSelected: (color) {
+                                  setState(() {
+                                    selectedColor.value = color.value;
+                                  });
+                                },
+                              ))
                           .toList(),
                     ),
                   ),
@@ -208,7 +207,4 @@ class TextEditorPageState extends State<TextEditorPage> with LittleWidgetBinding
           },
         ));
   }
-
-
-
 }

@@ -1,11 +1,11 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/pages/my/study_util.dart';
 import 'package:provider/provider.dart';
 
 import 'application.dart';
 import 'base/log/build_config.dart';
+import 'base/naughty/naughty.dart';
 import 'base/res/local_model.dart';
 import 'base/res/strings.dart';
 import 'base/res/theme/app_theme.dart';
@@ -13,6 +13,7 @@ import 'base/widgets/keyboard/keyboard_root.dart';
 import 'base/widgets/will_pop_view.dart';
 import 'models/article_model.dart';
 import 'models/banner_model.dart';
+import 'models/provider_manager.dart';
 import 'models/user_model.dart';
 import 'models/website_model.dart';
 import 'pages/main/home_page/home_model.dart';
@@ -20,6 +21,7 @@ import 'pages/main/main_model.dart';
 import 'pages/main/me_page/me_model.dart';
 import 'pages/main/nav_page/nav_model.dart';
 import 'pages/my/my_page.dart';
+import 'pages/my/study_util.dart';
 import 'pages/study/study_model.dart';
 
 ///
@@ -35,9 +37,9 @@ class AppPage extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     if (BuildConfig.isTestApp) {
-      return _easyApp();
+      return _buildEasyApp();
     }
-    return _providerApp(_rootApp(
+    return _buildProviderApp(_buildRootApp(
       KeyboardRootWidget(
         child: WillPopView(behavior: BackBehavior.background, child: child),
       ),
@@ -45,7 +47,7 @@ class AppPage extends StatelessWidget {
   }
 
   /// Provider 共享状态管理
-  Widget _providerApp(Widget child) => MultiProvider(child: child, providers: [
+  Widget _buildProviderApp(Widget child) => MultiProvider(child: child, providers: [
         ChangeNotifierProvider(create: (context) => LocalModel()),
         ChangeNotifierProvider(create: (context) => MainModel()),
         ChangeNotifierProvider(create: (context) => HomeModel()),
@@ -59,7 +61,7 @@ class AppPage extends StatelessWidget {
       ]);
 
   /// 全局适配屏幕
-  // Widget _screen(Widget child) => ScreenUtilInit(
+  // Widget __buildScreenApp(Widget child) => ScreenUtilInit(
   //       designSize: const Size(414, 896),
   //       minTextAdapt: true,
   //       splitScreenMode: true,
@@ -67,7 +69,14 @@ class AppPage extends StatelessWidget {
   //     );
 
   /// 全局设置（主题、语言设置）
-  Widget _rootApp(Widget child) => Consumer<LocalModel>(builder: (context, res, widget) {
+  Widget _buildRootApp(Widget child) => Consumer<LocalModel>(builder: (context, res, widget) {
+        // 初始化需要context，在这里注册
+        S.context = context;
+        Naughty.instance
+          ..init(context)
+          ..show();
+        ProviderManager.init(context);
+
         // Page必须放在MaterialApp中运行
         AppTheme? theme = res.appTheme;
         return MaterialApp(
@@ -113,7 +122,7 @@ class AppPage extends StatelessWidget {
         );
       });
 
-  Widget _easyApp() {
+  Widget _buildEasyApp() {
     StudyUtil.main();
     return MaterialApp(
       title: 'Flutter Demo',

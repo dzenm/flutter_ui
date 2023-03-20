@@ -1,9 +1,9 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/widgets/image_editor/model/float_text_model.dart';
 
 import '../image_editor.dart';
+import '../model/float_text_model.dart';
 
 
 

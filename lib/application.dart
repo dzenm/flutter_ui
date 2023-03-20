@@ -2,14 +2,22 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/app_page.dart';
 
+import 'app_page.dart';
+import 'base/db/db_manager.dart';
+import 'base/http/https_client.dart';
 import 'base/log/handle_error.dart';
 import 'base/log/log.dart';
+import 'base/naughty/http_interceptor.dart';
+import 'base/router/route_manager.dart';
+import 'base/utils/file_util.dart';
+import 'base/utils/native_channel_util.dart';
 import 'base/utils/notification_util.dart';
 import 'base/utils/sp_util.dart';
+import 'base/widgets/common_dialog.dart';
 import 'base/widgets/keyboard/mocks/mock_binding.dart';
 import 'base/widgets/keyboard/number_keyboard.dart';
+import 'http/cookie_interceptor.dart';
 import 'math_util.dart';
 import 'pages/login/login_page.dart';
 import 'pages/main/main_page.dart';
@@ -18,8 +26,6 @@ import 'pages/main/main_page.dart';
 /// Created by a0010 on 2022/7/28 10:56
 /// 全局的页面
 class Application {
-  static const String _tag = 'Application';
-
   /// 私有构造方法
   Application._internal();
 
@@ -37,26 +43,46 @@ class Application {
     log('启动: ${DateTime.now().millisecondsSinceEpoch}');
     log('Application是否单例: ${Application.instance == Application()}');
 
-    log('初始化 WidgetsFlutterBinding ...');
+    log('初始化 WidgetsFlutterBinding');
     MockBinding.ensureInitialized();
 
-    log('初始化 SharedPreferences ...');
-    bool res = await SpUtil.instance.init();
+    log('初始化 SharedPreferences');
+    bool res = await SpUtil.instance.init(logPrint: Log.i);
     log('初始化 SharedPreferences ${res ? '成功' : '失败'}');
 
-    log('初始化 阿里云推送 ...');
+    log('初始化 阿里云推送');
     _initAliYunPush();
 
-    log('初始化 系统通知 ...');
+    log('初始化 系统通知');
     _initSystemNotification();
 
-    log('初始化 Android设置 ...');
+    log('初始化 Android设置');
     _initAndroidSettings();
 
-    log('初始化 iOS设置 ...');
+    log('初始化 iOS设置');
     _initIOSSettings();
 
-    log('初始化 算法测试Main方法 ...');
+    log('初始化 DBManager');
+    DBManager.instance.init(logPrint: Log.b);
+
+    log('初始化 HttpsClient');
+    HttpsClient.instance.init(
+      logPrint: Log.h,
+      loading: CommonDialog.loading,
+      toast: CommonDialog.showToast,
+      interceptors: [HttpInterceptor(), CookieInterceptor()],
+    );
+
+    log('初始化 RouteManager');
+    RouteManager.init(logPrint: Log.i);
+
+    log('初始化 FileUtil');
+    FileUtil.instance.init(logPrint: Log.i);
+
+    log('初始化 NativeChannelUtil');
+    NativeChannelUtil.init(logPrint: Log.d);
+
+    log('初始化 算法测试Main方法');
     MathUtil.main();
 
     NumberKeyboard.register();
@@ -71,6 +97,9 @@ class Application {
       log('║                                                                            ║');
       log('╚════════════════════════════════════════════════════════════════════════════╝');
       runMockApp(AppPage(child: _initApp()));
+    }, handleMsg: (msg) async {
+      String logFileName = 'crash_${DateTime.now()}.log';
+      await FileUtil.instance.save(logFileName, msg, dir: 'crash').then((String? filePath) async {});
     });
   }
 
@@ -109,7 +138,5 @@ class Application {
   }
 
   /// 打印日志
-  void log(String msg) {
-    Log.i(msg, tag: _tag);
-  }
+  void log(String msg) => Log.i(msg, tag: 'Application');
 }

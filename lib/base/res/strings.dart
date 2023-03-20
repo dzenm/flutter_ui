@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import '../../application.dart';
 import 'lang/lang.dart';
 import 'lang/lang_en.dart';
 import 'lang/lang_zh.dart';
@@ -11,32 +10,33 @@ import 'lang/lang_zh.dart';
 class S implements WidgetsLocalizations {
   // 当前显示的语言类型
   final Locale _locale;
+  static BuildContext? _context;
 
   S(this._locale);
 
+  static set context(BuildContext context) => _context = context;
+
   // 语言包填充数据的widget
-  static const List<LocalizationsDelegate> localizationsDelegates = [
-    GeneratedLocalizationsDelegate(), // 需要设置多语言的本地值
-    GlobalMaterialLocalizations.delegate, // Material库widget
-    GlobalWidgetsLocalizations.delegate, // Widgets库widget
-    GlobalCupertinoLocalizations.delegate, // Cupertino库widget
-  ];
+  static List<LocalizationsDelegate> get localizationsDelegates => [
+        GeneratedLocalizationsDelegate(), // 需要设置多语言的本地值
+        GlobalMaterialLocalizations.delegate, // Material库widget
+        GlobalWidgetsLocalizations.delegate, // Widgets库widget
+        GlobalCupertinoLocalizations.delegate, // Cupertino库widget
+      ];
 
   // 语言包，可以指定国家编码
-  static const List<Locale> supportedLocales = [
-    Locale('zh'),
-    Locale('en'),
-  ];
+  static List<Locale> get supportedLocales => [
+        Locale('zh'),
+        Locale('en'),
+      ];
 
   // 保证切换语言时页面能自动刷新所有页面，一定要传对应页面的context，否则不起作用
-  static Lang of(BuildContext context) => Localizations.of(context, S)._getLang();
+  static Lang of(BuildContext context) => Localizations.of<S>(context, S)!._getLang();
 
   // 在一些没有context页面时，使用全局的context。
-  static Lang get from => of(Application().context);
+  static Lang get from => of(_context!);
 
-  Lang _getLang() {
-    return _langMap[_locale.languageCode]!;
-  }
+  Lang _getLang() => _langMap[_locale.languageCode]!;
 
   Map<String, Lang> _langMap = {
     'zh': LangZh(),

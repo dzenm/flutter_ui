@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import '../utils/sp_util.dart';
 import 'colors.dart';
 import 'theme/app_theme.dart';
-import '../utils/sp_util.dart';
 
 class LocalModel with ChangeNotifier {
   /// 初始化主题设置

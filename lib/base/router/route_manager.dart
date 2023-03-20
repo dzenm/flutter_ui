@@ -3,10 +3,17 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../log/log.dart';
-
 /// 路由管理工具类
+/// 如果需要打印日志要先初始化
+///   RouteManager.init(logPrint: Log.i);
 class RouteManager {
+  /// 日志打印，如果不设置，将不打印日志，如果要设置在使用数据库之前调用 [init]
+  static var _logPrint;
+
+  static void init({void Function(dynamic msg, {String tag})? logPrint}) {
+    _logPrint = logPrint;
+  }
+
   /// 打开一个新的页面
   static Future<dynamic> push(
     BuildContext context,
@@ -38,7 +45,7 @@ class RouteManager {
     bool isMaterial = false,
     Object? args,
   }) {
-    Log.i('打开新页面: $routeName${args == null ? '' : ', args=${jsonEncode(args)}'}');
+    log('打开新页面: $routeName${args == null ? '' : ', args=${jsonEncode(args)}'}');
     if (clearStack) {
       // 打开指定页面(同时指定到当前页面会被销毁)，例：A->B->C->D，由D页面进入A页面，B、C、D页面被销毁，打开A页面
       return Navigator.pushNamedAndRemoveUntil(context, routeName, (route) => route.settings.name == routeName, arguments: args);
@@ -64,7 +71,7 @@ class RouteManager {
 
   /// 创建默认的页面跳转动画
   static PageRoute _buildDefaultRoute(Widget page, bool isMaterial, Object? args) {
-    Log.i("打开新页面: RouterSettingsName=${page.toStringShort()}${args == null ? '' : ', args=${jsonEncode(args)}'}");
+    log("打开新页面: RouterSettingsName=${page.toStringShort()}${args == null ? '' : ', args=${jsonEncode(args)}'}");
     // return FadeRoute(builder: (context) => page);
     if (isMaterial) {
       return createMaterialRoute(page, args: args);
@@ -88,7 +95,7 @@ class RouteManager {
     });
     String paramStr = bufferStr.toString();
     String result = paramStr.substring(0, paramStr.length - 1);
-    Log.i("传递的参数: $result");
+    log("传递的参数: $result");
     return "$registerPath?$result";
   }
 
@@ -105,4 +112,6 @@ class RouteManager {
       settings: RouteSettings(name: page.toStringShort(), arguments: args),
     );
   }
+
+  static void log(String text) => _logPrint == null ? null : _logPrint!(text, tag: 'RouteManager');
 }

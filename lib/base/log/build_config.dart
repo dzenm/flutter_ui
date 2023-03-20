@@ -12,7 +12,7 @@ class BuildConfig {
   static bool showPageLog = true;
 
   /// 是否进入测试APP
-  static bool isTestApp = true;
+  static bool isTestApp = false;
 
   /// 中药请求key
   static String medicineKey = 'e5c1639a4fc97a080daaff94e08bd1ca';

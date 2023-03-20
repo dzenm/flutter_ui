@@ -6,7 +6,6 @@ import 'package:flutter/widgets.dart';
 class NavModel with ChangeNotifier {
   /// 初始化数据
   Future<void> init() async {
-    notifyListeners();
   }
 
   List<String> _tabs = ['1', '2', '3'];

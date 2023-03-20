@@ -1,7 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../log/log.dart';
-
 ///
 /// Created by a0010 on 2022/3/22 09:38
 /// SharedPreferences工具类
@@ -13,9 +11,12 @@ class SpUtil {
 
   static SpUtil get instance => _instance;
 
-  static SharedPreferences? _prefs;
+  factory SpUtil() => _instance;
 
-  static const String _tag = 'SpUtil';
+  SharedPreferences? _prefs;
+
+  /// 日志打印，如果不设置，将不打印日志，如果要设置在使用数据库之前调用 [init]
+  var _logPrint;
 
   /// 用户登录相关的信息
   static const String _userInfo = 'u_info'; // 登录的用户信息
@@ -32,8 +33,9 @@ class SpUtil {
   /// APP展示的主题
   static const String _settingLocale = 's_locale'; // APP展示的语言
 
-  Future init() async {
+  Future init({void Function(dynamic msg, {String tag})? logPrint}) async {
     _prefs = await SharedPreferences.getInstance();
+    _logPrint = logPrint;
     return _prefs != null;
   }
 
@@ -140,37 +142,39 @@ class SpUtil {
   }
 
   static String getString(String key) {
-    String? value = _prefs?.getString(key);
-    Log.i('get $key=$value', tag: _tag);
+    String? value = SpUtil.instance._prefs?.getString(key);
+    SpUtil.instance.log('get $key=$value');
     return value ?? '';
   }
 
   static void setString(String key, String? value) {
-    _prefs?.setString(key, value ?? '').then((res) => Log.i('$key=$value', tag: _tag));
+    SpUtil.instance._prefs?.setString(key, value ?? '').then((res) => SpUtil.instance.log('$key=$value'));
   }
 
   static int getInt(String key) {
-    int? value = _prefs?.getInt(key);
-    Log.i('get $key=$value', tag: _tag);
+    int? value = SpUtil.instance._prefs?.getInt(key);
+    SpUtil.instance.log('get $key=$value');
     return value ?? 0;
   }
 
   static void setInt(String key, int? value) {
-    _prefs?.setInt(key, value ?? 0).then((res) => Log.i('$key=$value', tag: _tag));
+    SpUtil.instance._prefs?.setInt(key, value ?? 0).then((res) => SpUtil.instance.log('$key=$value'));
   }
 
   static bool getBool(String key) {
-    bool? value = _prefs?.getBool(key);
-    Log.i('get $key=$value', tag: _tag);
+    bool? value = SpUtil.instance._prefs?.getBool(key);
+    SpUtil.instance.log('get $key=$value');
     return value ?? false;
   }
 
   static void setBool(String key, bool? value) {
-    _prefs?.setBool(key, value ?? false).then((res) => Log.i('$key=$value', tag: _tag));
+    SpUtil.instance._prefs?.setBool(key, value ?? false).then((res) => SpUtil.instance.log('$key=$value'));
   }
 
   static void remove(String key) {
-    Log.d('remove $key=$key', tag: _tag);
-    _prefs?.remove(key);
+    SpUtil.instance.log('remove $key=$key');
+    SpUtil.instance._prefs?.remove(key);
   }
+
+  void log(String text) => _logPrint == null ? null : _logPrint!(text, tag: 'SpUtil');
 }

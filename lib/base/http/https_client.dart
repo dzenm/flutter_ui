@@ -4,10 +4,6 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:dio/dio.dart';
 
 import '../../http/api_services.dart';
-import '../log/log.dart';
-import '../naughty/http_interceptor.dart';
-import '../widgets/common_dialog.dart';
-import 'cookie_interceptor.dart';
 import 'data_entity.dart';
 import 'log_interceptor.dart';
 
@@ -15,20 +11,31 @@ typedef Success = void Function(dynamic data);
 
 typedef Failed = void Function(HttpError error);
 
-ApiServices apiServices = HttpClient.instance._api[HttpClient.instance._baseUrls[0]]!;
+ApiServices apiServices = HttpsClient.instance._api[HttpsClient.instance._baseUrls[0]]!;
 
-ApiServices api(int index) => HttpClient.instance._api[HttpClient.instance._baseUrls[index]]!;
+ApiServices api(int index) => HttpsClient.instance._api[HttpsClient.instance._baseUrls[index]]!;
 
 ///
 /// Created by a0010 on 2022/3/22 09:38
 /// HTTP请求
-///
-class HttpClient {
-  static const String _tag = 'HttpClient';
+/// 如果需要自定义处理，先初始化
+///   HttpsClient.instance.init(
+///     logPrint: Log.http,
+///     loading: CommonDialog.loading,
+///     toast: CommonDialog.showToast,
+///     interceptors: [HttpInterceptor(), CookieInterceptor()],
+///   );
+class HttpsClient {
   static const int _connectTimeout = 20000;
   static const int _receiveTimeout = 20000;
 
-  static final HttpClient instance = HttpClient._internal();
+  HttpsClient._internal();
+
+  static final HttpsClient _instance = HttpsClient._internal();
+
+  static HttpsClient get instance => _instance;
+
+  factory HttpsClient() => _instance;
 
   Map<String, ApiServices> _api = {};
   List<String> _baseUrls = [
@@ -37,8 +44,40 @@ class HttpClient {
     'http://192.168.2.30:8080/api/v1/',
   ];
 
-  // 构造方法
-  HttpClient._internal() {
+  /// 日志打印，如果不设置，将不打印日志，如果要设置在使用数据库之前调用 [init]
+  var _logPrint;
+
+  /// 全局的请求提醒加载框
+  var _loading;
+
+  /// 全局的错误的toast提醒加载框
+  var _toast;
+
+  /// 请求拦截器
+  List<Interceptor> _interceptors = [];
+
+  /// 初始化
+  void init({
+    void Function(dynamic msg, {String tag})? logPrint,
+    CancelFunc Function({String? loadingTxt, bool isVertical, bool light})? loading,
+    CancelFunc Function(String text, {int seconds})? toast,
+    List<Interceptor>? interceptors,
+  }) {
+    _logPrint = logPrint;
+    _toast = toast;
+    _loading = loading;
+
+    if (interceptors != null) {
+      _interceptors.addAll(interceptors);
+    }
+    // 日志打印
+    _interceptors.add(LoggerInterceptor(formatJson: true, logPrint: (text) => log(text.toString())));
+    // 通过悬浮窗查看Http请求数据
+    // _interceptors.add(HttpInterceptor());
+    // cookie持久化
+    // _interceptors.add(CookieInterceptor.instance);
+
+    /// 创建dio
     _baseUrls.forEach((url) => _createApiServices(baseUrl: url));
   }
 
@@ -58,7 +97,7 @@ class HttpClient {
     ));
 
     // 不验证https证书
-    // (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (client) {
+    // (dio.httpClientAdapter as DefaultHttpsClientAdapter).onHttpsClientCreate = (client) {
     //   // config the http client
     //   // client.findProxy = (uri) {
     //   //  //proxy all request to localhost:8888
@@ -68,25 +107,15 @@ class HttpClient {
     //     log("验证https证书: host=$host, port=$port");
     //     return true;
     //   };
-    //   // you can also create a new HttpClient to dio
-    //   // return new HttpClient();
+    //   // you can also create a new HttpsClient to dio
+    //   // return new HttpsClient();
     //   return client;
     // };
-    // log interceptor
-    dio.interceptors.add(LoggerInterceptor(
-      formatJson: true,
-      logPrint: (text) => log(text.toString()),
-    ));
-
-    // 通过悬浮窗查看Http请求数据
-    dio.interceptors.add(HttpInterceptor());
-    // cookie持久化
-    dio.interceptors.add(CookieInterceptor.instance);
-
+    _interceptors.forEach((interceptor) => dio.interceptors.add(interceptor));
     _api[baseUrl] ??= ApiServices(dio, baseUrl: baseUrl);
   }
 
-  // 发起http请求
+  /// 发起http请求
   Future request(
     Future future, {
     Success? success,
@@ -95,7 +124,11 @@ class HttpClient {
     bool isShowToast = true,
     CancelFunc? loading,
   }) async {
-    CancelFunc? cancel = isShowDialog ? loading ?? CommonDialog.loading() : null;
+    CancelFunc? cancel;
+    if (isShowDialog) {
+      if (_loading != null) cancel = _loading!();
+      cancel = loading ?? cancel;
+    }
     HttpError? error;
     try {
       DataEntity data = await future;
@@ -112,30 +145,18 @@ class HttpClient {
     } catch (err) {
       error = _HttpError.handle(error: err);
     }
-    _dismissDialog(cancel);
-    _handleError(failed, error, isShowToast);
-  }
-
-  // 处理错误
-  void _handleError(Failed? failed, HttpError? error, bool isShowToast) {
-    if (error == null) {
-      return;
-    }
-    if (isShowToast) {
-      CommonDialog.showToast('${error.msg.isEmpty ? 'No Message' : error.msg} ${error.code}');
-    }
-    if (failed != null) {
-      failed(error);
-    }
+    // 请求结束关闭提示框
+    if (cancel != null) cancel();
+    // 没有异常，不处理，请求结束
+    if (error == null) return;
+    // 如果有异常通过toast提醒
+    if (isShowToast && _toast != null) _toast!('${error.msg} ${error.code}');
+    // 如果需要自定义处理异常，进行自定义异常处理
+    if (failed != null) failed(error);
     log('HTTP请求错误: code=${error.code}, msg=${error.msg}');
   }
 
-  // 关闭提示框
-  void _dismissDialog(CancelFunc? cancel) {
-    if (cancel != null) cancel();
-  }
-
-  void log(String text) => Log.http(text, tag: _tag);
+  void log(String text) => _logPrint == null ? null : _logPrint!(text, tag: 'HttpsClient');
 }
 
 /// HTTP请求错误信息的处理

@@ -1,7 +1,7 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/http/http_client.dart';
+import 'package:flutter_ui/base/http/https_client.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/res/local_model.dart';
 import 'package:flutter_ui/base/res/assets.dart';
@@ -325,7 +325,7 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   void _logout() {
-    HttpClient.instance.request(apiServices.logout(), success: (data) {
+    HttpsClient.instance.request(apiServices.logout(), success: (data) {
       SpUtil.resetUser();
       ProviderManager.clear(context);
       RouteManager.push(context, LoginPage(), clearStack: true);

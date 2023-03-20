@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/base/channels/native_channels.dart';
+import 'package:flutter_ui/base/utils/native_channel_util.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/res/local_model.dart';
 import 'package:flutter_ui/base/res/strings.dart';
@@ -184,7 +184,7 @@ class _StudyPageState extends State<StudyPage> {
         child: _text(S.of(context).nav),
         textColor: Colors.white,
         color: theme.primary,
-        onPressed: () => NativeChannels.startHomeActivity(),
+        onPressed: () => NativeChannelUtil.startHomeActivity(),
       ),
       SizedBox(height: 8),
       MaterialButton(

@@ -1,4 +1,5 @@
-import 'package:flutter_ui/application.dart';
+
+import 'application.dart';
 
 ///
 /// Created by a0010 on 2022/9/20 14:47

@@ -4,6 +4,8 @@ import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/res/local_model.dart';
 import 'package:flutter_ui/base/res/theme/app_theme.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
+import 'package:flutter_ui/http/http_manager.dart';
+import 'package:flutter_ui/models/article_model.dart';
 import 'package:flutter_ui/pages/main/nav_page/nav_model.dart';
 import 'package:provider/provider.dart';
 
@@ -98,6 +100,15 @@ class _NavPageState extends State<NavPage> {
           }).toList(),
         ),
       ),
+    );
+  }
+
+  Future<void> _getTopArticle() async {
+    await HttpManager.instance.getLopArticleList(
+      isShowDialog: false,
+      success: (list) {
+        context.read<ArticleModel>().updateArticles(list);
+      },
     );
   }
 }

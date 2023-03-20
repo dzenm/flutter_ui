@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 
 import '../res/local_model.dart';
 import '../res/theme/app_theme.dart';
-import '../router/route_manager.dart';
 import 'tap_layout.dart';
 
 ///
@@ -70,7 +69,7 @@ class UpgradeDialog extends StatelessWidget {
             child: TapLayout(
               height: 48,
               child: Text('关闭', style: TextStyle(color: theme.secondaryText)),
-              onTap: () => RouteManager.pop(context),
+              onTap: () => Navigator.pop(context),
             ),
             flex: 1,
           ),

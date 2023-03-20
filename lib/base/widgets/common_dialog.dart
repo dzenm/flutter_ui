@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/res/strings.dart';
-import 'package:flutter_ui/base/widgets/upgrade_dialog.dart';
 
+import '../res/strings.dart';
 import 'common_widget.dart';
 import 'tap_layout.dart';
+import 'upgrade_dialog.dart';
 import 'will_pop_view.dart';
 
 typedef ItemClickCallback = void Function(int index);

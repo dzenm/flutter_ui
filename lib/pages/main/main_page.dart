@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/base/log/log.dart';
-import 'package:flutter_ui/base/naughty/naughty.dart';
 import 'package:flutter_ui/base/widgets/badge_view.dart';
 import 'package:flutter_ui/base/widgets/keep_alive_wrapper.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
-import 'package:flutter_ui/models/provider_manager.dart';
 import 'package:flutter_ui/pages/main/main_model.dart';
 import 'package:provider/provider.dart';
 
@@ -39,13 +37,6 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     Log.i('initState', tag: _tag);
 
     WidgetsBinding.instance.addObserver(this);
-
-    Future.delayed(Duration.zero, () {
-      Naughty.instance
-        ..init(context)
-        ..show();
-      ProviderManager.init(context);
-    });
   }
 
   @override
@@ -106,8 +97,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   /// BottomNavigationBar widget
   List<Widget> _buildBottomNavigationBar() {
     int len = context.read<MainModel>().len;
-    return List.generate(
-        len, (i) => BottomNavigationBarItemView(index: i, controller: _pageController)); // bottomNavigation list
+    return List.generate(len, (i) => BottomNavigationBarItemView(index: i, controller: _pageController)); // bottomNavigation list
   }
 }
 

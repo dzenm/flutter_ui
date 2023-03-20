@@ -2,18 +2,21 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 
-import '../utils/sp_util.dart';
-import '../utils/str_util.dart';
+import '../base/utils/sp_util.dart';
+import '../base/utils/str_util.dart';
 
 ///
 /// Created by a0010 on 2023/2/23 14:10
 /// cookie持久化
 class CookieInterceptor extends Interceptor {
-  static get instance => _instance;
+
+  CookieInterceptor._privateConstructor();
 
   static final CookieInterceptor _instance = CookieInterceptor._privateConstructor();
 
-  CookieInterceptor._privateConstructor();
+  static get instance => _instance;
+
+  factory CookieInterceptor() => _instance;
 
   String? _cookie;
 

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import '../log/log.dart';
 import 'common_widget.dart';
 import 'tap_layout.dart';
 
@@ -269,7 +268,6 @@ class GridPickerState extends State<PhotoGridPicker> {
         path = item; //不可能出现.mp4
       }
 //      Log.d(path,tag:"显示的文件路径:");
-
       File? localFile = File(path);
       if (!localFile.existsSync()) {
         localFile = null;
@@ -285,9 +283,7 @@ class GridPickerState extends State<PhotoGridPicker> {
                     )
                   : null); //本地图片不存在则为空
 
-    } catch (e) {
-      Log.e(e.toString(), tag: "PhotoGridPicker-getImgChild:");
-    }
+    } catch (e) {}
     return Container(child: _placeholder);
     //图片 path
     //视频 videoThumbPath

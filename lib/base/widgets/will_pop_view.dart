@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 
-import '../channels/native_channels.dart';
+import '../utils/native_channel_util.dart';
 
 /// 监听返回键的动作
 class WillPopView extends StatefulWidget {
@@ -74,7 +74,7 @@ class _WillPopViewState extends State<WillPopView> {
       case BackBehavior.custom:
         return widget.onWillPop == null ? Future.value(true) : widget.onWillPop!();
       case BackBehavior.background:
-        await NativeChannels.onBackToDesktop();
+        await NativeChannelUtil.onBackToDesktop();
         return false;
       case BackBehavior.doubleTap:
         DateTime now = DateTime.now();

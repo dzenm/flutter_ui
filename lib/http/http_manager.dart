@@ -1,5 +1,5 @@
 import 'package:flutter_ui/base/http/page_entity.dart';
-import 'package:flutter_ui/base/http/http_client.dart';
+import 'package:flutter_ui/base/http/https_client.dart';
 import 'package:flutter_ui/entities/article_entity.dart';
 import 'package:flutter_ui/entities/banner_entity.dart';
 import 'package:flutter_ui/entities/coin_entity.dart';
@@ -18,13 +18,13 @@ class HttpManager {
   factory HttpManager() => instance;
 
   HttpManager._internal() {
-    _httpClient = HttpClient.instance;
+    _httpClient = HttpsClient.instance;
     _apiServices = apiServices;
   }
 
   static final HttpManager instance = HttpManager._internal();
 
-  late HttpClient _httpClient;
+  late HttpsClient _httpClient;
   late ApiServices _apiServices;
 
   /// 获取Banner，并保存banner数据
@@ -47,7 +47,7 @@ class HttpManager {
     bool isShowDialog = true,
     bool isShowToast = true,
   }) async {
-    await HttpClient.instance.request(apiServices.articleList(page),
+    await HttpsClient.instance.request(apiServices.articleList(page),
         isShowDialog: isShowDialog, isShowToast: isShowToast, success: (data) async {
       PageEntity page = PageEntity.fromJson(data);
 
@@ -67,7 +67,7 @@ class HttpManager {
     void Function(HttpError error)? failed,
     bool isShowDialog = true,
   }) async {
-    await HttpClient.instance.request(apiServices.topArticleList(), isShowDialog: isShowDialog, success: (data) async {
+    await HttpsClient.instance.request(apiServices.topArticleList(), isShowDialog: isShowDialog, success: (data) async {
       List<dynamic> datas = ((data ?? []) as List<dynamic>);
       List<ArticleEntity> list = datas.map((e) => ArticleEntity.fromJson(e)).toList();
       if (success != null) success(list);
@@ -84,7 +84,7 @@ class HttpManager {
     void Function(HttpError error)? failed,
     bool isShowDialog = true,
   }) async {
-    await HttpClient.instance.request(apiServices.friend(), isShowDialog: isShowDialog, success: (data) async {
+    await HttpsClient.instance.request(apiServices.friend(), isShowDialog: isShowDialog, success: (data) async {
       List<dynamic> datas = ((data ?? []) as List<dynamic>);
       List<WebsiteEntity> list = datas.map((e) => WebsiteEntity.fromJson(e)).toList();
       if (success != null) success(list);
@@ -101,7 +101,7 @@ class HttpManager {
     void Function(HttpError error)? failed,
     bool isShowDialog = true,
   }) async {
-    await HttpClient.instance.request(apiServices.hotkey(), isShowDialog: isShowDialog, success: (data) async {
+    await HttpsClient.instance.request(apiServices.hotkey(), isShowDialog: isShowDialog, success: (data) async {
       List<dynamic> datas = ((data ?? []) as List<dynamic>);
       List<HotkeyEntity> list = datas.map((e) => HotkeyEntity.fromJson(e)).toList();
       if (success != null) success(list);
@@ -118,7 +118,7 @@ class HttpManager {
     void Function(HttpError error)? failed,
     bool isShowDialog = true,
   }) async {
-    await HttpClient.instance.request(apiServices.tree(), isShowDialog: isShowDialog, success: (data) async {
+    await HttpsClient.instance.request(apiServices.tree(), isShowDialog: isShowDialog, success: (data) async {
       List<dynamic> datas = ((data ?? []) as List<dynamic>);
       List<TreeEntity> list = datas.map((e) => TreeEntity.fromJson(e)).toList();
       if (success != null) success(list);
@@ -137,7 +137,7 @@ class HttpManager {
     void Function(HttpError error)? failed,
     bool isShowDialog = true,
   }) async {
-    await HttpClient.instance.request(
+    await HttpsClient.instance.request(
       apiServices.treeArticleListByCid(page, cid),
       isShowDialog: isShowDialog,
       success: (data) async {
@@ -159,7 +159,7 @@ class HttpManager {
     void Function(HttpError error)? failed,
     bool isShowDialog = true,
   }) async {
-    await HttpClient.instance.request(apiServices.navi(), isShowDialog: isShowDialog, success: (data) async {
+    await HttpsClient.instance.request(apiServices.navi(), isShowDialog: isShowDialog, success: (data) async {
       List<dynamic> datas = ((data ?? []) as List<dynamic>);
       List<NaviEntity> list = datas.map((e) => NaviEntity.fromJson(e)).toList();
       if (success != null) success(list);
@@ -176,7 +176,7 @@ class HttpManager {
     void Function(HttpError error)? failed,
     bool isShowDialog = true,
   }) async {
-    await HttpClient.instance.request(apiServices.project(), isShowDialog: isShowDialog, success: (data) async {
+    await HttpsClient.instance.request(apiServices.project(), isShowDialog: isShowDialog, success: (data) async {
       List<dynamic> datas = ((data ?? []) as List<dynamic>);
       List<TreeEntity> list = datas.map((e) => TreeEntity.fromJson(e)).toList();
       if (success != null) success(list);
@@ -194,7 +194,7 @@ class HttpManager {
     void Function(HttpError error)? failed,
     bool isShowDialog = true,
   }) async {
-    await HttpClient.instance.request(apiServices.collect(page), isShowDialog: isShowDialog, success: (data) async {
+    await HttpsClient.instance.request(apiServices.collect(page), isShowDialog: isShowDialog, success: (data) async {
       PageEntity page = PageEntity.fromJson(data);
 
       List<dynamic> datas = page.datas ?? [];
@@ -215,7 +215,7 @@ class HttpManager {
     void Function()? success,
   }) async {
     Future<dynamic> future = collect ? apiServices.collectArticle(id) : apiServices.uncollectArticle(id);
-    await HttpClient.instance.request(future, isShowDialog: isShowDialog, success: (data) async {
+    await HttpsClient.instance.request(future, isShowDialog: isShowDialog, success: (data) async {
       if (success != null) success();
     });
   }
@@ -227,7 +227,7 @@ class HttpManager {
     void Function(HttpError error)? failed,
     bool isShowDialog = true,
   }) async {
-    await HttpClient.instance.request(apiServices.rankCoin(page), isShowDialog: isShowDialog, success: (data) async {
+    await HttpsClient.instance.request(apiServices.rankCoin(page), isShowDialog: isShowDialog, success: (data) async {
       PageEntity page = PageEntity.fromJson(data);
 
       List<dynamic> datas = page.datas ?? [];
@@ -247,7 +247,7 @@ class HttpManager {
     void Function(HttpError error)? failed,
     bool isShowDialog = true,
   }) async {
-    await HttpClient.instance.request(apiServices.coins(page), isShowDialog: isShowDialog, success: (data) async {
+    await HttpsClient.instance.request(apiServices.coins(page), isShowDialog: isShowDialog, success: (data) async {
       PageEntity page = PageEntity.fromJson(data);
 
       List<dynamic> datas = page.datas ?? [];
@@ -267,7 +267,7 @@ class HttpManager {
     void Function(HttpError error)? failed,
     bool isShowDialog = true,
   }) async {
-    await HttpClient.instance.request(apiServices.privateArticles(page), isShowDialog: isShowDialog,
+    await HttpsClient.instance.request(apiServices.privateArticles(page), isShowDialog: isShowDialog,
         success: (data) async {
       if (success != null) success(data);
     }, failed: (error) {
@@ -282,7 +282,7 @@ class HttpManager {
     void Function(dynamic data)? success,
     void Function(HttpError error)? failed,
   }) async {
-    await HttpClient.instance.request(apiServices.userinfo(), isShowDialog: false, success: (data) async {
+    await HttpsClient.instance.request(apiServices.userinfo(), isShowDialog: false, success: (data) async {
       if (success != null) success(data);
     }, failed: (error) {
       if (failed != null) {
