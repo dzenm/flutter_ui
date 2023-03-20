@@ -49,7 +49,6 @@ class CustomPopupView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      child: child,
       behavior: HitTestBehavior.translucent,
       onLongPress: () {
         if (onLongPress == null) {
@@ -67,6 +66,7 @@ class CustomPopupView extends StatelessWidget {
           onTap!();
         }
       },
+      child: child,
     );
   }
 
@@ -96,7 +96,6 @@ class CustomPopupView extends StatelessWidget {
               curve: Curves.easeOut,
             ),
             child: CustomPopupDialog(
-              child: body,
               doubleAnimation: animation,
               attachRect: Rect.fromLTWH(offset.dx, offset.dy, bounds.width, bounds.height),
               constraints: boxConstraints,
@@ -104,6 +103,7 @@ class CustomPopupView extends StatelessWidget {
               boxShadow: boxShadow,
               radius: radius,
               direction: direction,
+              child: body,
             ),
           ),
         );
@@ -148,7 +148,7 @@ class CustomPopupDialog extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _CustomPopupDialogState createState() => _CustomPopupDialogState();
+  State<StatefulWidget> createState() => _CustomPopupDialogState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -162,8 +162,8 @@ class CustomPopupDialog extends StatefulWidget {
 class _CustomPopupDialogState extends State<CustomPopupDialog> with TickerProviderStateMixin {
   static const double _arrowWidth = 12.0;
   static const double _arrowHeight = 8.0;
-  static double _screenWidth = MediaQueryData.fromWindow(window).size.width;
-  static double _screenHeight = MediaQueryData.fromWindow(window).size.height;
+  static final double _screenWidth = MediaQueryData.fromWindow(window).size.width;
+  static final double _screenHeight = MediaQueryData.fromWindow(window).size.height;
 
   @override
   Widget build(BuildContext context) {

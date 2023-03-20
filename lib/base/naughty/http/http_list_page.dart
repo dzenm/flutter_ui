@@ -9,13 +9,15 @@ import 'http_item_page.dart';
 
 /// naughty 主页
 class HTTPListPage extends StatefulWidget {
+  const HTTPListPage({super.key});
+
   @override
   State<StatefulWidget> createState() => _HTTPListPageState();
 }
 
 class _HTTPListPageState extends State<HTTPListPage> {
   List<HTTPEntity> _list = [];
-  List<Item> _items = [
+  final List<Item> _items = [
     Item(0, title: 'Database'),
     Item(1, title: 'SharedPreference'),
     Item(2, title: 'Setting'),
@@ -32,7 +34,7 @@ class _HTTPListPageState extends State<HTTPListPage> {
 
   //列表要展示的数据
   Future _getData() async {
-    await Future.delayed(Duration(seconds: 0), () {
+    await Future.delayed(const Duration(seconds: 0), () {
       setState(() => _list = Naughty.instance.data);
     });
   }
@@ -47,13 +49,13 @@ class _HTTPListPageState extends State<HTTPListPage> {
     Naughty.instance.init(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Debug Mode'),
+        title: const Text('Debug Mode'),
         actions: [
           PopupMenuButton<Item>(
             elevation: 4.0,
             onSelected: (Item item) {
               if (item.index == 0) {
-                RouteManager.push(context, DBListPage());
+                RouteManager.push(context, const DBListPage());
               } else if (item.index == 1) {
               } else if (item.index == 2) {
               } else if (item.index == 3) {
@@ -83,15 +85,15 @@ class _HTTPListPageState extends State<HTTPListPage> {
   // 列表单item
   Widget _renderRow(BuildContext context, int index) {
     return ClipRRect(
-      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+      borderRadius: const BorderRadius.all(Radius.circular(8.0)),
       child: Container(
-        margin: EdgeInsets.all(8.0),
+        margin: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
           color: Colors.white,
           shape: BoxShape.rectangle,
           border: Border.all(color: Colors.black12, width: 1),
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-          boxShadow: [
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+          boxShadow: const [
             BoxShadow(
               color: Colors.black12,
               blurRadius: 2.0, //阴影模糊程度
@@ -100,25 +102,25 @@ class _HTTPListPageState extends State<HTTPListPage> {
           ],
         ),
         child: TapLayout(
-          borderRadius: BorderRadius.all(Radius.circular(7)),
+          borderRadius: const BorderRadius.all(Radius.circular(7)),
           onTap: () => RouteManager.push(context, HTTPItemPage(_list[index])),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               _statusView(index),
               Container(
-                padding: EdgeInsets.only(left: 16.0, top: 8.0, right: 16.0, bottom: 16.0),
+                padding: const EdgeInsets.only(left: 16.0, top: 8.0, right: 16.0, bottom: 16.0),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _statusCodeView(index),
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     Expanded(
                       child: Column(
                         children: [
                           _methodView(index),
-                          SizedBox(height: 8),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           _detail(index),
                         ],
                       ),
@@ -143,13 +145,13 @@ class _HTTPListPageState extends State<HTTPListPage> {
                 ? 'Failed'
                 : 'None';
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
         color: _stateColor(index),
         shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.only(topRight: Radius.circular(7), bottomLeft: Radius.circular(7)),
+        borderRadius: const BorderRadius.only(topRight: Radius.circular(7), bottomLeft: Radius.circular(7)),
       ),
-      child: Text(text, style: TextStyle(color: Colors.white)),
+      child: Text(text, style: const TextStyle(color: Colors.white)),
     );
   }
 
@@ -166,9 +168,9 @@ class _HTTPListPageState extends State<HTTPListPage> {
     return Row(children: [
       Text(
         _list[index].method ?? '',
-        style: TextStyle(fontWeight: FontWeight.bold),
+        style: const TextStyle(fontWeight: FontWeight.bold),
       ),
-      SizedBox(width: 8),
+      const SizedBox(width: 8),
       Expanded(child: Text(_list[index].path ?? '', maxLines: 1, overflow: TextOverflow.ellipsis)),
     ]);
   }
@@ -195,7 +197,7 @@ class _HTTPListPageState extends State<HTTPListPage> {
   }
 
   // 下拉刷新方法,为_list重新赋值
-  Future<Null> _onRefresh() async {
+  Future<void> _onRefresh() async {
     await _getData();
   }
 }

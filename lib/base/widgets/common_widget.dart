@@ -14,9 +14,9 @@ class CommonWidget {
     Color? color,
   }) {
     return Container(
-      color: color ?? Color(0xFFEFEFEF),
+      color: color ?? const Color(0xFFEFEFEF),
       child: isVertical
-          ? SizedBox()
+          ? const SizedBox()
           : Divider(
               height: height,
               indent: left,
@@ -36,15 +36,15 @@ class CommonWidget {
   static Widget titleView(String title, {double left = 8, double top = 8, double right = 8, double bottom = 8}) {
     return Container(
       padding: EdgeInsets.only(left: left, top: top, right: right, bottom: bottom),
-      child: Row(children: [Expanded(child: Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)))]),
+      child: Row(children: [Expanded(child: Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)))]),
     );
   }
 
   // 内容
   static Widget multipleTextView(String msg) {
     return Container(
-      padding: EdgeInsets.all(8),
-      decoration: BoxDecoration(color: Colors.black12, borderRadius: BorderRadius.all(Radius.circular(8))),
+      padding: const EdgeInsets.all(8),
+      decoration: const BoxDecoration(color: Colors.black12, borderRadius: BorderRadius.all(Radius.circular(8))),
       child: Row(
         children: [Expanded(child: Text(msg))],
       ),
@@ -60,7 +60,7 @@ class CommonWidget {
     double? height,
   }) {
     String currentUrl = '';
-    if (url != null && url.length > 0) {
+    if (url != null && url.isNotEmpty) {
       currentUrl = '$url?${version ?? 0}';
     }
     return CachedNetworkImage(
@@ -85,7 +85,7 @@ class CommonWidget {
     return Container(
       width: width,
       height: height ?? width,
-      color: Color(0xffafafaf),
+      color: const Color(0xffafafaf),
       alignment: Alignment.center,
       child: Icon(
         Icons.ac_unit_outlined,
@@ -97,7 +97,7 @@ class CommonWidget {
 }
 
 class FileImageExt extends FileImage {
-  FileImageExt(File file, {double scale = 1.0}) : super(file, scale: scale);
+  const FileImageExt(File file, {double scale = 1.0}) : super(file, scale: scale);
 
   @override
   bool operator ==(dynamic other) {

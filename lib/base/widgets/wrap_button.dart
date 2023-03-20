@@ -19,7 +19,8 @@ class WrapButton extends StatelessWidget {
   final Gradient? gradient;
   final bool enable;
 
-  WrapButton({
+  const WrapButton({
+    super.key,
     this.width,
     this.height = 40.0,
     this.padding = const EdgeInsets.symmetric(horizontal: 5.0),
@@ -40,8 +41,8 @@ class WrapButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double opacity = enable ? 1 : 0.6;
-    Color _color = Color.fromRGBO(225, 225, 225, 1.0);
-    Gradient _gradient = gradient ??
+    Color defaultColor = const Color.fromRGBO(225, 225, 225, 1.0);
+    Gradient defaultGradient = gradient ??
         LinearGradient(colors: [
           Color.fromRGBO(8, 191, 98, opacity),
           Color.fromRGBO(8, 191, 98, opacity),
@@ -52,12 +53,12 @@ class WrapButton extends StatelessWidget {
       padding: padding,
       margin: margin,
       onTap: enable ? onTap : null,
-      background: color == null ? null : color,
-      gradient: color == null ? _gradient : null,
+      background: color ?? defaultColor,
+      gradient: color == null ? defaultGradient : null,
       boxShadow: boxShadow,
       border: isBorder ? Border.all(width: 0.5, color: Color(borderColor)) : null,
       borderRadius: BorderRadius.all(Radius.circular(radius)),
-      child: text == null ? child : Text('$text', style: style != null ? style : TextStyle(fontSize: 15.0, color: _color)),
+      child: text == null ? child : Text('$text', style: style ?? TextStyle(fontSize: 15.0, color: defaultColor)),
     );
   }
 }

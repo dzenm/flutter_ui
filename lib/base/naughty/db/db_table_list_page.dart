@@ -10,7 +10,7 @@ import 'db_table_item_page.dart';
 class DBTableListPage extends StatefulWidget {
   final String dbName;
 
-  DBTableListPage(this.dbName);
+  const DBTableListPage(this.dbName, {super.key});
 
   @override
   State<StatefulWidget> createState() => _DBTableListPageState();
@@ -45,7 +45,7 @@ class _DBTableListPageState extends State<DBTableListPage> {
 
   //列表要展示的数据
   Future getData() async {
-    await Future.delayed(Duration(seconds: 0), () async {
+    await Future.delayed(const Duration(seconds: 0), () async {
       _list = await DBManager().getTableList(dbName: widget.dbName);
       setState(() => {});
     });
@@ -54,15 +54,15 @@ class _DBTableListPageState extends State<DBTableListPage> {
   // 列表单item
   Widget _renderRow(BuildContext context, int index) {
     return ClipRRect(
-      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+      borderRadius: const BorderRadius.all(Radius.circular(8.0)),
       child: Container(
-        margin: EdgeInsets.all(8.0),
+        margin: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
           color: Colors.white,
           shape: BoxShape.rectangle,
           border: Border.all(color: Colors.black12, width: 1),
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-          boxShadow: [
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+          boxShadow: const [
             BoxShadow(
               color: Colors.black12,
               blurRadius: 2.0, //阴影模糊程度
@@ -71,16 +71,16 @@ class _DBTableListPageState extends State<DBTableListPage> {
           ],
         ),
         child: TapLayout(
-          borderRadius: BorderRadius.all(Radius.circular(7)),
+          borderRadius: const BorderRadius.all(Radius.circular(7)),
           onTap: () => RouteManager.push(context, DBTableItemPage(widget.dbName, _list[index].name ?? '')),
           child: Padding(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Row(
               children: [
                 Expanded(
                   child: Text(
                     _list[index].name ?? '',
-                    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black87, fontSize: 18.0),
+                    style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black87, fontSize: 18.0),
                   ),
                 ),
               ],
@@ -92,7 +92,7 @@ class _DBTableListPageState extends State<DBTableListPage> {
   }
 
   // 下拉刷新方法,为_list重新赋值
-  Future<Null> _onRefresh() async {
+  Future<void> _onRefresh() async {
     await getData();
   }
 }

@@ -13,13 +13,13 @@ class DeviceUtil {
       type: InternetAddressType.any,
     );
     network = "";
-    interfaces.forEach((interface) {
+    for (var interface in interfaces) {
       network += "### name: ${interface.name}\n";
       int i = 0;
-      interface.addresses.forEach((address) {
+      for (var address in interface.addresses) {
         network += "${i++}) ${address.address}\n";
-      });
-    });
+      }
+    }
     return network;
   }
 

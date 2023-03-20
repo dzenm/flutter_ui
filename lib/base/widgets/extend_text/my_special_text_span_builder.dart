@@ -11,7 +11,7 @@ class MySpecialTextSpanBuilder extends SpecialTextSpanBuilder {
   final bool showAtBackground;
   final BuilderType type;
 
-  MySpecialTextSpanBuilder({this.showAtBackground: false, this.type: BuilderType.extendedText});
+  MySpecialTextSpanBuilder({this.showAtBackground = false, this.type = BuilderType.extendedText});
 
   @override
   TextSpan build(String data, {TextStyle? textStyle, onTap}) {

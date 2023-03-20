@@ -182,7 +182,7 @@ class SignaturePainter extends CustomPainter {
 
 
   @override
-  void paint(Canvas canvas, _) {
+  void paint(Canvas canvas, Size size) {
     final List<Point> points = _controller.value;
     if (points.isEmpty) {
       return;
@@ -226,11 +226,12 @@ class SignaturePainter extends CustomPainter {
     Path paintPath() {
       final Path path = Path();
       final Map<int, List<Point>> pathM = {};
-      points.forEach((element) {
-        if(pathM[element.eventId] == null)
+      for (var element in points) {
+        if(pathM[element.eventId] == null) {
           pathM[element.eventId] = [];
+        }
         pathM[element.eventId]!.add(element);
-      });
+      }
 
       pathM.forEach((key, value) {
         final first = value.first;
@@ -240,9 +241,9 @@ class SignaturePainter extends CustomPainter {
           canvas.drawCircle(first.offset, _controller.penStrokeWidth,_penStyle);
           _penStyle.style = PaintingStyle.stroke;
         } else {
-          value.forEach((e) {
+          for (var e in value) {
             path.lineTo(e.offset.dx, e.offset.dy);
-          });
+          }
         }
       });
       return path;
@@ -263,7 +264,7 @@ class SignaturePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CustomPainter other) => true;
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
 
 

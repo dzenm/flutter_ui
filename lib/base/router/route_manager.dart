@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 ///   RouteManager.init(logPrint: Log.i);
 class RouteManager {
   /// 日志打印，如果不设置，将不打印日志，如果要设置在使用数据库之前调用 [init]
-  static var _logPrint;
+  static Function? _logPrint;
 
   static void init({void Function(dynamic msg, {String tag})? logPrint}) {
     _logPrint = logPrint;

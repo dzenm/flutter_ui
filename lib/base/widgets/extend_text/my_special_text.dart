@@ -15,7 +15,7 @@ class EmojiText extends SpecialText {
     String key = toString();
     if (EmojiUtil.instance.emojiMap.containsKey(key)) {
       // size = 30.0/26.0 * fontSize
-      final double size = 20.0;
+      const double size = 20.0;
       // fontSize 26 and text height = 30.0
       // final double fontSize = 26.0;
       return ImageSpan(
@@ -25,7 +25,7 @@ class EmojiText extends SpecialText {
         imageHeight: size,
         start: start,
         fit: BoxFit.fill,
-        margin: EdgeInsets.only(
+        margin: const EdgeInsets.only(
           left: 2.0,
           top: 2.0,
           right: 2.0,
@@ -38,7 +38,7 @@ class EmojiText extends SpecialText {
 
 // 表情工具类，获取表情
 class EmojiUtil {
-  final Map<String, String> _emojiMap = Map<String, String>();
+  final Map<String, String> _emojiMap = {};
 
   Map<String, String> get emojiMap => _emojiMap;
 
@@ -47,9 +47,7 @@ class EmojiUtil {
   static EmojiUtil? _instance;
 
   static EmojiUtil get instance {
-    if (_instance == null) {
-      _instance = EmojiUtil._();
-    }
+    _instance ??= EmojiUtil._();
     return _instance!;
   }
 

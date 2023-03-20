@@ -5,13 +5,12 @@ import '../../widgets/common_dialog.dart';
 import '../../widgets/common_widget.dart';
 import '../../widgets/tap_layout.dart';
 import '../http_entity.dart';
+
 /// 一个Http请求数据展示页面
 class HTTPItemPage extends StatefulWidget {
   final HTTPEntity entity;
 
-  HTTPItemPage(
-    this.entity,
-  );
+  const HTTPItemPage(this.entity, {super.key});
 
   @override
   State<StatefulWidget> createState() => _HTTPItemPageState();
@@ -19,7 +18,7 @@ class HTTPItemPage extends StatefulWidget {
 
 class _HTTPItemPageState extends State<HTTPItemPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  List<String> _titles = ['RESPONSE', 'REQUEST'];
+  final List<String> _titles = ['RESPONSE', 'REQUEST'];
 
   @override
   void initState() {
@@ -33,7 +32,7 @@ class _HTTPItemPageState extends State<HTTPItemPage> with SingleTickerProviderSt
       appBar: AppBar(
         title: Row(children: [
           Text('${widget.entity.method}'),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           Expanded(
             child: Text('${widget.entity.path}', maxLines: 1, overflow: TextOverflow.ellipsis),
           ),
@@ -43,11 +42,11 @@ class _HTTPItemPageState extends State<HTTPItemPage> with SingleTickerProviderSt
           indicatorColor: Colors.white,
           labelColor: Colors.white,
           isScrollable: true,
-          labelPadding: EdgeInsets.all(8),
+          labelPadding: const EdgeInsets.all(8),
           indicatorSize: TabBarIndicatorSize.label,
           unselectedLabelColor: Colors.grey.shade300,
           tabs: _titles.map((title) {
-            return Text(title, style: TextStyle(fontSize: 14));
+            return Text(title, style: const TextStyle(fontSize: 14));
           }).toList(),
         ),
       ),
@@ -64,16 +63,16 @@ class _HTTPItemPageState extends State<HTTPItemPage> with SingleTickerProviderSt
   // 列表布局
   Widget _listView(Map<String, dynamic> data) {
     List<Widget> list = [];
-    Widget interval = SizedBox(height: 8);
+    Widget interval = const SizedBox(height: 8);
     list.add(titleView('  Headers'));
     list.add(interval);
     list.add(CommonWidget.divider());
     list.add(interval);
     data.forEach((key, value) {
       if (key != 'Body') {
-        list.add(SizedBox(height: 4));
+        list.add(const SizedBox(height: 4));
         list.add(_pairView(key, value.toString()));
-        list.add(SizedBox(height: 4));
+        list.add(const SizedBox(height: 4));
       }
     });
     list.add(interval);
@@ -83,7 +82,7 @@ class _HTTPItemPageState extends State<HTTPItemPage> with SingleTickerProviderSt
     list.add(interval);
     list.add(Text(data['Body'].toString()));
     return Container(
-      margin: EdgeInsets.all(16),
+      margin: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: list,
@@ -99,20 +98,20 @@ class _HTTPItemPageState extends State<HTTPItemPage> with SingleTickerProviderSt
         Expanded(
           child: Text(
             key,
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(fontWeight: FontWeight.bold),
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        SizedBox(width: 16),
+        const SizedBox(width: 16),
         Expanded(
           flex: 2,
           child: TapLayout(
-            child: Text(value),
             alignment: Alignment.centerLeft,
             onTap: () {
               StrUtil.copy(value);
               CommonDialog.showToast('复制成功: $value');
             },
+            child: Text(value),
           ),
         ),
       ],
@@ -121,6 +120,6 @@ class _HTTPItemPageState extends State<HTTPItemPage> with SingleTickerProviderSt
 
   // 标题布局
   Widget titleView(String title) {
-    return Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold));
+    return Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold));
   }
 }

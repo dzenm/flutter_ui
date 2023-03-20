@@ -5,7 +5,7 @@ import 'keyboard_manager.dart';
 class KeyboardController extends ValueNotifier<TextEditingValue> {
   final InputClient client;
 
-  KeyboardController({TextEditingValue? value, required this.client}) : super(value == null ? TextEditingValue.empty : value);
+  KeyboardController({TextEditingValue? value, required this.client}) : super(value ?? TextEditingValue.empty);
 
   /// The current string the user is editing.
   String get text => value.text;
@@ -33,6 +33,7 @@ class KeyboardController extends ValueNotifier<TextEditingValue> {
     value = value.copyWith(selection: newSelection, composing: TextRange.empty);
   }
 
+  @override
   set value(TextEditingValue newValue) {
     newValue = newValue.copyWith(
         // 修正由于默认值导致的Bug

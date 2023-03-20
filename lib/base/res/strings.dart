@@ -18,7 +18,7 @@ class S implements WidgetsLocalizations {
 
   // 语言包填充数据的widget
   static List<LocalizationsDelegate> get localizationsDelegates => [
-        GeneratedLocalizationsDelegate(), // 需要设置多语言的本地值
+        const GeneratedLocalizationsDelegate(), // 需要设置多语言的本地值
         GlobalMaterialLocalizations.delegate, // Material库widget
         GlobalWidgetsLocalizations.delegate, // Widgets库widget
         GlobalCupertinoLocalizations.delegate, // Cupertino库widget
@@ -26,19 +26,19 @@ class S implements WidgetsLocalizations {
 
   // 语言包，可以指定国家编码
   static List<Locale> get supportedLocales => [
-        Locale('zh'),
-        Locale('en'),
+        const Locale('zh'),
+        const Locale('en'),
       ];
 
   // 保证切换语言时页面能自动刷新所有页面，一定要传对应页面的context，否则不起作用
-  static Lang of(BuildContext context) => Localizations.of<S>(context, S)!._getLang();
+  static Lang of(BuildContext context) => Localizations.of(context, S)._getLang();
 
   // 在一些没有context页面时，使用全局的context。
   static Lang get from => of(_context!);
 
   Lang _getLang() => _langMap[_locale.languageCode]!;
 
-  Map<String, Lang> _langMap = {
+  final Map<String, Lang> _langMap = {
     'zh': LangZh(),
     'en': LangEn(),
   };

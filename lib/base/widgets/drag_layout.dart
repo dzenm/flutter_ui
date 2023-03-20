@@ -9,7 +9,8 @@ class DragLayout extends StatefulWidget {
   final double width;
   final double height;
 
-  DragLayout({
+  const DragLayout({
+    super.key,
     this.child,
     this.onTap,
     this.width = 64.0,
@@ -22,7 +23,7 @@ class DragLayout extends StatefulWidget {
 
 class _DragLayoutState extends State<DragLayout> {
   // 当前悬浮窗的位置
-  Offset realPosition = Offset(0, kToolbarHeight + 64);
+  Offset realPosition = const Offset(0, kToolbarHeight + 64);
 
   @override
   void initState() {
@@ -56,7 +57,7 @@ class _DragLayoutState extends State<DragLayout> {
         top: realPosition.dy,
         child: GestureDetector(
           // 手指按下 位置(e.globalPosition)
-          onPanDown: (DragDownDetails details) => print(''),
+          onPanDown: (DragDownDetails details) {},
           // 手指滑动
           onPanUpdate: (DragUpdateDetails details) {
             setState(() => realPosition = _dragWidget(realPosition, details.delta));

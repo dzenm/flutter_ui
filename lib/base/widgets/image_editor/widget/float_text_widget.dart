@@ -40,8 +40,8 @@ class FloatTextWidgetState extends State<FloatTextWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(4),
-      constraints: BoxConstraints(
+      padding: const EdgeInsets.all(4),
+      constraints: const BoxConstraints(
         minWidth: 10, maxWidth: 335
       ),
       decoration: BoxDecoration(
@@ -62,7 +62,7 @@ class FloatTextWidgetState extends State<FloatTextWidget> {
 ///Draw dash border.
 class DashBorder extends Border{
 
-  DashBorder({
+  const DashBorder({
     this.gap = 4.0,
     this.strokeWidth = 2.0,
     this.dashColor = Colors.white,
@@ -126,34 +126,34 @@ class DashBorder extends Border{
         ..strokeWidth = strokeWidth
         ..style = PaintingStyle.stroke;
       // top line
-      final Path _topPath = getDashedPath(
+      final Path topPath = getDashedPath(
         a: math.Point(rect.topLeft.dx, rect.topLeft.dy),
         b: math.Point(rect.topRight.dx, rect.topRight.dy),
         gap: gap,
       );
       // right line
-      final Path _rightPath = getDashedPath(
+      final Path rightPath = getDashedPath(
         a: math.Point(rect.topRight.dx, rect.topRight.dy),
         b: math.Point(rect.bottomRight.dx, rect.bottomRight.dy),
         gap: gap,
       );
       // bottom line
-      final Path _bottomPath = getDashedPath(
+      final Path bottomPath = getDashedPath(
         a: math.Point(rect.bottomLeft.dx, rect.bottomLeft.dy),
         b: math.Point(rect.bottomRight.dx, rect.bottomRight.dy),
         gap: gap,
       );
       // left line
-      final Path _leftPath = getDashedPath(
+      final Path leftPath = getDashedPath(
         a: math.Point(rect.topLeft.dx, rect.topLeft.dy),
         b: math.Point(rect.bottomLeft.dx, rect.bottomLeft.dy),
         gap: gap,
       );
 
-      canvas.drawPath(_topPath, dashedPaint);
-      canvas.drawPath(_rightPath, dashedPaint);
-      canvas.drawPath(_bottomPath, dashedPaint);
-      canvas.drawPath(_leftPath, dashedPaint);
+      canvas.drawPath(topPath, dashedPaint);
+      canvas.drawPath(rightPath, dashedPaint);
+      canvas.drawPath(bottomPath, dashedPaint);
+      canvas.drawPath(leftPath, dashedPaint);
     }
 
     paintBorder(canvas, rect, top: top, right: right, bottom: bottom, left: left);

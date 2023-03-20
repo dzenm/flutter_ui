@@ -35,7 +35,7 @@ class MockBinding extends WidgetsFlutterBinding {
   }
 }
 
-runMockApp(Widget app) {
+runMockApp(Widget app) async {
   MockBinding.ensureInitialized()
     ..scheduleAttachRootWidget(app)
     ..scheduleWarmUpFrame();

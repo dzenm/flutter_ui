@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_ui/base/http/data_entity.dart';
+import '../base/http/data_entity.dart';
 import 'package:retrofit/http.dart';
 
 part 'api_services.g.dart';

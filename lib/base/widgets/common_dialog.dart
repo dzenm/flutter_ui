@@ -18,7 +18,7 @@ class CommonDialog {
       text: text,
       onlyOne: true,
       duration: Duration(seconds: seconds),
-      textStyle: TextStyle(fontSize: 14, color: Colors.white),
+      textStyle: const TextStyle(fontSize: 14, color: Colors.white),
     );
   }
 
@@ -26,13 +26,13 @@ class CommonDialog {
   static CancelFunc loading({String? loadingTxt, bool isVertical = true, bool light = false}) {
     loadingTxt ??= S.from.loading;
     List<Widget> widgets = [
-      SizedBox(
+      const SizedBox(
         width: 30,
         height: 30,
         child: CircularProgressIndicator(strokeWidth: 2, backgroundColor: Colors.white),
       ),
-      SizedBox(width: 20, height: 20),
-      Text(loadingTxt, style: TextStyle(color: Colors.white, fontSize: 16)),
+      const SizedBox(width: 20, height: 20),
+      Text(loadingTxt, style: const TextStyle(color: Colors.white, fontSize: 16)),
     ];
     return BotToast.showCustomLoading(
       align: Alignment.center,
@@ -42,8 +42,8 @@ class CommonDialog {
       allowClick: false,
       crossPage: false,
       toastBuilder: (_) => Container(
-        padding: EdgeInsets.symmetric(vertical: 30, horizontal: 40),
-        decoration: BoxDecoration(
+        padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 40),
+        decoration: const BoxDecoration(
           color: Colors.black54,
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
@@ -87,22 +87,24 @@ class CommonDialog {
     bool isMaterial = false,
   }) async {
     List<String> data = [];
-    items.forEach((item) => data.add(item));
+    for (var item in items) {
+      data.add(item);
+    }
     if (!isMaterial) data.add('CommonWidget.divider');
     data.add(S.of(context).cancel);
 
     double realHeight = (items.length + 1) * height;
 
-    Widget _child(int index) {
+    Widget buildChild(int index) {
       BorderRadius? borderRadius;
       if (!isMaterial) {
-        if (index == items.length) return SizedBox(height: 4); // 取消按钮和列表按钮之间的分隔条
+        if (index == items.length) return const SizedBox(height: 4); // 取消按钮和列表按钮之间的分隔条
         borderRadius = items.length == 1 // item只有一个按钮
-            ? BorderRadius.all(Radius.circular(8))
+            ? const BorderRadius.all(Radius.circular(8))
             : index == 0 || index == data.length - 1 // item的第一个按钮和取消按钮
-                ? BorderRadius.vertical(top: Radius.circular(8))
+                ? const BorderRadius.vertical(top: Radius.circular(8))
                 : index == items.length - 1 // item的最后一个按钮
-                    ? BorderRadius.vertical(bottom: Radius.circular(8))
+                    ? const BorderRadius.vertical(bottom: Radius.circular(8))
                     : null;
       }
       return Container(
@@ -125,19 +127,19 @@ class CommonDialog {
       );
     }
 
-    Widget _children() {
+    Widget buildChildren() {
       int index = -1;
       return realHeight > MediaQuery.of(context).size.width / 2
           ? ListView.builder(
               itemCount: data.length,
               shrinkWrap: true,
-              itemBuilder: (BuildContext context, int index) => _child(index),
+              itemBuilder: (BuildContext context, int index) => buildChild(index),
             )
           : Column(
               mainAxisSize: MainAxisSize.min,
               children: data.map((e) {
                 index++;
-                return _child(index);
+                return buildChild(index);
               }).toList(),
             );
     }
@@ -157,7 +159,7 @@ class CommonDialog {
           child: PhysicalModel(
             color: isMaterial ? Colors.white : Colors.transparent,
             clipBehavior: Clip.antiAlias,
-            child: _children(),
+            child: buildChildren(),
           ),
         );
       },
@@ -185,13 +187,13 @@ class CommonDialog {
           touchOutsideDismiss: touchOutsideDismiss,
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             SizedBox(height: content == null ? 36 : 20),
-            title ?? Text(titleString ?? '', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            title ?? Text(titleString ?? '', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             content == null
-                ? SizedBox(width: 0, height: 36)
+                ? const SizedBox(width: 0, height: 36)
                 : Flexible(
                     child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
                       child: content,
-                      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 24),
                     ),
                   ),
             CupertinoDialogButton(
@@ -265,7 +267,7 @@ class DialogWrapper extends StatelessWidget {
           backgroundColor: Colors.transparent,
           resizeToAvoidBottomInset: false, // 防止软键盘弹出像素溢出
           body: Container(
-            padding: EdgeInsets.symmetric(horizontal: 32),
+            padding: const EdgeInsets.symmetric(horizontal: 32),
             alignment: Alignment.center,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -297,21 +299,21 @@ class CupertinoDialogButton extends StatelessWidget {
   final GestureTapCallback? onPositiveTap;
   final GestureTapCallback? onNegativeTap;
 
-  CupertinoDialogButton({
-    Key? key,
+  const CupertinoDialogButton({
+    super.key,
     this.onPositiveTap,
     this.onNegativeTap,
     this.positiveStyle,
     this.negativeStyle,
     this.positiveText,
     this.negativeText,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        CommonWidget.divider(color: Color(0xFFBABABA), height: 0.5),
+        CommonWidget.divider(color: const Color(0xFFBABABA), height: 0.5),
         Row(children: [
           Expanded(
             child: TapLayout(
@@ -321,10 +323,11 @@ class CupertinoDialogButton extends StatelessWidget {
                 Navigator.of(context).pop();
                 if (onNegativeTap != null) onNegativeTap!();
               },
-              child: Text(negativeText ?? S.of(context).cancel, style: negativeStyle ?? TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+              child: Text(negativeText ?? S.of(context).cancel,
+                  style: negativeStyle ?? const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
             ),
           ),
-          Container(color: Color(0xFFBABABA), height: 45.0, width: 0.5),
+          Container(color: const Color(0xFFBABABA), height: 45.0, width: 0.5),
           Expanded(
             child: TapLayout(
               height: 45.0,
@@ -333,7 +336,8 @@ class CupertinoDialogButton extends StatelessWidget {
                 Navigator.of(context).pop();
                 if (onPositiveTap != null) onPositiveTap!();
               },
-              child: Text(positiveText ?? S.of(context).confirm, style: positiveStyle ?? TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+              child: Text(positiveText ?? S.of(context).confirm,
+                  style: positiveStyle ?? const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
             ),
           ),
         ])
@@ -347,7 +351,8 @@ class ListDialog extends Dialog {
   final List<String> list;
   final ItemClickCallback? onTap;
 
-  ListDialog({
+  const ListDialog({
+    super.key,
     required this.list,
     this.onTap,
   });
@@ -358,9 +363,9 @@ class ListDialog extends Dialog {
       type: MaterialType.transparency,
       child: Center(
         child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 40),
+          margin: const EdgeInsets.symmetric(horizontal: 40),
           child: ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(2)),
+            borderRadius: const BorderRadius.all(Radius.circular(2)),
             child: Container(
               color: Colors.white,
               child: Column(
@@ -393,7 +398,7 @@ class ListDialog extends Dialog {
       child: Container(
         height: 48,
         alignment: Alignment.centerLeft,
-        margin: EdgeInsets.symmetric(horizontal: 24),
+        margin: const EdgeInsets.symmetric(horizontal: 24),
         width: double.infinity,
         child: Text(list[index]),
       ),

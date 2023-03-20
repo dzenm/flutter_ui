@@ -7,8 +7,8 @@ import 'keyboard_manager.dart';
 
 /// 自定义键盘
 class CustomKeywordBoard {
-  static const CKTextInputType license = const CKTextInputType(name: 'CKLicenseKeyboard');
-  static const CKTextInputType number = const CKTextInputType(name: 'CKNumberKeyboard');
+  static const CKTextInputType license = CKTextInputType(name: 'CKLicenseKeyboard');
+  static const CKTextInputType number = CKTextInputType(name: 'CKNumberKeyboard');
 
   // 在main中执行runApp之前调用
   static void register() {
@@ -47,7 +47,7 @@ class NumberKeyboard extends StatelessWidget {
   final KeyboardController controller;
   final bool withDot;
 
-  const NumberKeyboard({required this.controller, this.withDot = false});
+  const NumberKeyboard({super.key, required this.controller, this.withDot = false});
 
   @override
   Widget build(BuildContext context) {
@@ -56,10 +56,10 @@ class NumberKeyboard extends StatelessWidget {
     return Container(
       height: CustomKeywordBoard.getNumberHeight(context),
       width: mediaQuery.size.width,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.grey,
       ),
-      child: GridView.count(childAspectRatio: 5 / 2, mainAxisSpacing: 0.5, crossAxisSpacing: 0.5, padding: EdgeInsets.all(0.0), crossAxisCount: 3, children: [
+      child: GridView.count(childAspectRatio: 5 / 2, mainAxisSpacing: 0.5, crossAxisSpacing: 0.5, padding: const EdgeInsets.all(0.0), crossAxisCount: 3, children: [
         buildButton('1'),
         buildButton('2'),
         buildButton('3'),
@@ -73,7 +73,7 @@ class NumberKeyboard extends StatelessWidget {
         buildButton('0'),
         buildButton(
           null,
-          icon: Icon(Icons.label, size: 25),
+          icon: const Icon(Icons.label, size: 25),
           color: Colors.blueGrey,
           onTap: () => controller.deleteOne(),
         )
@@ -86,7 +86,7 @@ class NumberKeyboard extends StatelessWidget {
       alignment: Alignment.center,
       background: color ?? Colors.white,
       onTap: onTap ?? () => controller.addText(text ?? ''),
-      child: icon ?? Text(text ?? '', style: TextStyle(fontWeight: FontWeight.w500, color: Colors.black, fontSize: 23.0)),
+      child: icon ?? Text(text ?? '', style: const TextStyle(fontWeight: FontWeight.w500, color: Colors.black, fontSize: 23.0)),
     );
   }
 }
@@ -95,20 +95,20 @@ class NumberKeyboard extends StatelessWidget {
 class LicenseKeyboard extends StatefulWidget {
   final KeyboardController controller;
 
-  LicenseKeyboard({required this.controller});
+  const LicenseKeyboard({super.key, required this.controller});
 
   @override
   State<StatefulWidget> createState() => _LicenseKeyboardState();
 }
 
 class _LicenseKeyboardState extends State<LicenseKeyboard> {
-  List<List<String>> _provinces = [
+  final List<List<String>> _provinces = [
     ['京', '津', '冀', '鲁', '晋', '蒙', '辽', '吉', '黑', '沪'],
     ['苏', '浙', '皖', '闽', '赣', '豫', '鄂', '湘', '粤', '桂'],
     ['渝', '川', '贵', '云', '藏', '陕', '甘', '青'],
     ['ABC', '琼', '新', '宁', '港', '澳', '台', '删除']
   ];
-  List<List<String>> _characters = [
+  final List<List<String>> _characters = [
     ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
     ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
     ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
@@ -126,18 +126,18 @@ class _LicenseKeyboardState extends State<LicenseKeyboard> {
     return Container(
       height: _itemHeight * 4 + 4 * 6 + 40,
       width: mediaQuery.size.width,
-      padding: EdgeInsets.only(left: 6),
-      decoration: BoxDecoration(color: Color(0xffd9d9d9)),
+      padding: const EdgeInsets.only(left: 6),
+      decoration: const BoxDecoration(color: Color(0xffd9d9d9)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           TapLayout(
             height: 40,
             width: 50,
-            padding: EdgeInsets.only(right: 10),
+            padding: const EdgeInsets.only(right: 10),
             alignment: Alignment.centerRight,
             onTap: () => widget.controller.doneAction(),
-            child: RotatedBox(
+            child: const RotatedBox(
               quarterTurns: 3,
               child: Icon(Icons.west_sharp, size: 20),
             ),
@@ -166,19 +166,19 @@ class _LicenseKeyboardState extends State<LicenseKeyboard> {
         return _buildItem(
           width: _itemWidth * 1.4,
           onTap: () => setState(() => _showProvinces = !_showProvinces),
-          child: Text(text, style: TextStyle(color: Colors.white, fontSize: 18.0)),
+          child: Text(text, style: const TextStyle(color: Colors.white, fontSize: 18.0)),
         );
       } else if (text == '删除') {
         return _buildItem(
           width: _itemWidth * 1.4,
           onTap: () => widget.controller.deleteOne(),
-          child: Icon(Icons.close_sharp, size: 25, color: Colors.white),
+          child: const Icon(Icons.close_sharp, size: 25, color: Colors.white),
         );
       } else {
         return _buildItem(
           width: _itemWidth,
           onTap: () => widget.controller.addText(text),
-          child: Text(text, style: TextStyle(color: Colors.black, fontSize: 18.0)),
+          child: Text(text, style: const TextStyle(color: Colors.black, fontSize: 18.0)),
         );
       }
     }).toList();
@@ -188,7 +188,7 @@ class _LicenseKeyboardState extends State<LicenseKeyboard> {
     return TapLayout(
       height: _itemHeight,
       width: width,
-      margin: EdgeInsets.only(right: 6, bottom: 6),
+      margin: const EdgeInsets.only(right: 6, bottom: 6),
       borderRadius: BorderRadius.circular(5),
       onTap: onTap,
       child: child,
@@ -214,7 +214,7 @@ class CellInput extends StatefulWidget {
   final FocusNode? focusNode;
   final int? verifyCodeType;
 
-  CellInput({
+  const CellInput({
     Key? key,
     this.cellCount = 4,
     this.inputType = InputType.number,
@@ -239,13 +239,13 @@ class CellInput extends StatefulWidget {
 
 class _CellInputState extends State<CellInput> {
   String inputStr = "";
-  bool _autofocus = false;
+  final bool _autofocus = false;
 
-  TextEditingController _controller = TextEditingController();
+  final TextEditingController _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 80,
       child: Stack(
         children: [
@@ -254,16 +254,16 @@ class _CellInputState extends State<CellInput> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: getCells(),
           ),
-          Container(
+          SizedBox(
             height: 80, //l 48 增加触发面积
             width: double.infinity,
             child: TextField(
               focusNode: widget.focusNode,
               keyboardType: keyboardType(),
               inputFormatters: [LengthLimitingTextInputFormatter(widget.cellCount)],
-              decoration: InputDecoration(border: InputBorder.none),
+              decoration: const InputDecoration(border: InputBorder.none),
               cursorWidth: 0,
-              style: TextStyle(color: Colors.transparent),
+              style: const TextStyle(color: Colors.transparent),
               controller: widget.controller ?? _controller,
               autofocus: _autofocus,
               onChanged: (value) {
@@ -321,12 +321,8 @@ class _CellInputState extends State<CellInput> {
         child: Container(
           width: widget.cellWidth ?? 55,
           height: widget.cellHeight ?? 70,
-          margin: widget.margin ?? EdgeInsets.only(left: 6, right: 6),
+          margin: widget.margin ?? const EdgeInsets.only(left: 6, right: 6),
           alignment: Alignment.center,
-          child: Text(
-            getIndexShowText(i),
-            style: TextStyle(fontSize: widget.fontSize, color: widget.textColor, fontWeight: FontWeight.w600),
-          ),
           decoration: BoxDecoration(
             color: Colors.white,
             border: widget.verifyCodeType == 1
@@ -335,6 +331,10 @@ class _CellInputState extends State<CellInput> {
                     ? getBorder(i)
                     : Border.all(width: 1, color: getBoarderColor(i)),
             borderRadius: widget.borderRadius,
+          ),
+          child: Text(
+            getIndexShowText(i),
+            style: TextStyle(fontSize: widget.fontSize, color: widget.textColor, fontWeight: FontWeight.w600),
           ),
         ),
       ),

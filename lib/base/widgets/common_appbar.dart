@@ -18,9 +18,8 @@ class TopAppbar extends StatefulWidget implements PreferredSizeWidget {
   final bool centerTitle;
   final double titleSpacing;
 
-  TopAppbar(
-    this.title, {
-    Key? key,
+  const TopAppbar(
+    this.title, {super.key,
     this.back = true,
     this.titleColor = Colors.black,
     this.backgroundColor = Colors.white,
@@ -32,10 +31,10 @@ class TopAppbar extends StatefulWidget implements PreferredSizeWidget {
     this.backFunc,
     this.titleSpacing = NavigationToolbar.kMiddleSpacing,
     this.leadWidget,
-  }) : super(key: key);
+  });
 
   @override
-  Size get preferredSize => Size.fromHeight(40); //appbar高度定制
+  Size get preferredSize => const Size.fromHeight(40); //appbar高度定制
 
   @override
   State<StatefulWidget> createState() => _TopAppbarState();
@@ -52,7 +51,7 @@ class _TopAppbarState extends State<TopAppbar> {
         TextSpan(
           text: widget.title, // default text style
           children: [
-            TextSpan(text: widget.subTitle ?? '', style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal)),
+            TextSpan(text: widget.subTitle ?? '', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.normal)),
           ],
         ),
       ),
@@ -71,8 +70,8 @@ class _TopAppbarState extends State<TopAppbar> {
             width: 40,
             height: 40,
             alignment: Alignment.centerLeft,
-            padding: EdgeInsets.only(left: 12),
-            child: leadingWidget != null ? leadingWidget : Icon(Icons.chevron_left_rounded, size: 15, color: titleColor),
+            padding: const EdgeInsets.only(left: 12),
+            child: leadingWidget ?? Icon(Icons.chevron_left_rounded, size: 15, color: titleColor),
             onTap: () {
               if (backFunc == null) {
                 _popThis(context);

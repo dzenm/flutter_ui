@@ -11,14 +11,14 @@ class StateView extends StatefulWidget {
   final Widget? title;
   final Widget? image;
 
-  StateView({
-    Key? key,
+  const StateView({
+    super.key,
     this.child,
     required this.controller,
     this.onTap,
     this.title,
     this.image,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() => _StateViewState();
@@ -53,10 +53,10 @@ class _StateViewState extends State<StateView> {
       // 加载进度提示
       Offstage(
         offstage: !controller.load,
-        child: Container(
+        child: SizedBox(
           width: size,
           height: size,
-          child: CircularProgressIndicator(),
+          child: const CircularProgressIndicator(),
         ),
       ),
       // 加载不成功的图片展示
@@ -64,7 +64,7 @@ class _StateViewState extends State<StateView> {
         offstage: !(!controller.more && (controller.empty || controller.failed)),
         child: image,
       ),
-      SizedBox(width: 16, height: 32),
+      const SizedBox(width: 16, height: 32),
       // 加载展示的文本信息
       title ?? Text(controller.stateText(context)),
     ];
@@ -79,14 +79,14 @@ class FooterStateView extends StatefulWidget {
   final Widget? image;
   final double loadingProgressSize;
 
-  FooterStateView({
-    Key? key,
+  const FooterStateView({
+    super.key,
     required this.controller,
     this.onTap,
     this.title,
     this.image,
     this.loadingProgressSize = 24,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() => _FooterViewState();

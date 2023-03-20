@@ -10,7 +10,8 @@ class LicenseView extends StatefulWidget {
   final LicenseController controller;
   final DefaultView? defaultView;
 
-  LicenseView({
+  const LicenseView({
+    super.key,
     required this.list,
     required this.controller,
     this.defaultView,
@@ -28,7 +29,7 @@ class _LicenseViewState extends State<LicenseView> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 50,
       child: Stack(
         children: [
@@ -36,7 +37,7 @@ class _LicenseViewState extends State<LicenseView> {
             textAlign: TextAlign.center,
             keyboardType: CustomKeywordBoard.license,
             cursorWidth: 0,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
               textBaseline: TextBaseline.alphabetic,
@@ -64,10 +65,10 @@ class _LicenseViewState extends State<LicenseView> {
       width: 36,
       height: 50,
       foreground: Colors.transparent,
-      borderRadius: BorderRadius.all(Radius.circular(8)),
+      borderRadius: const BorderRadius.all(Radius.circular(8)),
       background: widget.controller.select == index ? Colors.grey.shade200 : Colors.white,
       border: Border.all(color: Colors.grey.shade300, width: 0.5),
-      margin: EdgeInsets.symmetric(horizontal: 2),
+      margin: const EdgeInsets.symmetric(horizontal: 2),
       onTap: () {
         if (widget.controller.select < widget.list.length) {
           setState(() => widget.controller.setSelect(index));

@@ -115,13 +115,13 @@ class HandleError {
 
     Log.e('║══════════════════════════════ Error Info ═══════════════════════════════════, tag: _tag');
     List<String> list = getAppError(error, stackTrace);
-    list.forEach((msg) {
+    for (var msg in list) {
       if (msg == '@分割线@') {
         Log.e('║══════════════════════════════ Stack Trace ══════════════════════════════════, tag: _tag');
       } else {
         write(msg);
       }
-    });
+    }
     return sb.toString();
   }
 

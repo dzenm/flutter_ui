@@ -14,9 +14,9 @@ typedef GetKeyboardHeight = double Function(BuildContext context);
 typedef KeyboardBuilder = Widget Function(BuildContext context, KeyboardController controller, String? param);
 
 class CoolKeyboard {
-  static JSONMethodCodec _codec = const JSONMethodCodec();
+  static const JSONMethodCodec _codec = JSONMethodCodec();
   static KeyboardConfig? _currentKeyboard;
-  static Map<CKTextInputType, KeyboardConfig> _keyboards = {};
+  static final Map<CKTextInputType, KeyboardConfig> _keyboards = {};
   static KeyboardRootState? _root;
   static BuildContext? _context;
   static KeyboardController? _keyboardController;
@@ -37,16 +37,16 @@ class CoolKeyboard {
 
   static interceptorInput() {
     if (isInterceptor) return;
-    if (!(ServicesBinding.instance is MockBinding)) {
+    if (ServicesBinding.instance is! MockBinding) {
       throw Exception('CoolKeyboard can only be used in MockBinding');
     }
     var mockBinding = ServicesBinding.instance as MockBinding;
     var mockBinaryMessenger = mockBinding.defaultBinaryMessenger as MockBinaryMessenger;
-    mockBinaryMessenger.setMockMessageHandler("flutter/textinput", _textInputHanlde);
+    mockBinaryMessenger.setMockMessageHandler("flutter/textinput", _textInputHandle);
     isInterceptor = true;
   }
 
-  static Future<ByteData?> _textInputHanlde(ByteData? data) async {
+  static Future<ByteData?> _textInputHandle(ByteData? data) async {
     var methodCall = _codec.decodeMethodCall(data);
     switch (methodCall.method) {
       case 'TextInput.show':
@@ -65,9 +65,7 @@ class CoolKeyboard {
         break;
       case 'TextInput.hide':
         if (_currentKeyboard != null) {
-          if (clearTask == null) {
-            clearTask = new Timer(Duration(milliseconds: 16), () => hideKeyboard(animation: true));
-          }
+          clearTask ??= Timer(const Duration(milliseconds: 16), () => hideKeyboard(animation: true));
           return _codec.encodeSuccessEnvelope(null);
         } else {
           if (data != null) {
@@ -84,9 +82,7 @@ class CoolKeyboard {
         break;
       case 'TextInput.clearClient':
         var isShow = _currentKeyboard != null;
-        if (clearTask == null) {
-          clearTask = new Timer(Duration(milliseconds: 16), () => hideKeyboard(animation: true));
-        }
+        clearTask ??= Timer(const Duration(milliseconds: 16), () => hideKeyboard(animation: true));
         clearKeyboard();
         if (isShow) {
           return _codec.encodeSuccessEnvelope(null);
@@ -111,7 +107,7 @@ class CoolKeyboard {
         });
 
         if (client != null) {
-          await _sendPlatformMessage("flutter/textinput", _codec.encodeMethodCall(MethodCall('TextInput.hide')));
+          await _sendPlatformMessage("flutter/textinput", _codec.encodeMethodCall(const MethodCall('TextInput.hide')));
           return _codec.encodeSuccessEnvelope(null);
         } else {
           if (clearTask == null) {
@@ -129,8 +125,10 @@ class CoolKeyboard {
   }
 
   static void _updateEditingState() {
-    var callbackMethodCall = MethodCall("TextInputClient.updateEditingState", [_keyboardController!.client.connectionId, _keyboardController!.value.toJSON()]);
-    WidgetsBinding.instance.defaultBinaryMessenger.handlePlatformMessage("flutter/textinput", _codec.encodeMethodCall(callbackMethodCall), (data) {});
+    var callbackMethodCall = MethodCall("TextInputClient.updateEditingState",
+        [_keyboardController!.client.connectionId, _keyboardController!.value.toJSON()]);
+    WidgetsBinding.instance.defaultBinaryMessenger
+        .handlePlatformMessage("flutter/textinput", _codec.encodeMethodCall(callbackMethodCall), (data) {});
   }
 
   static Future<ByteData?> _sendPlatformMessage(String channel, ByteData message) {
@@ -212,7 +210,7 @@ class CoolKeyboard {
       // });
       if (animation) {
         _pageKey!.currentState?.exitKeyboard();
-        Future.delayed(Duration(milliseconds: 116)).then((_) {
+        Future.delayed(const Duration(milliseconds: 116)).then((_) {
           _root!.clearKeyboard();
         });
       } else {
@@ -238,8 +236,10 @@ class CoolKeyboard {
   }
 
   static sendPerformAction(TextInputAction action) {
-    var callbackMethodCall = MethodCall("TextInputClient.performAction", [_keyboardController!.client.connectionId, action.toString()]);
-    WidgetsBinding.instance.defaultBinaryMessenger.handlePlatformMessage("flutter/textinput", _codec.encodeMethodCall(callbackMethodCall), (data) {});
+    var callbackMethodCall =
+        MethodCall("TextInputClient.performAction", [_keyboardController!.client.connectionId, action.toString()]);
+    WidgetsBinding.instance.defaultBinaryMessenger
+        .handlePlatformMessage("flutter/textinput", _codec.encodeMethodCall(callbackMethodCall), (data) {});
   }
 
   static updateKeyboardHeight() {
@@ -338,7 +338,8 @@ class CKTextInputType extends TextInputType {
   final String name;
   final String? params;
 
-  const CKTextInputType({required this.name, bool? signed, bool? decimal, this.params}) : super.numberWithOptions(signed: signed, decimal: decimal);
+  const CKTextInputType({required this.name, bool? signed, bool? decimal, this.params})
+      : super.numberWithOptions(signed: signed, decimal: decimal);
 
   @override
   Map<String, dynamic> toJson() {
@@ -353,9 +354,10 @@ class CKTextInputType extends TextInputType {
         'decimal: $decimal)';
   }
 
-  bool operator ==(Object target) {
-    if (target is CKTextInputType) {
-      if (this.name == target.toString()) {
+  @override
+  bool operator ==(Object other) {
+    if (other is CKTextInputType) {
+      if (name == other.toString()) {
         return true;
       }
     }
@@ -363,10 +365,11 @@ class CKTextInputType extends TextInputType {
   }
 
   @override
-  int get hashCode => this.toString().hashCode;
+  int get hashCode => toString().hashCode;
 
   factory CKTextInputType.fromJSON(Map<String, dynamic> encoded) {
-    return CKTextInputType(name: encoded['name'], signed: encoded['signed'], decimal: encoded['decimal'], params: encoded['params']);
+    return CKTextInputType(
+        name: encoded['name'], signed: encoded['signed'], decimal: encoded['decimal'], params: encoded['params']);
   }
 }
 
@@ -399,6 +402,11 @@ class KeyboardPageState extends State<KeyboardPage> {
   @override
   Widget build(BuildContext context) {
     return AnimatedPositioned(
+      left: 0,
+      width: getScreenW(context),
+      bottom: _height * (isClose ? -1 : 0),
+      height: _height,
+      duration: const Duration(milliseconds: 100),
       child: IntrinsicHeight(child: Builder(
         builder: (ctx) {
           var result = widget.builder(ctx);
@@ -411,11 +419,6 @@ class KeyboardPageState extends State<KeyboardPage> {
           );
         },
       )),
-      left: 0,
-      width: getScreenW(context),
-      bottom: _height * (isClose ? -1 : 0),
-      height: _height,
-      duration: Duration(milliseconds: 100),
     );
   }
 
@@ -441,7 +444,7 @@ class KeyboardPageState extends State<KeyboardPage> {
 
   updateHeight(double height) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      this._height = height;
+      _height = height;
       setState(() => {});
     });
   }

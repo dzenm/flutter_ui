@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 /// 网络请求[dio.Interceptor], 网络请求信息输出到控制台.
 /// // log interceptor
@@ -179,7 +180,9 @@ class LoggerInterceptor extends Interceptor {
             jsonString = JsonEncoder.withIndent(interval).convert(json.decode(msg));
           }
         } catch (e) {
-          print(e);
+          if (kDebugMode) {
+            print(e);
+          }
         }
         jsonString.split('\n').forEach((val) => _print('$interval$val'));
       } else {

@@ -30,11 +30,10 @@ class Naughty {
   }
 
   Future<void> _createOverlay() async {
-    if (_overlayEntry == null)
-      _overlayEntry = OverlayEntry(builder: (BuildContext context) {
+    _overlayEntry ??= OverlayEntry(builder: (BuildContext context) {
         return _child ??
             FloatingButton(
-              onTap: () => RouteManager.push(context, HTTPListPage()),
+              onTap: () => RouteManager.push(context, const HTTPListPage()),
               imageProvider: AssetImage(Assets.image(('ic_vnote.png'))),
             );
       });
@@ -46,7 +45,7 @@ class Naughty {
   /// 显示悬浮窗
   void show() {
     dismiss();
-    Future.delayed(Duration(milliseconds: 100), _createOverlay);
+    Future.delayed(const Duration(milliseconds: 100), _createOverlay);
   }
 
   /// 隐藏悬浮窗

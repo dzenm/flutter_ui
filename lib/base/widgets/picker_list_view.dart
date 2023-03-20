@@ -15,13 +15,13 @@ class PickerListView extends StatefulWidget {
   final OnSelectedChanged? onSelectedChanged;
   final int defaultIndex;
 
-  PickerListView({
-    Key? key,
+  const PickerListView({
+    super.key,
     this.itemCount = 0,
     required this.builder,
     this.onSelectedChanged,
     this.defaultIndex = 0,
-  }) : super(key: key);
+  });
 
   static Future<T?> show<T>({
     required BuildContext context,
@@ -35,13 +35,11 @@ class PickerListView extends StatefulWidget {
       enableDrag: true,
       builder: (context) => BottomSheet(
         onClosing: () {},
-        builder: (context) => Container(
-          child: PickerListView(
-            itemCount: itemCount,
-            builder: builder,
-            onSelectedChanged: onSelectedChanged,
-            defaultIndex: defaultIndex,
-          ),
+        builder: (context) => PickerListView(
+          itemCount: itemCount,
+          builder: builder,
+          onSelectedChanged: onSelectedChanged,
+          defaultIndex: defaultIndex,
         ),
       ),
     );
@@ -63,7 +61,7 @@ class PickerListView extends StatefulWidget {
     OnSelectedChanged? onSelectedChanged,
     int defaultIndex = 0,
   }) async {
-    Widget _buildItem(BuildContext context, int index) {
+    Widget buildItem(BuildContext context, int index) {
       String item = list[index];
       if (item.isEmpty) {
         return Container();
@@ -77,13 +75,14 @@ class PickerListView extends StatefulWidget {
     return await show<T>(
       context: context,
       itemCount: list.length,
-      builder: _buildItem,
+      builder: buildItem,
       onSelectedChanged: onSelectedChanged,
       defaultIndex: defaultIndex,
     );
   }
 
-  _PickerListViewState createState() => _PickerListViewState();
+  @override
+  State<StatefulWidget> createState() => _PickerListViewState();
 }
 
 class _PickerListViewState extends State<PickerListView> {
@@ -125,9 +124,9 @@ class _PickerListViewState extends State<PickerListView> {
 
   Widget _buildButtonView() {
     return Container(
-      decoration: BoxDecoration(color: Colors.white),
+      decoration: const BoxDecoration(color: Colors.white),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Container(
+        SizedBox(
           height: _kPickerTitleHeight,
           child: TextButton(
             child: Text(
@@ -137,7 +136,7 @@ class _PickerListViewState extends State<PickerListView> {
             onPressed: () => Navigator.pop(context),
           ),
         ),
-        Container(
+        SizedBox(
           height: _kPickerTitleHeight,
           child: TextButton(
             child: Text(

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'common_widget.dart';
@@ -21,7 +22,7 @@ class PhotoGridPicker extends StatefulWidget {
   final int maxNum; //最多可选择图片数量
   final bool withAdd; //布局最后一个是否为添加
   final OnPhotoPickerClickListener? onImageGridClickListener;
-  final GlobalKey<GridPickerState>? key;
+  final GlobalKey<GridPickerState>? globalKey;
   final bool videoSingle; //视频是否只有一个
   final double marginHorizontal;
   final double marginTop;
@@ -33,9 +34,10 @@ class PhotoGridPicker extends StatefulWidget {
   final bool addStroke; //添加布局是否描边
   final bool linkVoice; //是否关联图片（朋友圈使用）
 
-  PhotoGridPicker(
+  const PhotoGridPicker(
     this._images, {
-    this.key,
+    super.key,
+    this.globalKey,
     this.maxNum = 3,
     this.withAdd = false,
     this.marginHorizontal = 0,
@@ -49,7 +51,7 @@ class PhotoGridPicker extends StatefulWidget {
     this.addStroke = true,
     this.linkVoice = false,
     this.videoSingle = false,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() {
@@ -89,7 +91,11 @@ class GridPickerState extends State<PhotoGridPicker> {
             : columnCount * itemWH +
 //            space * 2 +
                 (columnCount - 1) * widget.itemSpace,
-        margin: EdgeInsets.only(left: widget.marginHorizontal, right: widget.marginHorizontal, top: widget.marginTop, bottom: widget.marginBottom),
+        margin: EdgeInsets.only(
+            left: widget.marginHorizontal,
+            right: widget.marginHorizontal,
+            top: widget.marginTop,
+            bottom: widget.marginBottom),
         child: GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               //可以直接指定每行（列）显示多少个Item
@@ -99,7 +105,7 @@ class GridPickerState extends State<PhotoGridPicker> {
               mainAxisSpacing: widget.itemSpace, //垂直间距
               childAspectRatio: 1.0, //子Widget宽高比例
             ),
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
 //            padding: EdgeInsets.all(space), //GridView内边距
             itemCount: getCount(),
             itemBuilder: (context, index) {
@@ -149,12 +155,12 @@ class GridPickerState extends State<PhotoGridPicker> {
       child: Stack(alignment: Alignment.topRight, children: <Widget>[
         ConstrainedBox(
           child: _getImgChild(index),
-          constraints: BoxConstraints.expand(),
+          constraints: const BoxConstraints.expand(),
         ),
         Offstage(
           offstage: !widget.withAdd,
           child: TapLayout(
-            child: Icon(
+            child: const Icon(
               Icons.cancel,
               size: 20,
               color: Colors.black,
@@ -185,17 +191,17 @@ class GridPickerState extends State<PhotoGridPicker> {
           child: Offstage(
             offstage: !durationOffstage(index),
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   colors: [Colors.transparent, Colors.transparent, Colors.grey],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
               ),
-              padding: EdgeInsets.symmetric(horizontal: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 5),
               child: Text(
                 '${getDuration(index)}',
-                style: TextStyle(fontSize: 12, color: Colors.white),
+                style: const TextStyle(fontSize: 12, color: Colors.white),
               ),
             ),
           ),
@@ -283,7 +289,11 @@ class GridPickerState extends State<PhotoGridPicker> {
                     )
                   : null); //本地图片不存在则为空
 
-    } catch (e) {}
+    } catch (e) {
+      if (kDebugMode) {
+        print(e.toString());
+      }
+    }
     return Container(child: _placeholder);
     //图片 path
     //视频 videoThumbPath
@@ -366,9 +376,10 @@ class GridPickerState extends State<PhotoGridPicker> {
   int getCount() {
     if (widget.videoSingle) {
       return 1;
-    } else if (widget.withAdd && widget._images.length < widget.maxNum) //发布页面九宫格展示
+    } else if (widget.withAdd && widget._images.length < widget.maxNum) {
       return widget._images.length + 1;
-    else
-      return widget._images.length; //朋友圈九宫格展示
+    } else {
+      return widget._images.length;
+    } //朋友圈九宫格展示
   }
 }

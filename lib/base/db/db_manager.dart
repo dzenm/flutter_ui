@@ -32,7 +32,7 @@ class DBManager {
   }
 
   /// 日志打印，如果不设置，将不打印日志，如果要设置在使用数据库之前调用 [init]
-  var _logPrint;
+  Function? _logPrint;
 
   void init({void Function(dynamic msg, {String tag})? logPrint}) {
     _logPrint = logPrint;

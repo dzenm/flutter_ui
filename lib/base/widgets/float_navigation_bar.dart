@@ -30,8 +30,9 @@ class FloatNavigationBar extends StatefulWidget {
   final List<IconData> icons; // 显示的图标
   final List<String>? title; // 显示的文本
 
-  FloatNavigationBar(
+  const FloatNavigationBar(
     this.icons, {
+    super.key,
     this.actionIndex = 0,
     this.barHeight = 48.0,
     this.actionColor = Colors.blue,
@@ -40,13 +41,13 @@ class FloatNavigationBar extends StatefulWidget {
   });
 
   @override
-  _FloatNavigatorState createState() => _FloatNavigatorState();
+  State<StatefulWidget> createState() => _FloatNavigatorState();
 }
 
 class _FloatNavigatorState extends State<FloatNavigationBar> with SingleTickerProviderStateMixin {
   int _itemCount = 0; // item数量
   int _activeIndex = 0; // 显示为悬浮按钮的位置
-  double _radiusPadding = 10.0;
+  final double _radiusPadding = 10.0;
   double _radius = 0; // 悬浮图标半径
   double _moveTween = 0.0; // 移动补间
 
@@ -56,7 +57,7 @@ class _FloatNavigatorState extends State<FloatNavigationBar> with SingleTickerPr
   void initState() {
     _activeIndex = widget.actionIndex;
     _radius = widget.barHeight * 2 / 3;
-    _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 200));
+    _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 200));
     _itemCount = widget.icons.length;
     super.initState();
   }
@@ -64,7 +65,7 @@ class _FloatNavigatorState extends State<FloatNavigationBar> with SingleTickerPr
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    return Container(
+    return SizedBox(
       width: width,
       child: Stack(
         clipBehavior: Clip.none,
@@ -89,7 +90,7 @@ class _FloatNavigatorState extends State<FloatNavigationBar> with SingleTickerPr
       top: top,
       left: left,
       child: DecoratedBox(
-        decoration: ShapeDecoration(shape: CircleBorder(), shadows: [
+        decoration: ShapeDecoration(shape: const CircleBorder(), shadows: [
           BoxShadow(
             blurRadius: padding,
             offset: Offset(0, padding),
@@ -118,7 +119,8 @@ class _FloatNavigatorState extends State<FloatNavigationBar> with SingleTickerPr
           children: widget.icons
               .asMap()
               .map(
-                (i, v) => MapEntry(i, GestureDetector(child: getItem(i, _activeIndex == i), onTap: () => _switchNavigationItem(i))),
+                (i, v) => MapEntry(
+                    i, GestureDetector(child: getItem(i, _activeIndex == i), onTap: () => _switchNavigationItem(i))),
               )
               .values
               .toList(),
@@ -146,8 +148,8 @@ class _FloatNavigatorState extends State<FloatNavigationBar> with SingleTickerPr
     double newPosition = newIndex.toDouble();
     if (oldPosition != newPosition && _animationController?.status != AnimationStatus.forward) {
       _animationController?.reset();
-      Animation<double>? animation =
-          Tween(begin: oldPosition, end: newPosition).animate(CurvedAnimation(parent: _animationController!, curve: Curves.easeInCubic));
+      Animation<double>? animation = Tween(begin: oldPosition, end: newPosition)
+          .animate(CurvedAnimation(parent: _animationController!, curve: Curves.easeInCubic));
       animation
         ..addListener(() => setState(() => _moveTween = animation.value))
         ..addStatusListener((AnimationStatus status) {

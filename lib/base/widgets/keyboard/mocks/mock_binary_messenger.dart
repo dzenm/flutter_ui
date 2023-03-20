@@ -52,11 +52,12 @@ class MockBinaryMessenger extends BinaryMessenger {
     Future<ByteData?>? result;
     if (_inboundHandlers.containsKey(channel)) result = _inboundHandlers[channel]!(data);
     result ??= Future<ByteData?>.value(null);
-    if (callback != null)
+    if (callback != null) {
       result = result.then((ByteData? result) {
         callback(result);
         return result;
       });
+    }
     return result;
   }
 

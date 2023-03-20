@@ -16,7 +16,7 @@ class SpUtil {
   SharedPreferences? _prefs;
 
   /// 日志打印，如果不设置，将不打印日志，如果要设置在使用数据库之前调用 [init]
-  var _logPrint;
+  Function? _logPrint;
 
   /// 用户登录相关的信息
   static const String _userInfo = 'u_info'; // 登录的用户信息

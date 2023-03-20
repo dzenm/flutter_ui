@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
 
-import '../../pages/study/http_page/http_page.dart';
 import '../router/route_manager.dart';
 import '../utils/notification_util.dart';
 import '../utils/str_util.dart';
+import 'http/http_list_page.dart';
 import 'http_entity.dart';
 import 'naughty.dart';
 
@@ -24,7 +24,7 @@ class HttpInterceptor extends Interceptor {
     String body = '${options.method}  ${options.path}';
     NotificationUtil.showNotification(
       body: body,
-      onTap: (payload) async => RouteManager.push(Naughty().context, HTTPListPage()),
+      onTap: (payload) async => RouteManager.push(Naughty().context, const HTTPListPage()),
     );
     handler.next(options);
   }

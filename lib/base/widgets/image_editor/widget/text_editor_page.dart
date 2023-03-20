@@ -9,10 +9,10 @@ import 'image_editor_delegate.dart';
 
 ///A page for input some text to canvas.
 class TextEditorPage extends StatefulWidget {
+  const TextEditorPage({super.key});
+
   @override
-  State<StatefulWidget> createState() {
-    return TextEditorPageState();
-  }
+  State<StatefulWidget> createState() => TextEditorPageState();
 }
 
 class TextEditorPageState extends State<TextEditorPage> with LittleWidgetBinding, WindowUiBinding {
@@ -39,7 +39,7 @@ class TextEditorPageState extends State<TextEditorPage> with LittleWidgetBinding
 
   FloatTextModel buildModel() {
     RenderObject? ro = filedKey.currentContext?.findRenderObject();
-    Offset offset = Offset(100, 200);
+    Offset offset = const Offset(100, 200);
     if (ro is RenderBox) {
       //adjust text's dy value
       offset = ro.localToGlobal(Offset.zero).translate(0, -(44 + windowStatusBarHeight));
@@ -108,8 +108,8 @@ class TextEditorPageState extends State<TextEditorPage> with LittleWidgetBinding
                   child: Container(
                     height: 44,
                     alignment: Alignment.center,
-                    padding: EdgeInsets.only(top: 12, bottom: 12),
-                    child: Text(
+                    padding: const EdgeInsets.only(top: 12, bottom: 12),
+                    child: const Text(
                       'Cancel',
                       style: TextStyle(color: Colors.white, fontSize: 16),
                     ),
@@ -117,7 +117,7 @@ class TextEditorPageState extends State<TextEditorPage> with LittleWidgetBinding
                 ),
                 actions: [
                   Padding(
-                    padding: EdgeInsets.only(top: 12, bottom: 12, right: 16),
+                    padding: const EdgeInsets.only(top: 12, bottom: 12, right: 16),
                     child: doneButtonWidget(onPressed: popWithResult),
                   ),
                 ],
@@ -125,11 +125,11 @@ class TextEditorPageState extends State<TextEditorPage> with LittleWidgetBinding
               body: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(child: SizedBox()),
+                  const Expanded(child: SizedBox()),
                   //text area
                   Container(
                     width: screenWidth,
-                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: TextField(
                       key: filedKey,
                       maxLines: 50,
@@ -138,14 +138,14 @@ class TextEditorPageState extends State<TextEditorPage> with LittleWidgetBinding
                       focusNode: _node,
                       cursorColor: configModel.cursorColor,
                       style: TextStyle(color: _textColor, fontSize: _size, fontWeight: _fontWeight),
-                      decoration: InputDecoration(isCollapsed: true, border: InputBorder.none),
+                      decoration: const InputDecoration(isCollapsed: true, border: InputBorder.none),
                     ),
                   ),
-                  Expanded(child: SizedBox()),
+                  const Expanded(child: SizedBox()),
                   //slider
                   Container(
                     height: 36,
-                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     width: double.infinity,
                     //color: Colors.white,
                     child: Row(
@@ -167,7 +167,7 @@ class TextEditorPageState extends State<TextEditorPage> with LittleWidgetBinding
                   //color selector
                   Container(
                     height: 41,
-                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     width: double.infinity,
                     //color: Colors.white,
                     child: Row(

@@ -67,7 +67,7 @@ class ImageEditorState extends State<ImageEditor> with SignatureBinding, ScreenS
     _panelController.takeShot.value = true;
     screenshotController.capture(pixelRatio: 1.0).then((value) async {
       final paths = widget.savePath ?? await getTemporaryDirectory();
-      final file = await File('${paths.path}/' + DateTime.now().toString() + '.jpg').create();
+      final file = await File('${paths.path}/${DateTime.now()}.jpg').create();
       file.writeAsBytes(value ?? []);
       decodeImg().then((value) {
         if (value == null) {
@@ -116,20 +116,20 @@ class ImageEditorState extends State<ImageEditor> with SignatureBinding, ScreenS
                         top: value ? 0 : -headerHeight,
                         left: 0,
                         right: 0,
+                        duration: _panelController.panelDuration,
                         child: ValueListenableBuilder<bool>(
                             valueListenable: _panelController.takeShot,
                             builder: (ctx, value, child) {
                               return Opacity(
                                 opacity: value ? 0 : 1,
                                 child: AppBar(
-                                  iconTheme: IconThemeData(color: Colors.white, size: 16),
+                                  iconTheme: const IconThemeData(color: Colors.white, size: 16),
                                   leading: backWidget(),
                                   backgroundColor: Colors.transparent,
                                   actions: [resetWidget(onTap: resetCanvasPlate)],
                                 ),
                               );
-                            }),
-                        duration: _panelController.panelDuration);
+                            }));
                   }),
               //canvas
               Positioned.fromRect(
@@ -151,6 +151,7 @@ class ImageEditorState extends State<ImageEditor> with SignatureBinding, ScreenS
                   builder: (ctx, value, child) {
                     return AnimatedPositioned(
                         bottom: value ? 0 : -bottomBarHeight,
+                        duration: _panelController.panelDuration,
                         child: SizedBox(
                           width: screenWidth,
                           child: ValueListenableBuilder<bool>(
@@ -161,8 +162,7 @@ class ImageEditorState extends State<ImageEditor> with SignatureBinding, ScreenS
                                   child: _buildControlBar(),
                                 );
                               }),
-                        ),
-                        duration: _panelController.panelDuration);
+                        ));
                   }),
               //trash bin
               ValueListenableBuilder<bool>(
@@ -171,8 +171,8 @@ class ImageEditorState extends State<ImageEditor> with SignatureBinding, ScreenS
                     return AnimatedPositioned(
                         bottom: value ? _panelController.trashCanPosition.dy : -headerHeight,
                         left: _panelController.trashCanPosition.dx,
-                        child: _buildTrashCan(),
-                        duration: _panelController.panelDuration);
+                        duration: _panelController.panelDuration,
+                        child: _buildTrashCan());
                   }),
               //text canvas
               Positioned.fromRect(
@@ -241,7 +241,7 @@ class ImageEditorState extends State<ImageEditor> with SignatureBinding, ScreenS
                 _buildButton(OperateType.mosaic, 'Mosaic', onPressed: () {
                   switchPainterMode(DrawStyle.mosaic);
                 }),
-                Expanded(child: SizedBox()),
+                const Expanded(child: SizedBox()),
                 doneButtonWidget(onPressed: saveImage),
               ],
             ),
@@ -270,11 +270,11 @@ class ImageEditorState extends State<ImageEditor> with SignatureBinding, ScreenS
           return Container(
             width: _panelController.tcSize.width,
             height: _panelController.tcSize.height,
-            decoration: BoxDecoration(color: value, borderRadius: BorderRadius.all(Radius.circular(8))),
+            decoration: BoxDecoration(color: value, borderRadius: const BorderRadius.all(Radius.circular(8))),
             child: Column(
               children: [
                 12.vGap,
-                Icon(
+                const Icon(
                   Icons.delete_outline,
                   size: 32,
                   color: Colors.white,
@@ -282,7 +282,7 @@ class ImageEditorState extends State<ImageEditor> with SignatureBinding, ScreenS
                 4.vGap,
                 Text(
                   isActive ? 'move here for delete' : 'release to delete',
-                  style: TextStyle(color: Colors.white, fontSize: 12),
+                  style: const TextStyle(color: Colors.white, fontSize: 12),
                 )
               ],
             ),
@@ -369,7 +369,7 @@ mixin LittleWidgetBinding<T extends StatefulWidget> on State<T> {
   ///reset button
   Widget resetWidget({VoidCallback? onTap}) {
     return Padding(
-      padding: EdgeInsets.only(top: 6, bottom: 6, right: 16),
+      padding: const EdgeInsets.only(top: 6, bottom: 6, right: 16),
       child: ValueListenableBuilder<OperateType>(
         valueListenable: realState?._panelController.operateType ?? ValueNotifier(OperateType.non),
         builder: (ctx, value, child) {
@@ -464,13 +464,13 @@ mixin TextCanvasBinding<T extends StatefulWidget> on State<T> {
         alignment: Alignment.center,
         children: textModels
             .map((e) => Positioned(
+                  left: e.left,
+                  top: e.top,
                   child: _wrapWithGesture(
                       FloatTextWidget(
                         textModel: e,
                       ),
                       e),
-                  left: e.left,
-                  top: e.top,
                 ))
             .toList(),
       );
@@ -605,7 +605,7 @@ mixin SignatureBinding<T extends StatefulWidget> on State<T> {
               Stack(
                 children: pathRecord,
               )) ??
-          SizedBox();
+          const SizedBox();
     });
   }
 

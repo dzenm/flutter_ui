@@ -5,7 +5,8 @@ class BadgeView extends StatefulWidget {
   final int count;
   final Color color;
 
-  BadgeView({
+  const BadgeView({
+    super.key,
     this.count = -1,
     this.color = Colors.red,
   });
@@ -43,7 +44,7 @@ class _BadgeViewState extends State<BadgeView> {
           borderRadius: count >= 10 ? BorderRadius.circular(8) : null,
           color: widget.color,
         ),
-        child: Text(text, style: TextStyle(color: Colors.white, fontSize: 8)),
+        child: Text(text, style: const TextStyle(color: Colors.white, fontSize: 8)),
       ),
     );
   }

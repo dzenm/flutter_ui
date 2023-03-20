@@ -11,26 +11,26 @@ class WillPopView extends StatefulWidget {
   final BackBehavior behavior; //返回键的行为
   final WillPopCallback? onWillPop;
 
-  WillPopView({
-    Key? key,
+  const WillPopView({
+    super.key,
     required this.child,
     this.behavior = BackBehavior.custom,
     this.onWillPop,
-  }) : super(key: key);
+  });
 
   /// 点击返回时, 存在未保存的内容时弹出的提示框
   static Widget _buildPromptBackDialog(BuildContext context) {
     return AlertDialog(
-      title: Text('保存提示'),
-      content: Text('是否将当前页面保存?'),
+      title: const Text('保存提示'),
+      content: const Text('是否将当前页面保存?'),
       contentPadding: const EdgeInsets.fromLTRB(24.0, 8.0, 24.0, 8.0),
       actions: [
         TextButton(
-          child: Text('取消'),
+          child: const Text('取消'),
           onPressed: () => Navigator.pop(context, false),
         ),
         TextButton(
-          child: Text('确定'),
+          child: const Text('确定'),
           onPressed: () => Navigator.pop(context, true),
         ),
       ],
@@ -39,7 +39,8 @@ class WillPopView extends StatefulWidget {
 
   /// 返回时提示退出
   /// 设置提示框，默认实现[_buildPromptBackDialog]
-  static Future<bool> promptBack(BuildContext context, {bool isChanged = false, bool isShowDialog = true, WidgetBuilder? builder}) async {
+  static Future<bool> promptBack(BuildContext context,
+      {bool isChanged = false, bool isShowDialog = true, WidgetBuilder? builder}) async {
     if (isChanged && isShowDialog) {
       await showDialog<bool>(
         context: context,
@@ -78,13 +79,13 @@ class _WillPopViewState extends State<WillPopView> {
         return false;
       case BackBehavior.doubleTap:
         DateTime now = DateTime.now();
-        if (_lastTap == null || now.difference(_lastTap!) > Duration(seconds: 2)) {
+        if (_lastTap == null || now.difference(_lastTap!) > const Duration(seconds: 2)) {
           // 两次点击间隔超过2秒则重新计时
           _lastTap = now;
           BotToast.showText(
             text: '再次点击退出程序',
             onlyOne: true,
-            textStyle: TextStyle(fontSize: 14, color: Colors.white),
+            textStyle: const TextStyle(fontSize: 14, color: Colors.white),
           );
           return false;
         } else {

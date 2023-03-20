@@ -12,11 +12,13 @@ class DBDao {
   }) async {
     if (data == null) return;
     if (data is List) {
-      data.forEach((element) async => await DBManager().insertItem(
+      for (var element in data) {
+        await DBManager().insertItem(
             element.tableName,
             element.toJson(),
             conflictAlgorithm: conflictAlgorithm,
-          ));
+          );
+      }
     } else if (data is T) {
       await DBManager().insertItem(
         data.tableName,

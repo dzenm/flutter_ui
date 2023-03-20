@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 /// Item的点击事件
-typedef void ItemClick(int position);
+typedef ItemClick = void Function(int position);
 
 /// 自定义指示器布局
-typedef Widget IndicatorItemViewBuilder(int position, int selected);
+typedef IndicatorItemViewBuilder = Widget Function(int position, int selected);
 
 /// 自定义页面显示的布局
-typedef Widget ItemViewBuilder(dynamic data);
+typedef ItemViewBuilder = Widget Function(dynamic data);
 
 /// 轮播图展示
 class BannerView extends StatefulWidget {
@@ -24,8 +24,8 @@ class BannerView extends StatefulWidget {
   final IndicatorItemViewBuilder? indicatorBuilder;
   final ItemClick? onTap;
 
-  BannerView({
-    Key? key,
+  const BannerView({
+    super.key,
     required this.builder,
     required this.data,
     this.width,
@@ -36,16 +36,17 @@ class BannerView extends StatefulWidget {
     this.autoPlay = true,
     this.indicatorBuilder,
     this.onTap,
-  }) : super(key: key);
+  });
 
+  @override
   State<StatefulWidget> createState() => _BannerViewState();
 }
 
 class _BannerViewState extends State<BannerView> {
-  PageController _controller = PageController();
+  final PageController _controller = PageController();
 
   /// 内部加两个⻚⾯ +B(A,B)+A
-  List<Widget> _banners = [];
+  final List<Widget> _banners = [];
 
   /// 定时滑动页面的计时器
   Timer? _timer;
@@ -101,7 +102,9 @@ class _BannerViewState extends State<BannerView> {
     _banners.clear();
     // 初始化数据
     List<Widget> children = [];
-    widget.data.forEach((banner) => children.add(widget.builder(banner.data)));
+    for (var banner in widget.data) {
+      children.add(widget.builder(banner.data));
+    }
     _banners.addAll(children);
 
     // 定时器完成⾃动翻⻚
@@ -131,7 +134,7 @@ class _BannerViewState extends State<BannerView> {
   void _nextPage(Timer timer) {
     ++_curPageIndex;
     _curPageIndex = _curPageIndex == _banners.length ? 0 : _curPageIndex;
-    _controller.animateToPage(_curPageIndex, duration: Duration(milliseconds: 500), curve: Curves.linear);
+    _controller.animateToPage(_curPageIndex, duration: const Duration(milliseconds: 500), curve: Curves.linear);
   }
 
   @override
@@ -144,7 +147,7 @@ class _BannerViewState extends State<BannerView> {
   @override
   Widget build(BuildContext context) {
     if (_realLen == 0) return Container();
-    return Container(
+    return SizedBox(
       width: widget.width,
       height: widget.height,
       child: Stack(
@@ -215,7 +218,7 @@ class _BannerViewState extends State<BannerView> {
       alignment: widget.indicatorAlignment,
       child: IntrinsicHeight(
         child: Container(
-          padding: EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8.0),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: indicators,
@@ -230,7 +233,7 @@ class _BannerViewState extends State<BannerView> {
     bool selected = selectedIndex == i;
     Color color = selected ? Colors.white : Colors.grey;
     return Container(
-      margin: EdgeInsets.all(3.0),
+      margin: const EdgeInsets.all(3.0),
       width: 8,
       height: 8,
       decoration: BoxDecoration(
@@ -246,8 +249,8 @@ class _BannerViewState extends State<BannerView> {
       alignment: Alignment.bottomCenter,
       child: IntrinsicHeight(
         child: Container(
-          color: Color(0x99000000),
-          padding: EdgeInsets.all(6.0),
+          color: const Color(0x99000000),
+          padding: const EdgeInsets.all(6.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [_buildTitleItemView()],
@@ -267,7 +270,7 @@ class _BannerViewState extends State<BannerView> {
         softWrap: true,
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
-        style: TextStyle(color: Colors.white, fontSize: 12.0),
+        style: const TextStyle(color: Colors.white, fontSize: 12.0),
       ),
     );
   }

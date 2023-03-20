@@ -11,21 +11,21 @@ class RefreshListView extends StatefulWidget {
   final RefreshFunction refresh; // refresh为true表示下拉刷新的回调, 为false表示上拉加载更多的回调
   final bool showFooter;
 
-  RefreshListView({
-    Key? key,
+  const RefreshListView({
+    super.key,
     required this.itemCount,
     required this.builder,
     required this.refresh,
     this.controller,
     this.showFooter = false,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() => _RefreshListViewState();
 }
 
 class _RefreshListViewState extends State<RefreshListView> {
-  ScrollController _controller = ScrollController(); // listView的控制器
+  final ScrollController _controller = ScrollController(); // listView的控制器
   StateController? _stateController;
 
   @override

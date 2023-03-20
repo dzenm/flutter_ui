@@ -22,7 +22,7 @@ enum OperateType{
 
 class EditorPanelController {
 
-  static const defaultTrashColor = const Color(0x26ffffff);
+  static const defaultTrashColor = Color(0x26ffffff);
 
   EditorPanelController() {
     colorSelected = ValueNotifier(brushColor.first.value);
@@ -83,7 +83,7 @@ class EditorPanelController {
   Offset trashCanPosition = Offset(111, (20 + window.padding.bottom));
 
   ///trash can size.
-  final Size tcSize = Size(153, 77);
+  final Size tcSize = const Size(153, 77);
 
   ///The top and bottom panel's slide duration.
   final Duration panelDuration = const Duration(milliseconds: 300);

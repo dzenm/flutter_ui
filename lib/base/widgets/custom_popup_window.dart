@@ -22,9 +22,9 @@ class CustomPopupWindow extends StatefulWidget {
       CustomPopupRoute(
         child: CustomPopupWindow(
           targetKey: targetKey,
-          child: child,
           direction: direction ?? PopDirection.bottom,
           offset: offset ?? 4,
+          child: child,
         ),
       ),
     );
@@ -59,6 +59,8 @@ class CustomPopupWindow extends StatefulWidget {
       CustomPopupRoute(
         child: CustomPopupWindow(
           targetKey: targetKey,
+          direction: direction ?? PopDirection.bottom,
+          offset: offset ?? 4,
           child: _PopupWindowState._buildListView(
             context,
             titles,
@@ -68,21 +70,18 @@ class CustomPopupWindow extends StatefulWidget {
             color: color,
             onItemTap: onItemTap,
           ),
-          direction: direction ?? PopDirection.bottom,
-          offset: offset ?? 4,
         ),
       ),
     );
   }
 
-  final Key? key;
   final GlobalKey targetKey; //展示的target key
   final Widget child; //自定义widget
   final PopDirection direction; //PopupWindow在target的方向
   final double offset; //PopupWindow偏移量
 
-  CustomPopupWindow({
-    this.key,
+  const CustomPopupWindow({
+    super.key,
     required this.targetKey,
     required this.child,
     this.direction = PopDirection.bottom,
@@ -104,7 +103,6 @@ class _PopupWindowState extends State<CustomPopupWindow> {
     popupWindowKey = GlobalKey();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       RenderBox? target = widget.targetKey.currentContext?.findRenderObject() as RenderBox?;
-      print('RenderBox target is ${target == null ? 'Null' : 'Not Null'}');
       if (target != null) {
         // TargetWidget的坐标位置
         Offset localToGlobal = target.localToGlobal(Offset.zero);
@@ -164,11 +162,11 @@ class _PopupWindowState extends State<CustomPopupWindow> {
               color: Colors.transparent,
             ),
             Positioned(
+              left: left,
+              top: top,
               child: GestureDetector(
                 child: _buildCustomWidget(widget.child),
               ),
-              left: left,
-              top: top,
             )
           ],
         ),
@@ -193,14 +191,14 @@ class _PopupWindowState extends State<CustomPopupWindow> {
         color: color ?? Colors.black38,
         borderRadius: BorderRadius.all(Radius.circular(radius)),
       ),
-      margin: margin ?? EdgeInsets.symmetric(horizontal: 8),
+      margin: margin ?? const EdgeInsets.symmetric(horizontal: 8),
       clipBehavior: Clip.hardEdge,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: titles.map((title) {
           return TapLayout(
-            padding: padding ?? EdgeInsets.symmetric(vertical: 8, horizontal: 32),
-            child: Text(title, style: TextStyle(color: Colors.white)),
+            padding: padding ?? const EdgeInsets.symmetric(vertical: 8, horizontal: 32),
+            child: Text(title, style: const TextStyle(color: Colors.white)),
             onTap: () {
               Navigator.pop(context);
               if (onItemTap != null) {
@@ -224,7 +222,7 @@ class _PopupWindowState extends State<CustomPopupWindow> {
 
 /// 自定义的Popup跳转时的路由
 class CustomPopupRoute extends PopupRoute {
-  final Duration _duration = Duration(milliseconds: 100);
+  final Duration _duration = const Duration(milliseconds: 100);
   Widget child;
 
   CustomPopupRoute({required this.child});

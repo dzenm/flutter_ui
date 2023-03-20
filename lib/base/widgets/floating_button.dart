@@ -8,19 +8,20 @@ class FloatingButton extends StatefulWidget {
   final ImageProvider imageProvider;
   final GestureTapCallback? onTap;
 
-  FloatingButton({
+  const FloatingButton({
+    super.key,
     required this.imageProvider,
     this.onTap,
   });
 
   @override
-  _FloatingButtonState createState() => _FloatingButtonState();
+  State<StatefulWidget> createState() => _FloatingButtonState();
 }
 
 class _FloatingButtonState extends State<FloatingButton> with TickerProviderStateMixin {
   double _left = 0.0; //按钮在屏幕上的x坐标
   double _top = 100.0; //按钮在屏幕上的y坐标
-  double _radius = 50.0;
+  final double _radius = 50.0;
 
   bool isLeft = true; //按钮是否在按钮左侧
   bool isEdge = true; //按钮是否处于边缘
@@ -48,7 +49,7 @@ class _FloatingButtonState extends State<FloatingButton> with TickerProviderStat
             var pixelDetails = MediaQuery.of(context).size; //获取屏幕信息
 
             bool isPositionInLeft = e.position.dx <= pixelDetails.width / 2;
-            _controller = AnimationController(vsync: this, duration: Duration(milliseconds: 100)); //0.1s动画
+            _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 100)); //0.1s动画
             _animation = Tween<double>(
               begin: e.position.dx,
               end: isPositionInLeft ? 0.0 : pixelDetails.width - _radius,
@@ -166,7 +167,7 @@ class FloatingButtonPainter extends CustomPainter {
     Paint paint = Paint()
       ..isAntiAlias = false
       ..style = PaintingStyle.fill
-      ..color = Color.fromRGBO(0xF3, 0xF3, 0xF3, 0.9);
+      ..color = const Color.fromRGBO(0xF3, 0xF3, 0xF3, 0.9);
 
     // path : 按钮矩形的范围（不包括半圆）
     Path path;
@@ -204,13 +205,13 @@ class FloatingButtonPainter extends CustomPainter {
       ..isAntiAlias = true
       ..strokeWidth = 0.75
       ..strokeCap = StrokeCap.round
-      ..maskFilter = MaskFilter.blur(BlurStyle.normal, 0.25) //线条模糊
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 0.25) //线条模糊
       ..style = PaintingStyle.stroke
-      ..color = Color.fromRGBO(0xCF, 0xCF, 0xCF, 1);
+      ..color = const Color.fromRGBO(0xCF, 0xCF, 0xCF, 1);
     canvas.drawPath(edgePath, paint);
 
     //按下则画阴影，表示选中
-    if (isPress) canvas.drawShadow(isLeft ? edgePath : path, Color.fromRGBO(0xDA, 0xDA, 0xDA, 0.3), 0, false);
+    if (isPress) canvas.drawShadow(isLeft ? edgePath : path, const Color.fromRGBO(0xDA, 0xDA, 0xDA, 0.3), 0, false);
 
     _paintCircleImage(canvas);
   }
@@ -221,7 +222,7 @@ class FloatingButtonPainter extends CustomPainter {
     var paint = Paint()
       ..isAntiAlias = false
       ..style = PaintingStyle.fill
-      ..color = Color.fromRGBO(0xF3, 0xF3, 0xF3, 0.9);
+      ..color = const Color.fromRGBO(0xF3, 0xF3, 0xF3, 0.9);
     canvas.drawCircle(Offset(_radius, _radius), _radius, paint);
 
     //绘制按钮外层边框
@@ -229,8 +230,8 @@ class FloatingButtonPainter extends CustomPainter {
       ..isAntiAlias = true
       ..style = PaintingStyle.stroke
       ..strokeWidth = 0.75
-      ..maskFilter = MaskFilter.blur(BlurStyle.normal, 0.25)
-      ..color = Color.fromRGBO(0xCF, 0xCF, 0xCF, 1);
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 0.25)
+      ..color = const Color.fromRGBO(0xCF, 0xCF, 0xCF, 1);
     canvas.drawCircle(Offset(_radius, _radius), _radius, paint);
 
     //如果按下则绘制阴影
@@ -238,7 +239,7 @@ class FloatingButtonPainter extends CustomPainter {
       var circlePath = Path()
         ..moveTo(_radius, _radius)
         ..arcTo(Rect.fromCircle(center: Offset(_radius, _radius), radius: _radius), 0, 2 * 3.14, true); //使用pi会出错。
-      canvas.drawShadow(circlePath, Color.fromRGBO(0xCF, 0xCF, 0xCF, 0.3), 0.5, false);
+      canvas.drawShadow(circlePath, const Color.fromRGBO(0xCF, 0xCF, 0xCF, 0.3), 0.5, false);
     }
 
     _paintCircleImage(canvas);
@@ -250,7 +251,7 @@ class FloatingButtonPainter extends CustomPainter {
     Paint paint = Paint();
     canvas.save(); //图片剪裁前保存图层
 
-    RRect imageRRect = RRect.fromRectAndRadius(Rect.fromLTWH(_radius - 17.5, _radius - 17.5, 35, 35), Radius.circular(17.5));
+    RRect imageRRect = RRect.fromRectAndRadius(Rect.fromLTWH(_radius - 17.5, _radius - 17.5, 35, 35), const Radius.circular(17.5));
     canvas.clipRRect(imageRRect); //图片为圆形，圆形剪裁
     canvas.drawColor(Colors.white, BlendMode.srcOver); //设置填充颜色为白色
 

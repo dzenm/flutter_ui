@@ -27,8 +27,8 @@ class TapLayout extends StatefulWidget {
 
   final int delay;
 
-  TapLayout({
-    Key? key,
+  const TapLayout({
+    super.key,
     required this.child,
     this.onTap,
     this.onDoubleTap,

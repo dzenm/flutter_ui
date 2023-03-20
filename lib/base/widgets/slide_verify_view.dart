@@ -42,7 +42,7 @@ class _SlideVerifyViewState extends State<SlideVerifyView> with TickerProviderSt
   double _initial = 0.0;
 
   /// 滑动块宽度
-  double _sliderWidth = 64;
+  final double _sliderWidth = 64;
 
   /// 是否允许拖动
   bool _enableSlide = true;
@@ -105,7 +105,7 @@ class _SlideVerifyViewState extends State<SlideVerifyView> with TickerProviderSt
           border: Border.all(color: widget.borderColor),
 
           /// 圆角实现
-          borderRadius: BorderRadius.all(new Radius.circular(_height)),
+          borderRadius: BorderRadius.all(Radius.circular(_height)),
         ),
         child: Stack(children: [
           Positioned(
@@ -121,10 +121,10 @@ class _SlideVerifyViewState extends State<SlideVerifyView> with TickerProviderSt
                   color: widget.slideColor,
 
                   /// 圆角实现
-                  borderRadius: BorderRadius.all(new Radius.circular(_width / 2))),
+                  borderRadius: BorderRadius.all(Radius.circular(_width / 2))),
             ),
           ),
-          Center(
+          const Center(
             child: Text(
               '向右滑动解锁发言',
               style: TextStyle(color: Colors.white, fontSize: 14),
@@ -144,7 +144,7 @@ class _SlideVerifyViewState extends State<SlideVerifyView> with TickerProviderSt
                   border: Border.all(color: widget.borderColor),
 
                   /// 圆角实现
-                  borderRadius: BorderRadius.all(new Radius.circular(_height))),
+                  borderRadius: BorderRadius.all(Radius.circular(_height))),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

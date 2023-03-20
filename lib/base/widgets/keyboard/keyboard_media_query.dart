@@ -6,7 +6,7 @@ import 'keyboard_manager.dart';
 class KeyboardMediaQuery extends StatefulWidget {
   final Widget child;
 
-  KeyboardMediaQuery({required this.child});
+  const KeyboardMediaQuery({super.key, required this.child});
 
   @override
   State<StatefulWidget> createState() => KeyboardMediaQueryState();
@@ -14,8 +14,7 @@ class KeyboardMediaQuery extends StatefulWidget {
 
 class KeyboardMediaQueryState extends State<KeyboardMediaQuery> {
   double keyboardHeight = 0;
-  ValueNotifier<double> keyboardHeightNotifier =
-      CoolKeyboard.keyboardHeightNotifier;
+  ValueNotifier<double> keyboardHeightNotifier = CoolKeyboard.keyboardHeightNotifier;
 
   @override
   void initState() {
@@ -27,17 +26,15 @@ class KeyboardMediaQueryState extends State<KeyboardMediaQuery> {
   Widget build(BuildContext context) {
     // TODO: implement build
     var data = MediaQuery.maybeOf(context);
-    if (data == null) {
-      data = MediaQueryData.fromWindow(WidgetsBinding.instance.window);
-    }
+    data ??= MediaQueryData.fromWindow(WidgetsBinding.instance.window);
     var bottom = CoolKeyboard.keyboardHeightNotifier.value != 0
         ? CoolKeyboard.keyboardHeightNotifier.value
         : data.viewInsets.bottom;
     // TODO: implement build
     return MediaQuery(
-        child: widget.child,
-        data: data.copyWith(
-            viewInsets: data.viewInsets.copyWith(bottom: bottom)));
+      data: data.copyWith(viewInsets: data.viewInsets.copyWith(bottom: bottom)),
+      child: widget.child,
+    );
   }
 
   onUpdateHeight() {

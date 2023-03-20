@@ -37,24 +37,24 @@ class HttpsClient {
 
   factory HttpsClient() => _instance;
 
-  Map<String, ApiServices> _api = {};
-  List<String> _baseUrls = [
+  final Map<String, ApiServices> _api = {};
+  final List<String> _baseUrls = [
     'https://www.wanandroid.com/',
     'http://api.tianapi.com/',
     'http://192.168.2.30:8080/api/v1/',
   ];
 
   /// 日志打印，如果不设置，将不打印日志，如果要设置在使用数据库之前调用 [init]
-  var _logPrint;
+  Function? _logPrint;
 
   /// 全局的请求提醒加载框
-  var _loading;
+  Function? _loading;
 
   /// 全局的错误的toast提醒加载框
-  var _toast;
+  Function? _toast;
 
   /// 请求拦截器
-  List<Interceptor> _interceptors = [];
+  final List<Interceptor> _interceptors = [];
 
   /// 初始化
   void init({
@@ -78,15 +78,17 @@ class HttpsClient {
     // _interceptors.add(CookieInterceptor.instance);
 
     /// 创建dio
-    _baseUrls.forEach((url) => _createApiServices(baseUrl: url));
+    for (var url in _baseUrls) {
+      _createApiServices(baseUrl: url);
+    }
   }
 
   /// 创建ApiServices
   /// baseUrl必须使用 "", 不能使用 ''
   void _createApiServices({required String? baseUrl}) {
     Dio dio = Dio(BaseOptions(
-      connectTimeout: Duration(milliseconds: _connectTimeout),
-      receiveTimeout: Duration(milliseconds: _receiveTimeout),
+      connectTimeout: const Duration(milliseconds: _connectTimeout),
+      receiveTimeout: const Duration(milliseconds: _receiveTimeout),
       // 不使用http状态码判断状态，使用AdapterInterceptor来处理（适用于标准REST风格）
       validateStatus: (status) => true,
       baseUrl: baseUrl!,
@@ -111,7 +113,9 @@ class HttpsClient {
     //   // return new HttpsClient();
     //   return client;
     // };
-    _interceptors.forEach((interceptor) => dio.interceptors.add(interceptor));
+    for (var interceptor in _interceptors) {
+      dio.interceptors.add(interceptor);
+    }
     _api[baseUrl] ??= ApiServices(dio, baseUrl: baseUrl);
   }
 

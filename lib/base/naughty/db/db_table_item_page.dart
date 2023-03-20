@@ -9,10 +9,7 @@ class DBTableItemPage extends StatefulWidget {
   final String dbName;
   final String tableName;
 
-  DBTableItemPage(
-    this.dbName,
-    this.tableName,
-  );
+  const DBTableItemPage(this.dbName, this.tableName, {super.key});
 
   @override
   State<StatefulWidget> createState() => _DBTableItemPageState();
@@ -21,13 +18,13 @@ class DBTableItemPage extends StatefulWidget {
 class _DBTableItemPageState extends State<DBTableItemPage> {
   List<Map<String, dynamic>> _list = [];
   List<ColumnEntity> _columns = [];
-  StateController _controller = StateController();
+  final StateController _controller = StateController();
 
   @override
   void initState() {
     super.initState();
 
-    Future.delayed(Duration(milliseconds: 500), getData);
+    Future.delayed(const Duration(milliseconds: 500), getData);
   }
 
   Future<void> getData() async {
@@ -58,7 +55,7 @@ class _DBTableItemPageState extends State<DBTableItemPage> {
                     rows: _list.map((Map<String, dynamic> item) {
                       return DataRow(
                           cells: _columns.map((column) {
-                        return DataCell(Text('${item[column.name].toString()}'));
+                        return DataCell(Text(item[column.name].toString()));
                       }).toList());
                     }).toList(),
                   )

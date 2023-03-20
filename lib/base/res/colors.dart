@@ -22,7 +22,7 @@ class C {
     return _theme.keys.map((e) => e).toList();
   }
 
-  static Map<String, AppTheme> _theme = {
+  static final Map<String, AppTheme> _theme = {
     'gray': GrayTheme(),
     'blue': BlueTheme(),
     'blueAccent': BlueAccentTheme(),

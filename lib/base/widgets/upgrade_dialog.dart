@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../res/local_model.dart';
-import '../res/theme/app_theme.dart';
 import 'tap_layout.dart';
 
 ///
@@ -13,20 +10,19 @@ class UpgradeDialog extends StatelessWidget {
   final List<String> desc; // 展示新版本更新的描述信息
   final GestureTapCallback? onTap;
 
-  UpgradeDialog({
-    Key? key,
+  const UpgradeDialog({
+    super.key,
     required this.version,
     required this.desc,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    AppTheme theme = context.watch<LocalModel>().appTheme;
     return Container(
-      decoration: BoxDecoration(
-        color: theme.white,
-        borderRadius: const BorderRadius.all(Radius.circular(8)),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(8)),
       ),
       clipBehavior: Clip.hardEdge,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -37,7 +33,7 @@ class UpgradeDialog extends StatelessWidget {
             child: RichText(
               text: TextSpan(
                 text: '新版本',
-                style: TextStyle(color: theme.primaryText, fontSize: 18),
+                style: const TextStyle(color: Colors.red, fontSize: 18),
                 children: [TextSpan(text: version)],
               ),
             ),
@@ -51,7 +47,7 @@ class UpgradeDialog extends StatelessWidget {
           children: desc.map((value) {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(value, style: TextStyle(color: theme.secondaryText, height: 2)),
+              child: Text(value, style: const TextStyle(color: Colors.red, height: 2)),
             );
           }).toList(),
         ),
@@ -60,27 +56,26 @@ class UpgradeDialog extends StatelessWidget {
         // 分割线
         Container(
           height: 0.5,
-          color: theme.hintText,
         ),
 
         // 取消和升级按钮
         Row(children: [
           Expanded(
+            flex: 1,
             child: TapLayout(
               height: 48,
-              child: Text('关闭', style: TextStyle(color: theme.secondaryText)),
+              child: const Text('关闭'),
               onTap: () => Navigator.pop(context),
             ),
-            flex: 1,
           ),
           Expanded(
+            flex: 1,
             child: TapLayout(
               height: 48,
-              background: theme.primary,
-              child: Text('立即升级', style: TextStyle(color: theme.white)),
+              background: Colors.red,
               onTap: onTap,
+              child: const Text('立即升级', style: TextStyle(color: Colors.white)),
             ),
-            flex: 1,
           ),
         ]),
       ]),
@@ -113,7 +108,7 @@ class VersionEntity {
 
   @override
   String toString() {
-    StringBuffer sb = new StringBuffer('{');
+    StringBuffer sb = StringBuffer('{');
     sb.write("\"title\":\"$title\"");
     sb.write(",\"content\":\"$content\"");
     sb.write(",\"url\":\"$url\"");

@@ -14,7 +14,11 @@ const String interval = '  ';
 class Log {
   Log._internal();
 
-  static Log _instance = Log._internal();
+  static final Log _instance = Log._internal();
+
+  static Log get instance => _instance;
+
+  factory Log() => _instance;
 
   static const String _tag = 'Log';
 
@@ -30,9 +34,10 @@ class Log {
   bool _debuggable = true; // 是否是debug模式
   String _myTag = _tag;
 
-  static void init({bool isDebug = true, String tag = _tag}) {
+  static void init({bool isDebug = true, String tag = _tag, int level = _verbose}) {
     _instance._debuggable = isDebug;
     _instance._myTag = tag;
+    _instance._level = level;
   }
 
   static void v(dynamic message, {String tag = ''}) {

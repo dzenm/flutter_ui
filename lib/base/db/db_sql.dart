@@ -180,7 +180,7 @@ class Sql {
   // 数据库版本4升级到版本5
   static String? _onUpgrade_4_5(int oldVersion, int newVersion) {
     if (newVersion > 4 && oldVersion <= 5) {
-      String sql = '$createWebsiteTable';
+      String sql = createWebsiteTable;
       DBManager.instance.log('Database onUpgrade_4_5: $sql');
       return sql;
     }

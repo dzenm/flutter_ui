@@ -13,7 +13,7 @@ class FileUtil {
 
   factory FileUtil() => instance;
 
-  var _logPrint;
+  Function? _logPrint;
 
   void init({void Function(dynamic msg, {String tag})? logPrint}) {
     _logPrint = logPrint;
@@ -61,7 +61,7 @@ class FileUtil {
         await file.create();
       }
       IOSink slink = file.openWrite(mode: FileMode.append);
-      slink.write('$text');
+      slink.write(text);
       await slink.close();
       log('保存文件成功: ${file.path}');
       return Future.value(file.path);
@@ -87,7 +87,7 @@ class FileUtil {
   void copy(String oldPath, String newPath) {
     File oldFile = File(oldPath);
     try {
-      oldFile.copySync('$newPath');
+      oldFile.copySync(newPath);
       log('文件复制成功: from=$oldPath to=$newPath');
     } catch (e) {
       log('文件复制失败: $e');
@@ -132,12 +132,12 @@ class FileUtil {
   }
 
   //l 清除缓存目录工具
-  static Future<Null> clearTempCache() async {
+  static Future<void> clearTempCache() async {
     var tempPath = await getTemporaryDirectory();
     await requestPermission(tempPath);
   }
 
-  static Future<Null> requestPermission(FileSystemEntity file) async {
+  static Future<void> requestPermission(FileSystemEntity file) async {
     // PermissionStatus status = await Permission.storage.status;
     // if (status != PermissionStatus.granted) {
     //   CommonDialog.showToast("请先开启读写权限");
@@ -146,7 +146,7 @@ class FileUtil {
     await delDir(file);
   }
 
-  static Future<Null> delDir(FileSystemEntity file) async {
+  static Future<void> delDir(FileSystemEntity file) async {
     if (file is Directory && file.existsSync()) {
       final List<FileSystemEntity> children = file.listSync(recursive: true, followLinks: true);
       for (final FileSystemEntity child in children) {
@@ -158,7 +158,9 @@ class FileUtil {
       if (file.existsSync()) {
         await file.delete(recursive: true);
       }
-    } catch (err) {}
+    } catch (err) {
+      FileUtil.instance.log(err.toString());
+    }
   }
 
   //l 循环获取缓存大小
@@ -172,7 +174,11 @@ class FileUtil {
     if (file is Directory && file.existsSync()) {
       List children = file.listSync();
       double total = 0;
-      if (children.length > 0) for (final FileSystemEntity child in children) total += await getTotalSizeOfFilesInDir(child);
+      if (children.isNotEmpty) {
+        for (FileSystemEntity child in children) {
+          total += await getTotalSizeOfFilesInDir(child);
+        }
+      }
       return total;
     }
     return 0;
@@ -183,11 +189,7 @@ class FileUtil {
     if (value == null || value == 0) {
       return '0.0B';
     }
-    List<String> unitArr = []
-      ..add('B')
-      ..add('K')
-      ..add('M')
-      ..add('G');
+    List<String> unitArr = ['B', 'K', 'M', 'G'];
     int index = 0;
     while (value > 1024) {
       index++;

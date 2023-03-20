@@ -56,10 +56,10 @@ class DefaultImageEditorDelegate extends ImageEditorDelegate{
     return Container(
       constraints: constraints,
       alignment: Alignment.center,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(6)),
-          gradient: const LinearGradient(colors: [Colors.green, Colors.greenAccent])),
-      child: Text(
+          gradient: LinearGradient(colors: [Colors.green, Colors.greenAccent])),
+      child: const Text(
         'Done',
         style: TextStyle(fontSize: 15, color: Colors.white),
       ),
@@ -92,7 +92,7 @@ class DefaultImageEditorDelegate extends ImageEditorDelegate{
   }
 
   @override
-  Widget get resetWidget => Text('Reset', style: TextStyle(color: Colors.white, fontSize: 16));
+  Widget get resetWidget => const Text('Reset', style: TextStyle(color: Colors.white, fontSize: 16));
 
   @override
   SliderThemeData sliderThemeData(BuildContext context) => SliderTheme.of(context).copyWith(
@@ -101,7 +101,7 @@ class DefaultImageEditorDelegate extends ImageEditorDelegate{
     disabledThumbColor: Colors.white,
     activeTrackColor: const Color(0xFFF83112),
     inactiveTrackColor: Colors.white.withOpacity(0.5),
-    overlayShape: CustomRoundSliderOverlayShape(),
+    overlayShape: const CustomRoundSliderOverlayShape(),
   );
 
   @override
@@ -114,7 +114,7 @@ class DefaultImageEditorDelegate extends ImageEditorDelegate{
   Widget undoWidget(double limitSize) => Icon(Icons.undo, size: limitSize, color: Colors.white);
 
   @override
-  Widget get boldTagWidget => Text(
+  Widget get boldTagWidget => const Text(
     'Bold',
     style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.bold),
   );
@@ -158,7 +158,7 @@ abstract class TextConfigModel{
 ///For delegate [ImageEditor]'s ui style.
 abstract class ImageEditorDelegate{
 
-  final BoxConstraints _doneWidgetCons = BoxConstraints(maxHeight: 32, maxWidth: 54);
+  final BoxConstraints _doneWidgetCons = const BoxConstraints(maxHeight: 32, maxWidth: 54);
 
   final double _operateBtnSize = 24;
 
@@ -171,7 +171,7 @@ abstract class ImageEditorDelegate{
   Widget buildOperateWidget(OperateType type, {required bool choosen}) {
     switch(type) {
       case OperateType.non:
-        return SizedBox();
+        return const SizedBox();
       case OperateType.brush:
         return brushWidget(_operateBtnSize, type, choosen: choosen);
       case OperateType.text:
