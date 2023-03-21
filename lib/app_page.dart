@@ -13,7 +13,6 @@ import 'base/widgets/keyboard/keyboard_root.dart';
 import 'base/widgets/will_pop_view.dart';
 import 'models/article_model.dart';
 import 'models/banner_model.dart';
-import 'models/provider_manager.dart';
 import 'models/user_model.dart';
 import 'models/website_model.dart';
 import 'pages/main/home_page/home_model.dart';
@@ -39,9 +38,6 @@ class AppPage extends StatelessWidget {
     if (BuildConfig.isTestApp) {
       return _buildEasyApp();
     }
-
-    // 初始化需要用到context的地方
-    _init(context);
 
     // 初始化其他需要context的组件
     // Provider
@@ -92,7 +88,8 @@ class AppPage extends StatelessWidget {
   /// 全局设置（主题、语言、屏幕适配、路由设置）
   Widget _buildMaterialApp({Widget? child}) {
     return Consumer<LocalModel>(builder: (context, local, widget) {
-      ProviderManager.init(context);
+      // 初始化需要用到context的地方
+      Future.delayed(Duration.zero, () => _init(Application().context));
       // Page必须放在MaterialApp中运行
       AppTheme? theme = local.appTheme;
       return MaterialApp(

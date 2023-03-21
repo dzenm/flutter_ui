@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/entities/user_entity.dart';
-import 'package:flutter_ui/models/user_model.dart';
-import 'package:flutter_ui/pages/main/main_page.dart';
 import 'package:provider/provider.dart';
 
 import '../../base/http/https_client.dart';
@@ -11,6 +8,9 @@ import '../../base/res/strings.dart';
 import '../../base/router/route_manager.dart';
 import '../../base/utils/sp_util.dart';
 import '../../base/widgets/tap_layout.dart';
+import '../../entities/user_entity.dart';
+import '../../models/user_model.dart';
+import '../main/main_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -66,11 +66,11 @@ class _LoginPageState extends State<LoginPage> {
   void _initInputText() {
     usernameController.text = _username = SpUtil.getUsername();
     usernameController.addListener(() {
-      setState(() => _username = usernameController.text);
+      _username = usernameController.text;
       _resetLoginButtonState();
     });
     passwordController.addListener(() {
-      setState(() => _password = passwordController.text);
+      _password = passwordController.text;
       _resetLoginButtonState();
     });
   }
@@ -84,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
         title: Text(S.of(context).login, style: TextStyle(color: Colors.white)),
       ),
       body: SingleChildScrollView(
-        child: Padding(padding: EdgeInsets.only(top: 100), child: _buildBody()),
+        child: _buildBody(),
       ),
     );
   }
@@ -94,6 +94,8 @@ class _LoginPageState extends State<LoginPage> {
     return Container(
       padding: EdgeInsets.all(24),
       child: Column(mainAxisSize: MainAxisSize.min, children: [
+        SizedBox(height: 100),
+        // 用户名输入框
         TextField(
           controller: usernameController,
           decoration: InputDecoration(
@@ -110,6 +112,7 @@ class _LoginPageState extends State<LoginPage> {
           keyboardType: TextInputType.text,
         ),
         SizedBox(height: 32),
+        // 密码输入框
         TextField(
           controller: passwordController,
           decoration: InputDecoration(
@@ -129,6 +132,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         SizedBox(height: 32),
         Row(children: [
+          // 登陆按钮
           Expanded(
             flex: 1,
             child: TapLayout(
@@ -137,6 +141,18 @@ class _LoginPageState extends State<LoginPage> {
               background: _isDisableLoginButton ? Colors.blue.shade200 : Colors.blue,
               onTap: _isDisableLoginButton ? null : _loginPressed,
               child: Text(S.of(context).login, style: TextStyle(color: Colors.white)),
+            ),
+          ),
+          SizedBox(height: 32, width: 64),
+          // 注册按钮
+          Expanded(
+            flex: 1,
+            child: TapLayout(
+              height: 36.0,
+              borderRadius: BorderRadius.all(Radius.circular(2)),
+              background: _isDisableLoginButton ? Colors.blue.shade200 : Colors.blue,
+              onTap: _isDisableLoginButton ? null : _loginPressed,
+              child: Text(S.of(context).register, style: TextStyle(color: Colors.white)),
             ),
           ),
         ]),
