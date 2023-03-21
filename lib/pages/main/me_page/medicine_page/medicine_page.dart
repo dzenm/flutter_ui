@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/base/log/build_config.dart';
-import 'package:flutter_ui/base/http/https_client.dart';
-import 'package:flutter_ui/base/log/log.dart';
-import 'package:flutter_ui/entities/medicine_entity.dart';
 import 'package:flutter_html/flutter_html.dart';
+
+import '../../../../base/http/https_client.dart';
+import '../../../../base/log/build_config.dart';
+import '../../../../base/log/log.dart';
+import '../../../../entities/medicine_entity.dart';
 
 ///
 /// Created by a0010 on 2022/4/15 16:23

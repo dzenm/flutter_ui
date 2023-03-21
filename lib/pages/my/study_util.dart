@@ -1,4 +1,5 @@
-import 'package:flutter_ui/pages/my/future_study.dart';
+
+import 'future_study.dart';
 
 class StudyUtil {
   /// main 方法

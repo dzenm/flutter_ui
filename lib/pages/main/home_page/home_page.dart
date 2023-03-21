@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/base/log/log.dart';
-import 'package:flutter_ui/base/res/assets.dart';
-import 'package:flutter_ui/base/router/route_manager.dart';
-import 'package:flutter_ui/base/utils/str_util.dart';
-import 'package:flutter_ui/base/widgets/banner_view.dart';
-import 'package:flutter_ui/base/widgets/common_dialog.dart';
-import 'package:flutter_ui/base/widgets/refresh_list_view.dart';
-import 'package:flutter_ui/base/widgets/state_view.dart';
-import 'package:flutter_ui/base/widgets/tap_layout.dart';
-import 'package:flutter_ui/entities/article_entity.dart';
-import 'package:flutter_ui/entities/banner_entity.dart';
-import 'package:flutter_ui/http/http_manager.dart';
-import 'package:flutter_ui/models/article_model.dart';
-import 'package:flutter_ui/models/banner_model.dart';
-import 'package:flutter_ui/models/website_model.dart';
-import 'package:flutter_ui/pages/common/web_view_page.dart';
-import 'package:flutter_ui/res/custom_icons.dart';
 import 'package:provider/provider.dart';
+
+import '../../../base/log/log.dart';
+import '../../../base/res/assets.dart';
+import '../../../base/router/route_manager.dart';
+import '../../../base/utils/str_util.dart';
+import '../../../base/widgets/banner_view.dart';
+import '../../../base/widgets/common_dialog.dart';
+import '../../../base/widgets/refresh_list_view.dart';
+import '../../../base/widgets/state_view.dart';
+import '../../../base/widgets/tap_layout.dart';
+import '../../../entities/article_entity.dart';
+import '../../../entities/banner_entity.dart';
+import '../../../http/http_manager.dart';
+import '../../../models/article_model.dart';
+import '../../../models/banner_model.dart';
+import '../../../models/website_model.dart';
+import '../../../res/custom_icons.dart';
+import '../../common/web_view_page.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56

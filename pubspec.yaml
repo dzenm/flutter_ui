@@ -61,12 +61,14 @@ dependencies:
   screenshot: ^1.2.3
   # 图片绘制 https://pub.flutter-io.cn/packages/image
   image: 3.2.2
+  # 状态管理 https://pub.dev/packages/provider
+  provider: 6.0.5
+
   ########################################## UI ##########################################
   # WebView https://pub.dev/packages/webview_flutter
   webview_flutter: 4.0.2
   # 城市选择列表 https://pub.flutter-io.cn/packages/azlistview
   azlistview: 2.0.0
-
   #  # 下拉刷新 https://pub.flutter-io.cn/packages/pull_to_refresh
   #  pull_to_refresh: ^1.6.4
   #  # EChart 图表（缩放手势冲突） https://pub.flutter-io.cn/packages/flutter_echarts
@@ -83,7 +85,6 @@ dependencies:
   #  percent_indicator: ^3.0.1
   #  # 侧滑删除 https://pub.flutter-io.cn/packages/flutter_slidable
   #  flutter_slidable: ^0.5.7
-
   # 与flutter2.0冲突
   # 相册多图选择 https://pub.dev/packages/photo
   #  photo: 0.4.8
@@ -112,8 +113,6 @@ dependencies:
 
 
   ########################################## 基础 ########################################
-  # 状态管理 https://pub.dev/packages/provider
-  provider: 6.0.5
   # 时间格式化 https://pub.dev/packages/intl
   intl: 0.17.0
 

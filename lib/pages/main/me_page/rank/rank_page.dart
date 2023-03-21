@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/widgets/tap_layout.dart';
-import 'package:flutter_ui/entities/coin_entity.dart';
-import 'package:flutter_ui/http/http_manager.dart';
 
+import '../../../../base/widgets/tap_layout.dart';
+import '../../../../entities/coin_entity.dart';
+import '../../../../http/http_manager.dart';
 import '../list_page_state.dart';
 
 ///

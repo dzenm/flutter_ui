@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/base/log/log.dart';
-import 'package:flutter_ui/base/res/local_model.dart';
-import 'package:flutter_ui/base/res/strings.dart';
-import 'package:flutter_ui/base/res/theme/app_theme.dart';
-import 'package:flutter_ui/base/router/route_manager.dart';
-import 'package:flutter_ui/base/utils/device_util.dart';
-import 'package:flutter_ui/base/widgets/single_text_layout.dart';
-import 'package:flutter_ui/base/widgets/tap_layout.dart';
-import 'package:flutter_ui/entities/coin_entity.dart';
-import 'package:flutter_ui/entities/user_entity.dart';
-import 'package:flutter_ui/http/http_manager.dart';
-import 'package:flutter_ui/models/user_model.dart';
-import 'package:flutter_ui/pages/main/me_page/article/article_page.dart';
-import 'package:flutter_ui/pages/main/me_page/me_model.dart';
-import 'package:flutter_ui/pages/main/me_page/rank/rank_page.dart';
-import 'package:flutter_ui/pages/study/setting_page/setting_page.dart';
-import 'package:flutter_ui/pages/study/study_page.dart';
 import 'package:provider/provider.dart';
 
+import '../../../base/log/log.dart';
+import '../../../base/res/local_model.dart';
+import '../../../base/res/strings.dart';
+import '../../../base/res/theme/app_theme.dart';
+import '../../../base/router/route_manager.dart';
+import '../../../base/utils/device_util.dart';
+import '../../../base/widgets/single_text_layout.dart';
+import '../../../base/widgets/tap_layout.dart';
+import '../../../entities/coin_entity.dart';
+import '../../../entities/user_entity.dart';
+import '../../../http/http_manager.dart';
+import '../../../models/user_model.dart';
+import '../../study/setting_page/setting_page.dart';
+import '../../study/study_page.dart';
+import 'article/article_page.dart';
 import 'coin/coin_page.dart';
 import 'collect/collect_page.dart';
+import 'me_model.dart';
 import 'medicine_page/medicine_page.dart';
+import 'rank/rank_page.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56
@@ -38,6 +38,7 @@ class _MePageState extends State<MePage> {
   void initState() {
     super.initState();
     Log.i('initState', tag: _tag);
+
     _getUserinfo();
   }
 

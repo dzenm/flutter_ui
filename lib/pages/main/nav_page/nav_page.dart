@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/base/log/log.dart';
-import 'package:flutter_ui/base/res/local_model.dart';
-import 'package:flutter_ui/base/res/theme/app_theme.dart';
-import 'package:flutter_ui/base/router/route_manager.dart';
-import 'package:flutter_ui/http/http_manager.dart';
-import 'package:flutter_ui/models/article_model.dart';
-import 'package:flutter_ui/pages/main/nav_page/nav_model.dart';
 import 'package:provider/provider.dart';
 
+import '../../../base/log/log.dart';
+import '../../../base/res/local_model.dart';
+import '../../../base/res/theme/app_theme.dart';
+import '../../../base/router/route_manager.dart';
+import '../../../http/http_manager.dart';
+import '../../../models/article_model.dart';
 import 'edit_article_page.dart';
+import 'nav_model.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/base/db/db_base_model.dart';
-import 'package:flutter_ui/base/widgets/refresh_list_view.dart';
-import 'package:flutter_ui/base/widgets/state_view.dart';
+
+import '../../../base/db/db_base_model.dart';
+import '../../../base/widgets/refresh_list_view.dart';
+import '../../../base/widgets/state_view.dart';
 
 ///
 /// Created by a0010 on 2023/2/23 13:35

@@ -7,6 +7,8 @@ import 'lang/lang_en.dart';
 import 'lang/lang_zh.dart';
 
 /// 语言包
+/// 在MaterialApp中执行：
+///   S.context = context;
 class S implements WidgetsLocalizations {
   // 当前显示的语言类型
   final Locale _locale;
@@ -31,7 +33,7 @@ class S implements WidgetsLocalizations {
       ];
 
   // 保证切换语言时页面能自动刷新所有页面，一定要传对应页面的context，否则不起作用
-  static Lang of(BuildContext context) => Localizations.of(context, S)._getLang();
+  static Lang of(BuildContext context) => Localizations.of<S>(context, S)!._getLang();
 
   // 在一些没有context页面时，使用全局的context。
   static Lang get from => of(_context!);

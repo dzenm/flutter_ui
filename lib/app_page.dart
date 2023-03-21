@@ -35,27 +35,38 @@ class AppPage extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    // 简易模式测试页面
     if (BuildConfig.isTestApp) {
       return _buildEasyApp();
     }
-    // 初始化需要context，在这里注册
-    S.context = context;
+
+    // 初始化需要用到context的地方
+    _init(context);
+
+    // 初始化其他需要context的组件
+    // Provider
+    // Keyboard
+    // 返回键监听
+    return _buildProviderApp(
+      child: _buildMaterialApp(
+        child: KeyboardRootWidget(
+          child: WillPopView(behavior: BackBehavior.background, child: child),
+        ),
+      ),
+    );
+  }
+
+  /// 初始化需要用到context的地方
+  void _init(BuildContext context) {
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    S.context = context; // 初始化需要context，在这里注册
     Naughty.instance
       ..init(context)
       ..show();
-    return _buildProviderApp(_buildLocalApp((local) {
-      return _buildMaterialApp(
-        local,
-        KeyboardRootWidget(
-          child: WillPopView(behavior: BackBehavior.background, child: child),
-        ),
-      );
-    }));
   }
 
   /// Provider 共享状态管理
-  Widget _buildProviderApp(Widget child) {
+  Widget _buildProviderApp({Widget? child}) {
     return MultiProvider(child: child, providers: [
       ChangeNotifierProvider(create: (context) => LocalModel()),
       ChangeNotifierProvider(create: (context) => MainModel()),
@@ -78,58 +89,54 @@ class AppPage extends StatelessWidget {
   //       builder: () => child,
   //     );
 
-  /// 全局设置（主题、语言设置）
-  Widget _buildLocalApp(Widget Function(LocalModel) child) {
+  /// 全局设置（主题、语言、屏幕适配、路由设置）
+  Widget _buildMaterialApp({Widget? child}) {
     return Consumer<LocalModel>(builder: (context, local, widget) {
       ProviderManager.init(context);
-      return child(local);
+      // Page必须放在MaterialApp中运行
+      AppTheme? theme = local.appTheme;
+      return MaterialApp(
+        navigatorKey: Application().navigatorKey,
+        debugShowCheckedModeBanner: false,
+        // 设置主题，读取LocalModel的值，改变LocalModel的theme值会通过provider刷新页面
+        theme: ThemeData(
+          primaryColor: theme.primary,
+          appBarTheme: AppBarTheme(
+            backgroundColor: theme.primary,
+            systemOverlayStyle: SystemUiOverlayStyle.light,
+          ),
+          floatingActionButtonTheme: FloatingActionButtonThemeData(
+            backgroundColor: theme.primary,
+          ),
+          // pageTransitionsTheme: PageTransitionsTheme(
+          //   builders: <TargetPlatform, PageTransitionsBuilder>{
+          //     TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+          //     TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+          //   },
+          // ),
+        ),
+        // 设置语言，读取LocalModel的值，改变LocalModel的locale值会通过provider刷新页面
+        locale: local.locale,
+        // 国际化的Widget
+        localizationsDelegates: S.localizationsDelegates,
+        // 国际化语言包
+        supportedLocales: S.supportedLocales,
+        // 初始路由
+        initialRoute: '/',
+        builder: (context, child) {
+          final botToastBuilder = BotToastInit();
+          Widget toastWidget = botToastBuilder(context, child);
+          Widget fontWidget = MediaQuery(
+            //设置文字大小不随系统设置改变
+            data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+            child: toastWidget,
+          );
+          return fontWidget;
+        },
+        navigatorObservers: [BotToastNavigatorObserver()],
+        home: child,
+      );
     });
-  }
-
-  Widget _buildMaterialApp(LocalModel local, Widget child) {
-    // Page必须放在MaterialApp中运行
-    AppTheme? theme = local.appTheme;
-    return MaterialApp(
-      navigatorKey: Application().navigatorKey,
-      debugShowCheckedModeBanner: false,
-      // 设置主题，读取LocalModel的值，改变LocalModel的theme值会通过provider刷新页面
-      theme: ThemeData(
-        primaryColor: theme.primary,
-        appBarTheme: AppBarTheme(
-          backgroundColor: theme.primary,
-          systemOverlayStyle: SystemUiOverlayStyle.light,
-        ),
-        floatingActionButtonTheme: FloatingActionButtonThemeData(
-          backgroundColor: theme.primary,
-        ),
-        // pageTransitionsTheme: PageTransitionsTheme(
-        //   builders: <TargetPlatform, PageTransitionsBuilder>{
-        //     TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-        //     TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-        //   },
-        // ),
-      ),
-      // 设置语言，读取LocalModel的值，改变LocalModel的locale值会通过provider刷新页面
-      locale: local.locale,
-      // 国际化的Widget
-      localizationsDelegates: S.localizationsDelegates,
-      // 国际化语言包
-      supportedLocales: S.supportedLocales,
-      // 初始路由
-      initialRoute: '/',
-      builder: (context, child) {
-        final botToastBuilder = BotToastInit();
-        Widget toastWidget = botToastBuilder(context, child);
-        Widget fontWidget = MediaQuery(
-          //设置文字大小不随系统设置改变
-          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-          child: toastWidget,
-        );
-        return fontWidget;
-      },
-      navigatorObservers: [BotToastNavigatorObserver()],
-      home: child,
-    );
   }
 
   Widget _buildEasyApp() {

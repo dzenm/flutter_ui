@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/log/log.dart';
-import 'package:flutter_ui/base/widgets/badge_view.dart';
-import 'package:flutter_ui/base/widgets/keep_alive_wrapper.dart';
-import 'package:flutter_ui/base/widgets/tap_layout.dart';
-import 'package:flutter_ui/pages/main/main_model.dart';
 import 'package:provider/provider.dart';
 
+import '../../base/log/log.dart';
+import '../../base/widgets/badge_view.dart';
+import '../../base/widgets/keep_alive_wrapper.dart';
+import '../../base/widgets/tap_layout.dart';
 import 'home_page/home_page.dart';
+import 'main_model.dart';
 import 'me_page/me_page.dart';
 import 'nav_page/nav_page.dart';
 
@@ -22,7 +22,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   static const String _tag = 'MainPage';
 
   // 页面管理控制器
-  final PageController _pageController = PageController(initialPage: 0);
+  final PageController _controller = PageController(initialPage: 0);
 
   // 感知生命周期变化
   @override
@@ -59,7 +59,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    _pageController.dispose();
+    _controller.dispose();
     WidgetsBinding.instance.removeObserver(this);
 
     super.dispose();
@@ -74,7 +74,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
 
     return Scaffold(
       body: PageView(
-        controller: _pageController,
+        controller: _controller,
         physics: NeverScrollableScrollPhysics(),
         children: _buildTabPage(),
       ),
@@ -97,7 +97,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   /// BottomNavigationBar widget
   List<Widget> _buildBottomNavigationBar() {
     int len = context.read<MainModel>().len;
-    return List.generate(len, (i) => BottomNavigationBarItemView(index: i, controller: _pageController)); // bottomNavigation list
+    return List.generate(len, (i) => BottomNavigationBarItemView(index: i, controller: _controller)); // bottomNavigation list
   }
 }
 
@@ -136,7 +136,7 @@ class _BottomNavigationBarItemViewState extends State<BottomNavigationBarItemVie
           int index = widget.index;
           bool isSelected = context.read<MainModel>().isSelected(index);
           if (!isSelected) {
-            context.read<MainModel>().selectIndex = index;
+            context.read<MainModel>().selectedIndex = index;
             widget.controller.jumpToPage(index);
             // widget.controller.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
           }
@@ -171,7 +171,7 @@ class _BottomNavigationBarItemViewState extends State<BottomNavigationBarItemVie
       builder: (context, value, widget) {
         return BadgeView(count: value);
       },
-      selector: (context, model) => model.badgeCount(widget.index),
+      selector: (context, model) => model.badge(widget.index),
     );
   }
 
@@ -184,7 +184,7 @@ class _BottomNavigationBarItemViewState extends State<BottomNavigationBarItemVie
           _buildTitle(value),
         ]);
       },
-      selector: (context, model) => model.selectIndex,
+      selector: (context, model) => model.selectedIndex,
     );
   }
 

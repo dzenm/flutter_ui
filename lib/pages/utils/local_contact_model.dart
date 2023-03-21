@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
-import 'package:flutter_ui/pages/utils/contact_util.dart';
+
+import 'contact_util.dart';
 
 ///
 /// Created by a0010 on 2023/1/31 11:48

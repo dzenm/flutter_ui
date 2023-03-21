@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/base/res/local_model.dart';
-import 'package:flutter_ui/base/res/theme/app_theme.dart';
-import 'package:flutter_ui/entities/article_entity.dart';
-import 'package:flutter_ui/models/article_model.dart';
 import 'package:provider/provider.dart';
+
+import '../../../base/res/local_model.dart';
+import '../../../base/res/theme/app_theme.dart';
+import '../../../entities/article_entity.dart';
+import '../../../models/article_model.dart';
 
 ///
 /// Created by a0010 on 2023/2/10 11:59

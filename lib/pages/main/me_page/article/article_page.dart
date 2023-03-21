@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/http/page_entity.dart';
-import 'package:flutter_ui/base/widgets/tap_layout.dart';
-import 'package:flutter_ui/entities/article_entity.dart';
-import 'package:flutter_ui/entities/coin_entity.dart';
-import 'package:flutter_ui/http/http_manager.dart';
-import 'package:flutter_ui/models/user_model.dart';
-import 'package:flutter_ui/pages/main/me_page/list_page_state.dart';
 import 'package:provider/provider.dart';
+
+import '../../../../base/http/page_entity.dart';
+import '../../../../base/widgets/tap_layout.dart';
+import '../../../../entities/article_entity.dart';
+import '../../../../entities/coin_entity.dart';
+import '../../../../http/http_manager.dart';
+import '../../../../models/user_model.dart';
+import '../list_page_state.dart';
 
 ///
 /// Created by a0010 on 2023/2/23 13:35

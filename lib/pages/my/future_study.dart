@@ -1,4 +1,5 @@
-import 'package:flutter_ui/application.dart';
+
+import '../../application.dart';
 
 /// 异步学习测试代码
 class FutureStudy {

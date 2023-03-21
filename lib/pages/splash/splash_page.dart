@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/router/route_manager.dart';
-import 'package:flutter_ui/pages/main/main_page.dart';
+
+import '../../base/router/route_manager.dart';
+import '../main/main_page.dart';
 
 class SplashPage extends StatefulWidget {
   @override
