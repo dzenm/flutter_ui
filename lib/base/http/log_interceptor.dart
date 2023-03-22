@@ -57,7 +57,7 @@ class LoggerInterceptor extends Interceptor {
   ///  ...
   ///  await sink.close();
   ///```
-  void Function(Object object)? logPrint;
+  void Function(dynamic object)? logPrint;
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {

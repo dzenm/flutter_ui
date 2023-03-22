@@ -26,6 +26,7 @@ ApiServices api(int index) => HttpsClient.instance._api[HttpsClient.instance._ba
 ///     toast: CommonDialog.showToast,
 ///     interceptors: [HttpInterceptor(), CookieInterceptor()],
 ///   );
+/// TODO api_services
 class HttpsClient {
   static const int _connectTimeout = 20000;
   static const int _receiveTimeout = 20000;
@@ -60,8 +61,8 @@ class HttpsClient {
   /// 初始化
   void init({
     void Function(dynamic msg, {String tag})? logPrint,
-    CancelFunc Function({String? loadingTxt, bool isVertical, bool light})? loading,
-    CancelFunc Function(String text, {int seconds})? toast,
+    CancelFunc Function()? loading,
+    Function? toast,
     List<Interceptor>? interceptors,
   }) {
     _logPrint = logPrint;
@@ -72,7 +73,7 @@ class HttpsClient {
       _interceptors.addAll(interceptors);
     }
     // 日志打印
-    _interceptors.add(LoggerInterceptor(formatJson: true, logPrint: (text) => log(text.toString())));
+    _interceptors.add(LoggerInterceptor(formatJson: true, logPrint: log));
     // 通过悬浮窗查看Http请求数据
     // _interceptors.add(HttpInterceptor());
     // cookie持久化
@@ -163,7 +164,7 @@ class HttpsClient {
     log('HTTP请求错误: code=${error!.code}, msg=${error!.msg}');
   }
 
-  void log(String text) => _logPrint == null ? null : _logPrint!(text, tag: 'HttpsClient');
+  void log(dynamic text) => _logPrint == null ? null : _logPrint!(text, tag: 'HttpsClient');
 }
 
 /// HTTP请求错误信息的处理

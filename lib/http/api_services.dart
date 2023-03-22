@@ -4,6 +4,10 @@ import 'package:retrofit/http.dart';
 
 part 'api_services.g.dart';
 
+ApiServices createApi(Dio dio, {String? baseUrl}) {
+  return ApiServices(dio, baseUrl: baseUrl);
+}
+
 @RestApi()
 abstract class ApiServices {
   factory ApiServices(Dio dio, {String? baseUrl}) = _ApiServices;
