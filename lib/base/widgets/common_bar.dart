@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../../res/custom_icon.dart';
 import 'tap_layout.dart';
 
 class CommonBar extends StatefulWidget {
   final Widget? title;
   final bool centerTitle;
   final Color? backgroundColor;
+  final Color? statusBackgroundColor;
   final Brightness brightness;
   final Widget? suffix;
 
@@ -14,6 +16,7 @@ class CommonBar extends StatefulWidget {
     this.title,
     this.centerTitle = false,
     this.backgroundColor,
+    this.statusBackgroundColor,
     this.brightness = Brightness.light,
     this.suffix,
   });
@@ -29,11 +32,9 @@ class _CommonBarState extends State<CommonBar> {
     return Container(
       color: widget.backgroundColor,
       child: Column(children: [
+        Container(height: 24, color: widget.statusBackgroundColor),
         Container(
           height: kToolbarHeight,
-        ),
-        Container(
-          height: 56,
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Row(
             mainAxisAlignment: widget.centerTitle ? MainAxisAlignment.center : MainAxisAlignment.start,
@@ -47,7 +48,7 @@ class _CommonBarState extends State<CommonBar> {
                     Navigator.pop(context);
                   }
                 },
-                child: Icon(Icons.add, color: color),
+                child: Icon(CustomIcon.left_big, color: color),
               ),
               const SizedBox(width: 32),
               Expanded(
