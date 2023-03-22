@@ -13,7 +13,7 @@ import '../../../../entities/medicine_entity.dart';
 class MedicinePage extends StatefulWidget {
   final String medicineName;
 
-  MedicinePage({required this.medicineName});
+  const MedicinePage({super.key, required this.medicineName});
 
   @override
   State<StatefulWidget> createState() => _MedicinePageState();

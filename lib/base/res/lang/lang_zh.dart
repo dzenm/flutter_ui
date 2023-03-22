@@ -4,9 +4,6 @@ import 'lang.dart';
 /// Created by a0010 on 2023/1/30 14:23
 ///
 class LangZh extends Lang {
-  // 登录注册模块
-  // 主页模块
-
   // 未找到路由模块
   @override
   String get pageIsNotFound => '页面未找到';
@@ -114,6 +111,9 @@ class LangZh extends Lang {
 
   @override
   String get password => '密码';
+
+  @override
+  String get rPassword => '重复密码';
 
   @override
   String get phone => '手机号';

@@ -32,6 +32,7 @@ class UpgradeDialog extends StatelessWidget {
           Flexible(
             child: RichText(
               text: TextSpan(
+                /// TODO 国际化
                 text: '新版本',
                 style: const TextStyle(color: Colors.red, fontSize: 18),
                 children: [TextSpan(text: version)],

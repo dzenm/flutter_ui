@@ -78,7 +78,7 @@ class AppPage extends StatelessWidget {
   }
 
   /// 全局适配屏幕
-  // Widget __buildScreenApp(Widget child) => ScreenUtilInit(
+  // Widget _buildScreenApp(Widget child) => ScreenUtilInit(
   //       designSize: const Size(414, 896),
   //       minTextAdapt: true,
   //       splitScreenMode: true,

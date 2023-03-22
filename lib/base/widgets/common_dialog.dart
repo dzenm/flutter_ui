@@ -13,6 +13,7 @@ typedef ItemClickCallback = void Function(int index);
 
 class CommonDialog {
   /// toast弹出提示框
+  /// CommonDialog.showToast('hello')
   static CancelFunc showToast(String text, {int seconds = 2}) {
     return BotToast.showText(
       text: text,
@@ -23,6 +24,7 @@ class CommonDialog {
   }
 
   /// 加载中对话框
+  /// CommonDialog.loading()
   static CancelFunc loading({String? loadingTxt, bool isVertical = true, bool light = false}) {
     loadingTxt ??= S.from.loading;
     List<Widget> widgets = [
@@ -61,6 +63,7 @@ class CommonDialog {
   }
 
   /// 选择图片对话框
+  /// CommonDialog.showSelectImageBottomSheet(context)
   static Future<void> showSelectImageBottomSheet(
     BuildContext context, {
     Function? onCameraTap,
@@ -79,6 +82,9 @@ class CommonDialog {
   }
 
   /// 列表选择对话框
+  /// CommonDialog.showListBottomSheet(context, data, (int index) {
+  //    RouteManager.pop(context);
+  //  })
   static Future<void> showListBottomSheet(
     BuildContext context,
     List<String> items,
@@ -167,6 +173,12 @@ class CommonDialog {
   }
 
   /// 提示对话框
+  /// CommonDialog.showPromptDialog(
+  ///   context,
+  ///   titleString: '昵称',
+  ///   content: Text('这是设置好的昵称'),
+  ///   onPositiveTap: () => CommonDialog.showToast('修改成功'),
+  /// )
   static Future<T> showPromptDialog<T>(
     BuildContext context, {
     bool touchOutsideDismiss = false,
@@ -210,7 +222,12 @@ class CommonDialog {
     );
   }
 
-  // 应用升级提示框
+  /// 应用升级提示框
+  /// CommonDialog.showAppUpgradeDialog(
+  //    context,
+  //    version: '12',
+  //    desc: ['升级了'],
+  //  )
   static Future<T> showAppUpgradeDialog<T>(
     BuildContext context, {
     String? version,
@@ -347,6 +364,14 @@ class CupertinoDialogButton extends StatelessWidget {
 }
 
 /// 列表显示的dialog
+/// showDialog(
+//    context: context,
+//    builder: (BuildContext context) {
+//      return ListDialog(
+//        list: list,
+//        onTap: (index) {},
+//      );
+//    })
 class ListDialog extends Dialog {
   final List<String> list;
   final ItemClickCallback? onTap;

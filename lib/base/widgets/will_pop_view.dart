@@ -83,6 +83,7 @@ class _WillPopViewState extends State<WillPopView> {
           // 两次点击间隔超过2秒则重新计时
           _lastTap = now;
           BotToast.showText(
+            /// TODO 国际化
             text: '再次点击退出程序',
             onlyOne: true,
             textStyle: const TextStyle(fontSize: 14, color: Colors.white),

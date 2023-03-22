@@ -13,8 +13,9 @@ class PreviewPhotoPage extends StatefulWidget {
   final ImageProvider<Object>? imageProvider;
   final DownloadCallback? onDownload;
 
-  PreviewPhotoPage(
+  const PreviewPhotoPage(
     this.url, {
+    super.key,
     this.imageProvider,
     this.onDownload,
   });

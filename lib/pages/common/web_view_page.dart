@@ -17,11 +17,11 @@ class WebViewPage extends StatefulWidget {
   final String title;
   final String url;
 
-  WebViewPage({
-    Key? key,
+  const WebViewPage({
+    super.key,
     required this.title,
     required this.url,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() => _WebViewPageState();
