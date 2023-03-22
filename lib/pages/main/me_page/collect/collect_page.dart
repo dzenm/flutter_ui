@@ -9,7 +9,7 @@ import '../list_page_state.dart';
 /// Created by a0010 on 2023/2/23 13:35
 /// 我的收藏页面
 class CollectPage extends StatefulWidget {
-  CollectPage({Key? key}) : super(key: key);
+  const CollectPage({super.key});
 
   @override
   State<StatefulWidget> createState() => _CollectPageState();

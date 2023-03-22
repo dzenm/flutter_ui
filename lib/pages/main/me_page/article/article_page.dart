@@ -13,7 +13,7 @@ import '../list_page_state.dart';
 /// Created by a0010 on 2023/2/23 13:35
 /// 我分享的文章页面
 class ArticlePage extends StatefulWidget {
-  ArticlePage({Key? key}) : super(key: key);
+  const ArticlePage({super.key});
 
   @override
   State<StatefulWidget> createState() => _ArticlePageState();

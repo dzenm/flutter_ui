@@ -9,7 +9,7 @@ import '../list_page_state.dart';
 /// Created by a0010 on 2023/2/23 13:35
 /// 我的积分页面
 class CoinPage extends StatefulWidget {
-  CoinPage({Key? key}) : super(key: key);
+  const CoinPage({super.key});
 
   @override
   State<StatefulWidget> createState() => _CoinPageState();

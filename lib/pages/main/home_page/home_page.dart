@@ -24,11 +24,13 @@ import '../../common/web_view_page.dart';
 /// Created by a0010 on 2022/7/28 10:56
 /// 主页面
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
-  _HomePageState createState() => _HomePageState();
+  State<StatefulWidget> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
+class _HomePageState extends State<HomePage> {
   static const String _tag = 'HomePage';
   StateController _controller = StateController();
   int _page = 0; // 加载的页数
@@ -63,25 +65,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void dispose() {
     super.dispose();
     Log.i('dispose', tag: _tag);
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    Log.i('didChangeAppLifecycleState：$state', tag: _tag);
-
-    // 处理APP生命周期
-    switch (state) {
-      case AppLifecycleState.inactive: // 失去焦点
-        break;
-      case AppLifecycleState.resumed: // 进入前台
-        break;
-      case AppLifecycleState.paused: // 进入后台
-        break;
-      default:
-        break;
-    }
-    // 生命周期变更
   }
 
   @override

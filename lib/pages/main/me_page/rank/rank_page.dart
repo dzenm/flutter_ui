@@ -9,7 +9,7 @@ import '../list_page_state.dart';
 /// Created by a0010 on 2023/2/23 13:35
 /// 积分排行榜页面
 class RankPage extends StatefulWidget {
-  RankPage({Key? key}) : super(key: key);
+  const RankPage({super.key});
 
   @override
   State<StatefulWidget> createState() => _RankPageState();

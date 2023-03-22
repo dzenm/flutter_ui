@@ -4,6 +4,8 @@ import '../../base/router/route_manager.dart';
 import '../main/main_page.dart';
 
 class SplashPage extends StatefulWidget {
+  const SplashPage({super.key});
+
   @override
   State<StatefulWidget> createState() => _SplashPageState();
 }

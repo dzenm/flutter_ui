@@ -4,9 +4,6 @@ import 'lang.dart';
 /// Created by a0010 on 2023/1/30 14:23
 ///
 class LangEn extends Lang {
-  // 登录注册，个人中心，设置模块
-  // 主页模块
-
   // 未找到路由模块
   @override
   String get pageIsNotFound => 'Page is not found';
@@ -114,6 +111,9 @@ class LangEn extends Lang {
 
   @override
   String get password => 'Password';
+
+  @override
+  String get rPassword => 'Repeat Password';
 
   @override
   String get phone => 'Phone';

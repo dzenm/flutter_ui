@@ -14,6 +14,8 @@ import 'nav_page/nav_page.dart';
 /// Created by a0010 on 2022/7/28 10:56
 /// 主页页面
 class MainPage extends StatefulWidget {
+  const MainPage({super.key});
+
   @override
   State<StatefulWidget> createState() => _MainPageState();
 }
@@ -29,6 +31,18 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     Log.i('didChangeAppLifecycleState: $state', tag: _tag);
+
+    // 处理APP生命周期
+    switch (state) {
+      case AppLifecycleState.inactive: // 失去焦点
+        break;
+      case AppLifecycleState.resumed: // 进入前台
+        break;
+      case AppLifecycleState.paused: // 进入后台
+        break;
+      default:
+        break;
+    }
   }
 
   @override

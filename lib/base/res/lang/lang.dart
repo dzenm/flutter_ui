@@ -2,9 +2,6 @@
 /// Created by a0010 on 2023/1/30 14:25
 ///
 class Lang {
-  // 登录注册模块
-  // 主页模块
-
   // 未找到路由模块
   String get pageIsNotFound => '';
 
@@ -77,6 +74,8 @@ class Lang {
   String get username => '';
 
   String get password => '';
+
+  String get rPassword => '';
 
   String get phone => '';
 

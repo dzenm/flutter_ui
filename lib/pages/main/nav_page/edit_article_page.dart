@@ -11,6 +11,8 @@ import '../../../models/article_model.dart';
 /// Created by a0010 on 2023/2/10 11:59
 ///
 class EditArticlePage extends StatefulWidget {
+  const EditArticlePage({super.key});
+
   @override
   State<StatefulWidget> createState() => _EditArticlePageState();
 }

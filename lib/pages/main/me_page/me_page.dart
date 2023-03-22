@@ -27,8 +27,10 @@ import 'rank/rank_page.dart';
 /// Created by a0010 on 2022/7/28 10:56
 /// 我的页面
 class MePage extends StatefulWidget {
+  const MePage({super.key});
+
   @override
-  _MePageState createState() => _MePageState();
+  State<StatefulWidget> createState() => _MePageState();
 }
 
 class _MePageState extends State<MePage> {

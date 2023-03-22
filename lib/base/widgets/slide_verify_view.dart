@@ -126,6 +126,7 @@ class _SlideVerifyViewState extends State<SlideVerifyView> with TickerProviderSt
           ),
           const Center(
             child: Text(
+              /// TODO 国际化
               '向右滑动解锁发言',
               style: TextStyle(color: Colors.white, fontSize: 14),
             ),

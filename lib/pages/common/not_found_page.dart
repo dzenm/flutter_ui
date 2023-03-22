@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 
 class NotFoundPage extends StatefulWidget {
+  const NotFoundPage({super.key});
   @override
-  _NotFoundPageState createState() => _NotFoundPageState();
+  State<StatefulWidget> createState() => _NotFoundPageState();
 }
 
 class _NotFoundPageState extends State<NotFoundPage> {

@@ -4,7 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class CommonWidget {
-  // 分割线
+  /// 分割线
   static Widget divider({
     bool isVertical = false,
     double height = 0.1,
@@ -32,7 +32,7 @@ class CommonWidget {
 
   static Color brightnessTheme({bool isLight = true}) => isLight ? Colors.white : Colors.black87;
 
-  // 标题
+  /// 标题
   static Widget titleView(String title, {double left = 8, double top = 8, double right = 8, double bottom = 8}) {
     return Container(
       padding: EdgeInsets.only(left: left, top: top, right: right, bottom: bottom),
@@ -40,7 +40,7 @@ class CommonWidget {
     );
   }
 
-  // 内容
+  /// 内容
   static Widget multipleTextView(String msg) {
     return Container(
       padding: const EdgeInsets.all(8),
