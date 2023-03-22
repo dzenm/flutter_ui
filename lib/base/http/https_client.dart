@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dio/dio.dart';
+import 'package:dio/src/adapters/io_adapter.dart';
 
 import '../../http/api_services.dart';
 import 'data_entity.dart';
@@ -77,15 +78,14 @@ class HttpsClient {
     // cookie持久化
     // _interceptors.add(CookieInterceptor.instance);
 
-    /// 创建dio
     for (var url in _baseUrls) {
-      _createApiServices(baseUrl: url);
+      _api[url] ??= ApiServices(_createDio(baseUrl: url), baseUrl: url);
     }
   }
 
   /// 创建ApiServices
   /// baseUrl必须使用 "", 不能使用 ''
-  void _createApiServices({required String? baseUrl}) {
+  Dio _createDio({required String? baseUrl}) {
     Dio dio = Dio(BaseOptions(
       connectTimeout: const Duration(milliseconds: _connectTimeout),
       receiveTimeout: const Duration(milliseconds: _receiveTimeout),
@@ -99,29 +99,29 @@ class HttpsClient {
     ));
 
     // 不验证https证书
-    // (dio.httpClientAdapter as DefaultHttpsClientAdapter).onHttpsClientCreate = (client) {
-    //   // config the http client
-    //   // client.findProxy = (uri) {
-    //   //  //proxy all request to localhost:8888
-    //   //  return "192.168.1.1:8888";
-    //   //};
-    //   client.badCertificateCallback = (X509Certificate cert, String host, int port) {
-    //     log("验证https证书: host=$host, port=$port");
-    //     return true;
-    //   };
-    //   // you can also create a new HttpsClient to dio
-    //   // return new HttpsClient();
-    //   return client;
-    // };
+    (dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate = (HttpClient client) {
+      // config the http client
+      // client.findProxy = (uri) {
+      //  //proxy all request to localhost:8888
+      //  return "192.168.1.1:8888";
+      //};
+      client.badCertificateCallback = (X509Certificate cert, String host, int port) {
+        log("验证https证书: host=$host, port=$port");
+        return true;
+      };
+      // you can also create a new HttpsClient to dio
+      // return new HttpsClient();
+      return client;
+    };
     for (var interceptor in _interceptors) {
       dio.interceptors.add(interceptor);
     }
-    _api[baseUrl] ??= ApiServices(dio, baseUrl: baseUrl);
+    return dio;
   }
 
   /// 发起http请求
   Future request(
-    Future future, {
+    Future<DataEntity> future, {
     Success? success,
     Failed? failed,
     bool isShowDialog = true,
@@ -135,29 +135,32 @@ class HttpsClient {
     }
     HttpError? error;
     try {
-      DataEntity data = await future;
-      // 根据前后端协议
-      if (data.errorCode == 0 || data.errorCode == 200) {
-        if (success != null) success(data.data);
-      } else if (data.errorCode == -1) {
-        error = _HttpError.handle(code: data.errorCode, msg: data.errorMsg);
-      } else if (data.errorCode == -1001) {
-        error = _HttpError.handle(code: data.errorCode, msg: data.errorMsg);
-      } else {
-        error = _HttpError.handle(code: data.errorCode, msg: data.errorMsg);
-      }
+      await future.then((DataEntity data) {
+        // 根据前后端协议
+        if (data.errorCode == 0 || data.errorCode == 200) {
+          if (success != null) success(data.data);
+        } else if (data.errorCode == -1) {
+          error = _HandlerError.parse(code: data.errorCode, msg: data.errorMsg);
+        } else if (data.errorCode == -1001) {
+          error = _HandlerError.parse(code: data.errorCode, msg: data.errorMsg);
+        } else {
+          error = _HandlerError.parse(code: data.errorCode, msg: data.errorMsg);
+        }
+      }).catchError((err) {
+        error = _HandlerError.parse(error: err);
+      });
     } catch (err) {
-      error = _HttpError.handle(error: err);
+      error = _HandlerError.parse(error: err);
     }
     // 请求结束关闭提示框
     if (cancel != null) cancel();
     // 没有异常，不处理，请求结束
     if (error == null) return;
     // 如果有异常通过toast提醒
-    if (isShowToast && _toast != null) _toast!('${error.msg} ${error.code}');
+    if (isShowToast && _toast != null) _toast!('${error!.msg} ${error!.code}');
     // 如果需要自定义处理异常，进行自定义异常处理
-    if (failed != null) failed(error);
-    log('HTTP请求错误: code=${error.code}, msg=${error.msg}');
+    if (failed != null) failed(error!);
+    log('HTTP请求错误: code=${error!.code}, msg=${error!.msg}');
   }
 
   void log(String text) => _logPrint == null ? null : _logPrint!(text, tag: 'HttpsClient');
@@ -172,68 +175,73 @@ class HttpError {
 }
 
 /// 异常处理
-class _HttpError {
+class _HandlerError {
   /// code
-  static const int socketErrorCode = 1001;
-  static const int httpErrorCode = 1002;
-  static const int parseErrorCode = 1003;
-  static const int netErrorCode = 1004;
+  static const int socketCode = 1001;
+  static const int httpCode = 1002;
+  static const int connectionCode = 1003;
+  static const int formatCode = 1004;
 
-  static const int timeoutErrorCode = 1006;
-  static const int sendErrorCode = 1007;
-  static const int receiveErrorCode = 1008;
-  static const int cancelErrorCode = 1009;
+  static const int timeoutCode = 1006;
+  static const int sendCode = 1007;
+  static const int receiveCode = 1008;
+  static const int badCertificateCode = 1009;
+  static const int cancelCode = 1010;
 
-  static const int unknownErrorCode = 1109;
+  static const int unknownCode = 1109;
 
-  static const int runtimeErrorCode = 1120;
+  static const int runtimeCode = 1120;
 
   /// msg
-  static const String socketErrorMsg = '网络异常，请检查你的网络';
-  static const String httpErrorMsg = '服务器异常';
-  static const String parseErrorMsg = '数据解析错误';
-  static const String netErrorMsg = '网络异常，请检查你的网络';
+  static const String socketMsg = '网络异常，请检查你的网络';
+  static const String httpMsg = '服务器异常';
+  static const String connectionMsg = '连接异常';
+  static const String formatMsg = '数据解析异常';
 
-  static const String timeoutErrorMsg = '连接超时';
-  static const String sendErrorMsg = '请求超时';
-  static const String receiveErrorMsg = '响应超时';
-  static const String cancelErrorMsg = '取消请求';
+  static const String timeoutMsg = '连接超时';
+  static const String sendMsg = '请求超时';
+  static const String receiveMsg = '响应超时';
+  static const String badCertificateMsg = '无效的证书';
+  static const String cancelMsg = '请求被取消';
 
-  static const String unknownErrorMsg = '未知异常';
+  static const String unknownMsg = '未知异常';
 
-  static const String runtimeErrorMsg = '运行时的错误';
+  static const String runtimeMsg = '运行时的异常';
 
   // 处理异常
-  static HttpError handle({error, int? code, String? msg}) {
+  static HttpError parse({error, int? code, String? msg}) {
     code ??= 0;
     msg ??= '';
-    if (code != 0 && msg.isNotEmpty) {
+    if (code > 0 && msg.isNotEmpty) {
       return HttpError(code, msg);
     } else if (error != null && error is DioError) {
-      if (error.type == DioErrorType.unknown || error.type == DioErrorType.badResponse) {
-        dynamic e = error.error;
-        if (e is SocketException) {
-          return HttpError(socketErrorCode, socketErrorMsg);
-        } else if (e is HttpException) {
-          return HttpError(httpErrorCode, httpErrorMsg);
-        } else if (e is FormatException) {
-          return HttpError(parseErrorCode, parseErrorMsg);
-        }
-        return HttpError(netErrorCode, '$netErrorMsg ${error.toString()}');
-      } else if (error.type == DioErrorType.connectionTimeout) {
-        return HttpError(timeoutErrorCode, timeoutErrorMsg);
+      if (error.type == DioErrorType.connectionTimeout) {
+        return HttpError(timeoutCode, timeoutMsg);
       } else if (error.type == DioErrorType.sendTimeout) {
-        return HttpError(sendErrorCode, sendErrorMsg);
+        return HttpError(sendCode, sendMsg);
       } else if (error.type == DioErrorType.receiveTimeout) {
-        return HttpError(receiveErrorCode, receiveErrorMsg);
+        return HttpError(receiveCode, receiveMsg);
+      } else if (error.type == DioErrorType.badCertificate) {
+        return HttpError(badCertificateCode, badCertificateMsg);
+      } else if (error.type == DioErrorType.badResponse) {
+        return HttpError(error.response?.statusCode ?? 0, error.response?.statusMessage ?? '');
       } else if (error.type == DioErrorType.cancel) {
-        return HttpError(cancelErrorCode, cancelErrorMsg);
+        return HttpError(cancelCode, cancelMsg);
+      } else if (error.type == DioErrorType.connectionError) {
+        if (error.error is SocketException) {
+          return HttpError(socketCode, socketMsg);
+        } else if (error.error is HttpException) {
+          return HttpError(httpCode, httpMsg);
+        }
+        return HttpError(connectionCode, '$connectionMsg ${error.toString()}');
+      } else if (error.error is FormatException) {
+        return HttpError(formatCode, formatMsg);
       }
-      return HttpError(unknownErrorCode, '$unknownErrorMsg ${error.toString()}');
+      return HttpError(unknownCode, '$unknownMsg ${error.toString()}');
     } else if (error != null) {
-      return HttpError(runtimeErrorCode, '$runtimeErrorMsg ${error.toString()}');
+      return HttpError(runtimeCode, '$runtimeMsg ${error.toString()}');
     } else {
-      return HttpError(unknownErrorCode, '$unknownErrorMsg ${error.toString()}');
+      return HttpError(unknownCode, '$unknownMsg ${error.toString()}');
     }
   }
 }

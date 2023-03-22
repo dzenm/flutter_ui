@@ -1,5 +1,5 @@
-import 'package:flutter_ui/base/http/page_entity.dart';
 import 'package:flutter_ui/base/http/https_client.dart';
+import 'package:flutter_ui/base/http/page_entity.dart';
 import 'package:flutter_ui/entities/article_entity.dart';
 import 'package:flutter_ui/entities/banner_entity.dart';
 import 'package:flutter_ui/entities/coin_entity.dart';
@@ -43,12 +43,11 @@ class HttpManager {
   Future<void> getArticleList({
     int page = 0,
     void Function(List<ArticleEntity> list, int? pageCount)? success,
-    void Function(HttpError error)? failed,
+    Failed? failed,
     bool isShowDialog = true,
     bool isShowToast = true,
   }) async {
-    await HttpsClient.instance.request(apiServices.articleList(page),
-        isShowDialog: isShowDialog, isShowToast: isShowToast, success: (data) async {
+    await HttpsClient.instance.request(apiServices.articleList(page), isShowDialog: isShowDialog, isShowToast: isShowToast, success: (data) async {
       PageEntity page = PageEntity.fromJson(data);
 
       List<dynamic> datas = page.datas ?? [];
@@ -64,7 +63,7 @@ class HttpManager {
   /// 获取置顶article，并保存article数据
   Future<void> getLopArticleList({
     void Function(List<ArticleEntity> list)? success,
-    void Function(HttpError error)? failed,
+    Failed? failed,
     bool isShowDialog = true,
   }) async {
     await HttpsClient.instance.request(apiServices.topArticleList(), isShowDialog: isShowDialog, success: (data) async {
@@ -81,7 +80,7 @@ class HttpManager {
   /// 获取常用网站，并保存网站数据
   Future<void> getWebsiteList({
     void Function(List<WebsiteEntity> list)? success,
-    void Function(HttpError error)? failed,
+    Failed? failed,
     bool isShowDialog = true,
   }) async {
     await HttpsClient.instance.request(apiServices.friend(), isShowDialog: isShowDialog, success: (data) async {
@@ -98,7 +97,7 @@ class HttpManager {
   /// 获取热词
   Future<void> getHotkeyList({
     void Function(List<HotkeyEntity> list)? success,
-    void Function(HttpError error)? failed,
+    Failed? failed,
     bool isShowDialog = true,
   }) async {
     await HttpsClient.instance.request(apiServices.hotkey(), isShowDialog: isShowDialog, success: (data) async {
@@ -115,7 +114,7 @@ class HttpManager {
   /// 获取体系数据
   Future<void> getTreeList({
     void Function(List<TreeEntity> list)? success,
-    void Function(HttpError error)? failed,
+    Failed? failed,
     bool isShowDialog = true,
   }) async {
     await HttpsClient.instance.request(apiServices.tree(), isShowDialog: isShowDialog, success: (data) async {
@@ -134,7 +133,7 @@ class HttpManager {
     int page = 0,
     int cid = 0,
     void Function(List<TreeEntity> list)? success,
-    void Function(HttpError error)? failed,
+    Failed? failed,
     bool isShowDialog = true,
   }) async {
     await HttpsClient.instance.request(
@@ -156,7 +155,7 @@ class HttpManager {
   /// 获取导航数据
   Future<void> getNaviList({
     void Function(List<NaviEntity> list)? success,
-    void Function(HttpError error)? failed,
+    Failed? failed,
     bool isShowDialog = true,
   }) async {
     await HttpsClient.instance.request(apiServices.navi(), isShowDialog: isShowDialog, success: (data) async {
@@ -173,7 +172,7 @@ class HttpManager {
   /// 获取项目分类数据
   Future<void> getProjectList({
     void Function(List<TreeEntity> list)? success,
-    void Function(HttpError error)? failed,
+    Failed? failed,
     bool isShowDialog = true,
   }) async {
     await HttpsClient.instance.request(apiServices.project(), isShowDialog: isShowDialog, success: (data) async {
@@ -191,7 +190,7 @@ class HttpManager {
   Future<void> getCollectArticleList({
     int page = 0,
     void Function(List<CollectEntity> list, int? pageCount)? success,
-    void Function(HttpError error)? failed,
+    Failed? failed,
     bool isShowDialog = true,
   }) async {
     await HttpsClient.instance.request(apiServices.collect(page), isShowDialog: isShowDialog, success: (data) async {
@@ -214,7 +213,7 @@ class HttpManager {
     bool isShowDialog = true,
     void Function()? success,
   }) async {
-    Future<dynamic> future = collect ? apiServices.collectArticle(id) : apiServices.uncollectArticle(id);
+    var future = collect ? apiServices.collectArticle(id) : apiServices.uncollectArticle(id);
     await HttpsClient.instance.request(future, isShowDialog: isShowDialog, success: (data) async {
       if (success != null) success();
     });
@@ -224,7 +223,7 @@ class HttpManager {
   Future<void> getRankCoinList({
     int page = 1,
     void Function(List<CoinEntity> list, int? pageCount)? success,
-    void Function(HttpError error)? failed,
+    Failed? failed,
     bool isShowDialog = true,
   }) async {
     await HttpsClient.instance.request(apiServices.rankCoin(page), isShowDialog: isShowDialog, success: (data) async {
@@ -244,7 +243,7 @@ class HttpManager {
   Future<void> getCoinList({
     int page = 1,
     void Function(List<CoinRecordEntity> list, int? pageCount)? success,
-    void Function(HttpError error)? failed,
+    Failed? failed,
     bool isShowDialog = true,
   }) async {
     await HttpsClient.instance.request(apiServices.coins(page), isShowDialog: isShowDialog, success: (data) async {
@@ -264,11 +263,10 @@ class HttpManager {
   Future<void> getPrivateArticleList({
     int page = 1,
     void Function(dynamic data)? success,
-    void Function(HttpError error)? failed,
+    Failed? failed,
     bool isShowDialog = true,
   }) async {
-    await HttpsClient.instance.request(apiServices.privateArticles(page), isShowDialog: isShowDialog,
-        success: (data) async {
+    await HttpsClient.instance.request(apiServices.privateArticles(page), isShowDialog: isShowDialog, success: (data) async {
       if (success != null) success(data);
     }, failed: (error) {
       if (failed != null) {
@@ -280,7 +278,7 @@ class HttpManager {
   /// 获取用户信息
   Future<void> getUserinfo({
     void Function(dynamic data)? success,
-    void Function(HttpError error)? failed,
+    Failed? failed,
   }) async {
     await HttpsClient.instance.request(apiServices.userinfo(), isShowDialog: false, success: (data) async {
       if (success != null) success(data);
