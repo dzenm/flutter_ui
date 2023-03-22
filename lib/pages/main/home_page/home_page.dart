@@ -17,7 +17,7 @@ import '../../../http/http_manager.dart';
 import '../../../models/article_model.dart';
 import '../../../models/banner_model.dart';
 import '../../../models/website_model.dart';
-import '../../../res/custom_icons.dart';
+import '../../../res/custom_icon.dart';
 import '../../common/web_view_page.dart';
 
 ///
@@ -335,7 +335,7 @@ class ArticleItemView extends StatelessWidget {
               builder: (context, value, child) {
                 if (value == 0) return Container();
                 return Row(children: [
-                  Icon(CustomIcons.thumbs_up, color: Colors.lightBlue, size: 16),
+                  Icon(CustomIcon.thumbs_up, color: Colors.lightBlue, size: 16),
                   SizedBox(width: 4),
                   Text(
                     '$value',
@@ -368,7 +368,7 @@ class ArticleItemView extends StatelessWidget {
             // 文章收藏的状态
             Selector<ArticleModel, bool>(
               builder: (context, value, child) {
-                IconData icon = value ? CustomIcons.heart : CustomIcons.heart_empty;
+                IconData icon = value ? CustomIcon.heart : CustomIcon.heart_empty;
                 Color? color = value ? Colors.red : Colors.black26;
                 return TapLayout(
                   height: 48,
