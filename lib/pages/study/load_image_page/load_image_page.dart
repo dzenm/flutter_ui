@@ -4,6 +4,7 @@ import 'package:flutter_ui/base/res/assets.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/widgets/common_widget.dart';
 
+/// 加载图片
 class LoadImagePage extends StatefulWidget {
   LoadImagePage();
 

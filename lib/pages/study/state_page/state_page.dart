@@ -3,7 +3,7 @@ import 'package:flutter_ui/base/res/assets.dart';
 import 'package:flutter_ui/base/widgets/menu_Item.dart';
 import 'package:flutter_ui/base/widgets/state_view.dart';
 
-/// 状态页面
+/// 加载状态页面
 class StatePage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _StatePageState();

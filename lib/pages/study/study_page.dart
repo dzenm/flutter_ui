@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/base/utils/native_channel_util.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/res/local_model.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/res/theme/app_theme.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
+import 'package:flutter_ui/base/utils/native_channel_util.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/custom_popup_dialog.dart';
 import 'package:flutter_ui/base/widgets/picker_list_view.dart';
+import 'package:flutter_ui/pages/study/example_page/example_page.dart';
 import 'package:provider/provider.dart';
 
 import 'city_page/city_page.dart';
@@ -58,6 +59,135 @@ class _StudyPageState extends State<StudyPage> {
     AppTheme theme = context.watch<LocalModel>().appTheme;
     return [
       SizedBox(height: 16),
+      // 城市选择
+      MaterialButton(
+        child: _text(S.of(context).citySelected),
+        textColor: Colors.white,
+        color: theme.primary,
+        onPressed: () => RouteManager.push(context, CitySelectedPage()),
+      ),
+      SizedBox(height: 8),
+      // 字符转化
+      MaterialButton(
+        child: _text(S.of(context).charConvert),
+        textColor: Colors.white,
+        color: theme.primary,
+        onPressed: () => RouteManager.push(context, ConvertPage()),
+      ),
+      SizedBox(height: 8),
+      // 可拖动ListView
+      MaterialButton(
+        child: _text(S.of(context).dragList),
+        textColor: Colors.white,
+        color: theme.primary,
+        onPressed: () => RouteManager.push(context, DragListPage()),
+      ),
+      SizedBox(height: 8),
+      // 快速页面创建
+      MaterialButton(
+        child: _text(S.of(context).test),
+        textColor: Colors.white,
+        color: theme.primary,
+        onPressed: () => RouteManager.push(context, ExamplePage()),
+      ),
+      SizedBox(height: 8),
+      // 浮动的导航栏和PopupWindow
+      MaterialButton(
+        child: _text(S.of(context).navigationBar),
+        textColor: Colors.white,
+        color: theme.primary,
+        onPressed: () => RouteManager.push(context, FloatNavigationPage()),
+      ),
+      SizedBox(height: 8),
+      // HTTP请求
+      MaterialButton(
+        child: _text(S.of(context).httpRequest),
+        textColor: Colors.white,
+        color: theme.primary,
+        onPressed: () => RouteManager.push(context, HTTPListPage()),
+      ),
+      SizedBox(height: 8),
+      // 自定义键盘
+      MaterialButton(
+        child: _text(S.of(context).keyword),
+        textColor: Colors.white,
+        color: theme.primary,
+        onPressed: () => RouteManager.push(context, KeywordBoardPage()),
+      ),
+      SizedBox(height: 8),
+      // 刷新和底部加载的列表
+      MaterialButton(
+        child: _text(S.of(context).listAndRefresh),
+        textColor: Colors.white,
+        color: theme.primary,
+        onPressed: () => RouteManager.push(context, ListPage()),
+      ),
+      SizedBox(height: 8),
+      // 加载图片
+      MaterialButton(
+        child: _text(S.of(context).loadImage),
+        textColor: Colors.white,
+        color: theme.primary,
+        onPressed: () => RouteManager.push(context, LoadImagePage()),
+      ),
+      SizedBox(height: 8),
+      // Provider
+      MaterialButton(
+        child: _text('Provider'),
+        textColor: Colors.white,
+        color: theme.primary,
+        onPressed: () => RouteManager.push(context, ProviderPage()),
+      ),
+      SizedBox(height: 8),
+      // 二维码扫描
+      MaterialButton(
+        child: _text(S.of(context).qr),
+        textColor: Colors.white,
+        color: theme.primary,
+        onPressed: () => RouteManager.push(context, QRPage()),
+      ),
+      SizedBox(height: 8),
+      // 路由测试
+      MaterialButton(
+        child: _text(S.of(context).router),
+        textColor: Colors.white,
+        color: theme.primary,
+        onPressed: () => RouteManager.push(context, RouterPage()),
+      ),
+      SizedBox(height: 8),
+      // 设置
+      MaterialButton(
+        child: _text(S.of(context).setting),
+        textColor: Colors.white,
+        color: theme.primary,
+        onPressed: () => RouteManager.push(context, SettingPage()),
+      ),
+      SizedBox(height: 8),
+      // 加载状态
+      MaterialButton(
+        child: _text(S.of(context).state),
+        textColor: Colors.white,
+        color: theme.primary,
+        onPressed: () => RouteManager.push(context, StatePage()),
+      ),
+      SizedBox(height: 8),
+      // 文本展示
+      MaterialButton(
+        child: _text(S.of(context).textAndInput),
+        textColor: Colors.white,
+        color: theme.primary,
+        onPressed: () => RouteManager.push(context, TextPage()),
+      ),
+      SizedBox(height: 8),
+      // 视频播放
+      MaterialButton(
+        child: _text(S.of(context).videoPlay),
+        textColor: Colors.white,
+        color: theme.primary,
+        onPressed: () => RouteManager.push(context, VideoPage()),
+      ),
+      SizedBox(height: 8),
+      // 自定义PopupView控件
       CustomPopupView(
         direction: PopupDirection.top,
         margin: const EdgeInsets.symmetric(horizontal: 12),
@@ -89,97 +219,7 @@ class _StudyPageState extends State<StudyPage> {
         },
       ),
       SizedBox(height: 8),
-      MaterialButton(
-        child: _text(S.of(context).textAndInput),
-        textColor: Colors.white,
-        color: theme.primary,
-        onPressed: () => RouteManager.push(context, TextPage()),
-      ),
-      SizedBox(height: 8),
-      MaterialButton(
-        child: _text(S.of(context).navigationBar),
-        textColor: Colors.white,
-        color: theme.primary,
-        onPressed: () => RouteManager.push(context, FloatNavigationPage()),
-      ),
-      SizedBox(height: 8),
-      MaterialButton(
-        child: _text(S.of(context).charConvert),
-        textColor: Colors.white,
-        color: theme.primary,
-        onPressed: () => RouteManager.push(context, ConvertPage()),
-      ),
-      SizedBox(height: 8),
-      MaterialButton(
-        child: _text(S.of(context).httpRequest),
-        textColor: Colors.white,
-        color: theme.primary,
-        onPressed: () => RouteManager.push(context, HTTPListPage()),
-      ),
-      SizedBox(height: 8),
-      MaterialButton(
-        child: _text(S.of(context).listAndRefresh),
-        textColor: Colors.white,
-        color: theme.primary,
-        onPressed: () => RouteManager.push(context, ListPage()),
-      ),
-      SizedBox(height: 8),
-      MaterialButton(
-        child: _text(S.of(context).dragList),
-        textColor: Colors.white,
-        color: theme.primary,
-        onPressed: () => RouteManager.push(context, DragListPage()),
-      ),
-      SizedBox(height: 8),
-      MaterialButton(
-        child: _text('Provider'),
-        textColor: Colors.white,
-        color: theme.primary,
-        onPressed: () => RouteManager.push(context, ProviderPage()),
-      ),
-      SizedBox(height: 8),
-      MaterialButton(
-        child: _text(S.of(context).videoPlay),
-        textColor: Colors.white,
-        color: theme.primary,
-        onPressed: () => RouteManager.push(context, VideoPage()),
-      ),
-      SizedBox(height: 8),
-      MaterialButton(
-        child: _text(S.of(context).qr),
-        textColor: Colors.white,
-        color: theme.primary,
-        onPressed: () => RouteManager.push(context, QRPage()),
-      ),
-      SizedBox(height: 8),
-      MaterialButton(
-        child: _text(S.of(context).citySelected),
-        textColor: Colors.white,
-        color: theme.primary,
-        onPressed: () => RouteManager.push(context, CitySelectedPage()),
-      ),
-      SizedBox(height: 8),
-      MaterialButton(
-        child: _text(S.of(context).setting),
-        textColor: Colors.white,
-        color: theme.primary,
-        onPressed: () => RouteManager.push(context, SettingPage()),
-      ),
-      SizedBox(height: 8),
-      MaterialButton(
-        child: _text(S.of(context).state),
-        textColor: Colors.white,
-        color: theme.primary,
-        onPressed: () => RouteManager.push(context, StatePage()),
-      ),
-      SizedBox(height: 8),
-      MaterialButton(
-        child: _text(S.of(context).keyword),
-        textColor: Colors.white,
-        color: theme.primary,
-        onPressed: () => RouteManager.push(context, KeywordBoardPage()),
-      ),
-      SizedBox(height: 8),
+      // 启动原生页面
       MaterialButton(
         child: _text(S.of(context).nav),
         textColor: Colors.white,
@@ -187,21 +227,7 @@ class _StudyPageState extends State<StudyPage> {
         onPressed: () => NativeChannelUtil.startHomeActivity(),
       ),
       SizedBox(height: 8),
-      MaterialButton(
-        child: _text(S.of(context).loadImage),
-        textColor: Colors.white,
-        color: theme.primary,
-        onPressed: () => RouteManager.push(context, LoadImagePage()),
-      ),
-      SizedBox(height: 8),
-      MaterialButton(
-        child: _text(S.of(context).userContact),
-        textColor: Colors.white,
-        color: theme.primary,
-        onPressed: () => {},
-        // onPressed: () => RouteManager.push(context, PeopleListPage()),
-      ),
-      SizedBox(height: 8),
+      // PickerListView控件
       MaterialButton(
         child: _text(S.of(context).listDialog),
         textColor: Colors.white,
@@ -217,6 +243,7 @@ class _StudyPageState extends State<StudyPage> {
         ),
       ),
       SizedBox(height: 8),
+      // 升级dialog
       MaterialButton(
         child: _text(S.of(context).upgradeDialog),
         textColor: Colors.white,
@@ -226,13 +253,6 @@ class _StudyPageState extends State<StudyPage> {
           version: '12',
           desc: ['升级了'],
         ),
-      ),
-      SizedBox(height: 8),
-      MaterialButton(
-        child: _text(S.of(context).router),
-        textColor: Colors.white,
-        color: theme.primary,
-        onPressed: () => RouteManager.push(context, RouterPage()),
       ),
       SizedBox(height: 16),
     ];

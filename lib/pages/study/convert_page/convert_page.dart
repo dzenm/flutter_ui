@@ -6,6 +6,7 @@ import 'package:flutter_ui/base/utils/str_util.dart';
 import 'package:flutter_ui/base/widgets/common_widget.dart';
 import 'package:flutter_ui/entities/user_entity.dart';
 
+/// 字符转化
 class ConvertPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _ConvertPageState();

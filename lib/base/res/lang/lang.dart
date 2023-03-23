@@ -123,6 +123,8 @@ class Lang {
 
   String get walk => '';
 
+  String get test => '';
+
   String get keyword => '';
 
   String get router => '';

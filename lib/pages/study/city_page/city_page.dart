@@ -9,6 +9,9 @@ import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/state_view.dart';
 import 'package:lpinyin/lpinyin.dart';
 
+///
+/// 城市选择库的测试页面，使用了azListView
+///
 class CitySelectedPage extends StatefulWidget {
   CitySelectedPage();
 

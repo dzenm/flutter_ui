@@ -185,6 +185,10 @@ class LangZh extends Lang {
   String get walk => '步行';
 
   @override
+  @override
+  String get test => '测试';
+
+  @override
   String get keyword => '键盘';
 
   @override

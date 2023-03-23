@@ -5,7 +5,7 @@ import 'package:flutter_ui/base/res/theme/app_theme.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:provider/provider.dart';
 
-import 'child/first_page.dart';
+import 'first_page.dart';
 
 ///
 /// Created by a0010 on 2023/2/3 16:43

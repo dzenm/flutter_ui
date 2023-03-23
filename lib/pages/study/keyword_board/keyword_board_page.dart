@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ui/base/res/strings.dart';
 import 'package:flutter_ui/base/widgets/license_view.dart';
 
+/// 自定义键盘
 class KeywordBoardPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _KeywordBoardPageState();

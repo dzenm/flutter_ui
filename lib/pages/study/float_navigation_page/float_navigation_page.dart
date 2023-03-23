@@ -4,6 +4,7 @@ import 'package:flutter_ui/base/widgets/float_navigation_bar.dart';
 
 import '../../../base/widgets/custom_popup_window.dart';
 
+/// 浮动的导航栏和PopupWindow
 class FloatNavigationPage extends StatefulWidget {
   @override
   _FloatNavigationPageState createState() => _FloatNavigationPageState();
@@ -56,22 +57,6 @@ class _FloatNavigationPageState extends State<FloatNavigationPage> {
         ),
       ),
       bottomNavigationBar: FloatNavigationBar(_navs, title: _title),
-    );
-  }
-
-  Widget buildWidget() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-      decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.all(Radius.circular(6))),
-      child: Column(
-        children: [
-          Text("全选"),
-          SizedBox(height: 8),
-          Text("复制"),
-          SizedBox(height: 8),
-          Text("粘贴"),
-        ],
-      ),
     );
   }
 }

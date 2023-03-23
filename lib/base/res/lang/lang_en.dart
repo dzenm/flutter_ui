@@ -185,6 +185,9 @@ class LangEn extends Lang {
   String get walk => 'Walk';
 
   @override
+  String get test=> 'Test';
+
+  @override
   String get keyword => 'Keyword';
 
   @override

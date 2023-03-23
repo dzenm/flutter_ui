@@ -20,6 +20,7 @@ import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/base/widgets/will_pop_view.dart';
 import 'package:flutter_ui/pages/study/setting_page/setting_page.dart';
 
+/// 文本展示测试页面
 class TextPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _TextPageState();
@@ -81,6 +82,7 @@ class _TextPageState extends State<TextPage> {
           appBar: AppBar(
             title: Text('文本和输入框', style: TextStyle(color: Colors.white)),
             actions: [
+              /// 弹出式菜单
               PopupMenuButton(
                 elevation: 4.0,
                 onSelected: (Item item) {

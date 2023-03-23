@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 ///
 /// Created by a0010 on 2023/3/2 15:11
-///
+/// Provider
 class ProviderPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _ProviderPageState();
@@ -23,6 +23,7 @@ class _ProviderPageState extends State<ProviderPage> {
     Log.i('initState', tag: _tag);
     Future.delayed(Duration.zero, () {
       person = context.read<MeModel>().persons.first;
+      setState(() {});
     });
   }
 
@@ -62,7 +63,14 @@ class _ProviderPageState extends State<ProviderPage> {
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: SingleChildScrollView(
-          child: Row(children: [Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: _buildChildrenButtons()))]),
+          child: Row(children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: _buildChildrenButtons(),
+              ),
+            ),
+          ]),
         ),
       ),
     );
@@ -70,72 +78,168 @@ class _ProviderPageState extends State<ProviderPage> {
 
   List<Widget> _buildChildrenButtons() {
     return [
-      _buildMyWidget(person: person),
       SizedBox(height: 16),
-      _buildProviderWidget(),
+      Text('监听setState更新UI'),
+      SizedBox(height: 8),
+      _buildSetStateWidget(person: person),
+      SizedBox(height: 16),
+      Text('监听Provider更新UI'),
+      SizedBox(height: 8),
+      _ProviderWidget(),
+      SizedBox(height: 16),
+      Text('监听Selector更新UI'),
+      SizedBox(height: 8),
+      _buildSelectorWidget(),
       SizedBox(height: 16),
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         MaterialButton(
-          child: Text('Provider更新'),
+          child: Text('setState'),
           textColor: Colors.white,
           color: Colors.blue,
           onPressed: () {
-            person?.name = '通过Provider更新名字';
-            person?.age = 20;
-            person?.address = '通过Provider更新地址';
-            context.read<MeModel>().updatePerson(0, person!);
+            // I/ProviderPage  build
+            // I/ProviderPage  buildSetStateWidget
+            // I/ProviderPage  buildSelectorWidget
+            // I/ProviderWidget  build
+            // I/ProviderPage  Selector name: build
+            // I/ProviderPage  Selector address: build
+            // I/ProviderPage  Selector age: build
+            person?.name = '通过state更新名字';
+            person?.age = 10;
+            person?.address = 'setState Beijing';
+
+            setState(() {});
           },
         ),
         MaterialButton(
-          child: Text('setState更新'),
+          child: Text('Provider'),
           textColor: Colors.white,
           color: Colors.blue,
           onPressed: () {
-            person?.name = '通过state更新名字';
-            person?.age = 30;
-            person?.address = '通过state更新名字';
-            setState(() {});
+            // I/ProviderWidget  build
+            Person person = context.read<MeModel>().persons[1];
+            person.name = '通过Provider更新名字';
+            person.age = 20;
+            person.address = 'Provider Shanghai';
+            context.read<MeModel>().updatePerson(1, person);
+          },
+        ),
+        MaterialButton(
+          child: Text('Selector'),
+          textColor: Colors.white,
+          color: Colors.blue,
+          onPressed: () {
+            // I/ProviderWidget  build
+            // I/ProviderPage  Selector name: build
+            // I/ProviderPage  Selector age: build
+            // I/ProviderPage  Selector address: build
+            Person person = context.read<MeModel>().persons.last;
+            person.name = '通过Selector更新名字';
+            person.age = 30;
+            person.address = 'Selector JiangSu';
+            context.read<MeModel>().updatePerson(2, person);
           },
         ),
       ]),
     ];
   }
 
-  Widget _buildMyWidget({Person? person}) {
-    Log.i('_buildMyWidget', tag: _tag);
-    String title = 'setState';
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text('$title: ${person?.name}'),
-      Text('$title: ${person?.address}'),
-      Text('$title: ${person?.age}'),
-    ]);
+  Widget _buildSetStateWidget({Person? person}) {
+    Log.i('buildSetStateWidget', tag: _tag);
+
+    // setState 当前所在的widget及子widget都会被重建
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(16)),
+        border: Border.all(color: Colors.blue, width: 1),
+      ),
+      padding: EdgeInsets.all(16),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(children: [Text('${person?.name}')]),
+        SizedBox(height: 8),
+        Row(children: [Text('${person?.address}')]),
+        SizedBox(height: 8),
+        Row(children: [Text('${person?.age}')]),
+      ]),
+    );
   }
 
-  Widget _buildProviderWidget() {
-    Log.i('_buildProviderWidget', tag: _tag);
-    String title = 'Provider';
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Selector<MeModel, String>(
-        builder: (context, value, widget) {
-          Log.i('Provider Selector name: build', tag: _tag);
-          return Text('$title: $value');
-        },
-        selector: (context, model) => model.persons.first.name ?? '',
+  Widget _buildSelectorWidget() {
+    Log.i('buildSelectorWidget', tag: _tag);
+
+    // Selector 只在监听的值改变后发生变化，如果该值未改变，或者对象中的其他值/List的其他index值改变，均不会受到影响
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(16)),
+        border: Border.all(color: Colors.blue, width: 1),
       ),
-      Selector<MeModel, String>(
-        builder: (context, value, widget) {
-          Log.i('Provider Selector address: build', tag: _tag);
-          return Text('$title: $value');
-        },
-        selector: (context, model) => model.persons.first.address ?? '',
+      padding: EdgeInsets.all(16),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(children: [
+          Selector<MeModel, String>(
+            builder: (context, value, widget) {
+              Log.i('Selector name: build', tag: _tag);
+
+              return Text('$value');
+            },
+            selector: (context, model) => model.persons.last.name ?? '',
+          )
+        ]),
+        SizedBox(height: 8),
+        Row(children: [
+          Selector<MeModel, String>(
+            builder: (context, value, widget) {
+              Log.i('Selector address: build', tag: _tag);
+
+              return Text('$value');
+            },
+            selector: (context, model) => model.persons.last.address ?? '',
+          ),
+        ]),
+        SizedBox(height: 8),
+        Row(children: [
+          Selector<MeModel, int>(
+            builder: (context, value, widget) {
+              Log.i('Selector age: build', tag: _tag);
+
+              return Text('$value');
+            },
+            selector: (context, model) => model.persons.last.age ?? 0,
+          ),
+        ]),
+      ]),
+    );
+  }
+}
+
+class _ProviderWidget extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _ProviderWidgetState();
+}
+
+class _ProviderWidgetState extends State<_ProviderWidget> {
+  static const String _tag = 'ProviderWidget';
+
+  @override
+  Widget build(BuildContext context) {
+    Log.i('build', tag: _tag);
+
+    // watch 当前widget存在监听的对象有任一细微的变化都会影响build及子widget进行重建
+    // 比如监听的是List或者List的其中一个item，如果List的其他item发生变化都会影响监听了List或者List的其中一个item的widget进行重建
+    Person person = context.watch<MeModel>().persons[1];
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(16)),
+        border: Border.all(color: Colors.blue, width: 1),
       ),
-      Selector<MeModel, int>(
-        builder: (context, value, widget) {
-          Log.i('Provider Selector age: build', tag: _tag);
-          return Text('$title: $value');
-        },
-        selector: (context, model) => model.persons.first.age ?? 0,
-      ),
-    ]);
+      padding: EdgeInsets.all(16),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(children: [Text('${person.name}')]),
+        SizedBox(height: 8),
+        Row(children: [Text('${person.address}')]),
+        SizedBox(height: 8),
+        Row(children: [Text('${person.age}')]),
+      ]),
+    );
   }
 }
