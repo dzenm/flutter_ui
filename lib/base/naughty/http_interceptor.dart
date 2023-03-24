@@ -1,16 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
 
-import '../router/route_manager.dart';
-import '../utils/notification_util.dart';
-import '../utils/str_util.dart';
-import 'http/http_list_page.dart';
 import 'http_entity.dart';
 import 'naughty.dart';
 
 /// HTTP请求信息拦截
 class HttpInterceptor extends Interceptor {
-  Map<RequestOptions, HTTPEntity> map = {};
+  Map<RequestOptions, HTTPEntity> _cacheMap = {};
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
@@ -18,20 +14,17 @@ class HttpInterceptor extends Interceptor {
     entity.status = Status.running;
     entity.duration = DateTime.now().millisecondsSinceEpoch.toString();
     entity.time = DateFormat("HH:mm:ss SSS").format(DateTime.now());
-    map[options] = entity;
-    Naughty.instance.data.insert(0, entity);
+    _cacheMap[options] = entity;
+    Naughty.instance.httpRequests.insert(0, entity);
 
     String body = '${options.method}  ${options.path}';
-    NotificationUtil.showNotification(
-      body: body,
-      onTap: (payload) async => RouteManager.push(Naughty().context, const HTTPListPage()),
-    );
+    Naughty.instance.showNotification(body: body);
     handler.next(options);
   }
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) async {
-    HTTPEntity? entity = map[response.requestOptions];
+    HTTPEntity? entity = _cacheMap[response.requestOptions];
     if (entity != null) {
       entity.status = Status.success;
       _handle(response, entity);
@@ -41,7 +34,7 @@ class HttpInterceptor extends Interceptor {
 
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) async {
-    HTTPEntity? entity = map[err.requestOptions];
+    HTTPEntity? entity = _cacheMap[err.requestOptions];
     if (entity != null) {
       entity.status = Status.failed;
       _handle(err.response, entity);
@@ -52,7 +45,7 @@ class HttpInterceptor extends Interceptor {
   void _handle(Response? response, HTTPEntity entity) {
     entity.status = Status.success;
     entity.duration = '${DateTime.now().millisecondsSinceEpoch - int.parse(entity.duration)} ms';
-    entity.size = StrUtil.formatSize(StrUtil.getStringLength(response?.data.toString()));
+    entity.size = Naughty.instance.formatSize(Naughty.instance.getStringLength(response?.data.toString()));
 
     // request
     entity.method = response?.requestOptions.method ?? 'unknown';

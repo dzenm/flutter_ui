@@ -3,27 +3,25 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../router/route_manager.dart';
-import '../../utils/file_util.dart';
-import '../../utils/str_util.dart';
-import '../../widgets/tap_layout.dart';
-import 'db_table_list_page.dart';
+import '../widgets/tap_layout.dart';
+import 'db_table_page.dart';
+import 'naughty.dart';
 
 /// 数据库显示页面
-class DBListPage extends StatefulWidget {
-  const DBListPage({super.key});
+class DBPage extends StatefulWidget {
+  const DBPage({super.key});
 
   @override
-  State<StatefulWidget> createState() => _DBListPageState();
+  State<StatefulWidget> createState() => _DBPageState();
 }
 
-class _DBListPageState extends State<DBListPage> {
+class _DBPageState extends State<DBPage> {
   List<String> _list = [];
 
   @override
   void initState() {
     super.initState();
-    getData();
+    _getData();
   }
 
   @override
@@ -36,23 +34,23 @@ class _DBListPageState extends State<DBListPage> {
         onRefresh: _onRefresh,
         child: ListView.builder(
           shrinkWrap: true,
-          itemBuilder: _renderRow,
+          itemBuilder: _buildItem,
           itemCount: _list.length,
         ),
       ),
     );
   }
 
-  //列表要展示的数据
-  Future getData() async {
+  /// 列表要展示的数据
+  Future _getData() async {
     await Future.delayed(const Duration(seconds: 0), () async {
-      _list = await FileUtil.instance.getDBFiles();
+      _list = await Naughty.instance.getDBFiles();
       setState(() => {});
     });
   }
 
-  // 列表单item
-  Widget _renderRow(BuildContext context, int index) {
+  /// 列表item 布局
+  Widget _buildItem(BuildContext context, int index) {
     return ClipRRect(
       borderRadius: const BorderRadius.all(Radius.circular(8.0)),
       child: Container(
@@ -72,12 +70,12 @@ class _DBListPageState extends State<DBListPage> {
         ),
         child: TapLayout(
           borderRadius: const BorderRadius.all(Radius.circular(7)),
-          onTap: () => RouteManager.push(context, DBTableListPage(_list[index])),
+          onTap: () => Naughty.instance.push(context, DBTablePage(_list[index])),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: _listChildWidget(index),
+              children: _buildItemDetail(index),
             ),
           ),
         ),
@@ -85,12 +83,13 @@ class _DBListPageState extends State<DBListPage> {
     );
   }
 
-  List<Widget> _listChildWidget(int index) {
+  /// 列表item详细信息布局
+  List<Widget> _buildItemDetail(int index) {
     String path = _list[index];
-    String name = StrUtil.getFileName(path);
+    String name = Naughty.instance.getFileName(path);
     File file = File(path);
     int len = file.lengthSync();
-    String size = StrUtil.formatSize(len);
+    String size = Naughty.instance.formatSize(len);
     String modifyTime = DateFormat("yyyy-MM-dd HH:mm:ss").format(file.lastModifiedSync());
     return [
       Text(
@@ -109,8 +108,8 @@ class _DBListPageState extends State<DBListPage> {
     ];
   }
 
-  // 下拉刷新方法,为_list重新赋值
+  /// 下拉刷新方法,为_list重新赋值
   Future<void> _onRefresh() async {
-    await getData();
+    await _getData();
   }
 }

@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
 
-import '../../db/db_manager.dart';
-import '../../db/table_entity.dart';
-import '../../router/route_manager.dart';
-import '../../utils/str_util.dart';
-import '../../widgets/tap_layout.dart';
-import 'db_table_item_page.dart';
+import '../db/db_manager.dart';
+import '../widgets/tap_layout.dart';
+import 'db_column_page.dart';
+import 'naughty.dart';
+
 /// 数据库表列表展示页面
-class DBTableListPage extends StatefulWidget {
+class DBTablePage extends StatefulWidget {
   final String dbName;
 
-  const DBTableListPage(this.dbName, {super.key});
+  const DBTablePage(this.dbName, {super.key});
 
   @override
-  State<StatefulWidget> createState() => _DBTableListPageState();
+  State<StatefulWidget> createState() => _DBTablePageState();
 }
 
-class _DBTableListPageState extends State<DBTableListPage> {
-  List<TableEntity> _list = [];
+class _DBTablePageState extends State<DBTablePage> {
+  List _list = [];
 
   @override
   void initState() {
@@ -25,9 +24,17 @@ class _DBTableListPageState extends State<DBTableListPage> {
     getData();
   }
 
+  //列表要展示的数据
+  Future getData() async {
+    await Future.delayed(Duration.zero, () async {
+      _list = await DBManager().getTableList(dbName: widget.dbName);
+      setState(() => {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    String title = StrUtil.getFileName(widget.dbName);
+    String title = Naughty.instance.getFileName(widget.dbName);
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
@@ -36,23 +43,15 @@ class _DBTableListPageState extends State<DBTableListPage> {
         onRefresh: _onRefresh,
         child: ListView.builder(
           shrinkWrap: true,
-          itemBuilder: _renderRow,
+          itemBuilder: _buildItem,
           itemCount: _list.length,
         ),
       ),
     );
   }
 
-  //列表要展示的数据
-  Future getData() async {
-    await Future.delayed(const Duration(seconds: 0), () async {
-      _list = await DBManager().getTableList(dbName: widget.dbName);
-      setState(() => {});
-    });
-  }
-
-  // 列表单item
-  Widget _renderRow(BuildContext context, int index) {
+  // 列表 item 布局
+  Widget _buildItem(BuildContext context, int index) {
     return ClipRRect(
       borderRadius: const BorderRadius.all(Radius.circular(8.0)),
       child: Container(
@@ -72,7 +71,7 @@ class _DBTableListPageState extends State<DBTableListPage> {
         ),
         child: TapLayout(
           borderRadius: const BorderRadius.all(Radius.circular(7)),
-          onTap: () => RouteManager.push(context, DBTableItemPage(widget.dbName, _list[index].name ?? '')),
+          onTap: () => Naughty.instance.push(context, DBColumnPage(widget.dbName, _list[index].name ?? '')),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Row(

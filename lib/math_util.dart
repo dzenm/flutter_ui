@@ -1,11 +1,9 @@
-
 import 'application.dart';
 
 ///
 /// Created by a0010 on 2022/9/20 14:47
 ///
 class MathUtil {
-
   static void main() {
     MathUtil()._mergeSortTest();
   }

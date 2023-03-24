@@ -13,29 +13,15 @@ class NativeChannelUtil {
     _logPrint = logPrint;
   }
 
+  static MethodChannel _channel = const MethodChannel('flutter_ui/channel');
+
   // 点击返回键回退到手机桌面而不是结束当前页面
   static Future<bool> onBackToDesktop() async {
     if (!Platform.isAndroid) return false;
-    MethodChannel channel = const MethodChannel('channel/android/backToDesktop');
     try {
       // 通知安卓返回,到手机桌面
-      bool out = await channel.invokeMethod('backToDesktop');
+      bool out = await _channel.invokeMethod('backToDesktop');
       return out;
-    } on PlatformException catch (e) {
-      log(e.message);
-    }
-    return false;
-  }
-
-  // 启动一个新的服务
-  static Future<bool> startVideoService() async {
-    if (!Platform.isAndroid) return false;
-    MethodChannel channel = const MethodChannel('channel/android/startVideoService');
-    // 通知安卓返回,到手机桌面
-    try {
-      String data = await channel.invokeMethod('startVideoService');
-      log('从Android端Service返回数据: data=$data');
-      return true;
     } on PlatformException catch (e) {
       log(e.message);
     }
@@ -46,10 +32,9 @@ class NativeChannelUtil {
   static Future<bool> startHomeActivity() async {
     if (!Platform.isAndroid) return false;
     try {
-      MethodChannel channel = const MethodChannel('channel/android/homeActivity');
       // 通知安卓返回,到手机桌面
       Map<String, dynamic> inData = {'message': '我是来自Flutter传递的数据'};
-      String outData = await channel.invokeMethod('startHomeActivity', inData);
+      String outData = await _channel.invokeMethod('startHomeActivity', inData);
       log('HomeActivity数据: outData=$outData, inData=$inData');
       return true;
     } on PlatformException catch (e) {

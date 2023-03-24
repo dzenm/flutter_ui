@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../base/log/log.dart';
+import '../../base/naughty/naughty.dart';
 import '../../base/widgets/badge_view.dart';
 import '../../base/widgets/keep_alive_wrapper.dart';
 import '../../base/widgets/tap_layout.dart';
@@ -51,6 +52,12 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     Log.i('initState', tag: _tag);
 
     WidgetsBinding.instance.addObserver(this);
+    Future.delayed(
+      Duration.zero,
+      () => Naughty.instance
+        ..init(context)
+        ..show(),
+    );
   }
 
   @override

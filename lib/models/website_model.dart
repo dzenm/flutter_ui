@@ -38,9 +38,9 @@ class WebsiteModel with ChangeNotifier {
 
   /// 处理网站数据
   Future<void> _handleWebsite(WebsiteEntity website) async {
-    int index = _websites.indexOf(website);
+    int index = _websites.indexWhere((web) => web.id == website.id);
     if (index != -1) {
-      _websites.insert(index, website);
+      _websites[index] = website;
       await _entity.update(website); // 更新DB中的website数据
     } else {
       _websites.add(website);

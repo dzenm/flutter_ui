@@ -70,6 +70,8 @@ class _TextPageState extends State<TextPage> {
   void dispose() {
     super.dispose();
     Log.i('dispose', tag: _tag);
+
+    _controller.dispose();
   }
 
   @override

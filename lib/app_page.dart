@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 
 import 'application.dart';
 import 'base/log/build_config.dart';
-import 'base/naughty/naughty.dart';
 import 'base/res/local_model.dart';
 import 'base/res/strings.dart';
 import 'base/res/theme/app_theme.dart';
@@ -56,9 +55,6 @@ class AppPage extends StatelessWidget {
   void _init(BuildContext context) {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     S.context = context; // 初始化需要context，在这里注册
-    Naughty.instance
-      ..init(context)
-      ..show();
   }
 
   /// Provider 共享状态管理
