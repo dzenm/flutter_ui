@@ -7,11 +7,5 @@ import 'app_theme.dart';
 ///
 class GrayTheme extends AppTheme {
   @override
-  Color get primary => Colors.grey;
-
-  @override
-  Color get secondary => Colors.transparent;
-
-  @override
-  Color get background => Colors.white;
+  Color get toolbarBackground => Colors.grey;
 }

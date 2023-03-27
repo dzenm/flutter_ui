@@ -7,14 +7,5 @@ import 'app_theme.dart';
 ///
 class TealTheme extends AppTheme {
   @override
-  Color get primary => Colors.teal;
-
-  @override
-  Color get secondary => Colors.transparent;
-
-  @override
-  Color get background => Colors.white;
-
-  @override
-  Color get divide => Color(0xFFEFEFEF);
+  Color get toolbarBackground => Colors.teal;
 }

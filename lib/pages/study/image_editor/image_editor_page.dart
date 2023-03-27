@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/res/strings.dart';
+import 'package:flutter_ui/base/res/lang/strings.dart';
 import 'package:flutter_ui/base/widgets/image_editor/image_editor.dart';
 import 'package:image_picker/image_picker.dart';
 

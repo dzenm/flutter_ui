@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/router/route_manager.dart';
-import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:photo_view/photo_view.dart';
 
-import '../../application.dart';
+import '../../base/widgets/tap_layout.dart';
 
 typedef DownloadCallback = void Function(String url);
 
@@ -22,11 +20,12 @@ class PreviewPhotoPage extends StatefulWidget {
 
   /// 跳转图片预览页面
   static void show(
+    BuildContext context,
     List<String> url, {
     ImageProvider<Object>? imageProvider,
     DownloadCallback? onDownload,
   }) {
-    Navigator.of(Application().context).push(
+    Navigator.of(context).push(
       CustomerPageRoute(
         PreviewPhotoPage(
           url,
@@ -93,7 +92,7 @@ class _PreviewPhotoPageState extends State<PreviewPhotoPage> {
           maxScale: PhotoViewComputedScale.contained * 2,
           gestureDetectorBehavior: HitTestBehavior.translucent,
           scaleStateChangedCallback: (isZoom) {},
-          onTapUp: (context, details, controllerValue) => RouteManager.pop(context),
+          onTapUp: (context, details, controllerValue) => Navigator.pop(context),
         );
       }).toList(),
     );

@@ -1,11 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../base/http/https_client.dart';
 import '../../base/log/log.dart';
-import '../../base/res/strings.dart';
+import '../../base/res/lang/strings.dart';
 import '../../base/router/route_manager.dart';
 import '../../base/utils/sp_util.dart';
 import '../../base/widgets/tap_layout.dart';
@@ -23,9 +22,9 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   static const String _tag = 'RegisterPage';
 
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController rPasswordController = TextEditingController();
+  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  TextEditingController _rPasswordController = TextEditingController();
 
   String _username = '';
   String _password = '';
@@ -67,23 +66,23 @@ class _RegisterPageState extends State<RegisterPage> {
     super.dispose();
     Log.i('dispose', tag: _tag);
 
-    usernameController.dispose();
-    passwordController.dispose();
-    rPasswordController.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
+    _rPasswordController.dispose();
   }
 
   // 初始化输入框的内容并监听输入的内容
   void _initInputText() {
-    usernameController.addListener(() {
-      _username = usernameController.text;
+    _usernameController.addListener(() {
+      _username = _usernameController.text;
       _resetButtonState();
     });
-    passwordController.addListener(() {
-      _password = passwordController.text;
+    _passwordController.addListener(() {
+      _password = _passwordController.text;
       _resetButtonState();
     });
-    rPasswordController.addListener(() {
-      _rPassword = rPasswordController.text;
+    _rPasswordController.addListener(() {
+      _rPassword = _rPasswordController.text;
       _resetButtonState();
     });
   }
@@ -111,14 +110,14 @@ class _RegisterPageState extends State<RegisterPage> {
         SizedBox(height: 80),
         // 用户名输入框
         TextField(
-          controller: usernameController,
+          controller: _usernameController,
           decoration: InputDecoration(
             icon: Icon(Icons.person),
             labelText: S.of(context).username,
             suffixIcon: IconButton(
               splashColor: Colors.transparent,
               icon: Icon(Icons.close),
-              onPressed: () => usernameController.clear(),
+              onPressed: () => _usernameController.clear(),
             ),
           ),
           maxLines: 1,
@@ -128,7 +127,7 @@ class _RegisterPageState extends State<RegisterPage> {
         SizedBox(height: 32),
         // 密码输入框
         TextField(
-          controller: passwordController,
+          controller: _passwordController,
           decoration: InputDecoration(
             icon: Icon(Icons.admin_panel_settings),
             labelText: S.of(context).password,
@@ -147,7 +146,7 @@ class _RegisterPageState extends State<RegisterPage> {
         SizedBox(height: 32),
         // 重复密码输入框
         TextField(
-          controller: rPasswordController,
+          controller: _rPasswordController,
           decoration: InputDecoration(
             icon: Icon(Icons.admin_panel_settings),
             labelText: S.of(context).rPassword,

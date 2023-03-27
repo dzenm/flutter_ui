@@ -7,14 +7,5 @@ import 'app_theme.dart';
 ///
 class PurpleTheme extends AppTheme {
   @override
-  Color get primary => Colors.purple;
-
-  @override
-  Color get secondary => Colors.transparent;
-
-  @override
-  Color get background => Colors.white;
-
-  @override
-  Color get divide => Color(0xFFEFEFEF);
+  Color get toolbarBackground => Colors.purple;
 }

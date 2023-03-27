@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/res/assets.dart';
-import 'package:flutter_ui/base/res/strings.dart';
+import 'package:flutter_ui/base/res/lang/strings.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 
 class VlcVideoPage extends StatefulWidget {

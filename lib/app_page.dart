@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 
 import 'application.dart';
 import 'base/log/build_config.dart';
+import 'base/res/lang/strings.dart';
 import 'base/res/local_model.dart';
-import 'base/res/strings.dart';
 import 'base/res/theme/app_theme.dart';
 import 'base/widgets/keyboard/keyboard_root.dart';
 import 'base/widgets/will_pop_view.dart';
@@ -93,13 +93,13 @@ class AppPage extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         // 设置主题，读取LocalModel的值，改变LocalModel的theme值会通过provider刷新页面
         theme: ThemeData(
-          primaryColor: theme.primary,
+          primaryColor: theme.toolbarBackground,
           appBarTheme: AppBarTheme(
-            backgroundColor: theme.primary,
+            backgroundColor: theme.toolbarBackground,
             systemOverlayStyle: SystemUiOverlayStyle.light,
           ),
           floatingActionButtonTheme: FloatingActionButtonThemeData(
-            backgroundColor: theme.primary,
+            backgroundColor: theme.toolbarBackground,
           ),
           // pageTransitionsTheme: PageTransitionsTheme(
           //   builders: <TargetPlatform, PageTransitionsBuilder>{

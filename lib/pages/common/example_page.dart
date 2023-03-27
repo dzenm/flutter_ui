@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/widgets/common_bar.dart';
+
+import '../../base/widgets/common_bar.dart';
 
 ///
 /// Created by a0010 on 2023/3/23 09:01
@@ -15,6 +16,12 @@ class _ExamplePageState extends State<ExamplePage> {
   @override
   void initState() {
     super.initState();
+
+    Future.delayed(Duration.zero, () => _getData());
+  }
+
+  Future<void> _getData() async {
+    if (mounted) setState(() {});
   }
 
   @override

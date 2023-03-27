@@ -163,7 +163,7 @@ class FileUtil {
     }
   }
 
-  //l 循环获取缓存大小
+  // 循环获取缓存大小
   static Future getTotalSizeOfFilesInDir(final FileSystemEntity file) async {
     if (file is File && file.existsSync()) {
       // log("临时缓存目录路径:${file.path}");

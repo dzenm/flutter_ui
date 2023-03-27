@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../base/log/log.dart';
 import '../../../base/res/local_model.dart';
-import '../../../base/res/strings.dart';
+import '../../../base/res/lang/strings.dart';
 import '../../../base/res/theme/app_theme.dart';
 import '../../../base/router/route_manager.dart';
 import '../../../base/utils/device_util.dart';
@@ -123,7 +123,7 @@ class _MePageState extends State<MePage> {
           Column(children: [
             SizedBox(
               height: statusBarHeight + kToolbarHeight,
-              child: Container(color: theme.primary),
+              child: Container(color: theme.toolbarBackground),
             ),
             Expanded(child: Container(color: theme.divide)),
           ]),

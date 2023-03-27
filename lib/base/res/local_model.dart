@@ -1,48 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import '../utils/sp_util.dart';
-import 'colors.dart';
 import 'theme/app_theme.dart';
+import 'theme/colors.dart';
 
 class LocalModel with ChangeNotifier {
   /// 初始化主题设置
   LocalModel() {
-    _theme = SpUtil.getTheme();
+    _themeMode = C.getMode(SpUtil.getTheme());
     _locale = Locale(SpUtil.getLocale());
   }
 
-  /// 当前设置的主题
-  late String _theme;
+  /// 当前设置的主题模式
+  late AppThemeMode _themeMode;
 
-  String get theme => _theme;
+  /// 获取当前设置的主题模式
+  AppThemeMode get themeMode => _themeMode;
 
-  void setTheme(String theme) {
-    _theme = theme;
-    SpUtil.setTheme(theme);
-    notifyListeners();
-  }
-
-  /// 当前设置的语言
-  late Locale _locale;
-
-  Locale get locale => _locale;
-
-  void setLocale(Locale locale) {
-    _locale = locale;
-    SpUtil.setLocale(locale.languageCode);
+  /// 设置新的主题模式
+  void setThemeMode(AppThemeMode themeMode) {
+    _themeMode = themeMode;
+    SpUtil.setTheme(themeMode.name);
     notifyListeners();
   }
 
   /// 获取设置的主题包
-  AppTheme get appTheme => C.getTheme(theme);
+  AppTheme get appTheme => C.getTheme(themeMode);
 
-  String _value = 'init value';
+  /// 当前设置的语言
+  late Locale _locale;
 
-  String get value => _value;
+  /// 获取当前设置的语言
+  Locale get locale => _locale;
 
-  void setValue(String value) {
-    _value = value;
+  /// 设置新的语言
+  void setLocale(Locale locale) {
+    _locale = locale;
+    SpUtil.setLocale(locale.languageCode);
     notifyListeners();
   }
 }

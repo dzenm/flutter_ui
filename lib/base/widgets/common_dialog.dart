@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 
-import '../res/strings.dart';
+import '../res/lang/strings.dart';
 import 'common_widget.dart';
 import 'tap_layout.dart';
 import 'upgrade_dialog.dart';

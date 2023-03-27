@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/res/strings.dart';
+
+import '../../base/res/lang/strings.dart';
 
 class NotFoundPage extends StatefulWidget {
   const NotFoundPage({super.key});

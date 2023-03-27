@@ -7,14 +7,5 @@ import 'app_theme.dart';
 ///
 class PinkTheme extends AppTheme {
   @override
-  Color get primary => Colors.pink;
-
-  @override
-  Color get secondary => Colors.transparent;
-
-  @override
-  Color get background => Colors.orangeAccent;
-
-  @override
-  Color get divide => Color(0xFFEFEFEF);
+  Color get toolbarBackground => Colors.pink;
 }

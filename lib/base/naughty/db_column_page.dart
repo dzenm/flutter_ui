@@ -37,11 +37,11 @@ class _DBColumnPageState extends State<DBColumnPage> {
       appBar: AppBar(
         title: Text(widget.tableName),
       ),
-      body: SingleChildScrollView(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: _init
-              ? DataTable(
+      body: _init
+          ? SingleChildScrollView(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: DataTable(
                   dataRowHeight: 20,
                   headingRowHeight: 32,
                   horizontalMargin: 0,
@@ -54,14 +54,14 @@ class _DBColumnPageState extends State<DBColumnPage> {
                       return DataCell(Text(item[column.name].toString()));
                     }).toList());
                   }).toList(),
-                )
-              : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    SizedBox(width: 56, height: 56, child: CircularProgressIndicator()),
-                  ]),
-                ]),
-        ),
-      ),
+                ),
+              ),
+            )
+          : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                SizedBox(width: 56, height: 56, child: CircularProgressIndicator()),
+              ]),
+            ]),
     );
   }
 }

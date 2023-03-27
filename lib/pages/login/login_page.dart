@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../base/http/https_client.dart';
 import '../../base/log/log.dart';
-import '../../base/res/strings.dart';
+import '../../base/res/lang/strings.dart';
 import '../../base/router/route_manager.dart';
 import '../../base/utils/sp_util.dart';
 import '../../base/widgets/tap_layout.dart';
@@ -31,7 +31,8 @@ class _LoginPageState extends State<LoginPage> {
   String _password = '';
   String _rPassword = '';
 
-  bool _isLogin = true; // true为登陆，false为注册
+  bool _isLoginAndRegisterPage = true; // 是否登陆注册双功能页面
+  bool _switchCurrentLogin = true; // true为登陆，false为注册
 
   bool _isShowPwd = false; // 是否显示输入的密码
   bool _isShowRPwd = false; // 是否显示输入的重复密码
@@ -149,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         SizedBox(height: 32),
         // 重复密码输入框
-        if (!_isLogin)
+        if (!_switchCurrentLogin)
           TextField(
             controller: rPasswordController,
             decoration: InputDecoration(
@@ -167,7 +168,7 @@ class _LoginPageState extends State<LoginPage> {
             keyboardType: TextInputType.text,
             obscureText: !_isShowRPwd,
           ),
-        if (!_isLogin) SizedBox(height: 32),
+        if (!_switchCurrentLogin) SizedBox(height: 32),
         Row(children: [
           // 登陆按钮
           Expanded(
@@ -175,8 +176,8 @@ class _LoginPageState extends State<LoginPage> {
             child: TapLayout(
               height: 36.0,
               borderRadius: BorderRadius.all(Radius.circular(2)),
-              background: _isLogin && _isDisableLoginButton ? buttonColor.shade200 : buttonColor,
-              onTap: _isLogin && _isDisableLoginButton ? null : _login,
+              background: _switchCurrentLogin && _isDisableLoginButton ? buttonColor.shade200 : buttonColor,
+              onTap: _switchCurrentLogin && _isDisableLoginButton ? null : _login,
               child: Text(S.of(context).login, style: TextStyle(color: Colors.white)),
             ),
           ),
@@ -187,8 +188,8 @@ class _LoginPageState extends State<LoginPage> {
             child: TapLayout(
               height: 36.0,
               borderRadius: BorderRadius.all(Radius.circular(2)),
-              background: !_isLogin && _isDisableLoginButton ? buttonColor.shade200 : buttonColor,
-              onTap: !_isLogin && _isDisableLoginButton ? null : _register,
+              background: !_switchCurrentLogin && _isDisableLoginButton ? buttonColor.shade200 : buttonColor,
+              onTap: !_switchCurrentLogin && _isDisableLoginButton ? null : _register,
               child: Text(S.of(context).register, style: TextStyle(color: Colors.white)),
             ),
           ),
@@ -199,14 +200,14 @@ class _LoginPageState extends State<LoginPage> {
 
   // 如果输入的账号密码为空则禁用登录按钮
   void _resetLoginButtonState() {
-    setState(() => _isDisableLoginButton = _username.isEmpty || _password.isEmpty || (_isLogin ? false : _rPassword.isEmpty));
+    setState(() => _isDisableLoginButton = _username.isEmpty || _password.isEmpty || (_switchCurrentLogin ? false : _rPassword.isEmpty));
   }
 
   // 登录按钮点击事件
   void _login() {
     FocusScope.of(context).unfocus();
-    if (!_isLogin) {
-      setState(() => _isLogin = true);
+    if (!_switchCurrentLogin) {
+      setState(() => _switchCurrentLogin = true);
       return;
     }
     HttpsClient.instance.request(apiServices.login(_username, _password), success: (data) {
@@ -225,10 +226,13 @@ class _LoginPageState extends State<LoginPage> {
 
   void _register() {
     FocusScope.of(context).unfocus();
-    RouteManager.push(context, RegisterPage());
-    return;
-    if (_isLogin) {
-      setState(() => _isLogin = false);
+    if (!_isLoginAndRegisterPage) {
+      FocusScope.of(context).unfocus();
+      RouteManager.push(context, RegisterPage());
+      return;
+    }
+    if (_switchCurrentLogin) {
+      setState(() => _switchCurrentLogin = false);
       return;
     }
   }

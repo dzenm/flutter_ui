@@ -7,14 +7,5 @@ import 'app_theme.dart';
 ///
 class BlueAccentTheme extends AppTheme {
   @override
-  Color get primary => Colors.blueAccent;
-
-  @override
-  Color get secondary => Colors.transparent;
-
-  @override
-  Color get background => Colors.white;
-
-  @override
-  Color get divide => Color(0xFFEFEFEF);
+  Color get toolbarBackground => Colors.blueAccent;
 }

@@ -52,12 +52,13 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     Log.i('initState', tag: _tag);
 
     WidgetsBinding.instance.addObserver(this);
-    Future.delayed(
-      Duration.zero,
-      () => Naughty.instance
-        ..init(context)
-        ..show(),
-    );
+    Future.delayed(Duration.zero, () => _getData());
+  }
+
+  Future<void> _getData() async {
+    Naughty.instance
+      ..init(context)
+      ..show();
   }
 
   @override
@@ -92,7 +93,6 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     Log.i('build', tag: _tag);
 
     context.read<MainModel>().initData(context);
-
     return Scaffold(
       body: PageView(
         controller: _controller,
@@ -111,8 +111,9 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
 
   /// Page widget
   List<Widget> _buildTabPage() {
+    int len = context.read<MainModel>().len;
     List<Widget> list = [HomePage(), NavPage(), MePage()];
-    return List.generate(list.length, (index) => KeepAliveWrapper(child: list[index]));
+    return List.generate(len, (index) => KeepAliveWrapper(child: index < list.length ? list[index] : Container()));
   }
 
   /// BottomNavigationBar widget

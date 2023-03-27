@@ -3,11 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/base/http/https_client.dart';
 import 'package:flutter_ui/base/log/log.dart';
-import 'package:flutter_ui/base/res/local_model.dart';
 import 'package:flutter_ui/base/res/assets.dart';
-import 'package:flutter_ui/base/res/colors.dart';
-import 'package:flutter_ui/base/res/strings.dart';
+import 'package:flutter_ui/base/res/lang/strings.dart';
+import 'package:flutter_ui/base/res/local_model.dart';
 import 'package:flutter_ui/base/res/theme/app_theme.dart';
+import 'package:flutter_ui/base/res/theme/colors.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/base/utils/sp_util.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
@@ -99,7 +99,7 @@ class _SettingPageState extends State<SettingPage> {
               TapLayout(
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: () => PreviewPhotoPage.show([
+                onTap: () => PreviewPhotoPage.show(context, [
                   "https://www.wanandroid.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png",
                   Assets.image('a.jpg'),
                   Assets.image('a.jpg'),
@@ -174,8 +174,7 @@ class _SettingPageState extends State<SettingPage> {
                 child: SingleTextLayout(
                   icon: Icons.notifications_on_sharp,
                   title: S.of(context).notificationSwitch,
-                  suffix:
-                      CupertinoSwitch(value: switchState, onChanged: (value) => setState(() => switchState = value)),
+                  suffix: CupertinoSwitch(value: switchState, onChanged: (value) => setState(() => switchState = value)),
                 ),
               ),
               TapLayout(
@@ -210,7 +209,6 @@ class _SettingPageState extends State<SettingPage> {
               TapLayout(
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: () => context.read<LocalModel>().setValue('new value'),
                 child: SingleTextLayout(title: S.of(context).loginRecord, badgeCount: 0, isShowForward: true),
               ),
               TapLayout(
@@ -259,7 +257,7 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   void _selectedTheme() {
-    String theme = context.read<LocalModel>().theme;
+    AppThemeMode themeMode = context.read<LocalModel>().themeMode;
     showDialog<bool>(
       context: context,
       builder: (context) {
@@ -270,11 +268,11 @@ class _SettingPageState extends State<SettingPage> {
             child: Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: C.getKeys().map((key) {
-                Color? value = C.getTheme(key).primary;
+              children: C.getThemeModes().map((key) {
+                Color? value = C.getTheme(key).toolbarBackground;
                 return InkWell(
                   onTap: () {
-                    context.read<LocalModel>().setTheme(key);
+                    context.read<LocalModel>().setThemeMode(key);
                     CommonDialog.showToast('修改成功');
                     RouteManager.pop(context);
                   },
@@ -282,7 +280,7 @@ class _SettingPageState extends State<SettingPage> {
                     width: 40,
                     height: 40,
                     color: value,
-                    child: theme == key ? Icon(Icons.done, color: Colors.white) : null,
+                    child: themeMode == key ? Icon(Icons.done, color: Colors.white) : null,
                   ),
                 );
               }).toList(),

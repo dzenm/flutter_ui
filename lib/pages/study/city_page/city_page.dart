@@ -4,7 +4,7 @@ import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ui/base/res/assets.dart';
-import 'package:flutter_ui/base/res/strings.dart';
+import 'package:flutter_ui/base/res/lang/strings.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/state_view.dart';
 import 'package:lpinyin/lpinyin.dart';

@@ -2,9 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'lang/lang.dart';
-import 'lang/lang_en.dart';
-import 'lang/lang_zh.dart';
+import 'lang.dart';
+import 'lang_en.dart';
+import 'lang_zh.dart';
 
 /// 语言包
 /// 在MaterialApp中执行：
