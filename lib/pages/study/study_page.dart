@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ui/base/log/log.dart';
-import 'package:flutter_ui/base/res/local_model.dart';
 import 'package:flutter_ui/base/res/lang/strings.dart';
+import 'package:flutter_ui/base/res/local_model.dart';
 import 'package:flutter_ui/base/res/theme/app_theme.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/base/utils/native_channel_util.dart';
@@ -11,6 +11,7 @@ import 'package:flutter_ui/base/widgets/custom_popup_dialog.dart';
 import 'package:flutter_ui/base/widgets/picker_list_view.dart';
 import 'package:provider/provider.dart';
 
+import '../common/example_page.dart';
 import 'city_page/city_page.dart';
 import 'convert_page/convert_page.dart';
 import 'drag_list_page/drag_list_page.dart';
@@ -80,6 +81,14 @@ class _StudyPageState extends State<StudyPage> {
         textColor: Colors.white,
         color: theme.toolbarBackground,
         onPressed: () => RouteManager.push(context, DragListPage()),
+      ),
+      SizedBox(height: 8),
+      // 快速页面创建
+      MaterialButton(
+        child: _text(S.of(context).test),
+        textColor: Colors.white,
+        color: theme.toolbarBackground,
+        onPressed: () => RouteManager.push(context, ExamplePage()),
       ),
       SizedBox(height: 8),
       // 浮动的导航栏和PopupWindow
@@ -166,7 +175,7 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         child: _text(S.of(context).textAndInput),
         textColor: Colors.white,
-        color: theme.toolbarBackground,
+        color: theme.primary,
         onPressed: () => RouteManager.push(context, TextPage()),
       ),
       SizedBox(height: 8),
@@ -174,7 +183,7 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         child: _text(S.of(context).videoPlay),
         textColor: Colors.white,
-        color: theme.toolbarBackground,
+        color: theme.primary,
         onPressed: () => RouteManager.push(context, VideoPage()),
       ),
       SizedBox(height: 8),
@@ -190,7 +199,7 @@ class _StudyPageState extends State<StudyPage> {
           height: 36,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: theme.toolbarBackground,
+            color: theme.primary,
             borderRadius: BorderRadius.all(Radius.circular(2)),
           ),
           child: Row(
@@ -214,7 +223,7 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         child: _text(S.of(context).nav),
         textColor: Colors.white,
-        color: theme.toolbarBackground,
+        color: theme.primary,
         onPressed: () => NativeChannelUtil.startHomeActivity(),
       ),
       SizedBox(height: 8),
@@ -222,7 +231,7 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         child: _text(S.of(context).listDialog),
         textColor: Colors.white,
-        color: theme.toolbarBackground,
+        color: theme.primary,
         onPressed: () => PickerListView.showList(
           context: context,
           list: ['测试一', '测试二', '测试三', '测试四', '测试五'],
@@ -238,7 +247,7 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         child: _text(S.of(context).upgradeDialog),
         textColor: Colors.white,
-        color: theme.toolbarBackground,
+        color: theme.primary,
         onPressed: () => CommonDialog.showAppUpgradeDialog(
           context,
           version: '12',

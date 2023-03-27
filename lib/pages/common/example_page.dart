@@ -29,7 +29,7 @@ class _ExamplePageState extends State<ExamplePage> {
     return Scaffold(
       body: Container(
         child: Column(children: [
-          CommonBar(title: Text('标题'), centerTitle: true),
+          CommonBar(title: '标题', centerTitle: true),
         ]),
       ),
     );
