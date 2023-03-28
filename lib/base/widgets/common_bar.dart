@@ -148,4 +148,4 @@ class _CommonBarState extends State<CommonBar> {
       ),
     );
   }
-}}
+}

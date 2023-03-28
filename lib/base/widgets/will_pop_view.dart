@@ -39,8 +39,16 @@ class WillPopView extends StatefulWidget {
 
   /// 返回时提示退出
   /// 设置提示框，默认实现[_buildPromptBackDialog]
-  static Future<bool> promptBack(BuildContext context,
-      {bool isChanged = false, bool isShowDialog = true, WidgetBuilder? builder}) async {
+  /// WillPopView(
+  //    onWillPop: () => WillPopView.promptBack(context, isChanged: text != newText),
+  //    child: Scaffold(),
+  //  )
+  static Future<bool> promptBack(
+    BuildContext context, {
+    bool isChanged = false,
+    bool isShowDialog = true,
+    WidgetBuilder? builder,
+  }) async {
     if (isChanged && isShowDialog) {
       await showDialog<bool>(
         context: context,

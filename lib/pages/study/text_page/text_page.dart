@@ -118,7 +118,7 @@ class _TextPageState extends State<TextPage> {
                   children: [
                     CommonWidget.titleView('无边框带字数控制的输入框: '),
                     SingleEditLayout(
-                      '账户',
+                      title: '账户',
                       onChanged: (value) => setState(() => newText = value),
                       controller: _controller,
                       maxLength: 12,
