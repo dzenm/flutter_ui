@@ -31,6 +31,11 @@ class _NaughtPageState extends State<NaughtPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    Naughty.instance.show();
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

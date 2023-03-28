@@ -6,6 +6,7 @@ import '../../../base/log/log.dart';
 import '../../../base/res/local_model.dart';
 import '../../../base/res/theme/app_theme.dart';
 import '../../../base/router/route_manager.dart';
+import '../../../base/widgets/common_bar.dart';
 import '../../../http/http_manager.dart';
 import '../../../models/article_model.dart';
 import 'edit_article_page.dart';
@@ -65,10 +66,11 @@ class _NavPageState extends State<NavPage> {
     return DefaultTabController(
       length: tabs.length,
       child: Scaffold(
-        appBar: AppBar(
+        appBar: CommonBar(
           systemOverlayStyle: SystemUiOverlayStyle(
             statusBarBrightness: Brightness.dark,
           ),
+          toolbarHeight: 48,
           bottom: TabBar(
             controller: _tabController,
             indicatorSize: TabBarIndicatorSize.tab,

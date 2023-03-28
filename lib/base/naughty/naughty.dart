@@ -28,6 +28,8 @@ class Naughty {
 
   List<HTTPEntity> httpRequests = [];
 
+  bool _showing = false;
+
   /// 初始化, 设置子widget
   void init(BuildContext context, {Widget? child}) {
     _context = context;
@@ -49,19 +51,22 @@ class Naughty {
 
   /// 显示悬浮窗
   void show() {
-    dismiss();
+    if (_showing) return;
+    _showing = true;
     Future.delayed(Duration.zero, _createOverlay);
   }
 
   /// 隐藏悬浮窗
   void dismiss() {
+    if (!_showing) return;
+    _showing = false;
     _overlayEntry?.remove();
     _overlayEntry = null;
   }
 
   /// 展示通知
   void showNotification({String? title, String? body}) {
-    NotificationUtil.showNotification(
+    NotificationUtil().showNotification(
       title: title,
       body: body,
       onTap: (payload) async => push(context, const NaughtPage()),

@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'tap_layout.dart';
 
 /// AppBar封装
-class CommonBar extends StatefulWidget {
+class CommonBar extends StatefulWidget implements PreferredSizeWidget {
   final String? title;
   final Color? titleColor;
   final bool? centerTitle;
@@ -16,7 +16,8 @@ class CommonBar extends StatefulWidget {
   final Function? onBackTap;
   final double? elevation;
   final double toolbarHeight;
-  final SystemUiOverlayStyle systemUiOverlayStyle;
+  final PreferredSizeWidget? bottom;
+  final SystemUiOverlayStyle systemOverlayStyle;
   final List<Widget>? actions;
   final double? titleSpacing;
 
@@ -33,13 +34,17 @@ class CommonBar extends StatefulWidget {
     this.onBackTap,
     this.elevation = 0.0,
     this.toolbarHeight = kToolbarHeight,
-    this.systemUiOverlayStyle = SystemUiOverlayStyle.light,
+    this.bottom,
+    this.systemOverlayStyle = SystemUiOverlayStyle.light,
     this.actions,
     this.titleSpacing = NavigationToolbar.kMiddleSpacing,
   });
 
   @override
   State<StatefulWidget> createState() => _CommonBarState();
+
+  @override
+  Size get preferredSize => Size.fromHeight(toolbarHeight);
 }
 
 class _CommonBarState extends State<CommonBar> {
@@ -54,6 +59,7 @@ class _CommonBarState extends State<CommonBar> {
       ),
       backgroundColor: widget.backgroundColor,
       foregroundColor: widget.titleColor,
+      bottom: widget.bottom,
       title: Text.rich(
         TextSpan(
           text: widget.title,
@@ -69,7 +75,7 @@ class _CommonBarState extends State<CommonBar> {
       centerTitle: widget.centerTitle,
       elevation: widget.elevation,
       toolbarHeight: widget.toolbarHeight,
-      systemOverlayStyle: widget.systemUiOverlayStyle,
+      systemOverlayStyle: widget.systemOverlayStyle,
       actions: widget.actions,
     );
   }
@@ -98,7 +104,7 @@ class _CommonBarState extends State<CommonBar> {
     return Semantics(
       container: true,
       child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: widget.systemUiOverlayStyle,
+        value: widget.systemOverlayStyle,
         child: Material(
           color: widget.backgroundColor,
           child: Semantics(

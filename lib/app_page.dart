@@ -52,7 +52,7 @@ class AppPage extends StatelessWidget {
   }
 
   /// 初始化需要用到context的地方
-  void _init(BuildContext context) {
+  void _useContextBeforeBuild(BuildContext context) {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     S.context = context; // 初始化需要context，在这里注册
   }
@@ -85,7 +85,7 @@ class AppPage extends StatelessWidget {
   Widget _buildMaterialApp({Widget? child}) {
     return Consumer<LocalModel>(builder: (context, local, widget) {
       // 初始化需要用到context的地方
-      Future.delayed(Duration.zero, () => _init(Application().context));
+      Future.delayed(Duration.zero, () => _useContextBeforeBuild(Application().context));
       // Page必须放在MaterialApp中运行
       AppTheme? theme = local.appTheme;
       return MaterialApp(

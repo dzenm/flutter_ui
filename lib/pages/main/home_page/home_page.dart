@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/base/widgets/common_bar.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base/log/log.dart';
@@ -72,9 +73,9 @@ class _HomePageState extends State<HomePage> {
     Log.i('build', tag: _tag);
 
     return Scaffold(
-      appBar: AppBar(
-        // title: Text(widget.title, style: TextStyle(color: Colors.white)),
+      appBar: CommonBar(
         systemOverlayStyle: SystemUiOverlayStyle.light,
+        toolbarHeight: 0,
       ),
       body: Container(
         child: Column(
@@ -192,7 +193,7 @@ class ArticleListView extends StatefulWidget {
 }
 
 class _ArticleListViewState extends State<ArticleListView> {
-  static const String _tag = 'ArticleList';
+  static const String _tag = 'ArticleListView';
 
   @override
   Widget build(BuildContext context) {
@@ -217,7 +218,7 @@ class _ArticleListViewState extends State<ArticleListView> {
 
 /// 文章列表 item widget
 class ArticleItemView extends StatelessWidget {
-  static const String _tag = 'ArticleItem';
+  static const String _tag = 'ArticleItemView';
   final int index;
 
   ArticleItemView(this.index, {Key? key}) : super(key: key);

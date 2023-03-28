@@ -12,7 +12,6 @@ import 'base/naughty/http_interceptor.dart';
 import 'base/router/route_manager.dart';
 import 'base/utils/file_util.dart';
 import 'base/utils/native_channel_util.dart';
-import 'base/utils/notification_util.dart';
 import 'base/utils/sp_util.dart';
 import 'base/widgets/common_dialog.dart';
 import 'base/widgets/keyboard/mocks/mock_binding.dart';
@@ -107,9 +106,7 @@ class Application {
   void _initAliYunPush() {}
 
   /// 初始化系统通知
-  void _initSystemNotification() {
-    NotificationUtil.init();
-  }
+  void _initSystemNotification() {}
 
   /// 初始化Android设置
   void _initAndroidSettings() {
