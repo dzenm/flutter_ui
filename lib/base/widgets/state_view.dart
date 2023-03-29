@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../res/lang/strings.dart';
+import '../../generated/l10n.dart';
 import 'tap_layout.dart';
 
 /// 状态展示

@@ -27,8 +27,6 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   // 页面管理控制器
   final PageController _controller = PageController(initialPage: 0);
 
-  bool _initContext = false; // 是否初始化了context
-
   // 感知生命周期变化
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -61,12 +59,11 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
 
   /// 在build之前使用context，并且只能创建一次
   void _useContextBeforeBuild(BuildContext context) {
-    if (_initContext) return;
-    _initContext = true;
+    // 因为要跟随语言的变化， 所以每次build都需要更新
+    context.read<MainModel>().initData(context);
     Naughty.instance
       ..init(context)
       ..show();
-    context.read<MainModel>().initData(context);
   }
 
   @override

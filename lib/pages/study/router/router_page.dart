@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/base/res/local_model.dart';
-import 'package:flutter_ui/base/res/lang/strings.dart';
 import 'package:flutter_ui/base/res/theme/app_theme.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:provider/provider.dart';
@@ -45,7 +44,7 @@ class _RouterPageState extends State<RouterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).router, style: TextStyle(color: Colors.white)),
+        title: Text('路由跳转', style: TextStyle(color: Colors.white)),
       ),
       body: Container(
         padding: EdgeInsets.all(16),

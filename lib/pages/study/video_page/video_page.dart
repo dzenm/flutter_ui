@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/base/res/assets.dart';
-import 'package:flutter_ui/base/res/lang/strings.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/base/widgets/license_view.dart';
 
@@ -18,7 +17,7 @@ class _VideoPageState extends State<VideoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).videoPlay, style: TextStyle(color: Colors.white)),
+        title: Text('视频播放', style: TextStyle(color: Colors.white)),
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 16),
@@ -31,21 +30,21 @@ class _VideoPageState extends State<VideoPage> {
     return [
       SizedBox(height: 8),
       MaterialButton(
-        child: _text(S.of(context).vlcVideoPlay),
+        child: _text('VLC播放器'),
         textColor: Colors.white,
         color: Colors.blue,
         onPressed: () => RouteManager.push(context, VlcVideoPage()),
       ),
       SizedBox(height: 8),
       MaterialButton(
-        child: _text(S.of(context).ijkVideoPlay),
+        child: _text('IJK视频播放'),
         textColor: Colors.white,
         color: Colors.blue,
         onPressed: () => RouteManager.push(context, IjkVideoPage(url: 'asset:///' + Assets.video('butterfly.mp4'))),
       ),
       SizedBox(height: 8),
       MaterialButton(
-        child: _text(S.of(context).videoPlay),
+        child: _text('原生视频播放'),
         textColor: Colors.white,
         color: Colors.blue,
         onPressed: () => RouteManager.push(context, IjkListVideoPage()),
@@ -56,7 +55,7 @@ class _VideoPageState extends State<VideoPage> {
         controller: _controller,
       ),
       MaterialButton(
-        child: _text(S.of(context).videoPlay),
+        child: _text('其他视频播放'),
         textColor: Colors.white,
         color: Colors.blue,
         onPressed: () => setState(() => _controller.setSelect(_controller.select + 1)),

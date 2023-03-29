@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/base/res/assets.dart';
-import 'package:flutter_ui/base/res/lang/strings.dart';
 import 'package:flutter_ui/base/widgets/common_widget.dart';
 
 /// 加载图片
@@ -17,7 +16,7 @@ class _LoadImagePageState extends State<LoadImagePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).loadImage, style: TextStyle(color: Colors.white)),
+        title: Text('加载图片', style: TextStyle(color: Colors.white)),
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 16),

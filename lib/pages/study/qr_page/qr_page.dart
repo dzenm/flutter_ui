@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/res/lang/strings.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
@@ -26,7 +25,7 @@ class _QRPageState extends State<QRPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).qr, style: TextStyle(color: Colors.white)),
+        title: Text('二维码', style: TextStyle(color: Colors.white)),
       ),
       body: Stack(children: [
         ScanView(

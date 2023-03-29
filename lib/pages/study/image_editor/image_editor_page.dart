@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/res/lang/strings.dart';
 import 'package:flutter_ui/base/widgets/image_editor/image_editor.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -46,7 +45,7 @@ class _ImageEditor extends State<ImageEditorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).setting, style: TextStyle(color: Colors.white)),
+        title: Text('图片编辑', style: TextStyle(color: Colors.white)),
       ),
       body: Material(
         color: Colors.white,

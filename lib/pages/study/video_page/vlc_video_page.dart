@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/res/assets.dart';
-import 'package:flutter_ui/base/res/lang/strings.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 
 class VlcVideoPage extends StatefulWidget {
@@ -46,7 +45,7 @@ class _VlcVideoPageState extends State<VlcVideoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).vlcVideoPlay, style: TextStyle(color: Colors.white)),
+        title: Text('VLC视频播放', style: TextStyle(color: Colors.white)),
       ),
       body: Container(
         alignment: Alignment.center,

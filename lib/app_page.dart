@@ -1,15 +1,17 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'application.dart';
 import 'base/log/build_config.dart';
-import 'base/res/lang/strings.dart';
 import 'base/res/local_model.dart';
 import 'base/res/theme/app_theme.dart';
 import 'base/widgets/keyboard/keyboard_root.dart';
 import 'base/widgets/will_pop_view.dart';
+import 'generated/l10n.dart';
 import 'models/article_model.dart';
 import 'models/banner_model.dart';
 import 'models/user_model.dart';
@@ -54,7 +56,7 @@ class AppPage extends StatelessWidget {
   /// 初始化需要用到context的地方
   void _useContextBeforeBuild(BuildContext context) {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
-    S.context = context; // 初始化需要context，在这里注册
+    CommonDialog.init(context); // 初始化需要context，在这里注册
   }
 
   /// Provider 共享状态管理
@@ -89,6 +91,7 @@ class AppPage extends StatelessWidget {
       // Page必须放在MaterialApp中运行
       AppTheme? theme = local.appTheme;
       return MaterialApp(
+        title: 'Flutter UI',
         navigatorKey: Application().navigatorKey,
         debugShowCheckedModeBanner: false,
         // 设置主题，读取LocalModel的值，改变LocalModel的theme值会通过provider刷新页面
@@ -110,10 +113,18 @@ class AppPage extends StatelessWidget {
         ),
         // 设置语言，读取LocalModel的值，改变LocalModel的locale值会通过provider刷新页面
         locale: local.locale,
-        // 国际化的Widget
-        localizationsDelegates: S.localizationsDelegates,
+        // 国际化
+        localizationsDelegates: [
+          S.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
         // 国际化语言包
-        supportedLocales: S.supportedLocales,
+        supportedLocales: [
+          Locale("en"),
+          Locale("zh"),
+        ],
         // 初始路由
         initialRoute: '/',
         builder: (context, child) {

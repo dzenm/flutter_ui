@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/res/lang/strings.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/base/widgets/refresh_list_view.dart';
 import 'package:flutter_ui/base/widgets/state_view.dart';
@@ -31,7 +30,7 @@ class _ListPageState extends State<ListPage> {
     List<ArticleEntity> articleList = context.watch<ArticleModel>().allArticles;
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).listAndRefresh, style: TextStyle(color: Colors.white)),
+        title: Text('列表和刷新', style: TextStyle(color: Colors.white)),
       ),
       body: Container(
         child: Column(children: [

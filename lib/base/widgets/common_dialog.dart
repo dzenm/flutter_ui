@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 
-import '../res/lang/strings.dart';
+import '../../generated/l10n.dart';
 import 'common_widget.dart';
 import 'tap_layout.dart';
 import 'upgrade_dialog.dart';
@@ -12,6 +12,13 @@ import 'will_pop_view.dart';
 typedef ItemClickCallback = void Function(int index);
 
 class CommonDialog {
+
+  static void init(BuildContext? context) {
+    _context = context;
+  }
+
+  static BuildContext? _context;
+
   /// toast弹出提示框
   /// CommonDialog.showToast('hello')
   static CancelFunc showToast(String text, {int seconds = 2}) {
@@ -26,7 +33,7 @@ class CommonDialog {
   /// 加载中对话框
   /// CommonDialog.loading()
   static CancelFunc loading({String? loadingTxt, bool isVertical = true, bool light = false}) {
-    loadingTxt ??= S.from.loading;
+    loadingTxt ??= S.of(_context!).loading;
     List<Widget> widgets = [
       const SizedBox(
         width: 30,
@@ -340,8 +347,7 @@ class CupertinoDialogButton extends StatelessWidget {
                 Navigator.of(context).pop();
                 if (onNegativeTap != null) onNegativeTap!();
               },
-              child: Text(negativeText ?? S.of(context).cancel,
-                  style: negativeStyle ?? const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+              child: Text(negativeText ?? S.of(context).cancel, style: negativeStyle ?? const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
             ),
           ),
           Container(color: const Color(0xFFBABABA), height: 45.0, width: 0.5),
@@ -353,8 +359,7 @@ class CupertinoDialogButton extends StatelessWidget {
                 Navigator.of(context).pop();
                 if (onPositiveTap != null) onPositiveTap!();
               },
-              child: Text(positiveText ?? S.of(context).confirm,
-                  style: positiveStyle ?? const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+              child: Text(positiveText ?? S.of(context).confirm, style: positiveStyle ?? const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
             ),
           ),
         ])

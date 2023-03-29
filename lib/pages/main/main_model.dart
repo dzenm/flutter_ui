@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../base/res/lang/strings.dart';
+import '../../generated/l10n.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56

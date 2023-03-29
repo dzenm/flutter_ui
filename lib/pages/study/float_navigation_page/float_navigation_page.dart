@@ -34,7 +34,7 @@ class _FloatNavigationPageState extends State<FloatNavigationPage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        title: Text('NavigationBar', style: TextStyle(color: Colors.white)),
+        title: Text('导航栏', style: TextStyle(color: Colors.white)),
         centerTitle: true,
       ),
       body: Center(

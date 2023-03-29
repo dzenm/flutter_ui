@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/res/assets.dart';
-import 'package:flutter_ui/base/res/lang/strings.dart';
 import 'package:flutter_ui/base/router/route_manager.dart';
 import 'package:flutter_ui/base/widgets/badge_view.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
@@ -19,6 +18,8 @@ import 'package:flutter_ui/base/widgets/slide_verify_view.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/base/widgets/will_pop_view.dart';
 import 'package:flutter_ui/pages/study/setting_page/setting_page.dart';
+
+import '../../../generated/l10n.dart';
 
 /// 文本展示测试页面
 class TextPage extends StatefulWidget {
@@ -243,13 +244,13 @@ class _TextPageState extends State<TextPage> {
                     TapLayout(
                       height: 50.0,
                       padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: SingleTextLayout(title: S.of(context).notificationSwitch, suffix: CupertinoSwitch(value: switchState, onChanged: (value) => setState(() => switchState = value))),
+                      child: SingleTextLayout(title: '通知切换', suffix: CupertinoSwitch(value: switchState, onChanged: (value) => setState(() => switchState = value))),
                     ),
                     TapLayout(
                       height: 50.0,
                       padding: EdgeInsets.symmetric(horizontal: 16),
                       onTap: () => CommonDialog.showSelectImageBottomSheet(context),
-                      child: SingleTextLayout(title: S.of(context).notificationSwitch, text: '查看通知内容'),
+                      child: SingleTextLayout(title: '通知切换', text: '查看通知内容'),
                     ),
                     TapLayout(
                       height: 60.0,
@@ -257,7 +258,7 @@ class _TextPageState extends State<TextPage> {
                       onTap: () => CommonDialog.showListBottomSheet(context, data, (int index) {
                         RouteManager.pop(context);
                       }),
-                      child: SingleTextLayout(title: S.of(context).loginRecord, summary: '查看最近所有的登录记录', badgeCount: 0, isShowForward: true),
+                      child: SingleTextLayout(title: '登陆记录', summary: '查看最近所有的登录记录', badgeCount: 0, isShowForward: true),
                     ),
                     SizedBox(height: 8),
                     // Text(MeModel.of.value),

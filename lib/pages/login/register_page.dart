@@ -4,11 +4,11 @@ import 'package:provider/provider.dart';
 
 import '../../base/http/https_client.dart';
 import '../../base/log/log.dart';
-import '../../base/res/lang/strings.dart';
 import '../../base/router/route_manager.dart';
 import '../../base/utils/sp_util.dart';
 import '../../base/widgets/tap_layout.dart';
 import '../../entities/user_entity.dart';
+import '../../generated/l10n.dart';
 import '../../models/user_model.dart';
 import '../main/main_page.dart';
 

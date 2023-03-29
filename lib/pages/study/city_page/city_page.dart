@@ -4,7 +4,6 @@ import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ui/base/res/assets.dart';
-import 'package:flutter_ui/base/res/lang/strings.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/state_view.dart';
 import 'package:lpinyin/lpinyin.dart';
@@ -75,7 +74,7 @@ class _CitySelectedPageState extends State<CitySelectedPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(title: Text(S.of(context).citySelected, style: TextStyle(color: Colors.white))),
+      appBar: AppBar(title: Text('城市选择', style: TextStyle(color: Colors.white))),
       body: SafeArea(
         child: StateView(
           controller: _controller,

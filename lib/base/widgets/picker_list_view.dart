@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../res/lang/strings.dart';
+import '../../generated/l10n.dart';
 
 typedef OnSelectedChanged = void Function(int index);
 

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ui/base/http/https_client.dart';
 import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/base/res/assets.dart';
-import 'package:flutter_ui/base/res/lang/strings.dart';
 import 'package:flutter_ui/base/res/local_model.dart';
 import 'package:flutter_ui/base/res/theme/app_theme.dart';
 import 'package:flutter_ui/base/res/theme/colors.dart';
@@ -21,6 +20,7 @@ import 'package:flutter_ui/pages/common/preview_photo_page.dart';
 import 'package:flutter_ui/pages/login/login_page.dart';
 import 'package:provider/provider.dart';
 
+import '../../../generated/l10n.dart';
 import '../study_model.dart';
 
 /// 设置页面
@@ -163,7 +163,7 @@ class _SettingPageState extends State<SettingPage> {
                 },
                 child: SingleTextLayout(
                   icon: Icons.verified,
-                  title: S.of(context).verifyPhone,
+                  title: '验证手机号',
                   isShowForward: true,
                   badgeCount: 0,
                 ),
@@ -173,7 +173,7 @@ class _SettingPageState extends State<SettingPage> {
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: SingleTextLayout(
                   icon: Icons.notifications_on_sharp,
-                  title: S.of(context).notificationSwitch,
+                  title: '通知和刷新',
                   suffix: CupertinoSwitch(value: switchState, onChanged: (value) => setState(() => switchState = value)),
                 ),
               ),
@@ -209,7 +209,7 @@ class _SettingPageState extends State<SettingPage> {
               TapLayout(
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                child: SingleTextLayout(title: S.of(context).loginRecord, badgeCount: 0, isShowForward: true),
+                child: SingleTextLayout(title: '登陆记录', badgeCount: 0, isShowForward: true),
               ),
               TapLayout(
                 height: 50.0,
@@ -297,7 +297,7 @@ class _SettingPageState extends State<SettingPage> {
       builder: (context) {
         return SimpleDialog(
           title: Text(S.of(context).selectLanguage),
-          children: S.supportedLocales.map((value) {
+          children: [Locale('zh'), Locale('en')].map((value) {
             return SimpleDialogOption(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               child: Text(_convertLocale(value)),

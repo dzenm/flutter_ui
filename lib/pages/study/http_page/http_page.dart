@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/res/lang/strings.dart';
 import 'package:flutter_ui/base/utils/str_util.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/single_text_layout.dart';
@@ -10,6 +9,8 @@ import 'package:flutter_ui/entities/article_entity.dart';
 import 'package:flutter_ui/http/http_manager.dart';
 import 'package:flutter_ui/models/article_model.dart';
 import 'package:provider/provider.dart';
+
+import '../../../generated/l10n.dart';
 
 /// HTTP请求
 class HTTPListPage extends StatefulWidget {

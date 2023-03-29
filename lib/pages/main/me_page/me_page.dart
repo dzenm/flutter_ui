@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 
 import '../../../base/log/log.dart';
 import '../../../base/res/local_model.dart';
-import '../../../base/res/lang/strings.dart';
 import '../../../base/res/theme/app_theme.dart';
 import '../../../base/router/route_manager.dart';
 import '../../../base/utils/device_util.dart';
@@ -12,6 +11,7 @@ import '../../../base/widgets/single_text_layout.dart';
 import '../../../base/widgets/tap_layout.dart';
 import '../../../entities/coin_entity.dart';
 import '../../../entities/user_entity.dart';
+import '../../../generated/l10n.dart';
 import '../../../http/http_manager.dart';
 import '../../../models/user_model.dart';
 import '../../study/setting_page/setting_page.dart';

@@ -32,6 +32,7 @@ class Naughty {
 
   /// 初始化, 设置子widget
   void init(BuildContext context, {Widget? child}) {
+    if (_context != null && child == null) return;
     _context = context;
     _child = child;
   }
