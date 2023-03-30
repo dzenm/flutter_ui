@@ -89,16 +89,16 @@ class Application {
     log('═══════════════════════════════ 结束初始化 ════════════════════════════════════');
 
     // 运行flutter时全局异常捕获
-    await HandleError().catchFlutterError(() {
+    HandleError().catchFlutterError(() {
       log('╔════════════════════════════════════════════════════════════════════════════╗');
       log('║                                                                            ║');
       log('║                Start Flutter APP                                           ║');
       log('║                                                                            ║');
       log('╚════════════════════════════════════════════════════════════════════════════╝');
       runMockApp(AppPage(child: _initApp()));
-    }, handleMsg: (msg) async {
+    }, handleMsg: (message) async {
       String logFileName = 'crash_${DateTime.now()}.log';
-      await FileUtil.instance.save(logFileName, msg, dir: 'crash').then((String? filePath) async {});
+      await FileUtil.instance.save(logFileName, message, dir: 'crash').then((String? filePath) async {});
     });
   }
 

@@ -56,7 +56,7 @@ class AppPage extends StatelessWidget {
   /// 初始化需要用到context的地方
   void _useContextBeforeBuild(BuildContext context) {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
-    CommonDialog.init(context); // 初始化需要context，在这里注册
+    // CommonDialog.init(context); // 初始化需要context，在这里注册
   }
 
   /// Provider 共享状态管理
