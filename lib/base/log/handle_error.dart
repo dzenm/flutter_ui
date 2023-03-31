@@ -113,19 +113,23 @@ class HandleError {
     log('║                                                                            ║');
     log('╚════════════════════════════════════════════════════════════════════════════╝');
 
-    if (showPackageInfo || showDeviceInfo) {
-      log('╔══════════════════════════════ Phone Info ══════════════════════════════════╗');
-    }
     // 包名信息
+    if (showPackageInfo) {
+      log('╔══════════════════════════════ Package Info ════════════════════════════════╗');
+    }
     Map<String, dynamic> packageInfo = await getPackageInfo();
     for (var key in packageInfo.keys) handleSingleMessage('$key: ${packageInfo[key]}', needLog: showPackageInfo);
+
     // 设备信息
-    Map<String, dynamic> devicesInfo = await getPackageInfo();
+    if (showPackageInfo) {
+      log('║══════════════════════════════ Device Info ══════════════════════════════════');
+    }
+    Map<String, dynamic> devicesInfo = await getDeviceInfo();
     for (var key in devicesInfo.keys) handleSingleMessage('$key: ${devicesInfo[key]}', needLog: showDeviceInfo);
 
     // 异常信息
     log('║══════════════════════════════ Error Info ═══════════════════════════════════');
-    handleSingleMessage('$interval$error\n');
+    handleSingleMessage('$error');
 
     // 异常信息栈
     if (showStackInfo) {
@@ -145,7 +149,6 @@ class HandleError {
   Future<Map<String, dynamic>> getPackageInfo() async {
     PackageInfo info = await PackageInfo.fromPlatform();
     return {
-      'APP Info': '',
       'appName': info.appName,
       'packageName': info.packageName,
       'version': info.version,
@@ -157,12 +160,34 @@ class HandleError {
   /// 设备信息
   Future<Map<String, dynamic>> getDeviceInfo() async {
     DeviceInfoPlugin infoPlugin = DeviceInfoPlugin();
-    dynamic info = {};
+    Map<String, dynamic> map = {};
     if (Platform.isAndroid) {
-      info = (await infoPlugin.androidInfo).data;
+      AndroidDeviceInfo info = await infoPlugin.androidInfo;
+      Map<String, dynamic> temp = {
+        'baseOS': info.version.baseOS,
+        'codename': info.version.codename,
+        'incremental': info.version.incremental,
+        'previewSdkInt': info.version.previewSdkInt,
+        'release': info.version.release,
+        'sdkInt': info.version.sdkInt,
+        'securityPatch': info.version.securityPatch,
+      };
+      map.addAll(temp);
+      map.addAll(info.data);
+      map.remove('version');
     } else if (Platform.isIOS) {
-      info = (await infoPlugin.iosInfo).data;
+      IosDeviceInfo info = await infoPlugin.iosInfo;
+      Map<String, dynamic> temp = {
+        'sysname': info.utsname.sysname,
+        'nodename': info.utsname.nodename,
+        'release': info.utsname.release,
+        'version': info.utsname.version,
+        'machine': info.utsname.machine,
+      };
+      map.addAll(temp);
+      map.addAll(info.data);
+      map.remove('utsname');
     }
-    return {'Device Info': ''}..addAll(info);
+    return map;
   }
 }

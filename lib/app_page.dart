@@ -1,9 +1,9 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'application.dart';
 import 'base/log/build_config.dart';
@@ -56,7 +56,7 @@ class AppPage extends StatelessWidget {
   /// 初始化需要用到context的地方
   void _useContextBeforeBuild(BuildContext context) {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
-    // CommonDialog.init(context); // 初始化需要context，在这里注册
+    CommonDialog.init(context); // 初始化需要context，在这里注册
   }
 
   /// Provider 共享状态管理
