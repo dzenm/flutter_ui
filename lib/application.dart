@@ -38,8 +38,11 @@ class Application {
 
   /// 初始化
   void init() async {
-    log('═══════════════════════════════ 开始初始化 ════════════════════════════════════');
-    log('启动: ${DateTime.now().millisecondsSinceEpoch}');
+    log('═══════════════════════════════════════════ 开始初始化 ══════════════════════════════════════════════');
+
+    int now = DateTime.now().millisecondsSinceEpoch;
+    int duration = 0;
+    log('启动: now=$now, duration=$duration');
     log('Application是否单例: ${Application.instance == Application()}');
 
     log('初始化 WidgetsFlutterBinding');
@@ -85,16 +88,19 @@ class Application {
     MathUtil.main();
 
     NumberKeyboard.register();
-    log('结束: ${DateTime.now().millisecondsSinceEpoch}');
-    log('═══════════════════════════════ 结束初始化 ════════════════════════════════════');
+
+    int end = DateTime.now().millisecondsSinceEpoch;
+    duration = end - now;
+    log('结束: now=$end, duration=$duration');
+    log('═══════════════════════════════════════════ 结束初始化 ══════════════════════════════════════════════');
 
     // 运行flutter时全局异常捕获
     HandleError().catchFlutterError(() {
-      log('╔════════════════════════════════════════════════════════════════════════════╗');
-      log('║                                                                            ║');
-      log('║                Start Flutter APP                                           ║');
-      log('║                                                                            ║');
-      log('╚════════════════════════════════════════════════════════════════════════════╝');
+      log('╔══════════════════════════════════════════════════════════════════════════════════════════════════╗');
+      log('║                                                                                                  ║');
+      log('║                                        Start Flutter APP                                         ║');
+      log('║                                                                                                  ║');
+      log('╚══════════════════════════════════════════════════════════════════════════════════════════════════╝');
       runMockApp(AppPage(child: _initApp()));
     }, handleMsg: (message) async {
       String logFileName = 'crash_${DateTime.now()}.log';

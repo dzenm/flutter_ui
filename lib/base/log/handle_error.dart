@@ -107,38 +107,38 @@ class HandleError {
       sb.write('$message\n'); // 转化为文本
     }
 
-    log('╔════════════════════════════════════════════════════════════════════════════╗');
-    log('║                                                                            ║');
-    log('║                Handle Flutter Error                                        ║');
-    log('║                                                                            ║');
-    log('╚════════════════════════════════════════════════════════════════════════════╝');
+    log('╔══════════════════════════════════════════════════════════════════════════════════════════════════╗');
+    log('║                                                                                                  ║');
+    log('║                                       Handle Flutter Error                                       ║');
+    log('║                                                                                                  ║');
+    log('╚══════════════════════════════════════════════════════════════════════════════════════════════════╝');
 
     // 包名信息
     if (showPackageInfo) {
-      log('╔══════════════════════════════ Package Info ════════════════════════════════╗');
+      log('╔═════════════════════════════════════════ Package Info ════════════════════════════════════════════');
     }
     Map<String, dynamic> packageInfo = await getPackageInfo();
     for (var key in packageInfo.keys) handleSingleMessage('$key: ${packageInfo[key]}', needLog: showPackageInfo);
 
     // 设备信息
-    if (showPackageInfo) {
-      log('║══════════════════════════════ Device Info ══════════════════════════════════');
+    if (showDeviceInfo) {
+      log('║═════════════════════════════════════════ Device Info ═════════════════════════════════════════════');
     }
     Map<String, dynamic> devicesInfo = await getDeviceInfo();
     for (var key in devicesInfo.keys) handleSingleMessage('$key: ${devicesInfo[key]}', needLog: showDeviceInfo);
 
     // 异常信息
-    log('║══════════════════════════════ Error Info ═══════════════════════════════════');
+    log('║═════════════════════════════════════════ Error Info ══════════════════════════════════════════════');
     handleSingleMessage('$error');
 
     // 异常信息栈
     if (showStackInfo) {
-      log('║══════════════════════════════ Stack Trace ══════════════════════════════════');
+      log('║═════════════════════════════════════════ Stack Trace ═════════════════════════════════════════════');
     }
     List<String> stackInfo = stackTrace.toString().split('\n');
     for (var msg in stackInfo) handleSingleMessage(msg, needLog: showStackInfo);
 
-    log('╚════════════════════════════════════════════════════════════════════════════');
+    log('╚═══════════════════════════════════════════════════════════════════════════════════════════════════');
 
     if (handleMsg == null) return;
     // 处理信息，可以保存文本信息为文件或者上传至服务器
