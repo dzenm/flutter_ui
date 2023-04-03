@@ -1,7 +1,5 @@
 package com.dzenm.flutter_ui
 
-import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import com.dzenm.flutter_ui.study.JavaStudy
 import com.dzenm.flutter_ui.study.KotlinStudy
@@ -17,8 +15,6 @@ class MainActivity : FlutterActivity() {
     companion object {
         private val TAG = MainActivity::class.java.simpleName
     }
-
-    private var serviceIntent: Intent? = null
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         Log.d(TAG, "════════════════════════════════════════ configureFlutterEngine: ${System.currentTimeMillis()}")
@@ -41,51 +37,20 @@ class MainActivity : FlutterActivity() {
      * Android和flutter通信的方法通道
      */
     private fun loadMethodChannel(messenger: BinaryMessenger) {
-        serviceIntent = Intent(this, MediaService::class.java)
+        val channel = "flutter_ui/channel/" // 通讯名称, 返回按钮对应的事件
 
-        // flutter点击返回键的操作
-        val backChannel = "android/channel/backToDesktop" // 通讯名称, 返回按钮对应的事件
-        MethodChannel(messenger, backChannel).setMethodCallHandler { methodCall, result ->
-            if (methodCall.method == "backToDesktop") {
-                Log.d(TAG, "返回到主页")
-                moveTaskToBack(false)
-                result.success(true)
-            }
-        }
-
-        // flutter启动Android服务
-        val mediaServiceChannel = "android/channel/startVideoService" // 通讯名称, 启动服务对应的事件
-        MethodChannel(messenger, mediaServiceChannel).setMethodCallHandler { methodCall, result ->
-            if (methodCall.method == "startVideoService") {
-                Log.d(TAG, "启动视频服务")
-                startService()
-                result.success("服务已启动")
-            }
-        }
-
-        // flutter启动Android新Activity
-        val startActivityChannel = "android/channel/startNaughtyActivity" // 通讯名称, 跳转页面对应的事件
-        MethodChannel(messenger, startActivityChannel).setMethodCallHandler { methodCall, result ->
-            if (methodCall.method == "startNaughtyActivity") {
-                Log.d(TAG, "启动NaughtyActivity")
-                if (methodCall.arguments != null) {
-                    val title = methodCall.argument<String>("title")
+        // 监听flutter的指令调用
+        MethodChannel(messenger, channel).setMethodCallHandler { methodCall, result ->
+            when (methodCall.method) {
+                "backToDesktop" -> {
+                    Log.d(TAG, "返回到主页")
+                    moveTaskToBack(false)
+                    result.success(true)
                 }
-                startActivity(Intent(this, NaughtyActivity::class.java))
-                result.success("启动新的Activity, 回调Flutter的结果")
-            }
-        }
-
-        // flutter启动Android新Activity
-        val homeActivityChannel = "android/channel/homeActivity" // 通讯名称, 跳转页面对应的事件
-        MethodChannel(messenger, homeActivityChannel).setMethodCallHandler { methodCall, result ->
-            if (methodCall.method == "startHomeActivity") {
-                Log.d(TAG, "启动HomeActivity")
-                if (methodCall.arguments != null) {
-                    val title = methodCall.argument<String>("title")
+                "startVideoService" -> {
+                    Log.d(TAG, "启动视频服务")
+                    result.success("服务已启动")
                 }
-                startActivity(Intent(this, HomeActivity::class.java))
-                result.success("启动HomeActivity")
             }
         }
     }
@@ -106,14 +71,5 @@ class MainActivity : FlutterActivity() {
     override fun onDestroy() {
         super.onDestroy()
         Log.d(TAG, "════════════════════════════════════════ onDestroy")
-        stopService(serviceIntent)
-    }
-
-    private fun startService() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(serviceIntent)
-        } else {
-            startService(serviceIntent)
-        }
     }
 }

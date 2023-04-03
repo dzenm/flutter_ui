@@ -63,19 +63,6 @@
             android:name="flutterEmbedding"
             android:value="2" />
 
-        <activity
-            android:name=".NaughtyActivity"
-            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
-            android:hardwareAccelerated="true"
-            android:launchMode="singleInstance"
-            android:windowSoftInputMode="adjustResize" />
-
-        <activity
-            android:name=".HomeActivity"
-            android:exported="true" />
-
-        <service android:name=".MediaService" />
-
         <activity android:name="com.apptreesoftware.barcodescan.BarcodeScannerActivity" />
 
         <meta-data

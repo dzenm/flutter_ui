@@ -61,7 +61,7 @@ class _StateViewState extends State<StateView> {
       ),
       // 加载不成功的图片展示
       Offstage(
-        offstage: !(!controller.more && (controller.empty || controller.failed)),
+        offstage: !(!controller.more && (controller.empty || controller.failed)), // 只展示空白和失败的时候的图片
         child: image,
       ),
       const SizedBox(width: 16, height: 32),
@@ -124,47 +124,51 @@ class StateController with ChangeNotifier {
   bool _isInit = false;
   bool _isMore = false;
 
+  LoadState _state = LoadState.loading;
+
   StateController({
     this.initialState = LoadState.loading,
     this.isShowFooterState = true,
-  });
+  }) {
+    _state = initialState;
+  }
 
   void loadNone() {
-    initialState = LoadState.none;
+    _state = LoadState.none;
     notifyListeners();
   }
 
   void loading() {
-    initialState = LoadState.loading;
+    _state = LoadState.loading;
     notifyListeners();
   }
 
   void loadEmpty() {
-    initialState = _isMore && isShowFooterState ? LoadState.end : LoadState.empty;
+    _state = _isMore && isShowFooterState ? LoadState.end : LoadState.empty;
     notifyListeners();
   }
 
   void loadSuccess() {
-    initialState = LoadState.success;
+    _state = LoadState.success;
     notifyListeners();
   }
 
   void loadFailed() {
-    initialState = LoadState.failed;
+    _state = LoadState.failed;
     notifyListeners();
   }
 
   void loadComplete() {
     if (_isInit) return;
     _isInit = true;
-    initialState = LoadState.complete;
+    _state = LoadState.complete;
     notifyListeners();
   }
 
   void loadMore() {
     if (!_isInit) return;
     _isMore = true;
-    initialState = LoadState.more;
+    _state = LoadState.more;
     notifyListeners();
   }
 
@@ -175,7 +179,7 @@ class StateController with ChangeNotifier {
   }
 
   String stateText(BuildContext context) {
-    switch (initialState) {
+    switch (_state) {
       case LoadState.none:
         return S.of(context).none;
       case LoadState.loading:
@@ -195,17 +199,17 @@ class StateController with ChangeNotifier {
     }
   }
 
-  LoadState get state => initialState;
+  LoadState get state => _state;
 
-  bool get none => initialState == LoadState.none;
+  bool get none => _state == LoadState.none;
 
   bool get init => _isInit;
 
-  bool get load => initialState == LoadState.loading;
+  bool get load => _state == LoadState.loading;
 
-  bool get empty => initialState == LoadState.empty;
+  bool get empty => _state == LoadState.empty;
 
-  bool get failed => initialState == LoadState.failed;
+  bool get failed => _state == LoadState.failed;
 
   bool get more => _isMore;
 }

@@ -1,12 +1,9 @@
 import 'package:dio/dio.dart';
-import '../base/http/data_entity.dart';
 import 'package:retrofit/http.dart';
 
-part 'api_services.g.dart';
+import '../base/http/data_entity.dart';
 
-ApiServices createApi(Dio dio, {String? baseUrl}) {
-  return ApiServices(dio, baseUrl: baseUrl);
-}
+part 'api_services.g.dart';
 
 @RestApi()
 abstract class ApiServices {

@@ -110,7 +110,7 @@ class SpUtil {
   }
 
   /// 重置登录用户信息
-  static void resetUser() {
+  static void clearUser() {
     remove(_userInfo);
     remove(_userLoginState);
     remove(_user);

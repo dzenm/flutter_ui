@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/models/provider_manager.dart';
 import 'package:provider/provider.dart';
 
 import '../../base/log/log.dart';
@@ -60,7 +61,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   /// 在build之前使用context，并且只能创建一次
   void _useContextBeforeBuild(BuildContext context) {
     // 因为要跟随语言的变化， 所以每次build都需要更新
-    context.read<MainModel>().initData(context);
+    ProviderManager.init(context);
     Naughty.instance
       ..init(context)
       ..show();

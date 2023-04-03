@@ -13,7 +13,7 @@ import 'website_model.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56
-/// 管理所有Provider Model
+/// 管理所有Provider Model状态
 class ProviderManager {
   static bool _init = false;
 
@@ -21,11 +21,14 @@ class ProviderManager {
   static void init(BuildContext context) {
     if (_init) return;
     _init = true;
+    // 表相关的Model
     context.read<ArticleModel>().init();
     context.read<BannerModel>().init();
     context.read<UserModel>().init();
     context.read<WebsiteModel>().init();
 
+    // 页面相关的Model
+    context.read<MainModel>().initData(context);
     context.read<MainModel>().init();
     context.read<HomeModel>().init();
     context.read<MeModel>().init();
@@ -36,11 +39,13 @@ class ProviderManager {
   /// 清空所有数据
   static void clear(BuildContext context) {
     _init = false;
+    // 表相关的Model
     context.read<ArticleModel>().clear();
     context.read<BannerModel>().clear();
     context.read<UserModel>().clear();
     context.read<ArticleModel>().clear();
 
+    // 页面相关的Model
     context.read<MainModel>().clear();
     context.read<HomeModel>().clear();
     context.read<MeModel>().clear();
