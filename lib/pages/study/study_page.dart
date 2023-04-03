@@ -175,7 +175,7 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         child: _text('文本展示'),
         textColor: Colors.white,
-        color: theme.primary,
+        color: theme.toolbarBackground,
         onPressed: () => RouteManager.push(context, TextPage()),
       ),
       SizedBox(height: 8),
@@ -183,7 +183,7 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         child: _text('视频播放'),
         textColor: Colors.white,
-        color: theme.primary,
+        color: theme.toolbarBackground,
         onPressed: () => RouteManager.push(context, VideoPage()),
       ),
       SizedBox(height: 8),
@@ -199,12 +199,12 @@ class _StudyPageState extends State<StudyPage> {
           height: 36,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: theme.primary,
+            color: theme.toolbarBackground,
             borderRadius: BorderRadius.all(Radius.circular(2)),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [Text('展示Dialog', style: TextStyle(color: theme.background, fontWeight: FontWeight.w600))],
+            children: [Text('展示Dialog', style: TextStyle(color: theme.white, fontWeight: FontWeight.w600))],
           ),
         ),
         popupDialogBuilder: (context) {
@@ -219,19 +219,11 @@ class _StudyPageState extends State<StudyPage> {
         },
       ),
       SizedBox(height: 8),
-      // 启动原生页面
-      MaterialButton(
-        child: _text(S.of(context).nav),
-        textColor: Colors.white,
-        color: theme.primary,
-        onPressed: () => NativeChannelUtil.startHomeActivity(),
-      ),
-      SizedBox(height: 8),
       // PickerListView控件
       MaterialButton(
         child: _text('PickerListView控件'),
         textColor: Colors.white,
-        color: theme.primary,
+        color: theme.toolbarBackground,
         onPressed: () => PickerListView.showList(
           context: context,
           list: ['测试一', '测试二', '测试三', '测试四', '测试五'],
@@ -247,7 +239,7 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         child: _text('升级dialog'),
         textColor: Colors.white,
-        color: theme.primary,
+        color: theme.toolbarBackground,
         onPressed: () => CommonDialog.showAppUpgradeDialog(
           context,
           version: '12',
