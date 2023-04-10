@@ -47,12 +47,12 @@ class ArticleModel with ChangeNotifier {
   /// 处理文章数据
   Future<void> _handleArticle(ArticleEntity article) async {
     int index = _allArticle.indexWhere((e) => e.id == article.id);
-    if (index != -1) {
-      _allArticle[index] = article;
-      _entity.update(article); // 更新DB中的article数据
-    } else {
+    if (index == -1) {
       _allArticle.add(article);
       _entity.insert(article); // 保存为DB中的article数据
+    } else {
+      _allArticle[index] = article;
+      _entity.update(article); // 更新DB中的article数据
     }
   }
 

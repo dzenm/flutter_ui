@@ -26,7 +26,9 @@ class WebsiteModel with ChangeNotifier {
 
   /// 更新网站列表数据
   void updateWebsites(List<WebsiteEntity> websites) {
-    Future.forEach(websites, (WebsiteEntity website) async => await _handleWebsite(website));
+    for (var website in websites) {
+      _handleWebsite(website);
+    }
     notifyListeners();
   }
 
@@ -37,14 +39,14 @@ class WebsiteModel with ChangeNotifier {
   }
 
   /// 处理网站数据
-  Future<void> _handleWebsite(WebsiteEntity website) async {
+  void _handleWebsite(WebsiteEntity website) {
     int index = _websites.indexWhere((web) => web.id == website.id);
-    if (index != -1) {
-      _websites[index] = website;
-      await _entity.update(website); // 更新DB中的website数据
-    } else {
+    if (index == -1) {
       _websites.add(website);
-      await _entity.insert(website); // 保存为DB中的website数据
+      _entity.insert(website); // 保存为DB中的website数据
+    } else {
+      _websites[index] = website;
+      _entity.update(website); // 更新DB中的website数据
     }
   }
 

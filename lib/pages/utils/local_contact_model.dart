@@ -18,7 +18,7 @@ class LocalContactModel with ChangeNotifier {
   }
 
   Future<Contact> updateContact(Contact contact) async {
-    int index = _contacts.indexOf(contact);
+    int index = _contacts.indexWhere((element) => element.id == contact.id);
     Contact res = contact;
     if (index != -1) {
       _contacts[index] = contact;
@@ -29,7 +29,7 @@ class LocalContactModel with ChangeNotifier {
   }
 
   Future<void> deleteContact(Contact contact) async {
-    int index = _contacts.indexOf(contact);
+    int index = _contacts.indexWhere((element) => element.id == contact.id);
     if (index != -1) {
       _contacts.remove(contact);
       await contact.delete();
@@ -56,5 +56,4 @@ class LocalContactModel with ChangeNotifier {
     }
     return false;
   }
-
 }

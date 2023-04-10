@@ -30,10 +30,24 @@ class BannerModel with ChangeNotifier {
 
   /// 更新所有Banner数据
   set banners(List<BannerEntity> list) {
-    _banners = list;
-    // 保存banner到数据库
-    _entity.insert(list);
+    for (var banner in list) {
+      _handleBanner(banner);
+    }
     notifyListeners();
+  }
+
+  /// 处理banner数据，如果存在就更新，不存在就新增
+  void _handleBanner(BannerEntity banner) {
+    int index = _banners.indexWhere((e) => e.id == banner.id);
+    if (index == -1) {
+      // 保存banner
+      _entity.insert(banner);
+      _banners.add(banner);
+    } else {
+      // 更新banner
+      _entity.update(banner);
+      _banners[index] = banner;
+    }
   }
 
   /// 清空数据

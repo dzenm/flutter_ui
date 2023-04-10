@@ -6,7 +6,7 @@ import 'db_sql.dart';
 import 'table_entity.dart';
 
 /// 数据库升级
-typedef UpgradeDatabase = String? Function(int oldVersion, int newVersion);
+typedef UpgradeDatabase = List<String> Function(int oldVersion, int newVersion);
 
 /// 数据库管理，包括打开，关闭，创建，升级，增删改查。
 /// 如果需要打印日志，在main注册
@@ -24,6 +24,9 @@ class DBManager {
 
   Database? _database;
 
+  /// 数据库路径
+  String? _dbPath;
+
   /// 数据库名称，根据用户信息设置，如果不设置，默认使用userId
   String _userId = 'userId';
 
@@ -38,10 +41,10 @@ class DBManager {
     _logPrint = logPrint;
   }
 
-  /// 获取当前数据库对象, 未指定数据库名称时默认为用户名，切换数据库操作时要先关闭再重新打开。
+  /// 获取当前数据库对象, 未指定数据库名称时默认为用户名 [_userId]，切换数据库操作时要先关闭 [close] 再重新打开。
   Future<Database> getDatabase({String? dbName}) async {
     if (_database == null) {
-      String path = await getPath(dbName: dbName ?? currentDbName);
+      String path = await getPath(dbName: dbName);
       _database = await openDatabase(path, version: Sql.dbVersion, onCreate: _onCreate, onUpgrade: _onUpgrade);
     }
     return _database!;
@@ -61,17 +64,21 @@ class DBManager {
   void _onUpgrade(Database db, int oldVersion, int newVersion) async {
     log('升级数据库 oldVersion=$oldVersion, newVersion=$newVersion');
 
+    // 方式一，使用sql进行更新。
     Batch batch = db.batch();
     for (UpgradeDatabase upgradeDatabase in Sql.upgrades) {
-      String? sql = upgradeDatabase(oldVersion, newVersion);
-      if (sql != null) {
+      List<String> list = upgradeDatabase(oldVersion, newVersion);
+      if (list.isEmpty) continue;
+      for (var sql in list) {
         batch.execute(sql);
       }
     }
+    // 方式二，通过创建临时表更新
     await batch.commit();
+    log('升级数据库完成');
   }
 
-  /// 删除数据库
+  /// 删除数据库 [_userId]
   Future<void> drop() async {
     String path = await getPath();
     await deleteDatabase(path).then((value) => log('删除数据库成功'));
@@ -86,15 +93,15 @@ class DBManager {
     }
   }
 
-  /// 获取数据库名称
-  String get currentDbName => 'db_$_userId.db';
-
-  /// 获取数据库的路径
+  /// 获取数据库 [_userId] 的路径 [_dbPath]
   Future<String> getPath({String? dbName}) async {
     String databasesPath = await getDatabasesPath();
-    dbName = dbName ?? currentDbName;
-    log('数据库路径=$databasesPath, 数据库名称=$dbName');
-    return join(databasesPath, dbName);
+    if (_dbPath == null) {
+      dbName ??= 'db_$_userId.db';
+      log('数据库路径=$databasesPath, 数据库名称=$dbName');
+      _dbPath = join(databasesPath, dbName);
+    }
+    return _dbPath!;
   }
 
   /// 判断表是否存在

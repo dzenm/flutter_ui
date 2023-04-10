@@ -142,38 +142,44 @@ class SpUtil {
   }
 
   static String getString(String key) {
-    String? value = SpUtil.instance._prefs?.getString(key);
-    SpUtil.instance.log('get $key=$value');
-    return value ?? '';
+    String value = _instance._prefs?.getString(key) ?? '';
+    _instance.log('获取string值：key=$key, value=$value');
+    return value;
   }
 
   static void setString(String key, String? value) {
-    SpUtil.instance._prefs?.setString(key, value ?? '').then((res) => SpUtil.instance.log('$key=$value'));
+    _instance._prefs?.setString(key, value ?? '').then((res) {
+      _instance.log('设置string值：key=$key, value=$value');
+    });
   }
 
   static int getInt(String key) {
-    int? value = SpUtil.instance._prefs?.getInt(key);
-    SpUtil.instance.log('get $key=$value');
-    return value ?? 0;
+    int value = _instance._prefs?.getInt(key) ?? 0;
+    _instance.log('获取int值：key=$key, value=$value');
+    return value;
   }
 
   static void setInt(String key, int? value) {
-    SpUtil.instance._prefs?.setInt(key, value ?? 0).then((res) => SpUtil.instance.log('$key=$value'));
+    _instance._prefs?.setInt(key, value ?? 0).then((res) {
+      _instance.log('设置int值：key=$key, value=$value');
+    });
   }
 
   static bool getBool(String key) {
-    bool? value = SpUtil.instance._prefs?.getBool(key);
-    SpUtil.instance.log('get $key=$value');
-    return value ?? false;
+    bool value = _instance._prefs?.getBool(key) ?? false;
+    _instance.log('获取bool值：key=$key, value=$value');
+    return value;
   }
 
   static void setBool(String key, bool? value) {
-    SpUtil.instance._prefs?.setBool(key, value ?? false).then((res) => SpUtil.instance.log('$key=$value'));
+    _instance._prefs?.setBool(key, value ?? false).then((res) {
+      _instance.log('设置bool值：key=$key, value=$value');
+    });
   }
 
   static void remove(String key) {
-    SpUtil.instance.log('remove $key=$key');
-    SpUtil.instance._prefs?.remove(key);
+    _instance.log('remove $key=$key');
+    _instance._prefs?.remove(key);
   }
 
   void log(String text) => _logPrint == null ? null : _logPrint!(text, tag: 'SpUtil');

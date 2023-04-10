@@ -1,8 +1,8 @@
 import 'db_manager.dart';
 
 class Sql {
-  /// 数据库版本
-  static const dbVersion = 5;
+  //// 数据库版本
+  static const dbVersion = 1;
 
   /// 常用数据库语句
   static const String createTable = 'CREATE TABLE IF NOT EXISTS';
@@ -11,10 +11,11 @@ class Sql {
 
   /// 创建数据表的语句
   static const List<String> createTables = [
-    createUserTable,
-    createBannerTable,
-    createArticleTable,
-    createWebsiteTable,
+    _createUserTable,
+    _createBannerTable,
+    _createArticleTable,
+    _createWebsiteTable,
+    _createSystemTable,
   ];
 
   /// 更新数据库的语句
@@ -27,7 +28,7 @@ class Sql {
 
   ///============================== 0 创建表SQL ================================
 
-  static const String createUserTable = '''$createTable t_user(
+  static const String _createUserTable = '''$createTable t_user(
     id INTEGER PRIMARY KEY NOT NULL, 
     admin BIT, 
     chapterTops TEXT, 
@@ -43,7 +44,7 @@ class Sql {
     username TEXT
   );''';
 
-  static const String createBannerTable = '''$createTable t_banner(
+  static const String _createBannerTable = '''$createTable t_banner(
     id INTEGER PRIMARY KEY NOT NULL, 
     "desc" TEXT, 
     imagePath TEXT, 
@@ -54,7 +55,7 @@ class Sql {
     url TEXT
   );''';
 
-  static const String createArticleTable = '''$createTable t_article(
+  static const String _createArticleTable = '''$createTable t_article(
     id INTEGER PRIMARY KEY NOT NULL, 
     adminAdd BIT,
     apkLink TEXT,
@@ -93,7 +94,7 @@ class Sql {
     zan INTEGER
   );''';
 
-  static const String createWebsiteTable = '''$createTable t_website(
+  static const String _createWebsiteTable = '''$createTable t_website(
     id INTEGER PRIMARY KEY NOT NULL, 
     category TEXT, 
     icon TEXT, 
@@ -101,6 +102,13 @@ class Sql {
     name TEXT, 
     "order" INTEGER, 
     visible INTEGER
+  );''';
+
+  static const String _createSystemTable = '''$createTable t_system(
+    id INTEGER PRIMARY KEY NOT NULL, 
+    admin BIT, 
+    password TEXT, 
+    isDelete INTEGER
   );''';
 
   ///============================== 1 升级数据库 ===============================
@@ -148,42 +156,57 @@ class Sql {
   // – 添加多列索引
   // – ALTER TABLE t_test ADD INDEX index_name ( a, b, c )
 
-  // 数据库版本1升级到版本2
-  static String? _onUpgrade_1_2(int oldVersion, int newVersion) {
-    if (newVersion > 1 && oldVersion <= 1) {
-      DBManager.instance.log('Database onUpgrade_1_2: $createUserTable');
-      return createUserTable;
+  /// 数据库版本1升级到版本2
+  static List<String> _onUpgrade_1_2(int oldVersion, int newVersion) {
+    List<String> list = [];
+    if (oldVersion <= 1 && newVersion > 1) {
+      list.add('ALTER TABLE t_user ADD uuid TEXT DEFAULT ""');
+      list.add('ALTER TABLE t_user ADD account TEXT DEFAULT ""');
+      log('Database onUpgrade_1_2: ');
+      for (var sql in list) log('    $sql', blank: true);
     }
-    return null;
+    return list;
   }
 
-  // 数据库版本2升级到版本3
-  static String? _onUpgrade_2_3(int oldVersion, int newVersion) {
-    if (newVersion > 2 && oldVersion <= 2) {
-      String sql = 'ALTER TABLE t_banner ADD flutter TEXT DEFAULT ""';
-      DBManager.instance.log('Database onUpgrade_2_3: $sql');
-      return sql;
+  /// 数据库版本2升级到版本3
+  static List<String> _onUpgrade_2_3(int oldVersion, int newVersion) {
+    List<String> list = [];
+    if (oldVersion <= 2 && newVersion > 2) {
+      list.add(_createSystemTable);
+      log('Database onUpgrade_2_3: ');
+      for (var sql in list) log('    $sql', blank: true);
     }
-    return null;
+    return list;
   }
 
-  // 数据库版本3升级到版本4
-  static String? _onUpgrade_3_4(int oldVersion, int newVersion) {
-    if (newVersion > 3 && oldVersion <= 4) {
-      String sql = 'ALTER TABLE t_banner ADD content TEXT DEFAULT ""';
-      DBManager.instance.log('Database onUpgrade_3_4: $sql');
-      return sql;
+  /// 数据库版本3升级到版本4
+  static List<String> _onUpgrade_3_4(int oldVersion, int newVersion) {
+    List<String> list = [];
+    if (oldVersion <= 3 && newVersion > 3) {
+      list.add('ALTER TABLE t_system ADD title TEXT DEFAULT ""');
+      list.add('ALTER TABLE t_system ADD content TEXT DEFAULT ""');
+      list.add('ALTER TABLE t_system ADD footer TEXT DEFAULT ""');
+      log('Database onUpgrade_3_4: ');
+      for (var sql in list) log('    $sql', blank: true);
     }
-    return null;
+    return list;
   }
 
-  // 数据库版本4升级到版本5
-  static String? _onUpgrade_4_5(int oldVersion, int newVersion) {
-    if (newVersion > 4 && oldVersion <= 5) {
-      String sql = createWebsiteTable;
-      DBManager.instance.log('Database onUpgrade_4_5: $sql');
-      return sql;
+  /// 数据库版本4升级到版本5
+  static List<String> _onUpgrade_4_5(int oldVersion, int newVersion) {
+    List<String> list = [];
+    if (oldVersion <= 4 && newVersion > 4) {
+      list.add(_createWebsiteTable);
+      log('Database onUpgrade_3_4: ');
+      for (var sql in list) log('    $sql', blank: true);
     }
-    return null;
+    return list;
+  }
+
+  static void log(dynamic message, {bool blank = false}) {
+    if (blank) {
+      message = message.toString().replaceAll('\n', '    \n');
+    }
+    DBManager.instance.log(message);
   }
 }
