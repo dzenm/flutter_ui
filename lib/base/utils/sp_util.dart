@@ -167,13 +167,13 @@ class SpUtil {
 
   static bool getBool(String key) {
     bool value = _instance._prefs?.getBool(key) ?? false;
-    _instance.log('获取bool值：key=$key, value=$value');
+    _instance.log('获取bool值  ：key=$key, value=$value');
     return value;
   }
 
   static void setBool(String key, bool? value) {
     _instance._prefs?.setBool(key, value ?? false).then((res) {
-      _instance.log('设置bool值：key=$key, value=$value');
+      _instance.log('设置bool值  ：key=$key, value=$value');
     });
   }
 

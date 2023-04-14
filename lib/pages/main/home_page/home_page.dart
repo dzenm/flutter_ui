@@ -35,6 +35,9 @@ class _HomePageState extends State<HomePage> {
   static const String _tag = 'HomePage';
   StateController _controller = StateController();
   int _page = 0; // 加载的页数
+  bool _init = false;
+
+  String? title;
 
   @override
   void initState() {
@@ -77,9 +80,10 @@ class _HomePageState extends State<HomePage> {
         systemOverlayStyle: SystemUiOverlayStyle.light,
         toolbarHeight: 0,
       ),
-      body: Container(
+      body: !_init ? Container() : Container(
         child: Column(
           children: [
+            Text(title!),
             Banner(),
             Expanded(
               child: ArticleListView(controller: _controller, refresh: _onRefresh),
@@ -100,8 +104,11 @@ class _HomePageState extends State<HomePage> {
       _getTopArticle(),
       // _getDataList(),
     ]).then((value) {
+      title = 'test';
       Log.d('网络数据执行完成...', tag: _tag);
-    }).whenComplete(() => null);
+    }).whenComplete(() {
+      _init = true;
+    });
     Log.d('结束加载网络数据...', tag: _tag);
   }
 
@@ -196,11 +203,18 @@ class _ArticleListViewState extends State<ArticleListView> {
   static const String _tag = 'ArticleListView';
 
   @override
+  void initState() {
+    super.initState();
+    Log.i('initState', tag: _tag);
+  }
+
+  @override
   Widget build(BuildContext context) {
     Log.i('build', tag: _tag);
 
     return Selector<ArticleModel, int>(
       builder: (context, value, child) {
+        Log.i('build', tag: _tag);
         return RefreshListView(
           controller: widget.controller,
           itemCount: value,
