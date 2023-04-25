@@ -1,7 +1,7 @@
-import 'dart:io';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/base/log/build_config.dart';
 
 import 'app_page.dart';
 import 'base/db/db_manager.dart';
@@ -116,7 +116,7 @@ class Application {
 
   /// 初始化Android设置
   void _initAndroidSettings() {
-    if (!Platform.isAndroid) return;
+    if (!BuildConfig.isAndroid) return;
     // 设置Android头部的导航栏透明
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -129,7 +129,7 @@ class Application {
 
   /// 初始化iOS设置
   void _initIOSSettings() {
-    if (!Platform.isIOS) return;
+    if (!BuildConfig.isIOS) return;
   }
 
   /// 获取第一个页面

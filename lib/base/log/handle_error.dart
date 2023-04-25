@@ -1,11 +1,11 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import 'build_config.dart';
 import 'log.dart';
 
 /// 处理字符串
@@ -161,7 +161,7 @@ class HandleError {
   Future<Map<String, dynamic>> getDeviceInfo() async {
     DeviceInfoPlugin infoPlugin = DeviceInfoPlugin();
     Map<String, dynamic> map = {};
-    if (Platform.isAndroid) {
+    if (BuildConfig.isAndroid) {
       AndroidDeviceInfo info = await infoPlugin.androidInfo;
       Map<String, dynamic> temp = {
         'baseOS': info.version.baseOS,
@@ -175,7 +175,7 @@ class HandleError {
       map.addAll(temp);
       map.addAll(info.data);
       map.remove('version');
-    } else if (Platform.isIOS) {
+    } else if (BuildConfig.isIOS) {
       IosDeviceInfo info = await infoPlugin.iosInfo;
       Map<String, dynamic> temp = {
         'sysname': info.utsname.sysname,

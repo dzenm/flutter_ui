@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -13,14 +14,64 @@ import '../../models/user_model.dart';
 import '../main/main_page.dart';
 import 'register_page.dart';
 
-class LoginPage extends StatefulWidget {
+///
+/// 登录页面
+///
+class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
-  State<StatefulWidget> createState() => _LoginPageState();
+  Widget build(BuildContext context) {
+    if (kIsWeb) {
+      return _buildWebPage(context);
+    }
+    return _buildAppPage(context);
+  }
+
+  /// Web展示的页面
+  Widget _buildWebPage(BuildContext context) {
+    return Material(
+      child: Center(
+        child: Container(
+          width: 400,
+          padding: EdgeInsets.all(24),
+          child: _LoginWidget(),
+        ),
+      ),
+    );
+  }
+
+  /// App展示的页面
+  Widget _buildAppPage(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(S.of(context).login, style: TextStyle(color: Colors.white)),
+      ),
+      body: Center(
+        child: Stack(children: [
+          SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.all(24),
+              child: _LoginWidget(),
+            ),
+          )
+        ]),
+      ),
+    );
+  }
 }
 
-class _LoginPageState extends State<LoginPage> {
+///
+/// 登录组件主体部分的状态，不包含 [Scaffold]
+///
+class _LoginWidget extends StatefulWidget {
+  const _LoginWidget();
+
+  @override
+  State<StatefulWidget> createState() => _LoginWidgetState();
+}
+
+class _LoginWidgetState extends State<_LoginWidget> {
   static const String _tag = 'LoginPage';
 
   TextEditingController usernameController = TextEditingController();
@@ -54,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   @override
-  void didUpdateWidget(covariant LoginPage oldWidget) {
+  void didUpdateWidget(covariant _LoginWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     Log.i('didUpdateWidget', tag: _tag);
   }
@@ -96,111 +147,96 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     Log.i('build', tag: _tag);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(S.of(context).login, style: TextStyle(color: Colors.white)),
-      ),
-      body: SingleChildScrollView(
-        child: _buildBody(),
-      ),
-    );
-  }
-
-  // 主体页面结构
-  Widget _buildBody() {
     MaterialColor buttonColor = Colors.blue;
-    return Container(
-      padding: EdgeInsets.all(24),
-      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        SizedBox(height: 80),
-        // 用户名输入框
-        TextField(
-          controller: usernameController,
-          decoration: InputDecoration(
-            icon: Icon(Icons.person),
-            labelText: S.of(context).username,
-            suffixIcon: IconButton(
-              splashColor: Colors.transparent,
-              icon: Icon(Icons.close),
-              onPressed: () => usernameController.clear(),
-            ),
+    return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+      // 用户名输入框
+      TextField(
+        controller: usernameController,
+        decoration: InputDecoration(
+          icon: Icon(Icons.person),
+          labelText: S.of(context).username,
+          suffixIcon: IconButton(
+            splashColor: Colors.transparent,
+            icon: Icon(Icons.close),
+            onPressed: () => usernameController.clear(),
           ),
-          maxLines: 1,
-          maxLengthEnforcement: MaxLengthEnforcement.enforced,
-          keyboardType: TextInputType.text,
         ),
-        SizedBox(height: 32),
-        // 密码输入框
+        maxLines: 1,
+        maxLengthEnforcement: MaxLengthEnforcement.enforced,
+        keyboardType: TextInputType.text,
+      ),
+      SizedBox(height: 32),
+      // 密码输入框
+      TextField(
+        controller: passwordController,
+        decoration: InputDecoration(
+          icon: Icon(Icons.admin_panel_settings),
+          labelText: S.of(context).password,
+          suffixIcon: IconButton(
+            splashColor: Colors.transparent,
+            icon: Icon(_isShowPwd ? Icons.visibility : Icons.visibility_off, size: 20),
+            iconSize: 16,
+            // 点击改变显示或隐藏密码
+            onPressed: () => setState(() => _isShowPwd = !_isShowPwd),
+          ),
+        ),
+        maxLines: 1,
+        keyboardType: TextInputType.text,
+        obscureText: !_isShowPwd,
+      ),
+      SizedBox(height: 32),
+      // 重复密码输入框
+      if (!_switchCurrentLogin)
         TextField(
-          controller: passwordController,
+          controller: rPasswordController,
           decoration: InputDecoration(
             icon: Icon(Icons.admin_panel_settings),
-            labelText: S.of(context).password,
+            labelText: S.of(context).rPassword,
             suffixIcon: IconButton(
               splashColor: Colors.transparent,
-              icon: Icon(_isShowPwd ? Icons.visibility : Icons.visibility_off, size: 20),
+              icon: Icon(_isShowRPwd ? Icons.visibility : Icons.visibility_off, size: 20),
               iconSize: 16,
               // 点击改变显示或隐藏密码
-              onPressed: () => setState(() => _isShowPwd = !_isShowPwd),
+              onPressed: () => setState(() => _isShowRPwd = !_isShowRPwd),
             ),
           ),
           maxLines: 1,
           keyboardType: TextInputType.text,
-          obscureText: !_isShowPwd,
+          obscureText: !_isShowRPwd,
         ),
-        SizedBox(height: 32),
-        // 重复密码输入框
-        if (!_switchCurrentLogin)
-          TextField(
-            controller: rPasswordController,
-            decoration: InputDecoration(
-              icon: Icon(Icons.admin_panel_settings),
-              labelText: S.of(context).rPassword,
-              suffixIcon: IconButton(
-                splashColor: Colors.transparent,
-                icon: Icon(_isShowRPwd ? Icons.visibility : Icons.visibility_off, size: 20),
-                iconSize: 16,
-                // 点击改变显示或隐藏密码
-                onPressed: () => setState(() => _isShowRPwd = !_isShowRPwd),
-              ),
-            ),
-            maxLines: 1,
-            keyboardType: TextInputType.text,
-            obscureText: !_isShowRPwd,
+      if (!_switchCurrentLogin) SizedBox(height: 32),
+      Row(children: [
+        // 登陆按钮
+        Expanded(
+          flex: 1,
+          child: TapLayout(
+            height: 36.0,
+            borderRadius: BorderRadius.all(Radius.circular(2)),
+            background: _switchCurrentLogin && _isDisableLoginButton ? buttonColor.shade200 : buttonColor,
+            onTap: _switchCurrentLogin && _isDisableLoginButton ? null : _login,
+            child: Text(S.of(context).login, style: TextStyle(color: Colors.white)),
           ),
-        if (!_switchCurrentLogin) SizedBox(height: 32),
-        Row(children: [
-          // 登陆按钮
-          Expanded(
-            flex: 1,
-            child: TapLayout(
-              height: 36.0,
-              borderRadius: BorderRadius.all(Radius.circular(2)),
-              background: _switchCurrentLogin && _isDisableLoginButton ? buttonColor.shade200 : buttonColor,
-              onTap: _switchCurrentLogin && _isDisableLoginButton ? null : _login,
-              child: Text(S.of(context).login, style: TextStyle(color: Colors.white)),
-            ),
+        ),
+        SizedBox(height: 32, width: 64),
+        // 注册按钮
+        Expanded(
+          flex: 1,
+          child: TapLayout(
+            height: 36.0,
+            borderRadius: BorderRadius.all(Radius.circular(2)),
+            background: !_switchCurrentLogin && _isDisableLoginButton ? buttonColor.shade200 : buttonColor,
+            onTap: !_switchCurrentLogin && _isDisableLoginButton ? null : _register,
+            child: Text(S.of(context).register, style: TextStyle(color: Colors.white)),
           ),
-          SizedBox(height: 32, width: 64),
-          // 注册按钮
-          Expanded(
-            flex: 1,
-            child: TapLayout(
-              height: 36.0,
-              borderRadius: BorderRadius.all(Radius.circular(2)),
-              background: !_switchCurrentLogin && _isDisableLoginButton ? buttonColor.shade200 : buttonColor,
-              onTap: !_switchCurrentLogin && _isDisableLoginButton ? null : _register,
-              child: Text(S.of(context).register, style: TextStyle(color: Colors.white)),
-            ),
-          ),
-        ]),
+        ),
       ]),
-    );
+    ]);
   }
 
   // 如果输入的账号密码为空则禁用登录按钮
   void _resetLoginButtonState() {
-    setState(() => _isDisableLoginButton = _username.isEmpty || _password.isEmpty || (_switchCurrentLogin ? false : _rPassword.isEmpty));
+    _isDisableLoginButton = _username.isEmpty || _password.isEmpty || (_switchCurrentLogin ? false : _rPassword.isEmpty);
+    setState(() => {});
   }
 
   // 登录按钮点击事件

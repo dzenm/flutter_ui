@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/src/adapters/io_adapter.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../http/api_services.dart';
 import 'data_entity.dart';
@@ -96,24 +97,32 @@ class HttpsClient {
       headers: {
         'Accept': 'application/json,*/*',
         'Content-Type': 'application/json',
+
+        /// Web端报错处理
+        "Access-Control-Allow-Origin": "*", // Required for CORS support to work
+        "Access-Control-Allow-Credentials": 'true', // Required for cookies, authorization headers with HTTPS
+        "Access-Control-Allow-Headers": "Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,locale",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, OPTIONS, DELETE",
       },
     ));
 
-    // 不验证https证书
-    (dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate = (HttpClient client) {
-      // config the http client
-      // client.findProxy = (uri) {
-      //  //proxy all request to localhost:8888
-      //  return "192.168.1.1:8888";
-      //};
-      client.badCertificateCallback = (X509Certificate cert, String host, int port) {
-        log("验证https证书: host=$host, port=$port");
-        return true;
+    if (!kIsWeb) {
+      // 不验证https证书
+      (dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate = (HttpClient client) {
+        // config the http client
+        // client.findProxy = (uri) {
+        //  //proxy all request to localhost:8888
+        //  return "192.168.1.1:8888";
+        //};
+        client.badCertificateCallback = (X509Certificate cert, String host, int port) {
+          log("验证https证书: host=$host, port=$port");
+          return true;
+        };
+        // you can also create a new HttpsClient to dio
+        // return new HttpsClient();
+        return client;
       };
-      // you can also create a new HttpsClient to dio
-      // return new HttpsClient();
-      return client;
-    };
+    }
     for (var interceptor in _interceptors) {
       dio.interceptors.add(interceptor);
     }
