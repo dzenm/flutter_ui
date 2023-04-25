@@ -7,7 +7,7 @@ import 'package:flutter_ui/base/res/assets.dart';
 import 'package:flutter_ui/base/res/local_model.dart';
 import 'package:flutter_ui/base/res/theme/app_theme.dart';
 import 'package:flutter_ui/base/res/theme/colors.dart';
-import 'package:flutter_ui/base/router/route_manager.dart';
+import 'package:flutter_ui/base/utils/route_manager.dart';
 import 'package:flutter_ui/base/utils/sp_util.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/common_widget.dart';

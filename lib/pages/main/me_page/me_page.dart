@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../base/log/log.dart';
 import '../../../base/res/local_model.dart';
 import '../../../base/res/theme/app_theme.dart';
-import '../../../base/router/route_manager.dart';
+import '../../../base/utils/route_manager.dart';
 import '../../../base/utils/device_util.dart';
 import '../../../base/widgets/single_text_layout.dart';
 import '../../../base/widgets/tap_layout.dart';

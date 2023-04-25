@@ -9,7 +9,7 @@ import 'base/http/https_client.dart';
 import 'base/log/handle_error.dart';
 import 'base/log/log.dart';
 import 'base/naughty/http_interceptor.dart';
-import 'base/router/route_manager.dart';
+import 'base/utils/route_manager.dart';
 import 'base/utils/file_util.dart';
 import 'base/utils/native_channel_util.dart';
 import 'base/utils/sp_util.dart';

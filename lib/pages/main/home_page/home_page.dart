@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../../../base/log/log.dart';
 import '../../../base/res/assets.dart';
-import '../../../base/router/route_manager.dart';
+import '../../../base/utils/route_manager.dart';
 import '../../../base/utils/str_util.dart';
 import '../../../base/widgets/banner_view.dart';
 import '../../../base/widgets/common_dialog.dart';

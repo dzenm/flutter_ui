@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/base/res/local_model.dart';
 import 'package:flutter_ui/base/res/theme/app_theme.dart';
-import 'package:flutter_ui/base/router/route_manager.dart';
+import 'package:flutter_ui/base/utils/route_manager.dart';
 import 'package:flutter_ui/pages/study/router/router_page.dart';
 import 'package:provider/provider.dart';
 

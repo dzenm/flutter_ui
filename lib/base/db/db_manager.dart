@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -42,7 +43,8 @@ class DBManager {
   }
 
   /// 获取当前数据库对象, 未指定数据库名称时默认为用户名 [_userId]，切换数据库操作时要先关闭 [close] 再重新打开。
-  Future<Database> getDatabase({String? dbName}) async {
+  Future<Database?> getDatabase({String? dbName}) async {
+    if (kIsWeb) return null;
     if (_database == null) {
       String path = await getPath(dbName: dbName);
       _database = await openDatabase(path, version: Sql.dbVersion, onCreate: _onCreate, onUpgrade: _onUpgrade);
@@ -106,7 +108,8 @@ class DBManager {
 
   /// 判断表是否存在
   Future<bool> isTableExist(String tableName, {String? dbName}) async {
-    Database db = await getDatabase(dbName: dbName);
+    Database? db = await getDatabase(dbName: dbName);
+    if (db == null) return false;
     List list = await db.rawQuery("${Sql.selectAllTable} AND NAME='$tableName'");
     return list.isNotEmpty;
   }
@@ -127,7 +130,8 @@ class DBManager {
 
   /// 获取数据库中表的所有列结构的数据
   Future<List<ColumnEntity>> getTableColumn(String dbName, String tableName) async {
-    Database db = await getDatabase(dbName: dbName);
+    Database? db = await getDatabase(dbName: dbName);
+    if (db == null) return [];
     List list = await db.rawQuery('${Sql.pragmaTable}($tableName)');
     log('查询表列名: $list');
     return list.map((e) => ColumnEntity.fromJson(e)).toList();
@@ -135,7 +139,8 @@ class DBManager {
 
   /// 获取数据中所有表的数据
   Future<List<TableEntity>> getTableList({String? dbName}) async {
-    Database db = await getDatabase(dbName: dbName);
+    Database? db = await getDatabase(dbName: dbName);
+    if (db == null) return [];
     List<dynamic> list = await db.rawQuery(Sql.selectAllTable);
     log('查询所有表: $list');
     return list.map((element) => TableEntity.fromJson(element)).toList();
@@ -147,7 +152,8 @@ class DBManager {
     Map<String, dynamic> values, {
     ConflictAlgorithm? conflictAlgorithm,
   }) async {
-    Database db = await getDatabase();
+    Database? db = await getDatabase();
+    if (db == null) return -1;
 
     int id = 0;
     id = await db.insert(
@@ -164,7 +170,8 @@ class DBManager {
     String tableName, {
     Map<String, String>? where,
   }) async {
-    Database db = await getDatabase();
+    Database? db = await getDatabase();
+    if (db == null) return -1;
 
     int count = 0;
     if (where == null) {
@@ -191,7 +198,8 @@ class DBManager {
     Map<String, dynamic>? where,
     ConflictAlgorithm? conflictAlgorithm,
   }) async {
-    Database db = await getDatabase();
+    Database? db = await getDatabase();
+    if (db == null) return -1;
 
     StringBuffer params = StringBuffer();
     StringBuffer whereString = StringBuffer();
@@ -215,7 +223,8 @@ class DBManager {
     String tableName, {
     Map<String, String>? where,
   }) async {
-    Database db = await getDatabase();
+    Database? db = await getDatabase();
+    if (db == null) return [];
 
     List<Map<String, dynamic>> list = [];
 

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -38,6 +39,7 @@ class Naughty {
   }
 
   Future<void> _createOverlay() async {
+    if (kIsWeb) return;
     _overlayEntry ??= OverlayEntry(builder: (BuildContext context) {
       return _child ??
           FloatingButton(
@@ -52,6 +54,7 @@ class Naughty {
 
   /// 显示悬浮窗
   void show() {
+    if (kIsWeb) return;
     if (_showing) return;
     _showing = true;
     Future.delayed(Duration.zero, _createOverlay);
@@ -59,6 +62,7 @@ class Naughty {
 
   /// 隐藏悬浮窗
   void dismiss() {
+    if (kIsWeb) return;
     if (!_showing) return;
     _showing = false;
     _overlayEntry?.remove();
@@ -67,6 +71,7 @@ class Naughty {
 
   /// 展示通知
   void showNotification({String? title, String? body}) {
+    if (kIsWeb) return;
     NotificationUtil().showNotification(
       title: title,
       body: body,
@@ -85,6 +90,7 @@ class Naughty {
 
   /// 获取数据库文件夹所有数据库文件
   Future<List<String>> getDBFiles() async {
+    if (kIsWeb) return [];
     String parent = await getDatabasesPath();
     List<String> files = [];
     Directory(parent).listSync().forEach((element) {
