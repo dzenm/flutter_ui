@@ -3,10 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/base/http/https_client.dart';
 import 'package:flutter_ui/base/log/log.dart';
+import 'package:flutter_ui/base/res/app_theme.dart';
 import 'package:flutter_ui/base/res/assets.dart';
 import 'package:flutter_ui/base/res/local_model.dart';
-import 'package:flutter_ui/base/res/theme/app_theme.dart';
-import 'package:flutter_ui/base/res/theme/colors.dart';
 import 'package:flutter_ui/base/utils/route_manager.dart';
 import 'package:flutter_ui/base/utils/sp_util.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
@@ -268,8 +267,8 @@ class _SettingPageState extends State<SettingPage> {
             child: Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: C.getThemeModes().map((key) {
-                Color? value = C.getTheme(key).appbarColor;
+              children: context.read<LocalModel>().appThemes.map((key) {
+                Color? value = context.watch()<LocalModel>().getTheme(key).appbarColor;
                 return InkWell(
                   onTap: () {
                     context.read<LocalModel>().setThemeMode(key);

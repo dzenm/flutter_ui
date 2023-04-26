@@ -7,7 +7,7 @@ import 'package:flutter_ui/pages/main/me_page/edit_info_page.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base/res/local_model.dart';
-import '../../../base/res/theme/app_theme.dart';
+import '../../../base/res/app_theme.dart';
 import '../../../base/widgets/common_bar.dart';
 
 ///

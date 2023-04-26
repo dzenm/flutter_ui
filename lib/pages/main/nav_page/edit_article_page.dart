@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base/res/local_model.dart';
-import '../../../base/res/theme/app_theme.dart';
+import '../../../base/res/app_theme.dart';
 import '../../../entities/article_entity.dart';
 import '../../../models/article_model.dart';
 

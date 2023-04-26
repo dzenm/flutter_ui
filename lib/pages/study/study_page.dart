@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ui/base/log/log.dart';
+import 'package:flutter_ui/base/res/app_theme.dart';
 import 'package:flutter_ui/base/res/local_model.dart';
-import 'package:flutter_ui/base/res/theme/app_theme.dart';
 import 'package:flutter_ui/base/utils/route_manager.dart';
-import 'package:flutter_ui/base/utils/native_channel_util.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/custom_popup_dialog.dart';
 import 'package:flutter_ui/base/widgets/picker_list_view.dart';

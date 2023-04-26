@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/base/res/local_model.dart';
-import 'package:flutter_ui/base/res/theme/app_theme.dart';
+import 'package:flutter_ui/base/res/app_theme.dart';
 import 'package:flutter_ui/base/utils/route_manager.dart';
 import 'package:provider/provider.dart';
 
@@ -63,7 +63,7 @@ class _RouterPageState extends State<RouterPage> {
         ..add(MaterialButton(
           child: _text(list[i][0]),
           textColor: Colors.white,
-          color: appTheme.primary,
+          color: appTheme.appbarColor,
           onPressed: () => Navigator.push(context, RouteManager.createMaterialRoute(FirstPage(type: i, index: 0))),
         ));
     }

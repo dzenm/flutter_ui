@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../base/log/log.dart';
 import '../../../base/res/local_model.dart';
-import '../../../base/res/theme/app_theme.dart';
+import '../../../base/res/app_theme.dart';
 import '../../../base/utils/route_manager.dart';
 import '../../../base/widgets/common_bar.dart';
 import '../../../http/http_manager.dart';

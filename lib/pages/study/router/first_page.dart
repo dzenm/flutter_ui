@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/base/res/local_model.dart';
-import 'package:flutter_ui/base/res/theme/app_theme.dart';
+import 'package:flutter_ui/base/res/app_theme.dart';
 import 'package:flutter_ui/base/utils/route_manager.dart';
 import 'package:flutter_ui/pages/study/router/router_page.dart';
 import 'package:provider/provider.dart';
@@ -56,7 +56,7 @@ class _FirstPageState extends State<FirstPage> {
     return MaterialButton(
       child: _text(text),
       textColor: Colors.white,
-      color: appTheme.primary,
+      color: appTheme.appbarColor,
       onPressed: navigator,
     );
   }

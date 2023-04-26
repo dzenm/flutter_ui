@@ -1,9 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'local_model.dart';
+import 'theme/black_theme.dart';
+import 'theme/blue_accent_theme.dart';
+import 'theme/blue_theme.dart';
+import 'theme/cyan_theme.dart';
+import 'theme/dark_theme.dart';
+import 'theme/deep_orange_accent_theme.dart';
+import 'theme/deep_purple_accent_theme.dart';
+import 'theme/gray_theme.dart';
+import 'theme/green_theme.dart';
+import 'theme/light_theme.dart';
+import 'theme/orange_theme.dart';
+import 'theme/pink_theme.dart';
+import 'theme/purple_theme.dart';
+import 'theme/red_theme.dart';
+import 'theme/teal_theme.dart';
 
 ////
 //// Created by a0010 on 2023/1/30 15:15
 ////
 class AppTheme {
+  /// 获取颜色
+  static AppTheme of(BuildContext context, {bool listen = true}) {
+    return Provider.of<LocalModel>(context, listen: listen).appTheme;
+  }
+
+  static final Map<AppThemeMode, AppTheme> appTheme = {
+    AppThemeMode.light: LightTheme(),
+    AppThemeMode.dark: DarkTheme(),
+    AppThemeMode.gray: GrayTheme(),
+    AppThemeMode.blue: BlueTheme(),
+    AppThemeMode.blueAccent: BlueAccentTheme(),
+    AppThemeMode.cyan: CyanTheme(),
+    AppThemeMode.purple: PurpleTheme(),
+    AppThemeMode.deepPurpleAccent: DeepPurpleAccentTheme(),
+    AppThemeMode.deepOrange: DeepOrangeAccentTheme(),
+    AppThemeMode.green: GreenTheme(),
+    AppThemeMode.orange: OrangeTheme(),
+    AppThemeMode.pink: PinkTheme(),
+    AppThemeMode.red: RedTheme(),
+    AppThemeMode.teal: TealTheme(),
+    AppThemeMode.black: BlackTheme(),
+  };
+
+
   /// 根据颜色命名
   Color get white50 => Color(0xFAFAFA); // 纯白的 5%
   Color get white100 => Color(0xF5F5F5); // 纯白的 10%
@@ -100,4 +142,28 @@ class AppTheme {
   /// 	  DialogTheme dialogTheme, /// 自定义Dialog的主题形状
   /// 	  Typography typography, /// 用于配置TextTheme、primaryTextTheme和accentTextTheme的颜色和几何TextTheme值。
   /// 	  CupertinoThemeData cupertinoOverrideTheme
+}
+
+/// APP主题模式
+enum AppThemeMode {
+  light('light'),
+  dark('dark'),
+  gray('gray'),
+  blue('blue'),
+  blueAccent('blueAccent'),
+  cyan('cyan'),
+  purple('purple'),
+  deepPurpleAccent('deepPurpleAccent'),
+  deepOrange('deepOrange'),
+  green('green'),
+  orange('orange'),
+  pink('pink'),
+  red('red'),
+  teal('teal'),
+  black('black');
+
+  /// 可以自定义枚举对应的值
+  final String name;
+
+  const AppThemeMode(this.name);
 }

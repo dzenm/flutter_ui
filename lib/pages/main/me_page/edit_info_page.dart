@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/base/res/local_model.dart';
-import 'package:flutter_ui/base/res/theme/app_theme.dart';
+import 'package:flutter_ui/base/res/app_theme.dart';
 import 'package:flutter_ui/base/widgets/single_edit_layout.dart';
 import 'package:flutter_ui/base/widgets/will_pop_view.dart';
 import 'package:flutter_ui/entities/user_entity.dart';

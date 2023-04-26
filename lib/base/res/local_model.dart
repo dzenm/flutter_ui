@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../utils/sp_util.dart';
-import 'theme/app_theme.dart';
-import 'theme/colors.dart';
+import 'app_theme.dart';
 
 class LocalModel with ChangeNotifier {
   /// 初始化主题设置
   LocalModel() {
-    _themeMode = C.getMode(SpUtil.getTheme());
+    _themeMode = _getMode(SpUtil.getTheme());
     _locale = Locale(SpUtil.getLocale());
   }
 
@@ -25,7 +24,7 @@ class LocalModel with ChangeNotifier {
   }
 
   /// 获取设置的主题包
-  AppTheme get appTheme => C.getTheme(themeMode);
+  AppTheme get appTheme => getTheme(_themeMode);
 
   /// 当前设置的语言
   late Locale _locale;
@@ -39,4 +38,19 @@ class LocalModel with ChangeNotifier {
     SpUtil.setLocale(locale.languageCode);
     notifyListeners();
   }
+
+  Map<AppThemeMode, AppTheme> _appThemes = AppTheme.appTheme;
+
+  AppThemeMode _getMode(String name) {
+    AppThemeMode mode = AppThemeMode.light;
+    AppThemeMode.values.forEach((value) {
+      if (value.name == name) mode = value;
+    });
+    return mode;
+  }
+
+  AppTheme getTheme(AppThemeMode mode) => _appThemes[mode]!;
+
+  List<AppThemeMode> get appThemes => _appThemes.keys.toList();
+
 }

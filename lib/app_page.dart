@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'application.dart';
 import 'base/log/build_config.dart';
 import 'base/res/local_model.dart';
-import 'base/res/theme/app_theme.dart';
+import 'base/res/app_theme.dart';
 import 'base/widgets/keyboard/keyboard_root.dart';
 import 'base/widgets/will_pop_view.dart';
 import 'generated/l10n.dart';
