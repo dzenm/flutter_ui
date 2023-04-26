@@ -80,17 +80,19 @@ class _HomePageState extends State<HomePage> {
         systemOverlayStyle: SystemUiOverlayStyle.light,
         toolbarHeight: 0,
       ),
-      body: !_init ? Container() : Container(
-        child: Column(
-          children: [
-            Text(title!),
-            Banner(),
-            Expanded(
-              child: ArticleListView(controller: _controller, refresh: _onRefresh),
+      body: !_init
+          ? Container()
+          : Container(
+              child: Column(
+                children: [
+                  Text(title!),
+                  Banner(),
+                  Expanded(
+                    child: ArticleListView(controller: _controller, refresh: _onRefresh),
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
     );
   }
 

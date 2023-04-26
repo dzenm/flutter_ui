@@ -97,7 +97,6 @@ class HttpsClient {
       headers: {
         'Accept': 'application/json,*/*',
         'Content-Type': 'application/json',
-
         /// Web端报错处理
         "Access-Control-Allow-Origin": "*", // Required for CORS support to work
         "Access-Control-Allow-Credentials": 'true', // Required for cookies, authorization headers with HTTPS

@@ -1,8 +1,11 @@
 import 'package:flutter_ui/base/db/db_base_model.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'hotkey_entity.g.dart';
 
 ///
 /// Created by a0010 on 2023/2/23 14:26
 /// 热词
+@JsonSerializable()
 class HotkeyEntity extends DBBaseModel {
   int? id;
   String? link;
@@ -12,25 +15,14 @@ class HotkeyEntity extends DBBaseModel {
 
   HotkeyEntity();
 
-  HotkeyEntity.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    link = json['link'];
-    name = json['name'];
-    order = json['order'];
-    visible = json['visible'];
-  }
+  @override
+  factory HotkeyEntity.fromJson(Map<String, dynamic> json) => _$HotkeyEntityFromJson(json);
 
   @override
-  DBBaseModel fromJson(Map<String, dynamic> json) => HotkeyEntity.fromJson(json);
+  Map<String, dynamic> toJson() => _$HotkeyEntityToJson(this);
 
   @override
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'link': link,
-        'name': name,
-        'order': order,
-        'visible': visible,
-      };
+  DBBaseModel fromJson(Map<String, dynamic> json) => fromJson(json);
 
   @override
   String get primaryKey => 'id';

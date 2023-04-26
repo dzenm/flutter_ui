@@ -1,8 +1,11 @@
 import 'package:flutter_ui/base/db/db_base_model.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'coin_entity.g.dart';
 
 ///
 /// Created by a0010 on 2023/2/23 14:26
 /// 用户积分表
+@JsonSerializable()
 class CoinEntity extends DBBaseModel {
   int? coinCount;
   int? level;
@@ -13,26 +16,14 @@ class CoinEntity extends DBBaseModel {
 
   CoinEntity();
 
-  CoinEntity.fromJson(Map<String, dynamic> json) {
-    coinCount = json['coinCount'];
-    level = json['level'];
-    nickname = json['nickname'];
-    rank = json['rank'];
-    userId = json['userId'];
-    username = json['username'];
-  }
-
-  Map<String, dynamic> toJson() => {
-        'coinCount': coinCount,
-        'level': level,
-        'nickname': nickname,
-        'rank': rank,
-        'userId': userId,
-        'username': username,
-      };
+  @override
+  factory CoinEntity.fromJson(Map<String, dynamic> json) => _$CoinEntityFromJson(json);
 
   @override
-  DBBaseModel fromJson(Map<String, dynamic> json) => CoinEntity.fromJson(json);
+  Map<String, dynamic> toJson() => _$CoinEntityToJson(this);
+
+  @override
+  DBBaseModel fromJson(Map<String, dynamic> json) => fromJson(json);
 
   @override
   String get primaryKey => 'userId';

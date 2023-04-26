@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ui/base/log/build_config.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 
 import 'app_page.dart';
 import 'base/db/db_manager.dart';
@@ -101,6 +102,8 @@ class Application {
       log('║                                        Start Flutter APP                                         ║');
       log('║                                                                                                  ║');
       log('╚══════════════════════════════════════════════════════════════════════════════════════════════════╝');
+      // 让 Flutter 使用 path 策略
+      usePathUrlStrategy();
       runMockApp(AppPage(child: _initApp()));
     }, handleMsg: (message) async {
       String logFileName = 'crash_${DateTime.now()}.log';

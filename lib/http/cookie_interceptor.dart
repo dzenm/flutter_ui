@@ -33,7 +33,7 @@ class CookieInterceptor extends Interceptor {
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    _getCookies(options);
+    _setCookies(options);
     return super.onRequest(options, handler);
   }
 
@@ -57,13 +57,13 @@ class CookieInterceptor extends Interceptor {
     }
   }
 
-  Future<void> _getCookies(RequestOptions options) async {
+  Future<void> _setCookies(RequestOptions options) async {
     _cookie = _cookie ?? SpUtil.getCookie();
 
     // 将string类型的cookie转化成list
     List<String> cookies = StrUtil.stringToList(_cookie, pattern: '&');
 
-    options.headers[HttpHeaders.cookieHeader] = cookies;
-    // options.headers['token'] = SpUtil.getToken();
+    // options.headers[HttpHeaders.cookieHeader] = cookies;
+    options.headers[HttpHeaders.authorizationHeader] = cookies;
   }
 }
