@@ -39,7 +39,7 @@ class _EditArticlePageState extends State<EditArticlePage> {
             MaterialButton(
               child: Text('修改数据'),
               textColor: theme.background,
-              color: theme.toolbarBackground,
+              color: theme.appbarColor,
               onPressed: () {
                 ArticleEntity? article = context.read<ArticleModel>().getArticle(1);
                 if (article != null) {

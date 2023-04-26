@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 // 徽章标签
 class BadgeView extends StatefulWidget {
-  final int count;
-  final Color color;
+  final int count; // 展示的数量, 为0时展示小红点不展示数量，为-1时不展示
+  final Color color; // 背景颜色
 
   const BadgeView({
     super.key,
@@ -18,34 +18,41 @@ class BadgeView extends StatefulWidget {
 class _BadgeViewState extends State<BadgeView> {
   @override
   Widget build(BuildContext context) {
-    // 根据数量设置不同的宽度
     int count = widget.count;
-    double width = count > 99
+    // 当数量小于0，不展示
+    if (count < 0) {
+      return Container();
+    }
+    bool isOver100 = count > 99;
+    bool isOver10 = count > 9;
+    bool isOver1 = count > 0;
+    // 根据数量设置不同的大小
+    double height = isOver1 ? 16 : 8;
+    double width = isOver100
         ? 24
-        : count > 9
+        : isOver10
             ? 20
-            : count > 0
+            : isOver1
                 ? 16
                 : 8;
     // 根据数量设置显示文本
-    String text = count > 99
+    String text = isOver100
         ? '99+'
-        : count > 0
+        : isOver1
             ? '$count'
             : '';
-    return Offstage(
-      offstage: count < 0,
-      child: Container(
-        height: 15,
-        width: width,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          shape: count >= 10 ? BoxShape.rectangle : BoxShape.circle,
-          borderRadius: count >= 10 ? BorderRadius.circular(8) : null,
-          color: widget.color,
-        ),
-        child: Text(text, style: const TextStyle(color: Colors.white, fontSize: 8)),
+    BoxShape shape = isOver10 ? BoxShape.rectangle : BoxShape.circle;
+    BorderRadius? borderRadius = isOver10 ? BorderRadius.circular(8) : null;
+    return Container(
+      height: height,
+      width: width,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        shape: shape,
+        borderRadius: borderRadius,
+        color: widget.color,
       ),
+      child: Text(text, style: const TextStyle(color: Colors.white, fontSize: 8)),
     );
   }
 }

@@ -92,7 +92,7 @@ class _NavPageState extends State<NavPage> {
                   MaterialButton(
                     child: Text('进入下一个页面'),
                     textColor: theme.background,
-                    color: theme.toolbarBackground,
+                    color: theme.appbarColor,
                     onPressed: () {
                       RouteManager.push(context, EditArticlePage());
                     },

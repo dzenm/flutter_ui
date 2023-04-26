@@ -124,7 +124,7 @@ class _MePageState extends State<MePage> {
           Column(children: [
             SizedBox(
               height: statusBarHeight + kToolbarHeight,
-              child: Container(color: theme.toolbarBackground),
+              child: Container(color: theme.appbarColor),
             ),
             Expanded(child: Container(color: theme.divide)),
           ]),

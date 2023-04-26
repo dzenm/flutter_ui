@@ -63,7 +63,7 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         child: _text('城市选择'),
         textColor: Colors.white,
-        color: theme.toolbarBackground,
+        color: theme.appbarColor,
         onPressed: () => RouteManager.push(context, CitySelectedPage()),
       ),
       SizedBox(height: 8),
@@ -71,7 +71,7 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         child: _text('字符转化'),
         textColor: Colors.white,
-        color: theme.toolbarBackground,
+        color: theme.appbarColor,
         onPressed: () => RouteManager.push(context, ConvertPage()),
       ),
       SizedBox(height: 8),
@@ -79,7 +79,7 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         child: _text('可拖动ListView'),
         textColor: Colors.white,
-        color: theme.toolbarBackground,
+        color: theme.appbarColor,
         onPressed: () => RouteManager.push(context, DragListPage()),
       ),
       SizedBox(height: 8),
@@ -87,7 +87,7 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         child: _text('快速页面创建'),
         textColor: Colors.white,
-        color: theme.toolbarBackground,
+        color: theme.appbarColor,
         onPressed: () => RouteManager.push(context, ExamplePage()),
       ),
       SizedBox(height: 8),
@@ -95,7 +95,7 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         child: _text('浮动的导航栏和PopupWindow'),
         textColor: Colors.white,
-        color: theme.toolbarBackground,
+        color: theme.appbarColor,
         onPressed: () => RouteManager.push(context, FloatNavigationPage()),
       ),
       SizedBox(height: 8),
@@ -103,7 +103,7 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         child: _text('HTTP请求'),
         textColor: Colors.white,
-        color: theme.toolbarBackground,
+        color: theme.appbarColor,
         onPressed: () => RouteManager.push(context, HTTPListPage()),
       ),
       SizedBox(height: 8),
@@ -111,7 +111,7 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         child: _text('自定义键盘'),
         textColor: Colors.white,
-        color: theme.toolbarBackground,
+        color: theme.appbarColor,
         onPressed: () => RouteManager.push(context, KeywordBoardPage()),
       ),
       SizedBox(height: 8),
@@ -119,7 +119,7 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         child: _text('刷新和底部加载的列表'),
         textColor: Colors.white,
-        color: theme.toolbarBackground,
+        color: theme.appbarColor,
         onPressed: () => RouteManager.push(context, ListPage()),
       ),
       SizedBox(height: 8),
@@ -127,7 +127,7 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         child: _text('加载图片'),
         textColor: Colors.white,
-        color: theme.toolbarBackground,
+        color: theme.appbarColor,
         onPressed: () => RouteManager.push(context, LoadImagePage()),
       ),
       SizedBox(height: 8),
@@ -135,7 +135,7 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         child: _text('Provider'),
         textColor: Colors.white,
-        color: theme.toolbarBackground,
+        color: theme.appbarColor,
         onPressed: () => RouteManager.push(context, ProviderPage()),
       ),
       SizedBox(height: 8),
@@ -143,7 +143,7 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         child: _text('二维码扫描'),
         textColor: Colors.white,
-        color: theme.toolbarBackground,
+        color: theme.appbarColor,
         onPressed: () => RouteManager.push(context, QRPage()),
       ),
       SizedBox(height: 8),
@@ -151,7 +151,7 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         child: _text('路由测试'),
         textColor: Colors.white,
-        color: theme.toolbarBackground,
+        color: theme.appbarColor,
         onPressed: () => RouteManager.push(context, RouterPage()),
       ),
       SizedBox(height: 8),
@@ -159,7 +159,7 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         child: _text(S.of(context).setting),
         textColor: Colors.white,
-        color: theme.toolbarBackground,
+        color: theme.appbarColor,
         onPressed: () => RouteManager.push(context, SettingPage()),
       ),
       SizedBox(height: 8),
@@ -167,7 +167,7 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         child: _text(S.of(context).state),
         textColor: Colors.white,
-        color: theme.toolbarBackground,
+        color: theme.appbarColor,
         onPressed: () => RouteManager.push(context, StatePage()),
       ),
       SizedBox(height: 8),
@@ -175,7 +175,7 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         child: _text('文本展示'),
         textColor: Colors.white,
-        color: theme.toolbarBackground,
+        color: theme.appbarColor,
         onPressed: () => RouteManager.push(context, TextPage()),
       ),
       SizedBox(height: 8),
@@ -183,7 +183,7 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         child: _text('视频播放'),
         textColor: Colors.white,
-        color: theme.toolbarBackground,
+        color: theme.appbarColor,
         onPressed: () => RouteManager.push(context, VideoPage()),
       ),
       SizedBox(height: 8),
@@ -199,7 +199,7 @@ class _StudyPageState extends State<StudyPage> {
           height: 36,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: theme.toolbarBackground,
+            color: theme.appbarColor,
             borderRadius: BorderRadius.all(Radius.circular(2)),
           ),
           child: Row(
@@ -223,7 +223,7 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         child: _text('PickerListView控件'),
         textColor: Colors.white,
-        color: theme.toolbarBackground,
+        color: theme.appbarColor,
         onPressed: () => PickerListView.showList(
           context: context,
           list: ['测试一', '测试二', '测试三', '测试四', '测试五'],
@@ -239,7 +239,7 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         child: _text('升级dialog'),
         textColor: Colors.white,
-        color: theme.toolbarBackground,
+        color: theme.appbarColor,
         onPressed: () => CommonDialog.showAppUpgradeDialog(
           context,
           version: '12',

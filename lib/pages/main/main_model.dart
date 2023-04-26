@@ -20,7 +20,8 @@ class MainModel with ChangeNotifier {
       Icons.airplay_rounded,
       Icons.person,
     ];
-    _badges = List.generate(3, (index) => index * index * index);
+    // _badges = List.generate(3, (index) => index * index * index);
+    _badges = [-1, 0, 5];
     _selectedIndex = 0;
   }
 

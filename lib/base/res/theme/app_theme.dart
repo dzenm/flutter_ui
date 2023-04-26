@@ -29,7 +29,7 @@ class AppTheme {
   Color get white87 => Color(0xB2FFFFFF); // 纯黑的 87% #212121
   Color get white => Colors.white; // 纯白
 
-  /// 根据功能命名
+  /// 根据功能命名(整体)
   Color get primary => white; // 主要颜色
   Color get secondary => white; // 次要颜色
   Color get accent => white; // 主要颜色的对比颜色
@@ -41,12 +41,12 @@ class AppTheme {
   Color get hint => white400; // 提示颜色
   Color get primaryText => white900; // 主要文本颜色
   Color get secondaryText => white600; // 次要文本颜色
+  Color get hintText => white300; // 提示文本颜色
 
-  Color get toolbarForeground => white; // toolbar前景颜色
-  Color get toolbarBackground => white; // toolbar背景颜色
-  Color get bottomNavigationBar => white;
-
-  /// bottomNavigationBar背景颜色
+  /// 根据功能命名(局部)
+  Color get appbarForeground => white; // appbar前景颜色
+  Color get appbarColor => white; // appbar背景颜色
+  Color get bottomBarColor => white; // bottomBar背景颜色
 
   ///       Brightness brightness, /// 应用整体主题的亮度。用于按钮之类的小部件，以确定在不使用主色或强调色时选择什么颜色。
   /// 	  MaterialColor primarySwatch,/// 定义一个单一的颜色以及十个色度的色块。

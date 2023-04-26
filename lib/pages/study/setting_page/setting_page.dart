@@ -269,7 +269,7 @@ class _SettingPageState extends State<SettingPage> {
               spacing: 8,
               runSpacing: 8,
               children: C.getThemeModes().map((key) {
-                Color? value = C.getTheme(key).toolbarBackground;
+                Color? value = C.getTheme(key).appbarColor;
                 return InkWell(
                   onTap: () {
                     context.read<LocalModel>().setThemeMode(key);

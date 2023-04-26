@@ -4,8 +4,9 @@ import 'package:flutter/services.dart';
 /// 单行输入框布局
 class SingleEditLayout extends StatefulWidget {
   final String? title; // 标题文本
+  final Color? titleColor; // 标题文本颜色
+  final Color? textColor; // 文本颜色
   final String? hintText; // 提示文字
-  final TextStyle? style; // 文本样式
   final double fontSize; // 字体大小
   final int? maxLength; // 设置最大字数长度
   final bool isShowMaxLength; // 是否显示最大长度
@@ -16,11 +17,12 @@ class SingleEditLayout extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatters; // 输入文本的类型
   final double horizontalPadding; // 左右的内边距
 
-  const SingleEditLayout({
-    super.key,
+  SingleEditLayout({
+    Key? key,
     this.title,
     this.onChanged,
-    this.style,
+    this.titleColor,
+    this.textColor,
     this.hintText,
     this.fontSize = 16,
     this.maxLength,
@@ -30,26 +32,79 @@ class SingleEditLayout extends StatefulWidget {
     this.keyboardType = TextInputType.text,
     this.inputFormatters,
     this.horizontalPadding = 16,
-  });
+  }) : super(key: key);
+
+  // 输入框
+  static Widget textField(
+    FocusNode focusNode,
+    double fontSize,
+    String hintText,
+    ValueChanged<String> onChanged, {
+    bool? enabled,
+    Color? textColor,
+    TextInputType? keyboardType,
+    List<TextInputFormatter>? inputFormatters,
+    int? maxLength,
+    TextEditingController? controller,
+  }) {
+    return TextField(
+      enabled: enabled,
+      focusNode: focusNode,
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
+      style: TextStyle(
+        fontSize: fontSize,
+        textBaseline: TextBaseline.alphabetic,
+        color: textColor,
+      ),
+      decoration: InputDecoration(
+        // isCollapsed 去除默认的最小高度，然后添加一个top padding就能使输入文字居中显示
+        contentPadding: EdgeInsets.only(top: 8),
+        isCollapsed: true,
+        border: OutlineInputBorder(borderSide: BorderSide.none),
+        hintText: hintText,
+        counter: SizedBox(),
+        isDense: true,
+      ),
+      maxLines: 1,
+      maxLength: maxLength,
+      maxLengthEnforcement: MaxLengthEnforcement.enforced,
+      onChanged: onChanged,
+      controller: controller,
+    );
+  }
+
+  /// 创建一个带初始文本的 TextEditingController
+  static TextEditingController textEditingController({String text = ''}) {
+    return TextEditingController.fromValue(
+      TextEditingValue(
+        text: text,
+        selection: TextSelection.fromPosition(
+          TextPosition(
+            offset: text.length,
+            affinity: TextAffinity.downstream,
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   State<StatefulWidget> createState() => _SingleEditLayoutState();
 }
 
 class _SingleEditLayoutState extends State<SingleEditLayout> {
-  int _currentLength = 0;
+  var currentLength;
 
   // 判断和控制焦点的获取
-  FocusNode _focusNode = FocusNode();
-  bool _hasFocus = false;
+  var focusNode = FocusNode();
+  var hasFocus = false;
 
   @override
   void initState() {
     super.initState();
-    _focusNode.addListener(() {
-      _currentLength = widget.controller?.text.length ?? 0;
-      setState(() => _hasFocus = _focusNode.hasFocus);
-    });
+    currentLength = widget.controller?.text.length ?? 0;
+    focusNode.addListener(() => setState(() => hasFocus = focusNode.hasFocus));
   }
 
   @override
@@ -57,112 +112,56 @@ class _SingleEditLayoutState extends State<SingleEditLayout> {
     List<TextInputFormatter> inputFormatters = [if (widget.maxLength != null) LengthLimitingTextInputFormatter(widget.maxLength)];
     widget.inputFormatters?.forEach((element) => inputFormatters.add(element));
     return Container(
-      color: Colors.white,
       height: 50.0,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(width: widget.horizontalPadding),
-          // 标题文本
-          if (widget.title != null)
+      padding: EdgeInsets.symmetric(horizontal: widget.horizontalPadding),
+      child: Row(mainAxisSize: MainAxisSize.min, children: [
+        // 标题文本
+        if (widget.title != null)
+          Text(
+            widget.title ?? '',
+            style: TextStyle(fontSize: widget.fontSize, color: widget.titleColor),
+          ),
+        if (widget.title != null) SizedBox(width: 16),
+
+        // 输入文本
+        Expanded(
+          child: SingleEditLayout.textField(
+            focusNode,
+            widget.fontSize,
+            widget.hintText ?? '',
+            (value) => _onChanged(value),
+            enabled: widget.enabled,
+            textColor: widget.textColor,
+            keyboardType: widget.keyboardType,
+            inputFormatters: inputFormatters.isNotEmpty ? inputFormatters : null,
+            maxLength: widget.maxLength,
+            controller: widget.controller,
+          ),
+        ),
+
+        // 输入最大文本数量的提示
+        Offstage(
+          // 根据是否设置最大长度和是否获取焦点显示
+          offstage: (widget.maxLength == null ? true : !hasFocus),
+          child: Row(children: [
+            SizedBox(width: 12),
             Text(
-              widget.title!,
-              style: widget.style ?? Theme.of(context).textTheme.subtitle1,
+              '$currentLength/${widget.maxLength}',
+              style: TextStyle(fontSize: widget.fontSize - 2, color: Colors.grey),
             ),
-          if (widget.title != null) const SizedBox(width: 16),
-
-          // 输入文本
-          Expanded(
-            child: textField(
-              context,
-              _focusNode,
-              widget.fontSize,
-              widget.hintText ?? '',
-              (value) => _onChanged(value),
-              style: widget.style,
-              enabled: widget.enabled,
-              keyboardType: widget.keyboardType,
-              inputFormatters: inputFormatters.isNotEmpty ? inputFormatters : null,
-              maxLength: widget.maxLength,
-              controller: widget.controller,
-            ),
-          ),
-
-          // 输入最大文本数量的提示
-          Offstage(
-            // 根据是否设置最大长度和是否获取焦点显示
-            offstage: (widget.maxLength == null ? true : !_hasFocus),
-            child: Row(
-              children: [
-                const SizedBox(width: 12),
-                Text(
-                  '$_currentLength/${widget.maxLength}',
-                  style: TextStyle(fontSize: widget.fontSize - 2, color: Colors.grey),
-                ),
-              ],
-            ),
-          ),
-
-          SizedBox(width: widget.horizontalPadding),
-        ],
-      ),
+          ]),
+        ),
+      ]),
     );
   }
 
   // 　输入改变时更新文本
-  _onChanged(String value) {
+  void _onChanged(String value) {
     setState(() {
       if (widget.onChanged != null) {
         widget.onChanged!(value);
       }
-      _currentLength = value.length;
+      currentLength = value.length;
     });
   }
-}
-
-// 输入框
-textField(
-  BuildContext context,
-  FocusNode focusNode,
-  double fontSize,
-  String hintText,
-  ValueChanged<String> onChanged, {
-  bool? enabled,
-  TextStyle? style,
-  TextInputType? keyboardType,
-  List<TextInputFormatter>? inputFormatters,
-  int? maxLength,
-  TextEditingController? controller,
-}) {
-  return TextField(
-    enabled: enabled,
-    focusNode: focusNode,
-    keyboardType: keyboardType,
-    inputFormatters: inputFormatters,
-    style: style ?? Theme.of(context).textTheme.subtitle1,
-    decoration: InputDecoration(
-      // isCollapsed 去除默认的最小高度，然后添加一个top padding就能使输入文字居中显示
-      contentPadding: const EdgeInsets.only(top: 8),
-      isCollapsed: true,
-      border: const OutlineInputBorder(borderSide: BorderSide.none),
-      hintText: hintText,
-      counter: const SizedBox(),
-      isDense: true,
-    ),
-    maxLines: 1,
-    maxLength: maxLength,
-    maxLengthEnforcement: MaxLengthEnforcement.enforced,
-    onChanged: onChanged,
-    controller: controller,
-  );
-}
-
-// 创建一个带初始文本的 TextEditingController
-textEditingController({String text = ''}) {
-  TextEditingController.fromValue(
-    TextEditingValue(
-      text: text,
-      selection: TextSelection.fromPosition(TextPosition(offset: text.length, affinity: TextAffinity.downstream)),
-    ),
-  );
 }

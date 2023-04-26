@@ -7,5 +7,5 @@ import 'app_theme.dart';
 ///
 class DeepPurpleAccentTheme extends AppTheme {
   @override
-  Color get toolbarBackground => Colors.deepPurpleAccent;
+  Color get appbarColor => Colors.deepPurpleAccent;
 }

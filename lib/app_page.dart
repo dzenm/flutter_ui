@@ -96,13 +96,13 @@ class AppPage extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         // 设置主题，读取LocalModel的值，改变LocalModel的theme值会通过provider刷新页面
         theme: ThemeData(
-          primaryColor: theme.toolbarBackground,
+          primaryColor: theme.appbarColor,
           appBarTheme: AppBarTheme(
-            backgroundColor: theme.toolbarBackground,
+            backgroundColor: theme.appbarColor,
             systemOverlayStyle: SystemUiOverlayStyle.light,
           ),
           floatingActionButtonTheme: FloatingActionButtonThemeData(
-            backgroundColor: theme.toolbarBackground,
+            backgroundColor: theme.appbarColor,
           ),
           // pageTransitionsTheme: PageTransitionsTheme(
           //   builders: <TargetPlatform, PageTransitionsBuilder>{
