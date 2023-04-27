@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/widgets/image_editor/image_editor.dart';
 import 'package:image_picker/image_picker.dart';
 
 ///
@@ -17,21 +16,7 @@ class _ImageEditor extends State<ImageEditorPage> {
 
   final picker = ImagePicker();
 
-  Future<void> toImageEditor(File origin) async {
-    return Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return ImageEditor(
-        originImage: origin,
-      );
-    })).then((result) {
-      if (result is EditorImageResult) {
-        setState(() {
-          _image = result.newFile;
-        });
-      }
-    }).catchError((er) {
-      debugPrint(er);
-    });
-  }
+  Future<void> toImageEditor(File origin) async {}
 
   void getImage() async {
     XFile? image = await picker.pickImage(source: ImageSource.gallery);

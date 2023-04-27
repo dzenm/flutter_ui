@@ -183,6 +183,7 @@ class _PopupWindowState extends State<CustomPopupWindow> {
     EdgeInsetsGeometry? padding,
     EdgeInsetsGeometry? margin,
     Color? color,
+    double elevation = 0,
     ItemTapCallback? onItemTap,
   }) {
     int index = 0;
@@ -190,6 +191,16 @@ class _PopupWindowState extends State<CustomPopupWindow> {
       decoration: BoxDecoration(
         color: color ?? Colors.black38,
         borderRadius: BorderRadius.all(Radius.circular(radius)),
+        boxShadow: elevation == 6
+            ? []
+            : [
+                BoxShadow(
+                  color: Color(0x30000000),
+                  offset: const Offset(0, 2),
+                  blurRadius: elevation,
+                  spreadRadius: 0,
+                )
+              ],
       ),
       margin: margin ?? const EdgeInsets.symmetric(horizontal: 8),
       clipBehavior: Clip.hardEdge,

@@ -9,7 +9,6 @@ class SingleEditLayout extends StatefulWidget {
   final String? hintText; // 提示文字
   final double fontSize; // 字体大小
   final int? maxLength; // 设置最大字数长度
-  final bool isShowMaxLength; // 是否显示最大长度
   final bool enabled; // 是否可用输入
   final TextInputType? keyboardType; // 文本输入类型
   final ValueChanged<String>? onChanged; // 输入监听器
@@ -25,8 +24,7 @@ class SingleEditLayout extends StatefulWidget {
     this.textColor,
     this.hintText,
     this.fontSize = 16,
-    this.maxLength,
-    this.isShowMaxLength = true,
+    this.maxLength = 0,
     this.enabled = true,
     this.controller,
     this.keyboardType = TextInputType.text,
