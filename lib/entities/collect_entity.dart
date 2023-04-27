@@ -1,11 +1,8 @@
 import 'package:flutter_ui/base/db/db_base_model.dart';
-import 'package:json_annotation/json_annotation.dart';
-part 'collect_entity.g.dart';
 
 ///
 /// Created by a0010 on 2023/2/23 14:26
 /// 收藏
-@JsonSerializable()
 class CollectEntity extends DBBaseModel {
   String? author;
   int? chapterId;
@@ -26,14 +23,46 @@ class CollectEntity extends DBBaseModel {
 
   CollectEntity();
 
-  @override
-  factory CollectEntity.fromJson(Map<String, dynamic> json) => _$CollectEntityFromJson(json);
+  CollectEntity.fromJson(Map<String, dynamic> json) {
+    author = json['author'];
+    chapterId = json['chapterId'];
+    chapterName = json['chapterName'];
+    courseId = json['courseId'];
+    desc = json['desc'];
+    envelopePic = json['envelopePic'];
+    id = json['id'];
+    link = json['link'];
+    niceDate = json['niceDate'];
+    origin = json['origin'];
+    originId = json['originId'];
+    publishTime = json['publishTime'];
+    title = json['title'];
+    userId = json['userId'];
+    visible = json['visible'];
+    zan = json['zan'];
+  }
+
+  Map<String, dynamic> toJson() => {
+        'author': author,
+        'chapterId': chapterId,
+        'chapterName': chapterName,
+        'courseId': courseId,
+        'desc': desc,
+        'envelopePic': envelopePic,
+        'id': id,
+        'link': link,
+        'niceDate': niceDate,
+        'origin': origin,
+        'originId': originId,
+        'publishTime': publishTime,
+        'title': title,
+        'userId': userId,
+        'visible': visible,
+        'zan': zan,
+      };
 
   @override
-  Map<String, dynamic> toJson() => _$CollectEntityToJson(this);
-
-  @override
-  DBBaseModel fromJson(Map<String, dynamic> json) => fromJson(json);
+  CollectEntity fromJson(Map<String, dynamic> json) => CollectEntity.fromJson(json);
 
   @override
   String get primaryKey => 'id';

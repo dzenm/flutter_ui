@@ -1,11 +1,8 @@
 import 'package:flutter_ui/base/db/db_base_model.dart';
-import 'package:json_annotation/json_annotation.dart';
-part 'coin_record_entity.g.dart';
 
 ///
 /// Created by a0010 on 2023/2/23 14:26
 /// 用户积分记录表
-@JsonSerializable()
 class CoinRecordEntity extends DBBaseModel {
   int? coinCount;
   int? date;
@@ -18,14 +15,30 @@ class CoinRecordEntity extends DBBaseModel {
 
   CoinRecordEntity();
 
-  @override
-  factory CoinRecordEntity.fromJson(Map<String, dynamic> json) => _$CoinRecordEntityFromJson(json);
+  CoinRecordEntity.fromJson(Map<String, dynamic> json) {
+    coinCount = json['coinCount'];
+    date = json['date'];
+    desc = json['desc'];
+    id = json['id'];
+    reason = json['reason'];
+    type = json['type'];
+    userId = json['userId'];
+    username = json['username'];
+  }
+
+  Map<String, dynamic> toJson() => {
+        'coinCount': coinCount,
+        'date': date,
+        'desc': desc,
+        'id': id,
+        'reason': reason,
+        'type': type,
+        'userId': userId,
+        'username': username,
+      };
 
   @override
-  Map<String, dynamic> toJson() => _$CoinRecordEntityToJson(this);
-
-  @override
-  DBBaseModel fromJson(Map<String, dynamic> json) => fromJson(json);
+  DBBaseModel fromJson(Map<String, dynamic> json) => CoinRecordEntity.fromJson(json);
 
   @override
   String get primaryKey => 'id';

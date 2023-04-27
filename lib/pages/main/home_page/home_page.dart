@@ -18,7 +18,7 @@ import '../../../http/http_manager.dart';
 import '../../../models/article_model.dart';
 import '../../../models/banner_model.dart';
 import '../../../models/website_model.dart';
-import '../../../res/custom_icon.dart';
+import '../../../base/widgets/custom_icon.dart';
 import '../../common/web_view_page.dart';
 
 ///

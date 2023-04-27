@@ -1,12 +1,9 @@
 import 'package:flutter_ui/base/db/db_base_model.dart';
-import 'package:json_annotation/json_annotation.dart';
-part 'banner_entity.g.dart';
 
 ///
 /// Created by a0010 on 2023/2/23 14:26
 ///
 /// 轮播图
-@JsonSerializable()
 class BannerEntity extends DBBaseModel {
   String? desc;
   int? id;
@@ -19,14 +16,31 @@ class BannerEntity extends DBBaseModel {
 
   BannerEntity() : super();
 
-  @override
-  factory BannerEntity.fromJson(Map<String, dynamic> json) => _$BannerEntityFromJson(json);
+  BannerEntity.fromJson(Map<String, dynamic> json) : super.fromJson(json) {
+    desc = json['desc'];
+    id = json['id'];
+    imagePath = json['imagePath'];
+    isVisible = json['isVisible'];
+    order = json['order'];
+    title = json['title'];
+    type = json['type'];
+    url = json['url'];
+  }
 
   @override
-  Map<String, dynamic> toJson() => _$BannerEntityToJson(this);
+  Map<String, dynamic> toJson() => {
+        "desc": desc,
+        "id": id,
+        "imagePath": imagePath,
+        "isVisible": isVisible,
+        "order": order,
+        "title": title,
+        "type": type,
+        "url": url,
+      };
 
   @override
-  DBBaseModel fromJson(Map<String, dynamic> json) => fromJson(json);
+  BannerEntity fromJson(Map<String, dynamic> json) => BannerEntity.fromJson(json);
 
   @override
   String get primaryKey => 'id';

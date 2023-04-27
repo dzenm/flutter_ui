@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 import '../base/utils/sp_util.dart';
 import '../base/utils/str_util.dart';
@@ -9,7 +10,6 @@ import '../base/utils/str_util.dart';
 /// Created by a0010 on 2023/2/23 14:10
 /// cookie持久化
 class CookieInterceptor extends Interceptor {
-
   CookieInterceptor._privateConstructor();
 
   static final CookieInterceptor _instance = CookieInterceptor._privateConstructor();
@@ -63,7 +63,10 @@ class CookieInterceptor extends Interceptor {
     // 将string类型的cookie转化成list
     List<String> cookies = StrUtil.stringToList(_cookie, pattern: '&');
 
-    // options.headers[HttpHeaders.cookieHeader] = cookies;
-    options.headers[HttpHeaders.authorizationHeader] = cookies;
+    if (kIsWeb) {
+      options.headers[HttpHeaders.authorizationHeader] = cookies;
+    } else {
+      options.headers[HttpHeaders.cookieHeader] = cookies;
+    }
   }
 }

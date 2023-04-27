@@ -50,6 +50,7 @@ class ArticleModel with ChangeNotifier {
     int index = _allArticle.indexWhere((e) => e.id == article.id);
     Log.d('打印请求信息: ${article.toJson()}');
 
+    article.tags = [];
     if (index == -1) {
       _allArticle.add(article);
       _entity.insert(article); // 保存为DB中的article数据
