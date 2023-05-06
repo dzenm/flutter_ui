@@ -4,8 +4,9 @@ import '../../generated/l10n.dart';
 import 'tap_layout.dart';
 
 /// 状态展示
-class StateView extends StatefulWidget {
+class StateView extends StatelessWidget {
   final Widget? child;
+  final Color? color;
   final StateController controller;
   final GestureTapCallback? onTap;
   final Widget? title;
@@ -14,6 +15,7 @@ class StateView extends StatefulWidget {
   const StateView({
     super.key,
     this.child,
+    this.color,
     required this.controller,
     this.onTap,
     this.title,
@@ -21,58 +23,25 @@ class StateView extends StatefulWidget {
   });
 
   @override
-  State<StatefulWidget> createState() => _StateViewState();
-}
-
-class _StateViewState extends State<StateView> {
-  @override
   Widget build(BuildContext context) {
-    return Offstage(
-      offstage: widget.controller.none,
-      child: widget.controller.init && widget.child != null
-          ? widget.child
-          : TapLayout(
-              onTap: widget.controller.load ? null : widget.onTap,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: _stateView(context, widget.controller, 56, widget.title, image: widget.image),
-              ),
-            ),
+    if (controller.none) return Container();
+    if (controller.init && child != null) return child!;
+    return TapLayout(
+      onTap: controller.load ? null : onTap,
+      background: color,
+      child: LinearStateView(
+        controller: controller,
+        size: 56,
+        title: title,
+        image: image,
+        isVertical: false,
+      ),
     );
-  }
-
-  static List<Widget> _stateView(
-    BuildContext context,
-    StateController controller,
-    double size,
-    Widget? title, {
-    Widget? image,
-  }) {
-    return [
-      // 加载进度提示
-      Offstage(
-        offstage: !controller.load,
-        child: SizedBox(
-          width: size,
-          height: size,
-          child: const CircularProgressIndicator(),
-        ),
-      ),
-      // 加载不成功的图片展示
-      Offstage(
-        offstage: !(!controller.more && (controller.empty || controller.failed)), // 只展示空白和失败的时候的图片
-        child: image,
-      ),
-      const SizedBox(width: 16, height: 32),
-      // 加载展示的文本信息
-      title ?? Text(controller.stateText(context)),
-    ];
   }
 }
 
 /// 底部状态展示
-class FooterStateView extends StatefulWidget {
+class FooterStateView extends StatelessWidget {
   final StateController controller;
   final GestureTapCallback? onTap;
   final Widget? title;
@@ -89,31 +58,76 @@ class FooterStateView extends StatefulWidget {
   });
 
   @override
-  State<StatefulWidget> createState() => _FooterViewState();
-}
-
-class _FooterViewState extends State<FooterStateView> {
-  @override
   Widget build(BuildContext context) {
     // 未初始化/为空 不展示底部状态
-    bool offstage = !widget.controller.init || widget.controller.none;
+    bool offstage = !controller.init || controller.none;
     return Offstage(
       offstage: offstage,
       child: TapLayout(
         height: 56,
-        onTap: widget.onTap,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: _StateViewState._stateView(
-            context,
-            widget.controller,
-            widget.loadingProgressSize,
-            widget.title,
-          ),
+        onTap: onTap,
+        child: LinearStateView(
+          controller: controller,
+          size: loadingProgressSize,
+          title: title,
+          isVertical: true,
         ),
       ),
     );
+  }
+}
+
+/// 主要控制的状态展示
+class LinearStateView extends StatelessWidget {
+  final StateController controller;
+  final double size;
+  final Widget? title;
+  final Widget? image;
+  final bool isVertical;
+
+  const LinearStateView({
+    required this.controller,
+    required this.size,
+    this.title,
+    this.image,
+    required this.isVertical,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (isVertical) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: _buildStateView(context),
+      );
+    }
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: _buildStateView(context),
+    );
+  }
+
+  List<Widget> _buildStateView(BuildContext context) {
+    List<Widget> widgets = [];
+    // 加载进度提示
+    if (controller.load) {
+      widgets.add(SizedBox(
+        width: size,
+        height: size,
+        child: const CircularProgressIndicator(),
+      ));
+    }
+    // 加载不成功的图片展示，只展示空白和失败的时候的图片
+    if (!controller.more && (controller.empty || controller.failed) && image != null) {
+      widgets.add(image!);
+    }
+    // 图片和文本之间的间距
+    widgets.add(const SizedBox(width: 16, height: 32));
+    // 加载展示的文本信息
+    widgets.add(title ?? Text(controller.stateText(context)));
+    return widgets;
   }
 }
 

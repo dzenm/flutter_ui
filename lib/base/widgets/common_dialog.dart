@@ -12,7 +12,6 @@ import 'will_pop_view.dart';
 typedef ItemClickCallback = void Function(int index);
 
 class CommonDialog {
-
   static void init(BuildContext? context) {
     _context = context;
   }
@@ -198,6 +197,7 @@ class CommonDialog {
     TextStyle? negativeStyle,
     GestureTapCallback? onPositiveTap,
     GestureTapCallback? onNegativeTap,
+    bool singleButton = false,
   }) async {
     return await showDialog(
       context: context,
@@ -211,7 +211,7 @@ class CommonDialog {
                 ? const SizedBox(width: 0, height: 36)
                 : Flexible(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
+                      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
                       child: content,
                     ),
                   ),
@@ -222,6 +222,7 @@ class CommonDialog {
               negativeStyle: negativeStyle,
               onPositiveTap: onPositiveTap,
               onNegativeTap: onNegativeTap,
+              singleButton: singleButton,
             )
           ]),
         );
@@ -323,7 +324,9 @@ class CupertinoDialogButton extends StatelessWidget {
   final GestureTapCallback? onPositiveTap;
   final GestureTapCallback? onNegativeTap;
 
-  const CupertinoDialogButton({
+  final bool singleButton;
+
+  CupertinoDialogButton({
     super.key,
     this.onPositiveTap,
     this.onNegativeTap,
@@ -331,6 +334,7 @@ class CupertinoDialogButton extends StatelessWidget {
     this.negativeStyle,
     this.positiveText,
     this.negativeText,
+    this.singleButton = false,
   });
 
   @override
@@ -342,26 +346,25 @@ class CupertinoDialogButton extends StatelessWidget {
           Expanded(
             child: TapLayout(
               height: 45.0,
-              isRipple: false,
               onTap: () {
                 Navigator.of(context).pop();
                 if (onNegativeTap != null) onNegativeTap!();
               },
-              child: Text(negativeText ?? S.of(context).cancel, style: negativeStyle ?? const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+              child: Text(negativeText ?? '取消', style: negativeStyle),
             ),
           ),
-          Container(color: const Color(0xFFBABABA), height: 45.0, width: 0.5),
-          Expanded(
-            child: TapLayout(
-              height: 45.0,
-              isRipple: false,
-              onTap: () {
-                Navigator.of(context).pop();
-                if (onPositiveTap != null) onPositiveTap!();
-              },
-              child: Text(positiveText ?? S.of(context).confirm, style: positiveStyle ?? const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+          if (singleButton) Container(height: 45.0, width: 0.5, color: Color(0xffbababa)),
+          if (singleButton)
+            Expanded(
+              child: TapLayout(
+                height: 45.0,
+                onTap: () {
+                  Navigator.of(context).pop();
+                  if (onPositiveTap != null) onPositiveTap!();
+                },
+                child: Text(positiveText ?? '确定', style: positiveStyle),
+              ),
             ),
-          ),
         ])
       ],
     );
