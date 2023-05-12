@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/pages/routers.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base/log/log.dart';
-import '../../../base/res/local_model.dart';
 import '../../../base/res/app_theme.dart';
-import '../../../base/utils/route_manager.dart';
+import '../../../base/res/local_model.dart';
+import '../../../base/route/route_manager.dart';
 import '../../../base/utils/device_util.dart';
 import '../../../base/widgets/single_text_layout.dart';
 import '../../../base/widgets/tap_layout.dart';
@@ -14,15 +15,8 @@ import '../../../entities/user_entity.dart';
 import '../../../generated/l10n.dart';
 import '../../../http/http_manager.dart';
 import '../../../models/user_model.dart';
-import '../../study/setting_page/setting_page.dart';
-import '../../study/study_page.dart';
-import 'article/article_page.dart';
-import 'coin/coin_page.dart';
-import 'collect/collect_page.dart';
 import 'me_model.dart';
-import 'medicine_page/medicine_page.dart';
-import 'rank/rank_page.dart';
-import 'view_info_page.dart';
+import 'medicine/medicine_page.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56
@@ -160,7 +154,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => RouteManager.push(context, CollectPage()),
+        onTap: () => Navigator.pushNamed(context, Routers.collect),
         child: SingleTextLayout(
           icon: Icons.collections,
           title: S.of(context).collect,
@@ -170,7 +164,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => RouteManager.push(context, CoinPage()),
+        onTap: () => Navigator.pushNamed(context, Routers.coin),
         child: SingleTextLayout(
           icon: Icons.money,
           title: S.of(context).coin,
@@ -180,7 +174,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => RouteManager.push(context, RankPage()),
+        onTap: () => Navigator.pushNamed(context, Routers.rank),
         child: SingleTextLayout(
           icon: Icons.money,
           title: '积分排行榜',
@@ -190,7 +184,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => RouteManager.push(context, ArticlePage()),
+        onTap: () => Navigator.pushNamed(context, Routers.article),
         child: SingleTextLayout(
           icon: Icons.article,
           title: '分享的文章',
@@ -200,7 +194,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => RouteManager.push(context, StudyPage()),
+        onTap: () => Navigator.pushNamed(context, Routers.study.study),
         child: SingleTextLayout(
           icon: Icons.real_estate_agent_sharp,
           title: '学习主页',
@@ -210,7 +204,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => RouteManager.push(context, ViewInfoPage()),
+        onTap: () => Navigator.pushNamed(context, Routers.viewInfo),
         child: SingleTextLayout(
           icon: Icons.supervised_user_circle_sharp,
           title: '我的资料',
@@ -221,7 +215,7 @@ class _MePageState extends State<MePage> {
         height: 50.0,
         borderRadius: BorderRadius.only(bottomLeft: Radius.circular(5), bottomRight: Radius.circular(5)),
         padding: EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => RouteManager.push(context, SettingPage()),
+        onTap: () => Navigator.pushNamed(context, Routers.setting),
         child: SingleTextLayout(
           icon: Icons.settings,
           title: S.of(context).setting,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/utils/route_manager.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:image_picker/image_picker.dart';
@@ -80,6 +79,6 @@ class _QRPageState extends State<QRPage> {
 
   void _getResult(String result) {
     CommonDialog.showToast(result);
-    RouteManager.pop(context);
+    Navigator.pop(context);
   }
 }

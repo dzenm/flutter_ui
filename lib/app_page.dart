@@ -2,13 +2,15 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:provider/provider.dart';
 
 import 'application.dart';
 import 'base/log/build_config.dart';
-import 'base/res/local_model.dart';
 import 'base/res/app_theme.dart';
+import 'base/res/local_model.dart';
+import 'base/route/app_router.dart';
+import 'pages/routers.dart';
+import 'base/widgets/common_dialog.dart';
 import 'base/widgets/keyboard/keyboard_root.dart';
 import 'base/widgets/will_pop_view.dart';
 import 'generated/l10n.dart';
@@ -44,6 +46,8 @@ class AppPage extends StatelessWidget {
     // Provider
     // Keyboard
     // 返回键监听
+    // 初始化需要用到context的地方，在创建MaterialApp之前
+    _useContextBeforeBuild(context);
     return _buildProviderApp(
       child: _buildMaterialApp(
         child: KeyboardRootWidget(
@@ -53,8 +57,13 @@ class AppPage extends StatelessWidget {
     );
   }
 
-  /// 初始化需要用到context的地方
+  /// 初始化需要用到context的地方，在创建MaterialApp之前
   void _useContextBeforeBuild(BuildContext context) {
+    Routers.init();
+  }
+
+  /// 初始化需要用到context的地方，在创建MaterialApp之后
+  void _useContextAfterBuild(BuildContext context) {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     CommonDialog.init(context); // 初始化需要context，在这里注册
   }
@@ -86,8 +95,8 @@ class AppPage extends StatelessWidget {
   /// 全局设置（主题、语言、屏幕适配、路由设置）
   Widget _buildMaterialApp({Widget? child}) {
     return Consumer<LocalModel>(builder: (context, local, widget) {
-      // 初始化需要用到context的地方
-      Future.delayed(Duration.zero, () => _useContextBeforeBuild(Application().context));
+      // 初始化需要用到context的地方，在创建MaterialApp之后
+      Future.delayed(Duration.zero, () => _useContextAfterBuild(Application().context));
       // Page必须放在MaterialApp中运行
       AppTheme? theme = local.appTheme;
       return MaterialApp(
@@ -126,7 +135,8 @@ class AppPage extends StatelessWidget {
           Locale("zh"),
         ],
         // 初始路由
-        initialRoute: '/',
+        initialRoute: Routers.root,
+        onGenerateRoute: AppRouter().generator,
         builder: (context, child) {
           final botToastBuilder = BotToastInit();
           Widget toastWidget = botToastBuilder(context, child);

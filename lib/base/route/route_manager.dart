@@ -99,19 +99,110 @@ class RouteManager {
     return "$registerPath?$result";
   }
 
-  static PageRoute createMaterialRoute(Widget page, {Object? args}) {
+  static PageRoute createMaterialRoute(Widget child, {Object? args}) {
     return MaterialPageRoute(
-      builder: (BuildContext context) => page,
-      settings: RouteSettings(name: page.toStringShort(), arguments: args),
+      builder: (BuildContext context) => child,
+      settings: RouteSettings(name: child.toStringShort(), arguments: args),
     );
   }
 
-  static PageRoute createCupertinoRoute(Widget page, {Object? args}) {
+  static PageRoute createCupertinoRoute(Widget child, {Object? args}) {
     return CupertinoPageRoute(
-      builder: (BuildContext context) => page,
-      settings: RouteSettings(name: page.toStringShort(), arguments: args),
+      builder: (BuildContext context) => child,
+      settings: RouteSettings(name: child.toStringShort(), arguments: args),
     );
   }
 
   static void log(String text) => _logPrint == null ? null : _logPrint!(text, tag: 'RouteManager');
+}
+
+/// 自定义页面跳转动画
+class CustomRoute extends PageRouteBuilder {
+  final Widget child;
+  final PageTransition transition;
+
+  CustomRoute({
+    required this.child,
+    this.transition = PageTransition.fade,
+  }) : super(
+          transitionDuration: Duration(seconds: 1), // 设置过度时间
+          pageBuilder: (
+            // 上下文和动画
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+          ) {
+            return child;
+          },
+          transitionsBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) {
+            switch (transition) {
+              case PageTransition.fade:
+                // 渐变效果
+                return FadeTransition(
+                  // 从0开始到1
+                  opacity: Tween(begin: 0.0, end: 1.0).animate(
+                    CurvedAnimation(
+                      parent: animation, // 传入设置的动画
+                      curve: Curves.fastOutSlowIn, // 设置效果，快进漫出   这里有很多内置的效果
+                    ),
+                  ),
+                  child: child,
+                );
+              case PageTransition.scale:
+                // 缩放动画效果
+                return ScaleTransition(
+                  scale: Tween(begin: 0.0, end: 1.0).animate(
+                    CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.fastOutSlowIn,
+                    ),
+                  ),
+                  child: child,
+                );
+              case PageTransition.rotation:
+                // 旋转加缩放动画效果
+                return RotationTransition(
+                  turns: Tween(begin: 0.0, end: 1.0).animate(
+                    CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.fastOutSlowIn,
+                    ),
+                  ),
+                  child: ScaleTransition(
+                    scale: Tween(begin: 0.0, end: 1.0).animate(
+                      CurvedAnimation(
+                        parent: animation,
+                        curve: Curves.fastOutSlowIn,
+                      ),
+                    ),
+                    child: child,
+                  ),
+                );
+              case PageTransition.slide:
+                // 左右滑动动画效果
+                return SlideTransition(
+                  // 设置滑动的 X,Y 轴
+                  position: Tween<Offset>(begin: Offset(-1.0, 0.0), end: Offset(0.0, 0.0)).animate(
+                    CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.fastOutSlowIn,
+                    ),
+                  ),
+                  child: child,
+                );
+            }
+          },
+        );
+}
+
+enum PageTransition {
+  fade,
+  slide,
+  rotation,
+  scale,
 }

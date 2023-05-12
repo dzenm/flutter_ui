@@ -1,26 +1,26 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/http/https_client.dart';
-import 'package:flutter_ui/base/log/log.dart';
-import 'package:flutter_ui/base/res/app_theme.dart';
-import 'package:flutter_ui/base/res/assets.dart';
-import 'package:flutter_ui/base/res/local_model.dart';
-import 'package:flutter_ui/base/utils/route_manager.dart';
-import 'package:flutter_ui/base/utils/sp_util.dart';
-import 'package:flutter_ui/base/widgets/common_dialog.dart';
-import 'package:flutter_ui/base/widgets/common_widget.dart';
-import 'package:flutter_ui/base/widgets/single_text_layout.dart';
-import 'package:flutter_ui/base/widgets/tap_layout.dart';
-import 'package:flutter_ui/entities/user_entity.dart';
-import 'package:flutter_ui/models/provider_manager.dart';
-import 'package:flutter_ui/models/user_model.dart';
-import 'package:flutter_ui/pages/common/preview_photo_page.dart';
-import 'package:flutter_ui/pages/login/login_page.dart';
+import 'package:flutter_ui/http/http_manager.dart';
 import 'package:provider/provider.dart';
 
-import '../../../generated/l10n.dart';
-import '../study_model.dart';
+import '../../../../base/http/https_client.dart';
+import '../../../../base/log/log.dart';
+import '../../../../base/res/app_theme.dart';
+import '../../../../base/res/assets.dart';
+import '../../../../base/res/local_model.dart';
+import '../../../../base/route/route_manager.dart';
+import '../../../../base/utils/sp_util.dart';
+import '../../../../base/widgets/common_dialog.dart';
+import '../../../../base/widgets/common_widget.dart';
+import '../../../../base/widgets/single_text_layout.dart';
+import '../../../../base/widgets/tap_layout.dart';
+import '../../../../entities/user_entity.dart';
+import '../../../../generated/l10n.dart';
+import '../../../../models/provider_manager.dart';
+import '../../../../models/user_model.dart';
+import '../../../common/preview_photo_page.dart';
+import '../../../study/study_model.dart';
 
 /// 设置页面
 class SettingPage extends StatefulWidget {
@@ -226,7 +226,7 @@ class _SettingPageState extends State<SettingPage> {
               TapLayout(
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: _logout,
+                onTap: () => HttpManager().logout(),
                 child: SingleTextLayout(title: S.of(context).logout, isShowForward: true),
               ),
               TapLayout(
@@ -273,7 +273,7 @@ class _SettingPageState extends State<SettingPage> {
                   onTap: () {
                     context.read<LocalModel>().setThemeMode(key);
                     CommonDialog.showToast('修改成功');
-                    RouteManager.pop(context);
+                    Navigator.pop(context);
                   },
                   child: Container(
                     width: 40,
@@ -303,7 +303,7 @@ class _SettingPageState extends State<SettingPage> {
               onPressed: () {
                 context.read<LocalModel>().setLocale(value);
                 CommonDialog.showToast('修改成功');
-                RouteManager.pop(context);
+                Navigator.pop(context);
               },
             );
           }).toList(),
@@ -319,13 +319,5 @@ class _SettingPageState extends State<SettingPage> {
       return S.of(context).english;
     }
     return S.of(context).followSystem;
-  }
-
-  void _logout() {
-    HttpsClient.instance.request(apiServices.logout(), success: (data) {
-      SpUtil.clearUser();
-      ProviderManager.clear(context);
-      RouteManager.push(context, LoginPage(), clearStack: true);
-    });
   }
 }

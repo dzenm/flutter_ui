@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_ui/application.dart';
 import 'package:flutter_ui/base/http/https_client.dart';
 import 'package:flutter_ui/base/http/page_entity.dart';
 import 'package:flutter_ui/entities/article_entity.dart';
@@ -10,6 +12,10 @@ import 'package:flutter_ui/entities/navi_entity.dart';
 import 'package:flutter_ui/entities/tree_entity.dart';
 import 'package:flutter_ui/entities/website_entity.dart';
 import 'package:flutter_ui/http/api_services.dart';
+import 'package:flutter_ui/pages/routers.dart';
+
+import '../base/utils/sp_util.dart';
+import '../models/provider_manager.dart';
 
 ///
 /// Created by a0010 on 2022/10/25 13:11
@@ -286,6 +292,14 @@ class HttpManager {
       if (failed != null) {
         failed(error);
       }
+    });
+  }
+
+  Future<void> logout() async {
+    await HttpsClient.instance.request(apiServices.logout(), success: (data) {
+      SpUtil.clearUser();
+      ProviderManager.clear(Application().context);
+      Navigator.popAndPushNamed(Application().context, Routers.login);
     });
   }
 }

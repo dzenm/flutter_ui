@@ -2,24 +2,23 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:extended_text_field/extended_text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/log/log.dart';
-import 'package:flutter_ui/base/res/assets.dart';
-import 'package:flutter_ui/base/utils/route_manager.dart';
-import 'package:flutter_ui/base/widgets/badge_view.dart';
-import 'package:flutter_ui/base/widgets/common_dialog.dart';
-import 'package:flutter_ui/base/widgets/common_widget.dart';
-import 'package:flutter_ui/base/widgets/extend_text/my_special_text_span_builder.dart';
-import 'package:flutter_ui/base/widgets/keyboard/custom_keyword_board.dart';
-import 'package:flutter_ui/base/widgets/keyboard/keyboard_media_query.dart';
-import 'package:flutter_ui/base/widgets/menu_Item.dart';
-import 'package:flutter_ui/base/widgets/single_edit_layout.dart';
-import 'package:flutter_ui/base/widgets/single_text_layout.dart';
-import 'package:flutter_ui/base/widgets/slide_verify_view.dart';
-import 'package:flutter_ui/base/widgets/tap_layout.dart';
-import 'package:flutter_ui/base/widgets/will_pop_view.dart';
-import 'package:flutter_ui/pages/study/setting_page/setting_page.dart';
 
+import '../../../base/log/log.dart';
+import '../../../base/res/assets.dart';
+import '../../../base/widgets/badge_view.dart';
+import '../../../base/widgets/common_dialog.dart';
+import '../../../base/widgets/common_widget.dart';
+import '../../../base/widgets/extend_text/my_special_text_span_builder.dart';
+import '../../../base/widgets/keyboard/custom_keyword_board.dart';
+import '../../../base/widgets/keyboard/keyboard_media_query.dart';
+import '../../../base/widgets/menu_Item.dart';
+import '../../../base/widgets/single_edit_layout.dart';
+import '../../../base/widgets/single_text_layout.dart';
+import '../../../base/widgets/slide_verify_view.dart';
+import '../../../base/widgets/tap_layout.dart';
+import '../../../base/widgets/will_pop_view.dart';
 import '../../../generated/l10n.dart';
+import '../../routers.dart';
 
 /// 文本展示测试页面
 class TextPage extends StatefulWidget {
@@ -181,7 +180,7 @@ class _TextPageState extends State<TextPage> {
                     TapLayout(
                       height: 50.0,
                       padding: EdgeInsets.symmetric(horizontal: 16),
-                      onTap: () => RouteManager.push(context, SettingPage()),
+                      onTap: () => Navigator.pushNamed(context, Routers.setting),
                       child: SingleTextLayout(title: S.of(context).setting, isShowForward: true, prefix: BadgeView(count: 10)),
                     ),
                     TapLayout(
@@ -256,7 +255,7 @@ class _TextPageState extends State<TextPage> {
                       height: 60.0,
                       padding: EdgeInsets.symmetric(horizontal: 16),
                       onTap: () => CommonDialog.showListBottomSheet(context, data, (int index) {
-                        RouteManager.pop(context);
+                        Navigator.pop(context);
                       }),
                       child: SingleTextLayout(title: '登陆记录', summary: '查看最近所有的登录记录', badgeCount: 0, isShowForward: true),
                     ),
