@@ -40,13 +40,20 @@ class _FloatNavigationPageState extends State<FloatNavigationPage> {
       body: Center(
         child: SizedBox(
           key: targetKey,
-          width: 100,
-          height: 42,
+          width: 120,
+          height: 48,
           child: MaterialButton(
             onPressed: () {
-              CustomPopupWindow.showList(context, targetKey, ['全选', '复制', '粘贴'], onItemTap: (index) {
-                CommonDialog.showToast('第${index + 1}个Item');
-              });
+              CustomPopupWindow.showList(
+                context,
+                targetKey: targetKey,
+                titles: ['全选', '复制', '粘贴', '测试'],
+                direction: PopupDirection.topRight,
+                offset: Offset(0, -8),
+                onItemTap: (index) {
+                  CommonDialog.showToast('第${index + 1}个Item');
+                },
+              );
             },
             color: Colors.amberAccent,
             child: Text(

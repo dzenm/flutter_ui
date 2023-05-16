@@ -39,63 +39,63 @@ class StudyRouter extends IRouter {
 
   @override
   void initRouter(AppRouter router) {
-    router.define(study, pagerBuilder: () {
+    router.define(study, pagerBuilder: (context) {
       return StudyPage();
     });
 
-    router.define(city, pagerBuilder: () {
+    router.define(city, pagerBuilder: (context) {
       return CitySelectedPage();
     });
 
-    router.define(convert, pagerBuilder: () {
+    router.define(convert, pagerBuilder: (context) {
       return ConvertPage();
     });
 
-    router.define(dragList, pagerBuilder: () {
+    router.define(dragList, pagerBuilder: (context) {
       return DragListPage();
     });
 
-    router.define(floatNavigation, pagerBuilder: () {
+    router.define(floatNavigation, pagerBuilder: (context) {
       return FloatNavigationPage();
     });
 
-    router.define(http, pagerBuilder: () {
+    router.define(http, pagerBuilder: (context) {
       return HTTPListPage();
     });
 
-    router.define(image, pagerBuilder: () {
+    router.define(image, pagerBuilder: (context) {
       return ImageEditorPage();
     });
 
-    router.define(keyword, pagerBuilder: () {
+    router.define(keyword, pagerBuilder: (context) {
       return KeywordBoardPage();
     });
 
-    router.define(list, pagerBuilder: () {
+    router.define(list, pagerBuilder: (context) {
       return ListPage();
     });
 
-    router.define(loadImage, pagerBuilder: () {
+    router.define(loadImage, pagerBuilder: (context) {
       return LoadImagePage();
     });
 
-    router.define(qr, pagerBuilder: () {
+    router.define(qr, pagerBuilder: (context) {
       return QRPage();
     });
 
-    router.define(routers, pagerBuilder: () {
+    router.define(routers, pagerBuilder: (context) {
       return RouterPage();
     });
 
-    router.define(state, pagerBuilder: () {
+    router.define(state, pagerBuilder: (context) {
       return StatePage();
     });
 
-    router.define(text, pagerBuilder: () {
+    router.define(text, pagerBuilder: (context) {
       return TextPage();
     });
 
-    router.define(video, pagerBuilder: () {
+    router.define(video, pagerBuilder: (context) {
       return VideoPage();
     });
   }

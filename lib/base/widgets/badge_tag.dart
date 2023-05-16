@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
 
 // 徽章标签
-class BadgeView extends StatefulWidget {
+class BadgeTag extends StatelessWidget {
   final int count; // 展示的数量, 为0时展示小红点不展示数量，为-1时不展示
   final Color color; // 背景颜色
 
-  const BadgeView({
+  const BadgeTag({
     super.key,
     this.count = -1,
     this.color = Colors.red,
   });
 
   @override
-  State<StatefulWidget> createState() => _BadgeViewState();
-}
-
-class _BadgeViewState extends State<BadgeView> {
-  @override
   Widget build(BuildContext context) {
-    int count = widget.count;
     // 当数量小于0，不展示
     if (count < 0) {
       return Container();
@@ -50,7 +44,7 @@ class _BadgeViewState extends State<BadgeView> {
       decoration: BoxDecoration(
         shape: shape,
         borderRadius: borderRadius,
-        color: widget.color,
+        color: color,
       ),
       child: Text(text, style: const TextStyle(color: Colors.white, fontSize: 8)),
     );

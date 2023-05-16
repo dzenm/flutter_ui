@@ -166,6 +166,7 @@ flutter:
     - assets/files/
     - assets/fonts/
     - assets/images/
+    - assets/images/ic_triangle.png
     - assets/videos/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

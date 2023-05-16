@@ -6,12 +6,13 @@ import 'package:flutter/material.dart';
 import '../utils/native_channel_util.dart';
 
 /// 监听返回键的动作
-class WillPopView extends StatefulWidget {
+@immutable
+class WillPopView extends StatelessWidget {
   final Widget child; //如果对返回键进行监听，必须放在最顶层
   final BackBehavior behavior; //返回键的行为
   final WillPopCallback? onWillPop;
 
-  const WillPopView({
+  WillPopView({
     super.key,
     required this.child,
     this.behavior = BackBehavior.custom,
@@ -63,35 +64,29 @@ class WillPopView extends StatefulWidget {
     return !isChanged; // 根据isChanged的值决定调用系统返回键的处理
   }
 
-  @override
-  State<StatefulWidget> createState() => _WillPopViewState();
-}
-
-class _WillPopViewState extends State<WillPopView> {
-  DateTime? _lastTap; //上次点击时间
+  DateTime _lastTap = DateTime.now(); //上次点击时间
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      child: WillPopScope(onWillPop: _onWillPop, child: widget.child),
+      child: WillPopScope(onWillPop: _onWillPop, child: child),
     );
   }
 
   // 返回键事件，返回true，执行Navigator.pop(context)，返回false，则不执行
   Future<bool> _onWillPop() async {
-    switch (widget.behavior) {
+    switch (behavior) {
       case BackBehavior.custom:
-        return widget.onWillPop == null ? Future.value(true) : widget.onWillPop!();
+        return onWillPop == null ? Future.value(true) : onWillPop!();
       case BackBehavior.background:
         await NativeChannelUtil.onBackToDesktop();
         return false;
       case BackBehavior.doubleTap:
         DateTime now = DateTime.now();
-        if (_lastTap == null || now.difference(_lastTap!) > const Duration(seconds: 2)) {
+        if (now.difference(_lastTap) > const Duration(seconds: 2)) {
           // 两次点击间隔超过2秒则重新计时
           _lastTap = now;
           BotToast.showText(
-            /// TODO 国际化
             text: '再次点击退出程序',
             onlyOne: true,
             textStyle: const TextStyle(fontSize: 14, color: Colors.white),

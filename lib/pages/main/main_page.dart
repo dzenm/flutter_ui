@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../base/log/log.dart';
 import '../../base/naughty/naughty.dart';
-import '../../base/widgets/badge_view.dart';
+import '../../base/widgets/badge_tag.dart';
 import '../../base/widgets/keep_alive_wrapper.dart';
 import '../../base/widgets/tap_layout.dart';
 import 'home_page/home_page.dart';
@@ -198,7 +198,7 @@ class _BottomNavigationBarItemViewState extends State<BottomNavigationBarItemVie
 
     return Selector<MainModel, int>(
       builder: (context, value, widget) {
-        return BadgeView(count: value);
+        return BadgeTag(count: value);
       },
       selector: (context, model) => model.badge(widget.index),
     );

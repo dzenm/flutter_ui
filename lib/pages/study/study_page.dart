@@ -7,9 +7,8 @@ import '../../base/log/log.dart';
 import '../../base/res/app_theme.dart';
 import '../../base/res/local_model.dart';
 import '../../base/widgets/common_dialog.dart';
-import '../../base/widgets/custom_popup_dialog.dart';
+import '../../base/widgets/custom_popup_window.dart';
 import '../../base/widgets/picker/picker_view.dart';
-import '../../base/widgets/picker_list_view.dart';
 import '../../generated/l10n.dart';
 
 ///
@@ -21,7 +20,8 @@ class StudyPage extends StatefulWidget {
 }
 
 class _StudyPageState extends State<StudyPage> {
-  int _selectedIndex = 0;
+  String _selectedValue = '';
+  GlobalKey _targetKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -172,35 +172,20 @@ class _StudyPageState extends State<StudyPage> {
       ),
       SizedBox(height: 8),
       // 自定义PopupView控件
-      CustomPopupView(
-        direction: PopupDirection.top,
-        margin: const EdgeInsets.symmetric(horizontal: 12),
-        width: 160,
-        elevation: 5,
-        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 5.0, offset: Offset(2.0, 2.0))],
-        barrierColor: const Color(0x01FFFFFF),
-        child: Container(
-          height: 36,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: theme.appbarColor,
-            borderRadius: BorderRadius.all(Radius.circular(2)),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [Text('展示Dialog', style: TextStyle(color: theme.white, fontWeight: FontWeight.w600))],
-          ),
+      MaterialButton(
+        key: _targetKey,
+        child: _text('PopupWindow测试'),
+        textColor: Colors.white,
+        color: theme.appbarColor,
+        onPressed: () => CustomPopupWindow.showList(
+          context,
+          targetKey: _targetKey,
+          titles: ['全选', '复制', '粘贴', '测试'],
+          direction: PopupDirection.bottomLeft,
+          onItemTap: (index) {
+            CommonDialog.showToast('第${index + 1}个Item');
+          },
         ),
-        popupDialogBuilder: (context) {
-          return Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(4)),
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            child: Text('PopupWindow 测试'),
-          );
-        },
       ),
       SizedBox(height: 8),
       // PickerListView控件
@@ -208,13 +193,13 @@ class _StudyPageState extends State<StudyPage> {
         child: _text('PickerListView控件'),
         textColor: Colors.white,
         color: theme.appbarColor,
-        onPressed: () => PickerListView.showList(
-          context: context,
+        onPressed: () => PickerView.showList(
+          context,
           list: ['测试一', '测试二', '测试三', '测试四', '测试五'],
-          defaultIndex: _selectedIndex,
-          onSelectedChanged: (index) {
-            _selectedIndex = index;
-            Log.i('选中的回调: $_selectedIndex');
+          initialItem: _selectedValue,
+          onChanged: (value) {
+            _selectedValue = value;
+            Log.i('选中的回调: $_selectedValue');
           },
         ),
       ),

@@ -28,7 +28,7 @@ class TapLayout extends StatefulWidget {
   final int delay;
 
   const TapLayout({
-    super.key,
+    Key? key,
     required this.child,
     this.onTap,
     this.onDoubleTap,
@@ -48,7 +48,7 @@ class TapLayout extends StatefulWidget {
     this.isCircle = false,
     this.isRipple = true,
     this.delay = 150,
-  });
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _TapLayoutState();

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'badge_view.dart';
+import 'badge_tag.dart';
 
 /// 单行文本布局
-class SingleTextLayout extends StatefulWidget {
+class SingleTextLayout extends StatelessWidget {
   final IconData? icon; // 标题图标
   final Color? iconColor; // 标题图标颜色
 
@@ -51,11 +51,6 @@ class SingleTextLayout extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _SingleTextLayoutState();
-}
-
-class _SingleTextLayoutState extends State<SingleTextLayout> {
-  @override
   Widget build(BuildContext context) {
     return Row(children: [
       Expanded(
@@ -66,51 +61,51 @@ class _SingleTextLayoutState extends State<SingleTextLayout> {
             Row(children: [
               // 标题图标
               _titleIcon(),
-              if ((widget.icon != null || widget.image != null) && widget.title != null) SizedBox(width: 8),
+              if ((icon != null || image != null) && title != null) SizedBox(width: 8),
               // 标题文本
               _titleText(),
-              if (widget.prefix != null) SizedBox(width: 8),
+              if (prefix != null) SizedBox(width: 8),
               // 前缀布局
-              Offstage(offstage: widget.prefix == null, child: widget.prefix),
-              if ((widget.icon != null || widget.title != null) && !widget.isDense) SizedBox(width: 16),
+              Offstage(offstage: prefix == null, child: prefix),
+              if ((icon != null || title != null) && !isDense) SizedBox(width: 16),
               // 文本内容
               _contentText(),
-              if (widget.text != null) SizedBox(width: 8),
+              if (text != null) SizedBox(width: 8),
             ]),
-            if (widget.summary != null) SizedBox(height: 8),
+            if (summary != null) SizedBox(height: 8),
             // 概要文本
             _summaryText(),
           ],
         ),
       ),
       // 后缀布局
-      Offstage(offstage: widget.suffix == null, child: widget.suffix),
-      if (widget.suffix != null && widget.isShowForward) SizedBox(width: 8),
+      Offstage(offstage: suffix == null, child: suffix),
+      if (suffix != null && isShowForward) SizedBox(width: 8),
       // 小红点
-      Offstage(offstage: widget.badgeCount < 0, child: BadgeView(count: widget.badgeCount)),
+      Offstage(offstage: badgeCount < 0, child: BadgeTag(count: badgeCount)),
       // 下一级图标
       _forwardIcon(),
     ]);
   }
 
   Widget _titleIcon() {
-    Widget? child = widget.icon != null ? Icon(widget.icon, color: widget.iconColor, size: widget.fontSize + 4) : widget.image ?? Container();
+    Widget? child = icon != null ? Icon(icon, color: iconColor, size: fontSize + 4) : image ?? Container();
     return Offstage(
-      offstage: widget.icon == null && widget.image == null,
+      offstage: icon == null && image == null,
       child: child,
     );
   }
 
   Widget _titleText() {
     return Offstage(
-      offstage: widget.title == null,
+      offstage: title == null,
       child: Text(
-        widget.title ?? '',
+        title ?? '',
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: TextStyle(
-          fontSize: widget.fontSize,
-          color: widget.titleColor,
+          fontSize: fontSize,
+          color: titleColor,
         ),
       ),
     );
@@ -118,18 +113,18 @@ class _SingleTextLayoutState extends State<SingleTextLayout> {
 
   Widget _contentText() {
     // Expanded用于解决文本过长导致布局溢出的错误
-    return widget.text == null
+    return text == null
         ? Expanded(child: SizedBox(width: 0))
         : Expanded(
             flex: 1,
             child: Text(
-              widget.text ?? '',
-              textAlign: widget.isTextLeft ? TextAlign.left : TextAlign.right,
+              text ?? '',
+              textAlign: isTextLeft ? TextAlign.left : TextAlign.right,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                fontSize: widget.fontSize,
-                color: widget.textColor,
+                fontSize: fontSize,
+                color: textColor,
               ),
             ),
           );
@@ -137,14 +132,14 @@ class _SingleTextLayoutState extends State<SingleTextLayout> {
 
   Widget _summaryText() {
     return Offstage(
-      offstage: widget.summary == null,
+      offstage: summary == null,
       child: Text(
-        widget.summary ?? '',
+        summary ?? '',
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: TextStyle(
-          fontSize: widget.fontSize - 2,
-          color: widget.summaryColor,
+          fontSize: fontSize - 2,
+          color: summaryColor,
         ),
       ),
     );
@@ -152,8 +147,8 @@ class _SingleTextLayoutState extends State<SingleTextLayout> {
 
   Widget _forwardIcon() {
     return Offstage(
-      offstage: !widget.isShowForward,
-      child: Icon(Icons.keyboard_arrow_right, color: widget.forwardColor, size: 16),
+      offstage: !isShowForward,
+      child: Icon(Icons.keyboard_arrow_right, color: forwardColor, size: 16),
     );
   }
 }

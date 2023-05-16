@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../../base/log/log.dart';
 import '../../../base/res/assets.dart';
-import '../../../base/widgets/badge_view.dart';
+import '../../../base/widgets/badge_tag.dart';
 import '../../../base/widgets/common_dialog.dart';
 import '../../../base/widgets/common_widget.dart';
 import '../../../base/widgets/extend_text/my_special_text_span_builder.dart';
@@ -181,7 +181,7 @@ class _TextPageState extends State<TextPage> {
                       height: 50.0,
                       padding: EdgeInsets.symmetric(horizontal: 16),
                       onTap: () => Navigator.pushNamed(context, Routers.setting),
-                      child: SingleTextLayout(title: S.of(context).setting, isShowForward: true, prefix: BadgeView(count: 10)),
+                      child: SingleTextLayout(title: S.of(context).setting, isShowForward: true, prefix: BadgeTag(count: 10)),
                     ),
                     TapLayout(
                       height: 50.0,

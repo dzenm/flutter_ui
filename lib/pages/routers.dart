@@ -48,40 +48,40 @@ class Routers extends IRouter {
 
   @override
   void initRouter(AppRouter router) {
-    router.define(login, pagerBuilder: () {
+    router.define(login, pagerBuilder: (context) {
       return LoginPage();
     });
-    router.define(register, pagerBuilder: () {
+    router.define(register, pagerBuilder: (context) {
       return RegisterPage();
     });
-    router.define(main, pagerBuilder: () {
+    router.define(main, pagerBuilder: (context) {
       return MainPage();
     });
-    router.define(example, pagerBuilder: () {
+    router.define(example, pagerBuilder: (context) {
       return ExamplePage();
     });
-    router.define(article, pagerBuilder: () {
+    router.define(article, pagerBuilder: (context) {
       return ArticlePage();
     });
-    router.define(coin, pagerBuilder: () {
+    router.define(coin, pagerBuilder: (context) {
       return CoinPage();
     });
-    router.define(collect, pagerBuilder: () {
+    router.define(collect, pagerBuilder: (context) {
       return CollectPage();
     });
-    router.define(medicine, pagerBuilder: () {
+    router.define(medicine, pagerBuilder: (context) {
       return MedicinePage(medicineName: '');
     });
-    router.define(rank, pagerBuilder: () {
+    router.define(rank, pagerBuilder: (context) {
       return RankPage();
     });
-    router.define(setting, pagerBuilder: () {
+    router.define(setting, pagerBuilder: (context) {
       return SettingPage();
     });
-    router.define(editInfo, pagerBuilder: () {
+    router.define(editInfo, pagerBuilder: (context) {
       return EditInfoPage();
     });
-    router.define(viewInfo, pagerBuilder: () {
+    router.define(viewInfo, pagerBuilder: (context) {
       return ViewInfoPage();
     });
   }

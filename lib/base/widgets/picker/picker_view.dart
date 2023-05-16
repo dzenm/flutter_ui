@@ -7,6 +7,8 @@ import 'location.dart';
 
 typedef ValueChanged = void Function(List<dynamic> results);
 
+typedef ItemBuilder = Widget Function(BuildContext context, int index);
+
 const double _kPickerHeight = 220.0;
 const double _kPickerTitleHeight = 44.0;
 const double _kPickerItemHeight = 40.0;
@@ -15,6 +17,7 @@ const double _kPickerItemHeight = 40.0;
 class PickerView<T> extends StatefulWidget {
   final List<PickerItem> list;
   final List<String>? initialItem;
+  final ItemBuilder? itemBuilder;
   final PickerPopupRoute route;
   final ValueChanged? onChanged;
 
@@ -22,6 +25,7 @@ class PickerView<T> extends StatefulWidget {
     Key? key,
     required this.list,
     this.initialItem,
+    this.itemBuilder,
     required this.route,
     this.onChanged,
   });
@@ -89,6 +93,34 @@ class PickerView<T> extends StatefulWidget {
     return provinceList;
   }
 
+  /// 列表下拉选择器
+  /// PickerView.showList(
+  ///   context,
+  ///   list: ['测试一', '测试二', '测试三', '测试四', '测试五'],
+  ///   initialItem: _selectedValue,
+  ///   onChanged: (value) {
+  ///     _selectedValue = value;
+  ///     Log.i('选中的回调: $_selectedValue');
+  ///   },
+  /// )
+  static void showList(
+    BuildContext context, {
+    required List<String> list,
+    String? initialItem,
+    void Function(String item)? onChanged,
+  }) {
+    Navigator.push(
+      context,
+      PickerPopupRoute<String>(
+        list: list.map((item) => PickerItem(name: item)).toList(),
+        initialItem: initialItem == null ? null : [initialItem],
+        onChanged: onChanged == null ? null : (list) => onChanged(list[0]),
+        theme: Theme.of(context),
+        barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      ),
+    );
+  }
+
   @override
   State<StatefulWidget> createState() => _PickerViewState();
 }
@@ -113,9 +145,12 @@ class _PickerViewState<T> extends State<PickerView> {
     List<PickerItem>? data = _list;
     List<String> names = widget.initialItem ?? [];
     for (int i = 0; i < names.length; i++) {
-      if (data == null) continue;
+      // 数据为空不处理
+      if (data == null || data.isEmpty) continue;
+      // 在当前数据列表找到对应数据的下标
       for (int j = 0; j < data!.length; j++) {
-        if (names[i] != data[j].name) continue;
+        // 如果数据不相等/数据为空的情况默认为选中第一个
+        if (names[i] != data[j].name || names[i].isEmpty) continue;
         _selectedIndexes[i] = j;
         data = data[j].list;
         break;
@@ -237,6 +272,15 @@ class _PickerViewState<T> extends State<PickerView> {
   /// [index] 单个列表所在的下标
   /// [list] 单个选择列表布局对应展示的数据列表
   Widget _buildSinglePickerView(int index, List<PickerItem> list) {
+    List<Widget> widgets = [];
+    for (int i = 0; i < list.length; i++) {
+      PickerItem item = list[i];
+      if (widget.itemBuilder == null) {
+        widgets.add(_buildPickerItemView(item.name ?? ''));
+      } else {
+        widget.itemBuilder!(context, i);
+      }
+    }
     return Expanded(
       child: Container(
         padding: EdgeInsets.all(8.0),
@@ -247,7 +291,7 @@ class _PickerViewState<T> extends State<PickerView> {
           scrollController: _controllers[index],
           itemExtent: _kPickerItemHeight,
           onSelectedItemChanged: (int i) => _update(index, list, i),
-          children: list.map((item) => _buildPickerItemView(item.name ?? '')).toList(),
+          children: widgets,
         ),
       ),
     );
@@ -298,6 +342,7 @@ class _PickerViewState<T> extends State<PickerView> {
 class PickerPopupRoute<T> extends PopupRoute<T> {
   final List<PickerItem> list;
   final List<String>? initialItem;
+  final ItemBuilder? itemBuilder;
   final ValueChanged? onChanged;
   final ThemeData theme;
   final bool dismissible;
@@ -306,6 +351,7 @@ class PickerPopupRoute<T> extends PopupRoute<T> {
     this.dismissible = true,
     required this.list,
     this.initialItem,
+    this.itemBuilder,
     this.onChanged,
     required this.theme,
     required this.barrierLabel,
@@ -332,6 +378,7 @@ class PickerPopupRoute<T> extends PopupRoute<T> {
         list: list,
         route: this,
         initialItem: initialItem,
+        itemBuilder: itemBuilder,
         onChanged: onChanged,
       ),
     );
@@ -546,21 +593,4 @@ class _BottomPickerLayout extends SingleChildLayoutDelegate {
 //     days = tmpDays;
 //   }
 // }
-//
-// class SinglePicker {
-//   static void showPicker(
-//     BuildContext context, {
-//     required String selectItem,
-//     required List<String> selectList,
-//     required DateChangedCallback onConfirm,
-//   }) {
-//     Navigator.push(
-//         context,
-//         BasePickerRoute<String>(
-//           list: [],
-//           onConfirm: onConfirm,
-//           theme: Theme.of(context /*, shadowThemeOnly: true*/),
-//           barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-//         ));
-//   }
-// }
+
