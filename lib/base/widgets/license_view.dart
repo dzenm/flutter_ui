@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import 'keyboard/custom_keyword_board.dart';
 import 'tap_layout.dart';
 
-typedef DefaultView = Widget Function(int index);
-
 class LicenseView extends StatefulWidget {
   final List<String> list;
   final LicenseController controller;
-  final DefaultView? defaultView;
+  final IndexedWidgetBuilder? defaultView;
 
   const LicenseView({
     super.key,

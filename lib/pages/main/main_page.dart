@@ -53,10 +53,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     Log.i('initState', tag: _tag);
 
     WidgetsBinding.instance.addObserver(this);
-    Future.delayed(Duration.zero, () => _getData());
   }
-
-  Future<void> _getData() async {}
 
   /// 在build之前使用context，并且只能创建一次
   void _useContextBeforeBuild(BuildContext context) {
@@ -131,7 +128,9 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
 }
 
 /// 底部Item布局
-class BottomNavigationBarItemView extends StatefulWidget {
+class BottomNavigationBarItemView extends StatelessWidget {
+  static const String _tag = 'BottomNavigationBarItemView';
+
   final int index;
   final PageController controller;
   final GestureTapCallback? onTap;
@@ -141,13 +140,6 @@ class BottomNavigationBarItemView extends StatefulWidget {
     required this.controller,
     this.onTap,
   });
-
-  @override
-  State<StatefulWidget> createState() => _BottomNavigationBarItemViewState();
-}
-
-class _BottomNavigationBarItemViewState extends State<BottomNavigationBarItemView> {
-  static const String _tag = 'BottomNavigationBarItemView';
 
   @override
   Widget build(BuildContext context) {
@@ -162,14 +154,13 @@ class _BottomNavigationBarItemViewState extends State<BottomNavigationBarItemVie
         height: height,
         foreground: Colors.transparent,
         onTap: () {
-          int index = widget.index;
           bool isSelected = context.read<MainModel>().isSelected(index);
           if (!isSelected) {
             context.read<MainModel>().selectedIndex = index;
-            widget.controller.jumpToPage(index);
-            // widget.controller.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
+            controller.jumpToPage(index);
+            // controller.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
           }
-          if (widget.onTap != null) widget.onTap!();
+          if (onTap != null) onTap!();
         },
         child: Container(
           width: width,
@@ -200,7 +191,7 @@ class _BottomNavigationBarItemViewState extends State<BottomNavigationBarItemVie
       builder: (context, value, widget) {
         return BadgeTag(count: value);
       },
-      selector: (context, model) => model.badge(widget.index),
+      selector: (context, model) => model.badge(index),
     );
   }
 
@@ -218,24 +209,24 @@ class _BottomNavigationBarItemViewState extends State<BottomNavigationBarItemVie
   }
 
   Widget _buildIcon(int selectIndex) {
-    bool isSelected = selectIndex == widget.index; // 是否是选中的索引
+    bool isSelected = selectIndex == index; // 是否是选中的索引
     return Selector<MainModel, IconData>(
       builder: (context, value, widget) {
         Color color = isSelected ? Colors.blue : Colors.grey.shade500;
         return Icon(value, color: color, size: 20);
       },
-      selector: (context, model) => model.icon(widget.index),
+      selector: (context, model) => model.icon(index),
     );
   }
 
   Widget _buildTitle(int selectIndex) {
-    bool isSelected = selectIndex == widget.index; // 是否是选中的索引
+    bool isSelected = selectIndex == index; // 是否是选中的索引
     return Selector<MainModel, String>(
       builder: (context, value, widget) {
         Color color = isSelected ? Colors.blue : Colors.grey.shade500;
         return Text(value, style: TextStyle(fontSize: 10, color: color));
       },
-      selector: (context, model) => model.title(widget.index),
+      selector: (context, model) => model.title(index),
     );
   }
 }

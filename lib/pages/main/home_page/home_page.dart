@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/base/widgets/common_bar.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base/log/log.dart';
@@ -8,6 +7,7 @@ import '../../../base/res/assets.dart';
 import '../../../base/route/route_manager.dart';
 import '../../../base/utils/str_util.dart';
 import '../../../base/widgets/banner_view.dart';
+import '../../../base/widgets/common_bar.dart';
 import '../../../base/widgets/common_dialog.dart';
 import '../../../base/widgets/refresh_list_view.dart';
 import '../../../base/widgets/state_view.dart';
@@ -18,7 +18,7 @@ import '../../../http/http_manager.dart';
 import '../../../models/article_model.dart';
 import '../../../models/banner_model.dart';
 import '../../../models/website_model.dart';
-import '../../../base/widgets/custom_icon.dart';
+import '../../../base/res/custom_icon.dart';
 import '../../common/web_view_page.dart';
 
 ///
@@ -80,19 +80,24 @@ class _HomePageState extends State<HomePage> {
         systemOverlayStyle: SystemUiOverlayStyle.light,
         toolbarHeight: 0,
       ),
-      body: !_init
-          ? Container()
-          : Container(
-              child: Column(
-                children: [
-                  Text(title!),
-                  Banner(),
-                  Expanded(
-                    child: ArticleListView(controller: _controller, refresh: _onRefresh),
-                  ),
-                ],
-              ),
-            ),
+      body: _buildBody(),
+    );
+  }
+
+  Widget _buildBody() {
+    if (!_init) {
+      return Container();
+    }
+    return Container(
+      child: Column(
+        children: [
+          Text(title!),
+          Banner(),
+          Expanded(
+            child: ArticleListView(controller: _controller, refresh: _onRefresh),
+          ),
+        ],
+      ),
     );
   }
 

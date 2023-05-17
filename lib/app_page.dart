@@ -9,7 +9,6 @@ import 'base/log/build_config.dart';
 import 'base/res/app_theme.dart';
 import 'base/res/local_model.dart';
 import 'base/route/app_router.dart';
-import 'pages/routers.dart';
 import 'base/widgets/common_dialog.dart';
 import 'base/widgets/keyboard/keyboard_root.dart';
 import 'base/widgets/will_pop_view.dart';
@@ -23,7 +22,7 @@ import 'pages/main/main_model.dart';
 import 'pages/main/me_page/me_model.dart';
 import 'pages/main/nav_page/nav_model.dart';
 import 'pages/my/my_page.dart';
-import 'pages/my/study_util.dart';
+import 'pages/routers.dart';
 import 'pages/study/study_model.dart';
 
 ///
@@ -154,7 +153,6 @@ class AppPage extends StatelessWidget {
   }
 
   Widget _buildEasyApp() {
-    StudyUtil.main();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(

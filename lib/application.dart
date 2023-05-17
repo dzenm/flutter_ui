@@ -18,7 +18,6 @@ import 'base/widgets/common_dialog.dart';
 import 'base/widgets/keyboard/mocks/mock_binding.dart';
 import 'base/widgets/keyboard/number_keyboard.dart';
 import 'http/cookie_interceptor.dart';
-import 'math_util.dart';
 import 'pages/login/login_page.dart';
 import 'pages/main/main_page.dart';
 
@@ -84,9 +83,6 @@ class Application {
 
     log('初始化 NativeChannelUtil');
     NativeChannelUtil.init(logPrint: Log.d);
-
-    log('初始化 算法测试Main方法');
-    MathUtil.main();
 
     NumberKeyboard.register();
 

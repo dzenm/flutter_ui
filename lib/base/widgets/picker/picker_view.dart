@@ -5,10 +5,6 @@ import 'package:flutter/material.dart';
 
 import 'location.dart';
 
-typedef ValueChanged = void Function(List<dynamic> results);
-
-typedef ItemBuilder = Widget Function(BuildContext context, int index);
-
 const double _kPickerHeight = 220.0;
 const double _kPickerTitleHeight = 44.0;
 const double _kPickerItemHeight = 40.0;
@@ -17,9 +13,9 @@ const double _kPickerItemHeight = 40.0;
 class PickerView<T> extends StatefulWidget {
   final List<PickerItem> list;
   final List<String>? initialItem;
-  final ItemBuilder? itemBuilder;
+  final IndexedWidgetBuilder? itemBuilder;
   final PickerPopupRoute route;
-  final ValueChanged? onChanged;
+  final ValueChanged<List<dynamic>>? onChanged;
 
   PickerView({
     Key? key,
@@ -41,7 +37,7 @@ class PickerView<T> extends StatefulWidget {
   static void showLocation(
     BuildContext context, {
     List<String>? initialItem,
-    ValueChanged? onChanged,
+    ValueChanged<List<dynamic>>? onChanged,
     int maxColumn = 3,
   }) {
     List<PickerItem> list = _getLocation(maxColumn);
@@ -107,7 +103,7 @@ class PickerView<T> extends StatefulWidget {
     BuildContext context, {
     required List<String> list,
     String? initialItem,
-    void Function(String item)? onChanged,
+    ValueChanged<String>? onChanged,
   }) {
     Navigator.push(
       context,
@@ -342,8 +338,8 @@ class _PickerViewState<T> extends State<PickerView> {
 class PickerPopupRoute<T> extends PopupRoute<T> {
   final List<PickerItem> list;
   final List<String>? initialItem;
-  final ItemBuilder? itemBuilder;
-  final ValueChanged? onChanged;
+  final IndexedWidgetBuilder? itemBuilder;
+  final ValueChanged<List<dynamic>>? onChanged;
   final ThemeData theme;
   final bool dismissible;
 
@@ -593,4 +589,3 @@ class _BottomPickerLayout extends SingleChildLayoutDelegate {
 //     days = tmpDays;
 //   }
 // }
-

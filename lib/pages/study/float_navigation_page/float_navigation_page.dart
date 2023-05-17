@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/base/widgets/check_box.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/float_navigation_bar.dart';
 
@@ -37,31 +38,41 @@ class _FloatNavigationPageState extends State<FloatNavigationPage> {
         title: Text('导航栏', style: TextStyle(color: Colors.white)),
         centerTitle: true,
       ),
-      body: Center(
-        child: SizedBox(
-          key: targetKey,
-          width: 120,
-          height: 48,
-          child: MaterialButton(
-            onPressed: () {
-              CustomPopupWindow.showList(
-                context,
-                targetKey: targetKey,
-                titles: ['全选', '复制', '粘贴', '测试'],
-                direction: PopupDirection.topRight,
-                offset: Offset(0, -8),
-                onItemTap: (index) {
-                  CommonDialog.showToast('第${index + 1}个Item');
-                },
-              );
+      body: Container(
+        padding: EdgeInsets.all(16),
+        child: Column(children: [
+          CheckGroup(
+            list: ['左上', '正左', '左下'],
+            padding: EdgeInsets.symmetric(vertical: 16),
+            onChanged: (index) {
+
             },
-            color: Colors.amberAccent,
-            child: Text(
-              "Custom",
-              style: TextStyle(color: Colors.white),
+          ),
+          SizedBox(height: 24),
+          SizedBox(
+            key: targetKey,
+            width: 120,
+            height: 48,
+            child: MaterialButton(
+              onPressed: () {
+                CustomPopupWindow.showList(
+                  context,
+                  targetKey: targetKey,
+                  titles: ['全选', '复制', '粘贴', '测试'],
+                  direction: PopupDirection.topRight,
+                  onItemTap: (index) {
+                    CommonDialog.showToast('第${index + 1}个Item');
+                  },
+                );
+              },
+              color: Colors.amberAccent,
+              child: Text(
+                "Custom",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ),
-        ),
+        ]),
       ),
       bottomNavigationBar: FloatNavigationBar(_navs, title: _title),
     );

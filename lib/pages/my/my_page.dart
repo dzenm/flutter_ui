@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'study_util.dart';
+
 class MyPage extends StatefulWidget {
   const MyPage({required this.title});
 
@@ -20,6 +22,12 @@ class MyPage extends StatefulWidget {
 
 class _MyPageState extends State<MyPage> {
   int _counter = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    StudyUtil.main();
+  }
 
   void _incrementCounter() {
     setState(() {

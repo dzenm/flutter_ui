@@ -114,6 +114,7 @@ class CustomPopupWindow extends StatefulWidget {
       targetKey: targetKey,
       direction: direction ?? PopupDirection.bottom,
       offset: offset,
+      arrow: buildArrowView(direction ?? PopupDirection.bottom, color),
       isCollapsed: isCollapsed,
       child: _buildContentView(
         color: color,
@@ -207,10 +208,10 @@ class _PopupWindowState extends State<CustomPopupWindow> {
   GlobalKey _arrowKey = GlobalKey();
 
   /// Popup初始位置，不能展示在屏幕内，所以设置为负数
-  double _left = -100, _top = -100;
+  double _left = -2500, _top = -2500;
 
   /// Popup箭头方向的位置
-  double _arrowLeft = -100, _arrowTop = -100;
+  double _arrowLeft = -2500, _arrowTop = -2500;
 
   /// Popup的大小, 初始化必须为空
   double? _width, _height;
@@ -322,10 +323,17 @@ class _PopupWindowState extends State<CustomPopupWindow> {
   /// 调整位置在水平方向上边的时候
   void _fixTopInHorizontal(bool collapsed, Offset target, Size targetSize, Size popupSize, Size arrowSize) {
     if (collapsed) {
+      // 使Target高度跟Popup高度一致时，箭头位于Target中间
       _height = targetSize.height;
       _arrowTop = target.dy + targetSize.height / 2 - arrowSize.height / 2;
     } else {
-      _arrowTop = target.dy + _arrowOffset.dx;
+      if (popupSize.height >= targetSize.height) {
+        // 如果Popup高度比Target高度大，箭头还是位于Target中间
+        _arrowTop = target.dy + targetSize.height / 2 - arrowSize.height / 2;
+      } else {
+        // 如果Popup高度比Target高度小，箭头根据设置的偏移量(从上往下)决定位置
+        _arrowTop = target.dy + _arrowOffset.dx;
+      }
     }
     _top = target.dy;
   }
@@ -344,12 +352,19 @@ class _PopupWindowState extends State<CustomPopupWindow> {
   /// 调整位置在水平方向下边的时候
   void _fixBottomInHorizontal(bool collapsed, Offset target, Size targetSize, Size popupSize, Size arrowSize) {
     if (collapsed) {
+      // 使Target高度跟Popup高度一致时，箭头位于Target中间
       _top = target.dy;
       _height = targetSize.height;
       _arrowTop = target.dy + targetSize.height / 2 - arrowSize.height / 2;
     } else {
       _top = target.dy + targetSize.height - popupSize.height;
-      _arrowTop = target.dy + targetSize.height - arrowSize.height - _arrowOffset.dx;
+      if (popupSize.height >= targetSize.height) {
+        // 如果Popup高度比Target高度大，箭头还是位于Target中间
+        _arrowTop = target.dy + targetSize.height / 2 - arrowSize.height / 2;
+      } else {
+        // 如果Popup高度比Target高度小，箭头根据设置的偏移量(从下往上)决定位置
+        _arrowTop = target.dy + targetSize.height - arrowSize.height - _arrowOffset.dx;
+      }
     }
   }
 
@@ -364,10 +379,17 @@ class _PopupWindowState extends State<CustomPopupWindow> {
   /// 调整位置在竖直方向左边的时候
   void _fixLeftInVertical(bool collapsed, Offset target, Size targetSize, Size popupSize, Size arrowSize) {
     if (collapsed) {
+      // 使Target高度跟Popup高度一致时，箭头位于Target中间
       _width = targetSize.width;
       _arrowLeft = target.dx + targetSize.width / 2 - arrowSize.width / 2;
     } else {
-      _arrowLeft = target.dx + _arrowOffset.dx;
+      if (popupSize.width > targetSize.width) {
+        // 如果Popup高度比Target高度大，箭头还是位于Target中间
+        _arrowLeft = target.dx + targetSize.width / 2 - arrowSize.width / 2;
+      } else {
+        // 如果Popup高度比Target高度小，箭头根据设置的偏移量(从左往右)决定位置
+        _arrowLeft = target.dx + _arrowOffset.dx;
+      }
     }
     _left = target.dx;
   }
@@ -386,12 +408,19 @@ class _PopupWindowState extends State<CustomPopupWindow> {
   /// 调整位置在竖直方向右边的时候
   void _fixRightInVertical(bool collapsed, Offset target, Size targetSize, Size popupSize, Size arrowSize) {
     if (collapsed) {
+      // 使Target高度跟Popup高度一致时，箭头位于Target中间
       _left = target.dx;
       _width = targetSize.width;
       _arrowLeft = target.dx + targetSize.width / 2 - arrowSize.width / 2;
     } else {
       _left = target.dx + targetSize.width - popupSize.width;
-      _arrowLeft = target.dx + targetSize.width - arrowSize.width - _arrowOffset.dx;
+      if (popupSize.width > targetSize.width) {
+        // 如果Popup高度比Target高度大，箭头还是位于Target中间
+        _arrowLeft = target.dx + targetSize.width / 2 - arrowSize.width / 2;
+      } else {
+        // 如果Popup高度比Target高度小，箭头根据设置的偏移量(从右往左)决定位置
+        _arrowLeft = target.dx + targetSize.width - arrowSize.width - _arrowOffset.dx;
+      }
     }
   }
 
