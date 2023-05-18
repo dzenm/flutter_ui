@@ -1,12 +1,11 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/base/log/build_config.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
 import 'app_page.dart';
 import 'base/db/db_manager.dart';
 import 'base/http/https_client.dart';
+import 'base/log/build_config.dart';
 import 'base/log/handle_error.dart';
 import 'base/log/log.dart';
 import 'base/naughty/http_interceptor.dart';
@@ -23,7 +22,7 @@ import 'pages/main/main_page.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56
-/// 全局的页面
+/// App入口
 class Application {
   /// 私有构造方法
   Application._internal();
@@ -34,10 +33,31 @@ class Application {
 
   GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
+  /// 全局context
   BuildContext get context => navigatorKey.currentContext!;
 
-  /// 初始化
-  void init() async {
+  /// App入口
+  void main() {
+    _init();
+    // 运行flutter时全局异常捕获
+    HandleError().catchFlutterError(() {
+      log('╔══════════════════════════════════════════════════════════════════════════════════════════════════╗');
+      log('║                                                                                                  ║');
+      log('║                                        Start Flutter APP                                         ║');
+      log('║                                                                                                  ║');
+      log('╚══════════════════════════════════════════════════════════════════════════════════════════════════╝');
+      // 让 Flutter 使用 path 策略
+      usePathUrlStrategy();
+      //启动第一个页面(必须使用AppPage作为最顶层页面，包含一些页面初始化相关的信息；_initApp为用户看见的第一个页面，可以自己根据实际情况设置)
+      runMockApp(AppPage(child: _initApp()));
+    }, handleMsg: (message) async {
+      String logFileName = 'crash_${DateTime.now()}.log';
+      await FileUtil.instance.save(logFileName, message, dir: 'crash').then((String? filePath) async {});
+    });
+  }
+
+  // 初始化信息
+  void _init() async {
     log('═══════════════════════════════════════════ 开始初始化 ══════════════════════════════════════════════');
 
     int now = DateTime.now().millisecondsSinceEpoch;
@@ -90,21 +110,6 @@ class Application {
     duration = end - now;
     log('结束: now=$end, duration=$duration');
     log('═══════════════════════════════════════════ 结束初始化 ══════════════════════════════════════════════');
-
-    // 运行flutter时全局异常捕获
-    HandleError().catchFlutterError(() {
-      log('╔══════════════════════════════════════════════════════════════════════════════════════════════════╗');
-      log('║                                                                                                  ║');
-      log('║                                        Start Flutter APP                                         ║');
-      log('║                                                                                                  ║');
-      log('╚══════════════════════════════════════════════════════════════════════════════════════════════════╝');
-      // 让 Flutter 使用 path 策略
-      usePathUrlStrategy();
-      runMockApp(AppPage(child: _initApp()));
-    }, handleMsg: (message) async {
-      String logFileName = 'crash_${DateTime.now()}.log';
-      await FileUtil.instance.save(logFileName, message, dir: 'crash').then((String? filePath) async {});
-    });
   }
 
   /// 初始化阿里云推送

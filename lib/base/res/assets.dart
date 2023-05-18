@@ -1,3 +1,6 @@
+///
+/// Created by a0010 on 2022/3/22 09:38
+/// 获取Assets文件夹的数据
 class Assets {
   static const String imagePath = 'assets/images/';
   static const String videoPath = 'assets/videos/';

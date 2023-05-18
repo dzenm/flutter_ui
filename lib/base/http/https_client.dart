@@ -41,6 +41,7 @@ class HttpsClient {
   factory HttpsClient() => _instance;
 
   final Map<String, ApiServices> _api = {};
+  /// 如果存在多个url的情况，在这里添加，默认使用 [apiServices] ，其他使用 [api] 请求接口
   final List<String> _baseUrls = [
     'https://www.wanandroid.com/',
     'http://api.tianapi.com/',
@@ -140,6 +141,7 @@ class HttpsClient {
     CancelFunc? cancel;
     if (isShowDialog) {
       if (_loading != null) cancel = _loading!();
+      // 优先使用局部的加载提示框
       cancel = loading ?? cancel;
     }
     HttpError? error;

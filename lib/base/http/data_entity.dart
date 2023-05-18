@@ -1,7 +1,6 @@
 ///
 /// Created by a0010 on 2022/3/22 09:38
 /// HTTP返回时最外层数据对应的实体类
-///
 class DataEntity<T> {
   int? errorCode;
   String? errorMsg;

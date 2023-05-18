@@ -6,7 +6,7 @@ import 'build_config.dart';
 
 ///
 /// Created by a0010 on 2022/3/22 09:38
-/// 日志输出
+/// 日志打印
 ///
 class Log {
   Log._internal();

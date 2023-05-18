@@ -4,6 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
+///
+/// Created by a0010 on 2022/9/1 11:56
+/// 文件工具类
 class FileUtil {
   FileUtil._internal();
 

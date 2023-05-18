@@ -152,6 +152,7 @@ class AppPage extends StatelessWidget {
     });
   }
 
+  /// 进入学习页面
   Widget _buildEasyApp() {
     return MaterialApp(
       title: 'Flutter Demo',

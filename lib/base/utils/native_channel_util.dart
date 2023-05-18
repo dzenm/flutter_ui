@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 ///
 /// Created by a0010 on 2022/3/22 09:38
 /// 与原生进行通信的通道
-///
 class NativeChannelUtil {
   static Function? _logPrint;
 

@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import '../utils/sp_util.dart';
 import 'app_theme.dart';
 
+///
+/// Created by a0010 on 2022/3/22 09:38
+/// 本地resource共享的数据
 class LocalModel with ChangeNotifier {
   /// 初始化主题设置
   LocalModel() {
@@ -52,5 +55,4 @@ class LocalModel with ChangeNotifier {
   AppTheme getTheme(AppThemeMode mode) => _appThemes[mode]!;
 
   List<AppThemeMode> get appThemes => _appThemes.keys.toList();
-
 }

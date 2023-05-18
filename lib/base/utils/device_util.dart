@@ -3,7 +3,7 @@ import 'dart:io';
 
 ///
 /// Created by a0010 on 2022/9/1 11:56
-///
+/// 设备工具类
 class DeviceUtil {
   /// 获取内网IP
   static Future<String> getIntranetIP() async {

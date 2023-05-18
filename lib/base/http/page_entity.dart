@@ -1,3 +1,6 @@
+///
+/// Created by a0010 on 2022/3/22 09:38
+/// HTTP返回时分页数据对应的实体类
 class PageEntity<T> {
   int? size;
   int? total;
