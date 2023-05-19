@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../base/widgets/tap_layout.dart';
 import '../../../../entities/coin_entity.dart';
 import '../../../../http/http_manager.dart';
-import '../list_page_state.dart';
+import '../../../common/widgets/list_page_state.dart';
 
 ///
 /// Created by a0010 on 2023/2/23 13:35

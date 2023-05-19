@@ -2,10 +2,10 @@ import 'package:flutter_ui/pages/common/example_page.dart';
 import 'package:flutter_ui/pages/main/me_page/article/article_page.dart';
 import 'package:flutter_ui/pages/main/me_page/coin/coin_page.dart';
 import 'package:flutter_ui/pages/main/me_page/collect/collect_page.dart';
-import 'package:flutter_ui/pages/main/me_page/edit_info_page.dart';
+import 'package:flutter_ui/pages/main/me_page/info/edit_info_page.dart';
 import 'package:flutter_ui/pages/main/me_page/medicine/medicine_page.dart';
 import 'package:flutter_ui/pages/main/me_page/rank/rank_page.dart';
-import 'package:flutter_ui/pages/main/me_page/view_info_page.dart';
+import 'package:flutter_ui/pages/main/me_page/info/view_info_page.dart';
 
 import '../base/route/app_router.dart';
 import 'login/login_page.dart';

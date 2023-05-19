@@ -7,7 +7,7 @@ import 'package:flutter_ui/entities/user_entity.dart';
 import 'package:flutter_ui/models/user_model.dart';
 import 'package:provider/provider.dart';
 
-import '../../../base/widgets/common_bar.dart';
+import '../../../../base/widgets/common_bar.dart';
 
 ///
 /// Created by a0010 on 2023/3/23 09:01
