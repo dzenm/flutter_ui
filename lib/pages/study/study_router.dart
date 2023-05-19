@@ -1,4 +1,3 @@
-import 'package:flutter_ui/pages/study/study_page.dart';
 
 import '../../base/route/app_router.dart';
 import 'city_page/city_page.dart';
@@ -10,9 +9,11 @@ import 'image_editor/image_editor_page.dart';
 import 'keyword_board/keyword_board_page.dart';
 import 'list_page/list_page.dart';
 import 'load_image_page/load_image_page.dart';
+import 'provider_page/provider_page.dart';
 import 'qr_page/qr_page.dart';
 import 'router/router_page.dart';
 import 'state_page/state_page.dart';
+import 'study_page.dart';
 import 'text_page/text_page.dart';
 import 'video_page/video_page.dart';
 
@@ -77,6 +78,10 @@ class StudyRouter extends IRouter {
 
     router.define(loadImage, pagerBuilder: (context) {
       return LoadImagePage();
+    });
+
+    router.define(provider, pagerBuilder: (context) {
+      return ProviderPage();
     });
 
     router.define(qr, pagerBuilder: (context) {
