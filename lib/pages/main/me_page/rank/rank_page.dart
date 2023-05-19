@@ -32,7 +32,6 @@ class _RankPageState extends ListPageState<CoinEntity, RankPage> {
   @override
   Future<void> getData({bool reset = false}) async {
     super.getData(reset: reset);
-    pageIndex = -1;
     await HttpManager.instance.getRankCoinList(
       page: pageIndex,
       isShowDialog: false,
@@ -43,7 +42,7 @@ class _RankPageState extends ListPageState<CoinEntity, RankPage> {
         } else {
           // 加载数据成功，保存数据，下次加载下一页
           data = list;
-          pageIndex = 0;
+          updatePage();
           controller.loadMore();
         }
         if (mounted) setState(() {});

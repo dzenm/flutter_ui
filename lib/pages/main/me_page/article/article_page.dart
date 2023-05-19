@@ -36,7 +36,6 @@ class _ArticlePageState extends ListPageState<ArticleEntity, ArticlePage> {
   @override
   Future<void> getData({bool reset = false}) async {
     super.getData(reset: reset);
-    pageIndex = -1;
     await HttpManager.instance.getPrivateArticleList(
       page: pageIndex,
       isShowDialog: false,
@@ -53,10 +52,10 @@ class _ArticlePageState extends ListPageState<ArticleEntity, ArticlePage> {
         } else {
           // 加载数据成功，保存数据，下次加载下一页
           data = list;
-          pageIndex = 0;
+          updatePage();
           controller.loadMore();
         }
-        setState(() {});
+        if (mounted) setState(() {});
       },
       failed: (error) => setState(() => controller.loadFailed()),
     );

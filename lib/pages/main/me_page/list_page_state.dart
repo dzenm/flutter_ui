@@ -73,6 +73,7 @@ class ListPageState<D extends DBBaseModel, T extends StatefulWidget> extends Sta
   Future<void> getData({bool reset = false}) async {
     if (reset) {
       _list.clear();
+      _pageIndex = 1;
     }
     await Future.delayed(Duration(milliseconds: reset ? 500 : 0));
   }
@@ -89,12 +90,8 @@ class ListPageState<D extends DBBaseModel, T extends StatefulWidget> extends Sta
   int get pageIndex => _pageIndex;
 
   // 更新请求页数下标
-  set pageIndex(int index) {
-    if (index < 0) {
-      _pageIndex = index;
-    } else {
-      ++_pageIndex;
-    }
+  void updatePage() {
+    _pageIndex++;
   }
 
   StateController get controller => _controller;
