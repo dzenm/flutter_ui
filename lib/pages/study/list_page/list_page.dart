@@ -9,6 +9,8 @@ import 'package:flutter_ui/models/article_model.dart';
 import 'package:flutter_ui/pages/common/web_view_page.dart';
 import 'package:provider/provider.dart';
 
+import '../../routers.dart';
+
 /// 刷新和底部加载的列表
 class ListPage extends StatefulWidget {
   @override
@@ -52,7 +54,7 @@ class _ListPageState extends State<ListPage> {
   Widget _buildArticleItem(ArticleEntity article, int index) {
     String title = article.title ?? '';
     return TapLayout(
-      onTap: () => RouteManager.push(context, WebViewPage(title: title, url: article.link ?? '')),
+      onTap: () => Navigator.pushNamed(context, Routers.webView, arguments: {'title': title, 'url': article.link}),
       child: ListTile(
         title: Text(title),
       ),

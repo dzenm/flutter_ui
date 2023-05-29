@@ -2,6 +2,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:extended_text_field/extended_text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/pages/main/me_page/me_router.dart';
 
 import '../../../base/log/log.dart';
 import '../../../base/res/assets.dart';
@@ -18,7 +19,6 @@ import '../../../base/widgets/slide_verify_view.dart';
 import '../../../base/widgets/tap_layout.dart';
 import '../../../base/widgets/will_pop_view.dart';
 import '../../../generated/l10n.dart';
-import '../../routers.dart';
 
 /// 文本展示测试页面
 class TextPage extends StatefulWidget {
@@ -180,7 +180,7 @@ class _TextPageState extends State<TextPage> {
                     TapLayout(
                       height: 50.0,
                       padding: EdgeInsets.symmetric(horizontal: 16),
-                      onTap: () => Navigator.pushNamed(context, Routers.setting),
+                      onTap: () => Navigator.pushNamed(context, MeRouter.setting),
                       child: SingleTextLayout(title: S.of(context).setting, isShowForward: true, prefix: BadgeTag(count: 10)),
                     ),
                     TapLayout(

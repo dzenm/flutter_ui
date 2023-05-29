@@ -7,7 +7,7 @@ import '../../../../base/widgets/common_bar.dart';
 import '../../../../base/widgets/single_text_layout.dart';
 import '../../../../base/widgets/tap_layout.dart';
 import '../../../../models/user_model.dart';
-import '../../../routers.dart';
+import '../me_router.dart';
 
 ///
 /// Created by a0010 on 2023/3/23 09:01
@@ -41,7 +41,7 @@ class _ViewInfoPageState extends State<ViewInfoPage> {
           CommonBar(title: '我的信息', centerTitle: true, actions: [
             IconButton(
               icon: Icon(Icons.edit_sharp),
-              onPressed: () => Navigator.pushNamed(context, Routers.editInfo),
+              onPressed: () => Navigator.pushNamed(context, MeRouter.editInfo),
             ),
           ]),
           Selector<UserModel, String>(

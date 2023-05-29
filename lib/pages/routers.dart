@@ -1,17 +1,12 @@
-import 'package:flutter_ui/pages/common/example_page.dart';
-import 'package:flutter_ui/pages/main/me_page/article/article_page.dart';
-import 'package:flutter_ui/pages/main/me_page/coin/coin_page.dart';
-import 'package:flutter_ui/pages/main/me_page/collect/collect_page.dart';
-import 'package:flutter_ui/pages/main/me_page/info/edit_info_page.dart';
-import 'package:flutter_ui/pages/main/me_page/medicine/medicine_page.dart';
-import 'package:flutter_ui/pages/main/me_page/rank/rank_page.dart';
-import 'package:flutter_ui/pages/main/me_page/info/view_info_page.dart';
+import 'package:flutter/material.dart';
 
 import '../base/route/app_router.dart';
+import 'common/example_page.dart';
+import 'common/web_view_page.dart';
 import 'login/login_page.dart';
 import 'login/register_page.dart';
 import 'main/main_page.dart';
-import 'main/me_page/setting_page/setting_page.dart';
+import 'main/me_page/me_router.dart';
 import 'study/study_router.dart';
 
 ///
@@ -23,6 +18,7 @@ class Routers extends IRouter {
   static void init() {
     _routers.add(Routers());
     _routers.add(StudyRouter());
+    _routers.add(MeRouter());
 
     for (var router in _routers) {
       router.initRouter(AppRouter());
@@ -34,17 +30,10 @@ class Routers extends IRouter {
   static final String register = '/register';
   static final String main = '/main';
   static final String example = '/example';
-
-  static final String article = '/me/article';
-  static final String coin = '/me/coin';
-  static final String collect = '/me/collect';
-  static final String medicine = '/me/medicine';
-  static final String rank = '/me/rank';
-  static final String setting = '/me/setting';
-  static final String editInfo = '/me/editInfo';
-  static final String viewInfo = '/me/viewInfo';
+  static final String webView = '/webView';
 
   static final StudyRouter study = StudyRouter();
+  static final MeRouter me = MeRouter();
 
   @override
   void initRouter(AppRouter router) {
@@ -60,29 +49,11 @@ class Routers extends IRouter {
     router.define(example, pagerBuilder: (context) {
       return ExamplePage();
     });
-    router.define(article, pagerBuilder: (context) {
-      return ArticlePage();
-    });
-    router.define(coin, pagerBuilder: (context) {
-      return CoinPage();
-    });
-    router.define(collect, pagerBuilder: (context) {
-      return CollectPage();
-    });
-    router.define(medicine, pagerBuilder: (context) {
-      return MedicinePage(medicineName: '');
-    });
-    router.define(rank, pagerBuilder: (context) {
-      return RankPage();
-    });
-    router.define(setting, pagerBuilder: (context) {
-      return SettingPage();
-    });
-    router.define(editInfo, pagerBuilder: (context) {
-      return EditInfoPage();
-    });
-    router.define(viewInfo, pagerBuilder: (context) {
-      return ViewInfoPage();
+    router.define(webView, pagerBuilder: (context) {
+      dynamic args = ModalRoute.of(context)?.settings.arguments;
+      String title = args['title'] ?? '';
+      String url = args['url'] ?? '';
+      return WebViewPage(title: title, url: url);
     });
   }
 }

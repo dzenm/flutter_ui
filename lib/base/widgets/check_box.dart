@@ -51,27 +51,43 @@ class _CheckBoxState extends State<CheckBox> {
 }
 
 /// CheckGroup(
-///   list: ['左上', '正左', '左下'],
+///   list: ['左上', '正左', '左下', '上左', '正上', '上右', '右上', '正右', '右下', '下右', '正下', '下左'],
 ///   padding: EdgeInsets.symmetric(vertical: 16),
+///   childAspectRatio: 2.2,
+///   crossAxisCount: 3,
+///   crossAxisSpacing: 2,
 ///   onChanged: (index) {
+///     PopupDirection.values.forEach((direct) {
+///       if (direct.index == index) {
+///         _direction = direct;
+///       }
+///     });
 ///   },
-/// ),
+/// )
 /// 单选组，配合 [CheckItem] 使用
 class CheckGroup extends StatefulWidget {
-  final bool isVertical;
   final List<String> list;
+  final int initialValue;
   final Color? color;
   final Color? selectColor;
   final Color? unselectColor;
+  final double childAspectRatio;
+  final int crossAxisCount;
+  final double crossAxisSpacing;
+  final double mainAxisSpacing;
   final EdgeInsetsGeometry? padding;
   final ValueChanged<int>? onChanged;
 
   CheckGroup({
     required this.list,
-    this.isVertical = false,
+    this.initialValue = 0,
     this.color,
     this.selectColor,
     this.unselectColor,
+    this.childAspectRatio = 1,
+    this.crossAxisCount = 1,
+    this.crossAxisSpacing = 0.0,
+    this.mainAxisSpacing = 0.0,
     this.padding,
     this.onChanged,
   });
@@ -82,18 +98,24 @@ class CheckGroup extends StatefulWidget {
 
 class _CheckGroupState extends State<CheckGroup> {
   int _selectedIndex = 0;
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialValue;
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.isVertical) {
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: _buildItems(),
-      );
-    }
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+    return GridView.count(
+      shrinkWrap: true,
+      // 宽/高比
+      childAspectRatio: widget.childAspectRatio,
+      //设置一行的个数
+      crossAxisCount: widget.crossAxisCount,
+      //设置列间距
+      crossAxisSpacing: widget.crossAxisSpacing,
+      //设置行间距
+      mainAxisSpacing: widget.mainAxisSpacing,
       children: _buildItems(),
     );
   }
@@ -102,19 +124,26 @@ class _CheckGroupState extends State<CheckGroup> {
     List<Widget> widgets = [];
     List<String> list = widget.list;
     for (int index = 0; index < list.length; index++) {
-      widgets.add(CheckItem(
-        text: list[index],
-        index: index,
-        selectedIndex: _selectedIndex,
-        color: widget.color,
-        selectColor: widget.selectColor,
-        unselectColor: widget.unselectColor,
-        padding: widget.padding,
-        onChanged: (value) {
-          _selectedIndex = value;
-          setState(() {});
-        },
-      ));
+      widgets.add(
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Container(
+            child: CheckItem(
+              text: list[index],
+              index: index,
+              selectedIndex: _selectedIndex,
+              color: widget.color,
+              selectColor: widget.selectColor,
+              unselectColor: widget.unselectColor,
+              padding: widget.padding,
+              onChanged: (value) {
+                _selectedIndex = value;
+                if (widget.onChanged != null) widget.onChanged!(value);
+                setState(() {});
+              },
+            ),
+          ),
+        ]),
+      );
     }
     return widgets;
   }

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/pages/routers.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base/log/log.dart';
 import '../../../base/res/assets.dart';
-import '../../../base/route/route_manager.dart';
+import '../../../base/res/custom_icon.dart';
 import '../../../base/utils/str_util.dart';
 import '../../../base/widgets/banner_view.dart';
 import '../../../base/widgets/common_bar.dart';
@@ -18,8 +19,6 @@ import '../../../http/http_manager.dart';
 import '../../../models/article_model.dart';
 import '../../../models/banner_model.dart';
 import '../../../models/website_model.dart';
-import '../../../base/res/custom_icon.dart';
-import '../../common/web_view_page.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56
@@ -256,7 +255,7 @@ class ArticleItemView extends StatelessWidget {
       onTap: () {
         ArticleEntity? article = context.read<ArticleModel>().getArticle(index);
         if (article == null) return;
-        RouteManager.push(context, WebViewPage(title: article.title ?? '', url: article.link ?? ''));
+        Navigator.pushNamed(context, Routers.webView, arguments: {'title': article.title, 'url': article.link});
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -307,7 +306,7 @@ class ArticleItemView extends StatelessWidget {
                           // String page = url.substring(start, end);
                           ArticleEntity? article = context.read<ArticleModel>().getArticle(index);
                           if (article == null) return;
-                          RouteManager.push(context, WebViewPage(title: val.name ?? '', url: val.url ?? ''));
+                          Navigator.pushNamed(context, Routers.webView, arguments: {'title': val.name, 'url': val.url});
                         },
                       );
                     },

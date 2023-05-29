@@ -3,12 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base/log/log.dart';
-import '../../../base/res/local_model.dart';
 import '../../../base/res/app_theme.dart';
+import '../../../base/res/local_model.dart';
 import '../../../base/route/route_manager.dart';
 import '../../../base/widgets/common_bar.dart';
 import '../../../http/http_manager.dart';
 import '../../../models/article_model.dart';
+import '../../routers.dart';
 import 'edit_article_page.dart';
 import 'nav_model.dart';
 

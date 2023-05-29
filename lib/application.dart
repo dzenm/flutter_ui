@@ -37,8 +37,8 @@ class Application {
   BuildContext get context => navigatorKey.currentContext!;
 
   /// App入口
-  void main() {
-    _init();
+  void main() async {
+    await _init();
     // 运行flutter时全局异常捕获
     HandleError().catchFlutterError(() {
       log('╔══════════════════════════════════════════════════════════════════════════════════════════════════╗');
@@ -57,7 +57,7 @@ class Application {
   }
 
   // 初始化信息
-  void _init() async {
+  Future<void> _init() async {
     log('═══════════════════════════════════════════ 开始初始化 ══════════════════════════════════════════════');
 
     int now = DateTime.now().millisecondsSinceEpoch;

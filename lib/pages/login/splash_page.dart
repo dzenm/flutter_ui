@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../base/route/route_manager.dart';
-import '../main/main_page.dart';
+import '../routers.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -14,7 +13,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () => RouteManager.push(context, MainPage()));
+    Future.delayed(Duration.zero, () => Navigator.popAndPushNamed(context, Routers.main));
   }
 
   @override

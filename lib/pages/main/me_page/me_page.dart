@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/pages/main/me_page/me_router.dart';
 import 'package:flutter_ui/pages/routers.dart';
 import 'package:provider/provider.dart';
 
@@ -154,7 +155,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => Navigator.pushNamed(context, Routers.collect),
+        onTap: () => Navigator.pushNamed(context, MeRouter.collect),
         child: SingleTextLayout(
           icon: Icons.collections,
           title: S.of(context).collect,
@@ -164,7 +165,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => Navigator.pushNamed(context, Routers.coin),
+        onTap: () => Navigator.pushNamed(context, MeRouter.coin),
         child: SingleTextLayout(
           icon: Icons.money,
           title: S.of(context).coin,
@@ -174,7 +175,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => Navigator.pushNamed(context, Routers.rank),
+        onTap: () => Navigator.pushNamed(context, MeRouter.rank),
         child: SingleTextLayout(
           icon: Icons.money,
           title: '积分排行榜',
@@ -184,7 +185,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => Navigator.pushNamed(context, Routers.article),
+        onTap: () => Navigator.pushNamed(context, MeRouter.article),
         child: SingleTextLayout(
           icon: Icons.article,
           title: '分享的文章',
@@ -204,7 +205,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => Navigator.pushNamed(context, Routers.viewInfo),
+        onTap: () => Navigator.pushNamed(context, MeRouter.viewInfo),
         child: SingleTextLayout(
           icon: Icons.supervised_user_circle_sharp,
           title: '我的资料',
@@ -215,7 +216,7 @@ class _MePageState extends State<MePage> {
         height: 50.0,
         borderRadius: BorderRadius.only(bottomLeft: Radius.circular(5), bottomRight: Radius.circular(5)),
         padding: EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => Navigator.pushNamed(context, Routers.setting),
+        onTap: () => Navigator.pushNamed(context, MeRouter.setting),
         child: SingleTextLayout(
           icon: Icons.settings,
           title: S.of(context).setting,
