@@ -109,7 +109,7 @@ class CustomPopupWindow extends StatefulWidget {
     required List<String> titles,
     EdgeInsetsGeometry? padding,
     double radius = 8,
-    Color? color,
+    Color color = const Color(0xff4c4c4c),
     Color? textColor,
     ItemTapCallback? onItemTap,
   }) async {
@@ -142,7 +142,7 @@ class CustomPopupWindow extends StatefulWidget {
   static Widget _buildContentView({required Widget child, Color? color, double? radius}) {
     return Container(
       decoration: BoxDecoration(
-        color: color ?? Color(0xff4c4c4c),
+        color: color,
         borderRadius: BorderRadius.all(Radius.circular(radius ?? 0)),
         boxShadow: [
           BoxShadow(
@@ -182,7 +182,7 @@ class CustomPopupWindow extends StatefulWidget {
   }
 
   /// Popup箭头布局
-  static Widget buildArrowView(PopupDirection direction, Color? color) {
+  static Widget buildArrowView(PopupDirection direction, Color color) {
     bool isTop = [PopupDirection.topLeft, PopupDirection.top, PopupDirection.topRight].contains(direction);
     bool isBottom = [PopupDirection.bottomLeft, PopupDirection.bottom, PopupDirection.bottomRight].contains(direction);
     bool isLeft = [PopupDirection.leftTop, PopupDirection.left, PopupDirection.leftBottom].contains(direction);
@@ -199,7 +199,7 @@ class CustomPopupWindow extends StatefulWidget {
       height: isVertical ? 6 : 12,
       child: CustomPaint(
         painter: TrianglePainter(
-          color: color ?? Color(0xff4c4c4c),
+          color: color,
           direction: myDirection,
         ),
       ),

@@ -79,6 +79,7 @@ class _FloatNavigationPageState extends State<FloatNavigationPage> {
               direction: _direction,
               isCollapsed: _isCollapsed,
               isPin: _isPin,
+              color: Colors.grey,
               offset: _enabledOffset ? Offset(_offsetX, _offsetY) : null,
               arrowOffset: _enabledArrowOffset ? Offset(_offsetArrowX, _offsetArrowY) : null,
               titles: ['全选', '复制', '粘贴', '测试'],
