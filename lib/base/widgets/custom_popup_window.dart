@@ -198,7 +198,7 @@ class CustomPopupWindow extends StatefulWidget {
       width: isVertical ? 12 : 6,
       height: isVertical ? 6 : 12,
       child: CustomPaint(
-        painter: TrianglePainter(
+        painter: _TrianglePainter(
           color: color,
           direction: myDirection,
         ),
@@ -210,6 +210,7 @@ class CustomPopupWindow extends StatefulWidget {
   State<StatefulWidget> createState() => _PopupWindowState();
 }
 
+/// PopupWindow的布局
 class _PopupWindowState extends State<CustomPopupWindow> {
   GlobalKey _popupKey = GlobalKey();
   GlobalKey _arrowKey = GlobalKey();
@@ -323,9 +324,12 @@ class _PopupWindowState extends State<CustomPopupWindow> {
   /// 调整水平方向的位置，正值为右边，负值为左边
   void _fixHorizontal(Offset target, double width, double arrowWidth) {
     Offset offset = widget.offset ?? Offset(0, 0);
-    double dx = target.dx + offset.dx + (width > 0 ? _arrowOffset.dy : -_arrowOffset.dy);
-
-    _arrowLeft = dx + (width > 0 ? width : arrowWidth);
+    double dx = target.dx + offset.dx;
+    double offsetX = _arrowOffset.dy;
+    // 正值为往下偏移，负值为往上偏移
+    double internal = width > 0 ? offsetX : -offsetX;
+    // width大于0时，加上的width是target的宽度，以及设定的箭头的偏移量，小于0时，加上的arrowWidth是箭头自身的宽度，以及设定的箭头的偏移量
+    _arrowLeft = dx + (width > 0 ? width : arrowWidth) + internal;
     _left = dx + width + arrowWidth;
   }
 
@@ -377,9 +381,13 @@ class _PopupWindowState extends State<CustomPopupWindow> {
   /// 调整竖直方向的位置，正值为下边，负值为上边
   void _fixVertical(Offset target, double height, double arrowHeight) {
     Offset offset = widget.offset ?? Offset(0, 0);
-    double dy = target.dy + offset.dy + (height > 0 ? _arrowOffset.dy : -_arrowOffset.dy);
-    // 消除箭头和Popup主体之间的间距
-    double internal = height > 0 ? 0.5 : -0.5;
+    // offset是包含箭头和Popup主体的偏移
+    double dy = target.dy + offset.dy ;
+    // 0.5是为了消除箭头和Popup主体之间的间距
+    double offsetY = _arrowOffset.dy + 0.5;
+    // 正值为往下偏移，负值为往上偏移
+    double internal = height > 0 ? offsetY : -offsetY;
+    // height大于0时，加上的height是target的高度，以及设定的箭头的偏移量，小于0时，加上的arrowHeight是箭头自身的高度，以及设定的箭头的偏移量
     _arrowTop = dy + (height > 0 ? height : arrowHeight) + internal;
     _top = dy + height + arrowHeight;
   }
@@ -519,13 +527,13 @@ class _CustomPopupRoute<T> extends PopupRoute<T> {
 }
 
 /// 绘制三角形
-class TrianglePainter extends CustomPainter {
+class _TrianglePainter extends CustomPainter {
   Color color; //填充颜色
   Paint _paint = Paint(); //画笔
   Path _path = Path(); //绘制路径
   PopupDirection direction;
 
-  TrianglePainter({
+  _TrianglePainter({
     this.color = Colors.grey,
     this.direction = PopupDirection.bottom,
   }) {
