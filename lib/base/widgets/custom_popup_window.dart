@@ -233,7 +233,7 @@ class _PopupWindowState extends State<CustomPopupWindow> {
     super.initState();
 
     _isCollapsed = (widget.isCollapsed ?? _isCollapsed);
-    _isPin = (widget.isPin ?? _isPin);
+    _isPin = _isCollapsed && (widget.isPin ?? _isPin);
     _arrowOffset = widget.arrowOffset ?? _arrowOffset;
     WidgetsBinding.instance.addPostFrameCallback((_) => _calculatorPopupPosition());
   }
@@ -339,7 +339,7 @@ class _PopupWindowState extends State<CustomPopupWindow> {
       // 使Target高度跟Popup高度一致时，需要调整Popup的高度
       _height = targetSize.height;
     }
-    if (popupSize.height >= targetSize.height || (_isCollapsed && _isPin)) {
+    if (popupSize.height >= targetSize.height || _isPin) {
       // 使Target高度跟Popup高度一致/如果Popup高度比Target高度大，箭头位于Target中间
       _arrowTop = target.dy + targetSize.height / 2 - arrowSize.height / 2;
     } else {
@@ -369,7 +369,7 @@ class _PopupWindowState extends State<CustomPopupWindow> {
     } else {
       _top = target.dy + targetSize.height - popupSize.height;
     }
-    if (popupSize.height >= targetSize.height || (_isCollapsed && _isPin)) {
+    if (popupSize.height >= targetSize.height || _isPin) {
       // 使Target高度跟Popup高度一致/如果Popup高度比Target高度大，箭头还是位于Target中间
       _arrowTop = target.dy + targetSize.height / 2 - arrowSize.height / 2;
     } else {
@@ -398,7 +398,7 @@ class _PopupWindowState extends State<CustomPopupWindow> {
       // 使Target宽度跟Popup宽度一致时，需要调整Popup的宽度
       _width = targetSize.width;
     }
-    if (popupSize.width > targetSize.width || (_isCollapsed && _isPin)) {
+    if (popupSize.width > targetSize.width || _isPin) {
       // 使Target宽度跟Popup宽度一致/如果Popup宽度比Target宽度大，箭头还是位于Target中间
       _arrowLeft = target.dx + targetSize.width / 2 - arrowSize.width / 2;
     } else {
@@ -428,7 +428,7 @@ class _PopupWindowState extends State<CustomPopupWindow> {
     } else {
       _left = target.dx + targetSize.width - popupSize.width;
     }
-    if (popupSize.width > targetSize.width || (_isCollapsed && _isPin)) {
+    if (popupSize.width > targetSize.width || _isPin) {
       // 使Target宽度跟Popup宽度一致/如果Popup宽度比Target宽度大，箭头还是位于Target中间
       _arrowLeft = target.dx + targetSize.width / 2 - arrowSize.width / 2;
     } else {

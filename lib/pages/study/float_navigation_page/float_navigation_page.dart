@@ -41,7 +41,9 @@ class _FloatNavigationPageState extends State<FloatNavigationPage> {
       ),
       body: Container(
         padding: EdgeInsets.all(16),
-        child: _buildMenuView(),
+        child: SingleChildScrollView(
+          child: _buildMenuView(),
+        ),
       ),
       bottomNavigationBar: FloatNavigationBar(_navs, title: _title),
     );
