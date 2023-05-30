@@ -32,8 +32,8 @@ class Routers extends IRouter {
   static final String example = '/example';
   static final String webView = '/webView';
 
-  static final StudyRouter study = StudyRouter();
-  static final MeRouter me = MeRouter();
+  static final StudyRouter studyRouter = StudyRouter();
+  static final MeRouter meRouter = MeRouter();
 
   @override
   void initRouter(AppRouter router) {
