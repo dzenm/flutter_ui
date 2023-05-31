@@ -268,7 +268,7 @@ class _SettingPageState extends State<SettingPage> {
               spacing: 8,
               runSpacing: 8,
               children: context.read<LocalModel>().appThemes.map((key) {
-                Color? value = context.watch()<LocalModel>().getTheme(key).appbarColor;
+                Color? value = context.read<LocalModel>().getTheme(key).appbarColor;
                 return InkWell(
                   onTap: () {
                     context.read<LocalModel>().setThemeMode(key);

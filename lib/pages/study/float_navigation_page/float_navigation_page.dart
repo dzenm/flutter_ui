@@ -4,6 +4,7 @@ import 'package:flutter_ui/base/widgets/check_box.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/float_navigation_bar.dart';
 
+import '../../../base/widgets/adapter_size_text.dart';
 import '../../../base/widgets/custom_popup_window.dart';
 import '../../../base/widgets/single_text_layout.dart';
 import '../../../base/widgets/tap_layout.dart';
@@ -42,7 +43,9 @@ class _FloatNavigationPageState extends State<FloatNavigationPage> {
       body: Container(
         padding: EdgeInsets.all(16),
         child: SingleChildScrollView(
-          child: _buildMenuView(),
+          child: Row(children: [
+            Expanded(child: _buildMenuView()),
+          ]),
         ),
       ),
       bottomNavigationBar: FloatNavigationBar(_navs, title: _title),
@@ -51,7 +54,7 @@ class _FloatNavigationPageState extends State<FloatNavigationPage> {
 
   Widget _buildMenuView() {
     List<String> list = ['左上', '正左', '左下', '上左', '正上', '上右', '右上', '正右', '右下', '下右', '正下', '下左'];
-    return Column(children: [
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Container(
         child: CheckGroup(
           list: list,
@@ -202,6 +205,10 @@ class _FloatNavigationPageState extends State<FloatNavigationPage> {
             ),
           ),
         ]),
+      Container(
+        color: Colors.blue,
+        child: AdapterSizeText('这是测试恶化上帝亲吻哦并无多少钱为低温气候渴望且前后哦并', style: TextStyle(color: Colors.red, fontSize: 18),),
+      ),
     ]);
   }
 }
