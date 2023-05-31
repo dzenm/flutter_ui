@@ -10,10 +10,12 @@ class SingleTextLayout extends StatelessWidget {
   final Widget? image; // 标题图像
   final String? title; // 标题文本
   final Color? titleColor; // 标题文本颜色
+  final double padding; // 内容两边的间距
 
   final Widget? prefix; // 标题后内容前的布局
   final bool isDense; // 标题和内容是否存在间距
 
+  final Widget? content; // 内容布局
   final String? text; // 内容文本
   final Color? textColor; // 内容文本颜色
 
@@ -36,9 +38,11 @@ class SingleTextLayout extends StatelessWidget {
     this.image,
     this.title,
     this.titleColor,
+    this.padding = 0,
     this.prefix,
     this.isDense = false,
     this.text,
+    this.content,
     this.textColor,
     this.summary,
     this.summaryColor,
@@ -61,7 +65,7 @@ class SingleTextLayout extends StatelessWidget {
             Row(children: [
               // 标题图标
               _titleIcon(),
-              if ((icon != null || image != null) && title != null) SizedBox(width: 8),
+              if ((icon != null || image != null) && title != null) SizedBox(width: 8 + padding),
               // 标题文本
               _titleText(),
               if (prefix != null) SizedBox(width: 8),
@@ -70,7 +74,7 @@ class SingleTextLayout extends StatelessWidget {
               if ((icon != null || title != null) && !isDense) SizedBox(width: 16),
               // 文本内容
               _contentText(),
-              if (text != null) SizedBox(width: 8),
+              if (text != null) SizedBox(width: 8 + padding),
             ]),
             if (summary != null) SizedBox(height: 8),
             // 概要文本
@@ -114,7 +118,7 @@ class SingleTextLayout extends StatelessWidget {
   Widget _contentText() {
     // Expanded用于解决文本过长导致布局溢出的错误
     return text == null
-        ? Expanded(child: SizedBox(width: 0))
+        ? Expanded(child: content ?? SizedBox(width: 0))
         : Expanded(
             flex: 1,
             child: Text(

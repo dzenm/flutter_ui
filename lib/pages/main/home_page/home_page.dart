@@ -36,8 +36,6 @@ class _HomePageState extends State<HomePage> {
   int _page = 0; // 加载的页数
   bool _init = false;
 
-  String? title;
-
   @override
   void initState() {
     super.initState();
@@ -90,7 +88,6 @@ class _HomePageState extends State<HomePage> {
     return Container(
       child: Column(
         children: [
-          Text(title!),
           Banner(),
           Expanded(
             child: ArticleListView(controller: _controller, refresh: _onRefresh),
@@ -110,7 +107,6 @@ class _HomePageState extends State<HomePage> {
       _getTopArticle(),
       // _getDataList(),
     ]).then((value) {
-      title = 'test';
       Log.d('网络数据执行完成...', tag: _tag);
     }).whenComplete(() {
       _init = true;
