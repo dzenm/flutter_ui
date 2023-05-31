@@ -6,6 +6,7 @@ import 'package:flutter_ui/pages/main/me_page/me_router.dart';
 
 import '../../../base/log/log.dart';
 import '../../../base/res/assets.dart';
+import '../../../base/widgets/adapter_size_text.dart';
 import '../../../base/widgets/badge_tag.dart';
 import '../../../base/widgets/common_dialog.dart';
 import '../../../base/widgets/common_widget.dart';
@@ -259,9 +260,24 @@ class _TextPageState extends State<TextPage> {
                       }),
                       child: SingleTextLayout(title: '登陆记录', summary: '查看最近所有的登录记录', badgeCount: 0, isShowForward: true),
                     ),
+                    SizedBox(height: 24),
+                    CommonWidget.titleView('自适应文字大小: '),
+                    Container(
+                      child: AdapterSizeText('道可道，非常道。名可名，非常名。', style: TextStyle(color: Colors.red),),
+                    ),
                     SizedBox(height: 8),
-                    // Text(MeModel.of.value),
+                    Container(
+                      child: AdapterSizeText('无名，天地之始，有名，万物之母。', style: TextStyle(color: Colors.red),),
+                    ),
                     SizedBox(height: 8),
+                    Container(
+                      child: AdapterSizeText('故常无欲，以观其妙，常有欲，以观其徼。', style: TextStyle(color: Colors.red),),
+                    ),
+                    SizedBox(height: 8),
+                    Container(
+                      child: AdapterSizeText('此两者，同出而异名，同谓之玄，玄之又玄，众妙之门。', style: TextStyle(color: Colors.red),),
+                    ),
+                    SizedBox(height: 24),
                     TapLayout(
                       height: 48.0,
                       isRipple: false,

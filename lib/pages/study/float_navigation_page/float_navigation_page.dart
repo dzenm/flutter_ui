@@ -4,7 +4,6 @@ import 'package:flutter_ui/base/widgets/check_box.dart';
 import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:flutter_ui/base/widgets/float_navigation_bar.dart';
 
-import '../../../base/widgets/adapter_size_text.dart';
 import '../../../base/widgets/custom_popup_window.dart';
 import '../../../base/widgets/single_text_layout.dart';
 import '../../../base/widgets/tap_layout.dart';
@@ -205,10 +204,6 @@ class _FloatNavigationPageState extends State<FloatNavigationPage> {
             ),
           ),
         ]),
-      Container(
-        color: Colors.blue,
-        child: AdapterSizeText('这是测试恶化上帝亲吻哦并无多少钱为低温气候渴望且前后哦并', style: TextStyle(color: Colors.red, fontSize: 18),),
-      ),
     ]);
   }
 }
