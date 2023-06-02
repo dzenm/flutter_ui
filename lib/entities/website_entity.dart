@@ -1,8 +1,12 @@
 import 'package:flutter_ui/base/db/db_base_model.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'website_entity.g.dart';
 
 ///
 /// Created by a0010 on 2023/2/16 16:50
 /// 常用网站
+@JsonSerializable()
 class WebsiteEntity extends DBBaseModel {
   String? category;
   String? icon;
@@ -14,29 +18,13 @@ class WebsiteEntity extends DBBaseModel {
 
   WebsiteEntity();
 
-  WebsiteEntity.fromJson(Map<String, dynamic> json) {
-    category = json['category'];
-    icon = json['icon'];
-    id = json['id'];
-    link = json['link'];
-    name = json['name'];
-    order = json['order'];
-    visible = json['visible'];
-  }
+  factory WebsiteEntity.fromJson(Map<String, dynamic> json) => _$WebsiteEntityFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$WebsiteEntityToJson(this);
 
   @override
   DBBaseModel fromJson(Map<String, dynamic> json) => WebsiteEntity.fromJson(json);
-
-  @override
-  Map<String, dynamic> toJson() => {
-        'category': category,
-        'icon': icon,
-        'id': id,
-        'link': link,
-        'name': name,
-        'order': order,
-        'visible': visible,
-      };
 
   @override
   String get primaryKey => 'id';

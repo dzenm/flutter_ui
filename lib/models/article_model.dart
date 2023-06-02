@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/entities/article_entity.dart';
 
 ///

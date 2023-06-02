@@ -21,6 +21,7 @@ class _CollectPageState extends ListPageState<CollectEntity, CollectPage> {
 
   @override
   Widget buildItem(CollectEntity data, int index) {
+    throw Exception('');
     String title = data.title ?? '';
     return TapLayout(
       child: ListTile(
