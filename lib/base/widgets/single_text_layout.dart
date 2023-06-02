@@ -118,7 +118,9 @@ class SingleTextLayout extends StatelessWidget {
   Widget _contentText() {
     // Expanded用于解决文本过长导致布局溢出的错误
     return text == null
-        ? Expanded(child: content ?? SizedBox(width: 0))
+        ? Expanded(
+            child: Row(children: [content ?? SizedBox(width: 0)]),
+          )
         : Expanded(
             flex: 1,
             child: Text(

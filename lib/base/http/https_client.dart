@@ -4,6 +4,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/src/adapters/io_adapter.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_ui/base/log/log.dart';
 
 import '../../http/api_services.dart';
 import 'data_entity.dart';
@@ -41,6 +42,7 @@ class HttpsClient {
   factory HttpsClient() => _instance;
 
   final Map<String, ApiServices> _api = {};
+
   /// 如果存在多个url的情况，在这里添加，默认使用 [apiServices] ，其他使用 [api] 请求接口
   final List<String> _baseUrls = [
     'https://www.wanandroid.com/',
@@ -75,7 +77,7 @@ class HttpsClient {
       _interceptors.addAll(interceptors);
     }
     // 日志打印
-    _interceptors.add(LoggerInterceptor(formatJson: true, logPrint: log));
+    _interceptors.add(LoggerInterceptor(formatJson: true, logPrint: Log.h));
     // 通过悬浮窗查看Http请求数据
     // _interceptors.add(HttpInterceptor());
     // cookie持久化
@@ -98,6 +100,7 @@ class HttpsClient {
       headers: {
         'Accept': 'application/json,*/*',
         'Content-Type': 'application/json',
+
         /// Web端报错处理
         "Access-Control-Allow-Origin": "*", // Required for CORS support to work
         "Access-Control-Allow-Credentials": 'true', // Required for cookies, authorization headers with HTTPS

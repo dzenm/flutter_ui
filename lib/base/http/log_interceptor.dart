@@ -17,6 +17,7 @@ class LoggerInterceptor extends Interceptor {
     this.formatJson = false,
     this.decorate = true,
     this.interval = '  ',
+    this.onCompleted,
     this.logPrint,
   });
 
@@ -47,6 +48,9 @@ class LoggerInterceptor extends Interceptor {
   /// 缩进
   String interval;
 
+  /// 请求完成回调，[success] 表示请求是否没有错误
+  void Function(bool success)? onCompleted;
+
   /// Log printer; defaults print log to console.
   /// In flutter, you'd better use debugPrint.
   /// you can also write log in a file, for example:
@@ -57,7 +61,7 @@ class LoggerInterceptor extends Interceptor {
   ///  ...
   ///  await sink.close();
   ///```
-  void Function(dynamic object)? logPrint;
+  void Function(Object object)? logPrint;
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
@@ -109,6 +113,7 @@ class LoggerInterceptor extends Interceptor {
   void onResponse(Response response, ResponseInterceptorHandler handler) async {
     _handleRequest(response.requestOptions);
     _handleResponse(response);
+    if (onCompleted != null) onCompleted!(response.statusCode == 200);
     handler.next(response);
   }
 
@@ -145,24 +150,25 @@ class LoggerInterceptor extends Interceptor {
 
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) async {
-    _handleRequest(err.requestOptions);
-    _handleResponse(err.response);
-    _handleError(err);
+    if (error) {
+      _handleRequest(err.requestOptions);
+      _handleResponse(err.response);
+      _handleError(err);
+    }
+    if (onCompleted != null) onCompleted!(false);
     handler.next(err);
   }
 
   /// 处理请求错误信息
   void _handleError(DioError err) {
-    if (error) {
-      if (decorate) {
-        _logPrint('╔══════════════════════════════ DioError ════════════════════════════════════╗');
-      } else {
-        _logPrint('----------------------------------- DioError -----------------------------------------');
-      }
-      _print('${err.message}');
-      if (decorate) {
-        _logPrint('╚════════════════════════════════════════════════════════════════════════════╝');
-      }
+    if (decorate) {
+      _logPrint('╔══════════════════════════════ DioError ════════════════════════════════════╗');
+    } else {
+      _logPrint('----------------------------------- DioError -----------------------------------------');
+    }
+    _print('${err.message}');
+    if (decorate) {
+      _logPrint('╚════════════════════════════════════════════════════════════════════════════╝');
     }
   }
 
@@ -195,8 +201,7 @@ class LoggerInterceptor extends Interceptor {
 
   /// 日志打印
   void _logPrint(String msg) {
-    if (logPrint != null) {
-      logPrint!(msg);
-    }
+    if (logPrint == null) return;
+    logPrint!(msg);
   }
 }
