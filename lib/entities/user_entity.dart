@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_ui/base/db/db_base_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -8,7 +10,6 @@ part 'user_entity.g.dart';
 /// 用户表
 @JsonSerializable(explicitToJson: true)
 class UserEntity extends DBBaseModel {
-  @JsonKey(toJson: toBool, fromJson: boolToInt)
   bool? admin;
   List<dynamic>? chapterTops;
   int? coinCount;
@@ -25,9 +26,37 @@ class UserEntity extends DBBaseModel {
 
   UserEntity();
 
-  factory UserEntity.fromJson(Map<String, dynamic> json) => _$UserEntityFromJson(json);
+  UserEntity.fromJson(Map<String, dynamic> json) {
+    admin = toBool(json['admin']);
+    chapterTops = toList(json['chapterTops']).map((e) => e as dynamic).toList();
+    coinCount = json['coinCount'];
+    collectIds = toList(json['collectIds']).map((e) => e as int).toList();
+    email = json['email'];
+    icon = json['icon'];
+    id = json['id'];
+    nickname = json['nickname'];
+    password = json['password'];
+    publicName = json['publicName'];
+    token = json['token'];
+    type = json['type'];
+    username = json['username'];
+  }
 
-  Map<String, dynamic> toJson() => _$UserEntityToJson(this);
+  Map<String, dynamic> toJson() => {
+    'admin': boolToInt(admin),
+    'chapterTops': jsonEncode(chapterTops),
+    'coinCount': coinCount,
+    'collectIds': jsonEncode(collectIds),
+    'email': email,
+    'icon': icon,
+    'id': id,
+    'nickname': nickname,
+    'password': password,
+    'publicName': publicName,
+    'token': token,
+    'type': type,
+    'username': username,
+  };
 
   @override
   DBBaseModel fromJson(Map<String, dynamic> json) => UserEntity.fromJson(json);

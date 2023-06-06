@@ -55,6 +55,13 @@ class FileUtil {
     return files;
   }
 
+  /// 根据路径获取文件名
+  String getFileName(String path) {
+    int index = path.lastIndexOf('/');
+    int len = path.length;
+    return index == -1 ? '' : path.substring(index + 1, len);
+  }
+
   /// 保存text到本地文件里面
   Future<String?> save(String fileName, String text, {String? dir}) async {
     try {
@@ -95,13 +102,6 @@ class FileUtil {
     } catch (e) {
       log('文件复制失败: $e');
     }
-  }
-
-  /// 根据路径获取文件名
-  String getFileName(String path) {
-    int index = path.lastIndexOf('/');
-    int len = path.length;
-    return index == -1 ? '' : path.substring(index, len);
   }
 
   /// 拷贝文件夹

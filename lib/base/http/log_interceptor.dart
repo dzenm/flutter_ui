@@ -166,7 +166,7 @@ class LoggerInterceptor extends Interceptor {
     } else {
       _logPrint('----------------------------------- DioError -----------------------------------------');
     }
-    _print('${err.message}');
+    _print('${err.error}');
     if (decorate) {
       _logPrint('╚════════════════════════════════════════════════════════════════════════════╝');
     }

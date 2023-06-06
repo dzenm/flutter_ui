@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
+import 'package:flutter_ui/base/log/log.dart';
 import 'package:intl/intl.dart';
 
 import 'http_entity.dart';
@@ -10,6 +13,8 @@ class HttpInterceptor extends Interceptor {
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+    handler.next(options);
+
     HTTPEntity entity = HTTPEntity();
     entity.status = Status.running;
     entity.duration = DateTime.now().millisecondsSinceEpoch.toString();
@@ -19,61 +24,87 @@ class HttpInterceptor extends Interceptor {
 
     String body = '${options.method}  ${options.path}';
     Naughty.instance.showNotification(body: body);
-    handler.next(options);
   }
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) async {
-    HTTPEntity? entity = _cacheMap[response.requestOptions];
-    if (entity != null) {
-      entity.status = Status.success;
-      _handle(response, entity);
-    }
     handler.next(response);
+
+    HTTPEntity? entity = _cacheMap[response.requestOptions];
+    if (entity == null) return;
+    _handleRequest(response.requestOptions, entity);
+    _handleResponse(response, entity);
+    // 保存请求成功的状态
+    entity.status = Status.success;
+    bool res = response.statusCode == 200 && response.data['esg'] == 200;
+    Log.d('请求结果：$res');
+    _handleCompleted(entity, res);
   }
 
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) async {
-    HTTPEntity? entity = _cacheMap[err.requestOptions];
-    if (entity != null) {
-      entity.status = Status.failed;
-      _handle(err.response, entity);
-    }
     handler.next(err);
+
+    HTTPEntity? entity = _cacheMap[err.requestOptions];
+    if (entity == null) return;
+    _handleRequest(err.requestOptions, entity);
+    _handleResponse(err.response, entity);
+    _handleError(err, entity);
+    // 保存请求失败的状态和信息
+    entity.status = Status.failed;
+    _handleCompleted(entity, false);
   }
 
-  void _handle(Response? response, HTTPEntity entity) {
-    entity.status = Status.success;
+  /// 处理请求的信息
+  void _handleRequest(RequestOptions options, HTTPEntity entity) {
     entity.duration = '${DateTime.now().millisecondsSinceEpoch - int.parse(entity.duration)} ms';
-    entity.size = Naughty.instance.formatSize(Naughty.instance.getStringLength(response?.data.toString()));
+    entity.method = options.method;
+    entity.url = options.uri.toString();
+    entity.baseUrl = options.baseUrl;
+    entity.path = options.path;
+    entity.responseType = options.responseType.toString();
+    entity.maxRedirects = options.maxRedirects;
+    entity.listFormat = options.listFormat.toString();
+    entity.sendTimeout = options.sendTimeout;
+    entity.connectTimeout = options.connectTimeout;
+    entity.receiveTimeout = options.receiveTimeout;
+    entity.followRedirects = options.followRedirects;
+    entity.receiveDataWhenStatusError = options.receiveDataWhenStatusError;
+    entity.requestExtra = options.extra;
+    entity.requestQueryParameters = options.queryParameters;
+    entity.requestHeader = options.headers;
+    entity.requestBody = options.data;
+  }
 
-    // request
-    entity.method = response?.requestOptions.method ?? 'unknown';
-    entity.url = response?.requestOptions.uri.toString() ?? 'unknown';
-    entity.baseUrl = response?.requestOptions.baseUrl ?? 'unknown';
-    entity.path = response?.requestOptions.path;
-    entity.requestExtra = response?.requestOptions.extra;
-    entity.requestQueryParameters = response?.requestOptions.queryParameters;
-    entity.requestHeader = response?.requestOptions.headers;
-    entity.requestBody = response?.requestOptions.data;
+  /// 处理请求响应的信息
+  void _handleResponse(Response? response, HTTPEntity entity) {
+    if (response == null) return;
+    entity.size = Naughty.instance.formatSize(_getStringLength(response.data.toString()));
+    entity.statusCode = response.statusCode ?? -1;
+    entity.realUrl = response.realUri.toString();
+    entity.isRedirect = response.isRedirect;
+    entity.responseExtra = response.extra;
+    entity.responseHeader = response.headers.map;
+    entity.responseBody = response.data;
+  }
 
-    // response
-    entity.statusCode = response?.statusCode ?? -1;
-    entity.realUrl = response?.realUri.toString() ?? 'unknown';
-    entity.responseType = response?.requestOptions.responseType.toString() ?? 'unknown';
-    entity.maxRedirects = response?.requestOptions.maxRedirects ?? -1;
-    entity.listFormat = response?.requestOptions.listFormat.toString() ?? 'unknown';
-    entity.sendTimeout = response?.requestOptions.sendTimeout;
-    entity.connectTimeout = response?.requestOptions.connectTimeout;
-    entity.receiveTimeout = response?.requestOptions.receiveTimeout;
-    entity.followRedirects = response?.requestOptions.followRedirects ?? true;
-    entity.receiveDataWhenStatusError = response?.requestOptions.receiveDataWhenStatusError ?? true;
-    entity.isRedirect = response?.isRedirect ?? false;
+  /// 处理请求错误的信息
+  void _handleError(DioError err, HTTPEntity entity) {
+    entity.realUrl = err.requestOptions.uri.toString();
+    entity.responseBody = err.error.toString();
+  }
 
-    entity.responseExtra = response?.extra;
-    Map<String, dynamic> headers = {};
-    response?.headers.forEach((key, val) => headers[key] = val);
-    entity.responseHeader = headers;
-    entity.responseBody = response?.data;
+  /// 请求完成
+  void _handleCompleted(HTTPEntity entity, bool res) {
+  }
+
+  /// 获取字符串所占用的字节大小
+  int _getStringLength(String? str) {
+    if (str == null || str.isEmpty) return 0;
+
+    int len = 0;
+    utf8.encode(str).forEach((ch) => len += ch > 256 ? 3 : 1);
+
+    return len;
   }
 }

@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -134,15 +133,5 @@ class Naughty {
     bool isNeedDecimal = integer == 0 && decimal == 0;
 
     return '$integer${isNeedDecimal ? '' : '.$decimal'}${suffix[index]}';
-  }
-
-  /// 获取字符串所占用的字节大小
-  int getStringLength(String? str) {
-    if (str == null || str.isEmpty) return 0;
-
-    int len = 0;
-    utf8.encode(str).forEach((ch) => len += ch > 256 ? 3 : 1);
-
-    return len;
   }
 }

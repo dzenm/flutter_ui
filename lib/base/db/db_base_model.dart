@@ -24,26 +24,26 @@ abstract class DBBaseModel with DBDao {
   String get primaryValue => '';
 
   /// 将dynamic类型(只处理了string和List类型)转化为List类型
-  static List<dynamic> toList(dynamic data) {
+  List<dynamic> toList(dynamic data) {
     if (data is List) return data;
     if (data is String) return jsonDecode(data) as List<dynamic>;
     return [];
   }
 
   /// 将bool类型转化为int类型
-  static int boolToInt(bool? value) {
+  int boolToInt(bool? value) {
     return (value ?? false) ? 1 : 0;
   }
 
   /// 将dynamic类型(只处理了bool和int类型)转化为bool类型
-  static bool toBool(dynamic data) {
+  bool toBool(dynamic data) {
     if (data is bool) return data;
     if (data is int) return data == 1;
     return false;
   }
 
   /// 将List类型转化为string类型
-  static String toJsonString(List<dynamic> list) {
+  String toJsonString(List<dynamic> list) {
     try {
       return jsonEncode(list.map((e) => e.toJson()).toList());
     } catch (e) {
