@@ -230,12 +230,16 @@ class StateController with ChangeNotifier {
 
 /// 加载数据的状态
 enum LoadState {
-  none, // 什么都不做
-  loading, // 加载中，正在请求数据
-  empty, // 加载为空数据
-  success, // 加载成功
-  complete, // 加载完成
-  failed, // 加载错误
-  more, // 底部显示，加载部分页数，还有更多页面可以加载
-  end, // 底部显示，加载数据完成，没有数据可以加载
+  none(0), // 什么都不做
+  loading(1), // 加载中，正在请求数据
+  empty(2), // 加载为空数据
+  failed(3), // 加载错误
+  success(4), // 加载成功
+  complete(5), // 加载完成
+  more(6), // 底部显示，加载部分页数，还有更多页面可以加载
+  end(7); // 底部显示，加载数据完成，没有数据可以加载
+
+  final int value;
+
+  const LoadState(this.value);
 }

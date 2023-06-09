@@ -3,13 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../base/http/https_client.dart';
+import '../../base/log/build_config.dart';
 import '../../base/log/log.dart';
-import '../routers.dart';
 import '../../base/utils/sp_util.dart';
 import '../../base/widgets/tap_layout.dart';
 import '../../entities/user_entity.dart';
 import '../../generated/l10n.dart';
 import '../../models/user_model.dart';
+import '../routers.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -37,7 +38,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   void initState() {
     super.initState();
-    Log.i('initState', tag: _tag);
+    log('initState');
 
     _initInputText();
   }
@@ -45,25 +46,25 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    Log.i('didChangeDependencies', tag: _tag);
+    log('didChangeDependencies');
   }
 
   @override
   void didUpdateWidget(covariant RegisterPage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    Log.i('didUpdateWidget', tag: _tag);
+    log('didUpdateWidget');
   }
 
   @override
   void deactivate() {
     super.deactivate();
-    Log.i('deactivate', tag: _tag);
+    log('deactivate');
   }
 
   @override
   void dispose() {
     super.dispose();
-    Log.i('dispose', tag: _tag);
+    log('dispose');
 
     _usernameController.dispose();
     _passwordController.dispose();
@@ -88,7 +89,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    Log.i('build', tag: _tag);
+    log('build');
 
     return Scaffold(
       appBar: AppBar(
@@ -204,4 +205,6 @@ class _RegisterPageState extends State<RegisterPage> {
   void _pushMainPage() {
     Navigator.popAndPushNamed(context, Routers.main);
   }
+
+  void log(String msg) => BuildConfig.showPageLog ? Log.i(msg, tag: _tag) : null;
 }

@@ -1,16 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/base/log/build_config.dart';
 import 'package:provider/provider.dart';
 
 import '../../base/http/https_client.dart';
 import '../../base/log/log.dart';
-import '../routers.dart';
 import '../../base/utils/sp_util.dart';
 import '../../base/widgets/tap_layout.dart';
 import '../../entities/user_entity.dart';
 import '../../generated/l10n.dart';
 import '../../models/user_model.dart';
+import '../routers.dart';
 
 ///
 /// 登录页面
@@ -91,7 +92,7 @@ class _LoginWidgetState extends State<_LoginWidget> {
   @override
   void initState() {
     super.initState();
-    Log.i('initState', tag: _tag);
+    log('initState');
 
     _initInputText();
   }
@@ -99,25 +100,25 @@ class _LoginWidgetState extends State<_LoginWidget> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    Log.i('didChangeDependencies', tag: _tag);
+    log('didChangeDependencies');
   }
 
   @override
   void didUpdateWidget(covariant _LoginWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    Log.i('didUpdateWidget', tag: _tag);
+    log('didUpdateWidget');
   }
 
   @override
   void deactivate() {
     super.deactivate();
-    Log.i('deactivate', tag: _tag);
+    log('deactivate');
   }
 
   @override
   void dispose() {
     super.dispose();
-    Log.i('dispose', tag: _tag);
+    log('dispose');
 
     usernameController.dispose();
     passwordController.dispose();
@@ -143,7 +144,7 @@ class _LoginWidgetState extends State<_LoginWidget> {
 
   @override
   Widget build(BuildContext context) {
-    Log.i('build', tag: _tag);
+    log('build');
 
     MaterialColor buttonColor = Colors.blue;
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -274,4 +275,6 @@ class _LoginWidgetState extends State<_LoginWidget> {
   void _pushMainPage() {
     Navigator.popAndPushNamed(context, Routers.main);
   }
+
+  void log(String msg) => BuildConfig.showPageLog ? Log.i(msg, tag: _tag) : null;
 }

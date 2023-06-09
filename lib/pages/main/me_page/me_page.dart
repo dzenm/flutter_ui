@@ -4,6 +4,7 @@ import 'package:flutter_ui/pages/main/me_page/me_router.dart';
 import 'package:flutter_ui/pages/routers.dart';
 import 'package:provider/provider.dart';
 
+import '../../../base/log/build_config.dart';
 import '../../../base/log/log.dart';
 import '../../../base/res/app_theme.dart';
 import '../../../base/res/local_model.dart';
@@ -35,7 +36,7 @@ class _MePageState extends State<MePage> {
   @override
   void initState() {
     super.initState();
-    Log.i('initState', tag: _tag);
+    log('initState');
 
     _getUserinfo();
   }
@@ -43,30 +44,30 @@ class _MePageState extends State<MePage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    Log.i('didChangeDependencies', tag: _tag);
+    log('didChangeDependencies');
   }
 
   @override
   void didUpdateWidget(covariant MePage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    Log.i('didUpdateWidget', tag: _tag);
+    log('didUpdateWidget');
   }
 
   @override
   void deactivate() {
     super.deactivate();
-    Log.i('deactivate', tag: _tag);
+    log('deactivate');
   }
 
   @override
   void dispose() {
     super.dispose();
-    Log.i('dispose', tag: _tag);
+    log('dispose');
   }
 
   @override
   Widget build(BuildContext context) {
-    Log.i('build', tag: _tag);
+    log('build');
 
     AppTheme? theme = context.watch<LocalModel>().appTheme;
     double? statusBarHeight = MediaQuery.of(context).padding.top;
@@ -243,4 +244,6 @@ class _MePageState extends State<MePage> {
       context.read<UserModel>().coin = coin;
     });
   }
+
+  void log(String msg) => BuildConfig.showPageLog ? Log.i(msg, tag: _tag) : null;
 }

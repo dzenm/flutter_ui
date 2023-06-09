@@ -3,12 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_ui/pages/routers.dart';
 import 'package:provider/provider.dart';
 
-import '../../base/log/log.dart';
 import '../../base/res/app_theme.dart';
 import '../../base/res/local_model.dart';
-import '../../base/widgets/common_dialog.dart';
-import '../../base/widgets/custom_popup_window.dart';
-import '../../base/widgets/picker/picker_view.dart';
 import '../../generated/l10n.dart';
 
 ///
@@ -20,7 +16,6 @@ class StudyPage extends StatefulWidget {
 }
 
 class _StudyPageState extends State<StudyPage> {
-  String _selectedValue = '';
   GlobalKey _targetKey = GlobalKey();
 
   @override
@@ -57,6 +52,14 @@ class _StudyPageState extends State<StudyPage> {
         textColor: Colors.white,
         color: theme.appbarColor,
         onPressed: () => Navigator.pushNamed(context, Routers.studyRouter.convert),
+      ),
+      SizedBox(height: 8),
+      // dialog
+      MaterialButton(
+        child: _text('弹窗'),
+        textColor: Colors.white,
+        color: theme.appbarColor,
+        onPressed: () => Navigator.pushNamed(context, Routers.studyRouter.dialog),
       ),
       SizedBox(height: 8),
       // 可拖动ListView
@@ -115,6 +118,14 @@ class _StudyPageState extends State<StudyPage> {
         onPressed: () => Navigator.pushNamed(context, Routers.studyRouter.loadImage),
       ),
       SizedBox(height: 8),
+      // 加载图片
+      MaterialButton(
+        child: _text('PopupWindow测试'),
+        textColor: Colors.white,
+        color: theme.appbarColor,
+        onPressed: () => Navigator.pushNamed(context, Routers.studyRouter.popup),
+      ),
+      SizedBox(height: 8),
       // Provider
       MaterialButton(
         child: _text('Provider'),
@@ -169,61 +180,6 @@ class _StudyPageState extends State<StudyPage> {
         textColor: Colors.white,
         color: theme.appbarColor,
         onPressed: () => Navigator.pushNamed(context, Routers.studyRouter.video),
-      ),
-      SizedBox(height: 8),
-      // 自定义PopupView控件
-      MaterialButton(
-        key: _targetKey,
-        child: _text('PopupWindow测试'),
-        textColor: Colors.white,
-        color: theme.appbarColor,
-        onPressed: () => CustomPopupWindow.showList(
-          context,
-          targetKey: _targetKey,
-          titles: ['全选', '复制', '粘贴', '测试'],
-          direction: PopupDirection.bottomLeft,
-          onItemTap: (index) {
-            CommonDialog.showToast('第${index + 1}个Item');
-          },
-        ),
-      ),
-      SizedBox(height: 8),
-      // PickerListView控件
-      MaterialButton(
-        child: _text('PickerListView控件'),
-        textColor: Colors.white,
-        color: theme.appbarColor,
-        onPressed: () => PickerView.showList(
-          context,
-          list: ['测试一', '测试二', '测试三', '测试四', '测试五'],
-          initialItem: _selectedValue,
-          onChanged: (value) {
-            _selectedValue = value;
-            Log.i('选中的回调: $_selectedValue');
-          },
-        ),
-      ),
-      SizedBox(height: 8),
-      // 升级dialog
-      MaterialButton(
-        child: _text('升级dialog'),
-        textColor: Colors.white,
-        color: theme.appbarColor,
-        onPressed: () => CommonDialog.showAppUpgradeDialog(
-          context,
-          version: '12',
-          desc: ['升级了'],
-        ),
-      ),
-      SizedBox(height: 8),
-      // 选择区域
-      MaterialButton(
-        child: _text('选择区域'),
-        textColor: Colors.white,
-        color: theme.appbarColor,
-        onPressed: () => PickerView.showLocation(context, initialItem: ['湖北', '荆门市', '京山县'], onChanged: (results) {
-          Log.d('选中的结果: results=$results');
-        }),
       ),
       SizedBox(height: 16),
     ];

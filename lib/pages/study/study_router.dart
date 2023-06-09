@@ -1,7 +1,7 @@
-
 import '../../base/route/app_router.dart';
 import 'city_page/city_page.dart';
 import 'convert_page/convert_page.dart';
+import 'dialog_page/dialog_page.dart';
 import 'drag_list_page/drag_list_page.dart';
 import 'float_navigation_page/float_navigation_page.dart';
 import 'http_page/http_page.dart';
@@ -9,6 +9,7 @@ import 'image_editor/image_editor_page.dart';
 import 'keyword_board/keyword_board_page.dart';
 import 'list_page/list_page.dart';
 import 'load_image_page/load_image_page.dart';
+import 'popup_page/popup_page.dart';
 import 'provider_page/provider_page.dart';
 import 'qr_page/qr_page.dart';
 import 'router/router_page.dart';
@@ -24,6 +25,7 @@ class StudyRouter extends IRouter {
   String study = '/study';
   String city = '/study/city';
   String convert = '/study/convert';
+  String dialog = '/study/dialog';
   String dragList = '/study/dragList';
   String floatNavigation = '/study/floatNavigation';
   String http = '/study/http';
@@ -31,6 +33,7 @@ class StudyRouter extends IRouter {
   String keyword = '/study/keyword';
   String list = '/study/list';
   String loadImage = '/study/loadImage';
+  String popup = '/study/popup';
   String provider = '/study/provider';
   String qr = '/study/qr';
   String routers = '/study/routers';
@@ -50,6 +53,10 @@ class StudyRouter extends IRouter {
 
     router.define(convert, pagerBuilder: (context) {
       return ConvertPage();
+    });
+
+    router.define(dialog, pagerBuilder: (context) {
+      return DialogPage();
     });
 
     router.define(dragList, pagerBuilder: (context) {
@@ -78,6 +85,10 @@ class StudyRouter extends IRouter {
 
     router.define(loadImage, pagerBuilder: (context) {
       return LoadImagePage();
+    });
+
+    router.define(popup, pagerBuilder: (context) {
+      return PopupPage();
     });
 
     router.define(provider, pagerBuilder: (context) {

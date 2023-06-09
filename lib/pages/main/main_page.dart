@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ui/models/provider_manager.dart';
 import 'package:provider/provider.dart';
 
+import '../../base/log/build_config.dart';
 import '../../base/log/log.dart';
 import '../../base/naughty/naughty.dart';
 import '../../base/widgets/badge_tag.dart';
@@ -32,7 +33,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    Log.i('didChangeAppLifecycleState: $state', tag: _tag);
+    log('didChangeAppLifecycleState: $state');
 
     // 处理APP生命周期
     switch (state) {
@@ -50,7 +51,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    Log.i('initState', tag: _tag);
+    log('initState');
 
     WidgetsBinding.instance.addObserver(this);
   }
@@ -67,19 +68,19 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    Log.i('didChangeDependencies', tag: _tag);
+    log('didChangeDependencies');
   }
 
   @override
   void didUpdateWidget(covariant MainPage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    Log.i('didUpdateWidget', tag: _tag);
+    log('didUpdateWidget');
   }
 
   @override
   void deactivate() {
     super.deactivate();
-    Log.i('deactivate', tag: _tag);
+    log('deactivate');
   }
 
   @override
@@ -88,12 +89,12 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
 
     super.dispose();
-    Log.i('dispose', tag: _tag);
+    log('dispose');
   }
 
   @override
   Widget build(BuildContext context) {
-    Log.i('build', tag: _tag);
+    log('build');
 
     _useContextBeforeBuild(context);
 
@@ -125,6 +126,8 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     int len = context.read<MainModel>().len;
     return List.generate(len, (i) => BottomNavigationBarItemView(index: i, controller: _controller)); // bottomNavigation list
   }
+
+  void log(String msg) => BuildConfig.showPageLog ? Log.i(msg, tag: _tag) : null;
 }
 
 /// 底部Item布局
@@ -143,7 +146,7 @@ class BottomNavigationBarItemView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Log.d('build', tag: _tag);
+    Log.d('build');
 
     double width = 56, height = 56;
     // 平分整个宽度

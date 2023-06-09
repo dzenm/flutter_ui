@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/route/route_manager.dart';
 import 'package:flutter_ui/base/widgets/refresh_list_view.dart';
 import 'package:flutter_ui/base/widgets/state_view.dart';
 import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:flutter_ui/entities/article_entity.dart';
 import 'package:flutter_ui/http/http_manager.dart';
 import 'package:flutter_ui/models/article_model.dart';
-import 'package:flutter_ui/pages/common/web_view_page.dart';
 import 'package:provider/provider.dart';
 
 import '../../routers.dart';
@@ -44,6 +42,7 @@ class _ListPageState extends State<ListPage> {
                 return _buildArticleItem(articleList[index], index);
               },
               refresh: _onRefresh,
+              showFooter: true,
             ),
           )
         ]),

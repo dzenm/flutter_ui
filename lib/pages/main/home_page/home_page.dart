@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_ui/pages/routers.dart';
 import 'package:provider/provider.dart';
 
+import '../../../base/log/build_config.dart';
 import '../../../base/log/log.dart';
 import '../../../base/res/assets.dart';
 import '../../../base/res/custom_icon.dart';
@@ -39,7 +40,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    Log.i('initState', tag: _tag);
+    log('initState');
 
     _getData();
   }
@@ -47,30 +48,30 @@ class _HomePageState extends State<HomePage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    Log.i('didChangeDependencies', tag: _tag);
+    log('didChangeDependencies');
   }
 
   @override
   void didUpdateWidget(covariant HomePage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    Log.i('didUpdateWidget', tag: _tag);
+    log('didUpdateWidget');
   }
 
   @override
   void deactivate() {
     super.deactivate();
-    Log.i('deactivate', tag: _tag);
+    log('deactivate');
   }
 
   @override
   void dispose() {
     super.dispose();
-    Log.i('dispose', tag: _tag);
+    log('dispose');
   }
 
   @override
   Widget build(BuildContext context) {
-    Log.i('build', tag: _tag);
+    log('build');
 
     return Scaffold(
       appBar: CommonBar(
@@ -100,18 +101,18 @@ class _HomePageState extends State<HomePage> {
   Future<void> _onRefresh(bool refresh) async => await _getArticle(isReset: refresh);
 
   Future<void> _getData() async {
-    Log.d('开始加载网络数据...', tag: _tag);
+    log('开始加载网络数据...');
     await Future.wait([
       _getBanner(),
       _getArticle(isReset: true),
       _getTopArticle(),
       // _getDataList(),
     ]).then((value) {
-      Log.d('网络数据执行完成...', tag: _tag);
+      log('网络数据执行完成...');
     }).whenComplete(() {
       _init = true;
     });
-    Log.d('结束加载网络数据...', tag: _tag);
+    log('结束加载网络数据...');
   }
 
   Future<void> _getBanner() async {
@@ -184,6 +185,8 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
+
+  void log(String msg) => BuildConfig.showPageLog ? Log.i(msg, tag: _tag) : null;
 }
 
 /// 文章列表 widget

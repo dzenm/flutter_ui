@@ -31,85 +31,83 @@ class _HTTPListPageState extends State<HTTPListPage> {
         title: Text('HTTP请求', style: TextStyle(color: Colors.white)),
       ),
       body: Container(
+        padding: EdgeInsets.all(16),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        child: Padding(
-          padding: EdgeInsets.all(16),
-          child: Column(children: [
-            ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              child: Container(
-                color: Colors.blueGrey,
-                child: Column(children: [
-                  TapLayout(
-                    width: MediaQuery.of(context).size.width,
-                    height: 50.0,
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: SingleTextLayout(
-                      title: '显示加载框',
-                      titleColor: Colors.white,
-                      suffix: CupertinoSwitch(value: isShowDialog, onChanged: (value) => setState(() => isShowDialog = value)),
-                    ),
+        child: Column(children: [
+          ClipRRect(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            child: Container(
+              color: Colors.blueGrey,
+              child: Column(children: [
+                TapLayout(
+                  width: MediaQuery.of(context).size.width,
+                  height: 50.0,
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: SingleTextLayout(
+                    title: '显示加载框',
+                    titleColor: Colors.white,
+                    suffix: CupertinoSwitch(value: isShowDialog, onChanged: (value) => setState(() => isShowDialog = value)),
                   ),
-                  TapLayout(
-                    width: MediaQuery.of(context).size.width,
-                    height: 50.0,
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: SingleTextLayout(
-                      title: '显示错误提示框',
-                      titleColor: Colors.white,
-                      suffix: CupertinoSwitch(value: isShowToast, onChanged: (value) => setState(() => isShowToast = value)),
-                    ),
+                ),
+                TapLayout(
+                  width: MediaQuery.of(context).size.width,
+                  height: 50.0,
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: SingleTextLayout(
+                    title: '显示错误提示框',
+                    titleColor: Colors.white,
+                    suffix: CupertinoSwitch(value: isShowToast, onChanged: (value) => setState(() => isShowToast = value)),
                   ),
-                ]),
-              ),
+                ),
+              ]),
             ),
-            SizedBox(height: 16),
-            Row(children: [
-              Expanded(
-                  child: MaterialButton(
-                    onPressed: _getArticle,
-                    child: Text('重新请求', style: TextStyle(color: Colors.white)),
-                    color: Colors.blueGrey,
-                  ),
-                  flex: 1),
-              SizedBox(width: 16),
-              Expanded(
+          ),
+          SizedBox(height: 16),
+          Row(children: [
+            Expanded(
                 child: MaterialButton(
-                  onPressed: () => context.read<ArticleModel>().clear(),
-                  child: Text('清空数据', style: TextStyle(color: Colors.white)),
+                  onPressed: _getArticle,
+                  child: Text('重新请求', style: TextStyle(color: Colors.white)),
                   color: Colors.blueGrey,
                 ),
-                flex: 1,
-              ),
-            ]),
-            SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                WrapButton(
-                  text: S.of(context).login,
-                  width: 100.0,
-                  onTap: () => {CommonDialog.showToast('hello')},
-                ),
-                WrapButton(
-                  text: S.of(context).register,
-                  color: Colors.white,
-                  style: TextStyle(fontSize: 15.0, color: Color.fromRGBO(8, 191, 98, 1.0)),
-                  onTap: () => {},
-                  width: 100.0,
-                ),
-              ],
-            ),
-            SizedBox(height: 16),
+                flex: 1),
+            SizedBox(width: 16),
             Expanded(
-              child: SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
-                child: Center(child: Text(text)),
+              child: MaterialButton(
+                onPressed: () => context.read<ArticleModel>().clear(),
+                child: Text('清空数据', style: TextStyle(color: Colors.white)),
+                color: Colors.blueGrey,
               ),
+              flex: 1,
             ),
           ]),
-        ),
+          SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              WrapButton(
+                text: S.of(context).login,
+                width: 100.0,
+                onTap: () => CommonDialog.showToast('hello'),
+              ),
+              WrapButton(
+                text: S.of(context).register,
+                color: Colors.white,
+                style: TextStyle(fontSize: 15.0, color: Color.fromRGBO(8, 191, 98, 1.0)),
+                onTap: () => {},
+                width: 100.0,
+              ),
+            ],
+          ),
+          SizedBox(height: 16),
+          Expanded(
+            child: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              child: Center(child: Text(text)),
+            ),
+          ),
+        ]),
       ),
     );
   }

@@ -19,55 +19,17 @@ class CitySelectedPage extends StatefulWidget {
 }
 
 class _CitySelectedPageState extends State<CitySelectedPage> {
-  static const String _TOP = '↑';
-  static const String _STAR = '★';
-  static const String _END = '#';
-
-  List<CityModel> _cityList = [];
-  List<String> _hotCities = ['北京市', '广州市', '成都市', '深圳市', '杭州市', '武汉市'];
-
   StateController _controller = StateController();
+  List<CityModel> _cities = [];
 
   @override
   void initState() {
     super.initState();
 
-    Future.delayed(Duration(milliseconds: 500), () {
-      loadData();
-    });
-  }
-
-  void loadData() async {
-    //加载城市列表
-    await rootBundle.loadString(Assets.file('china.json')).then((value) {
-      _cityList.clear();
-      Map countyMap = json.decode(value);
-      List list = countyMap['china'];
-      list.forEach((v) => _cityList.add(CityModel.fromJson(v)));
-      _handleCityPinyin(_cityList);
+    Future.delayed(Duration(milliseconds: 500), () async {
+      _cities = await CitySelectedView.loadAssetsData();
       setState(() => _controller.loadComplete());
     });
-  }
-
-  void _handleCityPinyin(List<CityModel> list) {
-    if (list.isEmpty) return;
-    for (int i = 0, length = list.length; i < length; i++) {
-      String pinyin = PinyinHelper.getPinyinE(list[i].name);
-      String tag = pinyin.substring(0, 1).toUpperCase();
-      list[i].namePinyin = pinyin;
-      list[i].tagIndex = RegExp('[A-Z]').hasMatch(tag) ? tag : _END;
-    }
-    // A-Z sort.
-    SuspensionUtil.sortListBySuspensionTag(list);
-
-    // add hot_cityList.
-    List<CityModel> hotCities = _hotCities.map((city) => CityModel(name: city, tagIndex: _STAR)).toList();
-    _cityList.insertAll(0, hotCities);
-
-    // show sus tag.
-    SuspensionUtil.setShowSuspensionStatus(_cityList);
-
-    setState(() {});
   }
 
   @override
@@ -78,55 +40,130 @@ class _CitySelectedPageState extends State<CitySelectedPage> {
       body: SafeArea(
         child: StateView(
           controller: _controller,
-          child: Column(
-            children: [
-              Container(
-                alignment: Alignment.centerLeft,
-                padding: const EdgeInsets.only(left: 15.0),
-                height: 50.0,
-                child: Text("当前城市: 成都市"),
-              ),
-              Expanded(
-                child: AzListView(
-                  data: _cityList,
-                  itemCount: _cityList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return _buildListItem(_cityList[index]);
-                  },
-                  padding: EdgeInsets.zero,
-                  susItemBuilder: (BuildContext context, int index) {
-                    CityModel model = _cityList[index];
-                    if (_TOP == model.getSuspensionTag()) {
-                      return Container();
-                    }
-                    return _buildSusItem(_cityList[index].getSuspensionTag());
-                  },
-                  physics: BouncingScrollPhysics(),
-                  indexBarData: [_TOP, _STAR, ...kIndexBarData],
-                  indexBarOptions: IndexBarOptions(
-                    needRebuild: true,
-                    ignoreDragCancel: true,
-                    downTextStyle: TextStyle(fontSize: 12, color: Colors.white),
-                    downItemDecoration: BoxDecoration(shape: BoxShape.circle, color: Colors.green),
-                    indexHintWidth: 120 / 2,
-                    indexHintHeight: 100 / 2,
-                    indexHintDecoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(Assets.image('ic_bubble_gray.png')),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                    indexHintAlignment: Alignment.centerRight,
-                    indexHintChildAlignment: Alignment(-0.25, 0.0),
-                    indexHintOffset: Offset(-20, 0),
-                  ),
-                ),
-              )
-            ],
+          child: CitySelectedView(
+            cities: _cities,
+            onTap: (model) {
+              CommonDialog.showToast('onItemClick : ${model.toString()}');
+            },
           ),
         ),
       ),
     );
+  }
+}
+
+/// 城市选择布局
+class CitySelectedView extends StatefulWidget {
+  final List<CityModel> cities;
+  final List<String>? hotCities;
+  final ValueChanged<CityModel>? onTap;
+
+  CitySelectedView({
+    required this.cities,
+    this.hotCities,
+    this.onTap,
+  });
+
+  /// 加载assets的数据
+  static Future<List<CityModel>> loadAssetsData() async {
+    List<CityModel> cityList = [];
+    //加载城市列表
+    String jsonString = await rootBundle.loadString(Assets.file('china.json'));
+    Map countyMap = json.decode(jsonString);
+    List list = countyMap['china'];
+    list.forEach((map) => cityList.add(CityModel.fromJson(map)));
+    return cityList;
+  }
+
+  @override
+  State<StatefulWidget> createState() => _CitySelectedViewState();
+}
+
+class _CitySelectedViewState extends State<CitySelectedView> {
+  static const String _TOP = '↑';
+  static const String _STAR = '★';
+  static const String _END = '#';
+
+  /// 城市列表
+  List<CityModel> _cities = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _cities.addAll(widget.cities);
+    _handleCityPinyin();
+  }
+
+  /// 处理城市列表，按拼音首字母排序
+  void _handleCityPinyin() {
+    if (_cities.isEmpty) return;
+    for (int i = 0, length = _cities.length; i < length; i++) {
+      String pinyin = PinyinHelper.getPinyinE(_cities[i].name);
+      String tag = pinyin.substring(0, 1).toUpperCase();
+      _cities[i].namePinyin = pinyin;
+      _cities[i].tagIndex = RegExp('[A-Z]').hasMatch(tag) ? tag : _END;
+    }
+    // A-Z sort.
+    SuspensionUtil.sortListBySuspensionTag(_cities);
+
+    List<String> hotList = widget.hotCities ?? ['北京市', '广州市', '成都市', '深圳市', '杭州市', '武汉市'];
+    // add hot_cityList.
+    List<CityModel> hotCities = hotList.map((city) => CityModel(name: city, tagIndex: _STAR)).toList();
+    _cities.insertAll(0, hotCities);
+
+    // show sus tag.
+    SuspensionUtil.setShowSuspensionStatus(_cities);
+
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      Container(
+        alignment: Alignment.centerLeft,
+        padding: const EdgeInsets.only(left: 15.0),
+        height: 50.0,
+        child: Text("当前城市: 成都市"),
+      ),
+      Expanded(
+        child: AzListView(
+          data: _cities,
+          itemCount: _cities.length,
+          itemBuilder: (BuildContext context, int index) {
+            return _buildListItem(_cities[index]);
+          },
+          padding: EdgeInsets.zero,
+          susItemBuilder: (BuildContext context, int index) {
+            CityModel model = _cities[index];
+            if (_TOP == model.getSuspensionTag()) {
+              return Container();
+            }
+            return _buildSusItem(_cities[index].getSuspensionTag());
+          },
+          physics: BouncingScrollPhysics(),
+          indexBarData: [_TOP, _STAR, ...kIndexBarData],
+          indexBarOptions: IndexBarOptions(
+            needRebuild: true,
+            ignoreDragCancel: true,
+            downTextStyle: TextStyle(fontSize: 12, color: Colors.white),
+            downItemDecoration: BoxDecoration(shape: BoxShape.circle, color: Colors.green),
+            indexHintWidth: 120 / 2,
+            indexHintHeight: 100 / 2,
+            indexHintDecoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(Assets.image('ic_bubble_gray.png')),
+                fit: BoxFit.contain,
+              ),
+            ),
+            indexHintAlignment: Alignment.centerRight,
+            indexHintChildAlignment: Alignment(-0.25, 0.0),
+            indexHintOffset: Offset(-20, 0),
+          ),
+        ),
+      )
+    ]);
   }
 
   Widget _buildSusItem(String tag, {double susHeight = 40}) {
@@ -151,7 +188,9 @@ class _CitySelectedPageState extends State<CitySelectedPage> {
     return ListTile(
       title: Text(model.name),
       onTap: () {
-        CommonDialog.showToast('onItemClick : ${model.toString()}');
+        if (widget.onTap != null) {
+          widget.onTap!(model);
+        }
       },
     );
   }

@@ -52,12 +52,12 @@ class _ConvertPageState extends State<ConvertPage> {
                 MaterialButton(
                   color: Colors.blue,
                   textColor: Colors.white,
-                  child: Text('存储字符数组到SP'),
+                  child: Text('存储字符数组到SP(model转string)'),
                   onPressed: () => SpUtil.setUserInfo(jsonEncode(users)),
                 ),
               ]),
               SizedBox(height: 8),
-              CommonWidget.multipleTextView('通过jsonEncode编码为字符串, 然后通过SharedPreferences保存\njsonEncode(users)'),
+              CommonWidget.multipleTextView('通过jsonEncode转为字符串, 然后通过SharedPreferences保存\n\njsonEncode(users)'),
               SizedBox(height: 8),
               CommonWidget.divider(),
               SizedBox(height: 16),
@@ -65,14 +65,14 @@ class _ConvertPageState extends State<ConvertPage> {
                 MaterialButton(
                   color: Colors.blue,
                   textColor: Colors.white,
-                  child: Text('从SP取出字符数组'),
+                  child: Text('从SP取出字符数组(string转model)'),
                   onPressed: () {
-                    String string = SpUtil.getUserInfo();
-                    if (string.length > 0) {
-                      List<UserEntity> list = (jsonDecode(string) as List<dynamic>).map((e) => UserEntity.fromJson((e as Map<String, dynamic>))).toList();
+                    String json = SpUtil.getUserInfo();
+                    if (json.length > 0) {
+                      List<UserEntity> users = (jsonDecode(json) as List<dynamic>).map((e) => UserEntity.fromJson((e as Map<String, dynamic>))).toList();
                       setState(() {
-                        listStr = jsonEncode(list);
-                        listToJsonStr = StrUtil.formatToJson(list);
+                        listStr = jsonEncode(users);
+                        listToJsonStr = StrUtil.formatToJson(users);
                         listToBeanStr = jsonDecode(listStr).toString();
                       });
                     }
@@ -81,7 +81,7 @@ class _ConvertPageState extends State<ConvertPage> {
               ]),
               SizedBox(height: 8),
               CommonWidget.multipleTextView(
-                  '先通过SharedPreferences取出字符, 再通过jsonDecode解码并强制转化为List<dynamic>, 遍历数组将dynamic转化为Bean对应的Map对象\n(jsonDecode(string) as List<dynamic>).map((e) => User.fromJson((e as Map<String, dynamic>))).toList()'),
+                  '先通过SharedPreferences取出字符, 再通过jsonDecode解码并强制转化为List<dynamic>, 遍历数组将dynamic转化为Bean对应的Map对象\n\n(jsonDecode(string) as List<dynamic>).map((e) => User.fromJson((e as Map<String, dynamic>))).toList()'),
               SizedBox(height: 8),
               CommonWidget.divider(),
               CommonWidget.titleView('Map', top: 16),
