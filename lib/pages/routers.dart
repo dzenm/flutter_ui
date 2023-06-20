@@ -24,44 +24,44 @@ class Routers {
   static List<AppRoutePage> get routers => [
         AppRoutePage(
           name: root,
-          builder: (settings) {
+          builder: (params) {
             return AppPage();
           },
         ),
         AppRoutePage(
           name: notFound,
-          builder: (settings) {
+          builder: (params) {
             return NotFoundPage();
           },
         ),
         AppRoutePage(
           name: login,
-          builder: (settings) {
+          builder: (params) {
             return LoginPage();
           },
         ),
         AppRoutePage(
           name: register,
-          builder: (settings) {
+          builder: (params) {
             return RegisterPage();
           },
         ),
         AppRoutePage(
           name: main,
-          builder: (settings) {
+          builder: (params) {
             return MainPage();
           },
         ),
         AppRoutePage(
           name: example,
-          builder: (settings) {
+          builder: (params) {
             return ExamplePage();
           },
         ),
         AppRoutePage(
           name: webView,
-          builder: (queryParams) {
-            dynamic args = queryParams;
+          builder: (params) {
+            dynamic args = params;
             String title = args['title'] ?? '';
             String url = args['url'] ?? '';
             return WebViewPage(title: title, url: url);

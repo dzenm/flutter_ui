@@ -23,130 +23,130 @@ import 'video_page/video_page.dart';
 ///
 class StudyRouter {
   static final String study = '/study';
-  static final String city = '/study/city';
-  static final String convert = '/study/convert';
-  static final String dialog = '/study/dialog';
-  static final String dragList = '/study/dragList';
-  static final String floatNavigation = '/study/floatNavigation';
-  static final String http = '/study/http';
-  static final String image = '/study/image';
-  static final String keyword = '/study/keyword';
-  static final String list = '/study/list';
-  static final String loadImage = '/study/loadImage';
-  static final String popup = '/study/popup';
-  static final String provider = '/study/provider';
-  static final String qr = '/study/qr';
-  static final String router = '/study/router';
-  static final String state = '/study/state';
-  static final String text = '/study/text';
-  static final String video = '/study/video';
+  static final String city = '$study/city';
+  static final String convert = '$study/convert';
+  static final String dialog = '$study/dialog';
+  static final String dragList = '$study/dragList';
+  static final String floatNavigation = '$study/floatNavigation';
+  static final String http = '$study/http';
+  static final String image = '$study/image';
+  static final String keyword = '$study/keyword';
+  static final String list = '$study/list';
+  static final String loadImage = '$study/loadImage';
+  static final String popup = '$study/popup';
+  static final String provider = '$study/provider';
+  static final String qr = '$study/qr';
+  static final String router = '$study/router';
+  static final String state = '$study/state';
+  static final String text = '$study/text';
+  static final String video = '$study/video';
 
   static List<AppRoutePage> get routers => [
         AppRoutePage(
           name: study,
-          builder: (settings) {
+          builder: (params) {
             return StudyPage();
           },
         ),
         AppRoutePage(
           name: city,
-          builder: (settings) {
+          builder: (params) {
             return CitySelectedPage();
           },
         ),
         AppRoutePage(
           name: convert,
-          builder: (settings) {
+          builder: (params) {
             return ConvertPage();
           },
         ),
         AppRoutePage(
           name: dialog,
-          builder: (settings) {
+          builder: (params) {
             return DialogPage();
           },
         ),
         AppRoutePage(
           name: dragList,
-          builder: (settings) {
+          builder: (params) {
             return DragListPage();
           },
         ),
         AppRoutePage(
           name: floatNavigation,
-          builder: (settings) {
+          builder: (params) {
             return FloatNavigationPage();
           },
         ),
         AppRoutePage(
           name: http,
-          builder: (settings) {
+          builder: (params) {
             return HTTPListPage();
           },
         ),
         AppRoutePage(
           name: image,
-          builder: (settings) {
+          builder: (params) {
             return ImageEditorPage();
           },
         ),
         AppRoutePage(
           name: keyword,
-          builder: (settings) {
+          builder: (params) {
             return KeywordBoardPage();
           },
         ),
         AppRoutePage(
           name: list,
-          builder: (settings) {
+          builder: (params) {
             return ListPage();
           },
         ),
         AppRoutePage(
           name: loadImage,
-          builder: (settings) {
+          builder: (params) {
             return LoadImagePage();
           },
         ),
         AppRoutePage(
           name: popup,
-          builder: (settings) {
+          builder: (params) {
             return PopupPage();
           },
         ),
         AppRoutePage(
           name: provider,
-          builder: (settings) {
+          builder: (params) {
             return ProviderPage();
           },
         ),
         AppRoutePage(
           name: qr,
-          builder: (settings) {
+          builder: (params) {
             return QRPage();
           },
         ),
         AppRoutePage(
           name: router,
-          builder: (settings) {
+          builder: (params) {
             return RouterPage();
           },
         ),
         AppRoutePage(
           name: state,
-          builder: (settings) {
+          builder: (params) {
             return StatePage();
           },
         ),
         AppRoutePage(
           name: text,
-          builder: (settings) {
+          builder: (params) {
             return TextPage();
           },
         ),
         AppRoutePage(
           name: video,
-          builder: (settings) {
+          builder: (params) {
             return VideoPage();
           },
         ),

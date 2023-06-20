@@ -8,7 +8,6 @@ import '../../../base/log/log.dart';
 import '../../../base/res/app_theme.dart';
 import '../../../base/res/local_model.dart';
 import '../../../base/route/app_route_delegate.dart';
-import '../../../base/route/route_manager.dart';
 import '../../../base/utils/device_util.dart';
 import '../../../base/widgets/single_text_layout.dart';
 import '../../../base/widgets/tap_layout.dart';
@@ -19,7 +18,6 @@ import '../../../http/http_manager.dart';
 import '../../../models/user_model.dart';
 import '../../study/study_router.dart';
 import 'me_model.dart';
-import 'medicine/medicine_page.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56
@@ -147,7 +145,10 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => RouteManager.push(context, MedicinePage(medicineName: '金银花')),
+        onTap: () {
+          String params = '?medicineName=金银花';
+          AppRouteDelegate.of(context).push(MeRouter.medicine + params);
+        },
         child: SingleTextLayout(
           title: 'Chinese',
           isShowForward: true,

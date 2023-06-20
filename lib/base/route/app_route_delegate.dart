@@ -13,7 +13,8 @@ typedef RouteBuilder = PageRoute Function(Widget child);
 
 ///
 /// Created by a0010 on 2023/6/13 16:29
-/// 路由管理，基于[ChangeNotifier]管理数据，页面进出栈，需要主动刷新，否则页面调整不起作用，也可以使用已经封装好的方法 [push]
+/// 路由管理，基于[ChangeNotifier]管理数据，页面进出栈，需要主动刷新，否则页面调整不起作用，
+/// 也可以使用已经封装好的方法 [push]、[pushReplace]、[pushAndRemoveUntil]、[pop]、[popUntil]
 class AppRouteDelegate extends RouterDelegate<String> with ChangeNotifier, PopNavigatorRouterDelegateMixin<String> {
   GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
