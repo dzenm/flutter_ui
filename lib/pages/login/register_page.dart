@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../base/http/https_client.dart';
 import '../../base/log/build_config.dart';
 import '../../base/log/log.dart';
+import '../../base/route/app_route_delegate.dart';
 import '../../base/utils/sp_util.dart';
 import '../../base/widgets/tap_layout.dart';
 import '../../entities/user_entity.dart';
@@ -203,7 +204,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void _pushMainPage() {
-    Navigator.popAndPushNamed(context, Routers.main);
+    AppRouteDelegate.of(context).push(Routers.main, clearStack: true);
   }
 
   void log(String msg) => BuildConfig.showPageLog ? Log.i(msg, tag: _tag) : null;

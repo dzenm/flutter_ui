@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_ui/application.dart';
 import 'package:flutter_ui/base/http/https_client.dart';
 import 'package:flutter_ui/base/http/page_entity.dart';
+import 'package:flutter_ui/base/route/app_route_delegate.dart';
 import 'package:flutter_ui/entities/article_entity.dart';
 import 'package:flutter_ui/entities/banner_entity.dart';
 import 'package:flutter_ui/entities/coin_entity.dart';
@@ -299,7 +299,7 @@ class HttpManager {
     await HttpsClient.instance.request(apiServices.logout(), success: (data) {
       SpUtil.clearUser();
       ProviderManager.clear(Application().context);
-      Navigator.popAndPushNamed(Application().context, Routers.login);
+      AppRouteDelegate.of(Application().context).push(Routers.login, clearStack: true);
     });
   }
 }

@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../base/http/https_client.dart';
 import '../../base/log/log.dart';
+import '../../base/route/app_route_delegate.dart';
 import '../../base/utils/sp_util.dart';
 import '../../base/widgets/tap_layout.dart';
 import '../../entities/user_entity.dart';
@@ -263,7 +264,7 @@ class _LoginWidgetState extends State<_LoginWidget> {
     FocusScope.of(context).unfocus();
     if (!_isLoginAndRegisterPage) {
       FocusScope.of(context).unfocus();
-      Navigator.pushNamed(context, Routers.register);
+      AppRouteDelegate.of(context).push(Routers.register, clearStack: true);
       return;
     }
     if (_switchCurrentLogin) {
@@ -273,7 +274,7 @@ class _LoginWidgetState extends State<_LoginWidget> {
   }
 
   void _pushMainPage() {
-    Navigator.popAndPushNamed(context, Routers.main);
+    AppRouteDelegate.of(context).push(Routers.main, clearStack: true);
   }
 
   void log(String msg) => BuildConfig.showPageLog ? Log.i(msg, tag: _tag) : null;

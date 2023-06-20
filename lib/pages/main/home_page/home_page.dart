@@ -7,6 +7,7 @@ import '../../../base/log/build_config.dart';
 import '../../../base/log/log.dart';
 import '../../../base/res/assets.dart';
 import '../../../base/res/custom_icon.dart';
+import '../../../base/route/app_route_delegate.dart';
 import '../../../base/utils/str_util.dart';
 import '../../../base/widgets/banner_view.dart';
 import '../../../base/widgets/common_bar.dart';
@@ -254,7 +255,8 @@ class ArticleItemView extends StatelessWidget {
       onTap: () {
         ArticleEntity? article = context.read<ArticleModel>().getArticle(index);
         if (article == null) return;
-        Navigator.pushNamed(context, Routers.webView, arguments: {'title': article.title, 'url': article.link});
+        String params = '?title=${article.title}&url=${article.link}';
+        AppRouteDelegate.of(context).push(Routers.webView + params);
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -305,7 +307,8 @@ class ArticleItemView extends StatelessWidget {
                           // String page = url.substring(start, end);
                           ArticleEntity? article = context.read<ArticleModel>().getArticle(index);
                           if (article == null) return;
-                          Navigator.pushNamed(context, Routers.webView, arguments: {'title': val.name, 'url': val.url});
+                          String params = '?title=${val.name}&url=${val.url}';
+                          AppRouteDelegate.of(context).push(Routers.webView + params);
                         },
                       );
                     },

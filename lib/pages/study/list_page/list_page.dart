@@ -7,6 +7,7 @@ import 'package:flutter_ui/http/http_manager.dart';
 import 'package:flutter_ui/models/article_model.dart';
 import 'package:provider/provider.dart';
 
+import '../../../base/route/app_route_delegate.dart';
 import '../../routers.dart';
 
 /// 刷新和底部加载的列表
@@ -53,7 +54,10 @@ class _ListPageState extends State<ListPage> {
   Widget _buildArticleItem(ArticleEntity article, int index) {
     String title = article.title ?? '';
     return TapLayout(
-      onTap: () => Navigator.pushNamed(context, Routers.webView, arguments: {'title': title, 'url': article.link}),
+      onTap: () {
+        String params = '?title=$title&url=${article.link}';
+        AppRouteDelegate.of(context).push(Routers.webView + params);
+      },
       child: ListTile(
         title: Text(title),
       ),

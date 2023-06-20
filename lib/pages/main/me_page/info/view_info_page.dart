@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../base/res/app_theme.dart';
 import '../../../../base/res/local_model.dart';
+import '../../../../base/route/app_route_delegate.dart';
 import '../../../../base/widgets/common_bar.dart';
 import '../../../../base/widgets/single_text_layout.dart';
 import '../../../../base/widgets/tap_layout.dart';
@@ -41,7 +42,7 @@ class _ViewInfoPageState extends State<ViewInfoPage> {
           CommonBar(title: '我的信息', centerTitle: true, actions: [
             IconButton(
               icon: Icon(Icons.edit_sharp),
-              onPressed: () => Navigator.pushNamed(context, MeRouter.editInfo),
+              onPressed: () => AppRouteDelegate.of(context).push(MeRouter.editInfo),
             ),
           ]),
           Selector<UserModel, String>(

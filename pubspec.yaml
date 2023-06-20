@@ -120,7 +120,7 @@ dependencies:
   ########################################## 原生 ########################################
 
   # 操作系统通讯录 https://pub.flutter-io.cn/packages/flutter_contacts
-#  flutter_contacts: 1.1.6
+  #  flutter_contacts: 1.1.6
 
   ########################################## 网络 ########################################
   # 监测网络状态 https://pub.dev/packages/connectivity
@@ -147,6 +147,7 @@ dev_dependencies:
     sdk: flutter
   retrofit_generator: 6.0.0+3
   build_runner: 2.3.2
+  # flutter pub run build_runner build --delete-conflicting-outputs
   # json序列化 https://pub-web.flutter-io.cn/packages/json_serializable
   json_serializable: 6.6.1
 # For information on the generic Dart part of this file, see the

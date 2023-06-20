@@ -1,4 +1,4 @@
-import '../../../base/route/app_router.dart';
+import '../../../base/route/app_route_delegate.dart';
 import '../../common/example_page.dart';
 import 'article/article_page.dart';
 import 'coin/coin_page.dart';
@@ -12,11 +12,7 @@ import 'setting_page/setting_page.dart';
 ///
 /// Created by a0010 on 2023/5/23 14:50
 ///
-
-///
-/// Created by a0010 on 2023/5/6 13:32
-///
-class MeRouter extends IRouter {
+class MeRouter {
   static final String example = '/example';
   static final String article = '/me/article';
   static final String coin = '/me/coin';
@@ -27,34 +23,60 @@ class MeRouter extends IRouter {
   static final String editInfo = '/me/editInfo';
   static final String viewInfo = '/me/viewInfo';
 
-  @override
-  void initRouter(AppRouter router) {
-    router.define(example, pagerBuilder: (context) {
-      return ExamplePage();
-    });
-    router.define(article, pagerBuilder: (context) {
-      return ArticlePage();
-    });
-    router.define(coin, pagerBuilder: (context) {
-      return CoinPage();
-    });
-    router.define(collect, pagerBuilder: (context) {
-      return CollectPage();
-    });
-    router.define(medicine, pagerBuilder: (context) {
-      return MedicinePage(medicineName: '');
-    });
-    router.define(rank, pagerBuilder: (context) {
-      return RankPage();
-    });
-    router.define(setting, pagerBuilder: (context) {
-      return SettingPage();
-    });
-    router.define(editInfo, pagerBuilder: (context) {
-      return EditInfoPage();
-    });
-    router.define(viewInfo, pagerBuilder: (context) {
-      return ViewInfoPage();
-    });
-  }
+  static List<AppRoutePage> get routers => [
+        AppRoutePage(
+          name: example,
+          builder: (settings) {
+            return ExamplePage();
+          },
+        ),
+        AppRoutePage(
+          name: article,
+          builder: (settings) {
+            return ArticlePage();
+          },
+        ),
+        AppRoutePage(
+          name: coin,
+          builder: (settings) {
+            return CoinPage();
+          },
+        ),
+        AppRoutePage(
+          name: collect,
+          builder: (settings) {
+            return CollectPage();
+          },
+        ),
+        AppRoutePage(
+          name: medicine,
+          builder: (settings) {
+            return MedicinePage(medicineName: '');
+          },
+        ),
+        AppRoutePage(
+          name: rank,
+          builder: (settings) {
+            return RankPage();
+          },
+        ),
+        AppRoutePage(
+          name: setting,
+          builder: (settings) {
+            return SettingPage();
+          },
+        ),
+        AppRoutePage(
+          name: editInfo,
+          builder: (settings) {
+            return EditInfoPage();
+          },
+        ),
+        AppRoutePage(
+          name: viewInfo,
+          builder: (settings) {
+            return ViewInfoPage();
+          },
+        ),
+      ];
 }

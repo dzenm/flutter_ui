@@ -5,7 +5,9 @@ import 'package:provider/provider.dart';
 
 import '../../base/res/app_theme.dart';
 import '../../base/res/local_model.dart';
+import '../../base/route/app_route_delegate.dart';
 import '../../generated/l10n.dart';
+import 'study_router.dart';
 
 ///
 /// Created by a0010 on 2022/11/3 16:03
@@ -16,8 +18,6 @@ class StudyPage extends StatefulWidget {
 }
 
 class _StudyPageState extends State<StudyPage> {
-  GlobalKey _targetKey = GlobalKey();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +43,7 @@ class _StudyPageState extends State<StudyPage> {
         child: _text('城市选择'),
         textColor: Colors.white,
         color: theme.appbarColor,
-        onPressed: () => Navigator.pushNamed(context, Routers.studyRouter.city),
+        onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.city),
       ),
       SizedBox(height: 8),
       // 字符转化
@@ -51,7 +51,7 @@ class _StudyPageState extends State<StudyPage> {
         child: _text('字符转化'),
         textColor: Colors.white,
         color: theme.appbarColor,
-        onPressed: () => Navigator.pushNamed(context, Routers.studyRouter.convert),
+        onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.convert),
       ),
       SizedBox(height: 8),
       // dialog
@@ -59,7 +59,7 @@ class _StudyPageState extends State<StudyPage> {
         child: _text('弹窗'),
         textColor: Colors.white,
         color: theme.appbarColor,
-        onPressed: () => Navigator.pushNamed(context, Routers.studyRouter.dialog),
+        onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.dialog),
       ),
       SizedBox(height: 8),
       // 可拖动ListView
@@ -67,7 +67,7 @@ class _StudyPageState extends State<StudyPage> {
         child: _text('可拖动ListView'),
         textColor: Colors.white,
         color: theme.appbarColor,
-        onPressed: () => Navigator.pushNamed(context, Routers.studyRouter.dragList),
+        onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.dragList),
       ),
       SizedBox(height: 8),
       // 快速页面创建
@@ -75,7 +75,7 @@ class _StudyPageState extends State<StudyPage> {
         child: _text('快速页面创建'),
         textColor: Colors.white,
         color: theme.appbarColor,
-        onPressed: () => Navigator.pushNamed(context, Routers.example),
+        onPressed: () => AppRouteDelegate.of(context).push(Routers.example),
       ),
       SizedBox(height: 8),
       // 浮动的导航栏和PopupWindow
@@ -83,7 +83,7 @@ class _StudyPageState extends State<StudyPage> {
         child: _text('浮动的导航栏和PopupWindow'),
         textColor: Colors.white,
         color: theme.appbarColor,
-        onPressed: () => Navigator.pushNamed(context, Routers.studyRouter.floatNavigation),
+        onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.floatNavigation),
       ),
       SizedBox(height: 8),
       // HTTP请求
@@ -91,7 +91,7 @@ class _StudyPageState extends State<StudyPage> {
         child: _text('HTTP请求'),
         textColor: Colors.white,
         color: theme.appbarColor,
-        onPressed: () => Navigator.pushNamed(context, Routers.studyRouter.http),
+        onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.http),
       ),
       SizedBox(height: 8),
       // 自定义键盘
@@ -99,7 +99,7 @@ class _StudyPageState extends State<StudyPage> {
         child: _text('自定义键盘'),
         textColor: Colors.white,
         color: theme.appbarColor,
-        onPressed: () => Navigator.pushNamed(context, Routers.studyRouter.keyword),
+        onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.keyword),
       ),
       SizedBox(height: 8),
       // 刷新和底部加载的列表
@@ -107,7 +107,7 @@ class _StudyPageState extends State<StudyPage> {
         child: _text('刷新和底部加载的列表'),
         textColor: Colors.white,
         color: theme.appbarColor,
-        onPressed: () => Navigator.pushNamed(context, Routers.studyRouter.list),
+        onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.list),
       ),
       SizedBox(height: 8),
       // 加载图片
@@ -115,7 +115,7 @@ class _StudyPageState extends State<StudyPage> {
         child: _text('加载图片'),
         textColor: Colors.white,
         color: theme.appbarColor,
-        onPressed: () => Navigator.pushNamed(context, Routers.studyRouter.loadImage),
+        onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.loadImage),
       ),
       SizedBox(height: 8),
       // 加载图片
@@ -123,7 +123,7 @@ class _StudyPageState extends State<StudyPage> {
         child: _text('PopupWindow测试'),
         textColor: Colors.white,
         color: theme.appbarColor,
-        onPressed: () => Navigator.pushNamed(context, Routers.studyRouter.popup),
+        onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.popup),
       ),
       SizedBox(height: 8),
       // Provider
@@ -131,7 +131,7 @@ class _StudyPageState extends State<StudyPage> {
         child: _text('Provider'),
         textColor: Colors.white,
         color: theme.appbarColor,
-        onPressed: () => Navigator.pushNamed(context, Routers.studyRouter.provider),
+        onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.provider),
       ),
       SizedBox(height: 8),
       // 二维码扫描
@@ -139,7 +139,7 @@ class _StudyPageState extends State<StudyPage> {
         child: _text('二维码扫描'),
         textColor: Colors.white,
         color: theme.appbarColor,
-        onPressed: () => Navigator.pushNamed(context, Routers.studyRouter.qr),
+        onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.qr),
       ),
       SizedBox(height: 8),
       // 路由测试
@@ -147,7 +147,7 @@ class _StudyPageState extends State<StudyPage> {
         child: _text('路由测试'),
         textColor: Colors.white,
         color: theme.appbarColor,
-        onPressed: () => Navigator.pushNamed(context, Routers.studyRouter.routers),
+        onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.router),
       ),
       SizedBox(height: 8),
       // 设置
@@ -155,7 +155,7 @@ class _StudyPageState extends State<StudyPage> {
         child: _text(S.of(context).setting),
         textColor: Colors.white,
         color: theme.appbarColor,
-        onPressed: () => Navigator.pushNamed(context, Routers.studyRouter.city),
+        onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.city),
       ),
       SizedBox(height: 8),
       // 加载状态
@@ -163,7 +163,7 @@ class _StudyPageState extends State<StudyPage> {
         child: _text(S.of(context).state),
         textColor: Colors.white,
         color: theme.appbarColor,
-        onPressed: () => Navigator.pushNamed(context, Routers.studyRouter.state),
+        onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.state),
       ),
       SizedBox(height: 8),
       // 文本展示
@@ -171,7 +171,7 @@ class _StudyPageState extends State<StudyPage> {
         child: _text('文本展示'),
         textColor: Colors.white,
         color: theme.appbarColor,
-        onPressed: () => Navigator.pushNamed(context, Routers.studyRouter.text),
+        onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.text),
       ),
       SizedBox(height: 8),
       // 视频播放
@@ -179,7 +179,7 @@ class _StudyPageState extends State<StudyPage> {
         child: _text('视频播放'),
         textColor: Colors.white,
         color: theme.appbarColor,
-        onPressed: () => Navigator.pushNamed(context, Routers.studyRouter.video),
+        onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.video),
       ),
       SizedBox(height: 16),
     ];

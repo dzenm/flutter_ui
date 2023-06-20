@@ -17,8 +17,6 @@ import 'base/widgets/common_dialog.dart';
 import 'base/widgets/keyboard/mocks/mock_binding.dart';
 import 'base/widgets/keyboard/number_keyboard.dart';
 import 'http/cookie_interceptor.dart';
-import 'pages/login/login_page.dart';
-import 'pages/main/main_page.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56
@@ -31,10 +29,15 @@ class Application {
 
   factory Application() => instance;
 
-  GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  BuildContext? _context;
 
   /// 全局context
-  BuildContext get context => navigatorKey.currentContext!;
+  BuildContext get context => _context!;
+
+  /// 在[MaterialApp]设置
+  set context(BuildContext context) {
+    _context = context;
+  }
 
   /// App入口
   void main() async {
@@ -49,7 +52,7 @@ class Application {
       // 让 Flutter 使用 path 策略
       usePathUrlStrategy();
       //启动第一个页面(必须使用AppPage作为最顶层页面，包含一些页面初始化相关的信息；_initApp为用户看见的第一个页面，可以自己根据实际情况设置)
-      runMockApp(AppPage(child: _initApp()));
+      runMockApp(AppPage());
     }, handleMsg: (message) async {
       String logFileName = 'crash_${DateTime.now()}.log';
       await FileUtil.instance.save(logFileName, message, dir: 'crash').then((String? filePath) async {});
@@ -134,14 +137,6 @@ class Application {
   /// 初始化iOS设置
   void _initIOSSettings() {
     if (!BuildConfig.isIOS) return;
-  }
-
-  /// 获取第一个页面
-  Widget _initApp() {
-    if (SpUtil.getUserLoginState()) {
-      return MainPage();
-    }
-    return LoginPage();
   }
 
   /// 打印日志

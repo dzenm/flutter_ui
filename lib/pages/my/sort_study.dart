@@ -8,6 +8,8 @@ class SortStudy {
     List<People> list = [];
     list.add(People(age: 23, index: 1));
     list.add(People(age: 23, index: 6));
+    list.add(People(age: 24, index: 1));
+    list.add(People(age: 26, index: 6));
     list.add(People(age: 23, index: 3));
     list.add(People(age: 26, index: 5));
     list.add(People(age: 37, index: 5));
@@ -18,7 +20,9 @@ class SortStudy {
     /// item：age=23, index=1
     /// item：age=23, index=3
     /// item：age=23, index=6
+    /// item：age=24, index=1
     /// item：age=26, index=5
+    /// item：age=26, index=6
     /// item：age=36, index=5
     /// item：age=37, index=5
     list.sort((a, b) {

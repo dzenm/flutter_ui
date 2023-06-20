@@ -5,6 +5,7 @@ import 'package:flutter_ui/pages/main/me_page/me_router.dart';
 
 import '../../../base/log/log.dart';
 import '../../../base/res/assets.dart';
+import '../../../base/route/app_route_delegate.dart';
 import '../../../base/widgets/adapter_size_text.dart';
 import '../../../base/widgets/badge_tag.dart';
 import '../../../base/widgets/common_dialog.dart';
@@ -145,7 +146,7 @@ class _TextPageState extends State<TextPage> {
                 TapLayout(
                   height: 50.0,
                   padding: EdgeInsets.symmetric(horizontal: 16),
-                  onTap: () => Navigator.pushNamed(context, MeRouter.setting),
+                  onTap: () => AppRouteDelegate.of(context).push(MeRouter.setting),
                   child: SingleTextLayout(
                     title: S.of(context).setting,
                     isShowForward: true,

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ui/pages/main/me_page/me_router.dart';
-import 'package:flutter_ui/pages/routers.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base/log/build_config.dart';
 import '../../../base/log/log.dart';
 import '../../../base/res/app_theme.dart';
 import '../../../base/res/local_model.dart';
+import '../../../base/route/app_route_delegate.dart';
 import '../../../base/route/route_manager.dart';
 import '../../../base/utils/device_util.dart';
 import '../../../base/widgets/single_text_layout.dart';
@@ -17,6 +17,7 @@ import '../../../entities/user_entity.dart';
 import '../../../generated/l10n.dart';
 import '../../../http/http_manager.dart';
 import '../../../models/user_model.dart';
+import '../../study/study_router.dart';
 import 'me_model.dart';
 import 'medicine/medicine_page.dart';
 
@@ -156,7 +157,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => Navigator.pushNamed(context, MeRouter.collect),
+        onTap: () => AppRouteDelegate.of(context).push(MeRouter.collect),
         child: SingleTextLayout(
           icon: Icons.collections,
           title: S.of(context).collect,
@@ -166,7 +167,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => Navigator.pushNamed(context, MeRouter.coin),
+        onTap: () => AppRouteDelegate.of(context).push(MeRouter.coin),
         child: SingleTextLayout(
           icon: Icons.money,
           title: S.of(context).coin,
@@ -176,7 +177,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => Navigator.pushNamed(context, MeRouter.rank),
+        onTap: () => AppRouteDelegate.of(context).push(MeRouter.rank),
         child: SingleTextLayout(
           icon: Icons.money,
           title: '积分排行榜',
@@ -186,7 +187,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => Navigator.pushNamed(context, MeRouter.article),
+        onTap: () => AppRouteDelegate.of(context).push(MeRouter.article),
         child: SingleTextLayout(
           icon: Icons.article,
           title: '分享的文章',
@@ -196,7 +197,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => Navigator.pushNamed(context, Routers.studyRouter.study),
+        onTap: () => AppRouteDelegate.of(context).push(StudyRouter.study),
         child: SingleTextLayout(
           icon: Icons.real_estate_agent_sharp,
           title: '学习主页',
@@ -206,7 +207,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => Navigator.pushNamed(context, MeRouter.viewInfo),
+        onTap: () => AppRouteDelegate.of(context).push(MeRouter.viewInfo),
         child: SingleTextLayout(
           icon: Icons.supervised_user_circle_sharp,
           title: '我的资料',
@@ -217,7 +218,7 @@ class _MePageState extends State<MePage> {
         height: 50.0,
         borderRadius: BorderRadius.only(bottomLeft: Radius.circular(5), bottomRight: Radius.circular(5)),
         padding: EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => Navigator.pushNamed(context, MeRouter.setting),
+        onTap: () => AppRouteDelegate.of(context).push(MeRouter.setting),
         child: SingleTextLayout(
           icon: Icons.settings,
           title: S.of(context).setting,

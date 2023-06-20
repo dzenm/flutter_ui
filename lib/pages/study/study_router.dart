@@ -1,4 +1,4 @@
-import '../../base/route/app_router.dart';
+import '../../base/route/app_route_delegate.dart';
 import 'city_page/city_page.dart';
 import 'convert_page/convert_page.dart';
 import 'dialog_page/dialog_page.dart';
@@ -21,98 +21,134 @@ import 'video_page/video_page.dart';
 ///
 /// Created by a0010 on 2023/5/11 16:05
 ///
-class StudyRouter extends IRouter {
-  String study = '/study';
-  String city = '/study/city';
-  String convert = '/study/convert';
-  String dialog = '/study/dialog';
-  String dragList = '/study/dragList';
-  String floatNavigation = '/study/floatNavigation';
-  String http = '/study/http';
-  String image = '/study/image';
-  String keyword = '/study/keyword';
-  String list = '/study/list';
-  String loadImage = '/study/loadImage';
-  String popup = '/study/popup';
-  String provider = '/study/provider';
-  String qr = '/study/qr';
-  String routers = '/study/routers';
-  String state = '/study/state';
-  String text = '/study/text';
-  String video = '/study/video';
+class StudyRouter {
+  static final String study = '/study';
+  static final String city = '/study/city';
+  static final String convert = '/study/convert';
+  static final String dialog = '/study/dialog';
+  static final String dragList = '/study/dragList';
+  static final String floatNavigation = '/study/floatNavigation';
+  static final String http = '/study/http';
+  static final String image = '/study/image';
+  static final String keyword = '/study/keyword';
+  static final String list = '/study/list';
+  static final String loadImage = '/study/loadImage';
+  static final String popup = '/study/popup';
+  static final String provider = '/study/provider';
+  static final String qr = '/study/qr';
+  static final String router = '/study/router';
+  static final String state = '/study/state';
+  static final String text = '/study/text';
+  static final String video = '/study/video';
 
-  @override
-  void initRouter(AppRouter router) {
-    router.define(study, pagerBuilder: (context) {
-      return StudyPage();
-    });
-
-    router.define(city, pagerBuilder: (context) {
-      return CitySelectedPage();
-    });
-
-    router.define(convert, pagerBuilder: (context) {
-      return ConvertPage();
-    });
-
-    router.define(dialog, pagerBuilder: (context) {
-      return DialogPage();
-    });
-
-    router.define(dragList, pagerBuilder: (context) {
-      return DragListPage();
-    });
-
-    router.define(floatNavigation, pagerBuilder: (context) {
-      return FloatNavigationPage();
-    });
-
-    router.define(http, pagerBuilder: (context) {
-      return HTTPListPage();
-    });
-
-    router.define(image, pagerBuilder: (context) {
-      return ImageEditorPage();
-    });
-
-    router.define(keyword, pagerBuilder: (context) {
-      return KeywordBoardPage();
-    });
-
-    router.define(list, pagerBuilder: (context) {
-      return ListPage();
-    });
-
-    router.define(loadImage, pagerBuilder: (context) {
-      return LoadImagePage();
-    });
-
-    router.define(popup, pagerBuilder: (context) {
-      return PopupPage();
-    });
-
-    router.define(provider, pagerBuilder: (context) {
-      return ProviderPage();
-    });
-
-    router.define(qr, pagerBuilder: (context) {
-      return QRPage();
-    });
-
-    router.define(routers, pagerBuilder: (context) {
-      return RouterPage();
-    });
-
-    router.define(state, pagerBuilder: (context) {
-      return StatePage();
-    });
-
-    router.define(text, pagerBuilder: (context) {
-      return TextPage();
-    });
-
-    router.define(video, pagerBuilder: (context) {
-      return VideoPage();
-    });
-  }
+  static List<AppRoutePage> get routers => [
+        AppRoutePage(
+          name: study,
+          builder: (settings) {
+            return StudyPage();
+          },
+        ),
+        AppRoutePage(
+          name: city,
+          builder: (settings) {
+            return CitySelectedPage();
+          },
+        ),
+        AppRoutePage(
+          name: convert,
+          builder: (settings) {
+            return ConvertPage();
+          },
+        ),
+        AppRoutePage(
+          name: dialog,
+          builder: (settings) {
+            return DialogPage();
+          },
+        ),
+        AppRoutePage(
+          name: dragList,
+          builder: (settings) {
+            return DragListPage();
+          },
+        ),
+        AppRoutePage(
+          name: floatNavigation,
+          builder: (settings) {
+            return FloatNavigationPage();
+          },
+        ),
+        AppRoutePage(
+          name: http,
+          builder: (settings) {
+            return HTTPListPage();
+          },
+        ),
+        AppRoutePage(
+          name: image,
+          builder: (settings) {
+            return ImageEditorPage();
+          },
+        ),
+        AppRoutePage(
+          name: keyword,
+          builder: (settings) {
+            return KeywordBoardPage();
+          },
+        ),
+        AppRoutePage(
+          name: list,
+          builder: (settings) {
+            return ListPage();
+          },
+        ),
+        AppRoutePage(
+          name: loadImage,
+          builder: (settings) {
+            return LoadImagePage();
+          },
+        ),
+        AppRoutePage(
+          name: popup,
+          builder: (settings) {
+            return PopupPage();
+          },
+        ),
+        AppRoutePage(
+          name: provider,
+          builder: (settings) {
+            return ProviderPage();
+          },
+        ),
+        AppRoutePage(
+          name: qr,
+          builder: (settings) {
+            return QRPage();
+          },
+        ),
+        AppRoutePage(
+          name: router,
+          builder: (settings) {
+            return RouterPage();
+          },
+        ),
+        AppRoutePage(
+          name: state,
+          builder: (settings) {
+            return StatePage();
+          },
+        ),
+        AppRoutePage(
+          name: text,
+          builder: (settings) {
+            return TextPage();
+          },
+        ),
+        AppRoutePage(
+          name: video,
+          builder: (settings) {
+            return VideoPage();
+          },
+        ),
+      ];
 }
