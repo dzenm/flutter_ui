@@ -11,18 +11,6 @@ import '../log/log.dart';
 typedef PageBuilder = Widget Function(Map<String, String> queryParams);
 typedef RouteBuilder = PageRoute Function(Widget child);
 
-class AppRoutePage {
-  final String name;
-  final PageBuilder builder;
-  final RouteBuilder? routeBuilder;
-
-  AppRoutePage({
-    required this.name,
-    required this.builder,
-    this.routeBuilder,
-  });
-}
-
 ///
 /// Created by a0010 on 2023/6/13 16:29
 /// 路由管理，基于[ChangeNotifier]管理数据，页面进出栈，需要主动刷新，否则页面调整不起作用，也可以使用已经封装好的方法 [push]
@@ -72,6 +60,11 @@ class AppRouteDelegate extends RouterDelegate<String> with ChangeNotifier, PopNa
       return true;
     }
     return false;
+  }
+
+  @override
+  Future<void> setInitialRoutePath(String configuration) {
+    return setNewRoutePath(configuration);
   }
 
   @override
@@ -173,6 +166,20 @@ class AppRouteDelegate extends RouterDelegate<String> with ChangeNotifier, PopNa
     return result ?? true;
   }
 
+  /// 移除一个页面
+  void pop() {
+    if (!canPop()) return;
+    _removePage();
+    notifyListeners();
+  }
+
+  /// 移除多个页面，在[predicate]之上的页面全部移出栈
+  void popUntil({required String predicate}) {
+    if (!canPop()) return;
+    _removeUntil(predicate);
+    notifyListeners();
+  }
+
   /// 进入下一个页面
   /// [clearStack] 是否清除栈内所有页面
   void push(String path, {bool clearStack = false}) {
@@ -184,23 +191,38 @@ class AppRouteDelegate extends RouterDelegate<String> with ChangeNotifier, PopNa
   }
 
   /// 替换当前页面
-  void replace(String path) {
+  void pushReplace(String path) {
     if (_pages.isNotEmpty) {
       _pages.removeLast();
     }
     push(path);
   }
 
-  /// 进入下一个页面，并且移除[predicate]栈上面的页面，
+  /// 进入下一个页面，并且移出[predicate]之上的页面，
   void pushAndRemoveUntil(String path, {required String predicate}) {
-    for (int i = _pages.length - 1; i >= 0; i--) {
-      if (_pages[i].name != predicate) {
-        _pages.removeLast();
-      } else
-        break;
-    }
+    _removeUntil(predicate);
     push(path);
   }
+
+  /// 在[predicate]之上的页面全部移出栈
+  void _removeUntil(String predicate) {
+    for (int i = _pages.length - 1; i >= 0; i--) {
+      if (_pages[i].name == predicate) break;
+      _pages.removeLast();
+    }
+  }
+}
+
+class AppRoutePage {
+  final String name;
+  final PageBuilder builder;
+  final RouteBuilder? routeBuilder;
+
+  AppRoutePage({
+    required this.name,
+    required this.builder,
+    this.routeBuilder,
+  });
 }
 
 /// 自定义页面，包含跳转动画
