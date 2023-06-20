@@ -10,6 +10,7 @@ import 'base/log/build_config.dart';
 import 'base/res/app_theme.dart';
 import 'base/res/local_model.dart';
 import 'base/route/app_route_delegate.dart';
+import 'base/route/app_route_info_parser.dart';
 import 'base/utils/sp_util.dart';
 import 'base/widgets/common_dialog.dart';
 import 'generated/l10n.dart';
