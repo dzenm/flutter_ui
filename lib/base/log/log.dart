@@ -18,82 +18,68 @@ class Log {
   factory Log() => _instance;
 
   static const String _tag = 'Log';
+  static const int _maxLength = 800;
 
-  static const int _error = 6;
-  static const int _warm = 5;
-  static const int _info = 4;
-  static const int _debug = 3;
-  static const int _verbose = 2;
-  static const _maxLength = 800;
+  /// 打印日志的级别
+  Level _level = Level.verbose;
 
-  int _level = _verbose;
+  /// 是否是debug模式
+  bool _debug = true;
 
-  bool _debuggable = true; // 是否是debug模式
+  /// 默认打印日志的tag
   String _myTag = _tag;
 
-  static void init({bool isDebug = true, String tag = _tag, int level = _verbose}) {
-    _instance._debuggable = isDebug;
+  static void init({bool isDebug = true, String tag = _tag, Level level = Level.verbose}) {
+    _instance._debug = isDebug;
     _instance._myTag = tag;
     _instance._level = level;
   }
 
   static void v(dynamic message, {String tag = ''}) {
-    _printLog(tag, 'V', _verbose, message);
+    _printLog(tag, message, Level.verbose);
   }
 
   static void d(dynamic message, {String tag = ''}) {
-    _printLog(tag, 'D', _debug, message);
+    _printLog(tag, message, Level.debug);
   }
 
   static void i(dynamic message, {String tag = ''}) {
-    _printLog(tag, 'I', _info, message);
+    _printLog(tag, message, Level.info);
   }
 
   static void w(dynamic message, {String tag = ''}) {
-    _printLog(tag, 'W', _warm, message);
+    _printLog(tag, message, Level.warm);
   }
 
   static void e(dynamic message, {String tag = ''}) {
-    _printLog(tag, 'E', _error, message);
+    _printLog(tag, message, Level.error);
   }
 
   static void h(dynamic message, {String tag = ''}) {
-    if (BuildConfig.showHTTPLog) {
-      _printLog(tag, 'H', _error, message);
-    }
+    if (!BuildConfig.showHTTPLog) return;
+    _printLog(tag, message, Level.http);
   }
 
   static void b(dynamic message, {String tag = ''}) {
-    if (BuildConfig.showDBLog) {
-      _printLog(tag, 'B', _error, message);
-    }
+    if (!BuildConfig.showDBLog) return;
+    _printLog(tag, message, Level.db);
   }
 
-  static void _printLog(String tag, String levelTag, int level, dynamic message) {
+  static void _printLog(String tag, dynamic message, Level level) {
     if (kReleaseMode) {
       // release模式不打印
       return;
     }
-    if (_instance._debuggable) {
-      if (_instance._level <= level) {
-        dynamic msg = _instance._handlerMessage(tag, levelTag, message);
-        _instance._printLongMsg(level, msg);
-      }
+    if (!_instance._debug) {
+      // 如果不是自定义的debug模式也不打印
+      return;
     }
-  }
-
-  /// 打印长日志
-  void _printLongMsg(int level, dynamic msg) {
-    int len = msg.length;
-    if (len > _maxLength) {
-      for (int i = 0; i < len;) {
-        int start = i;
-        i = i + _maxLength;
-        _println(level, msg.substring(start, min(i, len)));
-      }
-    } else {
-      _println(level, msg);
+    if (_instance._level.value > level.value) {
+      // 如果打印的日志级别在默认的级别之下不打印
+      return;
     }
+    String result = _instance._handlerMessage(tag, level.tag, message);
+    _instance._printLongMsg(result, (msg) => _instance._println(level, msg));
   }
 
   /// 处理消息的内容
@@ -119,51 +105,64 @@ class Log {
     return sb.toString();
   }
 
+  /// 打印长日志
+  void _printLongMsg(String message, void Function(String message) printLog) {
+    int len = message.length;
+    if (len > _maxLength) {
+      for (int i = 0; i < len;) {
+        int start = i;
+        i = i + _maxLength;
+        printLog(message.substring(start, min(i, len)));
+      }
+    } else {
+      printLog(message);
+    }
+  }
+
   /// 换行打印
-  void _println(int level, String message, {bool isDefaultColor = true}) {
-    String prefix = _handlerPrefixTextColor(level, isDefaultColor);
-    String suffix = _handlerSuffixTextColor(level, isDefaultColor);
+  void _println(Level level, String message, {bool isDefaultColor = true}) {
+    // 处理文本展示的颜色
+    String prefix = '', suffix = '';
+    if (!isDefaultColor) {
+      List<String> colors = _handlerPrefixTextColor(level);
+      prefix = colors[0];
+      suffix = colors[1];
+    }
     String msg = prefix + message + suffix;
-    if (kDebugMode) {
-      print(msg);
-    }
+    print(msg);
   }
 
-  /// 处理前缀文本颜色
-  String _handlerPrefixTextColor(int level, bool isDefaultColor) {
-    if (isDefaultColor) return '';
+  /// 处理文本颜色
+  List<String> _handlerPrefixTextColor(Level level) {
     switch (level) {
-      case _verbose:
-        return '\x1B[35m ';
-      case _debug:
-        return '\x1B[35m ';
-      case _info:
-        return '\x1B[35m ';
-      case _warm:
-        return '\x1B[35m ';
-      case _error:
-        return '\x1B[31m ';
+      case Level.verbose:
+        return ['\x1B[35m ', ' \x1B[0m'];
+      case Level.debug:
+        return ['\x1B[35m ', ' \x1B[0m'];
+      case Level.info:
+        return ['\x1B[35m ', ' \x1B[0m'];
+      case Level.warm:
+        return ['\x1B[35m ', ' \x1B[0m'];
+      case Level.error:
+        return ['\x1B[31m ', ' \x1B[0m'];
       default:
-        return '';
+        return ['', ''];
     }
   }
+}
 
-  /// 处理后缀文本颜色
-  String _handlerSuffixTextColor(int level, bool isDefaultColor) {
-    if (isDefaultColor) return '';
-    switch (level) {
-      case _verbose:
-        return ' \x1B[0m';
-      case _debug:
-        return ' \x1B[0m';
-      case _info:
-        return ' \x1B[0m';
-      case _warm:
-        return ' \x1B[0m';
-      case _error:
-        return ' \x1B[0m';
-      default:
-        return '';
-    }
-  }
+/// 打印日志的级别
+enum Level {
+  verbose(2, 'V'),
+  debug(3, 'D'),
+  info(4, 'I'),
+  warm(5, 'W'),
+  error(6, 'E'),
+  http(7, 'H'),
+  db(8, 'B');
+
+  final int value;
+  final String tag;
+
+  const Level(this.value, this.tag);
 }

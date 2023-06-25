@@ -54,12 +54,18 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     log('initState');
 
     WidgetsBinding.instance.addObserver(this);
+    Future.delayed(Duration.zero, () => _initData());
   }
 
-  /// 在build之前使用context，并且只能创建一次
+  /// 初始化数据
+  Future<void> _initData() async {
+    log('initData');
+    await ProviderManager.init(context);
+  }
+
+  /// 在[build]之前使用使用[context]初始化数据
   void _useContextBeforeBuild(BuildContext context) {
-    // 因为要跟随语言的变化， 所以每次build都需要更新
-    ProviderManager.init(context);
+    ProviderManager.initData(context);
     Naughty.instance
       ..init(context)
       ..show();
@@ -98,33 +104,41 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
 
     _useContextBeforeBuild(context);
 
+    int len = context.read<MainModel>().len;
     return Scaffold(
       body: PageView(
         controller: _controller,
         physics: NeverScrollableScrollPhysics(),
-        children: _buildTabPage(),
+        children: _buildTabPage(len),
       ),
       bottomNavigationBar: BottomAppBar(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           mainAxisSize: MainAxisSize.max,
-          children: _buildBottomNavigationBar(),
+          children: _buildBottomNavigationBar(len),
         ),
       ),
     );
   }
 
   /// Page widget
-  List<Widget> _buildTabPage() {
-    int len = context.read<MainModel>().len;
+  List<Widget> _buildTabPage(int len) {
     List<Widget> list = [HomePage(), NavPage(), MePage()];
-    return List.generate(len, (index) => KeepAliveWrapper(child: index < list.length ? list[index] : Container()));
+    return List.generate(
+      len,
+      (index) => KeepAliveWrapper(child: index < list.length ? list[index] : Container()),
+    );
   }
 
   /// BottomNavigationBar widget
-  List<Widget> _buildBottomNavigationBar() {
-    int len = context.read<MainModel>().len;
-    return List.generate(len, (i) => BottomNavigationBarItemView(index: i, controller: _controller)); // bottomNavigation list
+  List<Widget> _buildBottomNavigationBar(int len) {
+    return List.generate(
+      len,
+      (i) => Expanded(
+        flex: 1,
+        child: BottomNavigationBarItemView(index: i, controller: _controller),
+      ),
+    ); // bottomNavigation list
   }
 
   void log(String msg) => BuildConfig.showPageLog ? Log.i(msg, tag: _tag) : null;
@@ -150,41 +164,40 @@ class BottomNavigationBarItemView extends StatelessWidget {
 
     double width = 56, height = 56;
     // 平分整个宽度
-    return Expanded(
-      flex: 1,
-      // 给item设置点击事件
-      child: TapLayout(
+    return TapLayout(
+      height: height,
+      foreground: Colors.transparent,
+      onTap: () => _jumpToPage(context),
+      child: Container(
+        width: width,
         height: height,
-        foreground: Colors.transparent,
-        onTap: () {
-          bool isSelected = context.read<MainModel>().isSelected(index);
-          if (!isSelected) {
-            context.read<MainModel>().selectedIndex = index;
-            controller.jumpToPage(index);
-            // controller.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
-          }
-          if (onTap != null) onTap!();
-        },
-        child: Container(
-          width: width,
-          height: height,
-          child: Stack(alignment: Alignment.center, children: [
-            // 图标和文字充满Stack并居中显示
-            Positioned.fill(child: _builtItem()),
-            // badge固定在右上角
-            Positioned(
-              width: width / 2,
-              height: height,
-              child: Stack(
-                alignment: Alignment.center,
-                clipBehavior: Clip.none,
-                children: [Positioned(left: 16, top: 2, child: _buildBadge())],
-              ),
+        child: Stack(alignment: Alignment.center, children: [
+          // 图标和文字充满Stack并居中显示
+          Positioned.fill(child: _builtItem()),
+          // badge固定在右上角
+          Positioned(
+            width: width / 2,
+            height: height,
+            child: Stack(
+              alignment: Alignment.center,
+              clipBehavior: Clip.none,
+              children: [Positioned(left: 16, top: 2, child: _buildBadge())],
             ),
-          ]),
-        ),
+          ),
+        ]),
       ),
     );
+  }
+
+  /// 跳转页面
+  void _jumpToPage(BuildContext context) {
+    bool isSelected = context.read<MainModel>().isSelected(index);
+    if (!isSelected) {
+      context.read<MainModel>().selectedIndex = index;
+      controller.jumpToPage(index);
+      // controller.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
+    }
+    if (onTap != null) onTap!();
   }
 
   Widget _buildBadge() {

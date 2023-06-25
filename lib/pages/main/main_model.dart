@@ -9,7 +9,7 @@ class MainModel with ChangeNotifier {
   /// 初始化数据
   Future<void> init() async {}
 
-  void initData(BuildContext context) {
+  Future<void> initData(BuildContext context) async {
     _titles = [
       S.of(context).home,
       S.of(context).nav,
