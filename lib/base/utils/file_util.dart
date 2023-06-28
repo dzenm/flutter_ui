@@ -34,7 +34,7 @@ class FileUtil {
     // getExternalStorageDirectories()	      Future<List<Directory>?>	  外部存储目录（单独分区）
     // getDownloadsDirectory()	              Future<Directory?>	        桌面程序下载目录
     Directory? packageDir = await getApplicationDocumentsDirectory();
-    Directory parent = Directory('${packageDir.path}${dir == null ? '' : '/$dir'}');
+    Directory parent = Directory('${packageDir.path}${dir == null ? '' : '${Platform.pathSeparator}$dir'}');
     if (!parent.existsSync()) {
       await parent.create();
     }
@@ -56,17 +56,21 @@ class FileUtil {
   }
 
   /// 根据路径获取文件名
-  String getFileName(String path) {
-    int index = path.lastIndexOf('/');
-    int len = path.length;
-    return index == -1 ? '' : path.substring(index + 1, len);
+  String getFileName(dynamic file) {
+    String path = '';
+    if (file is File) {
+      path = file.path;
+    } else {
+      path = file.toString();
+    }
+    return path.split(Platform.pathSeparator).last;
   }
 
   /// 保存text到本地文件里面
   Future<String?> save(String fileName, String text, {String? dir}) async {
     try {
       Directory parent = await getParent(dir: dir);
-      File file = File('${parent.path}/$fileName');
+      File file = File('${parent.path}${Platform.pathSeparator}$fileName');
       if (!file.existsSync()) {
         await file.create();
       }
@@ -84,7 +88,7 @@ class FileUtil {
   /// 读取文件的内容
   Future<String> read(String fileName, {String? dir}) async {
     Directory parent = await getParent(dir: dir);
-    File file = File('${parent.path}/$fileName');
+    File file = File('${parent.path}${Platform.pathSeparator}$fileName');
     if (!file.existsSync()) {
       return '';
     }
@@ -119,7 +123,7 @@ class FileUtil {
   /// 清空保存的内容
   void clear(String fileName, {String? dir}) async {
     Directory parent = await getParent(dir: dir);
-    File file = File('${parent.path}/$fileName');
+    File file = File('${parent.path}${Platform.pathSeparator}$fileName');
     if (file.existsSync()) {
       await file.writeAsString('');
     }
@@ -132,21 +136,6 @@ class FileUtil {
       await element.delete();
       log('删除成功: ${element.path}');
     });
-  }
-
-  //l 清除缓存目录工具
-  static Future<void> clearTempCache() async {
-    var tempPath = await getTemporaryDirectory();
-    await requestPermission(tempPath);
-  }
-
-  static Future<void> requestPermission(FileSystemEntity file) async {
-    // PermissionStatus status = await Permission.storage.status;
-    // if (status != PermissionStatus.granted) {
-    //   CommonDialog.showToast("请先开启读写权限");
-    //   return;
-    // }
-    await delDir(file);
   }
 
   static Future<void> delDir(FileSystemEntity file) async {
@@ -203,7 +192,6 @@ class FileUtil {
   }
 
   /// 清理内存图片缓存:
-  //clear all of image  in memory
   static clearMemoryImageCache() {
     PaintingBinding.instance.imageCache.clear();
   }

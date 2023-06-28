@@ -110,7 +110,7 @@ class Naughty {
     } else {
       path = file.toString();
     }
-    return path.split('/').last;
+    return path.split(Platform.pathSeparator).last;
   }
 
   /// 格式化文件大小，例：

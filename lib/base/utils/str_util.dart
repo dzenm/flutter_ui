@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/services.dart';
 
@@ -9,19 +8,6 @@ import 'package:flutter/services.dart';
 class StrUtil {
   /// 汉字的星期日期
   static List<String> chineseCharacterWeeks = ['一', '二', '三', '四', '五', '六', '七'];
-
-  /// 获取文件名通过路径或者文件，例：
-  /// path   = /data/user/0/com.dzenm.flutter_ui/databases/db_4824.db
-  /// result = db_4824.db
-  static String getFileName(dynamic file) {
-    String path = '';
-    if (file is File) {
-      path = file.path;
-    } else {
-      path = file.toString();
-    }
-    return path.split('/').last;
-  }
 
   /// 获取字符串所占用的字节大小
   static int getStringLength(String? str) {

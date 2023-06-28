@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -98,6 +100,7 @@ class DBManager {
   /// 获取数据库 [_userId] 的路径 [_dbPath]
   Future<String> getPath({String? dbName}) async {
     String databasesPath = await getDatabasesPath();
+    databasesPath = databasesPath.replaceAll('/', Platform.pathSeparator);
     if (_dbPath == null) {
       dbName ??= 'db_$_userId.db';
       log('数据库路径=$databasesPath, 数据库名称=$dbName');
