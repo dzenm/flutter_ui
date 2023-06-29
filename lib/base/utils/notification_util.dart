@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationUtil {
@@ -5,7 +7,7 @@ class NotificationUtil {
   bool _init = false;
 
   void initialize(DidReceiveNotificationResponseCallback? onTap) {
-    if (_init) return;
+    if (_init && !(Platform.isAndroid || Platform.isIOS)) return;
     _init = true;
     _notificationsPlugin.initialize(
       const InitializationSettings(
@@ -21,6 +23,7 @@ class NotificationUtil {
     String? body,
     DidReceiveNotificationResponseCallback? onTap,
   }) async {
+    if (!Platform.isAndroid || !Platform.isIOS) return;
     initialize(onTap);
     await _notificationsPlugin.show(
       0,

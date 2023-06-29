@@ -373,20 +373,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_vlc_player:
-    dependency: "direct main"
-    description:
-      name: flutter_vlc_player
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "7.2.0"
-  flutter_vlc_player_platform_interface:
-    dependency: transitive
-    description:
-      name: flutter_vlc_player_platform_interface
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "2.0.2"
   flutter_web_plugins:
     dependency: "direct main"
     description: flutter

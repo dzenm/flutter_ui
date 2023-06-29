@@ -4,7 +4,6 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/pages/routers.dart';
 
 import '../log/log.dart';
 
@@ -92,7 +91,7 @@ class AppRouteDelegate extends RouterDelegate<String> with ChangeNotifier, PopNa
     Log.d('解析路径: path=$path, queryParams=$queryParams');
     int index = routers.indexWhere((child) => child.name == path);
     if (index == -1) {
-      index = routers.indexWhere((route) => route.name == Routers.notFound);
+      index = routers.indexWhere((route) => route.name == '/notFound');
     }
     AppRoutePage routePage = routers[index];
     Widget child = routePage.builder(queryParams);
@@ -230,8 +229,21 @@ class AppRoutePage {
 class CustomPage<T> extends Page<T> {
   final Route<T> route;
 
-  CustomPage({
+  /// {@macro flutter.cupertino.CupertinoRouteTransitionMixin.title}
+  final String? title;
+
+  /// {@macro flutter.widgets.ModalRoute.maintainState}
+  final bool maintainState;
+
+  /// {@macro flutter.widgets.PageRoute.fullscreenDialog}
+  final bool fullscreenDialog;
+
+  /// Creates a custom page.
+  const CustomPage({
     required this.route,
+    this.maintainState = true,
+    this.title,
+    this.fullscreenDialog = false,
     super.key,
     super.name,
     super.arguments,

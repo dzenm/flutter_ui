@@ -108,8 +108,6 @@ dependencies:
   #  fijkplayer: ^0.10.1
   #  flutter_vlc_player: ^7.1.5
 
-  # vlc视频播放器插件 [最新版7.1.5 https://pub.flutter-io.cn/packages/flutter_vlc_player ]
-  flutter_vlc_player: 7.2.0
   ########################################## 文件 ########################################
 
 
