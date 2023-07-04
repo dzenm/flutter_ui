@@ -99,7 +99,12 @@ class DBManager {
 
   /// 获取数据库 [_userId] 的路径 [_dbPath]
   Future<String> getPath({String? dbName}) async {
-    String databasesPath = await getDatabasesPath();
+    String databasesPath = '';
+    if (Platform.isAndroid  || Platform.isIOS || Platform.isMacOS) {
+      databasesPath = await getDatabasesPath();
+    } else if (Platform.isWindows) {
+      databasesPath = await getDatabasesPath();
+    }
     databasesPath = databasesPath.replaceAll('/', Platform.pathSeparator);
     if (_dbPath == null) {
       dbName ??= 'db_$_userId.db';

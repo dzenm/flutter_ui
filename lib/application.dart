@@ -51,11 +51,11 @@ class Application {
       log('╚══════════════════════════════════════════════════════════════════════════════════════════════════╝');
       // 让 Flutter 使用 path 策略
       usePathUrlStrategy();
-      //启动第一个页面(必须使用AppPage作为最顶层页面，包含一些页面初始化相关的信息；_initApp为用户看见的第一个页面，可以自己根据实际情况设置)
+      //启动第一个页面(必须使用AppPage作为最顶层页面，包含一些页面初始化相关的信息)
       runMockApp(AppPage());
     }, handleMsg: (message) async {
       String logFileName = 'crash_${DateTime.now()}.log';
-      await FileUtil.instance.save(logFileName, message, dir: 'crash').then((String? filePath) async {});
+      await FileUtil.instance.save(logFileName, message, dir: 'crash');
     });
   }
 
