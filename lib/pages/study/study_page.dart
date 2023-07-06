@@ -182,6 +182,12 @@ class _StudyPageState extends State<StudyPage> {
         onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.video),
       ),
       SizedBox(height: 16),
+      MaterialButton(
+        child: _text('返回并传递数据'),
+        textColor: Colors.white,
+        color: theme.appbarColor,
+        onPressed: () => AppRouteDelegate.of(context).pop('这是回调的数据'),
+      ),
     ];
   }
 

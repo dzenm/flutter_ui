@@ -17,57 +17,57 @@ class Routers {
   static final String notFound = '/notFound';
   static final String login = '/login';
   static final String register = '/register';
-  static final String main = '/main';
+  static final String main = '/main/';
   static final String example = '/example';
   static final String webView = '/webView';
 
   static List<AppRoutePage> get routers => [
         AppRoutePage(
           name: root,
-          builder: (params) {
+          builder: (setting) {
             return AppPage();
           },
         ),
         AppRoutePage(
           name: notFound,
-          builder: (params) {
+          builder: (setting) {
             return NotFoundPage();
           },
         ),
         AppRoutePage(
           name: login,
-          builder: (params) {
+          builder: (setting) {
             return LoginPage();
           },
         ),
         AppRoutePage(
           name: register,
-          builder: (params) {
+          builder: (setting) {
             return RegisterPage();
           },
         ),
         AppRoutePage(
           name: main,
-          builder: (params) {
+          builder: (setting) {
             return MainPage();
           },
         ),
         AppRoutePage(
           name: example,
-          builder: (params) {
+          builder: (setting) {
             return ExamplePage();
           },
         ),
         AppRoutePage(
           name: webView,
-          builder: (params) {
-            dynamic args = params;
+          builder: (setting) {
+            dynamic args = setting.params;
             String title = args['title'] ?? '';
             String url = args['url'] ?? '';
             return WebViewPage(title: title, url: url);
           },
         ),
-      ]
-        ..addAll(MeRouter.routers)
-        ..addAll(StudyRouter.routers);
+        ...MeRouter.routers,
+        ...StudyRouter.routers,
+      ];
 }

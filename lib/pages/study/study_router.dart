@@ -44,109 +44,109 @@ class StudyRouter {
   static List<AppRoutePage> get routers => [
         AppRoutePage(
           name: study,
-          builder: (params) {
+          builder: (setting) {
             return StudyPage();
           },
         ),
         AppRoutePage(
           name: city,
-          builder: (params) {
+          builder: (setting) {
             return CitySelectedPage();
           },
         ),
         AppRoutePage(
           name: convert,
-          builder: (params) {
+          builder: (setting) {
             return ConvertPage();
           },
         ),
         AppRoutePage(
           name: dialog,
-          builder: (params) {
+          builder: (setting) {
             return DialogPage();
           },
         ),
         AppRoutePage(
           name: dragList,
-          builder: (params) {
+          builder: (setting) {
             return DragListPage();
           },
         ),
         AppRoutePage(
           name: floatNavigation,
-          builder: (params) {
+          builder: (setting) {
             return FloatNavigationPage();
           },
         ),
         AppRoutePage(
           name: http,
-          builder: (params) {
+          builder: (setting) {
             return HTTPListPage();
           },
         ),
         AppRoutePage(
           name: image,
-          builder: (params) {
+          builder: (setting) {
             return ImageEditorPage();
           },
         ),
         AppRoutePage(
           name: keyword,
-          builder: (params) {
+          builder: (setting) {
             return KeywordBoardPage();
           },
         ),
         AppRoutePage(
           name: list,
-          builder: (params) {
+          builder: (setting) {
             return ListPage();
           },
         ),
         AppRoutePage(
           name: loadImage,
-          builder: (params) {
+          builder: (setting) {
             return LoadImagePage();
           },
         ),
         AppRoutePage(
           name: popup,
-          builder: (params) {
+          builder: (setting) {
             return PopupPage();
           },
         ),
         AppRoutePage(
           name: provider,
-          builder: (params) {
+          builder: (setting) {
             return ProviderPage();
           },
         ),
         AppRoutePage(
           name: qr,
-          builder: (params) {
+          builder: (setting) {
             return QRPage();
           },
         ),
         AppRoutePage(
           name: router,
-          builder: (params) {
+          builder: (setting) {
             return RouterPage();
           },
         ),
         AppRoutePage(
           name: state,
-          builder: (params) {
+          builder: (setting) {
             return StatePage();
           },
         ),
         AppRoutePage(
           name: text,
-          builder: (params) {
+          builder: (setting) {
             return TextPage();
           },
         ),
         AppRoutePage(
           name: video,
-          builder: (params) {
+          builder: (setting) {
             return VideoPage();
           },
         ),

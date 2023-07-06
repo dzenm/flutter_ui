@@ -198,7 +198,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => AppRouteDelegate.of(context).push(StudyRouter.study),
+        onTap: () => AppRouteDelegate.of(context).push(StudyRouter.study).then((value) => log(value)),
         child: SingleTextLayout(
           icon: Icons.real_estate_agent_sharp,
           title: '学习主页',

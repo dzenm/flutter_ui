@@ -43,7 +43,7 @@ class AppPage extends StatelessWidget {
     } else {
       route = Routers.login;
     }
-    _delegate.push(route);
+    _delegate.push(route, pathSegments: ['123131', '12313123']);
   }
 
   // This widget is the root of your application.
@@ -159,7 +159,7 @@ class AppPage extends StatelessWidget {
         ],
         // 初始路由
         routerDelegate: _delegate,
-        // routeInformationParser: AppRouteInfoParser(),
+        routeInformationParser: AppRouteInfoParser(),
         builder: (context, child) {
           final botToastBuilder = BotToastInit();
           Widget toastWidget = botToastBuilder(context, child);

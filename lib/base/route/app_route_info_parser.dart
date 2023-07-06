@@ -1,5 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/base/log/log.dart';
+
+import 'app_route_util.dart';
+import 'custom_page_route.dart';
 
 ///
 /// Created by a0010 on 2023/6/13 17:01
@@ -7,50 +11,34 @@ import 'package:flutter/material.dart';
 class AppRouteInfoParser extends RouteInformationParser<Page<dynamic>> {
   const AppRouteInfoParser() : super();
 
+  /// 解析路由信息：浏览器中输入url/在代码中初始化路由
   @override
-  Future<Page<dynamic>> parseRouteInformation(
-      RouteInformation routeInformation) async {
+  Future<Page<dynamic>> parseRouteInformation(RouteInformation routeInformation) async {
     String path = routeInformation.location ?? '/';
-    Object? body = routeInformation.state;
-    PageTransitionsBuilder? _pageTransitions;
-    // Context ctx;
-    // if (body != null &&
-    //     body is Map &&
-    //     body['at'] != null &&
-    //     body['path'] != null &&
-    //     body['pathParams'] != null &&
-    //     body['isDirectly'] != null) {
-    //   ctx = Context.fromJson(body);
-    // } else {
-    //   ctx = Context(
-    //     path,
-    //     body: body,
-    //     isDirectly: true,
-    //   );
-    // }
-    // WidgetBuilder? builder;
-    // NavigatorRoute? handler = RRouter._register.match(ctx.uri);
-    // if (handler != null) {
-    //   final result = await handler(ctx);
-    //   if (result is WidgetBuilder) {
-    //     builder = result;
-    //   } else if (result is Redirect) {
-    //     return parseRouteInformation(
-    //         RouteInformation(location: result.path, state: body));
-    //   }
-    //   _pageTransitions = handler.defaultPageTransaction;
-    // }
-    // _pageTransitions ??= RRouter._defaultTransitionBuilder;
-    //
-    // builder ??=
-    //     (BuildContext context) => RRouter._errorPage.notFoundPage(context, ctx);
-    Page<dynamic> configuration = MaterialPage(child: Container());
-    return SynchronousFuture(configuration);
+    final body = routeInformation.state;
+    log('解析路由信息：location=${routeInformation.location}, state=${routeInformation.state}');
+    AppRouteSettings settings;
+    if (body != null && body is Map<String, dynamic> && body['originPath'] != null && body['name']) {
+      settings = AppRouteSettings.fromJson(body);
+    } else {
+      settings = AppRouteSettings(
+        originPath: path,
+        name: path,
+        body: body,
+      );
+    }
+
+    CustomPage page = AppRouteUtil.createPage(settings);
+    return SynchronousFuture(page);
   }
 
+  /// 存储路由信息：传入的 [configuration] 从 [AppRouteDelegate.currentConfiguration] 获得
   @override
   RouteInformation? restoreRouteInformation(Page<dynamic> configuration) {
     if (configuration.name == null) return null;
+    log('存储路由信息：name=${configuration.name}, arguments=${configuration.arguments}');
     return RouteInformation(location: configuration.name, state: configuration.arguments);
   }
+
+  void log(String msg) => Log.d(msg, tag: 'AppRouteInfoParser');
 }
