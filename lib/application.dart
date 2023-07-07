@@ -75,12 +75,6 @@ class Application {
     bool res = await SpUtil.instance.init(logPrint: Log.i);
     log('初始化 SharedPreferences ${res ? '成功' : '失败'}');
 
-    log('初始化 阿里云推送');
-    _initAliYunPush();
-
-    log('初始化 系统通知');
-    _initSystemNotification();
-
     log('初始化 Android设置');
     _initAndroidSettings();
 
@@ -114,12 +108,6 @@ class Application {
     log('结束: now=$end, duration=$duration');
     log('═══════════════════════════════════════════ 结束初始化 ══════════════════════════════════════════════');
   }
-
-  /// 初始化阿里云推送
-  void _initAliYunPush() {}
-
-  /// 初始化系统通知
-  void _initSystemNotification() {}
 
   /// 初始化Android设置
   void _initAndroidSettings() {

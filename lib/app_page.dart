@@ -43,7 +43,7 @@ class AppPage extends StatelessWidget {
     } else {
       route = Routers.login;
     }
-    _delegate.push(route, pathSegments: ['123131', '12313123']);
+    _delegate.push(route);
   }
 
   // This widget is the root of your application.

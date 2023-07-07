@@ -44,109 +44,109 @@ class StudyRouter {
   static List<AppRoutePage> get routers => [
         AppRoutePage(
           name: study,
-          builder: (setting) {
+          builder: (settings) {
             return StudyPage();
           },
         ),
         AppRoutePage(
           name: city,
-          builder: (setting) {
+          builder: (settings) {
             return CitySelectedPage();
           },
         ),
         AppRoutePage(
           name: convert,
-          builder: (setting) {
+          builder: (settings) {
             return ConvertPage();
           },
         ),
         AppRoutePage(
           name: dialog,
-          builder: (setting) {
+          builder: (settings) {
             return DialogPage();
           },
         ),
         AppRoutePage(
           name: dragList,
-          builder: (setting) {
+          builder: (settings) {
             return DragListPage();
           },
         ),
         AppRoutePage(
           name: floatNavigation,
-          builder: (setting) {
+          builder: (settings) {
             return FloatNavigationPage();
           },
         ),
         AppRoutePage(
           name: http,
-          builder: (setting) {
+          builder: (settings) {
             return HTTPListPage();
           },
         ),
         AppRoutePage(
           name: image,
-          builder: (setting) {
+          builder: (settings) {
             return ImageEditorPage();
           },
         ),
         AppRoutePage(
           name: keyword,
-          builder: (setting) {
+          builder: (settings) {
             return KeywordBoardPage();
           },
         ),
         AppRoutePage(
           name: list,
-          builder: (setting) {
+          builder: (settings) {
             return ListPage();
           },
         ),
         AppRoutePage(
           name: loadImage,
-          builder: (setting) {
+          builder: (settings) {
             return LoadImagePage();
           },
         ),
         AppRoutePage(
           name: popup,
-          builder: (setting) {
+          builder: (settings) {
             return PopupPage();
           },
         ),
         AppRoutePage(
           name: provider,
-          builder: (setting) {
+          builder: (settings) {
             return ProviderPage();
           },
         ),
         AppRoutePage(
           name: qr,
-          builder: (setting) {
+          builder: (settings) {
             return QRPage();
           },
         ),
         AppRoutePage(
           name: router,
-          builder: (setting) {
+          builder: (settings) {
             return RouterPage();
           },
         ),
         AppRoutePage(
           name: state,
-          builder: (setting) {
+          builder: (settings) {
             return StatePage();
           },
         ),
         AppRoutePage(
           name: text,
-          builder: (setting) {
+          builder: (settings) {
             return TextPage();
           },
         ),
         AppRoutePage(
           name: video,
-          builder: (setting) {
+          builder: (settings) {
             return VideoPage();
           },
         ),

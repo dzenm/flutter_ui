@@ -25,51 +25,51 @@ class MeRouter {
   static List<AppRoutePage> get routers => [
         AppRoutePage(
           name: article,
-          builder: (setting) {
+          builder: (settings) {
             return ArticlePage();
           },
         ),
         AppRoutePage(
           name: coin,
-          builder: (setting) {
+          builder: (settings) {
             return CoinPage();
           },
         ),
         AppRoutePage(
           name: collect,
-          builder: (setting) {
+          builder: (settings) {
             return CollectPage();
           },
         ),
         AppRoutePage(
           name: medicine,
-          builder: (setting) {
-            dynamic params = setting.params;
+          builder: (settings) {
+            dynamic params = settings.params;
             String medicineName = params['medicineName'] ?? '';
             return MedicinePage(medicineName: medicineName);
           },
         ),
         AppRoutePage(
           name: rank,
-          builder: (setting) {
+          builder: (settings) {
             return RankPage();
           },
         ),
         AppRoutePage(
           name: setting,
-          builder: (setting) {
+          builder: (settings) {
             return SettingPage();
           },
         ),
         AppRoutePage(
           name: editInfo,
-          builder: (setting) {
+          builder: (settings) {
             return EditInfoPage();
           },
         ),
         AppRoutePage(
           name: viewInfo,
-          builder: (setting) {
+          builder: (settings) {
             return ViewInfoPage();
           },
         ),
