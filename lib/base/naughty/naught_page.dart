@@ -51,6 +51,7 @@ class _NaughtPageState extends State<NaughtPage> {
               } else if (index == 2) {
               } else if (index == 3) {
                 Naughty.instance.httpRequests.clear();
+                setState(() {});
               } else if (index == 4) {
                 Navigator.pop(context);
               }

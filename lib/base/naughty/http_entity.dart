@@ -3,6 +3,7 @@ class HTTPEntity {
   String duration = '0 ms';
   String time = '';
   String size = '0 B';
+  int index = 0;
 
   // request
   String? method = 'Unknown';

@@ -1,24 +1,32 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:flutter_ui/base/log/log.dart';
 import 'package:intl/intl.dart';
 
+import '../log/log.dart';
 import 'http_entity.dart';
 import 'naughty.dart';
 
 /// HTTP请求信息拦截
 class HttpInterceptor extends Interceptor {
   Map<RequestOptions, HTTPEntity> _cacheMap = {};
+  Map<String, int> _countMap = {};
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     handler.next(options);
 
     HTTPEntity entity = HTTPEntity();
+    // 请求的状态：初始为请求中
     entity.status = Status.running;
+    // 请求的时间戳
     entity.duration = DateTime.now().millisecondsSinceEpoch.toString();
+    // 请求的起始时间
     entity.time = DateFormat("HH:mm:ss SSS").format(DateTime.now());
+    // 请求同一url的次数
+    int? index = _countMap[options.path];
+    _countMap[options.path] = (index ?? 0) + 1;
+    entity.index = _countMap[options.path]!;
     _cacheMap[options] = entity;
     Naughty.instance.httpRequests.insert(0, entity);
 
@@ -95,8 +103,7 @@ class HttpInterceptor extends Interceptor {
   }
 
   /// 请求完成
-  void _handleCompleted(HTTPEntity entity, bool res) {
-  }
+  void _handleCompleted(HTTPEntity entity, bool res) {}
 
   /// 获取字符串所占用的字节大小
   int _getStringLength(String? str) {

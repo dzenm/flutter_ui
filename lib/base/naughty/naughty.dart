@@ -2,10 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
 
 import '../utils/notification_util.dart';
-import '../widgets/floating_button.dart';
+import 'floating_button.dart';
 import 'http_entity.dart';
 import 'naught_page.dart';
 
@@ -19,58 +18,60 @@ class Naughty {
 
   factory Naughty() => _instance;
 
-  Widget? _child;
   BuildContext? _context;
 
   BuildContext get context => _context!;
 
+  /// 悬浮窗创建的控制器
   OverlayEntry? _overlayEntry;
 
   List<HTTPEntity> httpRequests = [];
 
   bool _showing = false;
 
+  bool get showing => _showing;
+
+  bool _init = false;
+
   /// 初始化, 设置子widget
   void init(BuildContext context, {Widget? child}) {
-    if (_context != null && child == null) return;
+    if (_context != null || _init) return;
     _context = context;
-    _child = child;
-  }
-
-  Future<void> _createOverlay() async {
-    if (kIsWeb) return;
+    // 创建悬浮窗
     _overlayEntry ??= OverlayEntry(builder: (BuildContext context) {
-      return _child ??
+      // 自定义悬浮窗布局
+      return child ??
           FloatingButton(
             onTap: () => push(context, const NaughtPage()),
             imageProvider: AssetImage('assets/images/ic_vnote.png'),
           );
     });
-    if (_context != null) {
-      Overlay.of(_context!)?.insert(_overlayEntry!);
-    }
+    _init = true;
   }
 
   /// 显示悬浮窗
   void show() {
-    if (kIsWeb) return;
+    if (kIsWeb || _context == null || !_init) return;
     if (_showing) return;
     _showing = true;
-    Future.delayed(Duration.zero, _createOverlay);
+    /// TODO 重复点击显示悬浮窗退出悬浮窗会报错，暂时未找的解决的办法
+    /// Failed assertion: line 1956 pos 12: '_elements.contains(element)': is not true.
+    Future.delayed(Duration.zero, () {
+      if (_context == null || _overlayEntry == null) return;
+      Overlay.of(_context!)?.insert(_overlayEntry!);
+    });
   }
 
   /// 隐藏悬浮窗
   void dismiss() {
-    if (kIsWeb) return;
+    if (kIsWeb || !_init) return;
     if (!_showing) return;
     _showing = false;
     _overlayEntry?.remove();
-    _overlayEntry = null;
   }
-
   /// 展示通知
   void showNotification({String? title, String? body}) {
-    if (kIsWeb) return;
+    if (kIsWeb || !_init) return;
     NotificationUtil().showNotification(
       title: title,
       body: body,
@@ -85,19 +86,6 @@ class Naughty {
       settings: RouteSettings(name: page.toStringShort()),
     );
     Navigator.push(context, route);
-  }
-
-  /// 获取数据库文件夹所有数据库文件
-  Future<List<String>> getDBFiles() async {
-    if (kIsWeb) return [];
-    String parent = await getDatabasesPath();
-    List<String> files = [];
-    Directory(parent).listSync().forEach((element) {
-      if (element.path.endsWith('.db')) {
-        files.add(element.path);
-      }
-    });
-    return files;
   }
 
   /// 获取文件名通过路径或者文件，例：

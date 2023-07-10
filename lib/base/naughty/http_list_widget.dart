@@ -42,8 +42,9 @@ class _HTTPListWidgetState extends State<HTTPListWidget> {
     );
   }
 
-  /// 列表单item布局
+  /// 列表item布局
   Widget _buildItem(BuildContext context, int index) {
+    HTTPEntity entity = _list[index];
     return ClipRRect(
       borderRadius: const BorderRadius.all(Radius.circular(8.0)),
       child: Container(
@@ -63,12 +64,12 @@ class _HTTPListWidgetState extends State<HTTPListWidget> {
         ),
         child: TapLayout(
           borderRadius: const BorderRadius.all(Radius.circular(7)),
-          onTap: () => Naughty.instance.push(context, HTTPItemPage(_list[index])),
+          onTap: () => Naughty.instance.push(context, HTTPItemPage(entity)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              _buildStatusView(index),
-              _buildContentView(index),
+              _buildStatusView(entity),
+              _buildContentView(entity),
             ],
           ),
         ),
@@ -77,18 +78,18 @@ class _HTTPListWidgetState extends State<HTTPListWidget> {
   }
 
   /// 请求状态布局
-  Widget _buildStatusView(int index) {
-    String text = _list[index].status == Status.running
+  Widget _buildStatusView(HTTPEntity entity) {
+    String text = entity.status == Status.running
         ? 'Running'
-        : _list[index].status == Status.success
+        : entity.status == Status.success
             ? 'Success'
-            : _list[index].status == Status.failed
+            : entity.status == Status.failed
                 ? 'Failed'
                 : 'None';
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
-        color: _stateColor(index),
+        color: _stateColor(entity.status),
         shape: BoxShape.rectangle,
         borderRadius: const BorderRadius.only(topRight: Radius.circular(7), bottomLeft: Radius.circular(7)),
       ),
@@ -97,21 +98,21 @@ class _HTTPListWidgetState extends State<HTTPListWidget> {
   }
 
   /// 请求的内容布局
-  Widget _buildContentView(int index) {
+  Widget _buildContentView(HTTPEntity entity) {
     return Container(
       padding: const EdgeInsets.only(left: 16.0, top: 8.0, right: 16.0, bottom: 16.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildStatusCodeView(index),
+          _buildStatusCodeView(entity),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
               children: [
-                _buildMethodView(index),
+                _buildMethodView(entity),
                 const SizedBox(height: 8),
                 const SizedBox(height: 8),
-                _buildDetailView(index),
+                _buildDetailView(entity),
               ],
             ),
           ),
@@ -121,43 +122,43 @@ class _HTTPListWidgetState extends State<HTTPListWidget> {
   }
 
   /// 请求状态码布局
-  Widget _buildStatusCodeView(int index) {
+  Widget _buildStatusCodeView(HTTPEntity entity) {
     return Text(
-      _list[index].statusCode.toString(),
-      style: TextStyle(fontWeight: FontWeight.bold, color: _stateColor(index)),
+      entity.statusCode.toString(),
+      style: TextStyle(fontWeight: FontWeight.bold, color: _stateColor(entity.status)),
     );
   }
 
   /// 请求方法和请求路径布局
-  Widget _buildMethodView(int index) {
+  Widget _buildMethodView(HTTPEntity entity) {
     return Row(children: [
       Text(
-        _list[index].method ?? '',
+        entity.method ?? '',
         style: const TextStyle(fontWeight: FontWeight.bold),
       ),
       const SizedBox(width: 8),
-      Expanded(child: Text(_list[index].path ?? '', maxLines: 1, overflow: TextOverflow.ellipsis)),
+      Expanded(child: Text('${entity.path ?? ''}(第${entity.index}次)', maxLines: 2, overflow: TextOverflow.ellipsis)),
     ]);
   }
 
   /// 请求的详细信息布局
-  Widget _buildDetailView(int index) {
+  Widget _buildDetailView(HTTPEntity entity) {
     return Row(
       children: [
-        SizedBox(width: 80, child: Text(_list[index].duration)),
-        Expanded(child: Text(_list[index].time)),
-        Text(_list[index].size),
+        SizedBox(width: 80, child: Text(entity.duration)),
+        Expanded(child: Text(entity.time)),
+        Text(entity.size),
       ],
     );
   }
 
   /// 根据请求状态显示不同的颜色
-  Color _stateColor(int index) {
-    return _list[index].status == Status.running
+  Color _stateColor(Status status) {
+    return status == Status.running
         ? Colors.blue
-        : _list[index].status == Status.success
+        : status == Status.success
             ? Colors.green
-            : _list[index].status == Status.failed
+            : status == Status.failed
                 ? Colors.red
                 : Colors.yellow;
   }

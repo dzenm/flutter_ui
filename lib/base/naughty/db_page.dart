@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sqflite/sqflite.dart';
 
 import '../widgets/tap_layout.dart';
 import 'db_table_page.dart';
@@ -44,9 +46,35 @@ class _DBPageState extends State<DBPage> {
   /// 列表要展示的数据
   Future _getData() async {
     await Future.delayed(const Duration(seconds: 0), () async {
-      _list = await Naughty.instance.getDBFiles();
+      _list = await getDBFiles();
       setState(() => {});
     });
+  }
+
+  /// 获取数据库文件夹所有数据库文件
+  Future<List<String>> getDBFiles() async {
+    List<String> files = [];
+    if (kIsWeb) return files;
+    String parent = await getDatabasesPath();
+    Directory(parent).listSync().forEach((element) {
+      if (element.path.endsWith('.db')) {
+        files.add(element.path);
+      }
+    });
+    return files;
+  }
+
+  Future<List<String>> getSharedPreferencesFiles() async {
+    List<String> files = [];
+    if (kIsWeb) return files;
+    String parent = await getDatabasesPath();
+
+    Directory(parent).listSync().forEach((element) {
+      if (element.path.endsWith('.db')) {
+        files.add(element.path);
+      }
+    });
+    return files;
   }
 
   /// 列表item 布局
