@@ -53,6 +53,7 @@ class _NaughtPageState extends State<NaughtPage> {
                 Naughty.instance.httpRequests.clear();
                 setState(() {});
               } else if (index == 4) {
+                Naughty.instance.dispose();
                 Navigator.pop(context);
               }
             },

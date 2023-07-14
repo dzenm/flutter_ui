@@ -411,7 +411,8 @@ class Banner extends StatelessWidget {
     return Selector<BannerModel, List<BannerEntity>>(
       builder: (context, value, widget) {
         return BannerView(
-          builder: (src) => Image.network(src ?? '', fit: BoxFit.cover),
+          repeat: true,
+          builder: (imagePath) => Image.network(imagePath ?? '', fit: BoxFit.cover),
           data: value.map((banner) => BannerData(title: banner.title, data: banner.imagePath)).toList(),
           onTap: (index) {
             CommonDialog.showToast(index.toString());

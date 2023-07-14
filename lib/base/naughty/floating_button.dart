@@ -25,8 +25,7 @@ class _FloatingButtonState extends State<FloatingButton> with TickerProviderStat
 
   bool isLeft = true; //按钮是否在按钮左侧
   bool isEdge = true; //按钮是否处于边缘
-  bool isPress = false; //按钮是否被按下
-  bool isMove = false; //按钮是否被按下
+  bool isMove = false; //按钮是否被移动
 
   AnimationController? _controller;
   Animation? _animation; // 松开后按钮返回屏幕边缘的动画
@@ -38,13 +37,13 @@ class _FloatingButtonState extends State<FloatingButton> with TickerProviderStat
       top: _top,
       child: Listener(
         //按下后设isPress为true，绘制选中阴影
-        onPointerDown: (details) => setState(() => isPress = true),
-        onPointerMove: (details) => setState(() => isMove = true),
+        onPointerMove: (details) {
+          // setState(() => isMove = true);
+        },
         //按下后设isPress为false，不绘制阴影
         //放下后根据当前x坐标与1/2屏幕宽度比较，判断屏幕在屏幕左侧或右侧，设置返回边缘动画
         //动画结束后设置isLeft的值，根据值绘制左/右边缘按钮
         onPointerUp: (e) async {
-          setState(() => isPress = false);
           if (isMove) {
             var pixelDetails = MediaQuery.of(context).size; //获取屏幕信息
 

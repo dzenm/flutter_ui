@@ -31,11 +31,11 @@ class Naughty {
 
   bool get showing => _showing;
 
-  bool _init = false;
+  bool get _isInit => _context != null && !kIsWeb;
 
   /// 初始化, 设置子widget
   void init(BuildContext context, {Widget? child}) {
-    if (_context != null || _init) return;
+    if (_isInit) return;
     _context = context;
     // 创建悬浮窗
     _overlayEntry ??= OverlayEntry(builder: (BuildContext context) {
@@ -46,14 +46,22 @@ class Naughty {
             imageProvider: AssetImage('assets/images/ic_vnote.png'),
           );
     });
-    _init = true;
+  }
+
+  /// 关闭并且恢复到初始状态
+  void dispose() {
+    if (!_isInit) return;
+    _context = null;
+    _showing = false;
+    _overlayEntry?.remove();
+    _overlayEntry = null;
   }
 
   /// 显示悬浮窗
   void show() {
-    if (kIsWeb || _context == null || !_init) return;
-    if (_showing) return;
+    if (!_isInit || _showing) return;
     _showing = true;
+
     /// TODO 重复点击显示悬浮窗退出悬浮窗会报错，暂时未找的解决的办法
     /// Failed assertion: line 1956 pos 12: '_elements.contains(element)': is not true.
     Future.delayed(Duration.zero, () {
@@ -64,14 +72,14 @@ class Naughty {
 
   /// 隐藏悬浮窗
   void dismiss() {
-    if (kIsWeb || !_init) return;
-    if (!_showing) return;
+    if (!_isInit || !_showing) return;
     _showing = false;
     _overlayEntry?.remove();
   }
+
   /// 展示通知
   void showNotification({String? title, String? body}) {
-    if (kIsWeb || !_init) return;
+    if (!_isInit) return;
     NotificationUtil().showNotification(
       title: title,
       body: body,

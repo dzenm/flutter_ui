@@ -2,26 +2,31 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+/// 自定义页面显示的布局
+typedef ItemBuilder = Widget Function(dynamic data);
+
 /// Item的点击事件
 typedef ItemClick = void Function(int position);
 
-/// 自定义指示器布局
-typedef IndicatorItemViewBuilder = Widget Function(int position, int selected);
+/// 自定义布局的其他属性
+typedef ParentBuilder = Widget Function(Widget child);
 
-/// 自定义页面显示的布局
-typedef ItemViewBuilder = Widget Function(dynamic data);
+/// 自定义指示器布局
+typedef IndicatorItemBuilder = Widget Function(bool isSelected);
 
 /// 轮播图展示
 class BannerView extends StatefulWidget {
+  final ItemBuilder builder;
+  final List<BannerData> data;
   final double? width;
   final double? height;
-  final ItemViewBuilder builder;
-  final List<BannerData> data;
   final Duration duration;
-  final double indicatorSize;
-  final Alignment indicatorAlignment;
   final bool autoPlay;
-  final IndicatorItemViewBuilder? indicatorBuilder;
+  final bool repeat;
+  final ParentBuilder? titleParentBuilder;
+  final double indicatorSize;
+  final ParentBuilder? indicatorParentBuilder;
+  final IndicatorItemBuilder? indicatorItemBuilder;
   final ItemClick? onTap;
 
   const BannerView({
@@ -31,10 +36,12 @@ class BannerView extends StatefulWidget {
     this.width,
     this.height = 200,
     this.duration = const Duration(seconds: 3),
-    this.indicatorSize = 8.0,
-    this.indicatorAlignment = Alignment.topRight,
     this.autoPlay = true,
-    this.indicatorBuilder,
+    this.repeat = false,
+    this.titleParentBuilder,
+    this.indicatorSize = 8.0,
+    this.indicatorParentBuilder,
+    this.indicatorItemBuilder,
     this.onTap,
   });
 
@@ -48,14 +55,11 @@ class _BannerViewState extends State<BannerView> {
   /// 内部加两个⻚⾯ +B(A,B)+A
   final List<Widget> _banners = [];
 
-  /// 定时滑动页面的计时器
-  Timer? _timer;
-
-  /// 实际数据的长度
-  int _realLen = 0;
-
   /// 当前页面在[_banners]中的索引
   int _curPageIndex = 0;
+
+  /// 定时滑动页面的计时器
+  Timer? _timer;
 
   @override
   void initState() {
@@ -81,6 +85,7 @@ class _BannerViewState extends State<BannerView> {
     }
   }
 
+  /// 是否需要更新，如果数据集发生变化，则返回true，否则false
   bool isUpdate(List oldList, List newList) {
     if (oldList.length != newList.length) {
       return true;
@@ -93,11 +98,9 @@ class _BannerViewState extends State<BannerView> {
     return false;
   }
 
+  /// 重置页面
   void _resetPage() {
-    _realLen = widget.data.length;
-    if (_realLen == 0) {
-      return;
-    }
+    if (realPageLength == 0) return;
 
     _banners.clear();
     // 初始化数据
@@ -107,8 +110,8 @@ class _BannerViewState extends State<BannerView> {
     }
     _banners.addAll(children);
 
-    // 定时器完成⾃动翻⻚
-    if (_realLen > 1) {
+    // 如果打开周期翻页的开关并且页面的长度内容大于两页时，在定时器完成进行⾃动翻⻚
+    if (widget.repeat && realPageLength > 1) {
       // 如果⼤于⼀⻚，则会在前后都加⼀⻚
       _banners.insert(0, children.last);
       _banners.add(children.first);
@@ -122,19 +125,20 @@ class _BannerViewState extends State<BannerView> {
     }
   }
 
-  // 自动更换页面
-  void _autoPlayPage() {
-    if (widget.autoPlay && _realLen > 1) {
-      _timer?.cancel();
-      _timer = Timer.periodic(widget.duration, _nextPage);
-    }
-  }
+  /// 真正的页面列表的长度(展示传入的数据长度)
+  int get realPageLength => widget.data.length;
 
-  // 进入下一页
-  void _nextPage(Timer timer) {
-    ++_curPageIndex;
-    _curPageIndex = _curPageIndex == _banners.length ? 0 : _curPageIndex;
-    _controller.animateToPage(_curPageIndex, duration: const Duration(milliseconds: 500), curve: Curves.linear);
+  /// 自动更换页面
+  void _autoPlayPage() {
+    if (widget.autoPlay && realPageLength > 1) {
+      _timer?.cancel();
+      _timer = Timer.periodic(widget.duration, (Timer timer) {
+        // 自动翻页
+        ++_curPageIndex;
+        _curPageIndex = _curPageIndex == _banners.length ? 0 : _curPageIndex;
+        _controller.animateToPage(_curPageIndex, duration: const Duration(milliseconds: 500), curve: Curves.linear);
+      });
+    }
   }
 
   @override
@@ -146,7 +150,7 @@ class _BannerViewState extends State<BannerView> {
 
   @override
   Widget build(BuildContext context) {
-    if (_realLen == 0) return Container();
+    if (realPageLength == 0) return Container();
     return SizedBox(
       width: widget.width,
       height: widget.height,
@@ -160,45 +164,41 @@ class _BannerViewState extends State<BannerView> {
     );
   }
 
-  // Banner页面
+  /// Banner页面
   Widget _buildBannerView() {
-    return _listener(PageView.builder(
-      itemCount: _banners.length,
-      controller: _controller,
-      onPageChanged: (int index) {
-        if (_realLen > 1) {
-          // 需要更新下下标
-          setState(() => _curPageIndex = index);
-        }
-      },
-      itemBuilder: (context, index) {
-        return Material(
-          child: InkWell(
-            child: _banners[index],
-            onTap: () {
-              if (_banners.length > 1 && widget.onTap != null) {
-                widget.onTap!(_curPageIndex - 1);
-              }
-            },
-          ),
-        );
-      },
-    ));
-  }
-
-  // 监听页面的切换
-  Widget _listener(Widget child) {
+    // 监听页面的切换
     return Listener(
       onPointerDown: (PointerDownEvent event) => _timer?.cancel(), // 手指放下时，取消自动换页定时器
       onPointerUp: (PointerUpEvent event) => _autoPlayPage(), // 手指抬起时，启动自动换页定时器
       child: NotificationListener(
-        child: child,
+        child: PageView.builder(
+          itemCount: _banners.length,
+          controller: _controller,
+          onPageChanged: (int index) {
+            if (realPageLength > 1) {
+              // 需要更新下下标
+              setState(() => _curPageIndex = index);
+            }
+          },
+          itemBuilder: (context, index) {
+            return Material(
+              child: InkWell(
+                child: _banners[index],
+                onTap: () {
+                  if (_banners.length > 1 && widget.onTap != null) {
+                    widget.onTap!(_getRealPageIndex(isStartZero: true));
+                  }
+                },
+              ),
+            );
+          },
+        ),
         onNotification: (notification) {
           if (notification is ScrollUpdateNotification) {
             // 是⼀个完整⻚⾯的偏移
             if (notification.metrics.atEdge) {
               // 如果是实际中的第一页或最后一页，需要重新调整它所在的位置
-              _controller.jumpToPage(_getRealIndex(isStartZero: false));
+              _controller.jumpToPage(_getRealPageIndex(isStartZero: false));
             }
           }
           return false;
@@ -207,31 +207,35 @@ class _BannerViewState extends State<BannerView> {
     );
   }
 
-  // 一组指示器布局
+  /// 一组指示器布局
   Widget _buildIndicatorView() {
     List<Widget> indicators = [];
-    for (int i = 0; i < _realLen; i++) {
-      Widget child = (widget.indicatorBuilder ?? _buildIndicatorItemView)(_getRealIndex(), i);
+    for (int i = 0; i < realPageLength; i++) {
+      bool selected = _getRealPageIndex() == i;
+      Widget child = (widget.indicatorItemBuilder ?? _buildIndicatorItemView)(selected);
       indicators.add(child);
     }
+    Widget child = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: indicators,
+    );
+    if (widget.indicatorParentBuilder != null) {
+      return widget.indicatorParentBuilder!(child);
+    }
     return Align(
-      alignment: widget.indicatorAlignment,
+      alignment: Alignment.topRight,
       child: IntrinsicHeight(
         child: Container(
           padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: indicators,
-          ),
+          child: child,
         ),
       ),
     );
   }
 
-  // 单个指示器布局
-  Widget _buildIndicatorItemView(int selectedIndex, int i) {
-    bool selected = selectedIndex == i;
-    Color color = selected ? Colors.white : Colors.grey;
+  /// 单个指示器布局
+  Widget _buildIndicatorItemView(bool isSelected) {
+    Color color = isSelected ? Colors.white : Colors.grey;
     return Container(
       margin: const EdgeInsets.all(3.0),
       width: 8,
@@ -243,40 +247,39 @@ class _BannerViewState extends State<BannerView> {
     );
   }
 
-  // 标题布局
+  /// 标题布局
   Widget _buildTitleView() {
+    BannerData banner = widget.data[_getRealPageIndex()];
+    String? title = banner.title;
+    if (title?.isEmpty ?? false) return Container();
+
+    Widget child = Text(
+      title!,
+      softWrap: true,
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+      style: const TextStyle(color: Colors.white, fontSize: 12.0),
+    );
+    if (widget.titleParentBuilder != null) {
+      return widget.titleParentBuilder!(child);
+    }
     return Align(
       alignment: Alignment.bottomCenter,
       child: IntrinsicHeight(
         child: Container(
           color: const Color(0x99000000),
           padding: const EdgeInsets.all(6.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [_buildTitleItemView()],
-          ),
+          child: Row(children: [Expanded(child: child)]),
         ),
       ),
     );
   }
 
-  // 单个标题布局
-  Widget _buildTitleItemView() {
-    BannerData banner = widget.data[_getRealIndex()];
-    if (banner.title?.isEmpty ?? false) return Container();
-    return Expanded(
-      child: Text(
-        banner.title ?? '',
-        softWrap: true,
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-        style: const TextStyle(color: Colors.white, fontSize: 12.0),
-      ),
-    );
-  }
-
   // 获取实际页面的索引
-  int _getRealIndex({bool isStartZero = true}) {
+  int _getRealPageIndex({bool isStartZero = true}) {
+    if (!widget.repeat) {
+      return _curPageIndex;
+    }
     int index = _curPageIndex;
     if (_curPageIndex == 0) {
       // 如果索引是children中的第⼀⻚，它显示的是实际中最后一页的内容，在children的索引是children.length - 2
