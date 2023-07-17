@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import '../../base/log/log.dart';
 import '../../base/widgets/badge_tag.dart';
 import '../../base/widgets/tap_layout.dart';
+import '../../generated/l10n.dart';
 import 'main_model.dart';
 
 ///
@@ -67,7 +68,7 @@ class BottomNavigationBarItemView extends StatelessWidget {
         height: height,
         child: Stack(alignment: Alignment.center, children: [
           // 图标和文字充满Stack并居中显示
-          Positioned.fill(child: _builtItem()),
+          Positioned.fill(child: _builtItem(context)),
           // badge固定在右上角
           Positioned(
             width: width / 2,
@@ -105,13 +106,13 @@ class BottomNavigationBarItemView extends StatelessWidget {
     );
   }
 
-  Widget _builtItem() {
+  Widget _builtItem(BuildContext context) {
     return Selector<MainModel, int>(
       builder: (context, value, widget) {
         return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           _buildIcon(value),
           SizedBox(height: 2),
-          _buildTitle(value),
+          _buildTitle(context, value),
         ]);
       },
       selector: (context, model) => model.selectedIndex,
@@ -119,24 +120,26 @@ class BottomNavigationBarItemView extends StatelessWidget {
   }
 
   Widget _buildIcon(int selectIndex) {
+    List<IconData> icons = [
+      Icons.home,
+      Icons.airplay_rounded,
+      Icons.person,
+    ];
+    IconData icon = icons[index]; // 当前index索引的图标
     bool isSelected = selectIndex == index; // 是否是选中的索引
-    return Selector<MainModel, IconData>(
-      builder: (context, value, widget) {
-        Color color = isSelected ? Colors.blue : Colors.grey.shade500;
-        return Icon(value, color: color, size: 20);
-      },
-      selector: (context, model) => model.icon(index),
-    );
+    Color color = isSelected ? Colors.blue : Colors.grey.shade500;
+    return Icon(icon, color: color, size: 20);
   }
 
-  Widget _buildTitle(int selectIndex) {
+  Widget _buildTitle(BuildContext context, int selectIndex) {
+    List<String> titles = [
+      S.of(context).home,
+      S.of(context).nav,
+      S.of(context).me,
+    ];
+    String title = titles[index]; // 当前index索引的标题
     bool isSelected = selectIndex == index; // 是否是选中的索引
-    return Selector<MainModel, String>(
-      builder: (context, value, widget) {
-        Color color = isSelected ? Colors.blue : Colors.grey.shade500;
-        return Text(value, style: TextStyle(fontSize: 10, color: color));
-      },
-      selector: (context, model) => model.title(index),
-    );
+    Color color = isSelected ? Colors.blue : Colors.grey.shade500;
+    return Text(title, style: TextStyle(fontSize: 10, color: color));
   }
 }

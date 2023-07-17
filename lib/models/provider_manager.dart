@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/models/article_model.dart';
-import 'package:flutter_ui/pages/main/home_page/home_model.dart';
-import 'package:flutter_ui/pages/main/main_model.dart';
-import 'package:flutter_ui/pages/main/me_page/me_model.dart';
-import 'package:flutter_ui/pages/main/nav_page/nav_model.dart';
-import 'package:flutter_ui/pages/study/study_model.dart';
+import 'package:flutter_ui/application.dart';
 import 'package:provider/provider.dart';
 
+import '../pages/main/home_page/home_model.dart';
+import '../pages/main/main_model.dart';
+import '../pages/main/me_page/me_model.dart';
+import '../pages/main/nav_page/nav_model.dart';
+import '../pages/study/study_model.dart';
+import 'article_model.dart';
 import 'banner_model.dart';
 import 'user_model.dart';
 import 'website_model.dart';
@@ -17,15 +18,11 @@ import 'website_model.dart';
 class ProviderManager {
   static bool _init = false;
 
-  static void initData(BuildContext context) {
+  /// 初始化所有数据
+  static Future<void> init(BuildContext context) async {
     if (_init) return;
     _init = true;
 
-    context.read<MainModel>().initData(context);
-  }
-
-  /// 初始化所有数据
-  static Future<void> init(BuildContext context) async {
     // 表相关的Model
     await context.read<ArticleModel>().init();
     await context.read<BannerModel>().init();
@@ -57,39 +54,39 @@ class ProviderManager {
     context.read<StudyModel>().clear();
   }
 
-  static ArticleModel getArticle(BuildContext context) {
-    return context.read<ArticleModel>();
+  static ArticleModel article({BuildContext? context, bool listen = false}) {
+    return Provider.of<ArticleModel>(context ?? Application().context, listen: listen);
   }
 
-  static BannerModel getBanner(BuildContext context) {
-    return context.read<BannerModel>();
+  static BannerModel banner({BuildContext? context, bool listen = false}) {
+    return Provider.of<BannerModel>(context ?? Application().context, listen: listen);
   }
 
-  static UserModel getUser(BuildContext context) {
-    return context.read<UserModel>();
+  static UserModel user({BuildContext? context, bool listen = false}) {
+    return Provider.of<UserModel>(context ?? Application().context, listen: listen);
   }
 
-  static WebsiteModel getWebsite(BuildContext context) {
-    return context.read<WebsiteModel>();
+  static WebsiteModel website({BuildContext? context, bool listen = false}) {
+    return Provider.of<WebsiteModel>(context ?? Application().context, listen: listen);
   }
 
-  static MainModel getMain(BuildContext context) {
-    return context.read<MainModel>();
+  static MainModel main({BuildContext? context, bool listen = false}) {
+    return Provider.of<MainModel>(context ?? Application().context, listen: listen);
   }
 
-  static HomeModel getHome(BuildContext context) {
-    return context.read<HomeModel>();
+  static HomeModel home({BuildContext? context, bool listen = false}) {
+    return Provider.of<HomeModel>(context ?? Application().context, listen: listen);
   }
 
-  static MeModel getMe(BuildContext context) {
-    return context.read<MeModel>();
+  static MeModel me({BuildContext? context, bool listen = false}) {
+    return Provider.of<MeModel>(context ?? Application().context, listen: listen);
   }
 
-  static NavModel getNav(BuildContext context) {
-    return context.read<NavModel>();
+  static NavModel nav({BuildContext? context, bool listen = false}) {
+    return Provider.of<NavModel>(context ?? Application().context, listen: listen);
   }
 
-  static StudyModel getStudy(BuildContext context) {
-    return context.read<StudyModel>();
+  static StudyModel study({BuildContext? context, bool listen = false}) {
+    return Provider.of<StudyModel>(context ?? Application().context, listen: listen);
   }
 }

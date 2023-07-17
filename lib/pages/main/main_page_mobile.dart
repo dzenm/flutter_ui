@@ -64,7 +64,6 @@ class _MainPageMobileState extends State<MainPageMobile> with WidgetsBindingObse
 
   /// 在[build]之前使用使用[context]初始化数据
   void _useContextBeforeBuild(BuildContext context) {
-    ProviderManager.initData(context);
     Naughty.instance
       ..init(context)
       ..show();
@@ -103,36 +102,36 @@ class _MainPageMobileState extends State<MainPageMobile> with WidgetsBindingObse
 
     _useContextBeforeBuild(context);
 
-    int len = context.read<MainModel>().len;
+    int length = context.read<MainModel>().length;
     return Scaffold(
       body: PageView(
         controller: _controller,
         physics: NeverScrollableScrollPhysics(),
-        children: _buildTabPage(len),
+        children: _buildTabPage(length),
       ),
       bottomNavigationBar: BottomAppBar(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           mainAxisSize: MainAxisSize.max,
-          children: _buildBottomNavigationBar(len),
+          children: _buildBottomNavigationBar(length),
         ),
       ),
     );
   }
 
   /// Page widget
-  List<Widget> _buildTabPage(int len) {
+  List<Widget> _buildTabPage(int length) {
     List<Widget> list = [HomePage(), NavPage(), MePage()];
     return List.generate(
-      len,
+      length,
       (index) => KeepAliveWrapper(child: index < list.length ? list[index] : Container()),
     );
   }
 
   /// BottomNavigationBar widget
-  List<Widget> _buildBottomNavigationBar(int len) {
+  List<Widget> _buildBottomNavigationBar(int length) {
     return List.generate(
-      len,
+      length,
       (i) => Expanded(
         flex: 1,
         child: BottomNavigationBarItemView(index: i, controller: _controller),
