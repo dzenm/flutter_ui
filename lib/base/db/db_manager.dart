@@ -154,7 +154,7 @@ class DBManager {
     return list.map((element) => TableEntity.fromJson(element)).toList();
   }
 
-  // 插入数据
+  /// 插入数据
   Future<int> insertItem(
     String tableName,
     Map<String, dynamic> values, {
@@ -226,7 +226,7 @@ class DBManager {
     return count;
   }
 
-  // 查询数据，当key和value存在时，查询对应表中的数据，当key和value不存在时，查询对应表中所有数据
+  /// 查询数据，当key和value存在时，查询对应表中的数据，当key和value不存在时，查询对应表中所有数据
   Future<List<Map<String, dynamic>>> where(
     String tableName, {
     Map<String, String>? where,
