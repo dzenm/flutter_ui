@@ -61,6 +61,8 @@ class _BannerViewState extends State<BannerView> {
   /// 定时滑动页面的计时器
   Timer? _timer;
 
+  bool _isPageMove = false;
+
   @override
   void initState() {
     super.initState();
@@ -178,6 +180,14 @@ class _BannerViewState extends State<BannerView> {
             if (realPageLength > 1) {
               // 需要更新下下标
               setState(() => _curPageIndex = index);
+              // 如果是实际中的第一页或最后一页，需要重新调整它所在的位置
+              // TODO 无法使用动画，否则滑动过快会报错
+              // _controller.jumpToPage(_getRealPageIndex(isStartZero: false));
+              // _controller.animateToPage(
+              //   _getRealPageIndex(isStartZero: false),
+              //   duration: Duration(milliseconds: 200),
+              //   curve: Curves.linear,
+              // );
             }
           },
           itemBuilder: (context, index) {
@@ -194,12 +204,18 @@ class _BannerViewState extends State<BannerView> {
           },
         ),
         onNotification: (notification) {
-          if (notification is ScrollUpdateNotification) {
-            // 是⼀个完整⻚⾯的偏移
+          if (notification is ScrollStartNotification) {
+            _isPageMove = true;
+            // 滚动开始
+          } else if (notification is ScrollUpdateNotification) {
+            // 滚动中
             if (notification.metrics.atEdge) {
               // 如果是实际中的第一页或最后一页，需要重新调整它所在的位置
               _controller.jumpToPage(_getRealPageIndex(isStartZero: false));
             }
+          } else if (notification is ScrollEndNotification) {
+            //滚动结束
+            _isPageMove = false;
           }
           return false;
         },
