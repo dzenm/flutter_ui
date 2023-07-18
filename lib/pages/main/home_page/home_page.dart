@@ -187,7 +187,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void log(String msg) => BuildConfig.showPageLog ? Log.i(msg, tag: _tag) : null;
+  void log(String msg) => BuildConfig.showPageLog ? Log.p(msg, tag: _tag) : null;
 }
 
 /// 文章列表 widget
@@ -211,16 +211,16 @@ class _ArticleListViewState extends State<ArticleListView> {
   @override
   void initState() {
     super.initState();
-    Log.i('initState', tag: _tag);
+    Log.p('initState', tag: _tag);
   }
 
   @override
   Widget build(BuildContext context) {
-    Log.i('build', tag: _tag);
+    Log.p('build', tag: _tag);
 
     return Selector<ArticleModel, int>(
       builder: (context, value, child) {
-        Log.i('build', tag: _tag);
+        Log.p('build', tag: _tag);
         return RefreshListView(
           controller: widget.controller,
           itemCount: value,
@@ -245,7 +245,7 @@ class ArticleItemView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Log.i('build', tag: _tag);
+    Log.p('build', tag: _tag);
 
     return TapLayout(
       borderRadius: BorderRadius.all(Radius.circular(16)),
@@ -406,7 +406,7 @@ class Banner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Log.i('build', tag: _tag);
+    Log.p('build', tag: _tag);
 
     return Selector<BannerModel, List<BannerEntity>>(
       builder: (context, value, widget) {

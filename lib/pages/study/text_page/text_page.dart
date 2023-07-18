@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/pages/main/me_page/me_router.dart';
 
+import '../../../base/log/build_config.dart';
 import '../../../base/log/log.dart';
 import '../../../base/res/assets.dart';
 import '../../../base/route/app_route_delegate.dart';
@@ -38,31 +39,31 @@ class _TextPageState extends State<TextPage> {
   void initState() {
     super.initState();
 
-    Log.i('initState', tag: _tag);
+    log('initState');
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    Log.i('didChangeDependencies', tag: _tag);
+    log('didChangeDependencies');
   }
 
   @override
   void didUpdateWidget(covariant TextPage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    Log.i('didUpdateWidget', tag: _tag);
+    log('didUpdateWidget');
   }
 
   @override
   void deactivate() {
     super.deactivate();
-    Log.i('deactivate', tag: _tag);
+    log('deactivate');
   }
 
   @override
   void dispose() {
     super.dispose();
-    Log.i('dispose', tag: _tag);
+    log('dispose');
 
     _controller.dispose();
   }
@@ -267,4 +268,6 @@ class _TextPageState extends State<TextPage> {
       ),
     );
   }
+
+  void log(String msg) => BuildConfig.showPageLog ? Log.p(msg, tag: _tag) : null;
 }

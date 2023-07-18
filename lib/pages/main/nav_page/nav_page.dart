@@ -117,7 +117,7 @@ class _NavPageState extends State<NavPage> {
     );
   }
 
-  void log(String msg) => BuildConfig.showPageLog ? Log.i(msg, tag: _tag) : null;
+  void log(String msg) => BuildConfig.showPageLog ? Log.p(msg, tag: _tag) : null;
 }
 
 class TopView extends StatefulWidget {
@@ -134,7 +134,7 @@ class _TopViewState extends State<TopView> {
 
   @override
   Widget build(BuildContext context) {
-    Log.i('build', tag: _tag);
+    Log.p('build', tag: _tag);
 
     return Text(widget.text);
   }

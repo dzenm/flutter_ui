@@ -65,6 +65,11 @@ class Log {
     _printLog(tag, message, Level.db);
   }
 
+  static void p(dynamic message, {String tag = ''}) {
+    if (!BuildConfig.showPageLog) return;
+    _printLog(tag, message, Level.page);
+  }
+
   static void _printLog(String tag, dynamic message, Level level) {
     if (kReleaseMode) {
       // release模式不打印
@@ -159,7 +164,8 @@ enum Level {
   warm(5, 'W'),
   error(6, 'E'),
   http(7, 'H'),
-  db(8, 'B');
+  db(8, 'B'),
+  page(9, 'P');
 
   final int value;
   final String tag;

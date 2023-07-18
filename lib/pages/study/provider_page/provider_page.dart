@@ -4,6 +4,8 @@ import 'package:flutter_ui/base/log/log.dart';
 import 'package:flutter_ui/pages/main/me_page/me_model.dart';
 import 'package:provider/provider.dart';
 
+import '../../../base/log/build_config.dart';
+
 ///
 /// Created by a0010 on 2023/3/2 15:11
 /// Provider
@@ -20,7 +22,7 @@ class _ProviderPageState extends State<ProviderPage> {
   @override
   void initState() {
     super.initState();
-    Log.i('initState', tag: _tag);
+    log('initState');
     Future.delayed(Duration.zero, () {
       person = context.read<MeModel>().persons.first;
       setState(() {});
@@ -30,30 +32,30 @@ class _ProviderPageState extends State<ProviderPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    Log.i('didChangeDependencies', tag: _tag);
+    log('didChangeDependencies');
   }
 
   @override
   void didUpdateWidget(covariant ProviderPage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    Log.i('didUpdateWidget', tag: _tag);
+    log('didUpdateWidget');
   }
 
   @override
   void deactivate() {
     super.deactivate();
-    Log.i('deactivate', tag: _tag);
+    log('deactivate');
   }
 
   @override
   void dispose() {
     super.dispose();
-    Log.i('dispose', tag: _tag);
+    log('dispose');
   }
 
   @override
   Widget build(BuildContext context) {
-    Log.i('build', tag: _tag);
+    log('build');
 
     return Scaffold(
       appBar: AppBar(
@@ -145,7 +147,7 @@ class _ProviderPageState extends State<ProviderPage> {
   }
 
   Widget _buildSetStateWidget({Person? person}) {
-    Log.i('buildSetStateWidget', tag: _tag);
+    log('buildSetStateWidget');
 
     // setState 当前所在的widget及子widget都会被重建
     return Container(
@@ -165,7 +167,7 @@ class _ProviderPageState extends State<ProviderPage> {
   }
 
   Widget _buildSelectorWidget() {
-    Log.i('buildSelectorWidget', tag: _tag);
+    log('buildSelectorWidget');
 
     // Selector 只在监听的值改变后发生变化，如果该值未改变，或者对象中的其他值/List的其他index值改变，均不会受到影响
     return Container(
@@ -178,7 +180,7 @@ class _ProviderPageState extends State<ProviderPage> {
         Row(children: [
           Selector<MeModel, String>(
             builder: (context, value, widget) {
-              Log.i('Selector name: build', tag: _tag);
+              log('Selector name: build');
 
               return Text('$value');
             },
@@ -189,7 +191,7 @@ class _ProviderPageState extends State<ProviderPage> {
         Row(children: [
           Selector<MeModel, String>(
             builder: (context, value, widget) {
-              Log.i('Selector address: build', tag: _tag);
+              log('Selector address: build');
 
               return Text('$value');
             },
@@ -200,7 +202,7 @@ class _ProviderPageState extends State<ProviderPage> {
         Row(children: [
           Selector<MeModel, int>(
             builder: (context, value, widget) {
-              Log.i('Selector age: build', tag: _tag);
+              log('Selector age: build');
 
               return Text('$value');
             },
@@ -210,6 +212,9 @@ class _ProviderPageState extends State<ProviderPage> {
       ]),
     );
   }
+
+  void log(String msg) => BuildConfig.showPageLog ? Log.p(msg, tag: _tag) : null;
+
 }
 
 class _ProviderWidget extends StatefulWidget {
@@ -222,7 +227,7 @@ class _ProviderWidgetState extends State<_ProviderWidget> {
 
   @override
   Widget build(BuildContext context) {
-    Log.i('build', tag: _tag);
+    log('build');
 
     // watch 当前widget存在监听的对象有任一细微的变化都会影响build及子widget进行重建
     // 比如监听的是List或者List的其中一个item，如果List的其他item发生变化都会影响监听了List或者List的其中一个item的widget进行重建
@@ -242,4 +247,6 @@ class _ProviderWidgetState extends State<_ProviderWidget> {
       ]),
     );
   }
+
+  void log(String msg) => BuildConfig.showPageLog ? Log.p(msg, tag: _tag) : null;
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import '../../base/log/build_config.dart';
 import '../../base/log/log.dart';
 import '../../base/widgets/will_pop_view.dart';
 
@@ -78,6 +79,7 @@ class FlutterWebView extends StatefulWidget {
 }
 
 class _FlutterWebViewState extends State<FlutterWebView> {
+  static final String _tag = 'WebViewPage';
   WebViewController? _controller;
   double _progressValue = 0;
   bool _isLoading = true;
@@ -122,7 +124,7 @@ class _FlutterWebViewState extends State<FlutterWebView> {
             },
             onNavigationRequest: (NavigationRequest request) {
               if (request.url.startsWith('myapp://')) {
-                Log.i('即将打开 ${request.url}');
+                log('即将打开 ${request.url}');
                 return NavigationDecision.prevent;
               }
               return NavigationDecision.navigate;
@@ -166,4 +168,6 @@ class _FlutterWebViewState extends State<FlutterWebView> {
       encoding: Encoding.getByName('utf-8'),
     ));
   }
+
+  void log(String msg) => BuildConfig.showPageLog ? Log.p(msg, tag: _tag) : null;
 }

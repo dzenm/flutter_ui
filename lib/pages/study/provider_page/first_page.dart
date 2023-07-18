@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../../../base/log/build_config.dart';
 import '../../../base/log/log.dart';
 import '../../../base/widgets/common_bar.dart';
 
 ///
 /// Created by a0010 on 2023/3/23 09:01
-/// 快速页面创建
 class FirstPage extends StatefulWidget {
   const FirstPage({super.key});
 
@@ -19,7 +19,7 @@ class _FirstPageState extends State<FirstPage> {
   @override
   void initState() {
     super.initState();
-    Log.i('initState', tag: _tag);
+    log('initState');
 
     Future.delayed(Duration.zero, () => _getData());
   }
@@ -27,25 +27,25 @@ class _FirstPageState extends State<FirstPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    Log.i('didChangeDependencies', tag: _tag);
+    log('didChangeDependencies');
   }
 
   @override
   void didUpdateWidget(covariant FirstPage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    Log.i('didUpdateWidget', tag: _tag);
+    log('didUpdateWidget');
   }
 
   @override
   void deactivate() {
     super.deactivate();
-    Log.i('deactivate', tag: _tag);
+    log('deactivate');
   }
 
   @override
   void dispose() {
     super.dispose();
-    Log.i('dispose', tag: _tag);
+    log('dispose');
   }
 
   Future<void> _getData() async {
@@ -62,4 +62,6 @@ class _FirstPageState extends State<FirstPage> {
       ),
     );
   }
+
+  void log(String msg) => BuildConfig.showPageLog ? Log.p(msg, tag: _tag) : null;
 }

@@ -80,7 +80,7 @@ class _MePageState extends State<MePage> {
             //滚动是是否拉伸图片
             stretch: true,
             //展开区域的高度
-            expandedHeight: 500,
+            expandedHeight: 300,
             //当snap配置为true时，向下滑动页面，SliverAppBar（以及其中配置的flexibleSpace内容）会立即显示出来，
             //反之当snap配置为false时，向下滑动时，只有当ListView的数据滑动到顶部时，SliverAppBar才会下拉显示出来。
             snap: false,
@@ -247,5 +247,5 @@ class _MePageState extends State<MePage> {
     });
   }
 
-  void log(String msg) => BuildConfig.showPageLog ? Log.i(msg, tag: _tag) : null;
+  void log(String msg) => BuildConfig.showPageLog ? Log.p(msg, tag: _tag) : null;
 }

@@ -207,5 +207,5 @@ class _RegisterPageState extends State<RegisterPage> {
     AppRouteDelegate.of(context).push(Routers.main, clearStack: true);
   }
 
-  void log(String msg) => BuildConfig.showPageLog ? Log.i(msg, tag: _tag) : null;
+  void log(String msg) => BuildConfig.showPageLog ? Log.p(msg, tag: _tag) : null;
 }
