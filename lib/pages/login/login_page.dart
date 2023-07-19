@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ui/base/log/build_config.dart';
@@ -16,19 +15,20 @@ import '../routers.dart';
 
 ///
 /// 登录页面
-///
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    if (kIsWeb) {
+    if (BuildConfig.isWeb) {
       return _buildWebPage(context);
+    } else if (BuildConfig.isDesktop) {
+      return _buildDeskTopPage(context);
     }
     return _buildAppPage(context);
   }
 
-  /// Web展示的页面
+  /// Web网页端展示的页面
   Widget _buildWebPage(BuildContext context) {
     return Material(
       child: Center(
@@ -41,7 +41,20 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  /// App展示的页面
+  /// Desktop桌面端展示的页面
+  Widget _buildDeskTopPage(BuildContext context) {
+    return Material(
+      child: Center(
+        child: Container(
+          width: 400,
+          padding: EdgeInsets.all(24),
+          child: _LoginWidget(),
+        ),
+      ),
+    );
+  }
+
+  /// App移动端展示的页面
   Widget _buildAppPage(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -63,7 +76,6 @@ class LoginPage extends StatelessWidget {
 
 ///
 /// 登录组件主体部分的状态，不包含 [Scaffold]
-///
 class _LoginWidget extends StatefulWidget {
   const _LoginWidget();
 

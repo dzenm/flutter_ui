@@ -1,5 +1,4 @@
-
-import '../../application.dart';
+import 'study.dart';
 
 /// 异步学习测试代码
 class FutureStudy {
@@ -26,15 +25,15 @@ class FutureStudy {
     // Future.micro task优先级其次（微任务队列 MicroTaskQueue）
     // Future.delayed优先级最后（事件队列 EventTaskQueue）
 
-    Application().log('main first task');
-    Future.microtask(() => Application().log('Future first microTask'));
-    Future.sync(() => Application().log('Future first syncTask'));
-    Future.delayed(Duration.zero, () => Application().log('Future first eventTask'));
+    Study.log('main first task');
+    Future.microtask(() => Study.log('Future first microTask'));
+    Future.sync(() => Study.log('Future first syncTask'));
+    Future.delayed(Duration.zero, () => Study.log('Future first eventTask'));
 
-    Application().log('main second task');
-    Future.sync(() => Application().log('Future second syncTask'));
-    Future.delayed(Duration.zero, () => Application().log('Future second eventTask'));
-    Future.microtask(() => Application().log('Future second microTask'));
+    Study.log('main second task');
+    Future.sync(() => Study.log('Future second syncTask'));
+    Future.delayed(Duration.zero, () => Study.log('Future second eventTask'));
+    Future.microtask(() => Study.log('Future second microTask'));
   }
 
   /// await 事件队列
@@ -49,30 +48,30 @@ class FutureStudy {
     // I/flutter ( 2593): 2023-03-12 08:20:15 073 I/Application  future value task
     //
 
-    Application().log('main task start');
+    Study.log('main task start');
     foo();
-    Future.value('future value task').then((a)=> Application().log(a));
-    Application().log("main task end");
+    Future.value('future value task').then((a) => Study.log(a));
+    Study.log("main task end");
   }
 
   void foo() async {
-    Application().log('foo task');
+    Study.log('foo task');
     String res = await fun1();
-    Application().log('foo $res');
+    Study.log('foo $res');
   }
 
   Future<String> fun1() async {
-    Application().log('fun1 task');
+    Study.log('fun1 task');
     return fun2();
   }
 
   Future<String> fun2() async {
-    Application().log('fun2 task');
+    Study.log('fun2 task');
     fun3();
     return 'return fun2';
   }
 
   Future<void> fun3() async {
-    Application().log('fun3 task');
+    Study.log('fun3 task');
   }
 }

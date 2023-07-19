@@ -20,7 +20,7 @@ import 'http/cookie_interceptor.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56
-/// App入口
+/// App入口，主要做一些工具相关的初始化功能，或者是全局的状态保存，初始化完成之后进入[AppPage]
 class Application {
   /// 私有构造方法
   Application._internal();

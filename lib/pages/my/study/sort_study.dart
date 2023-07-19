@@ -1,4 +1,4 @@
-import 'package:flutter_ui/application.dart';
+import 'study.dart';
 
 ///
 /// Created by a0010 on 2023/5/8 11:25
@@ -33,7 +33,7 @@ class SortStudy {
     });
 
     for (var item in list) {
-      Application().log('item：age=${item.age}, index=${item.index}');
+      Study.log('item：age=${item.age}, index=${item.index}');
     }
   }
 }

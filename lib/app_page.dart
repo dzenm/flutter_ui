@@ -27,7 +27,7 @@ import 'pages/study/study_model.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56
-/// 全局属性配置/初始化必要的全局信息
+/// 顶级页面，跟页面相关的全局属性配置/初始化必要的全局信息
 class AppPage extends StatelessWidget {
   final AppRouteDelegate _delegate = AppRouteDelegate(routers: Routers.routers);
 
@@ -54,12 +54,12 @@ class AppPage extends StatelessWidget {
       return _buildEasyApp();
     }
 
+    // 初始化需要用到context的地方，在创建MaterialApp之前
+    _useContextBeforeBuild(context);
     // 初始化其他需要context的组件
     // Provider
     // Keyboard
     // 返回键监听
-    // 初始化需要用到context的地方，在创建MaterialApp之前
-    _useContextBeforeBuild(context);
     return _buildProviderApp(
       child: _buildMaterialApp(),
     );
@@ -136,12 +136,10 @@ class AppPage extends StatelessWidget {
           floatingActionButtonTheme: FloatingActionButtonThemeData(
             backgroundColor: theme.appbarColor,
           ),
-          // pageTransitionsTheme: PageTransitionsTheme(
-          //   builders: <TargetPlatform, PageTransitionsBuilder>{
-          //     TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-          //     TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-          //   },
-          // ),
+          pageTransitionsTheme: PageTransitionsTheme(builders: {
+            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+          }),
         ),
         // 设置语言，读取LocalModel的值，改变LocalModel的locale值会通过provider刷新页面
         locale: local.locale,
@@ -162,13 +160,13 @@ class AppPage extends StatelessWidget {
         routeInformationParser: AppRouteInfoParser(),
         builder: (context, child) {
           final botToastBuilder = BotToastInit();
-          Widget toastWidget = botToastBuilder(context, child);
-          Widget fontWidget = MediaQuery(
+          Widget widget = botToastBuilder(context, child);
+          widget = MediaQuery(
             //设置文字大小不随系统设置改变
             data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-            child: toastWidget,
+            child: widget,
           );
-          return fontWidget;
+          return widget;
         },
       );
     });
