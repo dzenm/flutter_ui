@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:bot_toast/bot_toast.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/src/adapters/io_adapter.dart';
 import 'package:flutter/foundation.dart';
@@ -37,6 +36,15 @@ class HttpError {
 ///     toast: CommonDialog.showToast,
 ///     interceptors: [HttpInterceptor(), CookieInterceptor()],
 ///   );
+/// 在pubspec.yaml添加下列依赖
+/// dependencies:
+///  ...
+///  # HTTP请求
+///  retrofit: 4.0.1
+/// dev_dependencies:
+///  ...
+///  retrofit_generator: 6.0.0+3
+//   build_runner: 2.3.2
 class HttpsClient {
   static const int _connectTimeout = 20000;
   static const int _receiveTimeout = 20000;
@@ -77,7 +85,7 @@ class HttpsClient {
   /// [interceptors] 自定义拦截器
   void init({
     void Function(Object object)? logPrint,
-    CancelFunc Function()? loading,
+    void Function()? loading,
     Function? toast,
     List<Interceptor>? interceptors,
   }) {
@@ -161,13 +169,13 @@ class HttpsClient {
     bool isShowDialog = true,
     bool isShowToast = true,
     bool isCustomResult = false,
-    CancelFunc? loading,
+    void Function()? loading,
   }) async {
-    CancelFunc? cancel;
+    Function? cancel;
     if (isShowDialog) {
       // 优先使用局部的加载提示框
       cancel ??= loading;
-      cancel ??= _loading!();
+      cancel ??= _loading;
     }
     HttpError? error;
     try {

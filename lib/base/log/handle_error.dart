@@ -15,7 +15,9 @@ typedef HandleMsg = void Function(String message);
 /// 全局处理错误信息
 ///
 /// 在pubspec.yaml添加下列依赖
-/// # 获取硬件设备信息
+/// dependencies:
+///  ...
+///  # 获取硬件设备信息
 ///  device_info: ^0.4.0+1
 ///  # 获取APP相关信息
 ///  package_info: ^0.4.0+2

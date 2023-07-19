@@ -51,7 +51,7 @@ class CommonWidget {
     );
   }
 
-  static networkImage(
+  static CachedNetworkImage networkImage(
     String? url, {
     int? version,
     Widget? placeholder,

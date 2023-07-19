@@ -25,7 +25,7 @@ class _KeepAliveWrapperState extends State<KeepAliveWrapper> with AutomaticKeepA
   }
 
   @override
-  void didUpdateWidget(covariant KeepAliveWrapper oldWidget) {
+  void didUpdateWidget(KeepAliveWrapper oldWidget) {
     // 状态发生变化时调用
     if (oldWidget.keepAlive != widget.keepAlive) {
       // 更新KeepAlive状态

@@ -86,9 +86,7 @@ class CommonBar extends StatelessWidget implements PreferredSizeWidget {
       child: leading ?? BackButtonIcon(),
       onTap: () {
         if (onBackTap == null) {
-          if (Navigator.canPop(context)) {
-            Navigator.pop(context);
-          }
+          Navigator.pop(context);
         } else {
           onBackTap();
         }

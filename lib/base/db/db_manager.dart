@@ -16,6 +16,13 @@ typedef UpgradeDatabase = List<String> Function(int oldVersion, int newVersion);
 ///   DBManager.instance.init(logPrint: Log.db);
 /// 如果需要重新设置数据库的名称
 ///   DBManager.instance.userId = '123456';
+/// 在pubspec.yaml添加下列依赖
+/// dependencies:
+///  ...
+///  # sql
+///  sqflite: 2.2.7
+///  # 路径选择
+//   path_provider: 2.0.14
 class DBManager {
   DBManager._internal();
 
@@ -100,7 +107,7 @@ class DBManager {
   /// 获取数据库 [_userId] 的路径 [_dbPath]
   Future<String> getPath({String? dbName}) async {
     String databasesPath = '';
-    if (Platform.isAndroid  || Platform.isIOS || Platform.isMacOS) {
+    if (Platform.isAndroid || Platform.isIOS || Platform.isMacOS) {
       databasesPath = await getDatabasesPath();
     } else if (Platform.isWindows) {
       databasesPath = await getDatabasesPath();

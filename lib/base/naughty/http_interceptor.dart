@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
 
-import '../log/log.dart';
 import 'http_entity.dart';
 import 'naughty.dart';
 
@@ -45,7 +44,6 @@ class HttpInterceptor extends Interceptor {
     // 保存请求成功的状态
     entity.status = Status.success;
     bool res = response.statusCode == 200 && response.data['esg'] == 200;
-    Log.d('请求结果：$res');
     _handleCompleted(entity, res);
   }
 

@@ -68,7 +68,7 @@ class CommonDialog {
     );
   }
 
-  /// 选择图片对话框
+  /// iOS风格底部选择图片对话框
   /// CommonDialog.showSelectImageBottomSheet(context)
   static Future<void> showSelectImageBottomSheet(
     BuildContext context, {
@@ -87,10 +87,10 @@ class CommonDialog {
     });
   }
 
-  /// 列表选择对话框
+  /// iOS风格底部列表选择对话框
   /// CommonDialog.showListBottomSheet(context, data, (int index) {
-  //    RouteManager.pop(context);
-  //  })
+  ///   RouteManager.pop(context);
+  /// })
   static Future<void> showListBottomSheet(
     BuildContext context,
     List<String> items,
@@ -178,7 +178,7 @@ class CommonDialog {
     );
   }
 
-  /// 提示对话框
+  /// iOS风格提示对话框
   /// CommonDialog.showPromptDialog(
   ///   context,
   ///   titleString: '昵称',
@@ -232,10 +232,10 @@ class CommonDialog {
 
   /// 应用升级提示框
   /// CommonDialog.showAppUpgradeDialog(
-  //    context,
-  //    version: '12',
-  //    desc: ['升级了'],
-  //  )
+  ///   context,
+  ///   version: '12',
+  ///   desc: ['升级了'],
+  /// )
   static Future<T> showAppUpgradeDialog<T>(
     BuildContext context, {
     String? version,
@@ -371,15 +371,16 @@ class CupertinoDialogButton extends StatelessWidget {
   }
 }
 
-/// 列表显示的dialog
+/// Material居中列表显示的dialog
 /// showDialog(
-//    context: context,
-//    builder: (BuildContext context) {
-//      return ListDialog(
-//        list: list,
-//        onTap: (index) {},
-//      );
-//    })
+///   context: context,
+///   builder: (BuildContext context) {
+///     return ListDialog(
+///       list: list,
+///       onTap: (index) {},
+///     );
+///   },
+/// )
 class ListDialog extends Dialog {
   final List<String> list;
   final ItemClickCallback? onTap;
