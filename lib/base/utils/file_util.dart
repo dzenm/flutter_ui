@@ -18,7 +18,7 @@ class FileUtil {
 
   Function? _logPrint;
 
-  void init({void Function(dynamic msg, {String tag})? logPrint}) {
+  void init({Function? logPrint}) {
     _logPrint = logPrint;
   }
 

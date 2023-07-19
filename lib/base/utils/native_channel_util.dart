@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 class NativeChannelUtil {
   static Function? _logPrint;
 
-  static void init({void Function(dynamic msg, {String tag})? logPrint}) {
+  static void init({Function? logPrint}) {
     _logPrint = logPrint;
   }
 

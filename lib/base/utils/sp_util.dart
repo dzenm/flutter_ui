@@ -27,12 +27,10 @@ class SpUtil {
   static const String _userCookie = 'u_cookie'; // 登录的cookie信息
 
   /// APP设置相关的信息
-  static const String _settingTheme = 's_theme';
-
-  /// APP展示的主题
+  static const String _settingTheme = 's_theme'; // APP展示的主题
   static const String _settingLocale = 's_locale'; // APP展示的语言
 
-  Future init({void Function(dynamic msg, {String tag})? logPrint}) async {
+  Future init({Function? logPrint}) async {
     _prefs = await SharedPreferences.getInstance();
     _logPrint = logPrint;
     return _prefs != null;
