@@ -22,14 +22,23 @@ typedef HandleMsg = void Function(String message);
 ///  # 获取APP相关信息
 ///  package_info: ^0.4.0+2
 ///
-///    HandleError().catchFlutterError(() {
-///      runMockApp(AppPage(child: _initApp()));
-///    }, handleMsg: (message) async {
-///      String logFileName = 'crash_${DateTime.now()}.log';
-///      await FileUtil.instance.save(logFileName, message, dir: 'crash').then((String? filePath) async {});
-///    });
+/// HandleError().catchFlutterError(() {
+///   runMockApp(AppPage(child: _initApp()));
+/// }, handleMsg: (message) async {
+///   String logFileName = 'crash_${DateTime.now()}.log';
+///   await FileUtil.instance.save(logFileName, message, dir: 'crash').then((String? filePath) async {});
+/// });
 class HandleError {
-  // 捕获flutter运行时的错误
+  /// 包名相关的信息
+  static late PackageInfo packageInfo;
+
+  /// Android设备相关的信息
+  static late AndroidDeviceInfo androidDeviceInfo;
+
+  /// iOS设备相关的信息
+  static late IosDeviceInfo iosDeviceInfo;
+
+  /// 捕获flutter运行时的错误
   Future catchFlutterError(
     Function runApp, {
     HandleMsg? handleMsg,
@@ -75,6 +84,8 @@ class HandleError {
       _handleMessage(error, stackTrace, handleMsg, showPackageInfo, showDeviceInfo, showStackInfo, showLogInConsole);
       return true;
     };
+    // 进入App前先初始化信息
+    await _initInfo();
     runApp();
     return;
     // flutter sdk 3.3之前使用下面的方式捕获异常
@@ -87,8 +98,23 @@ class HandleError {
     });
   }
 
+  /// 初始化设备/包名相关的信息
+  Future<void> _initInfo() async {
+    packageInfo = await PackageInfo.fromPlatform();
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    androidDeviceInfo = await deviceInfo.androidInfo;
+    iosDeviceInfo = await deviceInfo.iosInfo;
+  }
+
   /// 处理信息
-  Future _handleMessage(
+  /// [error] 错误文本信息
+  /// [stackTrace] 错误的堆栈信息
+  /// [handleMsg] 自定义处理错误信息
+  /// [showPackageInfo] 是否显示包相关信息
+  /// [showDeviceInfo] 是否显示设备相关信息
+  /// [showStackInfo] 是否显示堆栈信息
+  /// [showLogInConsole] 是否在控制台打印错误信息
+  void _handleMessage(
     dynamic error,
     StackTrace stackTrace,
     HandleMsg? handleMsg,
@@ -96,7 +122,7 @@ class HandleError {
     bool showDeviceInfo,
     bool showStackInfo,
     bool showLogInConsole,
-  ) async {
+  ) {
     StringBuffer sb = StringBuffer();
     const String interval = '  '; // 缩进的距离
     // 打印日志
@@ -118,14 +144,14 @@ class HandleError {
     if (showPackageInfo) {
       log('╔═════════════════════════════════════════ Package Info ════════════════════════════════════════════');
     }
-    Map<String, dynamic> packageInfo = await getPackageInfo();
+    Map<String, dynamic> packageInfo = getPackageInfo();
     for (var key in packageInfo.keys) handleSingleMessage('$key: ${packageInfo[key]}', needLog: showPackageInfo);
 
     // 设备信息
     if (showDeviceInfo) {
       log('║═════════════════════════════════════════ Device Info ═════════════════════════════════════════════');
     }
-    Map<String, dynamic> devicesInfo = await getDeviceInfo();
+    Map<String, dynamic> devicesInfo = getDeviceInfo();
     for (var key in devicesInfo.keys) handleSingleMessage('$key: ${devicesInfo[key]}', needLog: showDeviceInfo);
 
     // 异常信息
@@ -147,46 +173,42 @@ class HandleError {
   }
 
   /// 获取APP信息
-  Future<Map<String, dynamic>> getPackageInfo() async {
-    PackageInfo info = await PackageInfo.fromPlatform();
+  Map<String, dynamic> getPackageInfo() {
     return {
-      'appName': info.appName,
-      'packageName': info.packageName,
-      'version': info.version,
-      'buildNumber': info.buildNumber,
-      'buildSignature': info.buildSignature,
+      'appName': packageInfo.appName,
+      'packageName': packageInfo.packageName,
+      'version': packageInfo.version,
+      'buildNumber': packageInfo.buildNumber,
+      'buildSignature': packageInfo.buildSignature,
     };
   }
 
-  /// 设备信息
-  Future<Map<String, dynamic>> getDeviceInfo() async {
-    DeviceInfoPlugin infoPlugin = DeviceInfoPlugin();
+  /// 获取设备信息
+  Map<String, dynamic> getDeviceInfo() {
     Map<String, dynamic> map = {};
     if (BuildConfig.isAndroid) {
-      AndroidDeviceInfo info = await infoPlugin.androidInfo;
       Map<String, dynamic> temp = {
-        'baseOS': info.version.baseOS,
-        'codename': info.version.codename,
-        'incremental': info.version.incremental,
-        'previewSdkInt': info.version.previewSdkInt,
-        'release': info.version.release,
-        'sdkInt': info.version.sdkInt,
-        'securityPatch': info.version.securityPatch,
+        'baseOS': androidDeviceInfo.version.baseOS,
+        'codename': androidDeviceInfo.version.codename,
+        'incremental': androidDeviceInfo.version.incremental,
+        'previewSdkInt': androidDeviceInfo.version.previewSdkInt,
+        'release': androidDeviceInfo.version.release,
+        'sdkInt': androidDeviceInfo.version.sdkInt,
+        'securityPatch': androidDeviceInfo.version.securityPatch,
       };
       map.addAll(temp);
-      map.addAll(info.data);
+      map.addAll(androidDeviceInfo.data);
       map.remove('version');
     } else if (BuildConfig.isIOS) {
-      IosDeviceInfo info = await infoPlugin.iosInfo;
       Map<String, dynamic> temp = {
-        'sysname': info.utsname.sysname,
-        'nodename': info.utsname.nodename,
-        'release': info.utsname.release,
-        'version': info.utsname.version,
-        'machine': info.utsname.machine,
+        'sysname': iosDeviceInfo.utsname.sysname,
+        'nodename': iosDeviceInfo.utsname.nodename,
+        'release': iosDeviceInfo.utsname.release,
+        'version': iosDeviceInfo.utsname.version,
+        'machine': iosDeviceInfo.utsname.machine,
       };
       map.addAll(temp);
-      map.addAll(info.data);
+      map.addAll(iosDeviceInfo.data);
       map.remove('utsname');
     }
     return map;

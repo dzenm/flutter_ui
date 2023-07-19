@@ -14,9 +14,11 @@ typedef Complete = void Function();
 
 typedef Failed = void Function(HttpError error);
 
-ApiServices apiServices = api(0);
+/// 默认[baseUrl]对应的[ApiServices]，用于获取请求
+ApiServices apiServices = api();
 
-ApiServices api(int index) => HttpsClient.instance._api[HttpsClient.instance._baseUrls[index]]!;
+/// 根据[baseUrl]下标对应的[ApiServices]，用于获取请求
+ApiServices api({int index = 0}) => HttpsClient.instance._api[HttpsClient.instance._baseUrls[index]]!;
 
 /// HTTP请求错误信息的处理
 class HttpError {
@@ -161,7 +163,7 @@ class HttpsClient {
   /// [isShowToast] 是否显示错误的toast提醒
   /// [isCustomResult] 是否自定义处理response body，@see [success]
   /// [loading] 自定义加载弹窗提示，@see [isShowDialog]
-  Future request(
+  Future<void> request(
     Future<DataEntity> future, {
     Success? success,
     Failed? failed,
@@ -174,8 +176,8 @@ class HttpsClient {
     Function? cancel;
     if (isShowDialog) {
       // 优先使用局部的加载提示框
-      cancel ??= loading;
-      cancel ??= _loading;
+      cancel ??= (loading ?? _loading);
+      if (cancel != null) cancel();
     }
     HttpError? error;
     try {
@@ -202,7 +204,7 @@ class HttpsClient {
     }
     if (complete != null) complete();
     // 请求结束关闭提示框
-    if (cancel != null) cancel();
+    if (isShowDialog && cancel != null) cancel();
     // 没有异常，不处理，请求结束
     if (error == null) return;
 

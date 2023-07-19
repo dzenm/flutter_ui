@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/pages/main/me_page/me_router.dart';
 import 'package:flutter_ui/pages/routers.dart';
 import 'package:provider/provider.dart';
 
@@ -155,7 +156,7 @@ class _StudyPageState extends State<StudyPage> {
         child: _text(S.of(context).setting),
         textColor: Colors.white,
         color: theme.appbarColor,
-        onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.city),
+        onPressed: () => AppRouteDelegate.of(context).push(MeRouter.setting),
       ),
       SizedBox(height: 8),
       // 加载状态

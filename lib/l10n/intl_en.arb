@@ -2,9 +2,6 @@
   "appName": "Flutter UI",
 
   "studyMainPage": "Study MainPage{name}",
-  "keyword": "Keyword",
-  "collect": "Collect",
-  "coin": "Coin",
 
   "login": "Login",
   "register": "Register",
@@ -13,13 +10,18 @@
   "username": "Username",
   "password": "Password",
   "rPassword": "Repeat Password",
+  "id": "ID",
   "phone": "Phone",
   "email": "Email",
+  "keyword": "Keyword",
+  "collect": "Collect",
+  "coin": "Coin",
   "setting": "Setting",
   "theme": "Theme",
   "language": "Language",
   "chinese": "Chinese",
   "english": "English",
+  "about": "About",
   "exit": "Exit",
   "home": "Home",
   "nav": "Nav",
@@ -41,9 +43,11 @@
   "none": "",
   "qr": "QR",
   "test": "Test",
+
   "notFoundPage": "Page is not found",
   "checkUpgrade": "Check Upgrade",
   "selectTheme": "Select Theme",
   "selectLanguage": "Select Language",
-  "followSystem": "Follow System"
+  "followSystem": "Follow System",
+  "exitLogout": "Exit Logout"
 }

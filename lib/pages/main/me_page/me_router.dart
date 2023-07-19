@@ -1,3 +1,6 @@
+import 'package:flutter_ui/pages/main/me_page/info/info_page.dart';
+import 'package:flutter_ui/pages/main/me_page/setting_page/about/about_page.dart';
+
 import '../../../base/route/app_route_delegate.dart';
 import 'article/article_page.dart';
 import 'coin/coin_page.dart';
@@ -18,9 +21,13 @@ class MeRouter {
   static final String collect = '$me/collect';
   static final String medicine = '$me/medicine';
   static final String rank = '$me/rank';
+
+  static final String info = '$me/info';
+  static final String viewInfo = '$me/$info/viewInfo';
+  static final String editInfo = '$me/$info/editInfo';
+
   static final String setting = '$me/setting';
-  static final String editInfo = '$me/editInfo';
-  static final String viewInfo = '$me/viewInfo';
+  static final String about = '$me/$setting/about';
 
   static List<AppRoutePage> get routers => [
         AppRoutePage(
@@ -56,9 +63,9 @@ class MeRouter {
           },
         ),
         AppRoutePage(
-          name: setting,
+          name: info,
           builder: (settings) {
-            return SettingPage();
+            return InfoPage();
           },
         ),
         AppRoutePage(
@@ -71,6 +78,18 @@ class MeRouter {
           name: viewInfo,
           builder: (settings) {
             return ViewInfoPage();
+          },
+        ),
+        AppRoutePage(
+          name: setting,
+          builder: (settings) {
+            return SettingPage();
+          },
+        ),
+        AppRoutePage(
+          name: about,
+          builder: (settings) {
+            return AboutPage();
           },
         ),
       ];

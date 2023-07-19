@@ -2,9 +2,6 @@
   "appName": "Flutter UI",
 
   "studyMainPage": "学习主页{name}",
-  "keyword": "键盘",
-  "collect": "收藏",
-  "coin": "积分",
 
   "login": "登录",
   "register": "注册",
@@ -13,13 +10,18 @@
   "username": "用户名",
   "password": "密码",
   "rPassword": "重复密码",
+  "id": "账号",
   "phone": "手机号",
   "email": "邮箱",
+  "keyword": "键盘",
+  "collect": "收藏",
+  "coin": "积分",
   "setting": "设置",
   "theme": "主题",
   "language": "语言",
   "chinese": "中文",
   "english": "英语",
+  "about": "关于",
   "exit": "退出",
   "home": "首页",
   "nav": "导航",
@@ -41,9 +43,11 @@
   "none": "",
   "qr": "二维码",
   "test": "测试",
+
   "notFoundPage": "页面未找到",
   "checkUpgrade": "检查更新",
   "selectTheme": "选择主题",
   "selectLanguage": "选择语言",
-  "followSystem": "跟随系统"
+  "followSystem": "跟随系统",
+  "exitLogout": "退出登陆"
 }

@@ -56,7 +56,7 @@ class _MedicinePageState extends State<MedicinePage> {
   }
 
   void _getZhongyao() {
-    HttpsClient.instance.request(api(1).getZhongYao(_key, widget.medicineName), success: (data) {
+    HttpsClient.instance.request(api(index: 1).getZhongYao(_key, widget.medicineName), success: (data) {
       _list = (data['newslist'] as List<dynamic>).map((e) => MedicineEntity.fromJson(e)).toList();
       setState(() {});
     });

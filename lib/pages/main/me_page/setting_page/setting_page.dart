@@ -1,23 +1,21 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/http/http_manager.dart';
+import 'package:flutter_ui/base/log/handle_error.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../base/log/build_config.dart';
 import '../../../../base/log/log.dart';
 import '../../../../base/res/app_theme.dart';
-import '../../../../base/res/assets.dart';
 import '../../../../base/res/local_model.dart';
+import '../../../../base/route/app_route_delegate.dart';
 import '../../../../base/widgets/common_dialog.dart';
 import '../../../../base/widgets/common_widget.dart';
 import '../../../../base/widgets/single_text_layout.dart';
 import '../../../../base/widgets/tap_layout.dart';
-import '../../../../entities/user_entity.dart';
 import '../../../../generated/l10n.dart';
-import '../../../../models/user_model.dart';
-import '../../../common/preview_photo_page.dart';
-import '../../../study/study_model.dart';
+import '../../../../http/http_manager.dart';
+import '../me_router.dart';
 
 /// 设置页面
 class SettingPage extends StatefulWidget {
@@ -64,9 +62,10 @@ class _SettingPageState extends State<SettingPage> {
   Widget build(BuildContext context) {
     log('build');
 
-    AppTheme appTheme = context.watch<LocalModel>().appTheme;
+    AppTheme theme = context.watch<LocalModel>().appTheme;
     Locale locale = context.watch<LocalModel>().locale;
-    UserEntity user = context.watch<UserModel>().user;
+
+    String currentVersion = HandleError.packageInfo.version;
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).setting, style: TextStyle(color: Colors.white)),
@@ -77,79 +76,6 @@ class _SettingPageState extends State<SettingPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 展示用户名
-              TapLayout(
-                isRipple: false,
-                height: 50.0,
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: () => CommonDialog.showToast(S.of(context).username),
-                child: SingleTextLayout(
-                  icon: Icons.person,
-                  title: S.of(context).username,
-                  text: user.username,
-                  isTextLeft: false,
-                  isShowForward: true,
-                ),
-              ),
-              // 展示用户头像
-              TapLayout(
-                height: 50.0,
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: () => PreviewPhotoPage.show(context, [
-                  "https://www.wanandroid.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png",
-                  Assets.image('a.jpg'),
-                  Assets.image('a.jpg'),
-                ]),
-                child: SingleTextLayout(
-                  icon: Icons.error,
-                  title: S.of(context).avatar,
-                  isTextLeft: false,
-                  suffix: ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: Image.asset(Assets.image('a.jpg'), fit: BoxFit.cover, width: 24, height: 24),
-                  ),
-                  isShowForward: true,
-                ),
-              ),
-              // 展示用户ID
-              TapLayout(
-                height: 50.0,
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: () => context.read<StudyModel>().setValue('new value'),
-                child: SingleTextLayout(
-                  icon: Icons.phone_android,
-                  title: S.of(context).phone,
-                  text: user.id.toString(),
-                  isTextLeft: false,
-                  isShowForward: true,
-                ),
-              ),
-              // 展示用户邮箱
-              TapLayout(
-                height: 50.0,
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: () => context.read<StudyModel>().setValue('new value'),
-                child: SingleTextLayout(
-                  icon: Icons.email,
-                  title: S.of(context).email,
-                  text: user.email,
-                  isTextLeft: false,
-                  isShowForward: true,
-                ),
-              ),
-              // 展示用户邮箱
-              TapLayout(
-                height: 50.0,
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: () => context.read<StudyModel>().setValue('new value'),
-                child: SingleTextLayout(
-                  icon: Icons.money,
-                  title: S.of(context).coin,
-                  text: user.coinCount.toString(),
-                  isTextLeft: false,
-                  isShowForward: true,
-                ),
-              ),
               TapLayout(
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
@@ -184,7 +110,7 @@ class _SettingPageState extends State<SettingPage> {
                   suffix: Container(
                     height: 24,
                     width: 24,
-                    color: appTheme.primary,
+                    color: theme.primary,
                     child: SizedBox(height: 24, width: 24),
                   ),
                 ),
@@ -204,11 +130,13 @@ class _SettingPageState extends State<SettingPage> {
               CommonWidget.divider(height: 8),
               TapLayout(
                 height: 50.0,
+                background: theme.white,
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: SingleTextLayout(title: '登陆记录', badgeCount: 0, isShowForward: true),
               ),
               TapLayout(
                 height: 50.0,
+                background: theme.white,
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 onTap: () {
                   CancelFunc cancel = CommonDialog.loading();
@@ -217,33 +145,27 @@ class _SettingPageState extends State<SettingPage> {
                     cancel();
                   });
                 },
-                child: SingleTextLayout(title: S.of(context).checkUpgrade, badgeCount: 100, isShowForward: true),
+                child: SingleTextLayout(
+                  title: S.of(context).checkUpgrade,
+                  suffix: Text('v$currentVersion'),
+                  badgeCount: 0,
+                  isShowForward: true,
+                ),
+              ),
+              TapLayout(
+                height: 50.0,
+                background: theme.white,
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                onTap: () => AppRouteDelegate.of(context).push(MeRouter.about),
+                child: SingleTextLayout(title: S.of(context).about, isShowForward: true),
               ),
               CommonWidget.divider(height: 8),
               TapLayout(
                 height: 50.0,
+                background: theme.white,
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 onTap: () => HttpManager().logout(),
-                child: SingleTextLayout(title: S.of(context).logout, isShowForward: true),
-              ),
-              TapLayout(
-                height: 50.0,
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: () {
-                  CancelFunc cancel = CommonDialog.loading();
-                  Future.delayed(Duration(seconds: 1), () {
-                    CommonDialog.showToast('退出成功');
-                    cancel();
-                  });
-                },
-                child: SingleTextLayout(
-                  image: ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: Image.asset(Assets.image('a.jpg'), fit: BoxFit.cover, width: 24, height: 24),
-                  ),
-                  title: S.of(context).exit,
-                  isShowForward: true,
-                ),
+                child: SingleTextLayout(title: S.of(context).exitLogout, isShowForward: true),
               ),
             ],
           ),
@@ -252,8 +174,11 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
+  /// 主题弹窗选择
   void _selectedTheme() {
-    AppThemeMode themeMode = context.read<LocalModel>().themeMode;
+    LocalModel model = context.read<LocalModel>();
+    List<AppThemeMode> modes = model.appThemes;
+    AppThemeMode currentThemeMode = model.themeMode;
     showDialog<bool>(
       context: context,
       builder: (context) {
@@ -264,11 +189,11 @@ class _SettingPageState extends State<SettingPage> {
             child: Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: context.read<LocalModel>().appThemes.map((key) {
-                Color? value = context.read<LocalModel>().getTheme(key).appbarColor;
+              children: modes.map((mode) {
+                Color? value = model.getTheme(mode).appbarColor;
                 return InkWell(
                   onTap: () {
-                    context.read<LocalModel>().setThemeMode(key);
+                    model.setThemeMode(mode);
                     CommonDialog.showToast('修改成功');
                     Navigator.pop(context);
                   },
@@ -276,7 +201,7 @@ class _SettingPageState extends State<SettingPage> {
                     width: 40,
                     height: 40,
                     color: value,
-                    child: themeMode == key ? Icon(Icons.done, color: Colors.white) : null,
+                    child: currentThemeMode == mode ? Icon(Icons.done, color: Colors.white) : null,
                   ),
                 );
               }).toList(),
@@ -287,18 +212,23 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
+  /// 语言弹窗选择
   void _selectedLanguage() {
+    List<Locale> locales = [
+      Locale('zh'),
+      Locale('en'),
+    ];
     showDialog<bool>(
       context: context,
       builder: (context) {
         return SimpleDialog(
           title: Text(S.of(context).selectLanguage),
-          children: [Locale('zh'), Locale('en')].map((value) {
+          children: locales.map((locale) {
             return SimpleDialogOption(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              child: Text(_convertLocale(value)),
+              child: Text(_convertLocale(locale)),
               onPressed: () {
-                context.read<LocalModel>().setLocale(value);
+                context.read<LocalModel>().setLocale(locale);
                 CommonDialog.showToast('修改成功');
                 Navigator.pop(context);
               },
@@ -309,6 +239,7 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
+  /// 转化本地语言：locale -> string
   String _convertLocale(Locale locale) {
     if (locale.languageCode == 'zh') {
       return S.of(context).chinese;

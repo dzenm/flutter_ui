@@ -201,14 +201,14 @@ class _MePageState extends State<MePage> {
         onTap: () => AppRouteDelegate.of(context).push(StudyRouter.study).then((value) => log(value)),
         child: SingleTextLayout(
           icon: Icons.real_estate_agent_sharp,
-          title: '学习主页',
+          title: S.of(context).studyMainPage(''),
           isShowForward: true,
         ),
       ),
       TapLayout(
         height: 50.0,
         padding: EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => AppRouteDelegate.of(context).push(MeRouter.viewInfo),
+        onTap: () => AppRouteDelegate.of(context).push(MeRouter.info),
         child: SingleTextLayout(
           icon: Icons.supervised_user_circle_sharp,
           title: '我的资料',

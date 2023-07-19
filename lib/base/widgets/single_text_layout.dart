@@ -64,21 +64,21 @@ class SingleTextLayout extends StatelessWidget {
           children: [
             Row(children: [
               // 标题图标
-              _titleIcon(),
+              _buildTitleIcon(),
               if ((icon != null || image != null) && title != null) SizedBox(width: 8 + padding),
               // 标题文本
-              _titleText(),
+              _buildTitleText(),
               if (prefix != null) SizedBox(width: 8),
               // 前缀布局
               Offstage(offstage: prefix == null, child: prefix),
               if ((icon != null || title != null) && !isDense) SizedBox(width: 16),
               // 文本内容
-              _contentText(),
+              _buildContentText(),
               if (text != null) SizedBox(width: 8 + padding),
             ]),
             if (summary != null) SizedBox(height: 8),
             // 概要文本
-            _summaryText(),
+            _buildSummaryText(),
           ],
         ),
       ),
@@ -88,11 +88,11 @@ class SingleTextLayout extends StatelessWidget {
       // 小红点
       Offstage(offstage: badgeCount < 0, child: BadgeTag(count: badgeCount)),
       // 下一级图标
-      _forwardIcon(),
+      _buildForwardIcon(),
     ]);
   }
 
-  Widget _titleIcon() {
+  Widget _buildTitleIcon() {
     Widget? child = icon != null ? Icon(icon, color: iconColor, size: fontSize + 4) : image ?? Container();
     return Offstage(
       offstage: icon == null && image == null,
@@ -100,7 +100,7 @@ class SingleTextLayout extends StatelessWidget {
     );
   }
 
-  Widget _titleText() {
+  Widget _buildTitleText() {
     return Offstage(
       offstage: title == null,
       child: Text(
@@ -115,7 +115,7 @@ class SingleTextLayout extends StatelessWidget {
     );
   }
 
-  Widget _contentText() {
+  Widget _buildContentText() {
     // Expanded用于解决文本过长导致布局溢出的错误
     return text == null
         ? Expanded(
@@ -136,7 +136,7 @@ class SingleTextLayout extends StatelessWidget {
           );
   }
 
-  Widget _summaryText() {
+  Widget _buildSummaryText() {
     return Offstage(
       offstage: summary == null,
       child: Text(
@@ -151,7 +151,7 @@ class SingleTextLayout extends StatelessWidget {
     );
   }
 
-  Widget _forwardIcon() {
+  Widget _buildForwardIcon() {
     return Offstage(
       offstage: !isShowForward,
       child: Icon(Icons.keyboard_arrow_right, color: forwardColor, size: 16),
