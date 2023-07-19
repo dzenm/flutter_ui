@@ -4,7 +4,6 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/src/adapters/io_adapter.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_ui/base/log/log.dart';
 
 import '../../http/api_services.dart';
 import 'data_entity.dart';
@@ -12,11 +11,21 @@ import 'log_interceptor.dart';
 
 typedef Success = void Function(dynamic data);
 
+typedef Complete = void Function();
+
 typedef Failed = void Function(HttpError error);
 
-ApiServices apiServices = HttpsClient.instance._api[HttpsClient.instance._baseUrls[0]]!;
+ApiServices apiServices = api(0);
 
 ApiServices api(int index) => HttpsClient.instance._api[HttpsClient.instance._baseUrls[index]]!;
+
+/// HTTP请求错误信息的处理
+class HttpError {
+  int code;
+  String msg;
+
+  HttpError(this.code, this.msg);
+}
 
 ///
 /// Created by a0010 on 2022/3/22 09:38
@@ -28,7 +37,6 @@ ApiServices api(int index) => HttpsClient.instance._api[HttpsClient.instance._ba
 ///     toast: CommonDialog.showToast,
 ///     interceptors: [HttpInterceptor(), CookieInterceptor()],
 ///   );
-/// TODO api_services
 class HttpsClient {
   static const int _connectTimeout = 20000;
   static const int _receiveTimeout = 20000;
@@ -63,8 +71,12 @@ class HttpsClient {
   final List<Interceptor> _interceptors = [];
 
   /// 初始化
+  /// [logPrint] 日志信息处理，可以自定义处理日志
+  /// [loading] 全局的加载提示框组件
+  /// [toast] 全局的自定义toast提醒
+  /// [interceptors] 自定义拦截器
   void init({
-    void Function(dynamic msg, {String tag})? logPrint,
+    void Function(Object object)? logPrint,
     CancelFunc Function()? loading,
     Function? toast,
     List<Interceptor>? interceptors,
@@ -77,7 +89,7 @@ class HttpsClient {
       _interceptors.addAll(interceptors);
     }
     // 日志打印
-    _interceptors.add(LoggerInterceptor(formatJson: true, logPrint: Log.h));
+    _interceptors.add(LoggerInterceptor(formatJson: true, logPrint: logPrint));
     // 通过悬浮窗查看Http请求数据
     // _interceptors.add(HttpInterceptor());
     // cookie持久化
@@ -133,23 +145,37 @@ class HttpsClient {
   }
 
   /// 发起http请求
+  /// [future] 异步请求的信息
+  /// [success] 请求成功的结果，如果[isCustomResult]为true，返回的data是未经处理的response body，为false，返回的是[DataEntity.data]
+  /// [complete] 请求完成的结果，不返回任何结果，不管是成功还是失败都会进入[complete]
+  /// [failed] 请求失败的结果，[HttpError] 是失败的信息
+  /// [isShowDialog] 是否显示加载的dialog，可以在[init]自定义全局的加载弹窗提示，[loading]为局部的加载弹窗提示
+  /// [isShowToast] 是否显示错误的toast提醒
+  /// [isCustomResult] 是否自定义处理response body，@see [success]
+  /// [loading] 自定义加载弹窗提示，@see [isShowDialog]
   Future request(
     Future<DataEntity> future, {
     Success? success,
     Failed? failed,
+    Complete? complete,
     bool isShowDialog = true,
     bool isShowToast = true,
+    bool isCustomResult = false,
     CancelFunc? loading,
   }) async {
     CancelFunc? cancel;
     if (isShowDialog) {
-      if (_loading != null) cancel = _loading!();
       // 优先使用局部的加载提示框
-      cancel = loading ?? cancel;
+      cancel ??= loading;
+      cancel ??= _loading!();
     }
     HttpError? error;
     try {
       await future.then((DataEntity data) {
+        if (isCustomResult) {
+          if (success != null) success(data);
+          return;
+        }
         // 根据前后端协议
         if (data.errorCode == 0 || data.errorCode == 200) {
           if (success != null) success(data.data);
@@ -166,26 +192,20 @@ class HttpsClient {
     } catch (err) {
       error = _HandlerError.parse(error: err);
     }
+    if (complete != null) complete();
     // 请求结束关闭提示框
     if (cancel != null) cancel();
     // 没有异常，不处理，请求结束
     if (error == null) return;
+
     // 如果有异常通过toast提醒
-    if (isShowToast && _toast != null) _toast!('${error!.msg} ${error!.code}');
+    if (isShowToast && _toast != null) _toast!('${error!.msg}，code=${error!.code}');
     // 如果需要自定义处理异常，进行自定义异常处理
     if (failed != null) failed(error!);
     log('HTTP请求错误: code=${error!.code}, msg=${error!.msg}');
   }
 
   void log(dynamic text) => _logPrint == null ? null : _logPrint!(text, tag: 'HttpsClient');
-}
-
-/// HTTP请求错误信息的处理
-class HttpError {
-  int code;
-  String msg;
-
-  HttpError(this.code, this.msg);
 }
 
 /// 异常处理
