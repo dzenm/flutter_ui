@@ -9,6 +9,7 @@ import '../../../../base/log/build_config.dart';
 import '../../../../base/log/log.dart';
 import '../../../../base/res/local_model.dart';
 import '../../../../entities/medicine_entity.dart';
+import '../../../../generated/l10n.dart';
 
 ///
 /// Created by a0010 on 2022/4/15 16:23
@@ -38,7 +39,7 @@ class _MedicinePageState extends State<MedicinePage> {
     AppTheme theme = context.watch<LocalModel>().theme;
     return Scaffold(
       appBar: AppBar(
-        title: Text('中药药方', style: TextStyle(color: theme.text)),
+        title: Text(S.of(context).chineseMedicine, style: TextStyle(color: theme.text)),
         systemOverlayStyle: SystemUiOverlayStyle.light,
       ),
       body: Container(

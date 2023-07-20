@@ -8,6 +8,7 @@ import 'package:flutter_ui/models/user_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../base/widgets/common_bar.dart';
+import '../../../../generated/l10n.dart';
 
 ///
 /// Created by a0010 on 2023/3/23 09:01
@@ -50,13 +51,13 @@ class _EditInfoPageState extends State<EditInfoPage> {
           body: Container(
             color: theme.background,
             child: Column(children: [
-              CommonBar(title: '编辑信息', centerTitle: true, actions: [
+              CommonBar(title: S.of(context).editProfile, centerTitle: true, actions: [
                 if (!_disableButton) IconButton(
                   icon: Icon(Icons.check),
                   onPressed: () => _disableButton ? null : _submit(),
                 ),
               ]),
-              SingleEditLayout(title: '用户名', controller: _controller, maxLength: 16),
+              SingleEditLayout(title: S.of(context).username, controller: _controller, maxLength: 16),
             ]),
           ),
         ));

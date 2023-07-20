@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../base/widgets/tap_layout.dart';
 import '../../../../entities/coin_entity.dart';
+import '../../../../generated/l10n.dart';
 import '../../../../http/http_manager.dart';
 import '../../../common/widgets/list_page_state.dart';
 
@@ -17,7 +18,7 @@ class RankPage extends StatefulWidget {
 
 class _RankPageState extends ListPageState<CoinEntity, RankPage> {
   @override
-  String getTitle() => '积分排行榜';
+  String getTitle() => S.of(context).integralRankingList;
 
   @override
   Widget buildItem(CoinEntity data, int index) {

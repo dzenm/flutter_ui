@@ -1,8 +1,6 @@
 {
   "appName": "Flutter UI",
 
-  "studyMainPage": "学习主页{name}",
-
   "login": "登录",
   "register": "注册",
   "logout": "注销",
@@ -17,6 +15,7 @@
   "collect": "收藏",
   "coin": "积分",
   "setting": "设置",
+  "notification": "通知",
   "theme": "主题",
   "language": "语言",
   "chinese": "中文",
@@ -43,11 +42,26 @@
   "none": "",
   "qr": "二维码",
   "test": "测试",
+  "profile": "我的信息",
+  "editProfile": "编辑信息",
+  "plaza": "广场",
+  "tutorial": "教程",
+  "qa": "问答",
+  "project": "项目",
+  "official": "公众号",
+  "tool": "工具",
 
   "notFoundPage": "页面未找到",
   "checkUpgrade": "检查更新",
   "selectTheme": "选择主题",
   "selectLanguage": "选择语言",
   "followSystem": "跟随系统",
-  "exitLogout": "退出登陆"
+  "exitLogout": "退出登陆",
+
+  "chineseMedicine": "中药",
+  "integralRankingList": "积分排行榜",
+  "sharedArticle": "分享的文章",
+  "loginRecord": "登陆记录",
+  "coinRecord": "积分获取记录列表",
+  "studyMainPage": "学习主页{name}"
 }

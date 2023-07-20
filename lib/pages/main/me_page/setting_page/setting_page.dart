@@ -79,23 +79,9 @@ class _SettingPageState extends State<SettingPage> {
               TapLayout(
                 height: 50.0,
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                onTap: () {
-                  CancelFunc cancel = CommonDialog.loading();
-                  Future.delayed(Duration(seconds: 1), () => cancel());
-                },
-                child: SingleTextLayout(
-                  icon: Icons.verified,
-                  title: '验证手机号',
-                  isShowForward: true,
-                  badgeCount: 0,
-                ),
-              ),
-              TapLayout(
-                height: 50.0,
-                padding: EdgeInsets.symmetric(horizontal: 16),
                 child: SingleTextLayout(
                   icon: Icons.notifications_on_sharp,
-                  title: '通知和刷新',
+                  title: S.of(context).notification,
                   suffix: CupertinoSwitch(value: switchState, onChanged: (value) => setState(() => switchState = value)),
                 ),
               ),
@@ -132,7 +118,7 @@ class _SettingPageState extends State<SettingPage> {
                 height: 50.0,
                 background: theme.white,
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                child: SingleTextLayout(title: '登陆记录', badgeCount: 0, isShowForward: true),
+                child: SingleTextLayout(title: S.of(context).loginRecord, badgeCount: 0, isShowForward: true),
               ),
               TapLayout(
                 height: 50.0,

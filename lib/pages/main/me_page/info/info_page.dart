@@ -32,7 +32,7 @@ class _InfoPageState extends State<InfoPage> {
       body: Container(
         color: theme.background,
         child: Column(children: [
-          CommonBar(title: '我的信息', centerTitle: true),
+          CommonBar(title: S.of(context).profile, centerTitle: true),
           ...buildChildrenButtons(theme),
         ]),
       ),

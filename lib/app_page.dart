@@ -122,7 +122,7 @@ class AppPage extends StatelessWidget {
         _useContextAfterBuild(context);
       });
       // Page必须放在MaterialApp中运行
-      AppTheme? theme = local.theme;
+      AppTheme theme = local.theme;
       return MaterialApp.router(
         title: 'FlutterUI',
         debugShowCheckedModeBanner: false,

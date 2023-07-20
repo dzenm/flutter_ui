@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../base/widgets/tap_layout.dart';
 import '../../../../entities/coin_record_entity.dart';
+import '../../../../generated/l10n.dart';
 import '../../../../http/http_manager.dart';
 import '../../../common/widgets/list_page_state.dart';
 
@@ -17,7 +18,7 @@ class CoinPage extends StatefulWidget {
 
 class _CoinPageState extends ListPageState<CoinRecordEntity, CoinPage> {
   @override
-  String getTitle() => '积分获取记录列表';
+  String getTitle() => S.of(context).coinRecord;
 
   @override
   Widget buildItem(CoinRecordEntity data, int index) {

@@ -5,6 +5,7 @@ import '../../../../base/http/page_entity.dart';
 import '../../../../base/widgets/tap_layout.dart';
 import '../../../../entities/article_entity.dart';
 import '../../../../entities/coin_entity.dart';
+import '../../../../generated/l10n.dart';
 import '../../../../http/http_manager.dart';
 import '../../../../models/user_model.dart';
 import '../../../common/widgets/list_page_state.dart';
@@ -21,7 +22,7 @@ class ArticlePage extends StatefulWidget {
 
 class _ArticlePageState extends ListPageState<ArticleEntity, ArticlePage> {
   @override
-  String getTitle() => '我分享的文章';
+  String getTitle() => S.of(context).sharedArticle;
 
   @override
   Widget buildItem(ArticleEntity data, int index) {

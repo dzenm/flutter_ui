@@ -176,8 +176,8 @@ class HttpsClient {
     Function? cancel;
     if (isShowDialog) {
       // 优先使用局部的加载提示框
-      cancel ??= (loading ?? _loading);
-      if (cancel != null) cancel();
+      Function? loadingFunc = loading ?? _loading;
+      if (loadingFunc != null) cancel = loadingFunc();
     }
     HttpError? error;
     try {

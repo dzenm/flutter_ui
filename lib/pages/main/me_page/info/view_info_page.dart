@@ -7,6 +7,7 @@ import '../../../../base/route/app_route_delegate.dart';
 import '../../../../base/widgets/common_bar.dart';
 import '../../../../base/widgets/single_text_layout.dart';
 import '../../../../base/widgets/tap_layout.dart';
+import '../../../../generated/l10n.dart';
 import '../../../../models/user_model.dart';
 import '../me_router.dart';
 
@@ -39,7 +40,7 @@ class _ViewInfoPageState extends State<ViewInfoPage> {
       body: Container(
         color: theme.background,
         child: Column(children: [
-          CommonBar(title: '我的信息', centerTitle: true, actions: [
+          CommonBar(title: S.of(context).profile, centerTitle: true, actions: [
             IconButton(
               icon: Icon(Icons.edit_sharp),
               onPressed: () => AppRouteDelegate.of(context).push(MeRouter.editInfo),

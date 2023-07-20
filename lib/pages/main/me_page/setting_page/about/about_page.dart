@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../base/widgets/common_bar.dart';
+import '../../../../../generated/l10n.dart';
 
 ///
 /// Created by a0010 on 2023/7/19 11:24
@@ -18,7 +19,7 @@ class _AboutPageState extends State<AboutPage> {
     return Scaffold(
       body: Container(
         child: Column(children: [
-          CommonBar(title: '关于', centerTitle: true),
+          CommonBar(title: S.of(context).about, centerTitle: true),
         ]),
       ),
     );

@@ -223,7 +223,7 @@ class BottomNavigationBarItemView extends StatelessWidget {
     return Selector<MainModel, int>(
       builder: (context, value, widget) {
         bool isSelected = value == index; // 是否是选中的索引
-        Color color = isSelected ? theme.blue : theme.hintText;
+        Color color = isSelected ? theme.blue : theme.hint;
         return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Icon(icon, color: color, size: 20),
           SizedBox(height: 2),

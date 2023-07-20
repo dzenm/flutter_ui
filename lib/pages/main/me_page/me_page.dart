@@ -6,9 +6,11 @@ import 'package:provider/provider.dart';
 import '../../../base/log/build_config.dart';
 import '../../../base/log/log.dart';
 import '../../../base/res/app_theme.dart';
+import '../../../base/res/assets.dart';
 import '../../../base/res/local_model.dart';
 import '../../../base/route/app_route_delegate.dart';
 import '../../../base/utils/device_util.dart';
+import '../../../base/widgets/common_bar.dart';
 import '../../../base/widgets/single_text_layout.dart';
 import '../../../base/widgets/tap_layout.dart';
 import '../../../entities/coin_entity.dart';
@@ -70,77 +72,58 @@ class _MePageState extends State<MePage> {
 
     AppTheme theme = context.watch<LocalModel>().theme;
     double? statusBarHeight = MediaQuery.of(context).padding.top;
-
-    return NestedScrollView(
-      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-        return [
-          SliverAppBar(
-            //当此值为true时 SliverAppBar 会固定在页面顶部，为false时 SliverAppBar 会随着滑动向上滑动
-            pinned: true,
-            //滚动是是否拉伸图片
-            stretch: true,
-            //展开区域的高度
-            expandedHeight: 300,
-            //当snap配置为true时，向下滑动页面，SliverAppBar（以及其中配置的flexibleSpace内容）会立即显示出来，
-            //反之当snap配置为false时，向下滑动时，只有当ListView的数据滑动到顶部时，SliverAppBar才会下拉显示出来。
-            snap: false,
-            //阴影
-            elevation: 0,
-            //背景颜色
-            // backgroundColor: headerWhite ? Colors.white : Color(0xFFF4F5F7),
-            //一个显示在 AppBar 下方的控件，高度和 AppBar 高度一样， // 可以实现一些特殊的效果，该属性通常在 SliverAppBar 中使用
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text('复仇者联盟', style: TextStyle(color: theme.background)),
-              background: Image.network(
-                'http://img.haote.com/upload/20180918/2018091815372344164.jpg',
-                fit: BoxFit.cover,
-              ),
-            ),
-            systemOverlayStyle: SystemUiOverlayStyle.dark,
-          ),
-        ];
-      },
-      physics: AlwaysScrollableScrollPhysics(),
-      body: SingleChildScrollView(
-        child: Container(
-          decoration: BoxDecoration(
-            color: theme.background,
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: Column(children: buildChildrenButtons(theme, statusBarHeight)),
-        ),
-      ),
-    );
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
         children: [
           // toolbar背景色块
           Column(children: [
-            SizedBox(
-              height: statusBarHeight + kToolbarHeight,
-              child: Container(color: theme.appbar),
+            CommonBar(
+              systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarIconBrightness: Brightness.light,
+              ),
             ),
             Expanded(child: Container(color: theme.divide)),
           ]),
           // body
-          SingleChildScrollView(
-            physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()), // 上拉下拉弹簧效果
-            child: Container(
-              margin: EdgeInsets.only(top: statusBarHeight + 16, left: 16, right: 16),
-              decoration: BoxDecoration(
-                color: theme.background,
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: Column(children: buildChildrenButtons(theme, statusBarHeight)),
-            ),
-          )
+          _buildBody(theme, statusBarHeight),
         ],
       ),
     );
   }
 
-  List<Widget> buildChildrenButtons(AppTheme? theme, double statusBarHeight) {
+  Widget _buildBody(AppTheme theme, double statusBarHeight) {
+    return SingleChildScrollView(
+      padding: EdgeInsets.only(left: 16, right: 16, top: statusBarHeight),
+      physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()), // 上拉下拉弹簧效果
+      child: Stack(alignment: Alignment.topRight, children: [
+        Container(
+          margin: EdgeInsets.only(top: 24),
+          decoration: BoxDecoration(
+            color: theme.background,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(children: [
+            SizedBox(height: 48),
+            ..._buildChildrenButtons(theme),
+          ]),
+        ),
+        Container(
+          margin: EdgeInsets.only(right: 32),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(width: 3.0, color: Color(0xfffcfcfc)),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(64),
+            child: Image.asset(Assets.image('a.jpg'), fit: BoxFit.cover, width: 64, height: 64),
+          ),
+        ),
+      ]),
+    );
+  }
+
+  List<Widget> _buildChildrenButtons(AppTheme theme) {
     return [
       TapLayout(
         height: 50.0,
@@ -150,7 +133,7 @@ class _MePageState extends State<MePage> {
           AppRouteDelegate.of(context).push(MeRouter.medicine + params);
         },
         child: SingleTextLayout(
-          title: 'Chinese',
+          title: S.of(context).chineseMedicine,
           isShowForward: true,
         ),
       ),
@@ -171,7 +154,7 @@ class _MePageState extends State<MePage> {
         onTap: () => AppRouteDelegate.of(context).push(MeRouter.coin),
         child: SingleTextLayout(
           icon: Icons.money,
-          title: S.of(context).coin,
+          title: S.of(context).coinRecord,
           isShowForward: true,
         ),
       ),
@@ -181,7 +164,7 @@ class _MePageState extends State<MePage> {
         onTap: () => AppRouteDelegate.of(context).push(MeRouter.rank),
         child: SingleTextLayout(
           icon: Icons.money,
-          title: '积分排行榜',
+          title: S.of(context).integralRankingList,
           isShowForward: true,
         ),
       ),
@@ -191,7 +174,7 @@ class _MePageState extends State<MePage> {
         onTap: () => AppRouteDelegate.of(context).push(MeRouter.article),
         child: SingleTextLayout(
           icon: Icons.article,
-          title: '分享的文章',
+          title: S.of(context).sharedArticle,
           isShowForward: true,
         ),
       ),
@@ -211,7 +194,7 @@ class _MePageState extends State<MePage> {
         onTap: () => AppRouteDelegate.of(context).push(MeRouter.info),
         child: SingleTextLayout(
           icon: Icons.supervised_user_circle_sharp,
-          title: '我的资料',
+          title: S.of(context).profile,
           isShowForward: true,
         ),
       ),

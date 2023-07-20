@@ -10,9 +10,7 @@ import 'first_page.dart';
 /// Created by a0010 on 2023/2/3 16:43
 ///
 /// 路由测试页面
-class RouterPage extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _RouterPageState();
+class RouterPage extends StatelessWidget {
 
   static final List<List<String>> list = [
     [
@@ -37,24 +35,22 @@ class RouterPage extends StatefulWidget {
       '测试4',
     ],
   ];
-}
 
-class _RouterPageState extends State<RouterPage> {
   @override
   Widget build(BuildContext context) {
+    AppTheme theme = context.watch<LocalModel>().theme;
     return Scaffold(
       appBar: AppBar(
-        title: Text('路由跳转', style: TextStyle(color: Colors.white)),
+        title: Text('路由跳转', style: TextStyle(color: theme.text)),
       ),
       body: Container(
         padding: EdgeInsets.all(16),
-        child: Column(children: _buildList()),
+        child: Column(children: _buildList(context, theme)),
       ),
     );
   }
 
-  List<Widget> _buildList() {
-    AppTheme appTheme = context.watch<LocalModel>().theme;
+  List<Widget> _buildList(BuildContext context, AppTheme theme) {
     List<Widget> widgets = [];
     List<List<String>> list = RouterPage.list;
     for (int i = 0; i < list.length; i++) {
@@ -63,7 +59,7 @@ class _RouterPageState extends State<RouterPage> {
         ..add(MaterialButton(
           child: _text(list[i][0]),
           textColor: Colors.white,
-          color: appTheme.appbar,
+          color: theme.button,
           onPressed: () => Navigator.push(context, RouteManager.createMaterialRoute(FirstPage(type: i, index: 0))),
         ));
     }

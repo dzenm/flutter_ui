@@ -6,12 +6,10 @@ import '../../../base/log/build_config.dart';
 import '../../../base/log/log.dart';
 import '../../../base/res/app_theme.dart';
 import '../../../base/res/local_model.dart';
-import '../../../base/route/route_manager.dart';
 import '../../../base/widgets/common_bar.dart';
+import '../../../generated/l10n.dart';
 import '../../../http/http_manager.dart';
 import '../../../models/article_model.dart';
-import 'edit_article_page.dart';
-import 'nav_model.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56
@@ -25,13 +23,13 @@ class NavPage extends StatefulWidget {
 
 class _NavPageState extends State<NavPage> {
   static const String _tag = 'NavPage';
-  TabController? _tabController;
+  TabController? _controller;
 
   @override
   void initState() {
     super.initState();
     log('initState');
-    _tabController = DefaultTabController.of(context);
+    _controller = DefaultTabController.of(context);
   }
 
   @override
@@ -62,48 +60,65 @@ class _NavPageState extends State<NavPage> {
   Widget build(BuildContext context) {
     log('build');
 
-    List<String> tabs = context.read<NavModel>().tabs;
-    AppTheme? theme = context.watch<LocalModel>().theme;
+    List<String> tabs = [
+      S.of(context).plaza,
+      S.of(context).tutorial,
+      S.of(context).qa,
+      S.of(context).project,
+      S.of(context).official,
+      S.of(context).tool,
+    ];
+    AppTheme theme = context.watch<LocalModel>().theme;
     return DefaultTabController(
       length: tabs.length,
       child: Scaffold(
         appBar: CommonBar(
+          backgroundColor: theme.white,
           systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarBrightness: Brightness.dark,
+            statusBarIconBrightness: Brightness.dark,
           ),
           toolbarHeight: 48,
           bottom: TabBar(
-            controller: _tabController,
+            controller: _controller,
+            isScrollable: true,
             indicatorSize: TabBarIndicatorSize.tab,
-            tabs: tabs.map((tab) => Tab(text: tab)).toList(),
+            unselectedLabelColor: theme.hint,
+            labelColor: theme.primaryText,
+            indicatorColor: theme.accent,
+            tabs: tabs.map((text) {
+              return Tab(text: text);
+            }).toList(),
           ),
         ),
         body: TabBarView(
           children: tabs.map((item) {
-            return Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: 8),
-                  TopView(text: '这是Top数据'),
-                  SizedBox(height: 8),
-                  MaterialButton(
-                    child: Text('进入下一个页面'),
-                    textColor: theme.background,
-                    color: theme.appbar,
-                    onPressed: () {
-                      RouteManager.push(context, EditArticlePage());
-                    },
-                  ),
-                  SizedBox(height: 8),
-                ],
-              ),
-            );
+            return _buildTabItem(theme);
           }).toList(),
         ),
+      ),
+    );
+  }
+
+  /// Tab Item
+  Widget _buildTabItem(AppTheme theme) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(height: 8),
+          TopView(text: '这是Top数据'),
+          SizedBox(height: 8),
+          MaterialButton(
+            child: Text('进入下一个页面'),
+            textColor: theme.background,
+            color: theme.appbar,
+            onPressed: () {},
+          ),
+          SizedBox(height: 8),
+        ],
       ),
     );
   }

@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/res/local_model.dart';
-import 'package:flutter_ui/base/res/app_theme.dart';
-import 'package:flutter_ui/base/route/route_manager.dart';
-import 'package:flutter_ui/pages/study/router/router_page.dart';
+
 import 'package:provider/provider.dart';
+
+import '../../../base/res/app_theme.dart';
+import '../../../base/res/local_model.dart';
+import '../../../base/route/route_manager.dart';
+import 'router_page.dart';
 
 ///
 /// Created by a0010 on 2023/2/3 16:59
 ///
-class FirstPage extends StatefulWidget {
+class FirstPage extends StatelessWidget {
   final int type;
   final int index;
 
@@ -18,21 +20,9 @@ class FirstPage extends StatefulWidget {
   });
 
   @override
-  State<StatefulWidget> createState() => _FirstPageState();
-}
-
-class _FirstPageState extends State<FirstPage> {
-  List<String> list = [];
-
-  @override
-  void initState() {
-    super.initState();
-
-    list = RouterPage.list[widget.type];
-  }
-
-  @override
   Widget build(BuildContext context) {
+    List<String> list = RouterPage.list[type];
+    bool last = index == list.length - 1;
     return Scaffold(
       appBar: AppBar(
         title: Text(list[0], style: TextStyle(color: Colors.white)),
@@ -42,51 +32,49 @@ class _FirstPageState extends State<FirstPage> {
         child: Column(
           children: [
             SizedBox(height: 16),
-            _buildNavigator(),
+            _buildNavigator(context, last),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildNavigator() {
+  Widget _buildNavigator(BuildContext context, bool last) {
     AppTheme appTheme = context.watch<LocalModel>().theme;
-    bool last = widget.index == list.length - 1;
     String text = last ? '返回' : '下一个页面';
     return MaterialButton(
       child: _text(text),
       textColor: Colors.white,
       color: appTheme.appbar,
-      onPressed: navigator,
+      onPressed: () => navigator(context, last),
     );
   }
 
-  void navigator() {
-    bool last = widget.index == list.length - 1;
+  void navigator(BuildContext context, bool last) {
     if (!last) {
       // 直接进入下一个页面，例：A->B, 现在在A页面调用push进入B页面
       Navigator.push(
         context,
-        RouteManager.createMaterialRoute(FirstPage(type: widget.type, index: widget.index + 1)),
+        RouteManager.createMaterialRoute(FirstPage(type: type, index: index + 1)),
       );
       return;
     }
-    if (widget.type == 0) {
+    if (type == 0) {
       // 返回上一个页面，例：A->B->C->D, 现在在D页面调用pop回到C页面
       Navigator.pop(context);
-    } else if (widget.type == 1) {
+    } else if (type == 1) {
       // 返回指定页面，例：A->B->C->D, 现在在D页面调用popUntil, 设置router.settings.name == 'A'，回到A页面
       Navigator.popUntil(context, (router) => router.settings.name == 'RouterPage');
-    } else if (widget.type == 2) {
+    } else if (type == 2) {
       //
       Navigator.pushReplacement(
         context,
-        RouteManager.createMaterialRoute(FirstPage(type: widget.type, index: widget.index)),
+        RouteManager.createMaterialRoute(FirstPage(type: type, index: index)),
       );
-    } else if (widget.type == 3) {
+    } else if (type == 3) {
       Navigator.pushAndRemoveUntil(
         context,
-        RouteManager.createMaterialRoute(FirstPage(type: widget.type, index: widget.index)),
+        RouteManager.createMaterialRoute(FirstPage(type: type, index: index)),
         (router) => router.settings.name == 'RouterPage',
       );
     }

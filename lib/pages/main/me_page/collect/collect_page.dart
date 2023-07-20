@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../base/widgets/tap_layout.dart';
 import '../../../../entities/collect_entity.dart';
+import '../../../../generated/l10n.dart';
 import '../../../../http/http_manager.dart';
 import '../../../common/widgets/list_page_state.dart';
 
@@ -17,7 +18,7 @@ class CollectPage extends StatefulWidget {
 
 class _CollectPageState extends ListPageState<CollectEntity, CollectPage> {
   @override
-  String getTitle() => '收藏列表';
+  String getTitle() => S.of(context).collect;
 
   @override
   Widget buildItem(CollectEntity data, int index) {

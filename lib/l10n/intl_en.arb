@@ -1,8 +1,6 @@
 {
   "appName": "Flutter UI",
 
-  "studyMainPage": "Study MainPage{name}",
-
   "login": "Login",
   "register": "Register",
   "logout": "Logout",
@@ -17,6 +15,7 @@
   "collect": "Collect",
   "coin": "Coin",
   "setting": "Setting",
+  "notification": "Notification",
   "theme": "Theme",
   "language": "Language",
   "chinese": "Chinese",
@@ -43,11 +42,26 @@
   "none": "",
   "qr": "QR",
   "test": "Test",
+  "profile": "My Profile",
+  "editProfile": "Edit Profile",
+  "plaza": "Plaza",
+  "tutorial": "Tutorial",
+  "qa": "Q&A",
+  "project": "Project",
+  "official": "Official",
+  "tool": "Tool",
 
   "notFoundPage": "Page is not found",
   "checkUpgrade": "Check Upgrade",
   "selectTheme": "Select Theme",
   "selectLanguage": "Select Language",
   "followSystem": "Follow System",
-  "exitLogout": "Exit Logout"
+  "exitLogout": "Exit Logout",
+
+  "chineseMedicine": "Chinese Medicine",
+  "integralRankingList": "Integral Ranking List",
+  "sharedArticle": "Shared Article",
+  "loginRecord": "Login Record",
+  "coinRecord": "Coin Record",
+  "studyMainPage": "Study MainPage{name}"
 }

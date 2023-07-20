@@ -75,11 +75,14 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     log('build');
-
+    AppTheme theme = context.watch<LocalModel>().theme;
     return Scaffold(
       appBar: CommonBar(
-        systemOverlayStyle: SystemUiOverlayStyle.light,
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarIconBrightness: Brightness.dark,
+        ),
         toolbarHeight: 0,
+        backgroundColor: theme.transparent,
       ),
       body: _buildBody(),
     );

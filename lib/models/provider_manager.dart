@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/application.dart';
+import 'package:flutter_ui/base/res/local_model.dart';
 import 'package:provider/provider.dart';
 
 import '../pages/main/home_page/home_model.dart';
@@ -52,6 +53,10 @@ class ProviderManager {
     context.read<MeModel>().clear();
     context.read<NavModel>().clear();
     context.read<StudyModel>().clear();
+  }
+
+  static LocalModel local({BuildContext? context, bool listen = false}) {
+    return Provider.of<LocalModel>(context ?? Application().context, listen: listen);
   }
 
   static ArticleModel article({BuildContext? context, bool listen = false}) {
