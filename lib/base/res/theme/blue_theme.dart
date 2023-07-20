@@ -7,5 +7,5 @@ import '../app_theme.dart';
 ///
 class BlueTheme extends AppTheme {
   @override
-  Color get appbarColor => Colors.blue;
+  Color get appbar => Colors.blue;
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/base/res/app_theme.dart';
+import 'package:flutter_ui/base/res/local_model.dart';
 import 'package:flutter_ui/models/provider_manager.dart';
 import 'package:provider/provider.dart';
 
@@ -146,7 +148,6 @@ class _MainPageMobileState extends State<MainPageMobile> with WidgetsBindingObse
 
 /// 底部Item布局
 class BottomNavigationBarItemView extends StatelessWidget {
-
   final int index;
   final PageController controller;
   final GestureTapCallback? onTap;
@@ -159,10 +160,11 @@ class BottomNavigationBarItemView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppTheme theme = context.watch<LocalModel>().theme;
     double width = 56, height = 56;
     return TapLayout(
       height: height,
-      foreground: Colors.transparent,
+      foreground: theme.transparent,
       onTap: () => _jumpToPage(context),
       child: Container(
         width: width,
@@ -205,39 +207,30 @@ class BottomNavigationBarItemView extends StatelessWidget {
   }
 
   Widget _builtItem(BuildContext context) {
-    return Selector<MainModel, int>(
-      builder: (context, value, widget) {
-        return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          _buildIcon(value),
-          SizedBox(height: 2),
-          _buildTitle(context, value),
-        ]);
-      },
-      selector: (context, model) => model.selectedIndex,
-    );
-  }
-
-  Widget _buildIcon(int selectIndex) {
+    AppTheme theme = context.watch<LocalModel>().theme;
     List<IconData> icons = [
       Icons.home,
       Icons.airplay_rounded,
       Icons.person,
     ];
-    IconData icon = icons[index]; // 当前index索引的图标
-    bool isSelected = selectIndex == index; // 是否是选中的索引
-    Color color = isSelected ? Colors.blue : Colors.grey.shade500;
-    return Icon(icon, color: color, size: 20);
-  }
-
-  Widget _buildTitle(BuildContext context, int selectIndex) {
     List<String> titles = [
       S.of(context).home,
       S.of(context).nav,
       S.of(context).me,
     ];
-    String title = titles[index]; // 当前index索引的标题
-    bool isSelected = selectIndex == index; // 是否是选中的索引
-    Color color = isSelected ? Colors.blue : Colors.grey.shade500;
-    return Text(title, style: TextStyle(fontSize: 10, color: color));
+    IconData icon = icons[index]; // 图标
+    String title = titles[index]; // 标题
+    return Selector<MainModel, int>(
+      builder: (context, value, widget) {
+        bool isSelected = value == index; // 是否是选中的索引
+        Color color = isSelected ? theme.blue : theme.hintText;
+        return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Icon(icon, color: color, size: 20),
+          SizedBox(height: 2),
+          Text(title, style: TextStyle(fontSize: 10, color: color)),
+        ]);
+      },
+      selector: (context, model) => model.selectedIndex,
+    );
   }
 }

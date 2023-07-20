@@ -63,7 +63,7 @@ class _NavPageState extends State<NavPage> {
     log('build');
 
     List<String> tabs = context.read<NavModel>().tabs;
-    AppTheme? theme = context.watch<LocalModel>().appTheme;
+    AppTheme? theme = context.watch<LocalModel>().theme;
     return DefaultTabController(
       length: tabs.length,
       child: Scaffold(
@@ -93,7 +93,7 @@ class _NavPageState extends State<NavPage> {
                   MaterialButton(
                     child: Text('进入下一个页面'),
                     textColor: theme.background,
-                    color: theme.appbarColor,
+                    color: theme.appbar,
                     onPressed: () {
                       RouteManager.push(context, EditArticlePage());
                     },

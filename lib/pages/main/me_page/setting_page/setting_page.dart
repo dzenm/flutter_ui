@@ -62,13 +62,13 @@ class _SettingPageState extends State<SettingPage> {
   Widget build(BuildContext context) {
     log('build');
 
-    AppTheme theme = context.watch<LocalModel>().appTheme;
+    AppTheme theme = context.watch<LocalModel>().theme;
     Locale locale = context.watch<LocalModel>().locale;
 
     String currentVersion = HandleError.packageInfo.version;
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).setting, style: TextStyle(color: Colors.white)),
+        title: Text(S.of(context).setting, style: TextStyle(color: theme.text)),
       ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
@@ -110,7 +110,7 @@ class _SettingPageState extends State<SettingPage> {
                   suffix: Container(
                     height: 24,
                     width: 24,
-                    color: theme.primary,
+                    color: theme.appbar,
                     child: SizedBox(height: 24, width: 24),
                   ),
                 ),
@@ -177,7 +177,8 @@ class _SettingPageState extends State<SettingPage> {
   /// 主题弹窗选择
   void _selectedTheme() {
     LocalModel model = context.read<LocalModel>();
-    List<AppThemeMode> modes = model.appThemes;
+    AppTheme theme = model.theme;
+    List<AppThemeMode> modes = model.themes;
     AppThemeMode currentThemeMode = model.themeMode;
     showDialog<bool>(
       context: context,
@@ -190,7 +191,7 @@ class _SettingPageState extends State<SettingPage> {
               spacing: 8,
               runSpacing: 8,
               children: modes.map((mode) {
-                Color? value = model.getTheme(mode).appbarColor;
+                Color? value = theme.appbar;
                 return InkWell(
                   onTap: () {
                     model.setThemeMode(mode);
@@ -201,7 +202,7 @@ class _SettingPageState extends State<SettingPage> {
                     width: 40,
                     height: 40,
                     color: value,
-                    child: currentThemeMode == mode ? Icon(Icons.done, color: Colors.white) : null,
+                    child: currentThemeMode == mode ? Icon(Icons.done, color: theme.icon) : null,
                   ),
                 );
               }).toList(),

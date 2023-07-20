@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import '../../base/http/https_client.dart';
 import '../../base/log/build_config.dart';
 import '../../base/log/log.dart';
+import '../../base/res/app_theme.dart';
+import '../../base/res/local_model.dart';
 import '../../base/route/app_route_delegate.dart';
 import '../../base/utils/sp_util.dart';
 import '../../base/widgets/tap_layout.dart';
@@ -91,10 +93,10 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     log('build');
-
+    AppTheme theme = context.watch<LocalModel>().theme;
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).register, style: TextStyle(color: Colors.white)),
+        title: Text(S.of(context).register, style: TextStyle(color: theme.white)),
       ),
       body: SingleChildScrollView(
         child: _buildBody(),
@@ -104,7 +106,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   // 主体页面结构
   Widget _buildBody() {
-    MaterialColor buttonColor = Colors.blue;
+    AppTheme theme = context.watch<LocalModel>().theme;
     return Container(
       padding: EdgeInsets.all(24),
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -116,7 +118,7 @@ class _RegisterPageState extends State<RegisterPage> {
             icon: Icon(Icons.person),
             labelText: S.of(context).username,
             suffixIcon: IconButton(
-              splashColor: Colors.transparent,
+              splashColor: theme.transparent,
               icon: Icon(Icons.close),
               onPressed: () => _usernameController.clear(),
             ),
@@ -133,7 +135,7 @@ class _RegisterPageState extends State<RegisterPage> {
             icon: Icon(Icons.admin_panel_settings),
             labelText: S.of(context).password,
             suffixIcon: IconButton(
-              splashColor: Colors.transparent,
+              splashColor: theme.transparent,
               icon: Icon(_isShowPwd ? Icons.visibility : Icons.visibility_off, size: 20),
               iconSize: 16,
               // 点击改变显示或隐藏密码
@@ -152,7 +154,7 @@ class _RegisterPageState extends State<RegisterPage> {
             icon: Icon(Icons.admin_panel_settings),
             labelText: S.of(context).rPassword,
             suffixIcon: IconButton(
-              splashColor: Colors.transparent,
+              splashColor: theme.transparent,
               icon: Icon(_isShowRPwd ? Icons.visibility : Icons.visibility_off, size: 20),
               iconSize: 16,
               // 点击改变显示或隐藏密码
@@ -171,9 +173,9 @@ class _RegisterPageState extends State<RegisterPage> {
             child: TapLayout(
               height: 36.0,
               borderRadius: BorderRadius.all(Radius.circular(2)),
-              background: _isDisableLoginButton ? buttonColor.shade200 : buttonColor,
+              background: _isDisableLoginButton ? theme.disableButton : theme.button,
               onTap: _isDisableLoginButton ? null : _register,
-              child: Text(S.of(context).register, style: TextStyle(color: Colors.white)),
+              child: Text(S.of(context).register, style: TextStyle(color: theme.text)),
             ),
           ),
         ]),

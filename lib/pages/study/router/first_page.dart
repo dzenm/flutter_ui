@@ -50,13 +50,13 @@ class _FirstPageState extends State<FirstPage> {
   }
 
   Widget _buildNavigator() {
-    AppTheme appTheme = context.watch<LocalModel>().appTheme;
+    AppTheme appTheme = context.watch<LocalModel>().theme;
     bool last = widget.index == list.length - 1;
     String text = last ? '返回' : '下一个页面';
     return MaterialButton(
       child: _text(text),
       textColor: Colors.white,
-      color: appTheme.appbarColor,
+      color: appTheme.appbar,
       onPressed: navigator,
     );
   }

@@ -24,7 +24,7 @@ import 'theme/teal_theme.dart';
 class AppTheme {
   /// 获取颜色
   static AppTheme of(BuildContext context, {bool listen = true}) {
-    return Provider.of<LocalModel>(context, listen: listen).appTheme;
+    return Provider.of<LocalModel>(context, listen: listen).theme;
   }
 
   static final Map<AppThemeMode, AppTheme> appTheme = {
@@ -45,51 +45,77 @@ class AppTheme {
     AppThemeMode.black: BlackTheme(),
   };
 
-  /// 根据颜色命名
-  Color get white50 => Color(0xFAFAFA); // 纯白的 5%
-  Color get white100 => Color(0xF5F5F5); // 纯白的 10%
-  Color get white150 => Color(0xEFEFEF); // 纯白的 15%
-  Color get white200 => Color(0xEEEEEE); // 纯白的 20%
-  Color get white300 => Color(0xE0E0E0); // 纯白的 30%
-  Color get white400 => Color(0xBDBDBD); // 纯白的 40%
-  Color get white500 => Color(0x9E9E9E); // 纯白的 50%
-  Color get white600 => Color(0x757575); // 纯白的 60%
-  Color get white700 => Color(0x616161); // 纯白的 70%
-  Color get white800 => Color(0x424242); // 纯白的 80%
-  Color get white900 => Color(0x212121); // 纯白的 90%
+  ///================================ 根据颜色命名 ================================
+  /// 由白到黑
+  Color get black50 => Color(0xFFFAFAFA); // 5%
+  Color get black100 => Color(0xFFF5F5F5); // 10%
+  Color get black150 => Color(0xFFEFEFEF); // 15%
+  Color get black200 => Color(0xFFEEEEEE); // 20%
+  Color get black300 => Color(0xFFE0E0E0); // 30%
+  Color get black400 => Color(0xFFBDBDBD); // 40%
+  Color get black500 => Color(0xFF9E9E9E); // 50%
+  Color get black600 => Color(0xFF757575); // 60%
+  Color get black700 => Color(0xFF616161); // 70%
+  Color get black800 => Color(0xFF424242); // 80%
+  Color get black900 => Color(0xFF212121); // 90%
 
-  Color get black12 => Color(0xFFE0E0E0); // 纯黑的 12% #e0e0e0
-  Color get black26 => Color(0x43000000); // 纯黑的 26% #BDBDBD
-  Color get black54 => Color(0x8A000000); // 纯黑的 54% #757575
-  Color get black87 => Color(0xDE000000); // 纯黑的 87% #212121
+  /// 纯黑系(按百分比)
+  Color get black120 => Color(0x1F000000); // 纯黑的 12% #e0e0e0
+  Color get black260 => Color(0x42000000); // 纯黑的 26% #BDBDBD
+  Color get black380 => Color(0x61000000); // 纯黑的 38% #757575
+  Color get black450 => Color(0x73000000); // 纯黑的 45% #9E9E9E
+  Color get black540 => Color(0x8A000000); // 纯黑的 54% #757575
+  Color get black870 => Color(0xDE000000); // 纯黑的 87% #212121
   Color get black => Colors.black; // 纯黑
 
-  Color get white12 => Color(0x1EFFFFFF); // 纯白的 12% #e0e0e0
-  Color get white26 => Color(0x80FFFFFF); // 纯黑的 26% #BDBDBD
-  Color get white54 => Color(0x80FFFFFF); // 纯黑的 54% #757575
-  Color get white87 => Color(0xB2FFFFFF); // 纯黑的 87% #212121
+  /// 纯百系(按百分比)
+  Color get white120 => Color(0x1FFFFFFF); // 纯白的 12% #e0e0e0
+  Color get white260 => Color(0x42FFFFFF); // 纯白的 26% #BDBDBD
+  Color get white380 => Color(0x61FFFFFF); // 纯白的 38% #BDBDBD
+  Color get white450 => Color(0x73FFFFFF); // 纯白的 45% #9E9E9E
+  Color get white540 => Color(0x8AFFFFFF); // 纯白的 54% #757575
+  Color get white870 => Color(0xDEFFFFFF); // 纯白的 87% #212121
   Color get white => Colors.white; // 纯白
 
-  /// 根据功能命名(整体)
-  Color get primary => white; // 主要颜色
-  Color get secondary => white; // 次要颜色
-  Color get accent => white; // 主要颜色的对比颜色
-  Color get button => white; // 按钮颜色
-  Color get selected => white; // 选中的颜色
-  Color get disableButton => white; // 禁用的按钮颜色
-  Color get background => white50; // 普通背景色
-  Color get divide => white300; // 分割线颜色
-  Color get hint => white400; // 提示颜色
-  Color get primaryText => white900; // 主要文本颜色
-  Color get secondaryText => white600; // 次要文本颜色
-  Color get hintText => white300; // 提示文本颜色
+  /// 其他单独的颜色
+  Color get transparent => Colors.transparent; // 透明色
+  Color get red => Colors.red; // 红色
+  Color get blue => Colors.blue; // 蓝色
 
-  /// 根据功能命名(局部)
-  Color get appbarForeground => white; // appbar前景颜色
-  Color get appbarColor => white; // appbar背景颜色
-  Color get bottomBarColor => white; // bottomBar背景颜色
+  /// 默认颜色值
+  Color get purple700 => Color(0xFF3700B3); // default dark primary color
+  Color get purple500 => Color(0xFF6200EE); // default primary color
+  Color get purple200 => Color(0xFFBB86FC); // default light primary color
+  Color get teal200 => Color(0xFF03DAC5); // default accent color
 
-  ///       Brightness brightness, /// 应用整体主题的亮度。用于按钮之类的小部件，以确定在不使用主色或强调色时选择什么颜色。
+  ///================================ 根据功能命名(整体) ================================
+  Color get primaryDark => purple700; // 主要颜色(深色)
+  Color get primary => purple500; // 主要颜色
+  Color get primaryLight => purple200; // 主要颜色(浅色)
+  Color get secondary => purple500; // 次要颜色
+  Color get accent => teal200; // 主要颜色的对比颜色
+  Color get button => purple500; // 按钮颜色
+  Color get disableButton => purple200; // 禁用的按钮颜色
+  Color get selected => purple500; // 选中的颜色
+  Color get unselected => purple200; // 未选中的颜色
+  Color get text => white; // 文本颜色(浅色white, 深色black900)
+  Color get icon => white; // 图标颜色(浅色white, 深色black900)
+  Color get background => black50; // 普通背景色
+  Color get foreground => black50; // 普通前景色
+  Color get divide => black300; // 分割线颜色
+  Color get hint => black400; // 提示颜色
+  Color get primaryText => black900; // 主要文本颜色
+  Color get secondaryText => black600; // 次要文本颜色
+  Color get hintText => black300; // 提示文本颜色
+
+  ///================================ 根据功能命名(局部) ================================
+  Color get statusBar => purple700; // appbar背景颜色
+  Color get appbar => purple700; // appbar背景颜色
+  Color get bottomBar => white; // bottomBar背景颜色
+
+  ///================================ 常用颜色设置 ================================
+
+  ///     Brightness brightness, /// 应用整体主题的亮度。用于按钮之类的小部件，以确定在不使用主色或强调色时选择什么颜色。
   /// 	  MaterialColor primarySwatch,/// 定义一个单一的颜色以及十个色度的色块。
   /// 	  Color primaryColor, /// 应用程序主要部分的背景颜色(toolbars、tab bars 等)
   /// 	  Brightness primaryColorBrightness, /// primaryColor的亮度。用于确定文本的颜色和放置在主颜色之上的图标(例如工具栏文本)。

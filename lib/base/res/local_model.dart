@@ -27,7 +27,7 @@ class LocalModel with ChangeNotifier {
   }
 
   /// 获取设置的主题包
-  AppTheme get appTheme => getTheme(_themeMode);
+  AppTheme get theme => getTheme(_themeMode);
 
   /// 当前设置的语言
   late Locale _locale;
@@ -54,5 +54,5 @@ class LocalModel with ChangeNotifier {
 
   AppTheme getTheme(AppThemeMode mode) => _appThemes[mode]!;
 
-  List<AppThemeMode> get appThemes => _appThemes.keys.toList();
+  List<AppThemeMode> get themes => _appThemes.keys.toList();
 }

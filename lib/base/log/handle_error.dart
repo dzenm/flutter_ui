@@ -102,8 +102,11 @@ class HandleError {
   Future<void> _initInfo() async {
     packageInfo = await PackageInfo.fromPlatform();
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    androidDeviceInfo = await deviceInfo.androidInfo;
-    iosDeviceInfo = await deviceInfo.iosInfo;
+    if (BuildConfig.isAndroid) {
+      androidDeviceInfo = await deviceInfo.androidInfo;
+    } else if (BuildConfig.isIOS) {
+      iosDeviceInfo = await deviceInfo.iosInfo;
+    }
   }
 
   /// 处理信息

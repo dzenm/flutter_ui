@@ -30,7 +30,7 @@ class _DialogPageState extends State<DialogPage> {
 
   @override
   Widget build(BuildContext context) {
-    AppTheme theme = context.watch<LocalModel>().appTheme;
+    AppTheme theme = context.watch<LocalModel>().theme;
     return Scaffold(
       appBar: AppBar(
         title: Text('弹窗', style: TextStyle(color: Colors.white)),
@@ -64,7 +64,7 @@ class _DialogPageState extends State<DialogPage> {
         child: Column(children: [
           MaterialButton(
             textColor: Colors.white,
-            color: theme.appbarColor,
+            color: theme.appbar,
             onPressed: () {
               CancelFunc cancel = CommonDialog.loading();
               Future.delayed(Duration(seconds: 1), () => cancel());
@@ -74,7 +74,7 @@ class _DialogPageState extends State<DialogPage> {
           SizedBox(height: 8),
           MaterialButton(
             textColor: Colors.white,
-            color: theme.appbarColor,
+            color: theme.appbar,
             onPressed: () => CommonDialog.showPromptDialog(
               context,
               titleString: '立即开通',
@@ -94,7 +94,7 @@ class _DialogPageState extends State<DialogPage> {
           SizedBox(height: 8),
           MaterialButton(
             textColor: Colors.white,
-            color: theme.appbarColor,
+            color: theme.appbar,
             onPressed: () => CommonDialog.showPromptDialog(
               context,
               titleString: '昵称',
@@ -106,14 +106,14 @@ class _DialogPageState extends State<DialogPage> {
           SizedBox(height: 8),
           MaterialButton(
             textColor: Colors.white,
-            color: theme.appbarColor,
+            color: theme.appbar,
             onPressed: () => CommonDialog.showSelectImageBottomSheet(context),
             child: Row(children: [_text('选择图片弹窗')]),
           ),
           SizedBox(height: 8),
           MaterialButton(
             textColor: Colors.white,
-            color: theme.appbarColor,
+            color: theme.appbar,
             onPressed: () => CommonDialog.showListBottomSheet(context, data, (int index) {
               Navigator.pop(context);
             }),
@@ -122,7 +122,7 @@ class _DialogPageState extends State<DialogPage> {
           SizedBox(height: 8),
           MaterialButton(
             textColor: Colors.white,
-            color: theme.appbarColor,
+            color: theme.appbar,
             onPressed: () => showDialog(
               context: context,
               builder: (BuildContext context) {
@@ -137,7 +137,7 @@ class _DialogPageState extends State<DialogPage> {
           SizedBox(height: 8),
           MaterialButton(
             textColor: Colors.white,
-            color: theme.appbarColor,
+            color: theme.appbar,
             onPressed: () => CommonDialog.showAppUpgradeDialog(
               context,
               version: '12',
@@ -148,7 +148,7 @@ class _DialogPageState extends State<DialogPage> {
           SizedBox(height: 8),
           MaterialButton(
             textColor: Colors.white,
-            color: theme.appbarColor,
+            color: theme.appbar,
             onPressed: () => PickerView.showLocation(context, initialItem: ['湖北', '荆门市', '京山县'], onChanged: (results) {
               CommonDialog.showToast('选中的结果: results=$results');
             }),
@@ -157,7 +157,7 @@ class _DialogPageState extends State<DialogPage> {
           SizedBox(height: 8),
           MaterialButton(
             textColor: Colors.white,
-            color: theme.appbarColor,
+            color: theme.appbar,
             onPressed: () => PickerView.showList(
               context,
               list: ['测试一', '测试二', '测试三', '测试四', '测试五'],

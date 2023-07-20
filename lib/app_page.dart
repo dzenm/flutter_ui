@@ -122,19 +122,19 @@ class AppPage extends StatelessWidget {
         _useContextAfterBuild(context);
       });
       // Page必须放在MaterialApp中运行
-      AppTheme? theme = local.appTheme;
+      AppTheme? theme = local.theme;
       return MaterialApp.router(
         title: 'FlutterUI',
         debugShowCheckedModeBanner: false,
         // 设置主题，读取LocalModel的值，改变LocalModel的theme值会通过provider刷新页面
         theme: ThemeData(
-          primaryColor: theme.appbarColor,
+          primaryColor: theme.appbar,
           appBarTheme: AppBarTheme(
-            backgroundColor: theme.appbarColor,
+            backgroundColor: theme.appbar,
             systemOverlayStyle: SystemUiOverlayStyle.light,
           ),
           floatingActionButtonTheme: FloatingActionButtonThemeData(
-            backgroundColor: theme.appbarColor,
+            backgroundColor: theme.appbar,
           ),
           pageTransitionsTheme: PageTransitionsTheme(builders: {
             TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),

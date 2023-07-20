@@ -68,7 +68,7 @@ class _MePageState extends State<MePage> {
   Widget build(BuildContext context) {
     log('build');
 
-    AppTheme? theme = context.watch<LocalModel>().appTheme;
+    AppTheme theme = context.watch<LocalModel>().theme;
     double? statusBarHeight = MediaQuery.of(context).padding.top;
 
     return NestedScrollView(
@@ -119,7 +119,7 @@ class _MePageState extends State<MePage> {
           Column(children: [
             SizedBox(
               height: statusBarHeight + kToolbarHeight,
-              child: Container(color: theme.appbarColor),
+              child: Container(color: theme.appbar),
             ),
             Expanded(child: Container(color: theme.divide)),
           ]),

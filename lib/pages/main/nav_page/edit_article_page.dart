@@ -20,13 +20,13 @@ class EditArticlePage extends StatefulWidget {
 class _EditArticlePageState extends State<EditArticlePage> {
   @override
   Widget build(BuildContext context) {
-    AppTheme? theme = context.watch<LocalModel>().appTheme;
+    AppTheme theme = context.watch<LocalModel>().theme;
     return Scaffold(
       appBar: AppBar(
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarBrightness: Brightness.dark,
         ),
-        title: Text('编辑文章信息', style: TextStyle(color: Colors.white)),
+        title: Text('编辑文章信息', style: TextStyle(color: theme.text)),
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,
@@ -39,7 +39,7 @@ class _EditArticlePageState extends State<EditArticlePage> {
             MaterialButton(
               child: Text('修改数据'),
               textColor: theme.background,
-              color: theme.appbarColor,
+              color: theme.appbar,
               onPressed: () {
                 ArticleEntity? article = context.read<ArticleModel>().getArticle(1);
                 if (article != null) {

@@ -5,8 +5,10 @@ import 'package:provider/provider.dart';
 
 import '../../../base/log/build_config.dart';
 import '../../../base/log/log.dart';
+import '../../../base/res/app_theme.dart';
 import '../../../base/res/assets.dart';
 import '../../../base/res/custom_icon.dart';
+import '../../../base/res/local_model.dart';
 import '../../../base/route/app_route_delegate.dart';
 import '../../../base/utils/str_util.dart';
 import '../../../base/widgets/banner_view.dart';
@@ -191,7 +193,9 @@ class _HomePageState extends State<HomePage> {
 }
 
 /// 文章列表 widget
-class ArticleListView extends StatefulWidget {
+class ArticleListView extends StatelessWidget {
+  static const String _tag = 'ArticleListView';
+
   final StateController controller;
   final RefreshFunction refresh;
 
@@ -202,32 +206,17 @@ class ArticleListView extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _ArticleListViewState();
-}
-
-class _ArticleListViewState extends State<ArticleListView> {
-  static const String _tag = 'ArticleListView';
-
-  @override
-  void initState() {
-    super.initState();
-    Log.p('initState', tag: _tag);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    Log.p('build', tag: _tag);
-
     return Selector<ArticleModel, int>(
       builder: (context, value, child) {
         Log.p('build', tag: _tag);
         return RefreshListView(
-          controller: widget.controller,
+          controller: controller,
           itemCount: value,
           builder: (context, index) {
             return ArticleItemView(index);
           },
-          refresh: widget.refresh,
+          refresh: refresh,
           showFooter: true,
         );
       },
@@ -247,9 +236,11 @@ class ArticleItemView extends StatelessWidget {
   Widget build(BuildContext context) {
     Log.p('build', tag: _tag);
 
+    AppTheme theme = context.watch<LocalModel>().theme;
+
     return TapLayout(
       borderRadius: BorderRadius.all(Radius.circular(16)),
-      background: Colors.black12,
+      background: theme.background,
       margin: EdgeInsets.only(top: 12, left: 8, right: 8),
       padding: EdgeInsets.all(12),
       onTap: () {
@@ -279,7 +270,7 @@ class ArticleItemView extends StatelessWidget {
                 builder: (context, value, child) {
                   return Text(
                     value,
-                    style: TextStyle(fontSize: 18, color: Colors.black87),
+                    style: TextStyle(fontSize: 18, color: theme.primaryText),
                   );
                 },
                 selector: (context, model) => model.getArticle(index)?.title ?? '',
@@ -297,7 +288,7 @@ class ArticleItemView extends StatelessWidget {
                         padding: EdgeInsets.all(4),
                         child: Text(
                           val.name ?? '',
-                          style: TextStyle(fontSize: 12, color: Colors.blue),
+                          style: TextStyle(fontSize: 12, color: theme.blue),
                         ),
                         onTap: () {
                           String url = val.url ?? '';
@@ -327,7 +318,7 @@ class ArticleItemView extends StatelessWidget {
                     offstage: value.isEmpty,
                     child: Text(
                       value,
-                      style: TextStyle(color: Colors.black45),
+                      style: TextStyle(color: theme.secondaryText),
                     ),
                   );
                 },
@@ -341,11 +332,11 @@ class ArticleItemView extends StatelessWidget {
               builder: (context, value, child) {
                 if (value == 0) return Container();
                 return Row(children: [
-                  Icon(CustomIcon.thumbs_up, color: Colors.lightBlue, size: 16),
+                  Icon(CustomIcon.thumbs_up, color: theme.blue, size: 16),
                   SizedBox(width: 4),
                   Text(
                     '$value',
-                    style: TextStyle(color: Colors.lightBlue),
+                    style: TextStyle(color: theme.blue),
                   ),
                   SizedBox(width: 8),
                 ]);
@@ -375,11 +366,11 @@ class ArticleItemView extends StatelessWidget {
             Selector<ArticleModel, bool>(
               builder: (context, value, child) {
                 IconData icon = value ? CustomIcon.heart : CustomIcon.heart_empty;
-                Color? color = value ? Colors.red : Colors.black26;
+                Color? color = value ? theme.red : theme.hint;
                 return TapLayout(
                   height: 48,
                   width: 48,
-                  foreground: Colors.transparent,
+                  foreground: theme.transparent,
                   onTap: () {
                     ArticleEntity? article = context.read<ArticleModel>().getArticle(index);
                     if (article == null) return;

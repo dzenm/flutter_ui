@@ -34,10 +34,10 @@ class _ViewInfoPageState extends State<ViewInfoPage> {
 
   @override
   Widget build(BuildContext context) {
-    AppTheme theme = context.read<LocalModel>().appTheme;
+    AppTheme theme = context.read<LocalModel>().theme;
     return Scaffold(
       body: Container(
-        color: theme.white150,
+        color: theme.background,
         child: Column(children: [
           CommonBar(title: '我的信息', centerTitle: true, actions: [
             IconButton(

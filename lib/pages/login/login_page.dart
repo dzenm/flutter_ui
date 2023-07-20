@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ui/base/log/build_config.dart';
+import 'package:flutter_ui/base/res/app_theme.dart';
+import 'package:flutter_ui/base/res/local_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../base/http/https_client.dart';
@@ -56,9 +58,10 @@ class LoginPage extends StatelessWidget {
 
   /// App移动端展示的页面
   Widget _buildAppPage(BuildContext context) {
+    AppTheme theme = context.watch<LocalModel>().theme;
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).login, style: TextStyle(color: Colors.white)),
+        title: Text(S.of(context).login, style: TextStyle(color: theme.white)),
       ),
       body: Center(
         child: Stack(children: [
@@ -159,7 +162,7 @@ class _LoginWidgetState extends State<_LoginWidget> {
   Widget build(BuildContext context) {
     log('build');
 
-    MaterialColor buttonColor = Colors.blue;
+    AppTheme theme = context.watch<LocalModel>().theme;
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
       // 用户名输入框
       TextField(
@@ -168,7 +171,7 @@ class _LoginWidgetState extends State<_LoginWidget> {
           icon: Icon(Icons.person),
           labelText: S.of(context).username,
           suffixIcon: IconButton(
-            splashColor: Colors.transparent,
+            splashColor: theme.transparent,
             icon: Icon(Icons.close),
             onPressed: () => usernameController.clear(),
           ),
@@ -185,7 +188,7 @@ class _LoginWidgetState extends State<_LoginWidget> {
           icon: Icon(Icons.admin_panel_settings),
           labelText: S.of(context).password,
           suffixIcon: IconButton(
-            splashColor: Colors.transparent,
+            splashColor: theme.transparent,
             icon: Icon(_isShowPwd ? Icons.visibility : Icons.visibility_off, size: 20),
             iconSize: 16,
             // 点击改变显示或隐藏密码
@@ -205,7 +208,7 @@ class _LoginWidgetState extends State<_LoginWidget> {
             icon: Icon(Icons.admin_panel_settings),
             labelText: S.of(context).rPassword,
             suffixIcon: IconButton(
-              splashColor: Colors.transparent,
+              splashColor: theme.transparent,
               icon: Icon(_isShowRPwd ? Icons.visibility : Icons.visibility_off, size: 20),
               iconSize: 16,
               // 点击改变显示或隐藏密码
@@ -224,9 +227,9 @@ class _LoginWidgetState extends State<_LoginWidget> {
           child: TapLayout(
             height: 36.0,
             borderRadius: BorderRadius.all(Radius.circular(2)),
-            background: _switchCurrentLogin && _isDisableLoginButton ? buttonColor.shade200 : buttonColor,
+            background: _switchCurrentLogin && _isDisableLoginButton ? theme.disableButton : theme.button,
             onTap: _switchCurrentLogin && _isDisableLoginButton ? null : _login,
-            child: Text(S.of(context).login, style: TextStyle(color: Colors.white)),
+            child: Text(S.of(context).login, style: TextStyle(color: theme.text)),
           ),
         ),
         SizedBox(height: 32, width: 64),
@@ -236,9 +239,9 @@ class _LoginWidgetState extends State<_LoginWidget> {
           child: TapLayout(
             height: 36.0,
             borderRadius: BorderRadius.all(Radius.circular(2)),
-            background: !_switchCurrentLogin && _isDisableLoginButton ? buttonColor.shade200 : buttonColor,
+            background: !_switchCurrentLogin && _isDisableLoginButton ? theme.disableButton : theme.button,
             onTap: !_switchCurrentLogin && _isDisableLoginButton ? null : _register,
-            child: Text(S.of(context).register, style: TextStyle(color: Colors.white)),
+            child: Text(S.of(context).register, style: TextStyle(color: theme.text)),
           ),
         ),
       ]),

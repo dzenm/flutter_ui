@@ -54,7 +54,7 @@ class _RouterPageState extends State<RouterPage> {
   }
 
   List<Widget> _buildList() {
-    AppTheme appTheme = context.watch<LocalModel>().appTheme;
+    AppTheme appTheme = context.watch<LocalModel>().theme;
     List<Widget> widgets = [];
     List<List<String>> list = RouterPage.list;
     for (int i = 0; i < list.length; i++) {
@@ -63,7 +63,7 @@ class _RouterPageState extends State<RouterPage> {
         ..add(MaterialButton(
           child: _text(list[i][0]),
           textColor: Colors.white,
-          color: appTheme.appbarColor,
+          color: appTheme.appbar,
           onPressed: () => Navigator.push(context, RouteManager.createMaterialRoute(FirstPage(type: i, index: 0))),
         ));
     }
