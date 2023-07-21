@@ -132,7 +132,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _getTopArticle() async {
-    await HttpManager.instance.getLopArticleList(
+    await HttpManager.instance.getTopArticleList(
       isShowDialog: false,
       success: (list) {
         context.read<ArticleModel>().updateArticles(list);

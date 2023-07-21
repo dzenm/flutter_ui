@@ -118,7 +118,13 @@ main.dart ---> application.dart ---> app_page.dart ---> login_page.dart/main_pag
 void main() ---> Application().main() ---> Application()._initApp() ---> LoginPage()/MainPage()
 ```
 
+## 四、使用
 
+* 1.在命令行执行命令，拉取相关的依赖
+> flutter pub get
+
+* 2.在生成相关的文件
+> flutter pub run build_runner build --delete-conflicting-outputs
 
 ## 联系我
 

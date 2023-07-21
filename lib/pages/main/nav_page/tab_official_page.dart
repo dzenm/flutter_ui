@@ -12,6 +12,11 @@ class TabOfficialPage extends StatefulWidget {
 
 class _TabOfficialPageState extends State<TabOfficialPage> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return const Placeholder();
   }

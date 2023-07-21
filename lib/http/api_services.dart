@@ -230,10 +230,10 @@ abstract class ApiServices {
   );
 
   ///=============================== 十一、问答 ==============================================
-  /// 11.1 分享文章 [ https://wanandroid.com/wenda/list/1/json ]
-  @GET('wenda/list/{pageNumber}/json')
+  /// 11.1 问答 [ https://wanandroid.com/wenda/list/1/json ]
+  @GET('wenda/list/{pageId}/json')
   Future<DataEntity> questions(
-    @Path("pageNumber") int pageNumber, // 页码拼接在链接上，从1开始，取值为[1-40]
+    @Path("pageId") int pageId, // // 页面id，拼接在链接中。
   );
 
   ///=============================== 十二、个人信息接口 ==============================================

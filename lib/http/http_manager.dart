@@ -1,4 +1,3 @@
-import 'package:flutter_ui/application.dart';
 import 'package:flutter_ui/base/http/https_client.dart';
 import 'package:flutter_ui/base/http/page_entity.dart';
 import 'package:flutter_ui/base/route/app_route_delegate.dart';
@@ -11,9 +10,9 @@ import 'package:flutter_ui/entities/hotkey_entity.dart';
 import 'package:flutter_ui/entities/navi_entity.dart';
 import 'package:flutter_ui/entities/tree_entity.dart';
 import 'package:flutter_ui/entities/website_entity.dart';
-import 'package:flutter_ui/http/api_services.dart';
 import 'package:flutter_ui/pages/routers.dart';
 
+import '../application.dart';
 import '../base/utils/sp_util.dart';
 import '../models/provider_manager.dart';
 
@@ -25,20 +24,18 @@ class HttpManager {
 
   HttpManager._internal() {
     _httpClient = HttpsClient.instance;
-    _apiServices = apiServices;
   }
 
   static final HttpManager instance = HttpManager._internal();
 
   late HttpsClient _httpClient;
-  late ApiServices _apiServices;
 
   /// 获取Banner，并保存banner数据
   Future<void> banner({
     void Function(List<BannerEntity> list)? success,
     bool isShowDialog = true,
   }) async {
-    await _httpClient.request(_apiServices.banner(), isShowDialog: isShowDialog, success: (data) async {
+    await _httpClient.request(apiServices.banner(), isShowDialog: isShowDialog, success: (data) async {
       List<dynamic> datas = ((data ?? []) as List<dynamic>);
       List<BannerEntity> list = datas.map((e) => BannerEntity.fromJson(e)).toList();
       if (success != null) success(list);
@@ -53,7 +50,7 @@ class HttpManager {
     bool isShowDialog = true,
     bool isShowToast = true,
   }) async {
-    await HttpsClient.instance.request(apiServices.articleList(page), isShowDialog: isShowDialog, isShowToast: isShowToast, success: (data) async {
+    await _httpClient.request(apiServices.articleList(page), isShowDialog: isShowDialog, isShowToast: isShowToast, success: (data) async {
       PageEntity page = PageEntity.fromJson(data);
 
       List<dynamic> datas = page.datas ?? [];
@@ -67,12 +64,12 @@ class HttpManager {
   }
 
   /// 获取置顶article，并保存article数据
-  Future<void> getLopArticleList({
+  Future<void> getTopArticleList({
     void Function(List<ArticleEntity> list)? success,
     Failed? failed,
     bool isShowDialog = true,
   }) async {
-    await HttpsClient.instance.request(apiServices.topArticleList(), isShowDialog: isShowDialog, success: (data) async {
+    await _httpClient.request(apiServices.topArticleList(), isShowDialog: isShowDialog, success: (data) async {
       List<dynamic> datas = ((data ?? []) as List<dynamic>);
       List<ArticleEntity> list = datas.map((e) => ArticleEntity.fromJson(e)).toList();
       if (success != null) success(list);
@@ -89,7 +86,7 @@ class HttpManager {
     Failed? failed,
     bool isShowDialog = true,
   }) async {
-    await HttpsClient.instance.request(apiServices.friend(), isShowDialog: isShowDialog, success: (data) async {
+    await _httpClient.request(apiServices.friend(), isShowDialog: isShowDialog, success: (data) async {
       List<dynamic> datas = ((data ?? []) as List<dynamic>);
       List<WebsiteEntity> list = datas.map((e) => WebsiteEntity.fromJson(e)).toList();
       if (success != null) success(list);
@@ -106,7 +103,7 @@ class HttpManager {
     Failed? failed,
     bool isShowDialog = true,
   }) async {
-    await HttpsClient.instance.request(apiServices.hotkey(), isShowDialog: isShowDialog, success: (data) async {
+    await _httpClient.request(apiServices.hotkey(), isShowDialog: isShowDialog, success: (data) async {
       List<dynamic> datas = ((data ?? []) as List<dynamic>);
       List<HotkeyEntity> list = datas.map((e) => HotkeyEntity.fromJson(e)).toList();
       if (success != null) success(list);
@@ -123,7 +120,7 @@ class HttpManager {
     Failed? failed,
     bool isShowDialog = true,
   }) async {
-    await HttpsClient.instance.request(apiServices.tree(), isShowDialog: isShowDialog, success: (data) async {
+    await _httpClient.request(apiServices.tree(), isShowDialog: isShowDialog, success: (data) async {
       List<dynamic> datas = ((data ?? []) as List<dynamic>);
       List<TreeEntity> list = datas.map((e) => TreeEntity.fromJson(e)).toList();
       if (success != null) success(list);
@@ -142,7 +139,7 @@ class HttpManager {
     Failed? failed,
     bool isShowDialog = true,
   }) async {
-    await HttpsClient.instance.request(
+    await _httpClient.request(
       apiServices.treeArticleListByCid(page, cid),
       isShowDialog: isShowDialog,
       success: (data) async {
@@ -164,7 +161,7 @@ class HttpManager {
     Failed? failed,
     bool isShowDialog = true,
   }) async {
-    await HttpsClient.instance.request(apiServices.navi(), isShowDialog: isShowDialog, success: (data) async {
+    await _httpClient.request(apiServices.navi(), isShowDialog: isShowDialog, success: (data) async {
       List<dynamic> datas = ((data ?? []) as List<dynamic>);
       List<NaviEntity> list = datas.map((e) => NaviEntity.fromJson(e)).toList();
       if (success != null) success(list);
@@ -181,7 +178,7 @@ class HttpManager {
     Failed? failed,
     bool isShowDialog = true,
   }) async {
-    await HttpsClient.instance.request(apiServices.project(), isShowDialog: isShowDialog, success: (data) async {
+    await _httpClient.request(apiServices.project(), isShowDialog: isShowDialog, success: (data) async {
       List<dynamic> datas = ((data ?? []) as List<dynamic>);
       List<TreeEntity> list = datas.map((e) => TreeEntity.fromJson(e)).toList();
       if (success != null) success(list);
@@ -199,7 +196,7 @@ class HttpManager {
     Failed? failed,
     bool isShowDialog = true,
   }) async {
-    await HttpsClient.instance.request(apiServices.collect(page), isShowDialog: isShowDialog, success: (data) async {
+    await _httpClient.request(apiServices.collect(page), isShowDialog: isShowDialog, success: (data) async {
       PageEntity page = PageEntity.fromJson(data);
 
       List<dynamic> datas = page.datas ?? [];
@@ -220,7 +217,7 @@ class HttpManager {
     void Function()? success,
   }) async {
     var future = collect ? apiServices.collectArticle(id) : apiServices.uncollectArticle(id);
-    await HttpsClient.instance.request(future, isShowDialog: isShowDialog, success: (data) async {
+    await _httpClient.request(future, isShowDialog: isShowDialog, success: (data) async {
       if (success != null) success();
     });
   }
@@ -232,7 +229,7 @@ class HttpManager {
     Failed? failed,
     bool isShowDialog = true,
   }) async {
-    await HttpsClient.instance.request(apiServices.rankCoin(page), isShowDialog: isShowDialog, success: (data) async {
+    await _httpClient.request(apiServices.rankCoin(page), isShowDialog: isShowDialog, success: (data) async {
       PageEntity page = PageEntity.fromJson(data);
 
       List<dynamic> datas = page.datas ?? [];
@@ -252,12 +249,32 @@ class HttpManager {
     Failed? failed,
     bool isShowDialog = true,
   }) async {
-    await HttpsClient.instance.request(apiServices.coins(page), isShowDialog: isShowDialog, success: (data) async {
+    await _httpClient.request(apiServices.coins(page), isShowDialog: isShowDialog, success: (data) async {
       PageEntity page = PageEntity.fromJson(data);
 
       List<dynamic> datas = page.datas ?? [];
       List<CoinRecordEntity> list = datas.map((e) => CoinRecordEntity.fromJson(e)).toList();
       if (success != null) success(list, page.pageCount);
+    }, failed: (error) {
+      if (failed != null) {
+        failed(error);
+      }
+    });
+  }
+
+  /// 获取积分排行榜
+  Future<void> getQuestions({
+    int pageId = 1,
+    void Function(dynamic data)? success,
+    Failed? failed,
+    bool isShowDialog = true,
+  }) async {
+    await _httpClient.request(apiServices.questions(pageId), isShowDialog: isShowDialog, success: (data) async {
+      // PageEntity page = PageEntity.fromJson(data);
+      //
+      // List<dynamic> datas = page.datas ?? [];
+      // List<CoinRecordEntity> list = datas.map((e) => CoinRecordEntity.fromJson(e)).toList();
+      // if (success != null) success(list, page.pageCount);
     }, failed: (error) {
       if (failed != null) {
         failed(error);
@@ -272,7 +289,7 @@ class HttpManager {
     Failed? failed,
     bool isShowDialog = true,
   }) async {
-    await HttpsClient.instance.request(apiServices.privateArticles(page), isShowDialog: isShowDialog, success: (data) async {
+    await _httpClient.request(apiServices.privateArticles(page), isShowDialog: isShowDialog, success: (data) async {
       if (success != null) success(data);
     }, failed: (error) {
       if (failed != null) {
@@ -286,7 +303,7 @@ class HttpManager {
     void Function(dynamic data)? success,
     Failed? failed,
   }) async {
-    await HttpsClient.instance.request(apiServices.userinfo(), isShowDialog: false, success: (data) async {
+    await _httpClient.request(apiServices.userinfo(), isShowDialog: false, success: (data) async {
       if (success != null) success(data);
     }, failed: (error) {
       if (failed != null) {
@@ -295,8 +312,9 @@ class HttpManager {
     });
   }
 
+  /// 退出登录的账号
   Future<void> logout() async {
-    await HttpsClient.instance.request(apiServices.logout(), success: (data) {
+    await _httpClient.request(apiServices.logout(), success: (data) {
       SpUtil.clearUser();
       ProviderManager.clear(Application().context);
       AppRouteDelegate.of(Application().context).push(Routers.login, clearStack: true);
