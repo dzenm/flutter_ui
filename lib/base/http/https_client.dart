@@ -18,7 +18,7 @@ typedef Failed = void Function(HttpError error);
 ApiServices apiServices = api();
 
 /// 根据[baseUrl]下标对应的[ApiServices]，用于获取请求
-ApiServices api({int index = 0}) => HttpsClient.instance._api[HttpsClient.instance._baseUrls[index]]!;
+ApiServices api({int index = 0}) => HttpsClient.instance.apiServices(index);
 
 /// HTTP请求错误信息的处理
 class HttpError {
@@ -59,10 +59,16 @@ class HttpsClient {
 
   factory HttpsClient() => _instance;
 
-  final Map<String, ApiServices> _api = {};
+  final Map<String, ApiServices> _apiServices = {};
+
+  ApiServices apiServices(int index) => _apiServices[baseUrls[index]]!;
 
   /// 如果存在多个url的情况，在这里添加，默认使用 [apiServices] ，其他使用 [api] 请求接口
-  final List<String> _baseUrls = [];
+  final List<String> baseUrls = [
+    'https://www.wanandroid.com/',
+    'http://api.tianapi.com/',
+    'http://192.168.2.30:8080/api/v1/',
+  ];
 
   /// 日志打印，如果不设置，将不打印日志，如果要设置在使用数据库之前调用 [init]
   Function? _logPrint;
@@ -86,7 +92,6 @@ class HttpsClient {
     void Function()? loading,
     Function? toast,
     List<Interceptor>? interceptors,
-    List<String>? baseUrls,
   }) {
     _logPrint = logPrint;
     _toast = toast;
@@ -102,11 +107,8 @@ class HttpsClient {
     // cookie持久化
     // _interceptors.add(CookieInterceptor.instance);
 
-    if (baseUrls != null) {
-      _baseUrls.addAll(baseUrls);
-    }
-    for (var url in _baseUrls) {
-      _api[url] ??= ApiServices(_createDio(baseUrl: url), baseUrl: url);
+    for (var url in baseUrls) {
+      _apiServices[url] ??= ApiServices(_createDio(baseUrl: url), baseUrl: url);
     }
   }
 

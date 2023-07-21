@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/base/http/https_client.dart';
 import 'package:flutter_ui/pages/routers.dart';
 import 'package:provider/provider.dart';
 
@@ -299,7 +300,7 @@ class ArticleItemView extends StatelessWidget {
                           /// 处理url
                           String path = val.url ?? '';
                           int start = path.indexOf('/');
-                          String url = HttpManager.baseUrls[0] + path.substring(start);
+                          String url = HttpsClient().baseUrls[0] + path.substring(start);
                           String params = '?title=${val.name}&url=$url';
                           AppRouteDelegate.of(context).push(Routers.webView + params);
                         },
