@@ -12,7 +12,7 @@ class ColumnEntity {
   String? name;
   String? type;
   int? notnull;
-  String? dflt_value;
+  String? dFltValue;
   int? pk;
 
   ColumnEntity.fromJson(Map<String, dynamic> json) {
@@ -20,7 +20,7 @@ class ColumnEntity {
     name = json['name'];
     type = json['type'];
     notnull = json['notnull'];
-    dflt_value = json['dflt_value'];
+    dFltValue = json['dflt_value'];
     pk = json['pk'];
   }
 
@@ -29,7 +29,7 @@ class ColumnEntity {
         'name': name,
         'type': type,
         'notnull': notnull,
-        'dflt_value': dflt_value,
+        'dflt_value': dFltValue,
         'pk': pk,
       };
 }

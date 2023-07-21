@@ -12,7 +12,7 @@ class CheckBox extends StatefulWidget {
   final Color? unselectColor;
   final ValueChanged<bool>? onChanged;
 
-  const CheckBox({
+  const CheckBox({super.key,
     required this.text,
     this.color,
     this.selectColor,
@@ -43,7 +43,7 @@ class _CheckBoxState extends State<CheckBox> {
           size: 16,
           color: _isSelected ? widget.selectColor ?? Colors.blue : widget.unselectColor ?? Colors.grey,
         ),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         Text(widget.text, style: TextStyle(fontSize: 14, color: widget.color ?? Colors.grey))
       ]),
     );
@@ -78,7 +78,7 @@ class CheckGroup extends StatefulWidget {
   final EdgeInsetsGeometry? padding;
   final ValueChanged<int>? onChanged;
 
-  CheckGroup({
+  const CheckGroup({super.key,
     required this.list,
     this.initialValue = 0,
     this.color,
@@ -126,21 +126,19 @@ class _CheckGroupState extends State<CheckGroup> {
     for (int index = 0; index < list.length; index++) {
       widgets.add(
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Container(
-            child: CheckItem(
-              text: list[index],
-              index: index,
-              selectedIndex: _selectedIndex,
-              color: widget.color,
-              selectColor: widget.selectColor,
-              unselectColor: widget.unselectColor,
-              padding: widget.padding,
-              onChanged: (value) {
-                _selectedIndex = value;
-                if (widget.onChanged != null) widget.onChanged!(value);
-                setState(() {});
-              },
-            ),
+          CheckItem(
+            text: list[index],
+            index: index,
+            selectedIndex: _selectedIndex,
+            color: widget.color,
+            selectColor: widget.selectColor,
+            unselectColor: widget.unselectColor,
+            padding: widget.padding,
+            onChanged: (value) {
+              _selectedIndex = value;
+              if (widget.onChanged != null) widget.onChanged!(value);
+              setState(() {});
+            },
           ),
         ]),
       );
@@ -160,7 +158,7 @@ class CheckItem extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final ValueChanged<int>? onChanged;
 
-  CheckItem({
+  const CheckItem({super.key,
     required this.index,
     required this.selectedIndex,
     required this.text,
@@ -186,7 +184,7 @@ class CheckItem extends StatelessWidget {
           size: 16,
           color: isSelected ? selectColor ?? Colors.blue : unselectColor ?? Colors.grey,
         ),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         Text(text, style: TextStyle(fontSize: 14, color: color ?? Colors.grey))
       ]),
     );

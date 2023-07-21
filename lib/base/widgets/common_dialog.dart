@@ -326,7 +326,7 @@ class CupertinoDialogButton extends StatelessWidget {
 
   final bool singleButton;
 
-  CupertinoDialogButton({
+  const CupertinoDialogButton({
     super.key,
     this.onPositiveTap,
     this.onNegativeTap,
@@ -353,7 +353,7 @@ class CupertinoDialogButton extends StatelessWidget {
               child: Text(negativeText ?? '取消', style: negativeStyle),
             ),
           ),
-          if (singleButton) Container(height: 45.0, width: 0.5, color: Color(0xffbababa)),
+          if (singleButton) Container(height: 45.0, width: 0.5, color: const Color(0xffbababa)),
           if (singleButton)
             Expanded(
               child: TapLayout(

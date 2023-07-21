@@ -58,7 +58,7 @@ class _DBColumnPageState extends State<DBColumnPage> {
               ),
             )
           : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Column(mainAxisAlignment: MainAxisAlignment.center, children: const [
                 SizedBox(width: 56, height: 56, child: CircularProgressIndicator()),
               ]),
             ]),

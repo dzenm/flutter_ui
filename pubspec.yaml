@@ -2,7 +2,7 @@ name: flutter_ui
 description: A new Flutter application.
 
 # The following line prevents the package from being accidentally published to
-# pub.dev using `pub publish`. This is preferred for private packages.
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
@@ -12,15 +12,22 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # build by specifying --build-name and --build-number, respectively.
 # In Android, build-name is used as versionName while build-number used as versionCode.
 # Read more about Android versioning at https://developer.android.com/studio/publish/versioning
-# In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
+# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+# In Windows, build-name is used as the major, minor, and patch parts
+# of the product and file versions while build-number is used as the build suffix.
 version: 1.0.0+1
 
 environment:
   sdk: '>=2.18.6 <3.0.0'
 
-
+# Dependencies specify other packages that your package needs in order to work.
+# To automatically upgrade your package dependencies to the latest versions
+# consider running `flutter pub upgrade --major-versions`. Alternatively,
+# dependencies can be manually updated by changing the version numbers below to
+# the latest version available on pub.dev. To see which dependencies have newer
+# versions available, run `flutter pub outdated`.
 dependencies:
   flutter:
     sdk: flutter
@@ -35,13 +42,13 @@ dependencies:
   # 图片 https://pub.flutter-io.cn/packages/cupertino_icons
   cupertino_icons: 1.0.5
   # sql https://pub.dev/packages/sqflite
-  sqflite: 2.2.7
+  sqflite: 2.2.8+4
   # 路径选择 https://pub.dev/packages/path_provider
-  path_provider: 2.0.14
+  path_provider: 2.0.15
   # 本地化存储 https://pub.dev/packages/shared_preferences
-  shared_preferences: 2.1.0
+  shared_preferences: 2.2.0
   # Toast https://pub.flutter-io.cn/packages/bot_toast
-  bot_toast: 4.0.3
+  bot_toast: 4.0.4
   # HTTP请求 https://pub.flutter-io.cn/packages/retrofit
   retrofit: 4.0.1
   # cookie管理
@@ -49,11 +56,11 @@ dependencies:
   # cookie持久化
   #  cookie_jar: 3.0.1
   # 获取版本信息 https://pub.dev/packages/package_info_plus
-  package_info_plus: 3.0.3
+  package_info_plus: 4.0.2
   # 获取安卓iOS设备信息 https://pub.flutter-io.cn/packages/device_info_plus
-  device_info_plus: 8.1.0
+  device_info_plus: 9.0.2
   # 通知栏通知提醒 https://pub.flutter-io.cn/packages/flutter_local_notifications
-  flutter_local_notifications: 14.0.0
+  flutter_local_notifications: 14.1.1
   # 图片缓存 [最新版3.2.0 https://pub.flutter-io.cn/packages/cached_network_image ]
   cached_network_image: 3.2.3
   # 输入框扩展 https://pub.flutter-io.cn/packages/extended_text_field
@@ -63,11 +70,11 @@ dependencies:
   # 状态管理 https://pub.dev/packages/provider
   provider: 6.0.5
   # Json序列化 https://pub.dev/packages/json_annotation
-  json_annotation: ^4.8.0
+  json_annotation: 4.8.0
 
   ########################################## UI ##########################################
   # WebView https://pub.dev/packages/webview_flutter
-  webview_flutter: 4.2.0
+  webview_flutter: 4.2.2
   # 城市选择列表 https://pub.flutter-io.cn/packages/azlistview
   azlistview: 2.0.0
   #  # 下拉刷新 https://pub.flutter-io.cn/packages/pull_to_refresh
@@ -96,10 +103,10 @@ dependencies:
   #  multi_image_picker: ^4.6.1
 
   ########################################## 音视频 ######################################
-  # 图片选择器 [最新版0.8.4+10 https://pub.flutter-io.cn/packages/image_picker ]
+  # 图片选择器 [最新版0.8.4+10 https://pub.flutter-io.cn/packages/transparent_image ]
   transparent_image: 2.0.1
   # 图片选择器 [最新版0.8.4+10 https://pub.flutter-io.cn/packages/image_picker ]
-  image_picker: 0.8.7+4
+  image_picker: 0.8.7+5
   # 图片预览控件 [最新版0.13.0 https://pub.flutter-io.cn/packages/photo_view ]
   photo_view: 0.14.0
   #  # 视频播放 [最新版2.3.0 https://pub.flutter-io.cn/packages/video_player ]
@@ -122,13 +129,13 @@ dependencies:
 
   ########################################## 网络 ########################################
   # 监测网络状态 https://pub.dev/packages/connectivity
-  connectivity: ^3.0.6
+  connectivity: 3.0.6
 
   ########################################## 工具 ########################################
   # 扫描二维码 https://pub.flutter-io.cn/packages/scan
   scan: 1.6.0
   # 汉字转拼音 https://pub.flutter-io.cn/packages/lpinyin
-  lpinyin: ^2.0.1
+  lpinyin: 2.0.3
   #  # 屏幕参数适配 https://pub.dev/packages/flutter_screenutil
   #  flutter_screenutil: ^4.0.4+1
 
@@ -137,7 +144,7 @@ dependencies:
   #  # 网页打开工具 https://pub.dev/packages/url_launcher#-readme-tab-
   #  url_launcher: ^6.0.3
   #  # Flutter 常用工具类库（本地化 屏幕适配） https://pub.flutter-io.cn/packages/flustars
-  #  flustars: ^2.0.1
+  #  flustars: ^2.0.1 https://pub.flutter-io.cn/packages/flutter_html
   flutter_html: 3.0.0-alpha.6
 
 dev_dependencies:
@@ -148,6 +155,13 @@ dev_dependencies:
   # flutter pub run build_runner build --delete-conflicting-outputs
   # json序列化 https://pub-web.flutter-io.cn/packages/json_serializable
   json_serializable: 6.6.1
+
+  # The "flutter_lints" package below contains a set of recommended lints to
+  # encourage good coding practices. The lint set provided by the package is
+  # activated in the `analysis_options.yaml` file located at the root of your
+  # package. See that file for information about deactivating specific lint
+  # rules and activating additional ones.
+  flutter_lints: ^2.0.0
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

@@ -5,7 +5,7 @@ import 'package:flutter_ui/entities/article_entity.dart';
 /// Created by a0010 on 2022/7/28 10:56
 /// Provider中共享的文章数据
 class ArticleModel with ChangeNotifier {
-  ArticleEntity _entity = ArticleEntity();
+  final ArticleEntity _entity = ArticleEntity();
 
   /// 数据库对应的所有数据
   List<ArticleEntity> _allArticle = [];
@@ -25,9 +25,7 @@ class ArticleModel with ChangeNotifier {
   List<ArticleEntity> get articles => _allArticle.where((article) => article.type == 0).toList();
 
   /// 所有的文章数据，置顶的排在前面，普通的排在后面
-  List<ArticleEntity> get allArticles => []
-    ..addAll(topArticles)
-    ..addAll(articles);
+  List<ArticleEntity> get allArticles => [...topArticles, ...articles];
 
   /// 根据索引获取文章
   ArticleEntity? getArticle(int index) => allArticles.isEmpty ? null : allArticles[index];

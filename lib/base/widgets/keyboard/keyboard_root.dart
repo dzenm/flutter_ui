@@ -51,14 +51,14 @@ class KeyboardRootState extends State<KeyboardRootWidget> {
     }));
   }
 
-  setKeyboard(WidgetBuilder keyboardbuilder) {
-    this._keyboardbuilder = keyboardbuilder;
+  setKeyboard(WidgetBuilder keyboardBuilder) {
+    _keyboardbuilder = keyboardBuilder;
     setState(() {});
   }
 
   clearKeyboard() {
-    if (this._keyboardbuilder != null) {
-      this._keyboardbuilder = null;
+    if (_keyboardbuilder != null) {
+      _keyboardbuilder = null;
       setState(() {});
     }
   }

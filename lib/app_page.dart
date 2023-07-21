@@ -37,7 +37,7 @@ class AppPage extends StatelessWidget {
 
   /// 获取第一个页面
   void _initApp() {
-    final route;
+    final String route;
     if (SpUtil.getUserLoginState()) {
       route = Routers.main;
     } else {
@@ -87,7 +87,7 @@ class AppPage extends StatelessWidget {
 
   /// Provider 共享状态管理
   Widget _buildProviderApp({Widget? child}) {
-    return MultiProvider(child: child, providers: [
+    return MultiProvider(providers: [
       ChangeNotifierProvider(create: (context) => LocalModel()),
       ChangeNotifierProvider(create: (context) => MainModel()),
       ChangeNotifierProvider(create: (context) => HomeModel()),
@@ -98,7 +98,7 @@ class AppPage extends StatelessWidget {
       ChangeNotifierProvider(create: (context) => ArticleModel()),
       ChangeNotifierProvider(create: (context) => WebsiteModel()),
       ChangeNotifierProvider(create: (context) => StudyModel()),
-    ]);
+    ], child: child);
   }
 
   /// 全局适配屏幕
@@ -136,7 +136,7 @@ class AppPage extends StatelessWidget {
           floatingActionButtonTheme: FloatingActionButtonThemeData(
             backgroundColor: theme.appbar,
           ),
-          pageTransitionsTheme: PageTransitionsTheme(builders: {
+          pageTransitionsTheme: const PageTransitionsTheme(builders: {
             TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
             TargetPlatform.android: CupertinoPageTransitionsBuilder(),
           }),
@@ -144,20 +144,20 @@ class AppPage extends StatelessWidget {
         // 设置语言，读取LocalModel的值，改变LocalModel的locale值会通过provider刷新页面
         locale: local.locale,
         // 国际化
-        localizationsDelegates: [
+        localizationsDelegates: const [
           S.delegate,
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
         // 国际化语言包
-        supportedLocales: [
+        supportedLocales: const [
           Locale("en"),
           Locale("zh"),
         ],
         // 初始路由
         routerDelegate: _delegate,
-        routeInformationParser: AppRouteInfoParser(),
+        routeInformationParser: const AppRouteInfoParser(),
         builder: (context, child) {
           final botToastBuilder = BotToastInit();
           Widget widget = botToastBuilder(context, child);

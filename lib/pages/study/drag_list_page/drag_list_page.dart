@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 
 /// 可拖动ListView
 class DragListPage extends StatefulWidget {
+  const DragListPage({super.key});
+
   @override
   State<StatefulWidget> createState() => _DragListPageState();
 }
 
 class _DragListPageState extends State<DragListPage> {
-  List<Color> _list = [
+  final List<Color> _list = [
     Colors.blue,
     Colors.pink,
     Colors.amber,
@@ -21,10 +23,10 @@ class _DragListPageState extends State<DragListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('拖拽列表ø', style: TextStyle(color: Colors.white)),
+        title: const Text('拖拽列表ø', style: TextStyle(color: Colors.white)),
       ),
       body: Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Column(

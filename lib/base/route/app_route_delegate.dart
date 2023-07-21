@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +27,7 @@ class AppRoutePage {
 /// 路由管理，基于[ChangeNotifier]管理数据，页面进出栈，需要主动刷新，否则页面调整不起作用，
 /// 也可以使用已经封装好的方法 [pop]、[maybePop]、[popUntil]、[push]、[pushReplace]、[pushAndRemoveUntil]
 class AppRouteDelegate extends RouterDelegate<Page<dynamic>> with ChangeNotifier, PopNavigatorRouterDelegateMixin<Page<dynamic>> {
-  GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
   /// 页面管理栈
   final List<Page<dynamic>> _pages = [];
@@ -75,7 +77,7 @@ class AppRouteDelegate extends RouterDelegate<Page<dynamic>> with ChangeNotifier
   /// 新增路由信息：浏览器中输入url/在代码中初始化路由
   /// 配合 [AppRouteInfoParser] 使用，与自定义管理路由栈没有关系
   @override
-  Future<void> setNewRoutePath(Page<dynamic> configuration) async {
+  Future<Void> setNewRoutePath(Page<dynamic> configuration) async {
     debugPrint('setNewRoutePath：configuration=$configuration');
     // 打开一个新的页面，由于进入了一个新的页面，同时需要更新ChangeNotifier
     dynamic navigateResult = await _pushPage(configuration);

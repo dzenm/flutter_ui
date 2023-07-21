@@ -12,7 +12,6 @@ class MathStudy {
   void _mergeSortTest() {
     List<int> arr = [19, 85, 27, 68, 41, 65, 59, 82, 74, 41, 32, 70];
     List<int> temp = [];
-    arr.forEach((element) => temp.add(0));
     Study.log('归并排序前： arr=$arr');
     _mergeSort(arr, temp, 0, arr.length - 1);
     Study.log('归并排序后： arr=$arr');
@@ -30,9 +29,17 @@ class MathStudy {
   void _merge(List<int> arr, List<int> temp, int lo, int hi, int mid) {
     int len = hi - lo + 1;
     int p = lo, i = lo, j = mid;
-    while (i <= mid - 1 && j <= hi) temp[p++] = arr[i] < arr[j] ? arr[i++] : arr[j++];
-    while (i <= mid - 1) temp[p++] = arr[i++];
-    while (j <= hi) temp[p++] = arr[j++];
-    for (int k = 0; k < len; k++, hi--) arr[hi] = temp[hi];
+    while (i <= mid - 1 && j <= hi) {
+      temp[p++] = arr[i] < arr[j] ? arr[i++] : arr[j++];
+    }
+    while (i <= mid - 1) {
+      temp[p++] = arr[i++];
+    }
+    while (j <= hi) {
+      temp[p++] = arr[j++];
+    }
+    for (int k = 0; k < len; k++, hi--) {
+      arr[hi] = temp[hi];
+    }
   }
 }

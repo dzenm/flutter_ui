@@ -9,19 +9,19 @@ import 'package:flutter/material.dart';
 ///
 /// Created by a0010 on 2023/7/5 16:22
 ///
-typedef Route<T> BuildCustomRoute<T extends Object?>(BuildContext context, CustomPage page);
+typedef BuildCustomRoute<T extends Object?> = Route<T> Function(BuildContext context, CustomPage page);
 
 PageTransitionsBuilder defaultTransitionsBuilder() {
-  if (kIsWeb) return NoTransitionBuilder();
+  if (kIsWeb) return const NoTransitionBuilder();
   switch (Platform.operatingSystem) {
     case 'android':
     case 'fuchsia':
     case 'windows':
-      return OpenUpwardsPageTransitionsBuilder();
+      return const OpenUpwardsPageTransitionsBuilder();
     case 'ios':
     case 'macos':
     case 'linux':
-      return CupertinoPageTransitionsBuilder();
+      return const CupertinoPageTransitionsBuilder();
   }
   return const OpenUpwardsPageTransitionsBuilder();
 }
@@ -93,6 +93,7 @@ class CustomPageRoute2<T> extends PageRoute<T> {
     return _page.child;
   }
 
+  @override
   ui.ImageFilter? get filter => _page.filter;
 
   @override

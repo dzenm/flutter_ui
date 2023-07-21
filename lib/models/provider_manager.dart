@@ -25,17 +25,17 @@ class ProviderManager {
     _init = true;
 
     // 表相关的Model
-    await context.read<ArticleModel>().init();
-    await context.read<BannerModel>().init();
-    await context.read<UserModel>().init();
-    await context.read<WebsiteModel>().init();
+    context.read<ArticleModel>().init();
+    context.read<BannerModel>().init();
+    context.read<UserModel>().init();
+    context.read<WebsiteModel>().init();
 
     // 页面相关的Model
-    await context.read<MainModel>().init();
-    await context.read<HomeModel>().init();
-    await context.read<MeModel>().init();
-    await context.read<NavModel>().init();
-    await context.read<StudyModel>().init();
+    context.read<MainModel>().init();
+    context.read<HomeModel>().init();
+    context.read<MeModel>().init();
+    context.read<NavModel>().init();
+    context.read<StudyModel>().init();
   }
 
   /// 清空所有数据

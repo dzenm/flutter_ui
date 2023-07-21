@@ -63,12 +63,10 @@ class _NaughtPageState extends State<NaughtPage> {
           )
         ],
       ),
-      body: Container(
-        child: Column(
-          children: [
-            Expanded(child: HTTPListWidget()),
-          ],
-        ),
+      body: Column(
+        children: const [
+          Expanded(child: HTTPListWidget()),
+        ],
       ),
     );
   }

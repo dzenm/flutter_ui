@@ -53,7 +53,7 @@ class _EditInfoPageState extends State<EditInfoPage> {
             child: Column(children: [
               CommonBar(title: S.of(context).editProfile, centerTitle: true, actions: [
                 if (!_disableButton) IconButton(
-                  icon: Icon(Icons.check),
+                  icon: const Icon(Icons.check),
                   onPressed: () => _disableButton ? null : _submit(),
                 ),
               ]),

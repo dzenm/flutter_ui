@@ -25,9 +25,9 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   static const String _tag = 'RegisterPage';
 
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  TextEditingController _rPasswordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _rPasswordController = TextEditingController();
 
   String _username = '';
   String _password = '';
@@ -108,18 +108,18 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget _buildBody() {
     AppTheme theme = context.watch<LocalModel>().theme;
     return Container(
-      padding: EdgeInsets.all(24),
+      padding: const EdgeInsets.all(24),
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        SizedBox(height: 80),
+        const SizedBox(height: 80),
         // 用户名输入框
         TextField(
           controller: _usernameController,
           decoration: InputDecoration(
-            icon: Icon(Icons.person),
+            icon: const Icon(Icons.person),
             labelText: S.of(context).username,
             suffixIcon: IconButton(
               splashColor: theme.transparent,
-              icon: Icon(Icons.close),
+              icon: const Icon(Icons.close),
               onPressed: () => _usernameController.clear(),
             ),
           ),
@@ -127,12 +127,12 @@ class _RegisterPageState extends State<RegisterPage> {
           maxLengthEnforcement: MaxLengthEnforcement.enforced,
           keyboardType: TextInputType.text,
         ),
-        SizedBox(height: 32),
+        const SizedBox(height: 32),
         // 密码输入框
         TextField(
           controller: _passwordController,
           decoration: InputDecoration(
-            icon: Icon(Icons.admin_panel_settings),
+            icon: const Icon(Icons.admin_panel_settings),
             labelText: S.of(context).password,
             suffixIcon: IconButton(
               splashColor: theme.transparent,
@@ -146,12 +146,12 @@ class _RegisterPageState extends State<RegisterPage> {
           keyboardType: TextInputType.text,
           obscureText: !_isShowPwd,
         ),
-        SizedBox(height: 32),
+        const SizedBox(height: 32),
         // 重复密码输入框
         TextField(
           controller: _rPasswordController,
           decoration: InputDecoration(
-            icon: Icon(Icons.admin_panel_settings),
+            icon: const Icon(Icons.admin_panel_settings),
             labelText: S.of(context).rPassword,
             suffixIcon: IconButton(
               splashColor: theme.transparent,
@@ -165,14 +165,14 @@ class _RegisterPageState extends State<RegisterPage> {
           keyboardType: TextInputType.text,
           obscureText: !_isShowRPwd,
         ),
-        SizedBox(height: 32),
+        const SizedBox(height: 32),
         Row(children: [
           // 注册按钮
           Expanded(
             flex: 1,
             child: TapLayout(
               height: 36.0,
-              borderRadius: BorderRadius.all(Radius.circular(2)),
+              borderRadius: const BorderRadius.all(Radius.circular(2)),
               background: _isDisableLoginButton ? theme.disableButton : theme.button,
               onTap: _isDisableLoginButton ? null : _register,
               child: Text(S.of(context).register, style: TextStyle(color: theme.text)),

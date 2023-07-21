@@ -8,7 +8,7 @@ class NavModel with ChangeNotifier {
   Future<void> init() async {
   }
 
-  List<String> _tabs = ['1', '2', '3'];
+  final List<String> _tabs = ['1', '2', '3'];
 
   List<String> get tabs => _tabs;
 

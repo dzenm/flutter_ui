@@ -5,7 +5,7 @@ import 'package:flutter_ui/entities/banner_entity.dart';
 /// Created by a0010 on 2022/10/25 11:25
 /// Provider中共享的Banner数据
 class BannerModel with ChangeNotifier {
-  BannerEntity _entity = BannerEntity();
+  final BannerEntity _entity = BannerEntity();
 
   /// 初始化Banner数据，从数据库获取所有的Banner数据
   Future<void> init() async {

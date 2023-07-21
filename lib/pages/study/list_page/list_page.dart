@@ -12,12 +12,14 @@ import '../../routers.dart';
 
 /// 刷新和底部加载的列表
 class ListPage extends StatefulWidget {
+  const ListPage({super.key});
+
   @override
   State<StatefulWidget> createState() => _ListPageState();
 }
 
 class _ListPageState extends State<ListPage> {
-  StateController _controller = StateController();
+  final StateController _controller = StateController();
   int _page = 0; // 加载的页数
 
   @override
@@ -31,23 +33,21 @@ class _ListPageState extends State<ListPage> {
     List<ArticleEntity> articleList = context.watch<ArticleModel>().allArticles;
     return Scaffold(
       appBar: AppBar(
-        title: Text('列表和刷新', style: TextStyle(color: Colors.white)),
+        title: const Text('列表和刷新', style: TextStyle(color: Colors.white)),
       ),
-      body: Container(
-        child: Column(children: [
-          Expanded(
-            child: RefreshListView(
-              controller: _controller,
-              itemCount: articleList.length,
-              builder: (BuildContext context, int index) {
-                return _buildArticleItem(articleList[index], index);
-              },
-              refresh: _onRefresh,
-              showFooter: true,
-            ),
-          )
-        ]),
-      ),
+      body: Column(children: [
+        Expanded(
+          child: RefreshListView(
+            controller: _controller,
+            itemCount: articleList.length,
+            builder: (BuildContext context, int index) {
+              return _buildArticleItem(articleList[index], index);
+            },
+            refresh: _onRefresh,
+            showFooter: true,
+          ),
+        )
+      ]),
     );
   }
 

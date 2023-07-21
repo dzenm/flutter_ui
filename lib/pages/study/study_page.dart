@@ -12,6 +12,8 @@ import 'study_router.dart';
 /// Created by a0010 on 2022/11/3 16:03
 ///
 class StudyPage extends StatefulWidget {
+  const StudyPage({super.key});
+
   @override
   State<StatefulWidget> createState() => _StudyPageState();
 }
@@ -49,7 +51,7 @@ class _StudyPageState extends State<StudyPage> {
           ),
         ];
       },
-      physics: AlwaysScrollableScrollPhysics(),
+      physics: const AlwaysScrollableScrollPhysics(),
       body: _buildBody(theme),
     );
   }
@@ -57,7 +59,7 @@ class _StudyPageState extends State<StudyPage> {
   Widget _buildBody(AppTheme theme) {
     return Container(
       color: theme.background,
-      padding: EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: SingleChildScrollView(
         child: Column(children: _buildChildrenButtons()),
       ),
@@ -67,140 +69,140 @@ class _StudyPageState extends State<StudyPage> {
   List<Widget> _buildChildrenButtons() {
     AppTheme theme = context.watch<LocalModel>().theme;
     return [
-      SizedBox(height: 16),
+      const SizedBox(height: 16),
       // 城市选择
       MaterialButton(
-        child: _text('城市选择'),
         textColor: Colors.white,
         color: theme.button,
         onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.city),
+        child: _text('城市选择'),
       ),
-      SizedBox(height: 8),
+      const SizedBox(height: 8),
       // 字符转化
       MaterialButton(
-        child: _text('字符转化'),
         textColor: Colors.white,
         color: theme.button,
         onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.convert),
+        child: _text('字符转化'),
       ),
-      SizedBox(height: 8),
+      const SizedBox(height: 8),
       // dialog
       MaterialButton(
-        child: _text('弹窗'),
         textColor: Colors.white,
         color: theme.button,
         onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.dialog),
+        child: _text('弹窗'),
       ),
-      SizedBox(height: 8),
+      const SizedBox(height: 8),
       // 可拖动ListView
       MaterialButton(
-        child: _text('可拖动ListView'),
         textColor: Colors.white,
         color: theme.button,
         onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.dragList),
+        child: _text('可拖动ListView'),
       ),
-      SizedBox(height: 8),
+      const SizedBox(height: 8),
       // 浮动的导航栏和PopupWindow
       MaterialButton(
-        child: _text('浮动的导航栏和PopupWindow'),
         textColor: Colors.white,
         color: theme.button,
         onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.floatNavigation),
+        child: _text('浮动的导航栏和PopupWindow'),
       ),
-      SizedBox(height: 8),
+      const SizedBox(height: 8),
       // HTTP请求
       MaterialButton(
-        child: _text('HTTP请求'),
         textColor: Colors.white,
         color: theme.button,
         onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.http),
+        child: _text('HTTP请求'),
       ),
-      SizedBox(height: 8),
+      const SizedBox(height: 8),
       // 自定义键盘
       MaterialButton(
-        child: _text('自定义键盘'),
         textColor: Colors.white,
         color: theme.button,
         onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.keyword),
+        child: _text('自定义键盘'),
       ),
-      SizedBox(height: 8),
+      const SizedBox(height: 8),
       // 刷新和底部加载的列表
       MaterialButton(
-        child: _text('刷新和底部加载的列表'),
         textColor: Colors.white,
         color: theme.button,
         onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.list),
+        child: _text('刷新和底部加载的列表'),
       ),
-      SizedBox(height: 8),
+      const SizedBox(height: 8),
       // 加载图片
       MaterialButton(
-        child: _text('加载图片'),
         textColor: Colors.white,
         color: theme.button,
         onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.loadImage),
+        child: _text('加载图片'),
       ),
-      SizedBox(height: 8),
+      const SizedBox(height: 8),
       // 加载图片
       MaterialButton(
-        child: _text('PopupWindow测试'),
         textColor: Colors.white,
         color: theme.button,
         onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.popup),
+        child: _text('PopupWindow测试'),
       ),
-      SizedBox(height: 8),
+      const SizedBox(height: 8),
       // Provider
       MaterialButton(
-        child: _text('Provider'),
         textColor: Colors.white,
         color: theme.button,
         onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.provider),
+        child: _text('Provider'),
       ),
-      SizedBox(height: 8),
+      const SizedBox(height: 8),
       // 二维码扫描
       MaterialButton(
-        child: _text('二维码扫描'),
         textColor: Colors.white,
         color: theme.button,
         onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.qr),
+        child: _text('二维码扫描'),
       ),
-      SizedBox(height: 8),
+      const SizedBox(height: 8),
       // 路由测试
       MaterialButton(
-        child: _text('路由测试'),
         textColor: Colors.white,
         color: theme.button,
         onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.router),
+        child: _text('路由测试'),
       ),
-      SizedBox(height: 8),
+      const SizedBox(height: 8),
       // 加载状态
       MaterialButton(
-        child: _text(S.of(context).state),
         textColor: Colors.white,
         color: theme.button,
         onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.state),
+        child: _text(S.of(context).state),
       ),
-      SizedBox(height: 8),
+      const SizedBox(height: 8),
       // 文本展示
       MaterialButton(
-        child: _text('文本展示'),
         textColor: Colors.white,
         color: theme.button,
         onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.text),
+        child: _text('文本展示'),
       ),
-      SizedBox(height: 8),
+      const SizedBox(height: 8),
       // 视频播放
       MaterialButton(
-        child: _text('视频播放'),
         textColor: Colors.white,
         color: theme.button,
         onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.video),
+        child: _text('视频播放'),
       ),
-      SizedBox(height: 16),
+      const SizedBox(height: 16),
       MaterialButton(
-        child: _text('返回并传递数据'),
         textColor: Colors.white,
         color: theme.button,
         onPressed: () => AppRouteDelegate.of(context).pop('这是回调的数据'),
+        child: _text('返回并传递数据'),
       ),
     ];
   }

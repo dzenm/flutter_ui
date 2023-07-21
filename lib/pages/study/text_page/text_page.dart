@@ -23,13 +23,15 @@ import '../../../generated/l10n.dart';
 
 /// 文本展示测试页面
 class TextPage extends StatefulWidget {
+  const TextPage({super.key});
+
   @override
   State<StatefulWidget> createState() => _TextPageState();
 }
 
 class _TextPageState extends State<TextPage> {
   static const String _tag = 'TextPage';
-  TextEditingController _controller = new TextEditingController(text: "初始化");
+  final TextEditingController _controller = TextEditingController(text: "初始化");
   String text = '';
   String newText = '';
   bool switchState = true;
@@ -76,12 +78,12 @@ class _TextPageState extends State<TextPage> {
         onWillPop: () => WillPopView.promptBack(context, isChanged: text != newText),
         child: Scaffold(
           appBar: AppBar(
-            title: Text('文本和输入框', style: TextStyle(color: Colors.white)),
+            title: const Text('文本和输入框', style: TextStyle(color: Colors.white)),
           ),
           body: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             child: Padding(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 CommonWidget.titleView('无边框带字数控制的输入框: '),
                 SingleEditLayout(
@@ -95,14 +97,14 @@ class _TextPageState extends State<TextPage> {
                 ),
                 Container(
                   color: Colors.blue,
-                  padding: EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
                   height: 80,
                   alignment: Alignment.topLeft,
-                  child: Row(children: [Text(newText, maxLines: 4, style: TextStyle(color: Colors.white))]),
+                  child: Row(children: [Text(newText, maxLines: 4, style: const TextStyle(color: Colors.white))]),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 CommonWidget.titleView('输入框的特殊表情: '),
-                Text(
+                const Text(
                   '特殊小技巧，试试输入\'[a]\', \'[b]\', \'[c]\', \'[d]\', \'[e]\'',
                   style: TextStyle(fontSize: 10),
                 ),
@@ -110,53 +112,53 @@ class _TextPageState extends State<TextPage> {
                   specialTextSpanBuilder: MySpecialTextSpanBuilder(showAtBackground: true, type: BuilderType.extendedTextField),
                 ),
                 CommonWidget.divider(),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 CommonWidget.titleView('输入框的特殊表情: '),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                   child: SlideVerifyView(
                     slideColor: Colors.green,
-                    backgroundColor: Color(0xFFE5E5E5),
-                    borderColor: Color(0xFFE5E5E5),
+                    backgroundColor: const Color(0xFFE5E5E5),
+                    borderColor: const Color(0xFFE5E5E5),
                     onChanged: () async => CommonDialog.showToast('验证成功'),
                   ),
                 ),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 CommonWidget.titleView('自适应宽度使用: '),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
+                  children: const [
                     Flexible(child: Text('Row包含一个文本，两个图标，给所有子widget设置Expand的，这是长文本的效果', maxLines: 1, overflow: TextOverflow.ellipsis)),
                     Icon(Icons.add_photo_alternate_outlined),
                     Icon(Icons.info),
                   ],
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
+                  children: const [
                     Flexible(child: Text('短文本和图标', maxLines: 1, overflow: TextOverflow.ellipsis)),
                     Icon(Icons.add_photo_alternate_outlined),
                     Icon(Icons.info),
                   ],
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 CommonWidget.divider(),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 CommonWidget.titleView('设置页面常用单行布局: '),
                 TapLayout(
                   height: 50.0,
-                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   onTap: () => AppRouteDelegate.of(context).push(MeRouter.setting),
                   child: SingleTextLayout(
                     title: S.of(context).setting,
                     isShowForward: true,
-                    prefix: BadgeTag(count: 10),
+                    prefix: const BadgeTag(count: 10),
                   ),
                 ),
                 TapLayout(
                   height: 50.0,
-                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: SingleTextLayout(
                     title: S.of(context).phone,
                     text: '17601487212',
@@ -164,7 +166,7 @@ class _TextPageState extends State<TextPage> {
                     isShowForward: true,
                   ),
                 ),
-                TapLayout(
+                const TapLayout(
                   height: 50.0,
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   child: SingleTextLayout(
@@ -175,7 +177,7 @@ class _TextPageState extends State<TextPage> {
                     isShowForward: true,
                   ),
                 ),
-                TapLayout(
+                const TapLayout(
                   height: 50.0,
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   child: SingleTextLayout(
@@ -188,7 +190,7 @@ class _TextPageState extends State<TextPage> {
                 ),
                 TapLayout(
                   height: 50.0,
-                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: SingleTextLayout(
                     icon: Icons.person,
                     title: S.of(context).avatar,
@@ -207,7 +209,7 @@ class _TextPageState extends State<TextPage> {
                 ),
                 TapLayout(
                   height: 50.0,
-                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: SingleTextLayout(
                     title: '通知切换',
                     suffix: CupertinoSwitch(
@@ -216,12 +218,12 @@ class _TextPageState extends State<TextPage> {
                     ),
                   ),
                 ),
-                TapLayout(
+                const TapLayout(
                   height: 50.0,
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   child: SingleTextLayout(title: '通知切换', text: '查看通知内容'),
                 ),
-                TapLayout(
+                const TapLayout(
                   height: 60.0,
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   child: SingleTextLayout(
@@ -231,36 +233,28 @@ class _TextPageState extends State<TextPage> {
                     isShowForward: true,
                   ),
                 ),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 CommonWidget.titleView('自适应文字大小: '),
-                Container(
-                  child: AdapterSizeText(
-                    '道可道，非常道。名可名，非常名。',
-                    style: TextStyle(color: Colors.red),
-                  ),
+                const AdapterSizeText(
+                  '道可道，非常道。名可名，非常名。',
+                  style: TextStyle(color: Colors.red),
                 ),
-                SizedBox(height: 8),
-                Container(
-                  child: AdapterSizeText(
-                    '无名，天地之始，有名，万物之母。',
-                    style: TextStyle(color: Colors.red),
-                  ),
+                const SizedBox(height: 8),
+                const AdapterSizeText(
+                  '无名，天地之始，有名，万物之母。',
+                  style: TextStyle(color: Colors.red),
                 ),
-                SizedBox(height: 8),
-                Container(
-                  child: AdapterSizeText(
-                    '故常无欲，以观其妙，常有欲，以观其徼。',
-                    style: TextStyle(color: Colors.red),
-                  ),
+                const SizedBox(height: 8),
+                const AdapterSizeText(
+                  '故常无欲，以观其妙，常有欲，以观其徼。',
+                  style: TextStyle(color: Colors.red),
                 ),
-                SizedBox(height: 8),
-                Container(
-                  child: AdapterSizeText(
-                    '此两者，同出而异名，同谓之玄，玄之又玄，众妙之门。',
-                    style: TextStyle(color: Colors.red),
-                  ),
+                const SizedBox(height: 8),
+                const AdapterSizeText(
+                  '此两者，同出而异名，同谓之玄，玄之又玄，众妙之门。',
+                  style: TextStyle(color: Colors.red),
                 ),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
               ]),
             ),
           ),

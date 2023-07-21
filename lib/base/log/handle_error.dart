@@ -148,14 +148,18 @@ class HandleError {
       log('╔═════════════════════════════════════════ Package Info ════════════════════════════════════════════');
     }
     Map<String, dynamic> packageInfo = getPackageInfo();
-    for (var key in packageInfo.keys) handleSingleMessage('$key: ${packageInfo[key]}', needLog: showPackageInfo);
+    for (var key in packageInfo.keys) {
+      handleSingleMessage('$key: ${packageInfo[key]}', needLog: showPackageInfo);
+    }
 
     // 设备信息
     if (showDeviceInfo) {
       log('║═════════════════════════════════════════ Device Info ═════════════════════════════════════════════');
     }
     Map<String, dynamic> devicesInfo = getDeviceInfo();
-    for (var key in devicesInfo.keys) handleSingleMessage('$key: ${devicesInfo[key]}', needLog: showDeviceInfo);
+    for (var key in devicesInfo.keys) {
+      handleSingleMessage('$key: ${devicesInfo[key]}', needLog: showDeviceInfo);
+    }
 
     // 异常信息
     log('║═════════════════════════════════════════ Error Info ══════════════════════════════════════════════');
@@ -166,7 +170,9 @@ class HandleError {
       log('║═════════════════════════════════════════ Stack Trace ═════════════════════════════════════════════');
     }
     List<String> stackInfo = stackTrace.toString().split('\n');
-    for (var msg in stackInfo) handleSingleMessage(msg, needLog: showStackInfo);
+    for (var msg in stackInfo) {
+      handleSingleMessage(msg, needLog: showStackInfo);
+    }
 
     log('╚═══════════════════════════════════════════════════════════════════════════════════════════════════');
 

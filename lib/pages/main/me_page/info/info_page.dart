@@ -47,7 +47,7 @@ class _InfoPageState extends State<InfoPage> {
           return TapLayout(
             height: 50,
             background: theme.white,
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             onTap: () => PreviewPhotoPage.show(context, [
               "https://www.wanandroid.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png",
               Assets.image('a.jpg'),
@@ -73,7 +73,7 @@ class _InfoPageState extends State<InfoPage> {
           return TapLayout(
             height: 50,
             background: theme.white,
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             onTap: () => context.read<StudyModel>().setValue('new value'),
             child: SingleTextLayout(
               icon: Icons.phone,
@@ -92,7 +92,7 @@ class _InfoPageState extends State<InfoPage> {
           return TapLayout(
             height: 50,
             background: theme.white,
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             onTap: () => AppRouteDelegate.of(context).push(MeRouter.editInfo),
             child: SingleTextLayout(
               icon: Icons.person,
@@ -111,7 +111,7 @@ class _InfoPageState extends State<InfoPage> {
           return TapLayout(
             height: 50,
             background: theme.white,
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             onTap: () => context.read<StudyModel>().setValue('new value'),
             child: SingleTextLayout(
               icon: Icons.email,
@@ -130,7 +130,7 @@ class _InfoPageState extends State<InfoPage> {
           return TapLayout(
             height: 50,
             background: theme.white,
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             onTap: () => context.read<StudyModel>().setValue('new value'),
             child: SingleTextLayout(
               icon: Icons.money,

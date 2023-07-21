@@ -8,8 +8,8 @@ import 'naughty.dart';
 
 /// HTTP请求信息拦截
 class HttpInterceptor extends Interceptor {
-  Map<RequestOptions, HTTPEntity> _cacheMap = {};
-  Map<String, int> _countMap = {};
+  final Map<RequestOptions, HTTPEntity> _cacheMap = {};
+  final Map<String, int> _countMap = {};
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
@@ -48,7 +48,7 @@ class HttpInterceptor extends Interceptor {
   }
 
   @override
-  void onError(DioError err, ErrorInterceptorHandler handler) async {
+  void onError(DioException err, ErrorInterceptorHandler handler) async {
     handler.next(err);
 
     HTTPEntity? entity = _cacheMap[err.requestOptions];
@@ -95,7 +95,7 @@ class HttpInterceptor extends Interceptor {
   }
 
   /// 处理请求错误的信息
-  void _handleError(DioError err, HTTPEntity entity) {
+  void _handleError(DioException err, HTTPEntity entity) {
     entity.realUrl = err.requestOptions.uri.toString();
     entity.responseBody = err.error.toString();
   }

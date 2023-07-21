@@ -42,13 +42,13 @@ class LocalModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Map<AppThemeMode, AppTheme> _appThemes = AppTheme.appTheme;
+  final Map<AppThemeMode, AppTheme> _appThemes = AppTheme.appTheme;
 
   AppThemeMode _getMode(String name) {
     AppThemeMode mode = AppThemeMode.light;
-    AppThemeMode.values.forEach((value) {
+    for (var value in AppThemeMode.values) {
       if (value.name == name) mode = value;
-    });
+    }
     return mode;
   }
 

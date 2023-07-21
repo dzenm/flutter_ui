@@ -15,6 +15,7 @@ class MedicineEntity extends DBBaseModel {
 
   factory MedicineEntity.fromJson(Map<String, dynamic> json) => _$MedicineEntityFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$MedicineEntityToJson(this);
 
   @override

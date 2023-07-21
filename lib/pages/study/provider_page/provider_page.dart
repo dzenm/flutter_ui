@@ -10,6 +10,8 @@ import '../../../base/log/build_config.dart';
 /// Created by a0010 on 2023/3/2 15:11
 /// Provider
 class ProviderPage extends StatefulWidget {
+  const ProviderPage({super.key});
+
   @override
   State<StatefulWidget> createState() => _ProviderPageState();
 }
@@ -59,11 +61,11 @@ class _ProviderPageState extends State<ProviderPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('测试Provider', style: TextStyle(color: Colors.white)),
+        title: const Text('测试Provider', style: TextStyle(color: Colors.white)),
         systemOverlayStyle: SystemUiOverlayStyle.light,
       ),
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: SingleChildScrollView(
           child: Row(children: [
             Expanded(
@@ -80,22 +82,21 @@ class _ProviderPageState extends State<ProviderPage> {
 
   List<Widget> _buildChildrenButtons() {
     return [
-      SizedBox(height: 16),
-      Text('监听setState更新UI'),
-      SizedBox(height: 8),
+      const SizedBox(height: 16),
+      const Text('监听setState更新UI'),
+      const SizedBox(height: 8),
       _buildSetStateWidget(person: person),
-      SizedBox(height: 16),
-      Text('监听Provider更新UI'),
-      SizedBox(height: 8),
+      const SizedBox(height: 16),
+      const Text('监听Provider更新UI'),
+      const SizedBox(height: 8),
       _ProviderWidget(),
-      SizedBox(height: 16),
-      Text('监听Selector更新UI'),
-      SizedBox(height: 8),
+      const SizedBox(height: 16),
+      const Text('监听Selector更新UI'),
+      const SizedBox(height: 8),
       _buildSelectorWidget(),
-      SizedBox(height: 16),
+      const SizedBox(height: 16),
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         MaterialButton(
-          child: Text('setState'),
           textColor: Colors.white,
           color: Colors.blue,
           onPressed: () {
@@ -112,9 +113,9 @@ class _ProviderPageState extends State<ProviderPage> {
 
             setState(() {});
           },
+          child: const Text('setState'),
         ),
         MaterialButton(
-          child: Text('Provider'),
           textColor: Colors.white,
           color: Colors.blue,
           onPressed: () {
@@ -125,9 +126,9 @@ class _ProviderPageState extends State<ProviderPage> {
             person.address = 'Provider Shanghai';
             context.read<MeModel>().updatePerson(1, person);
           },
+          child: const Text('Provider'),
         ),
         MaterialButton(
-          child: Text('Selector'),
           textColor: Colors.white,
           color: Colors.blue,
           onPressed: () {
@@ -141,6 +142,7 @@ class _ProviderPageState extends State<ProviderPage> {
             person.address = 'Selector JiangSu';
             context.read<MeModel>().updatePerson(2, person);
           },
+          child: const Text('Selector'),
         ),
       ]),
     ];
@@ -152,15 +154,15 @@ class _ProviderPageState extends State<ProviderPage> {
     // setState 当前所在的widget及子widget都会被重建
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(16)),
+        borderRadius: const BorderRadius.all(Radius.circular(16)),
         border: Border.all(color: Colors.blue, width: 1),
       ),
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [Text('${person?.name}')]),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Row(children: [Text('${person?.address}')]),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Row(children: [Text('${person?.age}')]),
       ]),
     );
@@ -172,33 +174,33 @@ class _ProviderPageState extends State<ProviderPage> {
     // Selector 只在监听的值改变后发生变化，如果该值未改变，或者对象中的其他值/List的其他index值改变，均不会受到影响
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(16)),
+        borderRadius: const BorderRadius.all(Radius.circular(16)),
         border: Border.all(color: Colors.blue, width: 1),
       ),
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
           Selector<MeModel, String>(
             builder: (context, value, widget) {
               log('Selector name: build');
 
-              return Text('$value');
+              return Text(value);
             },
             selector: (context, model) => model.persons.last.name ?? '',
           )
         ]),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Row(children: [
           Selector<MeModel, String>(
             builder: (context, value, widget) {
               log('Selector address: build');
 
-              return Text('$value');
+              return Text(value);
             },
             selector: (context, model) => model.persons.last.address ?? '',
           ),
         ]),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Row(children: [
           Selector<MeModel, int>(
             builder: (context, value, widget) {
@@ -234,15 +236,15 @@ class _ProviderWidgetState extends State<_ProviderWidget> {
     Person person = context.watch<MeModel>().persons[1];
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(16)),
+        borderRadius: const BorderRadius.all(Radius.circular(16)),
         border: Border.all(color: Colors.blue, width: 1),
       ),
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [Text('${person.name}')]),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Row(children: [Text('${person.address}')]),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Row(children: [Text('${person.age}')]),
       ]),
     );

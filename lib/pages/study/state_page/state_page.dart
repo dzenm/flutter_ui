@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/base/res/assets.dart';
-import 'package:flutter_ui/base/widgets/menu_Item.dart';
+import 'package:flutter_ui/base/widgets/menu_item.dart';
 import 'package:flutter_ui/base/widgets/state_view.dart';
 
 /// 加载状态页面
 class StatePage extends StatefulWidget {
+  const StatePage({super.key});
+
   @override
   State<StatefulWidget> createState() => _StatePageState();
 }
 
 class _StatePageState extends State<StatePage> {
-  List<Item> _items = [
+  final List<Item> _items = [
     Item(0, title: '展示加载页面'),
     Item(1, title: '展示失败页面'),
     Item(2, title: '展示空白页面'),
@@ -21,13 +23,13 @@ class _StatePageState extends State<StatePage> {
 
   String _image = 'a.jpg';
 
-  StateController _controller = StateController(isShowFooterState: false);
+  final StateController _controller = StateController(isShowFooterState: false);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('文本和输入框', style: TextStyle(color: Colors.white)),
+        title: const Text('文本和输入框', style: TextStyle(color: Colors.white)),
         actions: [
           PopupMenuButton<Item>(
             elevation: 4.0,
@@ -61,7 +63,7 @@ class _StatePageState extends State<StatePage> {
       body: StateView(
         controller: _controller,
         image: Image.asset(Assets.image(_image), fit: BoxFit.cover, width: 96, height: 96),
-        child: Center(
+        child: const Center(
           child: Text('展示成功页面'),
         ),
       ),

@@ -28,13 +28,13 @@ class NavPage extends StatefulWidget {
 
 class _NavPageState extends State<NavPage> {
   static const String _tag = 'NavPage';
-  List<Widget> _tabItems = [
-    TabPlazaPage(),
-    TabTutorialPage(),
-    TabQAPage(),
-    TabProjectPage(),
-    TabOfficialPage(),
-    TabToolPage(),
+  final List<Widget> _tabItems = [
+    const TabPlazaPage(),
+    const TabTutorialPage(),
+    const TabQAPage(),
+    const TabProjectPage(),
+    const TabOfficialPage(),
+    const TabToolPage(),
   ];
 
   @override
@@ -85,7 +85,7 @@ class _NavPageState extends State<NavPage> {
       child: Scaffold(
         appBar: CommonBar(
           backgroundColor: theme.white,
-          systemOverlayStyle: SystemUiOverlayStyle(
+          systemOverlayStyle: const SystemUiOverlayStyle(
             statusBarIconBrightness: Brightness.dark,
           ),
           toolbarHeight: 48,

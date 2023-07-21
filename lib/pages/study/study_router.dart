@@ -22,132 +22,132 @@ import 'video_page/video_page.dart';
 /// Created by a0010 on 2023/5/11 16:05
 ///
 class StudyRouter {
-  static final String study = '/study';
-  static final String city = '$study/city';
-  static final String convert = '$study/convert';
-  static final String dialog = '$study/dialog';
-  static final String dragList = '$study/dragList';
-  static final String floatNavigation = '$study/floatNavigation';
-  static final String http = '$study/http';
-  static final String image = '$study/image';
-  static final String keyword = '$study/keyword';
-  static final String list = '$study/list';
-  static final String loadImage = '$study/loadImage';
-  static final String popup = '$study/popup';
-  static final String provider = '$study/provider';
-  static final String qr = '$study/qr';
-  static final String router = '$study/router';
-  static final String state = '$study/state';
-  static final String text = '$study/text';
-  static final String video = '$study/video';
+  static const String study = '/study';
+  static const String city = '$study/city';
+  static const String convert = '$study/convert';
+  static const String dialog = '$study/dialog';
+  static const String dragList = '$study/dragList';
+  static const String floatNavigation = '$study/floatNavigation';
+  static const String http = '$study/http';
+  static const String image = '$study/image';
+  static const String keyword = '$study/keyword';
+  static const String list = '$study/list';
+  static const String loadImage = '$study/loadImage';
+  static const String popup = '$study/popup';
+  static const String provider = '$study/provider';
+  static const String qr = '$study/qr';
+  static const String router = '$study/router';
+  static const String state = '$study/state';
+  static const String text = '$study/text';
+  static const String video = '$study/video';
 
   static List<AppRoutePage> get routers => [
         AppRoutePage(
           name: study,
           builder: (settings) {
-            return StudyPage();
+            return const StudyPage();
           },
         ),
         AppRoutePage(
           name: city,
           builder: (settings) {
-            return CitySelectedPage();
+            return const CitySelectedPage();
           },
         ),
         AppRoutePage(
           name: convert,
           builder: (settings) {
-            return ConvertPage();
+            return const ConvertPage();
           },
         ),
         AppRoutePage(
           name: dialog,
           builder: (settings) {
-            return DialogPage();
+            return const DialogPage();
           },
         ),
         AppRoutePage(
           name: dragList,
           builder: (settings) {
-            return DragListPage();
+            return const DragListPage();
           },
         ),
         AppRoutePage(
           name: floatNavigation,
           builder: (settings) {
-            return FloatNavigationPage();
+            return const FloatNavigationPage();
           },
         ),
         AppRoutePage(
           name: http,
           builder: (settings) {
-            return HTTPListPage();
+            return const HTTPListPage();
           },
         ),
         AppRoutePage(
           name: image,
           builder: (settings) {
-            return ImageEditorPage();
+            return const ImageEditorPage();
           },
         ),
         AppRoutePage(
           name: keyword,
           builder: (settings) {
-            return KeywordBoardPage();
+            return const KeywordBoardPage();
           },
         ),
         AppRoutePage(
           name: list,
           builder: (settings) {
-            return ListPage();
+            return const ListPage();
           },
         ),
         AppRoutePage(
           name: loadImage,
           builder: (settings) {
-            return LoadImagePage();
+            return const LoadImagePage();
           },
         ),
         AppRoutePage(
           name: popup,
           builder: (settings) {
-            return PopupPage();
+            return const PopupPage();
           },
         ),
         AppRoutePage(
           name: provider,
           builder: (settings) {
-            return ProviderPage();
+            return const ProviderPage();
           },
         ),
         AppRoutePage(
           name: qr,
           builder: (settings) {
-            return QRPage();
+            return const QRPage();
           },
         ),
         AppRoutePage(
           name: router,
           builder: (settings) {
-            return RouterPage();
+            return const RouterPage();
           },
         ),
         AppRoutePage(
           name: state,
           builder: (settings) {
-            return StatePage();
+            return const StatePage();
           },
         ),
         AppRoutePage(
           name: text,
           builder: (settings) {
-            return TextPage();
+            return const TextPage();
           },
         ),
         AppRoutePage(
           name: video,
           builder: (settings) {
-            return VideoPage();
+            return const VideoPage();
           },
         ),
       ];

@@ -9,7 +9,7 @@ class MainModel with ChangeNotifier {
 
   /// 主页底部的小红点数量列表
   /// _badges = List.generate(3, (index) => index * index * index);
-  List<int> _badges = [-1, 0, 5];
+  final List<int> _badges = [-1, 0, 5];
 
   /// 根据索引获取底部按钮的小红点数量
   int badge(int index) => _badges[index];

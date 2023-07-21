@@ -260,20 +260,20 @@ class _HandlerError {
     msg ??= '';
     if (code > 0 && msg.isNotEmpty) {
       return HttpError(code, msg);
-    } else if (error != null && error is DioError) {
-      if (error.type == DioErrorType.connectionTimeout) {
+    } else if (error != null && error is DioException) {
+      if (error.type == DioExceptionType.connectionTimeout) {
         return HttpError(timeoutCode, timeoutMsg);
-      } else if (error.type == DioErrorType.sendTimeout) {
+      } else if (error.type == DioExceptionType.sendTimeout) {
         return HttpError(sendCode, sendMsg);
-      } else if (error.type == DioErrorType.receiveTimeout) {
+      } else if (error.type == DioExceptionType.receiveTimeout) {
         return HttpError(receiveCode, receiveMsg);
-      } else if (error.type == DioErrorType.badCertificate) {
+      } else if (error.type == DioExceptionType.badCertificate) {
         return HttpError(badCertificateCode, badCertificateMsg);
-      } else if (error.type == DioErrorType.badResponse) {
+      } else if (error.type == DioExceptionType.badResponse) {
         return HttpError(error.response?.statusCode ?? 0, error.response?.statusMessage ?? '');
-      } else if (error.type == DioErrorType.cancel) {
+      } else if (error.type == DioExceptionType.cancel) {
         return HttpError(cancelCode, cancelMsg);
-      } else if (error.type == DioErrorType.connectionError) {
+      } else if (error.type == DioExceptionType.connectionError) {
         if (error.error is SocketException) {
           return HttpError(socketCode, socketMsg);
         } else if (error.error is HttpException) {

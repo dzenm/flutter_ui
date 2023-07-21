@@ -6,7 +6,7 @@ class VideoPlayerView extends StatefulWidget {
   final String thumbUrl;
   final bool autoPlay;
 
-  VideoPlayerView({
+  const VideoPlayerView({super.key,
     required this.url,
     this.thumbUrl = '',
     this.autoPlay = false,
@@ -83,7 +83,7 @@ class IjkVideoPage extends StatefulWidget {
   final bool autoPlay;
   final bool repeat;
 
-  IjkVideoPage({
+  const IjkVideoPage({super.key,
     required this.url,
     this.autoPlay = false,
     this.repeat = false,
@@ -104,15 +104,15 @@ class _IjkVideoPageState extends State<IjkVideoPage> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(0),
           child: AppBar(
             leading: null,
             backgroundColor: Colors.transparent,
-            systemOverlayStyle: SystemUiOverlayStyle(
+            systemOverlayStyle: const SystemUiOverlayStyle(
               statusBarBrightness: Brightness.dark,
             ),
-          ),
-          preferredSize: Size.fromHeight(0)),
-      body: VideoPlayerView(
+          )),
+      body: const VideoPlayerView(
         url: 'asset:///assets/video/butterfly.mp4',
         thumbUrl: 'assets/image/thumb_video_cover.png',
       ),

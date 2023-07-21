@@ -15,20 +15,18 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (BuildConfig.isPhone) {
-      return MainPageMobile();
+      return const MainPageMobile();
     } else if (BuildConfig.isWeb) {
-      return MainPageWeb();
+      return const MainPageWeb();
     } else if (BuildConfig.isWindows) {
-      return MainPageWindows();
+      return const MainPageWindows();
     } else if (BuildConfig.isMac) {
-      return MainPageMac();
+      return const MainPageMac();
     } else if (BuildConfig.isLinux) {
-      return MainPageLinux();
+      return const MainPageLinux();
     }
-    return Container(
-      child: Center(
-        child: Text('未知平台'),
-      ),
+    return const Center(
+      child: Text('未知平台'),
     );
   }
 }

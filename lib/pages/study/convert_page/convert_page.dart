@@ -8,6 +8,8 @@ import 'package:flutter_ui/entities/user_entity.dart';
 
 /// 字符转化
 class ConvertPage extends StatefulWidget {
+  const ConvertPage({super.key});
+
   @override
   State<StatefulWidget> createState() => _ConvertPageState();
 }
@@ -39,36 +41,36 @@ class _ConvertPageState extends State<ConvertPage> {
     List<UserEntity> users = [user, user, user];
     return Scaffold(
       appBar: AppBar(
-        title: Text('字符转化', style: TextStyle(color: Colors.white)),
+        title: const Text('字符转化', style: TextStyle(color: Colors.white)),
         elevation: 0.0,
       ),
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Container(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Column(
             children: [
               Row(children: [
                 MaterialButton(
                   color: Colors.blue,
                   textColor: Colors.white,
-                  child: Text('存储字符数组到SP(model转string)'),
+                  child: const Text('存储字符数组到SP(model转string)'),
                   onPressed: () => SpUtil.setUserInfo(jsonEncode(users)),
                 ),
               ]),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               CommonWidget.multipleTextView('通过jsonEncode转为字符串, 然后通过SharedPreferences保存\n\njsonEncode(users)'),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               CommonWidget.divider(),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Row(children: [
                 MaterialButton(
                   color: Colors.blue,
                   textColor: Colors.white,
-                  child: Text('从SP取出字符数组(string转model)'),
+                  child: const Text('从SP取出字符数组(string转model)'),
                   onPressed: () {
                     String json = SpUtil.getUserInfo();
-                    if (json.length > 0) {
+                    if (json.isNotEmpty) {
                       List<UserEntity> users = (jsonDecode(json) as List<dynamic>).map((e) => UserEntity.fromJson((e as Map<String, dynamic>))).toList();
                       setState(() {
                         listStr = jsonEncode(users);
@@ -79,30 +81,30 @@ class _ConvertPageState extends State<ConvertPage> {
                   },
                 ),
               ]),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               CommonWidget.multipleTextView(
                   '先通过SharedPreferences取出字符, 再通过jsonDecode解码并强制转化为List<dynamic>, 遍历数组将dynamic转化为Bean对应的Map对象\n\n(jsonDecode(string) as List<dynamic>).map((e) => User.fromJson((e as Map<String, dynamic>))).toList()'),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               CommonWidget.divider(),
               CommonWidget.titleView('Map', top: 16),
               CommonWidget.multipleTextView(data.toString()),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               CommonWidget.divider(),
               CommonWidget.titleView('Map转字符串并格式化', top: 16),
               CommonWidget.multipleTextView(StrUtil.formatToJson(user.toJson())),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               CommonWidget.divider(),
               CommonWidget.titleView('List', top: 16),
               CommonWidget.multipleTextView(listStr),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               CommonWidget.divider(),
               CommonWidget.titleView('List转字符串并格式化', top: 16),
               CommonWidget.multipleTextView(listToJsonStr),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               CommonWidget.divider(),
               CommonWidget.titleView('字符串转Bean', top: 16),
               CommonWidget.multipleTextView(listToBeanStr),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               CommonWidget.divider(),
             ],
           ),

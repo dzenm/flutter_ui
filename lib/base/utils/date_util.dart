@@ -13,8 +13,9 @@ class DateUtil {
       compareDateTime = DateTime.parse(dateTime);
     } else if (dateTime is DateTime) {
       compareDateTime = dateTime;
-    } else
+    } else {
       return false;
+    }
     DateTime? baseDateTime;
     if (other is String) {
       baseDateTime = DateTime.parse(other);
@@ -36,8 +37,9 @@ class DateUtil {
       compareDateTime = DateTime.parse(dateTime);
     } else if (dateTime is DateTime) {
       compareDateTime = dateTime;
-    } else
+    } else {
       return false;
+    }
     DateTime? baseDateTime;
     if (other is String) {
       baseDateTime = DateTime.parse(other);

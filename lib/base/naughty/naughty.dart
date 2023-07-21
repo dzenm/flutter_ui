@@ -43,7 +43,7 @@ class Naughty {
       return child ??
           FloatingButton(
             onTap: () => push(context, const NaughtPage()),
-            imageProvider: AssetImage('assets/images/ic_vnote.png'),
+            imageProvider: const AssetImage('assets/images/ic_vnote.png'),
           );
     });
   }

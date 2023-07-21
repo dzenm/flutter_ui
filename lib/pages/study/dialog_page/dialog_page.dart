@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../base/res/app_theme.dart';
 import '../../../base/res/local_model.dart';
 import '../../../base/widgets/common_dialog.dart';
-import '../../../base/widgets/menu_Item.dart';
+import '../../../base/widgets/menu_item.dart';
 import '../../../base/widgets/picker/picker_view.dart';
 
 ///
@@ -20,7 +20,7 @@ class DialogPage extends StatefulWidget {
 
 class _DialogPageState extends State<DialogPage> {
   String _selectedValue = '';
-  List<Item> _items = [
+  final List<Item> _items = [
     Item(0, title: '数据库'),
     Item(1, title: 'SharedPreference'),
     Item(2, title: '设置'),
@@ -33,7 +33,7 @@ class _DialogPageState extends State<DialogPage> {
     AppTheme theme = context.watch<LocalModel>().theme;
     return Scaffold(
       appBar: AppBar(
-        title: Text('弹窗', style: TextStyle(color: Colors.white)),
+        title: const Text('弹窗', style: TextStyle(color: Colors.white)),
         actions: [
           /// 弹出式菜单
           PopupMenuButton(
@@ -46,7 +46,7 @@ class _DialogPageState extends State<DialogPage> {
                 return PopupMenuItem(
                   value: value,
                   child: Row(children: [
-                    SizedBox(
+                    const SizedBox(
                       width: 32,
                       height: 32,
                       child: Icon(Icons.map),
@@ -60,18 +60,18 @@ class _DialogPageState extends State<DialogPage> {
         ],
       ),
       body: Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(children: [
           MaterialButton(
             textColor: Colors.white,
             color: theme.appbar,
             onPressed: () {
               CancelFunc cancel = CommonDialog.loading();
-              Future.delayed(Duration(seconds: 1), () => cancel());
+              Future.delayed(const Duration(seconds: 1), () => cancel());
             },
             child: Row(children: [_text('加载弹窗(1秒后关闭)')]),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           MaterialButton(
             textColor: Colors.white,
             color: theme.appbar,
@@ -82,7 +82,7 @@ class _DialogPageState extends State<DialogPage> {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                children: const [
                   Text('购买类型：', style: TextStyle(fontSize: 16)),
                   Text('应付金额：￥', style: TextStyle(fontSize: 16)),
                   Text('支付方式：(￥)', style: TextStyle(fontSize: 16)),
@@ -91,26 +91,26 @@ class _DialogPageState extends State<DialogPage> {
             ),
             child: Row(children: [_text('支付弹窗')]),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           MaterialButton(
             textColor: Colors.white,
             color: theme.appbar,
             onPressed: () => CommonDialog.showPromptDialog(
               context,
               titleString: '昵称',
-              content: Text('这是设置好的昵称'),
+              content: const Text('这是设置好的昵称'),
               onPositiveTap: () => CommonDialog.showToast('修改成功'),
             ),
             child: Row(children: [_text('提示弹窗')]),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           MaterialButton(
             textColor: Colors.white,
             color: theme.appbar,
             onPressed: () => CommonDialog.showSelectImageBottomSheet(context),
             child: Row(children: [_text('选择图片弹窗')]),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           MaterialButton(
             textColor: Colors.white,
             color: theme.appbar,
@@ -119,7 +119,7 @@ class _DialogPageState extends State<DialogPage> {
             }),
             child: Row(children: [_text('iOS底部列表弹窗')]),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           MaterialButton(
             textColor: Colors.white,
             color: theme.appbar,
@@ -134,7 +134,7 @@ class _DialogPageState extends State<DialogPage> {
             ),
             child: Row(children: [_text('Material居中列表弹窗')]),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           MaterialButton(
             textColor: Colors.white,
             color: theme.appbar,
@@ -145,7 +145,7 @@ class _DialogPageState extends State<DialogPage> {
             ),
             child: Row(children: [_text('升级弹窗')]),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           MaterialButton(
             textColor: Colors.white,
             color: theme.appbar,
@@ -154,7 +154,7 @@ class _DialogPageState extends State<DialogPage> {
             }),
             child: Row(children: [_text('选择区域弹窗')]),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           MaterialButton(
             textColor: Colors.white,
             color: theme.appbar,

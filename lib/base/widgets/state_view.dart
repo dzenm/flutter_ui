@@ -85,7 +85,7 @@ class LinearStateView extends StatelessWidget {
   final Widget? image;
   final bool isVertical;
 
-  const LinearStateView({
+  const LinearStateView({super.key,
     required this.controller,
     required this.size,
     this.title,

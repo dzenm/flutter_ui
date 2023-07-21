@@ -42,7 +42,7 @@ class PreviewPhotoPage extends StatefulWidget {
 }
 
 class _PreviewPhotoPageState extends State<PreviewPhotoPage> {
-  List<String> _list = [];
+  final List<String> _list = [];
   int _currentIndex = 0;
 
   @override
@@ -56,15 +56,13 @@ class _PreviewPhotoPageState extends State<PreviewPhotoPage> {
     return SafeArea(
       child: PhotoViewGestureDetectorScope(
         axis: Axis.horizontal,
-        child: Container(
-          child: TapLayout(
-            onLongPress: () => {},
-            child: Stack(alignment: Alignment.center, children: [
-              _buildPageView(),
-              _buildIndicator(),
-              _buildDownloadPhoto(),
-            ]),
-          ),
+        child: TapLayout(
+          onLongPress: () => {},
+          child: Stack(alignment: Alignment.center, children: [
+            _buildPageView(),
+            _buildIndicator(),
+            _buildDownloadPhoto(),
+          ]),
         ),
       ),
     );
@@ -80,7 +78,7 @@ class _PreviewPhotoPageState extends State<PreviewPhotoPage> {
         viewportFraction: 1, //占屏幕多少，1为占满整个屏幕
         keepPage: true, //是否保存当前Page的状态，如果保存，下次进入对应保存的page，如果为false。下次总是从initialPage开始。
       ),
-      physics: BouncingScrollPhysics(),
+      physics: const BouncingScrollPhysics(),
       // 是否具有回弹效果
       pageSnapping: true,
       onPageChanged: (index) => setState(() => _currentIndex = index),
@@ -120,7 +118,7 @@ class _PreviewPhotoPageState extends State<PreviewPhotoPage> {
           offstage: _list.length <= 1,
           child: Text(
             '${_currentIndex + 1}/${_list.length}',
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white),
           ),
         )
       ]),
@@ -142,8 +140,8 @@ class _PreviewPhotoPageState extends State<PreviewPhotoPage> {
             }
           },
           background: Colors.white38,
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-          child: Icon(Icons.download_rounded, size: 24, color: Colors.white),
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+          child: const Icon(Icons.download_rounded, size: 24, color: Colors.white),
         ),
       ),
     );
@@ -159,8 +157,8 @@ class CustomerPageRoute extends PageRouteBuilder {
     this.widget, {
     this.style = AnimatorStyle.fade,
   }) : super(
-          transitionDuration: Duration(milliseconds: 250),
-          reverseTransitionDuration: Duration(milliseconds: 250),
+          transitionDuration: const Duration(milliseconds: 250),
+          reverseTransitionDuration: const Duration(milliseconds: 250),
           pageBuilder: (context, animation1, secondaryAnimation) {
             return widget;
           },
@@ -182,7 +180,7 @@ class CustomerPageRoute extends PageRouteBuilder {
             } else if (style == AnimatorStyle.translate) {
               //左右滑动动画效果
               return SlideTransition(
-                position: Tween(begin: Offset(1.0, 0.0), end: Offset(0.0, 0.0)) //设置滑动起点和终点
+                position: Tween(begin: const Offset(1.0, 0.0), end: const Offset(0.0, 0.0)) //设置滑动起点和终点
                     .animate(CurvedAnimation(parent: animation, curve: Curves.easeOutCubic)),
                 child: child,
               );

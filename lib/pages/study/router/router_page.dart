@@ -36,6 +36,8 @@ class RouterPage extends StatelessWidget {
     ],
   ];
 
+  const RouterPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     AppTheme theme = context.watch<LocalModel>().theme;
@@ -44,7 +46,7 @@ class RouterPage extends StatelessWidget {
         title: Text('路由跳转', style: TextStyle(color: theme.text)),
       ),
       body: Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(children: _buildList(context, theme)),
       ),
     );
@@ -55,12 +57,12 @@ class RouterPage extends StatelessWidget {
     List<List<String>> list = RouterPage.list;
     for (int i = 0; i < list.length; i++) {
       widgets
-        ..add(SizedBox(height: 8))
+        ..add(const SizedBox(height: 8))
         ..add(MaterialButton(
-          child: _text(list[i][0]),
           textColor: Colors.white,
           color: theme.button,
           onPressed: () => Navigator.push(context, RouteManager.createMaterialRoute(FirstPage(type: i, index: 0))),
+          child: _text(list[i][0]),
         ));
     }
     return widgets;

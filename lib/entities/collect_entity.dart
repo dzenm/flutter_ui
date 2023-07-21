@@ -29,6 +29,7 @@ class CollectEntity extends DBBaseModel {
 
   factory CollectEntity.fromJson(Map<String, dynamic> json) => _$CollectEntityFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$CollectEntityToJson(this);
 
   @override

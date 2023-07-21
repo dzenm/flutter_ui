@@ -46,13 +46,13 @@ class _WebViewPageState extends State<WebViewPage> {
         return _controller != null && !(await _controller!.canGoBack());
       },
       child: Scaffold(
-        appBar: AppBar(title: Text(_title, style: TextStyle(color: Colors.white))),
+        appBar: AppBar(title: Text(_title, style: const TextStyle(color: Colors.white))),
         body: SafeArea(
           child: FlutterWebView(
             url: widget.url,
             onTitleChange: (result) => setState(() => _title = result),
             onControllerCallback: (WebViewController controller) {
-              this._controller = controller;
+              _controller = controller;
             },
           ),
         ),
@@ -67,7 +67,7 @@ class FlutterWebView extends StatefulWidget {
   final WebViewCallback? onTitleChange;
   final ControllerCallback? onControllerCallback;
 
-  FlutterWebView({
+  const FlutterWebView({
     Key? key,
     required this.url,
     this.onTitleChange,
@@ -79,7 +79,7 @@ class FlutterWebView extends StatefulWidget {
 }
 
 class _FlutterWebViewState extends State<FlutterWebView> {
-  static final String _tag = 'WebViewPage';
+  static const String _tag = 'WebViewPage';
   WebViewController? _controller;
   double _progressValue = 0;
   bool _isLoading = true;
@@ -92,8 +92,7 @@ class _FlutterWebViewState extends State<FlutterWebView> {
   }
 
   void _initWebViewController(String url) {
-    if (_controller == null) {
-      _controller = WebViewController()
+    _controller ??= WebViewController()
         ..setJavaScriptMode(JavaScriptMode.unrestricted)
         ..setBackgroundColor(const Color(0x00000000))
         ..setNavigationDelegate(
@@ -131,7 +130,6 @@ class _FlutterWebViewState extends State<FlutterWebView> {
             },
           ),
         );
-    }
     if (_controller != null) {
       if (url.startsWith('http://') || url.startsWith('https://')) {
         _controller!.loadRequest(Uri.parse(url));
@@ -153,7 +151,7 @@ class _FlutterWebViewState extends State<FlutterWebView> {
         child: LinearProgressIndicator(
           value: _progressValue, //0~1的浮点数，用来表示进度多少;如果 value 为 null 或空，则显示一个动画，否则显示一个定值
           backgroundColor: Colors.grey.shade200, //背景颜色
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.blue), //进度颜色
+          valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue), //进度颜色
         ),
       ),
     ]);

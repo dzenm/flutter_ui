@@ -47,34 +47,34 @@ class AppTheme {
 
   ///================================ 根据颜色命名 ================================
   /// 由白到黑
-  Color get black50 => Color(0xFFFAFAFA); // 5%
-  Color get black100 => Color(0xFFF5F5F5); // 10%
-  Color get black150 => Color(0xFFEFEFEF); // 15%
-  Color get black200 => Color(0xFFEEEEEE); // 20%
-  Color get black300 => Color(0xFFE0E0E0); // 30%
-  Color get black400 => Color(0xFFBDBDBD); // 40%
-  Color get black500 => Color(0xFF9E9E9E); // 50%
-  Color get black600 => Color(0xFF757575); // 60%
-  Color get black700 => Color(0xFF616161); // 70%
-  Color get black800 => Color(0xFF424242); // 80%
-  Color get black900 => Color(0xFF212121); // 90%
+  Color get black50 => const Color(0xFFFAFAFA); // 5%
+  Color get black100 => const Color(0xFFF5F5F5); // 10%
+  Color get black150 => const Color(0xFFEFEFEF); // 15%
+  Color get black200 => const Color(0xFFEEEEEE); // 20%
+  Color get black300 => const Color(0xFFE0E0E0); // 30%
+  Color get black400 => const Color(0xFFBDBDBD); // 40%
+  Color get black500 => const Color(0xFF9E9E9E); // 50%
+  Color get black600 => const Color(0xFF757575); // 60%
+  Color get black700 => const Color(0xFF616161); // 70%
+  Color get black800 => const Color(0xFF424242); // 80%
+  Color get black900 => const Color(0xFF212121); // 90%
 
   /// 纯黑系(按百分比)
-  Color get black120 => Color(0x1F000000); // 纯黑的 12% #e0e0e0
-  Color get black260 => Color(0x42000000); // 纯黑的 26% #BDBDBD
-  Color get black380 => Color(0x61000000); // 纯黑的 38% #757575
-  Color get black450 => Color(0x73000000); // 纯黑的 45% #9E9E9E
-  Color get black540 => Color(0x8A000000); // 纯黑的 54% #757575
-  Color get black870 => Color(0xDE000000); // 纯黑的 87% #212121
+  Color get black120 => const Color(0x1F000000); // 纯黑的 12% #e0e0e0
+  Color get black260 => const Color(0x42000000); // 纯黑的 26% #BDBDBD
+  Color get black380 => const Color(0x61000000); // 纯黑的 38% #757575
+  Color get black450 => const Color(0x73000000); // 纯黑的 45% #9E9E9E
+  Color get black540 => const Color(0x8A000000); // 纯黑的 54% #757575
+  Color get black870 => const Color(0xDE000000); // 纯黑的 87% #212121
   Color get black => Colors.black; // 纯黑
 
   /// 纯百系(按百分比)
-  Color get white120 => Color(0x1FFFFFFF); // 纯白的 12% #e0e0e0
-  Color get white260 => Color(0x42FFFFFF); // 纯白的 26% #BDBDBD
-  Color get white380 => Color(0x61FFFFFF); // 纯白的 38% #BDBDBD
-  Color get white450 => Color(0x73FFFFFF); // 纯白的 45% #9E9E9E
-  Color get white540 => Color(0x8AFFFFFF); // 纯白的 54% #757575
-  Color get white870 => Color(0xDEFFFFFF); // 纯白的 87% #212121
+  Color get white120 => const Color(0x1FFFFFFF); // 纯白的 12% #e0e0e0
+  Color get white260 => const Color(0x42FFFFFF); // 纯白的 26% #BDBDBD
+  Color get white380 => const Color(0x61FFFFFF); // 纯白的 38% #BDBDBD
+  Color get white450 => const Color(0x73FFFFFF); // 纯白的 45% #9E9E9E
+  Color get white540 => const Color(0x8AFFFFFF); // 纯白的 54% #757575
+  Color get white870 => const Color(0xDEFFFFFF); // 纯白的 87% #212121
   Color get white => Colors.white; // 纯白
 
   /// 其他单独的颜色
@@ -83,10 +83,10 @@ class AppTheme {
   Color get blue => Colors.blue; // 蓝色
 
   /// 默认颜色值
-  Color get purple700 => Color(0xFF3700B3); // default dark primary color
-  Color get purple500 => Color(0xFF6200EE); // default primary color
-  Color get purple200 => Color(0xFFBB86FC); // default light primary color
-  Color get teal200 => Color(0xFF03DAC5); // default accent color
+  Color get purple700 => const Color(0xFF3700B3); // default dark primary color
+  Color get purple500 => const Color(0xFF6200EE); // default primary color
+  Color get purple200 => const Color(0xFFBB86FC); // default light primary color
+  Color get teal200 => const Color(0xFF03DAC5); // default accent color
 
   ///================================ 根据功能命名(整体) ================================
   Color get primaryDark => purple700; // 主要颜色(深色)

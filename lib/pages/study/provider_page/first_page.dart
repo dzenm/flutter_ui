@@ -55,11 +55,9 @@ class _FirstPageState extends State<FirstPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: Column(children: [
-          CommonBar(title: '标题', centerTitle: true),
-        ]),
-      ),
+      body: Column(children: const [
+        CommonBar(title: '标题', centerTitle: true),
+      ]),
     );
   }
 
