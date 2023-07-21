@@ -7,9 +7,14 @@ import '../../../base/log/log.dart';
 import '../../../base/res/app_theme.dart';
 import '../../../base/res/local_model.dart';
 import '../../../base/widgets/common_bar.dart';
+import '../../../base/widgets/keep_alive_wrapper.dart';
 import '../../../generated/l10n.dart';
-import '../../../http/http_manager.dart';
-import '../../../models/article_model.dart';
+import 'tab_official_page.dart';
+import 'tab_plaza_page.dart';
+import 'tab_project_page.dart';
+import 'tab_qa_page.dart';
+import 'tab_tool_page.dart';
+import 'tab_tutorial_page.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56
@@ -23,13 +28,19 @@ class NavPage extends StatefulWidget {
 
 class _NavPageState extends State<NavPage> {
   static const String _tag = 'NavPage';
-  TabController? _controller;
+  List<Widget> _tabItems = [
+    TabPlazaPage(),
+    TabTutorialPage(),
+    TabQAPage(),
+    TabProjectPage(),
+    TabOfficialPage(),
+    TabToolPage(),
+  ];
 
   @override
   void initState() {
     super.initState();
     log('initState');
-    _controller = DefaultTabController.of(context);
   }
 
   @override
@@ -59,7 +70,7 @@ class _NavPageState extends State<NavPage> {
   @override
   Widget build(BuildContext context) {
     log('build');
-
+    AppTheme theme = context.watch<LocalModel>().theme;
     List<String> tabs = [
       S.of(context).plaza,
       S.of(context).tutorial,
@@ -68,7 +79,7 @@ class _NavPageState extends State<NavPage> {
       S.of(context).official,
       S.of(context).tool,
     ];
-    AppTheme theme = context.watch<LocalModel>().theme;
+
     return DefaultTabController(
       length: tabs.length,
       child: Scaffold(
@@ -79,7 +90,6 @@ class _NavPageState extends State<NavPage> {
           ),
           toolbarHeight: 48,
           bottom: TabBar(
-            controller: _controller,
             isScrollable: true,
             indicatorSize: TabBarIndicatorSize.tab,
             unselectedLabelColor: theme.hint,
@@ -90,67 +100,12 @@ class _NavPageState extends State<NavPage> {
             }).toList(),
           ),
         ),
-        body: TabBarView(
-          children: tabs.map((item) {
-            return _buildTabItem(theme);
-          }).toList(),
+        body: KeepAliveWrapper(
+          child: TabBarView(children: _tabItems),
         ),
       ),
     );
   }
 
-  /// Tab Item
-  Widget _buildTabItem(AppTheme theme) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(height: 8),
-          TopView(text: '这是Top数据'),
-          SizedBox(height: 8),
-          MaterialButton(
-            child: Text('进入下一个页面'),
-            textColor: theme.background,
-            color: theme.appbar,
-            onPressed: () {},
-          ),
-          SizedBox(height: 8),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _getTopArticle() async {
-    await HttpManager.instance.getLopArticleList(
-      isShowDialog: false,
-      success: (list) {
-        context.read<ArticleModel>().updateArticles(list);
-      },
-    );
-  }
-
   void log(String msg) => BuildConfig.showPageLog ? Log.p(msg, tag: _tag) : null;
-}
-
-class TopView extends StatefulWidget {
-  final String text;
-
-  TopView({Key? key, required this.text}) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() => _TopViewState();
-}
-
-class _TopViewState extends State<TopView> {
-  static const String _tag = 'TopView';
-
-  @override
-  Widget build(BuildContext context) {
-    Log.p('build', tag: _tag);
-
-    return Text(widget.text);
-  }
 }

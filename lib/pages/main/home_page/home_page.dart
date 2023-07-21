@@ -112,7 +112,7 @@ class _HomePageState extends State<HomePage> {
       _getBanner(),
       _getArticle(isReset: true),
       _getTopArticle(),
-      // _getDataList(),
+      _getDataList(),
     ]).then((value) {
       log('网络数据执行完成...');
     }).whenComplete(() {
@@ -298,7 +298,7 @@ class ArticleItemView extends StatelessWidget {
                           int start = url.indexOf('/');
                           if (start <= 0) return;
                           int end = url.indexOf('');
-                          // String page = url.substring(start, end);
+                          String page = url.substring(start, end);
                           ArticleEntity? article = context.read<ArticleModel>().getArticle(index);
                           if (article == null) return;
                           String params = '?title=${val.name}&url=${val.url}';

@@ -94,56 +94,56 @@ class CommonBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  Widget _buildToolbar(BuildContext context) {
-    return Semantics(
-      container: true,
-      child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: systemOverlayStyle,
-        child: Material(
-          color: backgroundColor,
-          child: Semantics(
-            explicitChildNodes: true,
-            child: Container(
-              color: backgroundColor,
-              child: Column(children: [
-                Container(height: 24, color: backgroundColor),
-                Container(
-                  height: kToolbarHeight,
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Row(children: [
-                    TapLayout(
-                      isCircle: true,
-                      width: 40,
-                      height: 40,
-                      onTap: () {
-                        if (Navigator.canPop(context)) {
-                          Navigator.pop(context);
-                        }
-                      },
-                      child: BackButton(),
-                    ),
-                    const SizedBox(width: 32),
-                    Expanded(
-                      flex: 1,
-                      child: Row(mainAxisAlignment: centerTitle ?? false ? MainAxisAlignment.center : MainAxisAlignment.start, children: [
-                        Text.rich(
-                          TextSpan(text: title, children: [
-                            TextSpan(
-                              text: subTitle ?? '',
-                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
-                            ),
-                          ]),
-                        ),
-                      ]),
-                    ),
-                    const SizedBox(width: 32),
-                  ]),
-                )
-              ]),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+// Widget _buildToolbar(BuildContext context) {
+//   return Semantics(
+//     container: true,
+//     child: AnnotatedRegion<SystemUiOverlayStyle>(
+//       value: systemOverlayStyle,
+//       child: Material(
+//         color: backgroundColor,
+//         child: Semantics(
+//           explicitChildNodes: true,
+//           child: Container(
+//             color: backgroundColor,
+//             child: Column(children: [
+//               Container(height: 24, color: backgroundColor),
+//               Container(
+//                 height: kToolbarHeight,
+//                 padding: const EdgeInsets.symmetric(horizontal: 24),
+//                 child: Row(children: [
+//                   TapLayout(
+//                     isCircle: true,
+//                     width: 40,
+//                     height: 40,
+//                     onTap: () {
+//                       if (Navigator.canPop(context)) {
+//                         Navigator.pop(context);
+//                       }
+//                     },
+//                     child: BackButton(),
+//                   ),
+//                   const SizedBox(width: 32),
+//                   Expanded(
+//                     flex: 1,
+//                     child: Row(mainAxisAlignment: centerTitle ?? false ? MainAxisAlignment.center : MainAxisAlignment.start, children: [
+//                       Text.rich(
+//                         TextSpan(text: title, children: [
+//                           TextSpan(
+//                             text: subTitle ?? '',
+//                             style: const TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
+//                           ),
+//                         ]),
+//                       ),
+//                     ]),
+//                   ),
+//                   const SizedBox(width: 32),
+//                 ]),
+//               )
+//             ]),
+//           ),
+//         ),
+//       ),
+//     ),
+//   );
+// }
 }

@@ -61,8 +61,6 @@ class _BannerViewState extends State<BannerView> {
   /// 定时滑动页面的计时器
   Timer? _timer;
 
-  bool _isPageMove = false;
-
   @override
   void initState() {
     super.initState();
@@ -205,7 +203,6 @@ class _BannerViewState extends State<BannerView> {
         ),
         onNotification: (notification) {
           if (notification is ScrollStartNotification) {
-            _isPageMove = true;
             // 滚动开始
           } else if (notification is ScrollUpdateNotification) {
             // 滚动中
@@ -215,7 +212,6 @@ class _BannerViewState extends State<BannerView> {
             }
           } else if (notification is ScrollEndNotification) {
             //滚动结束
-            _isPageMove = false;
           }
           return false;
         },

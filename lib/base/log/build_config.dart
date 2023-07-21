@@ -35,5 +35,5 @@ class BuildConfig {
 
   static bool get isPhone => isAndroid || isIOS;
 
-  static bool get isWeb => !(isDesktop && isPhone && isFuchsia);
+  static bool get isWeb => !(isDesktop || isPhone || isFuchsia);
 }

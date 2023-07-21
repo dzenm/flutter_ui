@@ -68,7 +68,7 @@ class _HTTPItemPageState extends State<HTTPItemPage> with SingleTickerProviderSt
 class _TabWidget extends StatefulWidget {
   final Map<String, dynamic> data;
 
-  _TabWidget({super.key, required this.data});
+  const _TabWidget({required this.data});
 
   @override
   State<StatefulWidget> createState() => _TabWidgetState();

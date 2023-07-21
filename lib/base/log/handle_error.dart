@@ -89,13 +89,13 @@ class HandleError {
     runApp();
     return;
     // flutter sdk 3.3之前使用下面的方式捕获异常
-    runZonedGuarded(() {
-      // 在这里启动Flutter APP之后，所有的异常信息才能捕获成功
-      runApp();
-    }, (dynamic error, StackTrace stackTrace) async {
-      // 处理异常信息
-      _handleMessage(error, stackTrace, handleMsg, showPackageInfo, showDeviceInfo, showStackInfo, showLogInConsole);
-    });
+    // runZonedGuarded(() {
+    //   // 在这里启动Flutter APP之后，所有的异常信息才能捕获成功
+    //   runApp();
+    // }, (dynamic error, StackTrace stackTrace) async {
+    //   // 处理异常信息
+    //   _handleMessage(error, stackTrace, handleMsg, showPackageInfo, showDeviceInfo, showStackInfo, showLogInConsole);
+    // });
   }
 
   /// 初始化设备/包名相关的信息
