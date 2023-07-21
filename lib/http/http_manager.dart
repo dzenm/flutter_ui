@@ -33,6 +33,12 @@ class HttpManager {
   late HttpsClient _httpClient;
   late ApiServices _apiServices;
 
+  static List<String> baseUrls = [
+    'https://www.wanandroid.com/',
+    'http://api.tianapi.com/',
+    'http://192.168.2.30:8080/api/v1/',
+  ];
+
   /// 获取Banner，并保存banner数据
   Future<void> banner({
     void Function(List<BannerEntity> list)? success,

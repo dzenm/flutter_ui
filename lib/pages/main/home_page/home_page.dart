@@ -160,6 +160,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _getDataList() async {
+    if (_init) return;
+    if (!_init) return;
     await HttpManager.instance.getWebsiteList(
       isShowDialog: false,
       success: (list) {
@@ -294,14 +296,11 @@ class ArticleItemView extends StatelessWidget {
                           style: TextStyle(fontSize: 12, color: theme.blue),
                         ),
                         onTap: () {
-                          String url = val.url ?? '';
-                          int start = url.indexOf('/');
-                          if (start <= 0) return;
-                          int end = url.indexOf('');
-                          String page = url.substring(start, end);
-                          ArticleEntity? article = context.read<ArticleModel>().getArticle(index);
-                          if (article == null) return;
-                          String params = '?title=${val.name}&url=${val.url}';
+                          /// 处理url
+                          String path = val.url ?? '';
+                          int start = path.indexOf('/');
+                          String url = HttpManager.baseUrls[0] + path.substring(start);
+                          String params = '?title=${val.name}&url=$url';
                           AppRouteDelegate.of(context).push(Routers.webView + params);
                         },
                       );
