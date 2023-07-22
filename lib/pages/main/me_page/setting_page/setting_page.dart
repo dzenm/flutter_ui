@@ -179,7 +179,7 @@ class _SettingPageState extends State<SettingPage> {
               spacing: 8,
               runSpacing: 8,
               children: modes.map((mode) {
-                Color? value = theme.appbar;
+                Color? value = model.getTheme(mode).appbar;
                 return InkWell(
                   onTap: () {
                     model.setThemeMode(mode);

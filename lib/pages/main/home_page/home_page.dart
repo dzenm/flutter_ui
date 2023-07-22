@@ -90,9 +90,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildBody() {
-    if (!_init) {
-      return Container();
-    }
     return Column(
       children: [
         const Banner(),
