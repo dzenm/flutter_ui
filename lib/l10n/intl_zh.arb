@@ -2,6 +2,7 @@
   "appName": "Flutter UI",
 
   "login": "登录",
+  "verifyCode": "验证码",
   "register": "注册",
   "logout": "注销",
   "avatar": "头像",
@@ -63,5 +64,8 @@
   "sharedArticle": "分享的文章",
   "loginRecord": "登陆记录",
   "coinRecord": "积分获取记录列表",
-  "studyMainPage": "学习主页{name}"
+  "studyMainPage": "学习主页{name}",
+  "readAndAgree": "阅读并同意",
+  "registerProtocol": "《软件注册协议》",
+  "privateProtocol": "《隐私协议》"
 }

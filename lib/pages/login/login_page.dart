@@ -9,6 +9,7 @@ import '../../base/http/https_client.dart';
 import '../../base/log/log.dart';
 import '../../base/route/app_route_delegate.dart';
 import '../../base/utils/sp_util.dart';
+import '../../base/widgets/common_bar.dart';
 import '../../base/widgets/tap_layout.dart';
 import '../../entities/user_entity.dart';
 import '../../generated/l10n.dart';
@@ -37,7 +38,7 @@ class LoginPage extends StatelessWidget {
         child: Container(
           width: 400,
           padding: const EdgeInsets.all(24),
-          child: const _LoginWidget(),
+          child: const _EditLoginInfoView(),
         ),
       ),
     );
@@ -50,7 +51,7 @@ class LoginPage extends StatelessWidget {
         child: Container(
           width: 400,
           padding: const EdgeInsets.all(24),
-          child: const _LoginWidget(),
+          child: const _EditLoginInfoView(),
         ),
       ),
     );
@@ -59,18 +60,27 @@ class LoginPage extends StatelessWidget {
   /// App移动端展示的页面
   Widget _buildAppPage(BuildContext context) {
     AppTheme theme = context.watch<LocalModel>().theme;
+    Size size = MediaQuery.of(context).size;
+    double marginTop = size.height / 8;
+    double marginBottom = size.height / 4;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(S.of(context).login, style: TextStyle(color: theme.white)),
-      ),
-      body: Center(
-        child: Stack(children: [
-          SingleChildScrollView(
-            child: Container(
-              padding: const EdgeInsets.all(24),
-              child: const _LoginWidget(),
+      backgroundColor: theme.background,
+      body: SingleChildScrollView(
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          CommonBar(
+            backgroundColor: theme.background,
+            systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarIconBrightness: Brightness.dark,
+              statusBarBrightness: Brightness.dark,
             ),
-          )
+          ),
+          SizedBox(height: marginTop),
+          Container(
+            padding: const EdgeInsets.all(24),
+            child: const _EditLoginInfoView(),
+          ),
+          SizedBox(height: marginBottom),
+          const ProtocolInfoView(),
         ]),
       ),
     );
@@ -78,32 +88,29 @@ class LoginPage extends StatelessWidget {
 }
 
 ///
-/// 登录组件主体部分的状态，不包含 [Scaffold]
-class _LoginWidget extends StatefulWidget {
-  const _LoginWidget();
+/// 登录组件主体部分(编辑登录信息)，不包含 [Scaffold]
+class _EditLoginInfoView extends StatefulWidget {
+  const _EditLoginInfoView();
 
   @override
-  State<StatefulWidget> createState() => _LoginWidgetState();
+  State<StatefulWidget> createState() => __EditLoginInfoViewState();
 }
 
-class _LoginWidgetState extends State<_LoginWidget> {
+class __EditLoginInfoViewState extends State<_EditLoginInfoView> {
   static const String _tag = 'LoginPage';
 
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController rPasswordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _verifyCodeController = TextEditingController();
 
   String _username = '';
   String _password = '';
-  String _rPassword = '';
-
-  final bool _isLoginAndRegisterPage = true; // 是否登陆注册双功能页面
-  bool _switchCurrentLogin = true; // true为登陆，false为注册
+  String _verifyCode = ''; // 验证码
 
   bool _isShowPwd = false; // 是否显示输入的密码
-  bool _isShowRPwd = false; // 是否显示输入的重复密码
-
+  bool _loginByPhone = false; // 是否通过手机号验证码登录
   bool _isDisableLoginButton = true; // 是否禁用点击按钮，根据输入的内容_isLogin为true禁用登陆按钮，为false禁用注册按钮
+  bool _isAdgree = false;
 
   @override
   void initState() {
@@ -120,7 +127,7 @@ class _LoginWidgetState extends State<_LoginWidget> {
   }
 
   @override
-  void didUpdateWidget(covariant _LoginWidget oldWidget) {
+  void didUpdateWidget(_EditLoginInfoView oldWidget) {
     super.didUpdateWidget(oldWidget);
     log('didUpdateWidget');
   }
@@ -136,24 +143,23 @@ class _LoginWidgetState extends State<_LoginWidget> {
     super.dispose();
     log('dispose');
 
-    usernameController.dispose();
-    passwordController.dispose();
-    rPasswordController.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
   }
 
   // 初始化输入框的内容，如果本地储存账号和密码，获取并填充到输入框
   void _initInputText() {
-    usernameController.text = _username = SpUtil.getUsername();
-    usernameController.addListener(() {
-      _username = usernameController.text;
+    _usernameController.text = _username = SpUtil.getUsername();
+    _usernameController.addListener(() {
+      _username = _usernameController.text;
       _resetLoginButtonState();
     });
-    passwordController.addListener(() {
-      _password = passwordController.text;
+    _passwordController.addListener(() {
+      _password = _passwordController.text;
       _resetLoginButtonState();
     });
-    rPasswordController.addListener(() {
-      _rPassword = rPasswordController.text;
+    _verifyCodeController.addListener(() {
+      _verifyCode = _verifyCodeController.text;
       _resetLoginButtonState();
     });
   }
@@ -166,14 +172,14 @@ class _LoginWidgetState extends State<_LoginWidget> {
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
       // 用户名输入框
       TextField(
-        controller: usernameController,
+        controller: _usernameController,
         decoration: InputDecoration(
           icon: const Icon(Icons.person),
           labelText: S.of(context).username,
           suffixIcon: IconButton(
             splashColor: theme.transparent,
             icon: const Icon(Icons.close),
-            onPressed: () => usernameController.clear(),
+            onPressed: () => _usernameController.clear(),
           ),
         ),
         maxLines: 1,
@@ -182,83 +188,97 @@ class _LoginWidgetState extends State<_LoginWidget> {
       ),
       const SizedBox(height: 32),
       // 密码输入框
-      TextField(
-        controller: passwordController,
-        decoration: InputDecoration(
-          icon: const Icon(Icons.admin_panel_settings),
-          labelText: S.of(context).password,
-          suffixIcon: IconButton(
-            splashColor: theme.transparent,
-            icon: Icon(_isShowPwd ? Icons.visibility : Icons.visibility_off, size: 20),
-            iconSize: 16,
-            // 点击改变显示或隐藏密码
-            onPressed: () => setState(() => _isShowPwd = !_isShowPwd),
-          ),
-        ),
-        maxLines: 1,
-        keyboardType: TextInputType.text,
-        obscureText: !_isShowPwd,
-      ),
-      const SizedBox(height: 32),
-      // 重复密码输入框
-      if (!_switchCurrentLogin)
+      if (!_loginByPhone)
         TextField(
-          controller: rPasswordController,
+          controller: _passwordController,
           decoration: InputDecoration(
             icon: const Icon(Icons.admin_panel_settings),
-            labelText: S.of(context).rPassword,
+            labelText: S.of(context).password,
             suffixIcon: IconButton(
               splashColor: theme.transparent,
-              icon: Icon(_isShowRPwd ? Icons.visibility : Icons.visibility_off, size: 20),
+              icon: Icon(_isShowPwd ? Icons.visibility : Icons.visibility_off, size: 20),
               iconSize: 16,
               // 点击改变显示或隐藏密码
-              onPressed: () => setState(() => _isShowRPwd = !_isShowRPwd),
+              onPressed: () => setState(() => _isShowPwd = !_isShowPwd),
             ),
           ),
           maxLines: 1,
           keyboardType: TextInputType.text,
-          obscureText: !_isShowRPwd,
+          obscureText: !_isShowPwd,
         ),
-      if (!_switchCurrentLogin) const SizedBox(height: 32),
+      // 验证码输入框
+      if (_loginByPhone)
+        TextField(
+          controller: _passwordController,
+          decoration: InputDecoration(
+            icon: const Icon(Icons.verified_sharp),
+            labelText: S.of(context).verifyCode,
+            suffixIcon: IconButton(
+              splashColor: theme.transparent,
+
+              icon: Icon(_isShowPwd ? Icons.visibility : Icons.visibility_off, size: 20),
+              iconSize: 16,
+              // 点击改变显示或隐藏密码
+              onPressed: () => setState(() => _isShowPwd = !_isShowPwd),
+            ),
+          ),
+          maxLines: 1,
+          keyboardType: TextInputType.text,
+          obscureText: !_isShowPwd,
+        ),
+      const SizedBox(height: 40),
+
+      // 登陆按钮
+      TapLayout(
+        height: 40.0,
+        borderRadius: const BorderRadius.all(Radius.circular(2)),
+        background: _isDisableLoginButton ? theme.disableButton : theme.button,
+        onTap: _isDisableLoginButton ? null : _login,
+        child: Text(S.of(context).login, style: TextStyle(color: theme.text)),
+      ),
+      const SizedBox(height: 16, width: 64),
       Row(children: [
-        // 登陆按钮
-        Expanded(
-          flex: 1,
-          child: TapLayout(
-            height: 36.0,
-            borderRadius: const BorderRadius.all(Radius.circular(2)),
-            background: _switchCurrentLogin && _isDisableLoginButton ? theme.disableButton : theme.button,
-            onTap: _switchCurrentLogin && _isDisableLoginButton ? null : _login,
-            child: Text(S.of(context).login, style: TextStyle(color: theme.text)),
-          ),
+        // 验证码登录按钮
+        TapLayout(
+          height: 40.0,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          borderRadius: const BorderRadius.all(Radius.circular(4)),
+          onTap: _switchLoginType,
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
+            Text('${S.of(context).verifyCode}${S.of(context).login}', style: TextStyle(color: theme.button)),
+          ]),
         ),
-        const SizedBox(height: 32, width: 64),
+        Expanded(child: Container()),
         // 注册按钮
-        Expanded(
-          flex: 1,
-          child: TapLayout(
-            height: 36.0,
-            borderRadius: const BorderRadius.all(Radius.circular(2)),
-            background: !_switchCurrentLogin && _isDisableLoginButton ? theme.disableButton : theme.button,
-            onTap: !_switchCurrentLogin && _isDisableLoginButton ? null : _register,
-            child: Text(S.of(context).register, style: TextStyle(color: theme.text)),
-          ),
+        TapLayout(
+          height: 40.0,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          borderRadius: const BorderRadius.all(Radius.circular(4)),
+          onTap: _register,
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
+            Text(S.of(context).register, style: TextStyle(color: theme.button)),
+          ]),
         ),
       ]),
     ]);
   }
 
-  // 如果输入的账号密码为空则禁用登录按钮
+  /// 如果输入的账号密码为空则禁用登录按钮
   void _resetLoginButtonState() {
-    _isDisableLoginButton = _username.isEmpty || _password.isEmpty || (_switchCurrentLogin ? false : _rPassword.isEmpty);
+    _isDisableLoginButton = _username.isEmpty || _password.isEmpty;
     setState(() => {});
   }
 
-  // 登录按钮点击事件
+  /// 切换登录的方式
+  void _switchLoginType() {
+    setState(() => _loginByPhone = !_loginByPhone);
+  }
+
+  /// 登录按钮点击事件
   void _login() {
     FocusScope.of(context).unfocus();
-    if (!_switchCurrentLogin) {
-      setState(() => _switchCurrentLogin = true);
+    if (_loginByPhone) {
+
       return;
     }
     HttpsClient.instance.request(apiServices.login(_username, _password), success: (data) {
@@ -277,15 +297,7 @@ class _LoginWidgetState extends State<_LoginWidget> {
 
   void _register() {
     FocusScope.of(context).unfocus();
-    if (!_isLoginAndRegisterPage) {
-      FocusScope.of(context).unfocus();
-      AppRouteDelegate.of(context).push(Routers.register, clearStack: true);
-      return;
-    }
-    if (_switchCurrentLogin) {
-      setState(() => _switchCurrentLogin = false);
-      return;
-    }
+    AppRouteDelegate.of(context).push(Routers.register);
   }
 
   void _pushMainPage() {
@@ -293,4 +305,48 @@ class _LoginWidgetState extends State<_LoginWidget> {
   }
 
   void log(String msg) => BuildConfig.showPageLog ? Log.p(msg, tag: _tag) : null;
+}
+
+/// 协议信息部分
+class ProtocolInfoView extends StatefulWidget {
+  final ValueChanged<bool>? onChanged;
+
+  const ProtocolInfoView({super.key, this.onChanged});
+
+  @override
+  State<StatefulWidget> createState() => _ProtocolInfoViewState();
+}
+
+class _ProtocolInfoViewState extends State<ProtocolInfoView> {
+  bool isAgree = false;
+
+  @override
+  Widget build(BuildContext context) {
+    AppTheme theme = context.watch<LocalModel>().theme;
+    IconData icon = isAgree ? Icons.check_box_sharp : Icons.check_box_outline_blank_sharp;
+    Color color = isAgree ? theme.blue : theme.hint;
+    return Column(mainAxisSize: MainAxisSize.min, children: [
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        const SizedBox(width: 16),
+        TapLayout(
+          onTap: () {
+            setState(() => isAgree = !isAgree);
+            if (widget.onChanged != null) widget.onChanged!(isAgree);
+          },
+          child: Icon(icon, color: color),
+        ),
+        const SizedBox(width: 4),
+        Text(S.of(context).readAndAgree, style: TextStyle(color: theme.hint, fontSize: 12)),
+        TapLayout(
+          onTap: () {},
+          child: Text(S.of(context).registerProtocol, style: TextStyle(color: theme.blue, fontSize: 12)),
+        ),
+        TapLayout(
+          onTap: () {},
+          child: Text(S.of(context).privateProtocol, style: TextStyle(color: theme.blue, fontSize: 12)),
+        ),
+        const SizedBox(width: 16),
+      ]),
+    ]);
+  }
 }

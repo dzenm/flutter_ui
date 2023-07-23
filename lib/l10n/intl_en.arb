@@ -2,6 +2,7 @@
   "appName": "Flutter UI",
 
   "login": "Login",
+  "verifyCode": "Verify Code",
   "register": "Register",
   "logout": "Logout",
   "avatar": "Avatar",
@@ -63,5 +64,8 @@
   "sharedArticle": "Shared Article",
   "loginRecord": "Login Record",
   "coinRecord": "Coin Record",
-  "studyMainPage": "Study MainPage{name}"
+  "studyMainPage": "Study MainPage{name}",
+  "readAndAgree": "Read And Agree",
+  "registerProtocol": "<Register Protocol>",
+  "privateProtocol": "<Private Protocol>"
 }
