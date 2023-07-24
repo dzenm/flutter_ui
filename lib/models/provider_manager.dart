@@ -17,30 +17,8 @@ import 'website_model.dart';
 /// Created by a0010 on 2022/7/28 10:56
 /// 管理所有Provider Model状态
 class ProviderManager {
-  static bool _init = false;
-
-  /// 初始化所有数据
-  static Future<void> init(BuildContext context) async {
-    if (_init) return;
-    _init = true;
-
-    // 表相关的Model
-    context.read<ArticleModel>().init();
-    context.read<BannerModel>().init();
-    context.read<UserModel>().init();
-    context.read<WebsiteModel>().init();
-
-    // 页面相关的Model
-    context.read<MainModel>().init();
-    context.read<HomeModel>().init();
-    context.read<MeModel>().init();
-    context.read<NavModel>().init();
-    context.read<StudyModel>().init();
-  }
-
   /// 清空所有数据
   static void clear(BuildContext context) {
-    _init = false;
     // 表相关的Model
     context.read<ArticleModel>().clear();
     context.read<BannerModel>().clear();
