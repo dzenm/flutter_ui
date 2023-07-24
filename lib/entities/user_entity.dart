@@ -42,6 +42,7 @@ class UserEntity extends DBBaseModel {
     username = json['username'];
   }
 
+  @override
   Map<String, dynamic> toJson() => {
     'admin': boolToInt(admin),
     'chapterTops': jsonEncode(chapterTops),

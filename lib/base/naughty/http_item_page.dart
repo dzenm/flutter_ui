@@ -83,7 +83,7 @@ class _TabWidgetState extends State<_TabWidget> {
     List<Widget> list = [];
     list.add(_buildTitleView('  Headers'));
     list.add(interval);
-    list.add(Divider(height: 0.1, color: const Color(0xFFEFEFEF)));
+    list.add(const Divider(height: 0.1, color: Color(0xFFEFEFEF)));
     list.add(interval);
     data.forEach((key, value) {
       if (key != 'Body') {
@@ -95,7 +95,7 @@ class _TabWidgetState extends State<_TabWidget> {
     list.add(interval);
     list.add(_buildTitleView('  Body'));
     list.add(interval);
-    list.add(Divider(height: 0.1, color: const Color(0xFFEFEFEF)));
+    list.add(const Divider(height: 0.1, color: Color(0xFFEFEFEF)));
     list.add(interval);
     list.add(Text(data['Body'].toString()));
 

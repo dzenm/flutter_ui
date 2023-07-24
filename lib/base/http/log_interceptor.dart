@@ -136,7 +136,7 @@ class LoggerInterceptor extends Interceptor {
       }
       _print('headers:');
       Map<String, dynamic> headers = {};
-      response.headers.forEach((key, val) => headers['$key'] = val.join('\r\n\t'));
+      response.headers.forEach((key, val) => headers[key] = val.join('\r\n\t'));
       _print(headers);
     }
     if (responseBody) {
@@ -149,7 +149,7 @@ class LoggerInterceptor extends Interceptor {
   }
 
   @override
-  void onError(DioError err, ErrorInterceptorHandler handler) async {
+  void onError(DioException err, ErrorInterceptorHandler handler) async {
     if (error) {
       _handleRequest(err.requestOptions);
       _handleResponse(err.response);
@@ -160,7 +160,7 @@ class LoggerInterceptor extends Interceptor {
   }
 
   /// 处理请求错误信息
-  void _handleError(DioError err) {
+  void _handleError(DioException err) {
     if (decorate) {
       _logPrint('╔══════════════════════════════ DioError ════════════════════════════════════╗');
     } else {

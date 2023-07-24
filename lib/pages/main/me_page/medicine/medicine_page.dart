@@ -42,7 +42,7 @@ class _MedicinePageState extends State<MedicinePage> {
         systemOverlayStyle: SystemUiOverlayStyle.light,
       ),
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: ListView.builder(
           shrinkWrap: true,
           itemCount: _list.length,

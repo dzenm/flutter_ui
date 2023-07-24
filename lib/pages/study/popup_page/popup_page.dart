@@ -18,7 +18,7 @@ class PopupPage extends StatefulWidget {
 }
 
 class _PopupPageState extends State<PopupPage> {
-  GlobalKey _targetKey = GlobalKey();
+  final GlobalKey _targetKey = GlobalKey();
 
   PopupDirection _direction = PopupDirection.bottom;
   bool _isCollapsed = false, _isPin = false, _enabledOffset = false, _enabledArrowOffset = false;
@@ -29,11 +29,11 @@ class _PopupPageState extends State<PopupPage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        title: Text('PopupWindow测试', style: TextStyle(color: Colors.white)),
+        title: const Text('PopupWindow测试', style: TextStyle(color: Colors.white)),
         centerTitle: true,
       ),
       body: Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: Row(children: [
             Expanded(child: _buildMenuView()),
@@ -46,22 +46,20 @@ class _PopupPageState extends State<PopupPage> {
   Widget _buildMenuView() {
     List<String> list = ['左上', '正左', '左下', '上左', '正上', '上右', '右上', '正右', '右下', '下右', '正下', '下左'];
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Container(
-        child: CheckGroup(
-          list: list,
-          padding: EdgeInsets.symmetric(vertical: 16),
-          initialValue: 10,
-          childAspectRatio: 2.2,
-          crossAxisCount: 3,
-          crossAxisSpacing: 2,
-          onChanged: (index) {
-            PopupDirection.values.forEach((direct) {
-              if (direct.index == index) {
-                _direction = direct;
-              }
-            });
-          },
-        ),
+      CheckGroup(
+        list: list,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        initialValue: 10,
+        childAspectRatio: 2.2,
+        crossAxisCount: 3,
+        crossAxisSpacing: 2,
+        onChanged: (index) {
+          for (var direct in PopupDirection.values) {
+            if (direct.index == index) {
+              _direction = direct;
+            }
+          }
+        },
       ),
       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         SizedBox(
@@ -86,7 +84,7 @@ class _PopupPageState extends State<PopupPage> {
               );
             },
             color: Colors.amberAccent,
-            child: Text(
+            child: const Text(
               "Custom",
               style: TextStyle(color: Colors.white),
             ),
@@ -120,7 +118,7 @@ class _PopupPageState extends State<PopupPage> {
       ),
       if (_enabledOffset)
         Row(children: [
-          Text('Popup偏移量X'),
+          const Text('Popup偏移量X'),
           Expanded(
             child: Slider(
               value: _offsetX,
@@ -138,7 +136,7 @@ class _PopupPageState extends State<PopupPage> {
         ]),
       if (_enabledOffset)
         Row(children: [
-          Text('Popup偏移量Y'),
+          const Text('Popup偏移量Y'),
           Expanded(
             child: Slider(
               value: _offsetY,
@@ -164,7 +162,7 @@ class _PopupPageState extends State<PopupPage> {
       ),
       if (_enabledArrowOffset)
         Row(children: [
-          Text('Popup偏移量X'),
+          const Text('Popup偏移量X'),
           Expanded(
             child: Slider(
               value: _offsetArrowX,
@@ -182,7 +180,7 @@ class _PopupPageState extends State<PopupPage> {
         ]),
       if (_enabledArrowOffset)
         Row(children: [
-          Text('Popup偏移量Y'),
+          const Text('Popup偏移量Y'),
           Expanded(
             child: Slider(
               value: _offsetArrowY,

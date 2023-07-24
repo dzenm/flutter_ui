@@ -21,6 +21,7 @@ class CoinRecordEntity extends DBBaseModel {
 
   factory CoinRecordEntity.fromJson(Map<String, dynamic> json) => _$CoinRecordEntityFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$CoinRecordEntityToJson(this);
 
   @override

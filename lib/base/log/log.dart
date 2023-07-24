@@ -134,7 +134,9 @@ class Log {
       suffix = colors[1];
     }
     String msg = prefix + message + suffix;
-    print(msg);
+    if (kDebugMode) {
+      print(msg);
+    }
   }
 
   /// 处理文本颜色

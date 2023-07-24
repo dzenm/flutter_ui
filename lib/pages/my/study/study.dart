@@ -5,7 +5,7 @@ import 'math_study.dart';
 import 'sort_study.dart';
 
 class Study {
-  static final String _tag = 'Study';
+  static const String _tag = 'Study';
 
   /// main 方法
   static void main() {

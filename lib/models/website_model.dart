@@ -5,7 +5,7 @@ import 'package:flutter_ui/entities/website_entity.dart';
 /// Created by a0010 on 2022/7/28 10:56
 /// Provider中共享的网站数据
 class WebsiteModel with ChangeNotifier {
-  WebsiteEntity _entity = WebsiteEntity();
+  final WebsiteEntity _entity = WebsiteEntity();
 
   /// 数据库对应的所有数据
   List<WebsiteEntity> _websites = [];

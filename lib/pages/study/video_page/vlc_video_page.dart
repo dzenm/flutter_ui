@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class VlcVideoPage extends StatefulWidget {
+  const VlcVideoPage({super.key});
+
   @override
   State<StatefulWidget> createState() => _VlcVideoPageState();
 }
@@ -40,7 +42,7 @@ class _VlcVideoPageState extends State<VlcVideoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('VLC视频播放', style: TextStyle(color: Colors.white)),
+        title: const Text('VLC视频播放', style: TextStyle(color: Colors.white)),
       ),
       // body: Container(
       //   alignment: Alignment.center,

@@ -13,13 +13,13 @@ import 'study/study_router.dart';
 /// Created by a0010 on 2023/5/6 13:32
 ///
 class Routers {
-  static final String root = '/';
-  static final String notFound = '/notFound';
-  static final String login = '/login';
-  static final String register = '/register';
-  static final String main = '/main';
-  static final String example = '/example';
-  static final String webView = '/webView';
+  static const String root = '/';
+  static const String notFound = '/notFound';
+  static const String login = '/login';
+  static const String register = '/register';
+  static const String main = '/main';
+  static const String example = '/example';
+  static const String webView = '/webView';
 
   static List<AppRoutePage> get routers => [
         AppRoutePage(
@@ -31,31 +31,31 @@ class Routers {
         AppRoutePage(
           name: notFound,
           builder: (settings) {
-            return NotFoundPage();
+            return const NotFoundPage();
           },
         ),
         AppRoutePage(
           name: login,
           builder: (settings) {
-            return LoginPage();
+            return const LoginPage();
           },
         ),
         AppRoutePage(
           name: register,
           builder: (settings) {
-            return RegisterPage();
+            return const RegisterPage();
           },
         ),
         AppRoutePage(
           name: main,
           builder: (settings) {
-            return MainPage();
+            return const MainPage();
           },
         ),
         AppRoutePage(
           name: example,
           builder: (settings) {
-            return ExamplePage();
+            return const ExamplePage();
           },
         ),
         AppRoutePage(

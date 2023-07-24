@@ -26,21 +26,21 @@ class _TabPlazaPageState extends State<TabPlazaPage> {
   @override
   Widget build(BuildContext context) {
     AppTheme theme = context.watch<LocalModel>().theme;
-    return Container(
+    return SizedBox(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           MaterialButton(
-            child: Text('进入下一个页面'),
             textColor: theme.background,
             color: theme.appbar,
             onPressed: () {},
+            child: const Text('进入下一个页面'),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
         ],
       ),
     );

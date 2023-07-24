@@ -42,7 +42,7 @@ class _ViewInfoPageState extends State<ViewInfoPage> {
         child: Column(children: [
           CommonBar(title: S.of(context).profile, centerTitle: true, actions: [
             IconButton(
-              icon: Icon(Icons.edit_sharp),
+              icon: const Icon(Icons.edit_sharp),
               onPressed: () => AppRouteDelegate.of(context).push(MeRouter.editInfo),
             ),
           ]),
@@ -51,8 +51,8 @@ class _ViewInfoPageState extends State<ViewInfoPage> {
               onTap: () => {},
               height: 50,
               background: theme.white,
-              padding: EdgeInsets.all(16),
-              child: SingleTextLayout(title: '$value'),
+              padding: const EdgeInsets.all(16),
+              child: SingleTextLayout(title: value),
             ),
             selector: (context, model) => model.user.username ?? '',
           )

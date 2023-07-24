@@ -113,7 +113,7 @@ class Application {
   void _initAndroidSettings() {
     if (!BuildConfig.isAndroid) return;
     // 设置Android头部的导航栏透明
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       // 全局设置透明
       statusBarBrightness: Brightness.light,

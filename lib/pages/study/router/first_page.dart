@@ -14,7 +14,7 @@ class FirstPage extends StatelessWidget {
   final int type;
   final int index;
 
-  FirstPage({
+  const FirstPage({super.key,
     required this.type,
     required this.index,
   });
@@ -25,13 +25,13 @@ class FirstPage extends StatelessWidget {
     bool last = index == list.length - 1;
     return Scaffold(
       appBar: AppBar(
-        title: Text(list[0], style: TextStyle(color: Colors.white)),
+        title: Text(list[0], style: const TextStyle(color: Colors.white)),
       ),
       body: Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             _buildNavigator(context, last),
           ],
         ),
@@ -43,10 +43,10 @@ class FirstPage extends StatelessWidget {
     AppTheme appTheme = context.watch<LocalModel>().theme;
     String text = last ? '返回' : '下一个页面';
     return MaterialButton(
-      child: _text(text),
       textColor: Colors.white,
       color: appTheme.appbar,
       onPressed: () => navigator(context, last),
+      child: _text(text),
     );
   }
 

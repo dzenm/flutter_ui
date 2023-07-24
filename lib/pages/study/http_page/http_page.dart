@@ -14,6 +14,8 @@ import '../../../generated/l10n.dart';
 
 /// HTTP请求
 class HTTPListPage extends StatefulWidget {
+  const HTTPListPage({super.key});
+
   @override
   State<StatefulWidget> createState() => _HTTPListPageState();
 }
@@ -28,22 +30,22 @@ class _HTTPListPageState extends State<HTTPListPage> {
     String text = StrUtil.formatToJson(list);
     return Scaffold(
       appBar: AppBar(
-        title: Text('HTTP请求', style: TextStyle(color: Colors.white)),
+        title: const Text('HTTP请求', style: TextStyle(color: Colors.white)),
       ),
       body: Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Column(children: [
           ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(10)),
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
             child: Container(
               color: Colors.blueGrey,
               child: Column(children: [
                 TapLayout(
                   width: MediaQuery.of(context).size.width,
                   height: 50.0,
-                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: SingleTextLayout(
                     title: '显示加载框',
                     titleColor: Colors.white,
@@ -53,7 +55,7 @@ class _HTTPListPageState extends State<HTTPListPage> {
                 TapLayout(
                   width: MediaQuery.of(context).size.width,
                   height: 50.0,
-                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: SingleTextLayout(
                     title: '显示错误提示框',
                     titleColor: Colors.white,
@@ -63,26 +65,26 @@ class _HTTPListPageState extends State<HTTPListPage> {
               ]),
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Row(children: [
             Expanded(
+                flex: 1,
                 child: MaterialButton(
                   onPressed: _getArticle,
-                  child: Text('重新请求', style: TextStyle(color: Colors.white)),
                   color: Colors.blueGrey,
-                ),
-                flex: 1),
-            SizedBox(width: 16),
+                  child: const Text('重新请求', style: TextStyle(color: Colors.white)),
+                )),
+            const SizedBox(width: 16),
             Expanded(
+              flex: 1,
               child: MaterialButton(
                 onPressed: () => context.read<ArticleModel>().clear(),
-                child: Text('清空数据', style: TextStyle(color: Colors.white)),
                 color: Colors.blueGrey,
+                child: const Text('清空数据', style: TextStyle(color: Colors.white)),
               ),
-              flex: 1,
             ),
           ]),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -94,16 +96,16 @@ class _HTTPListPageState extends State<HTTPListPage> {
               WrapButton(
                 text: S.of(context).register,
                 color: Colors.white,
-                style: TextStyle(fontSize: 15.0, color: Color.fromRGBO(8, 191, 98, 1.0)),
+                style: const TextStyle(fontSize: 15.0, color: Color.fromRGBO(8, 191, 98, 1.0)),
                 onTap: () => {},
                 width: 100.0,
               ),
             ],
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Expanded(
             child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               child: Center(child: Text(text)),
             ),
           ),

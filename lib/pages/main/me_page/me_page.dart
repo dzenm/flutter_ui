@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/models/provider_manager.dart';
 import 'package:flutter_ui/pages/main/me_page/me_router.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +20,6 @@ import '../../../generated/l10n.dart';
 import '../../../http/http_manager.dart';
 import '../../../models/user_model.dart';
 import '../../study/study_router.dart';
-import 'me_model.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56
@@ -78,7 +78,7 @@ class _MePageState extends State<MePage> {
         children: [
           // toolbar背景色块
           Column(children: [
-            CommonBar(
+            const CommonBar(
               systemOverlayStyle: SystemUiOverlayStyle(
                 statusBarIconBrightness: Brightness.light,
               ),
@@ -95,24 +95,24 @@ class _MePageState extends State<MePage> {
   Widget _buildBody(AppTheme theme, double statusBarHeight) {
     return SingleChildScrollView(
       padding: EdgeInsets.only(left: 16, right: 16, top: statusBarHeight),
-      physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()), // 上拉下拉弹簧效果
+      physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()), // 上拉下拉弹簧效果
       child: Stack(alignment: Alignment.topRight, children: [
         Container(
-          margin: EdgeInsets.only(top: 24),
+          margin: const EdgeInsets.only(top: 24),
           decoration: BoxDecoration(
             color: theme.background,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Column(children: [
-            SizedBox(height: 48),
+            const SizedBox(height: 48),
             ..._buildChildrenButtons(theme),
           ]),
         ),
         Container(
-          margin: EdgeInsets.only(right: 32),
+          margin: const EdgeInsets.only(right: 32),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(width: 3.0, color: Color(0xfffcfcfc)),
+            border: Border.all(width: 3.0, color: const Color(0xfffcfcfc)),
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(64),
@@ -127,7 +127,7 @@ class _MePageState extends State<MePage> {
     return [
       TapLayout(
         height: 50.0,
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         onTap: () {
           String params = '?medicineName=金银花';
           AppRouteDelegate.of(context).push(MeRouter.medicine + params);
@@ -137,10 +137,10 @@ class _MePageState extends State<MePage> {
           isShowForward: true,
         ),
       ),
-      SizedBox(height: 8),
+      const SizedBox(height: 8),
       TapLayout(
         height: 50.0,
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         onTap: () => AppRouteDelegate.of(context).push(MeRouter.collect),
         child: SingleTextLayout(
           icon: Icons.collections,
@@ -150,7 +150,7 @@ class _MePageState extends State<MePage> {
       ),
       TapLayout(
         height: 50.0,
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         onTap: () => AppRouteDelegate.of(context).push(MeRouter.coin),
         child: SingleTextLayout(
           icon: Icons.money,
@@ -160,7 +160,7 @@ class _MePageState extends State<MePage> {
       ),
       TapLayout(
         height: 50.0,
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         onTap: () => AppRouteDelegate.of(context).push(MeRouter.rank),
         child: SingleTextLayout(
           icon: Icons.money,
@@ -170,7 +170,7 @@ class _MePageState extends State<MePage> {
       ),
       TapLayout(
         height: 50.0,
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         onTap: () => AppRouteDelegate.of(context).push(MeRouter.article),
         child: SingleTextLayout(
           icon: Icons.article,
@@ -180,7 +180,7 @@ class _MePageState extends State<MePage> {
       ),
       TapLayout(
         height: 50.0,
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         onTap: () => AppRouteDelegate.of(context).push(StudyRouter.study).then((value) => log(value)),
         child: SingleTextLayout(
           icon: Icons.real_estate_agent_sharp,
@@ -190,7 +190,7 @@ class _MePageState extends State<MePage> {
       ),
       TapLayout(
         height: 50.0,
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         onTap: () => AppRouteDelegate.of(context).push(MeRouter.info),
         child: SingleTextLayout(
           icon: Icons.supervised_user_circle_sharp,
@@ -200,8 +200,8 @@ class _MePageState extends State<MePage> {
       ),
       TapLayout(
         height: 50.0,
-        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(5), bottomRight: Radius.circular(5)),
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(5), bottomRight: Radius.circular(5)),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         onTap: () => AppRouteDelegate.of(context).push(MeRouter.setting),
         child: SingleTextLayout(
           icon: Icons.settings,
@@ -214,7 +214,7 @@ class _MePageState extends State<MePage> {
 
   void getData() async {
     String ip = await DeviceUtil.getIP();
-    context.read<MeModel>().updateIP(ip);
+    ProviderManager.me(context: context).updateIP(ip);
   }
 
   Future<void> _getUserinfo() async {

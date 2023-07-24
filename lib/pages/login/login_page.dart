@@ -36,8 +36,8 @@ class LoginPage extends StatelessWidget {
       child: Center(
         child: Container(
           width: 400,
-          padding: EdgeInsets.all(24),
-          child: _LoginWidget(),
+          padding: const EdgeInsets.all(24),
+          child: const _LoginWidget(),
         ),
       ),
     );
@@ -49,8 +49,8 @@ class LoginPage extends StatelessWidget {
       child: Center(
         child: Container(
           width: 400,
-          padding: EdgeInsets.all(24),
-          child: _LoginWidget(),
+          padding: const EdgeInsets.all(24),
+          child: const _LoginWidget(),
         ),
       ),
     );
@@ -67,8 +67,8 @@ class LoginPage extends StatelessWidget {
         child: Stack(children: [
           SingleChildScrollView(
             child: Container(
-              padding: EdgeInsets.all(24),
-              child: _LoginWidget(),
+              padding: const EdgeInsets.all(24),
+              child: const _LoginWidget(),
             ),
           )
         ]),
@@ -97,7 +97,7 @@ class _LoginWidgetState extends State<_LoginWidget> {
   String _password = '';
   String _rPassword = '';
 
-  bool _isLoginAndRegisterPage = true; // 是否登陆注册双功能页面
+  final bool _isLoginAndRegisterPage = true; // 是否登陆注册双功能页面
   bool _switchCurrentLogin = true; // true为登陆，false为注册
 
   bool _isShowPwd = false; // 是否显示输入的密码
@@ -168,11 +168,11 @@ class _LoginWidgetState extends State<_LoginWidget> {
       TextField(
         controller: usernameController,
         decoration: InputDecoration(
-          icon: Icon(Icons.person),
+          icon: const Icon(Icons.person),
           labelText: S.of(context).username,
           suffixIcon: IconButton(
             splashColor: theme.transparent,
-            icon: Icon(Icons.close),
+            icon: const Icon(Icons.close),
             onPressed: () => usernameController.clear(),
           ),
         ),
@@ -180,12 +180,12 @@ class _LoginWidgetState extends State<_LoginWidget> {
         maxLengthEnforcement: MaxLengthEnforcement.enforced,
         keyboardType: TextInputType.text,
       ),
-      SizedBox(height: 32),
+      const SizedBox(height: 32),
       // 密码输入框
       TextField(
         controller: passwordController,
         decoration: InputDecoration(
-          icon: Icon(Icons.admin_panel_settings),
+          icon: const Icon(Icons.admin_panel_settings),
           labelText: S.of(context).password,
           suffixIcon: IconButton(
             splashColor: theme.transparent,
@@ -199,13 +199,13 @@ class _LoginWidgetState extends State<_LoginWidget> {
         keyboardType: TextInputType.text,
         obscureText: !_isShowPwd,
       ),
-      SizedBox(height: 32),
+      const SizedBox(height: 32),
       // 重复密码输入框
       if (!_switchCurrentLogin)
         TextField(
           controller: rPasswordController,
           decoration: InputDecoration(
-            icon: Icon(Icons.admin_panel_settings),
+            icon: const Icon(Icons.admin_panel_settings),
             labelText: S.of(context).rPassword,
             suffixIcon: IconButton(
               splashColor: theme.transparent,
@@ -219,26 +219,26 @@ class _LoginWidgetState extends State<_LoginWidget> {
           keyboardType: TextInputType.text,
           obscureText: !_isShowRPwd,
         ),
-      if (!_switchCurrentLogin) SizedBox(height: 32),
+      if (!_switchCurrentLogin) const SizedBox(height: 32),
       Row(children: [
         // 登陆按钮
         Expanded(
           flex: 1,
           child: TapLayout(
             height: 36.0,
-            borderRadius: BorderRadius.all(Radius.circular(2)),
+            borderRadius: const BorderRadius.all(Radius.circular(2)),
             background: _switchCurrentLogin && _isDisableLoginButton ? theme.disableButton : theme.button,
             onTap: _switchCurrentLogin && _isDisableLoginButton ? null : _login,
             child: Text(S.of(context).login, style: TextStyle(color: theme.text)),
           ),
         ),
-        SizedBox(height: 32, width: 64),
+        const SizedBox(height: 32, width: 64),
         // 注册按钮
         Expanded(
           flex: 1,
           child: TapLayout(
             height: 36.0,
-            borderRadius: BorderRadius.all(Radius.circular(2)),
+            borderRadius: const BorderRadius.all(Radius.circular(2)),
             background: !_switchCurrentLogin && _isDisableLoginButton ? theme.disableButton : theme.button,
             onTap: !_switchCurrentLogin && _isDisableLoginButton ? null : _register,
             child: Text(S.of(context).register, style: TextStyle(color: theme.text)),

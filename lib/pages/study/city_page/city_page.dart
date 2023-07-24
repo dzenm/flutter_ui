@@ -12,21 +12,21 @@ import 'package:lpinyin/lpinyin.dart';
 /// 城市选择库的测试页面，使用了azListView
 ///
 class CitySelectedPage extends StatefulWidget {
-  CitySelectedPage();
+  const CitySelectedPage({super.key});
 
   @override
   State<StatefulWidget> createState() => _CitySelectedPageState();
 }
 
 class _CitySelectedPageState extends State<CitySelectedPage> {
-  StateController _controller = StateController();
+  final StateController _controller = StateController();
   List<CityModel> _cities = [];
 
   @override
   void initState() {
     super.initState();
 
-    Future.delayed(Duration(milliseconds: 500), () async {
+    Future.delayed(const Duration(milliseconds: 500), () async {
       _cities = await CitySelectedView.loadAssetsData();
       setState(() => _controller.loadComplete());
     });
@@ -36,7 +36,7 @@ class _CitySelectedPageState extends State<CitySelectedPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(title: Text('城市选择', style: TextStyle(color: Colors.white))),
+      appBar: AppBar(title: const Text('城市选择', style: TextStyle(color: Colors.white))),
       body: SafeArea(
         child: StateView(
           controller: _controller,
@@ -58,7 +58,7 @@ class CitySelectedView extends StatefulWidget {
   final List<String>? hotCities;
   final ValueChanged<CityModel>? onTap;
 
-  CitySelectedView({
+  const CitySelectedView({super.key, 
     required this.cities,
     this.hotCities,
     this.onTap,
@@ -71,7 +71,9 @@ class CitySelectedView extends StatefulWidget {
     String jsonString = await rootBundle.loadString(Assets.file('china.json'));
     Map countyMap = json.decode(jsonString);
     List list = countyMap['china'];
-    list.forEach((map) => cityList.add(CityModel.fromJson(map)));
+    for (var map in list) {
+      cityList.add(CityModel.fromJson(map));
+    }
     return cityList;
   }
 
@@ -80,12 +82,12 @@ class CitySelectedView extends StatefulWidget {
 }
 
 class _CitySelectedViewState extends State<CitySelectedView> {
-  static const String _TOP = '↑';
-  static const String _STAR = '★';
-  static const String _END = '#';
+  static const String _top = '↑';
+  static const String _star = '★';
+  static const String _end = '#';
 
   /// 城市列表
-  List<CityModel> _cities = [];
+  final List<CityModel> _cities = [];
 
   @override
   void initState() {
@@ -102,14 +104,14 @@ class _CitySelectedViewState extends State<CitySelectedView> {
       String pinyin = PinyinHelper.getPinyinE(_cities[i].name);
       String tag = pinyin.substring(0, 1).toUpperCase();
       _cities[i].namePinyin = pinyin;
-      _cities[i].tagIndex = RegExp('[A-Z]').hasMatch(tag) ? tag : _END;
+      _cities[i].tagIndex = RegExp('[A-Z]').hasMatch(tag) ? tag : _end;
     }
     // A-Z sort.
     SuspensionUtil.sortListBySuspensionTag(_cities);
 
     List<String> hotList = widget.hotCities ?? ['北京市', '广州市', '成都市', '深圳市', '杭州市', '武汉市'];
     // add hot_cityList.
-    List<CityModel> hotCities = hotList.map((city) => CityModel(name: city, tagIndex: _STAR)).toList();
+    List<CityModel> hotCities = hotList.map((city) => CityModel(name: city, tagIndex: _star)).toList();
     _cities.insertAll(0, hotCities);
 
     // show sus tag.
@@ -125,7 +127,7 @@ class _CitySelectedViewState extends State<CitySelectedView> {
         alignment: Alignment.centerLeft,
         padding: const EdgeInsets.only(left: 15.0),
         height: 50.0,
-        child: Text("当前城市: 成都市"),
+        child: const Text("当前城市: 成都市"),
       ),
       Expanded(
         child: AzListView(
@@ -137,18 +139,18 @@ class _CitySelectedViewState extends State<CitySelectedView> {
           padding: EdgeInsets.zero,
           susItemBuilder: (BuildContext context, int index) {
             CityModel model = _cities[index];
-            if (_TOP == model.getSuspensionTag()) {
+            if (_top == model.getSuspensionTag()) {
               return Container();
             }
             return _buildSusItem(_cities[index].getSuspensionTag());
           },
-          physics: BouncingScrollPhysics(),
-          indexBarData: [_TOP, _STAR, ...kIndexBarData],
+          physics: const BouncingScrollPhysics(),
+          indexBarData: const [_top, _star, ...kIndexBarData],
           indexBarOptions: IndexBarOptions(
             needRebuild: true,
             ignoreDragCancel: true,
-            downTextStyle: TextStyle(fontSize: 12, color: Colors.white),
-            downItemDecoration: BoxDecoration(shape: BoxShape.circle, color: Colors.green),
+            downTextStyle: const TextStyle(fontSize: 12, color: Colors.white),
+            downItemDecoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.green),
             indexHintWidth: 120 / 2,
             indexHintHeight: 100 / 2,
             indexHintDecoration: BoxDecoration(
@@ -158,8 +160,8 @@ class _CitySelectedViewState extends State<CitySelectedView> {
               ),
             ),
             indexHintAlignment: Alignment.centerRight,
-            indexHintChildAlignment: Alignment(-0.25, 0.0),
-            indexHintOffset: Offset(-20, 0),
+            indexHintChildAlignment: const Alignment(-0.25, 0.0),
+            indexHintOffset: const Offset(-20, 0),
           ),
         ),
       )
@@ -167,19 +169,19 @@ class _CitySelectedViewState extends State<CitySelectedView> {
   }
 
   Widget _buildSusItem(String tag, {double susHeight = 40}) {
-    if (tag == _STAR) {
-      tag = '$_STAR 热门城市';
+    if (tag == _star) {
+      tag = '$_star 热门城市';
     }
     return Container(
       height: susHeight,
       width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.only(left: 16.0),
-      color: Color(0xFFF3F4F5),
+      padding: const EdgeInsets.only(left: 16.0),
+      color: const Color(0xFFF3F4F5),
       alignment: Alignment.centerLeft,
       child: Text(
         tag,
         softWrap: false,
-        style: TextStyle(fontSize: 14.0, color: Color(0xFF666666)),
+        style: const TextStyle(fontSize: 14.0, color: Color(0xFF666666)),
       ),
     );
   }

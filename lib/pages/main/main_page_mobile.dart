@@ -110,7 +110,7 @@ class _MainPageMobileState extends State<MainPageMobile> with WidgetsBindingObse
     return Scaffold(
       body: PageView(
         controller: _controller,
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         children: _buildTabPage(length),
       ),
       bottomNavigationBar: BottomAppBar(
@@ -125,7 +125,7 @@ class _MainPageMobileState extends State<MainPageMobile> with WidgetsBindingObse
 
   /// Page widget
   List<Widget> _buildTabPage(int length) {
-    List<Widget> list = [HomePage(), NavPage(), MePage()];
+    List<Widget> list = [const HomePage(), const NavPage(), const MePage()];
     return List.generate(
       length,
       (index) => KeepAliveWrapper(child: index < list.length ? list[index] : Container()),
@@ -152,7 +152,8 @@ class BottomNavigationBarItemView extends StatelessWidget {
   final PageController controller;
   final GestureTapCallback? onTap;
 
-  BottomNavigationBarItemView({
+  const BottomNavigationBarItemView({
+    super.key,
     required this.index,
     required this.controller,
     this.onTap,
@@ -166,7 +167,7 @@ class BottomNavigationBarItemView extends StatelessWidget {
       height: height,
       foreground: theme.transparent,
       onTap: () => _jumpToPage(context),
-      child: Container(
+      child: SizedBox(
         width: width,
         height: height,
         child: Stack(alignment: Alignment.center, children: [
@@ -192,7 +193,7 @@ class BottomNavigationBarItemView extends StatelessWidget {
     bool isSelected = context.read<MainModel>().isSelected(index);
     if (!isSelected) {
       context.read<MainModel>().selectedIndex = index;
-      controller.animateToPage(index, duration: Duration(milliseconds: 250), curve: Curves.ease);
+      controller.animateToPage(index, duration: const Duration(milliseconds: 250), curve: Curves.ease);
     }
     if (onTap != null) onTap!();
   }
@@ -226,7 +227,7 @@ class BottomNavigationBarItemView extends StatelessWidget {
         Color color = isSelected ? theme.blue : theme.hint;
         return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Icon(icon, color: color, size: 20),
-          SizedBox(height: 2),
+          const SizedBox(height: 2),
           Text(title, style: TextStyle(fontSize: 10, color: color)),
         ]);
       },

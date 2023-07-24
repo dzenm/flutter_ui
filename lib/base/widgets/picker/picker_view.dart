@@ -17,8 +17,7 @@ class PickerView<T> extends StatefulWidget {
   final PickerPopupRoute route;
   final ValueChanged<List<dynamic>>? onChanged;
 
-  PickerView({
-    Key? key,
+  const PickerView({super.key,
     required this.list,
     this.initialItem,
     this.itemBuilder,
@@ -34,8 +33,7 @@ class PickerView<T> extends StatefulWidget {
   ///     Log.d('选中的结果: results=$results');
   ///   }
   /// )
-  static void showLocation(
-    BuildContext context, {
+  static void showLocation(BuildContext context, {
     List<String>? initialItem,
     ValueChanged<List<dynamic>>? onChanged,
     int maxColumn = 3,
@@ -49,7 +47,9 @@ class PickerView<T> extends StatefulWidget {
         initialItem: initialItem,
         onChanged: onChanged,
         theme: Theme.of(context),
-        barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierLabel: MaterialLocalizations
+            .of(context)
+            .modalBarrierDismissLabel,
       ),
     );
   }
@@ -99,8 +99,7 @@ class PickerView<T> extends StatefulWidget {
   ///     Log.i('选中的回调: $_selectedValue');
   ///   },
   /// )
-  static void showList(
-    BuildContext context, {
+  static void showList(BuildContext context, {
     required List<String> list,
     String? initialItem,
     ValueChanged<String>? onChanged,
@@ -112,7 +111,9 @@ class PickerView<T> extends StatefulWidget {
         initialItem: initialItem == null ? null : [initialItem],
         onChanged: onChanged == null ? null : (list) => onChanged(list[0]),
         theme: Theme.of(context),
-        barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierLabel: MaterialLocalizations
+            .of(context)
+            .modalBarrierDismissLabel,
       ),
     );
   }
@@ -196,28 +197,32 @@ class _PickerViewState<T> extends State<PickerView> {
   /// Title View
   Widget _buildTitleActionsView() {
     return Container(
-      decoration: BoxDecoration(color: Colors.white),
+      decoration: const BoxDecoration(color: Colors.white),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Container(
+        SizedBox(
           height: _kPickerTitleHeight,
           child: TextButton(
             child: Text(
               '取消',
               style: TextStyle(
-                color: Theme.of(context).unselectedWidgetColor,
+                color: Theme
+                    .of(context)
+                    .unselectedWidgetColor,
                 fontSize: 16.0,
               ),
             ),
             onPressed: () => Navigator.pop(context),
           ),
         ),
-        Container(
+        SizedBox(
           height: _kPickerTitleHeight,
           child: TextButton(
             child: Text(
               '确定',
               style: TextStyle(
-                color: Theme.of(context).primaryColor,
+                color: Theme
+                    .of(context)
+                    .primaryColor,
                 fontSize: 16.0,
               ),
             ),
@@ -232,7 +237,6 @@ class _PickerViewState<T> extends State<PickerView> {
                 }
                 widget.onChanged!(results);
               }
-              ;
               Navigator.pop(context);
             },
           ),
@@ -243,20 +247,20 @@ class _PickerViewState<T> extends State<PickerView> {
 
   /// 选择布局列表
   Widget _buildPickerListView() {
-    List<PickerItem> _getData(int i, int level, List<PickerItem> list, int index) {
+    List<PickerItem> getData(int i, int level, List<PickerItem> list, int index) {
       if (i == level) {
         return list;
       }
-      return _getData(i + 1, level, list[index].list ?? [], _selectedIndexes[i + 1]);
+      return getData(i + 1, level, list[index].list ?? [], _selectedIndexes[i + 1]);
     }
 
     List<Widget> widgets = [];
     for (int i = 0; i < _len; i++) {
-      widgets.add(_buildSinglePickerView(i, _getData(0, i, _list, _selectedIndexes[0])));
+      widgets.add(_buildSinglePickerView(i, getData(0, i, _list, _selectedIndexes[0])));
     }
     return Container(
       height: _kPickerHeight,
-      decoration: BoxDecoration(color: Colors.white),
+      decoration: const BoxDecoration(color: Colors.white),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: widgets,
@@ -279,9 +283,9 @@ class _PickerViewState<T> extends State<PickerView> {
     }
     return Expanded(
       child: Container(
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         height: _kPickerHeight,
-        decoration: BoxDecoration(color: Colors.white),
+        decoration: const BoxDecoration(color: Colors.white),
         child: CupertinoPicker(
           backgroundColor: Colors.white,
           scrollController: _controllers[index],
@@ -299,9 +303,9 @@ class _PickerViewState<T> extends State<PickerView> {
       height: _kPickerItemHeight,
       alignment: Alignment.center,
       child: Text(
-        '$text',
+        text,
         style: TextStyle(
-          color: Color(0xFF000046),
+          color: const Color(0xFF000046),
           fontSize: _pickerFontSize(text),
         ),
         textAlign: TextAlign.start,

@@ -9,23 +9,23 @@
 class TableEntity {
   String? type;
   String? name;
-  String? tbl_name;
-  int? rootpage;
+  String? tblName;
+  int? rootPage;
   String? sql;
 
   TableEntity.fromJson(Map<String, dynamic> json) {
     type = json['type'];
     name = json['name'];
-    tbl_name = json['tbl_name'];
-    rootpage = json['rootpage'];
+    tblName = json['tbl_name'];
+    rootPage = json['rootpage'];
     sql = json['sql'];
   }
 
   Map<String, dynamic> toJson() => {
         'type': type,
         'name': name,
-        'tbl_name': tbl_name,
-        'rootpage': rootpage,
+        'tbl_name': tblName,
+        'rootpage': rootPage,
         'sql': sql,
       };
 }

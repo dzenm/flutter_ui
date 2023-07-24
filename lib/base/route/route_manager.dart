@@ -125,7 +125,7 @@ class CustomRoute extends PageRouteBuilder {
     required this.child,
     this.transition = PageTransition.fade,
   }) : super(
-          transitionDuration: Duration(seconds: 1), // 设置过度时间
+          transitionDuration: const Duration(seconds: 1), // 设置过度时间
           pageBuilder: (
             // 上下文和动画
             BuildContext context,
@@ -187,7 +187,7 @@ class CustomRoute extends PageRouteBuilder {
                 // 左右滑动动画效果
                 return SlideTransition(
                   // 设置滑动的 X,Y 轴
-                  position: Tween<Offset>(begin: Offset(-1.0, 0.0), end: Offset(0.0, 0.0)).animate(
+                  position: Tween<Offset>(begin: const Offset(-1.0, 0.0), end: const Offset(0.0, 0.0)).animate(
                     CurvedAnimation(
                       parent: animation,
                       curve: Curves.fastOutSlowIn,

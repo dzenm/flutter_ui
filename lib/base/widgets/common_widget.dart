@@ -113,5 +113,6 @@ class FileImageExt extends FileImage {
   }
 
   @override
-  int get hashCode => super.hashCode;
+  int get hashCode => Object.hash(file.path, scale);
+
 }

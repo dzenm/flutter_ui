@@ -16,8 +16,8 @@ class SingleEditLayout extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatters; // 输入文本的类型
   final double horizontalPadding; // 左右的内边距
 
-  SingleEditLayout({
-    Key? key,
+  const SingleEditLayout({
+    super.key,
     this.title,
     this.onChanged,
     this.titleColor,
@@ -30,7 +30,7 @@ class SingleEditLayout extends StatefulWidget {
     this.keyboardType = TextInputType.text,
     this.inputFormatters,
     this.horizontalPadding = 16,
-  }) : super(key: key);
+  });
 
   // 输入框
   static Widget textField(
@@ -57,11 +57,11 @@ class SingleEditLayout extends StatefulWidget {
       ),
       decoration: InputDecoration(
         // isCollapsed 去除默认的最小高度，然后添加一个top padding就能使输入文字居中显示
-        contentPadding: EdgeInsets.only(top: 8),
+        contentPadding: const EdgeInsets.only(top: 8),
         isCollapsed: true,
-        border: OutlineInputBorder(borderSide: BorderSide.none),
+        border: const OutlineInputBorder(borderSide: BorderSide.none),
         hintText: hintText,
-        counter: SizedBox(),
+        counter: const SizedBox(),
         isDense: true,
       ),
       maxLines: 1,
@@ -92,7 +92,7 @@ class SingleEditLayout extends StatefulWidget {
 }
 
 class _SingleEditLayoutState extends State<SingleEditLayout> {
-  var currentLength;
+  var currentLength = 0;
 
   // 判断和控制焦点的获取
   var focusNode = FocusNode();
@@ -119,7 +119,7 @@ class _SingleEditLayoutState extends State<SingleEditLayout> {
             widget.title ?? '',
             style: TextStyle(fontSize: widget.fontSize, color: widget.titleColor),
           ),
-        if (widget.title != null) SizedBox(width: 16),
+        if (widget.title != null) const SizedBox(width: 16),
 
         // 输入文本
         Expanded(
@@ -142,7 +142,7 @@ class _SingleEditLayoutState extends State<SingleEditLayout> {
           // 根据是否设置最大长度和是否获取焦点显示
           offstage: (widget.maxLength == null ? true : !hasFocus),
           child: Row(children: [
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Text(
               '$currentLength/${widget.maxLength}',
               style: TextStyle(fontSize: widget.fontSize - 2, color: Colors.grey),

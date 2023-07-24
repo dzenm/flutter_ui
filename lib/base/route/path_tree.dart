@@ -43,19 +43,19 @@ class PathTree<T> {
   final _tree = SubTree<T>();
 
   void addPath(String path, T value,
-      {Iterable<String> tags: const ['*'], Map<String, String>? pathRegEx}) {
-    final segs = pathToSegments(path);
-    addPathAsSegments(segs, value, tags: tags, pathRegEx: pathRegEx);
+      {Iterable<String> tags = const ['*'], Map<String, String>? pathRegEx}) {
+    final seg = pathToSegments(path);
+    addPathAsSegments(seg, value, tags: tags, pathRegEx: pathRegEx);
   }
 
   void addPathAsSegments(Iterable<String> segments, T value,
-      {Iterable<String> tags: const ['*'], Map<String, String>? pathRegEx}) {
+      {Iterable<String> tags = const ['*'], Map<String, String>? pathRegEx}) {
     pathRegEx ??= {};
     SubTree<T> subtree = _tree;
-    final int numSegs = segments.length;
-    for (int i = 0; i < numSegs; i++) {
+    final int numSeg = segments.length;
+    for (int i = 0; i < numSeg; i++) {
       String seg = segments.elementAt(i);
-      if (i == numSegs - 1 &&
+      if (i == numSeg - 1 &&
           (seg == '*' || (seg.startsWith(':') && seg.endsWith('*')))) {
         for (String tag in tags) {
           // TODO what if there is already a value here?
@@ -96,9 +96,9 @@ class PathTree<T> {
       _match(_tree, segments, tag);
 
   T? _match(SubTree<T> root, Iterable<String> segments, String tag) {
-    final int numSegs = segments.length;
+    final int numSeg = segments.length;
     SubTree<T> subTree = root;
-    for (int i = 0; i < numSegs; i++) {
+    for (int i = 0; i < numSeg; i++) {
       String seg = segments.elementAt(i);
 
       SubTree<T>? next = subTree.fixed[seg];

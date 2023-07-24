@@ -62,13 +62,13 @@ class CustomPopupWindow extends StatefulWidget {
       _CustomPopupRoute(
         child: CustomPopupWindow(
           targetKey: targetKey,
-          child: child,
           arrow: arrow,
           direction: direction,
           offset: offset,
           arrowOffset: arrowOffset,
           isCollapsed: isCollapsed,
           isPin: isPin,
+          child: child,
         ),
       ),
     );
@@ -144,7 +144,7 @@ class CustomPopupWindow extends StatefulWidget {
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.all(Radius.circular(radius ?? 0)),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             offset: Offset(0, 1),
             blurRadius: 10.0,
@@ -160,7 +160,7 @@ class CustomPopupWindow extends StatefulWidget {
         ],
       ),
       clipBehavior: Clip.hardEdge,
-      padding: EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: child,
     );
   }
@@ -194,7 +194,7 @@ class CustomPopupWindow extends StatefulWidget {
             : isLeft
                 ? PopupDirection.left
                 : PopupDirection.right;
-    return Container(
+    return SizedBox(
       width: isVertical ? 12 : 6,
       height: isVertical ? 6 : 12,
       child: CustomPaint(
@@ -212,8 +212,8 @@ class CustomPopupWindow extends StatefulWidget {
 
 /// PopupWindow的布局
 class _PopupWindowState extends State<CustomPopupWindow> {
-  GlobalKey _popupKey = GlobalKey();
-  GlobalKey _arrowKey = GlobalKey();
+  final GlobalKey _popupKey = GlobalKey();
+  final GlobalKey _arrowKey = GlobalKey();
 
   /// Popup初始位置，不能展示在屏幕内，所以设置为负数
   double _left = -2500, _top = -2500;
@@ -225,7 +225,7 @@ class _PopupWindowState extends State<CustomPopupWindow> {
   double? _width, _height;
 
   /// 箭头的偏移量
-  Offset _arrowOffset = Offset(16, 0);
+  Offset _arrowOffset = const Offset(16, 0);
   bool _isCollapsed = false, _isPin = false;
 
   @override
@@ -255,7 +255,7 @@ class _PopupWindowState extends State<CustomPopupWindow> {
     _height = popupSize.height;
 
     // 箭头的大小
-    Size arrowSize = arrowView?.size ?? Size(0, 0);
+    Size arrowSize = arrowView?.size ?? const Size(0, 0);
 
     switch (widget.direction ?? PopupDirection.bottom) {
       // 在target的左边
@@ -323,7 +323,7 @@ class _PopupWindowState extends State<CustomPopupWindow> {
 
   /// 调整水平方向的位置，正值为右边，负值为左边
   void _fixHorizontal(Offset target, double width, double arrowWidth) {
-    Offset offset = widget.offset ?? Offset(0, 0);
+    Offset offset = widget.offset ?? const Offset(0, 0);
     double dx = target.dx + offset.dx;
     double offsetX = _arrowOffset.dy;
     // 正值为往下偏移，负值为往上偏移
@@ -380,7 +380,7 @@ class _PopupWindowState extends State<CustomPopupWindow> {
 
   /// 调整竖直方向的位置，正值为下边，负值为上边
   void _fixVertical(Offset target, double height, double arrowHeight) {
-    Offset offset = widget.offset ?? Offset(0, 0);
+    Offset offset = widget.offset ?? const Offset(0, 0);
     // offset是包含箭头和Popup主体的偏移
     double dy = target.dy + offset.dy ;
     // 0.5是为了消除箭头和Popup主体之间的间距
@@ -484,7 +484,7 @@ class _PopupWindowState extends State<CustomPopupWindow> {
 
   /// 自定义的Popup Widget布局
   Widget _buildCustomView() {
-    return Container(
+    return SizedBox(
       key: _popupKey,
       width: _width,
       height: _height,
@@ -529,8 +529,8 @@ class _CustomPopupRoute<T> extends PopupRoute<T> {
 /// 绘制三角形
 class _TrianglePainter extends CustomPainter {
   Color color; //填充颜色
-  Paint _paint = Paint(); //画笔
-  Path _path = Path(); //绘制路径
+  final Paint _paint = Paint(); //画笔
+  final Path _path = Path(); //绘制路径
   PopupDirection direction;
 
   _TrianglePainter({

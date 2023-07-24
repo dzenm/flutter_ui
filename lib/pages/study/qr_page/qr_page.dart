@@ -6,6 +6,8 @@ import 'package:scan/scan.dart';
 
 /// 二维码扫描页面, 在进入页面之前先请求权限
 class QRPage extends StatefulWidget {
+  const QRPage({super.key});
+
   @override
   State<StatefulWidget> createState() => _QRPageState();
 }
@@ -24,13 +26,13 @@ class _QRPageState extends State<QRPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('二维码', style: TextStyle(color: Colors.white)),
+        title: const Text('二维码', style: TextStyle(color: Colors.white)),
       ),
       body: Stack(children: [
         ScanView(
           controller: controller,
           scanAreaScale: .7,
-          scanLineColor: Color(0xFF4759DA),
+          scanLineColor: const Color(0xFF4759DA),
           onCapture: (data) {
             _getResult(data);
           },
@@ -43,8 +45,8 @@ class _QRPageState extends State<QRPage> {
               builder: (BuildContext context, StateSetter state) {
                 stateSetter = state;
                 return TapLayout(
-                  padding: EdgeInsets.all(8),
-                  child: Icon(lightIcon, size: 32, color: Color(0xFF4759DA)),
+                  padding: const EdgeInsets.all(8),
+                  child: Icon(lightIcon, size: 32, color: const Color(0xFF4759DA)),
                   onTap: () {
                     controller?.toggleTorchMode();
                     if (lightIcon == Icons.flash_on) {
@@ -57,10 +59,10 @@ class _QRPageState extends State<QRPage> {
                 );
               },
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             TapLayout(
-              padding: EdgeInsets.all(8),
-              child: Icon(Icons.image, size: 32, color: Color(0xFF4759DA)),
+              padding: const EdgeInsets.all(8),
+              child: const Icon(Icons.image, size: 32, color: Color(0xFF4759DA)),
               onTap: () async {
                 XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
                 if (image != null) {

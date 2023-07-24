@@ -14,9 +14,9 @@ import '../../../base/widgets/state_view.dart';
 /// 创建自己的 [State] 直接继承 [ListPageState]，[D] 为列表的数据结构类型，[T] 为StateWidget类型
 ///
 class ListPageState<D extends DBBaseModel, T extends StatefulWidget> extends State<T> {
-  StateController _controller = StateController();
+  final StateController _controller = StateController();
   int _pageIndex = 1; // 加载的页数
-  List<D> _list = []; // 加载的数据
+  final List<D> _list = []; // 加载的数据
 
   @override
   void initState() {
@@ -35,7 +35,7 @@ class ListPageState<D extends DBBaseModel, T extends StatefulWidget> extends Sta
 
   AppBar buildAppbar() {
     return AppBar(
-      title: Text(getTitle(), style: TextStyle(color: Colors.white)),
+      title: Text(getTitle(), style: const TextStyle(color: Colors.white)),
       systemOverlayStyle: SystemUiOverlayStyle.light,
     );
   }
@@ -45,21 +45,19 @@ class ListPageState<D extends DBBaseModel, T extends StatefulWidget> extends Sta
   }
 
   Widget buildBody() {
-    return Container(
-      child: Column(children: [
-        Expanded(
-          child: RefreshListView(
-            controller: _controller,
-            itemCount: _list.length,
-            builder: (BuildContext context, int index) {
-              return buildItem(_list[index], index);
-            },
-            refresh: onRefresh,
-            showFooter: true,
-          ),
+    return Column(children: [
+      Expanded(
+        child: RefreshListView(
+          controller: _controller,
+          itemCount: _list.length,
+          builder: (BuildContext context, int index) {
+            return buildItem(_list[index], index);
+          },
+          refresh: onRefresh,
+          showFooter: true,
         ),
-      ]),
-    );
+      ),
+    ]);
   }
 
   Widget buildItem(D data, int index) {

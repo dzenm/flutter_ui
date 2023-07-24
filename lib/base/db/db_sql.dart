@@ -163,7 +163,9 @@ class Sql {
       list.add('ALTER TABLE t_user ADD uuid TEXT DEFAULT ""');
       list.add('ALTER TABLE t_user ADD account TEXT DEFAULT ""');
       log('Database onUpgrade_1_2: ');
-      for (var sql in list) log('    $sql', blank: true);
+      for (var sql in list) {
+        log('    $sql', blank: true);
+      }
     }
     return list;
   }
@@ -174,7 +176,9 @@ class Sql {
     if (oldVersion <= 2 && newVersion > 2) {
       list.add(_createSystemTable);
       log('Database onUpgrade_2_3: ');
-      for (var sql in list) log('    $sql', blank: true);
+      for (var sql in list) {
+        log('    $sql', blank: true);
+      }
     }
     return list;
   }
@@ -187,7 +191,9 @@ class Sql {
       list.add('ALTER TABLE t_system ADD content TEXT DEFAULT ""');
       list.add('ALTER TABLE t_system ADD footer TEXT DEFAULT ""');
       log('Database onUpgrade_3_4: ');
-      for (var sql in list) log('    $sql', blank: true);
+      for (var sql in list) {
+        log('    $sql', blank: true);
+      }
     }
     return list;
   }
@@ -198,7 +204,9 @@ class Sql {
     if (oldVersion <= 4 && newVersion > 4) {
       list.add(_createWebsiteTable);
       log('Database onUpgrade_3_4: ');
-      for (var sql in list) log('    $sql', blank: true);
+      for (var sql in list) {
+        log('    $sql', blank: true);
+      }
     }
     return list;
   }

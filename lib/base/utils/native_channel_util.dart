@@ -12,7 +12,7 @@ class NativeChannelUtil {
     _logPrint = logPrint;
   }
 
-  static MethodChannel _channel = const MethodChannel('flutter_ui/channel');
+  static const MethodChannel _channel = MethodChannel('flutter_ui/channel');
 
   // 点击返回键回退到手机桌面而不是结束当前页面
   static Future<bool> onBackToDesktop() async {

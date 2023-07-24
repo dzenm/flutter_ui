@@ -3,22 +3,24 @@ import 'package:flutter_ui/base/widgets/license_view.dart';
 
 /// 自定义键盘
 class KeywordBoardPage extends StatefulWidget {
+  const KeywordBoardPage({super.key});
+
   @override
   State<StatefulWidget> createState() => _KeywordBoardPageState();
 }
 
 class _KeywordBoardPageState extends State<KeywordBoardPage> {
-  List<String> _license = ['', '', '', '', '', '', ''];
-  LicenseController _controller = LicenseController();
+  final List<String> _license = ['', '', '', '', '', '', ''];
+  final LicenseController _controller = LicenseController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('视频播放', style: TextStyle(color: Colors.white)),
+        title: const Text('视频播放', style: TextStyle(color: Colors.white)),
       ),
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           children: [
             LicenseView(list: _license, controller: _controller),

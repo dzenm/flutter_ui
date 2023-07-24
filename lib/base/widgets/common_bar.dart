@@ -83,7 +83,7 @@ class CommonBar extends StatelessWidget implements PreferredSizeWidget {
       height: 40,
       isCircle: true,
       padding: const EdgeInsets.only(left: 12),
-      child: leading ?? BackButtonIcon(),
+      child: leading ?? const BackButtonIcon(),
       onTap: () {
         if (onBackTap == null) {
           Navigator.pop(context);

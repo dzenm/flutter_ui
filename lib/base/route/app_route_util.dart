@@ -17,9 +17,7 @@ class AppRouteUtil {
     String path = setting.originPath;
     // 查找注册的页面
     AppRoutePage? routePage = register.match(Uri.parse(path));
-    if (routePage == null) {
-      routePage = register.match(Uri.parse('/notFound'));
-    }
+    routePage ??= register.match(Uri.parse('/notFound'));
 
     return CustomPage<dynamic>(
       child: Builder(builder: (BuildContext context) => routePage!.builder(setting)),
@@ -42,7 +40,7 @@ class AppRouteSettings extends RouteSettings {
   final Map<String, dynamic>? params;
   final dynamic body;
 
-  AppRouteSettings({
+  const AppRouteSettings({
     required this.originPath,
     super.name,
     super.arguments,
@@ -85,14 +83,14 @@ class AppRouteSettings extends RouteSettings {
       for (var item in u.pathSegments) {
         if (item.startsWith(':')) {
           if (pathSegments == null || i >= pathSegments.length) {
-            throw FormatException('params length error');
+            throw const FormatException('params length error');
           }
           String key = item.replaceAll(':', '');
           String value = pathSegments[i++];
           paths[key] = value;
           sb.write('/$value');
         } else {
-          sb.write('/${item}');
+          sb.write('/$item');
         }
       }
     }

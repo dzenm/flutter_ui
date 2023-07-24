@@ -37,7 +37,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   static const String _tag = 'HomePage';
-  StateController _controller = StateController();
+  final StateController _controller = StateController();
   int _page = 0; // 加载的页数
   bool _init = false;
 
@@ -79,7 +79,7 @@ class _HomePageState extends State<HomePage> {
     AppTheme theme = context.watch<LocalModel>().theme;
     return Scaffold(
       appBar: CommonBar(
-        systemOverlayStyle: SystemUiOverlayStyle(
+        systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarIconBrightness: Brightness.dark,
         ),
         toolbarHeight: 0,
@@ -90,18 +90,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildBody() {
-    if (!_init) {
-      return Container();
-    }
-    return Container(
-      child: Column(
-        children: [
-          Banner(),
-          Expanded(
-            child: ArticleListView(controller: _controller, refresh: _onRefresh),
-          ),
-        ],
-      ),
+    return Column(
+      children: [
+        const Banner(),
+        Expanded(
+          child: ArticleListView(controller: _controller, refresh: _onRefresh),
+        ),
+      ],
     );
   }
 
@@ -205,7 +200,7 @@ class ArticleListView extends StatelessWidget {
   final StateController controller;
   final RefreshFunction refresh;
 
-  ArticleListView({
+  const ArticleListView({
     Key? key,
     required this.controller,
     required this.refresh,
@@ -236,7 +231,7 @@ class ArticleItemView extends StatelessWidget {
   static const String _tag = 'ArticleItemView';
   final int index;
 
-  ArticleItemView(this.index, {Key? key}) : super(key: key);
+  const ArticleItemView(this.index, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -245,10 +240,10 @@ class ArticleItemView extends StatelessWidget {
     AppTheme theme = context.watch<LocalModel>().theme;
 
     return TapLayout(
-      borderRadius: BorderRadius.all(Radius.circular(16)),
+      borderRadius: const BorderRadius.all(Radius.circular(16)),
       background: theme.background,
-      margin: EdgeInsets.only(top: 12, left: 8, right: 8),
-      padding: EdgeInsets.all(12),
+      margin: const EdgeInsets.only(top: 12, left: 8, right: 8),
+      padding: const EdgeInsets.all(12),
       onTap: () {
         ArticleEntity? article = context.read<ArticleModel>().getArticle(index);
         if (article == null) return;
@@ -291,7 +286,7 @@ class ArticleItemView extends StatelessWidget {
                   children: value.map(
                     (val) {
                       return TapLayout(
-                        padding: EdgeInsets.all(4),
+                        padding: const EdgeInsets.all(4),
                         child: Text(
                           val.name ?? '',
                           style: TextStyle(fontSize: 12, color: theme.blue),
@@ -336,12 +331,12 @@ class ArticleItemView extends StatelessWidget {
                 if (value == 0) return Container();
                 return Row(children: [
                   Icon(CustomIcon.thumbs_up, color: theme.blue, size: 16),
-                  SizedBox(width: 4),
+                  const SizedBox(width: 4),
                   Text(
                     '$value',
                     style: TextStyle(color: theme.blue),
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                 ]);
               },
               selector: (context, model) => model.getArticle(index)?.zan ?? 0,
@@ -364,7 +359,7 @@ class ArticleItemView extends StatelessWidget {
               },
               selector: (context, model) => model.getArticle(index)?.shareDate ?? 0,
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             // 文章收藏的状态
             Selector<ArticleModel, bool>(
               builder: (context, value, child) {
@@ -397,6 +392,8 @@ class ArticleItemView extends StatelessWidget {
 /// 轮播图 widget
 class Banner extends StatelessWidget {
   static const String _tag = 'Banner';
+
+  const Banner({super.key});
 
   @override
   Widget build(BuildContext context) {

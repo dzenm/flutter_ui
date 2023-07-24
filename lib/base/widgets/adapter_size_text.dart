@@ -20,30 +20,30 @@ class AdapterSizeText extends StatefulWidget {
   final ui.TextHeightBehavior? textHeightBehavior;
   final Color? selectionColor;
 
-  AdapterSizeText(
-      this.data, {
-        super.key,
-        this.style,
-        this.strutStyle,
-        this.textAlign,
-        this.textDirection,
-        this.locale,
-        this.softWrap,
-        this.overflow,
-        this.textScaleFactor,
-        this.maxLines = 1,
-        this.semanticsLabel,
-        this.textWidthBasis,
-        this.textHeightBehavior,
-        this.selectionColor,
-      });
+  const AdapterSizeText(
+    this.data, {
+    super.key,
+    this.style,
+    this.strutStyle,
+    this.textAlign,
+    this.textDirection,
+    this.locale,
+    this.softWrap,
+    this.overflow,
+    this.textScaleFactor,
+    this.maxLines = 1,
+    this.semanticsLabel,
+    this.textWidthBasis,
+    this.textHeightBehavior,
+    this.selectionColor,
+  });
 
   @override
   State<StatefulWidget> createState() => _AdapterSizeTextState();
 }
 
 class _AdapterSizeTextState extends State<AdapterSizeText> {
-  GlobalKey _key = GlobalKey();
+  final GlobalKey _key = GlobalKey();
   late TextStyle _style;
   late double _fontSize;
 

@@ -31,7 +31,7 @@ class SingleTextLayout extends StatelessWidget {
   final int badgeCount; // 小红点数量
   final Color? forwardColor; // 指向下一级图标颜色
 
-  SingleTextLayout({
+  const SingleTextLayout({
     Key? key,
     this.icon,
     this.iconColor,
@@ -68,15 +68,15 @@ class SingleTextLayout extends StatelessWidget {
               if ((icon != null || image != null) && title != null) SizedBox(width: 8 + padding),
               // 标题文本
               _buildTitleText(),
-              if (prefix != null) SizedBox(width: 8),
+              if (prefix != null) const SizedBox(width: 8),
               // 前缀布局
               Offstage(offstage: prefix == null, child: prefix),
-              if ((icon != null || title != null) && !isDense) SizedBox(width: 16),
+              if ((icon != null || title != null) && !isDense) const SizedBox(width: 16),
               // 文本内容
               _buildContentText(),
               if (text != null) SizedBox(width: 8 + padding),
             ]),
-            if (summary != null) SizedBox(height: 8),
+            if (summary != null) const SizedBox(height: 8),
             // 概要文本
             _buildSummaryText(),
           ],
@@ -84,7 +84,7 @@ class SingleTextLayout extends StatelessWidget {
       ),
       // 后缀布局
       Offstage(offstage: suffix == null, child: suffix),
-      if (suffix != null && isShowForward) SizedBox(width: 8),
+      if (suffix != null && isShowForward) const SizedBox(width: 8),
       // 小红点
       Offstage(offstage: badgeCount < 0, child: BadgeTag(count: badgeCount)),
       // 下一级图标
@@ -119,7 +119,7 @@ class SingleTextLayout extends StatelessWidget {
     // Expanded用于解决文本过长导致布局溢出的错误
     return text == null
         ? Expanded(
-            child: Row(children: [content ?? SizedBox(width: 0)]),
+            child: Row(children: [content ?? const SizedBox(width: 0)]),
           )
         : Expanded(
             flex: 1,

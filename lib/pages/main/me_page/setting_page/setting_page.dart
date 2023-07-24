@@ -19,6 +19,8 @@ import '../me_router.dart';
 
 /// 设置页面
 class SettingPage extends StatefulWidget {
+  const SettingPage({super.key});
+
   @override
   State<StatefulWidget> createState() => _SettingPageState();
 }
@@ -71,14 +73,14 @@ class _SettingPageState extends State<SettingPage> {
         title: Text(S.of(context).setting, style: TextStyle(color: theme.text)),
       ),
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TapLayout(
                 height: 50.0,
-                padding: EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: SingleTextLayout(
                   icon: Icons.notifications_on_sharp,
                   title: S.of(context).notification,
@@ -87,7 +89,7 @@ class _SettingPageState extends State<SettingPage> {
               ),
               TapLayout(
                 height: 50.0,
-                padding: EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 onTap: () => _selectedTheme(),
                 child: SingleTextLayout(
                   icon: Icons.color_lens,
@@ -97,13 +99,13 @@ class _SettingPageState extends State<SettingPage> {
                     height: 24,
                     width: 24,
                     color: theme.appbar,
-                    child: SizedBox(height: 24, width: 24),
+                    child: const SizedBox(height: 24, width: 24),
                   ),
                 ),
               ),
               TapLayout(
                 height: 50.0,
-                padding: EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 onTap: _selectedLanguage,
                 child: SingleTextLayout(
                   icon: Icons.language,
@@ -117,16 +119,16 @@ class _SettingPageState extends State<SettingPage> {
               TapLayout(
                 height: 50.0,
                 background: theme.white,
-                padding: EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: SingleTextLayout(title: S.of(context).loginRecord, badgeCount: 0, isShowForward: true),
               ),
               TapLayout(
                 height: 50.0,
                 background: theme.white,
-                padding: EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 onTap: () {
                   CancelFunc cancel = CommonDialog.loading();
-                  Future.delayed(Duration(seconds: 1), () {
+                  Future.delayed(const Duration(seconds: 1), () {
                     CommonDialog.showToast('已是最新版本');
                     cancel();
                   });
@@ -141,7 +143,7 @@ class _SettingPageState extends State<SettingPage> {
               TapLayout(
                 height: 50.0,
                 background: theme.white,
-                padding: EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 onTap: () => AppRouteDelegate.of(context).push(MeRouter.about),
                 child: SingleTextLayout(title: S.of(context).about, isShowForward: true),
               ),
@@ -149,7 +151,7 @@ class _SettingPageState extends State<SettingPage> {
               TapLayout(
                 height: 50.0,
                 background: theme.white,
-                padding: EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 onTap: () => HttpManager().logout(),
                 child: SingleTextLayout(title: S.of(context).exitLogout, isShowForward: true),
               ),
@@ -172,12 +174,12 @@ class _SettingPageState extends State<SettingPage> {
         return AlertDialog(
           title: Text(S.of(context).selectTheme),
           content: Padding(
-            padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+            padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
             child: Wrap(
               spacing: 8,
               runSpacing: 8,
               children: modes.map((mode) {
-                Color? value = theme.appbar;
+                Color? value = model.getTheme(mode).appbar;
                 return InkWell(
                   onTap: () {
                     model.setThemeMode(mode);
@@ -202,8 +204,8 @@ class _SettingPageState extends State<SettingPage> {
   /// 语言弹窗选择
   void _selectedLanguage() {
     List<Locale> locales = [
-      Locale('zh'),
-      Locale('en'),
+      const Locale('zh'),
+      const Locale('en'),
     ];
     showDialog<bool>(
       context: context,
@@ -212,7 +214,7 @@ class _SettingPageState extends State<SettingPage> {
           title: Text(S.of(context).selectLanguage),
           children: locales.map((locale) {
             return SimpleDialogOption(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               child: Text(_convertLocale(locale)),
               onPressed: () {
                 context.read<LocalModel>().setLocale(locale);

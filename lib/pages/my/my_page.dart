@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'study/study.dart';
 
 class MyPage extends StatefulWidget {
-  const MyPage({required this.title});
+  const MyPage({super.key, required this.title});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
