@@ -229,36 +229,6 @@ class CommonDialog {
       },
     );
   }
-
-  /// 应用升级提示框
-  /// CommonDialog.showAppUpgradeDialog(
-  ///   context,
-  ///   version: '12',
-  ///   desc: ['升级了'],
-  /// )
-  static Future<T> showAppUpgradeDialog<T>(
-    BuildContext context, {
-    String? version,
-    List<String> desc = const [],
-    GestureTapCallback? onTap,
-  }) async {
-    return await showDialog(
-      context: context,
-      builder: (context) {
-        return DialogWrapper(
-          color: Colors.transparent,
-          touchOutsideDismiss: false,
-          backDismiss: false,
-          borderRadius: const BorderRadius.all(Radius.circular(4)),
-          child: UpgradeDialog(
-            version: 'v$version',
-            desc: desc,
-            onTap: onTap,
-          ),
-        );
-      },
-    );
-  }
 }
 
 /// Dialog设置是否可以点击外部取消显示

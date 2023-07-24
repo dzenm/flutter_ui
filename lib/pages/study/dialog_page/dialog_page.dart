@@ -1,5 +1,6 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/base/widgets/upgrade_dialog.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base/res/app_theme.dart';
@@ -138,11 +139,7 @@ class _DialogPageState extends State<DialogPage> {
           MaterialButton(
             textColor: Colors.white,
             color: theme.appbar,
-            onPressed: () => CommonDialog.showAppUpgradeDialog(
-              context,
-              version: '12',
-              desc: ['升级了'],
-            ),
+            onPressed: () => UpgradeDialog.upgrade(context),
             child: Row(children: [_text('升级弹窗')]),
           ),
           const SizedBox(height: 8),
