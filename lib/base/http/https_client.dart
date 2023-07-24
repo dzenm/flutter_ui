@@ -8,10 +8,16 @@ import '../../http/api_services.dart';
 import 'data_entity.dart';
 import 'log_interceptor.dart';
 
+/// 请求成功返回的结果
 typedef Success = void Function(dynamic data);
 
+/// 下载文件的进度
+typedef Progress = void Function(double percent, int count, int total);
+
+/// 请求完成的标志
 typedef Complete = void Function();
 
+/// 请求失败返回的结果
 typedef Failed = void Function(HttpError error);
 
 /// 默认[baseUrl]对应的[ApiServices]，用于获取请求
@@ -216,6 +222,60 @@ class HttpsClient {
     if (failed != null) failed(error!);
     log('HTTP请求错误: code=${error!.code}, msg=${error!.msg}');
   }
+
+  /// 下载文件
+  /// [url] 下载文件的url
+  /// [savePath] 保存文件的路径
+  /// [cancel] 取消下载请求的token
+  /// [success] 下载成功返回的结果
+  /// [progress] 下载的进度
+  /// [failed] 下载失败返回的结果
+  Future<void> download(
+    String url,
+    dynamic savePath, {
+    CancelToken? cancel,
+    Success? success,
+    Progress? progress,
+    Failed? failed,
+  }) async {
+    HttpError? error;
+    try {
+      Response response = await Dio().download(
+        url,
+        savePath,
+        options: Options(
+          responseType: ResponseType.bytes,
+          followRedirects: false,
+        ),
+        cancelToken: cancel,
+        onReceiveProgress: (int count, int total) {
+          if (progress == null) return;
+          // 获取下载进度
+          double progressPercent = double.parse((count / total).toStringAsFixed(2));
+          progress(progressPercent, count, total);
+        },
+      );
+      if (response.statusCode == 200 || response.statusCode == 206) {
+        // 下载成功的返回结果
+        if (success != null) {
+          success(response.data);
+        }
+      } else {
+        // 下载请求失败的错误信息
+        error = HttpError(response.statusCode ?? 1000, response.statusMessage ?? '');
+      }
+    } on DioException catch (e) {
+      // 下载失败的错误信息
+      error = HttpError(1000, e.message ?? '');
+    }
+    // 下载结果
+    if (error == null) return;
+    if (failed != null) {
+      failed(error);
+    }
+  }
+
+  Future<void> upload() async {}
 
   void log(dynamic text) => _logPrint == null ? null : _logPrint!(text, tag: 'HttpsClient');
 }

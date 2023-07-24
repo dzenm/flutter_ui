@@ -47,7 +47,7 @@ class _TabPlazaPageState extends State<TabPlazaPage> {
   }
 
   Future<void> _getTopArticle() async {
-    await HttpManager.instance.getLopArticleList(
+    await HttpManager.instance.getTopArticleList(
       isShowDialog: false,
       success: (list) {
         context.read<ArticleModel>().updateArticles(list);
