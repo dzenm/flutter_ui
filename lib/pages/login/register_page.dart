@@ -9,20 +9,92 @@ import '../../base/res/app_theme.dart';
 import '../../base/res/local_model.dart';
 import '../../base/route/app_route_delegate.dart';
 import '../../base/utils/sp_util.dart';
+import '../../base/widgets/common_bar.dart';
 import '../../base/widgets/tap_layout.dart';
 import '../../entities/user_entity.dart';
 import '../../generated/l10n.dart';
 import '../../models/user_model.dart';
 import '../routers.dart';
+import 'login_page.dart';
 
-class RegisterPage extends StatefulWidget {
+class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});
 
   @override
-  State<StatefulWidget> createState() => _RegisterPageState();
+  Widget build(BuildContext context) {
+    if (BuildConfig.isWeb) {
+      return _buildWebPage(context);
+    } else if (BuildConfig.isDesktop) {
+      return _buildDeskTopPage(context);
+    }
+    return _buildAppPage(context);
+  }
+
+  /// Web网页端展示的页面
+  Widget _buildWebPage(BuildContext context) {
+    return Material(
+      child: Center(
+        child: Container(
+          width: 400,
+          padding: const EdgeInsets.all(24),
+          child: const _EditRegisterInfoView(),
+        ),
+      ),
+    );
+  }
+
+  /// Desktop桌面端展示的页面
+  Widget _buildDeskTopPage(BuildContext context) {
+    return Material(
+      child: Center(
+        child: Container(
+          width: 400,
+          padding: const EdgeInsets.all(24),
+          child: const _EditRegisterInfoView(),
+        ),
+      ),
+    );
+  }
+
+  /// App移动端展示的页面
+  Widget _buildAppPage(BuildContext context) {
+    AppTheme theme = context.watch<LocalModel>().theme;
+    Size size = MediaQuery.of(context).size;
+    double marginTop = size.height / 14;
+    double marginBottom = size.height / 6;
+    return Scaffold(
+      backgroundColor: theme.background,
+      body: SingleChildScrollView(
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          CommonBar(
+            titleColor: theme.primaryText,
+            backgroundColor: theme.background,
+            systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarIconBrightness: Brightness.dark,
+              statusBarBrightness: Brightness.dark,
+            ),
+          ),
+          SizedBox(height: marginTop),
+          Container(
+            padding: const EdgeInsets.all(24),
+            child: const _EditRegisterInfoView(),
+          ),
+          SizedBox(height: marginBottom),
+          const ProtocolInfoView(),
+        ]),
+      ),
+    );
+  }
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _EditRegisterInfoView extends StatefulWidget {
+  const _EditRegisterInfoView({super.key});
+
+  @override
+  State<StatefulWidget> createState() => __EditRegisterInfoViewState();
+}
+
+class __EditRegisterInfoViewState extends State<_EditRegisterInfoView> {
   static const String _tag = 'RegisterPage';
 
   final TextEditingController _usernameController = TextEditingController();
@@ -53,7 +125,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   @override
-  void didUpdateWidget(covariant RegisterPage oldWidget) {
+  void didUpdateWidget(_EditRegisterInfoView oldWidget) {
     super.didUpdateWidget(oldWidget);
     log('didUpdateWidget');
   }
@@ -94,93 +166,77 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     log('build');
     AppTheme theme = context.watch<LocalModel>().theme;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(S.of(context).register, style: TextStyle(color: theme.white)),
+    return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+      const SizedBox(height: 80),
+      // 用户名输入框
+      TextField(
+        controller: _usernameController,
+        decoration: InputDecoration(
+          icon: const Icon(Icons.person),
+          labelText: S.of(context).username,
+          suffixIcon: IconButton(
+            splashColor: theme.transparent,
+            icon: const Icon(Icons.close),
+            onPressed: () => _usernameController.clear(),
+          ),
+        ),
+        maxLines: 1,
+        maxLengthEnforcement: MaxLengthEnforcement.enforced,
+        keyboardType: TextInputType.text,
       ),
-      body: SingleChildScrollView(
-        child: _buildBody(),
+      const SizedBox(height: 32),
+      // 密码输入框
+      TextField(
+        controller: _passwordController,
+        decoration: InputDecoration(
+          icon: const Icon(Icons.admin_panel_settings),
+          labelText: S.of(context).password,
+          suffixIcon: IconButton(
+            splashColor: theme.transparent,
+            icon: Icon(_isShowPwd ? Icons.visibility : Icons.visibility_off, size: 20),
+            iconSize: 16,
+            // 点击改变显示或隐藏密码
+            onPressed: () => setState(() => _isShowPwd = !_isShowPwd),
+          ),
+        ),
+        maxLines: 1,
+        keyboardType: TextInputType.text,
+        obscureText: !_isShowPwd,
       ),
-    );
-  }
-
-  // 主体页面结构
-  Widget _buildBody() {
-    AppTheme theme = context.watch<LocalModel>().theme;
-    return Container(
-      padding: const EdgeInsets.all(24),
-      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        const SizedBox(height: 80),
-        // 用户名输入框
-        TextField(
-          controller: _usernameController,
-          decoration: InputDecoration(
-            icon: const Icon(Icons.person),
-            labelText: S.of(context).username,
-            suffixIcon: IconButton(
-              splashColor: theme.transparent,
-              icon: const Icon(Icons.close),
-              onPressed: () => _usernameController.clear(),
-            ),
+      const SizedBox(height: 32),
+      // 重复密码输入框
+      TextField(
+        controller: _rPasswordController,
+        decoration: InputDecoration(
+          icon: const Icon(Icons.admin_panel_settings),
+          labelText: S.of(context).rPassword,
+          suffixIcon: IconButton(
+            splashColor: theme.transparent,
+            icon: Icon(_isShowRPwd ? Icons.visibility : Icons.visibility_off, size: 20),
+            iconSize: 16,
+            // 点击改变显示或隐藏密码
+            onPressed: () => setState(() => _isShowRPwd = !_isShowRPwd),
           ),
-          maxLines: 1,
-          maxLengthEnforcement: MaxLengthEnforcement.enforced,
-          keyboardType: TextInputType.text,
         ),
-        const SizedBox(height: 32),
-        // 密码输入框
-        TextField(
-          controller: _passwordController,
-          decoration: InputDecoration(
-            icon: const Icon(Icons.admin_panel_settings),
-            labelText: S.of(context).password,
-            suffixIcon: IconButton(
-              splashColor: theme.transparent,
-              icon: Icon(_isShowPwd ? Icons.visibility : Icons.visibility_off, size: 20),
-              iconSize: 16,
-              // 点击改变显示或隐藏密码
-              onPressed: () => setState(() => _isShowPwd = !_isShowPwd),
-            ),
+        maxLines: 1,
+        keyboardType: TextInputType.text,
+        obscureText: !_isShowRPwd,
+      ),
+      const SizedBox(height: 32),
+      Row(children: [
+        // 注册按钮
+        Expanded(
+          flex: 1,
+          child: TapLayout(
+            height: 36.0,
+            borderRadius: const BorderRadius.all(Radius.circular(2)),
+            background: _isDisableLoginButton ? theme.disableButton : theme.button,
+            onTap: _isDisableLoginButton ? null : _register,
+            child: Text(S.of(context).register, style: TextStyle(color: theme.text)),
           ),
-          maxLines: 1,
-          keyboardType: TextInputType.text,
-          obscureText: !_isShowPwd,
         ),
-        const SizedBox(height: 32),
-        // 重复密码输入框
-        TextField(
-          controller: _rPasswordController,
-          decoration: InputDecoration(
-            icon: const Icon(Icons.admin_panel_settings),
-            labelText: S.of(context).rPassword,
-            suffixIcon: IconButton(
-              splashColor: theme.transparent,
-              icon: Icon(_isShowRPwd ? Icons.visibility : Icons.visibility_off, size: 20),
-              iconSize: 16,
-              // 点击改变显示或隐藏密码
-              onPressed: () => setState(() => _isShowRPwd = !_isShowRPwd),
-            ),
-          ),
-          maxLines: 1,
-          keyboardType: TextInputType.text,
-          obscureText: !_isShowRPwd,
-        ),
-        const SizedBox(height: 32),
-        Row(children: [
-          // 注册按钮
-          Expanded(
-            flex: 1,
-            child: TapLayout(
-              height: 36.0,
-              borderRadius: const BorderRadius.all(Radius.circular(2)),
-              background: _isDisableLoginButton ? theme.disableButton : theme.button,
-              onTap: _isDisableLoginButton ? null : _register,
-              child: Text(S.of(context).register, style: TextStyle(color: theme.text)),
-            ),
-          ),
-        ]),
       ]),
-    );
+    ]);
   }
 
   // 如果输入的账号密码为空则禁用按钮

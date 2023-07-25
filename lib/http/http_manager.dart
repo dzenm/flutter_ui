@@ -312,7 +312,28 @@ class HttpManager {
     });
   }
 
-  /// 退出登录的账号
+  /// 获取问答article，并保存article数据
+  Future<void> getQuestionsList({
+    int page = 0,
+    void Function(List<ArticleEntity> list, int? pageCount)? success,
+    Failed? failed,
+    bool isShowDialog = true,
+    bool isShowToast = true,
+  }) async {
+    await HttpsClient.instance.request(apiServices.questions(page), isShowDialog: isShowDialog, isShowToast: isShowToast, success: (data) async {
+      PageEntity page = PageEntity.fromJson(data);
+
+      List<dynamic> datas = page.datas ?? [];
+      List<ArticleEntity> list = datas.map((e) => ArticleEntity.fromJson(e)).toList();
+      if (success != null) success(list, page.pageCount);
+    }, failed: (error) {
+      if (failed != null) {
+        failed(error);
+      }
+    });
+  }
+
+
   Future<void> logout() async {
     await _httpClient.request(apiServices.logout(), success: (data) {
       SpUtil.clearUser();
