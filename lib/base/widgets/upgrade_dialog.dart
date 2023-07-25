@@ -38,12 +38,12 @@ class UpgradeDialog extends StatefulWidget {
     );
     if (!needUpgrade(currentVersion, appVersion.version)) return;
     if (Platform.isIOS) {
-//      String url = 'itms-apps://itunes.apple.com/cn/app/id414478124?mt=8'; // 这是微信的地址，到时候换成自己的应用的地址
-//      if (await canLaunch(url)){
-//    await launch(url);
-//    }else {
-//    throw 'Could not launch $url';
-//    }
+      // String url = 'itms-apps://itunes.apple.com/cn/app/id414478124?mt=8'; // 这是微信的地址，到时候换成自己的应用的地址
+      // if (await canLaunch(url)) {
+      //   await launch(url);
+      // } else {
+      //   throw 'Could not launch $url';
+      // }
     } else {
       Future.delayed(Duration.zero, () async {
         showDialog(
@@ -134,7 +134,7 @@ class _UpgradeDialogState extends State<UpgradeDialog> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 60),
+      margin: const EdgeInsets.symmetric(horizontal: 32),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -169,7 +169,7 @@ class _UpgradeDialogState extends State<UpgradeDialog> {
     return SizedBox(
       height: 100,
       child: SingleChildScrollView(
-        child: Column(children: [
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           const Text('更新内容'),
           const SizedBox(height: 8),
           Text(
@@ -203,9 +203,9 @@ class _UpgradeDialogState extends State<UpgradeDialog> {
       if (!_running)
         TapLayout(
           height: 40,
-          borderRadius: const BorderRadius.all(Radius.circular(8)),
           background: widget.color,
           alignment: Alignment.center,
+          borderRadius: const BorderRadius.all(Radius.circular(4)),
           onTap: () => start(),
           child: const Text(
             '立即升级',
@@ -214,12 +214,13 @@ class _UpgradeDialogState extends State<UpgradeDialog> {
         ),
       const SizedBox(height: 8),
       TapLayout(
+        height: 40,
+        alignment: Alignment.center,
+        borderRadius: const BorderRadius.all(Radius.circular(4)),
         onTap: () {
           _cancel?.cancel();
           Navigator.pop(context);
         },
-        height: 32,
-        alignment: Alignment.center,
         child: const Text('稍后升级'),
       ),
     ];

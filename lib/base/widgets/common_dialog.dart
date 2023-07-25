@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import '../../generated/l10n.dart';
 import 'common_widget.dart';
 import 'tap_layout.dart';
-import 'upgrade_dialog.dart';
 import 'will_pop_view.dart';
 
 typedef ItemClickCallback = void Function(int index);
@@ -139,22 +138,19 @@ class CommonDialog {
       );
     }
 
-    Widget buildChildren() {
-      int index = -1;
-      return realHeight > MediaQuery.of(context).size.width / 2
-          ? ListView.builder(
-              itemCount: data.length,
-              shrinkWrap: true,
-              itemBuilder: (BuildContext context, int index) => buildChild(index),
-            )
-          : Column(
-              mainAxisSize: MainAxisSize.min,
-              children: data.map((e) {
-                index++;
-                return buildChild(index);
-              }).toList(),
-            );
-    }
+    int index = -1;
+    Widget child = realHeight > MediaQuery.of(context).size.width / 2
+        ? ListView.builder(
+            itemCount: data.length,
+            itemBuilder: (BuildContext context, int index) => buildChild(index),
+          )
+        : Column(
+            mainAxisSize: MainAxisSize.min,
+            children: data.map((e) {
+              index++;
+              return buildChild(index);
+            }).toList(),
+          );
 
     showModalBottomSheet(
       context: context,
@@ -171,7 +167,7 @@ class CommonDialog {
           child: PhysicalModel(
             color: isMaterial ? Colors.white : Colors.transparent,
             clipBehavior: Clip.antiAlias,
-            child: buildChildren(),
+            child: child,
           ),
         );
       },
@@ -264,18 +260,15 @@ class DialogWrapper extends StatelessWidget {
           body: Container(
             padding: const EdgeInsets.symmetric(horizontal: 32),
             alignment: Alignment.center,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ClipRRect(
-                  borderRadius: borderRadius,
-                  child: Container(
-                    color: color,
-                    child: child,
-                  ),
-                )
-              ],
-            ),
+            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              ClipRRect(
+                borderRadius: borderRadius,
+                child: Container(
+                  color: color,
+                  child: child,
+                ),
+              )
+            ]),
           ),
         ),
       ),

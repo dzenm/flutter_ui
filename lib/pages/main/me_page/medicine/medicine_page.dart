@@ -44,7 +44,6 @@ class _MedicinePageState extends State<MedicinePage> {
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: ListView.builder(
-          shrinkWrap: true,
           itemCount: _list.length,
           itemBuilder: (BuildContext context, int index) {
             MedicineEntity medicine = _list[index];

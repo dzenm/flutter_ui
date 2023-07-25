@@ -35,7 +35,6 @@ class _HTTPListWidgetState extends State<HTTPListWidget> {
     return RefreshIndicator(
       onRefresh: _getData,
       child: ListView.builder(
-        shrinkWrap: true,
         itemBuilder: _buildItem,
         itemCount: _list.length,
       ),

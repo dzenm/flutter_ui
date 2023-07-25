@@ -7,6 +7,16 @@ class MainModel with ChangeNotifier {
   /// 初始化数据
   Future<void> init() async {}
 
+  /// 首页面切换的PageController
+  PageController? _controller;
+
+  PageController get controller => _controller!;
+
+  /// 初始化PageController，为空时创建默认的PageController
+  void initController({PageController? controller}) {
+    _controller = controller ?? PageController();
+  }
+
   /// 主页底部的小红点数量列表
   /// _badges = List.generate(3, (index) => index * index * index);
   final List<int> _badges = [-1, 0, 5];
@@ -43,12 +53,18 @@ class MainModel with ChangeNotifier {
   set selectedIndex(int selectedIndex) {
     if (_selectedIndex == selectedIndex) return;
     _selectedIndex = selectedIndex;
+    _controller?.animateToPage(
+      selectedIndex,
+      duration: const Duration(milliseconds: 250),
+      curve: Curves.ease,
+    );
     notifyListeners();
   }
 
   /// 清空数据
   void clear() {
     _selectedIndex = 0;
+    _controller = null;
     notifyListeners();
   }
 }

@@ -28,17 +28,13 @@ class _PopupPageState extends State<PopupPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0.0,
         title: const Text('PopupWindow测试', style: TextStyle(color: Colors.white)),
-        centerTitle: true,
       ),
       body: Container(
         padding: const EdgeInsets.all(16),
-        child: SingleChildScrollView(
-          child: Row(children: [
-            Expanded(child: _buildMenuView()),
-          ]),
-        ),
+        child: Row(children: [
+          Expanded(child: _buildMenuView()),
+        ]),
       ),
     );
   }
@@ -46,7 +42,7 @@ class _PopupPageState extends State<PopupPage> {
   Widget _buildMenuView() {
     List<String> list = ['左上', '正左', '左下', '上左', '正上', '上右', '右上', '正右', '右下', '下右', '正下', '下左'];
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      CheckGroup(
+      Flexible(child: CheckGroup(
         list: list,
         padding: const EdgeInsets.symmetric(vertical: 16),
         initialValue: 10,
@@ -60,7 +56,7 @@ class _PopupPageState extends State<PopupPage> {
             }
           }
         },
-      ),
+      )),
       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         SizedBox(
           key: _targetKey,

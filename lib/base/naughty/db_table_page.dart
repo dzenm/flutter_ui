@@ -42,7 +42,6 @@ class _DBTablePageState extends State<DBTablePage> {
       body: RefreshIndicator(
         onRefresh: _onRefresh,
         child: ListView.builder(
-          shrinkWrap: true,
           itemBuilder: _buildItem,
           itemCount: _list.length,
         ),

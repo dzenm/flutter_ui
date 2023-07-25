@@ -144,7 +144,6 @@ class _LicenseKeyboardState extends State<LicenseKeyboard> {
           ),
           Expanded(
             child: ListView.builder(
-              shrinkWrap: true,
               padding: EdgeInsets.zero,
               itemBuilder: (context, index) {
                 return Row(

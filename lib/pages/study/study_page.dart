@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/pages/main/main_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../base/res/app_theme.dart';
@@ -201,7 +202,10 @@ class _StudyPageState extends State<StudyPage> {
       MaterialButton(
         textColor: Colors.white,
         color: theme.button,
-        onPressed: () => AppRouteDelegate.of(context).pop('这是回调的数据'),
+        onPressed: () {
+          context.read<MainModel>().selectedIndex = 1;
+          AppRouteDelegate.of(context).pop('这是回调的数据');
+        },
         child: _text('返回并传递数据'),
       ),
     ];

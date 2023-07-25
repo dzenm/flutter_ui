@@ -35,7 +35,6 @@ class _DBPageState extends State<DBPage> {
       body: RefreshIndicator(
         onRefresh: _onRefresh,
         child: ListView.builder(
-          shrinkWrap: true,
           itemBuilder: _buildItem,
           itemCount: _list.length,
         ),

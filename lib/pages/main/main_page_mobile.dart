@@ -29,9 +29,6 @@ class MainPageMobile extends StatefulWidget {
 class _MainPageMobileState extends State<MainPageMobile> with WidgetsBindingObserver {
   static const String _tag = 'MainPage';
 
-  // 页面管理控制器
-  final PageController _controller = PageController(initialPage: 0);
-
   // 感知生命周期变化
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -57,6 +54,7 @@ class _MainPageMobileState extends State<MainPageMobile> with WidgetsBindingObse
     log('initState');
 
     WidgetsBinding.instance.addObserver(this);
+    context.read<MainModel>().initController(controller: PageController(initialPage: 0));
     Future.delayed(Duration.zero, () => _initData());
   }
 
@@ -109,7 +107,7 @@ class _MainPageMobileState extends State<MainPageMobile> with WidgetsBindingObse
 
   @override
   void dispose() {
-    _controller.dispose();
+    context.read<MainModel>().controller.dispose();
     WidgetsBinding.instance.removeObserver(this);
 
     super.dispose();
@@ -123,9 +121,10 @@ class _MainPageMobileState extends State<MainPageMobile> with WidgetsBindingObse
     _useContextBeforeBuild(context);
 
     int length = context.read<MainModel>().length;
+    PageController controller = context.read<MainModel>().controller;
     return Scaffold(
       body: PageView(
-        controller: _controller,
+        controller: controller,
         physics: const NeverScrollableScrollPhysics(),
         children: _buildTabPage(length),
       ),
@@ -152,10 +151,7 @@ class _MainPageMobileState extends State<MainPageMobile> with WidgetsBindingObse
   List<Widget> _buildBottomNavigationBar(int length) {
     return List.generate(
       length,
-      (i) => Expanded(
-        flex: 1,
-        child: BottomNavigationBarItemView(index: i, controller: _controller),
-      ),
+      (i) => Expanded(flex: 1, child: BottomNavigationBarItemView(index: i)),
     ); // bottomNavigation list
   }
 
@@ -165,15 +161,8 @@ class _MainPageMobileState extends State<MainPageMobile> with WidgetsBindingObse
 /// 底部Item布局
 class BottomNavigationBarItemView extends StatelessWidget {
   final int index;
-  final PageController controller;
-  final GestureTapCallback? onTap;
 
-  const BottomNavigationBarItemView({
-    super.key,
-    required this.index,
-    required this.controller,
-    this.onTap,
-  });
+  const BottomNavigationBarItemView({super.key, required this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -209,9 +198,7 @@ class BottomNavigationBarItemView extends StatelessWidget {
     bool isSelected = context.read<MainModel>().isSelected(index);
     if (!isSelected) {
       context.read<MainModel>().selectedIndex = index;
-      controller.animateToPage(index, duration: const Duration(milliseconds: 250), curve: Curves.ease);
     }
-    if (onTap != null) onTap!();
   }
 
   Widget _buildBadge() {
