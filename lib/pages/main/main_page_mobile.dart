@@ -107,7 +107,6 @@ class _MainPageMobileState extends State<MainPageMobile> with WidgetsBindingObse
 
   @override
   void dispose() {
-    context.read<MainModel>().controller.dispose();
     WidgetsBinding.instance.removeObserver(this);
 
     super.dispose();

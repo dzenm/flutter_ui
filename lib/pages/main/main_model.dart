@@ -64,6 +64,7 @@ class MainModel with ChangeNotifier {
   /// 清空数据
   void clear() {
     _selectedIndex = 0;
+    _controller?.dispose();
     _controller = null;
     notifyListeners();
   }

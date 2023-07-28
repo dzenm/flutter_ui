@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ui/base/log/build_config.dart';
 import 'package:flutter_ui/base/res/app_theme.dart';
 import 'package:flutter_ui/base/res/local_model.dart';
+import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:provider/provider.dart';
 
 import '../../base/http/https_client.dart';
@@ -80,16 +83,17 @@ class LoginPage extends StatelessWidget {
             child: const _EditLoginInfoView(),
           ),
           SizedBox(height: marginBottom),
-          const ProtocolInfoView(),
+          ProtocolInfoView(onChanged: (value) => _EditLoginInfoView._isAgree = value),
         ]),
       ),
     );
   }
 }
 
-///
 /// 登录组件主体部分(编辑登录信息)，不包含 [Scaffold]
 class _EditLoginInfoView extends StatefulWidget {
+  static bool _isAgree = false;
+
   const _EditLoginInfoView();
 
   @override
@@ -108,9 +112,8 @@ class __EditLoginInfoViewState extends State<_EditLoginInfoView> {
   String _verifyCode = ''; // 验证码
 
   bool _isShowPwd = false; // 是否显示输入的密码
-  bool _loginByPhone = false; // 是否通过手机号验证码登录
+  bool _loginByPhone = true; // 是否通过手机号验证码登录
   bool _isDisableLoginButton = true; // 是否禁用点击按钮，根据输入的内容_isLogin为true禁用登陆按钮，为false禁用注册按钮
-  bool _isAdgree = false;
 
   @override
   void initState() {
@@ -213,14 +216,7 @@ class __EditLoginInfoViewState extends State<_EditLoginInfoView> {
           decoration: InputDecoration(
             icon: const Icon(Icons.verified_sharp),
             labelText: S.of(context).verifyCode,
-            suffixIcon: IconButton(
-              splashColor: theme.transparent,
-
-              icon: Icon(_isShowPwd ? Icons.visibility : Icons.visibility_off, size: 20),
-              iconSize: 16,
-              // 点击改变显示或隐藏密码
-              onPressed: () => setState(() => _isShowPwd = !_isShowPwd),
-            ),
+            suffix: const VerifyCodeView(),
           ),
           maxLines: 1,
           keyboardType: TextInputType.text,
@@ -277,11 +273,17 @@ class __EditLoginInfoViewState extends State<_EditLoginInfoView> {
   /// 登录按钮点击事件
   void _login() {
     FocusScope.of(context).unfocus();
-    if (_loginByPhone) {
-
+    if (!_EditLoginInfoView._isAgree) {
+      CommonDialog.showToast('请先同意隐私协议');
       return;
     }
-    HttpsClient.instance.request(apiServices.login(_username, _password), success: (data) {
+    String password = '';
+    if (!_loginByPhone) {
+      password = _password;
+    } else {
+      password = _verifyCode;
+    }
+    HttpsClient.instance.request(apiServices.login(_username, password), success: (data) {
       UserEntity user = UserEntity.fromJson(data);
 
       // 先保存SP，数据库创建需要用到SP的userId
@@ -347,6 +349,62 @@ class _ProtocolInfoViewState extends State<ProtocolInfoView> {
         ),
         const SizedBox(width: 16),
       ]),
+    ]);
+  }
+}
+
+/// 验证码
+class VerifyCodeView extends StatefulWidget {
+  final GestureTapCallback? onTap;
+
+  const VerifyCodeView({super.key, this.onTap});
+
+  @override
+  State<StatefulWidget> createState() => _VerifyCodeViewState();
+}
+
+class _VerifyCodeViewState extends State<VerifyCodeView> {
+  Timer? _timer; // 计时器
+  int _second = -1; // 计时的时间
+
+  /// 倒计时
+  void _countDownCode() {
+    _second = 59;
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      --_second;
+      if (_second < 0) {
+        timer.cancel();
+      }
+      setState(() {});
+    });
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    bool reset = _second < 0;
+    String text = reset ? '获取验证码' : '$_second 秒';
+    return Row(mainAxisSize: MainAxisSize.min, children: [
+      TapLayout(
+        background: Colors.transparent,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        onTap: reset
+            ? null
+            : () {
+                _countDownCode();
+                if (widget.onTap != null) {
+                  widget.onTap!();
+                }
+              },
+        child: Text(text),
+      ),
     ]);
   }
 }

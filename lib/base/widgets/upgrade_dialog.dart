@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+// ignore_for_file: depend_on_referenced_packages
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/base/http/https_client.dart';

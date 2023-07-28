@@ -6,13 +6,12 @@ import 'package:flutter/material.dart';
 import '../utils/native_channel_util.dart';
 
 /// 监听返回键的动作
-@immutable
 class WillPopView extends StatelessWidget {
   final Widget child; //如果对返回键进行监听，必须放在最顶层
   final BackBehavior behavior; //返回键的行为
   final WillPopCallback? onWillPop;
 
-  WillPopView({
+  const WillPopView({
     super.key,
     required this.child,
     this.behavior = BackBehavior.custom,
@@ -64,7 +63,7 @@ class WillPopView extends StatelessWidget {
     return !isChanged; // 根据isChanged的值决定调用系统返回键的处理
   }
 
-  DateTime _lastTap = DateTime.now(); //上次点击时间
+  static DateTime _lastTap = DateTime.now(); //上次点击时间
 
   @override
   Widget build(BuildContext context) {

@@ -88,7 +88,7 @@ class RegisterPage extends StatelessWidget {
 }
 
 class _EditRegisterInfoView extends StatefulWidget {
-  const _EditRegisterInfoView({super.key});
+  const _EditRegisterInfoView();
 
   @override
   State<StatefulWidget> createState() => __EditRegisterInfoViewState();

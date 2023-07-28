@@ -1,5 +1,6 @@
 import 'dart:io';
 
+// ignore_for_file: depend_on_referenced_packages
 import 'package:dio/dio.dart';
 import 'package:dio/src/adapters/io_adapter.dart';
 import 'package:flutter/foundation.dart';
