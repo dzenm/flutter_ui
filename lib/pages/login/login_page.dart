@@ -331,13 +331,14 @@ class _ProtocolInfoViewState extends State<ProtocolInfoView> {
       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         const SizedBox(width: 16),
         TapLayout(
+          foreground: theme.transparent,
+          padding: const EdgeInsets.all(8),
           onTap: () {
             setState(() => isAgree = !isAgree);
             if (widget.onChanged != null) widget.onChanged!(isAgree);
           },
           child: Icon(icon, color: color),
         ),
-        const SizedBox(width: 4),
         Text(S.of(context).readAndAgree, style: TextStyle(color: theme.hint, fontSize: 12)),
         TapLayout(
           onTap: () {},
