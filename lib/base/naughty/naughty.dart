@@ -66,7 +66,7 @@ class Naughty {
     /// Failed assertion: line 1956 pos 12: '_elements.contains(element)': is not true.
     Future.delayed(Duration.zero, () {
       if (_context == null || _overlayEntry == null) return;
-      Overlay.of(_context!)?.insert(_overlayEntry!);
+      Overlay.of(_context!).insert(_overlayEntry!);
     });
   }
 

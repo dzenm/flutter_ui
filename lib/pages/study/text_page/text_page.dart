@@ -125,18 +125,18 @@ class _TextPageState extends State<TextPage> {
                 ),
                 const SizedBox(height: 24),
                 CommonWidget.titleView('自适应宽度使用: '),
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: const [
+                  children: [
                     Flexible(child: Text('Row包含一个文本，两个图标，给所有子widget设置Expand的，这是长文本的效果', maxLines: 1, overflow: TextOverflow.ellipsis)),
                     Icon(Icons.add_photo_alternate_outlined),
                     Icon(Icons.info),
                   ],
                 ),
                 const SizedBox(height: 8),
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: const [
+                  children: [
                     Flexible(child: Text('短文本和图标', maxLines: 1, overflow: TextOverflow.ellipsis)),
                     Icon(Icons.add_photo_alternate_outlined),
                     Icon(Icons.info),

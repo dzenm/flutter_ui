@@ -26,8 +26,8 @@ class _ExamplePageState extends State<ExamplePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(children: const [
+    return const Scaffold(
+      body: Column(children: [
         CommonBar(title: '标题', centerTitle: true),
       ]),
     );

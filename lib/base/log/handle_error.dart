@@ -54,7 +54,9 @@ class HandleError {
         // FlutterError.presentError(details);
         FlutterError.dumpErrorToConsole(details);
       } else {
-        Zone.current.handleUncaughtError(details.exception, details.stack!);
+        if (details.stack != null) {
+          Zone.current.handleUncaughtError(details.exception, details.stack!);
+        }
       }
     };
     // 自定义错误界面

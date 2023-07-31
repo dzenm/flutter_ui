@@ -4,7 +4,7 @@ import 'db_base_model.dart';
 import 'db_manager.dart';
 
 /// 数据库操作(增删改查), 在model中使用with混入即可。
-class DBDao {
+mixin DBDao {
   /// 插入数据
   Future<void> insert<T extends DBBaseModel>(
     dynamic data, {

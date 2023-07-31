@@ -25,7 +25,7 @@ class Routers {
         AppRoutePage(
           name: root,
           builder: (settings) {
-            return AppPage();
+            return const AppPage();
           },
         ),
         AppRoutePage(

@@ -79,11 +79,11 @@ class _DialogPageState extends State<DialogPage> {
             onPressed: () => CommonDialog.showPromptDialog(
               context,
               titleString: '立即开通',
-              content: Column(
+              content: const Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Text('购买类型：', style: TextStyle(fontSize: 16)),
                   Text('应付金额：￥', style: TextStyle(fontSize: 16)),
                   Text('支付方式：(￥)', style: TextStyle(fontSize: 16)),
