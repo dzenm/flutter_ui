@@ -2,17 +2,17 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/base/log/build_config.dart';
-import 'package:flutter_ui/base/res/app_theme.dart';
-import 'package:flutter_ui/base/res/local_model.dart';
-import 'package:flutter_ui/base/widgets/common_dialog.dart';
 import 'package:provider/provider.dart';
 
 import '../../base/http/https_client.dart';
+import '../../base/log/build_config.dart';
 import '../../base/log/log.dart';
+import '../../base/res/app_theme.dart';
+import '../../base/res/local_model.dart';
 import '../../base/route/app_route_delegate.dart';
 import '../../base/utils/sp_util.dart';
 import '../../base/widgets/common_bar.dart';
+import '../../base/widgets/common_dialog.dart';
 import '../../base/widgets/tap_layout.dart';
 import '../../entities/user_entity.dart';
 import '../../generated/l10n.dart';
