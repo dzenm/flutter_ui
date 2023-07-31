@@ -169,6 +169,7 @@ class __EditLoginInfoViewState extends State<_EditLoginInfoView> {
 
   @override
   Widget build(BuildContext context) {
+
     log('build');
 
     AppTheme theme = context.watch<LocalModel>().theme;
