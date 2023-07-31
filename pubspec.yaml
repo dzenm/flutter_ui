@@ -20,7 +20,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.18.6 <3.0.0'
+  sdk: '>=3.0.6 <4.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -42,7 +42,7 @@ dependencies:
   # 图片 https://pub.flutter-io.cn/packages/cupertino_icons
   cupertino_icons: 1.0.5
   # sql https://pub.dev/packages/sqflite
-  sqflite: 2.2.8+4
+  sqflite: 2.3.0
   # 路径选择 https://pub.dev/packages/path_provider
   path_provider: 2.0.15
   # 本地化存储 https://pub.dev/packages/shared_preferences
@@ -60,17 +60,17 @@ dependencies:
   # 获取安卓iOS设备信息 https://pub.flutter-io.cn/packages/device_info_plus
   device_info_plus: 9.0.2
   # 通知栏通知提醒 https://pub.flutter-io.cn/packages/flutter_local_notifications
-  flutter_local_notifications: 14.1.1
+  flutter_local_notifications: 15.1.0+1
   # 图片缓存 [最新版3.2.0 https://pub.flutter-io.cn/packages/cached_network_image ]
   cached_network_image: 3.2.3
   # 输入框扩展 https://pub.flutter-io.cn/packages/extended_text_field
-  extended_text_field: 10.2.0
+  extended_text_field: 12.0.1
   # 返回按钮拦截 https://pub.flutter-io.cn/packages/back_button_interceptor
   back_button_interceptor: 6.0.2
   # 状态管理 https://pub.dev/packages/provider
   provider: 6.0.5
   # Json序列化 https://pub.dev/packages/json_annotation
-  json_annotation: 4.8.0
+  json_annotation: 4.8.1
 
   ########################################## UI ##########################################
   # WebView https://pub.dev/packages/webview_flutter
@@ -106,7 +106,7 @@ dependencies:
   # 图片选择器 [最新版0.8.4+10 https://pub.flutter-io.cn/packages/transparent_image ]
   transparent_image: 2.0.1
   # 图片选择器 [最新版0.8.4+10 https://pub.flutter-io.cn/packages/image_picker ]
-  image_picker: 0.8.7+5
+  image_picker: 1.0.1
   # 图片预览控件 [最新版0.13.0 https://pub.flutter-io.cn/packages/photo_view ]
   photo_view: 0.14.0
   #  # 视频播放 [最新版2.3.0 https://pub.flutter-io.cn/packages/video_player ]
@@ -120,7 +120,7 @@ dependencies:
 
   ########################################## 基础 ########################################
   # 时间格式化 https://pub.dev/packages/intl
-  intl: 0.17.0
+  intl: 0.18.0
 
   ########################################## 原生 ########################################
 
@@ -145,16 +145,16 @@ dependencies:
   #  url_launcher: ^6.0.3
   #  # Flutter 常用工具类库（本地化 屏幕适配） https://pub.flutter-io.cn/packages/flustars
   #  flustars: ^2.0.1 https://pub.flutter-io.cn/packages/flutter_html
-  flutter_html: 3.0.0-alpha.6
+  flutter_html: 3.0.0-beta.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  retrofit_generator: 6.0.0+3
-  build_runner: 2.3.2
+  retrofit_generator: 7.0.8
+  build_runner: 2.4.6
   # flutter pub run build_runner build --delete-conflicting-outputs
   # json序列化 https://pub-web.flutter-io.cn/packages/json_serializable
-  json_serializable: 6.6.1
+  json_serializable: 6.7.1
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

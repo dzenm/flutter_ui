@@ -67,17 +67,17 @@ class _MainPageMobileState extends State<MainPageMobile> with WidgetsBindingObse
   /// 初始化Provider数据，使用context并且异步加载，必须放在页面执行
   Future<void> _initProvider() async {
     // 表相关的Model
-    await ProviderManager.article(context: context).init();
-    await ProviderManager.banner(context: context).init();
-    await ProviderManager.user(context: context).init();
-    await ProviderManager.website(context: context).init();
+    ProviderManager.article(context: context).init();
+    ProviderManager.banner(context: context).init();
+    ProviderManager.user(context: context).init();
+    ProviderManager.website(context: context).init();
 
     // 页面相关的Model
-    await ProviderManager.main(context: context).init();
-    await ProviderManager.home(context: context).init();
-    await ProviderManager.me(context: context).init();
-    await ProviderManager.nav(context: context).init();
-    await ProviderManager.study(context: context).init();
+    ProviderManager.main(context: context).init();
+    ProviderManager.home(context: context).init();
+    ProviderManager.me(context: context).init();
+    ProviderManager.nav(context: context).init();
+    ProviderManager.study(context: context).init();
   }
 
   /// 在[build]之前使用使用[context]初始化数据

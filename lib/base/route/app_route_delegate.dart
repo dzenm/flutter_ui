@@ -32,10 +32,13 @@ class AppRouteDelegate extends RouterDelegate<Page<dynamic>> with ChangeNotifier
   /// 页面管理栈
   final List<Page<dynamic>> _pages = [];
 
-  AppRouteDelegate({required List<AppRoutePage> routers}) {
+  AppRouteDelegate({required List<AppRoutePage> routers, String? initialRoute}) {
     // 注册路由信息
     for (var route in routers) {
       AppRouteUtil.register.addRoute(route);
+    }
+    if (initialRoute != null) {
+      push(initialRoute);
     }
   }
 
@@ -188,9 +191,9 @@ class AppRouteDelegate extends RouterDelegate<Page<dynamic>> with ChangeNotifier
 
   /// 在[predicate]之上的页面全部移出栈
   Page? _removeUntil(String predicate) {
-    for (int i = _pages.length - 1; i >= 0; i--) {
+    for (int i = _pages.length - 1; i >= 0; --i) {
       if (_pages[i].name == predicate) break;
-      return _removePage();
+      _removePage();
     }
     return null;
   }

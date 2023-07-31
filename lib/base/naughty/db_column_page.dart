@@ -42,7 +42,7 @@ class _DBColumnPageState extends State<DBColumnPage> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
-                  dataRowHeight: 20,
+                  dataRowMinHeight: 20,
                   headingRowHeight: 32,
                   horizontalMargin: 0,
                   columnSpacing: 5,
@@ -57,8 +57,8 @@ class _DBColumnPageState extends State<DBColumnPage> {
                 ),
               ),
             )
-          : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Column(mainAxisAlignment: MainAxisAlignment.center, children: const [
+          : const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                 SizedBox(width: 56, height: 56, child: CircularProgressIndicator()),
               ]),
             ]),

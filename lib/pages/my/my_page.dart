@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'study/study.dart';
 
-class MyPage extends StatefulWidget {
-  const MyPage({super.key, required this.title});
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key, required this.title});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -17,10 +17,10 @@ class MyPage extends StatefulWidget {
   final String title;
 
   @override
-  State<MyPage> createState() => _MyPageState();
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyPageState extends State<MyPage> {
+class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   @override
@@ -50,6 +50,10 @@ class _MyPageState extends State<MyPage> {
     // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
+        // TRY THIS: Try changing the color here to a specific color (to
+        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
+        // change color while the other colors stay the same.
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
@@ -62,16 +66,15 @@ class _MyPageState extends State<MyPage> {
           // arranges them vertically. By default, it sizes itself to fit its
           // children horizontally, and tries to be as tall as its parent.
           //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
           // Column has various properties to control how it sizes itself and
           // how it positions its children. Here we use mainAxisAlignment to
           // center the children vertically; the main axis here is the vertical
           // axis because Columns are vertical (the cross axis would be
           // horizontal).
+          //
+          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
+          // action in the IDE, or press "p" in the console), to see the
+          // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
@@ -79,7 +82,7 @@ class _MyPageState extends State<MyPage> {
             ),
             Text(
               '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
         ),

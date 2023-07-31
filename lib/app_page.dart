@@ -29,22 +29,7 @@ import 'pages/study/study_model.dart';
 /// Created by a0010 on 2022/7/28 10:56
 /// 顶级页面，跟页面相关的全局属性配置/初始化必要的全局信息
 class AppPage extends StatelessWidget {
-  final AppRouteDelegate _delegate = AppRouteDelegate(routers: Routers.routers);
-
-  AppPage({super.key}) {
-    _initApp();
-  }
-
-  /// 获取第一个页面
-  void _initApp() {
-    final String route;
-    if (SpUtil.getUserLoginState()) {
-      route = Routers.main;
-    } else {
-      route = Routers.login;
-    }
-    _delegate.push(route);
-  }
+  const AppPage({super.key});
 
   // This widget is the root of your application.
   @override
@@ -72,16 +57,23 @@ class AppPage extends StatelessWidget {
       theme: ThemeData(
         // This is the theme of your application.
         //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
+        // TRY THIS: Try running your application with "flutter run". You'll see
+        // the application has a blue toolbar. Then, without quitting the app,
+        // try changing the seedColor in the colorScheme below to Colors.green
+        // and then invoke "hot reload" (save your changes or press the "hot
+        // reload" button in a Flutter-supported IDE, or press "r" if you used
+        // the command line to start the app).
+        //
         // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+        // state is not lost during the reload. To reset the state, use hot
+        // restart instead.
+        //
+        // This works for code too, not just values: Most code changes can be
+        // tested with just a hot reload.
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
       ),
-      home: const MyPage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 
@@ -114,10 +106,11 @@ class AppPage extends StatelessWidget {
 
   /// 全局设置（主题、语言、屏幕适配、路由设置）
   Widget _buildMaterialApp() {
-    return Consumer<LocalModel>(builder: (context, local, widget) {
+    AppRouteDelegate delegate = _createRouteDelegate();
+    return Consumer<LocalModel>(builder: (ctx, local, widget) {
       // 初始化需要用到context的地方，在创建MaterialApp之后
       Future.delayed(Duration.zero, () {
-        BuildContext context = _delegate.context;
+        BuildContext context = delegate.context;
         Application().context = context;
         _useContextAfterBuild(context);
       });
@@ -140,6 +133,23 @@ class AppPage extends StatelessWidget {
             TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
             TargetPlatform.android: CupertinoPageTransitionsBuilder(),
           }),
+          // This is the theme of your application.
+          //
+          // TRY THIS: Try running your application with "flutter run". You'll see
+          // the application has a blue toolbar. Then, without quitting the app,
+          // try changing the seedColor in the colorScheme below to Colors.green
+          // and then invoke "hot reload" (save your changes or press the "hot
+          // reload" button in a Flutter-supported IDE, or press "r" if you used
+          // the command line to start the app).
+          //
+          // Notice that the counter didn't reset back to zero; the application
+          // state is not lost during the reload. To reset the state, use hot
+          // restart instead.
+          //
+          // This works for code too, not just values: Most code changes can be
+          // tested with just a hot reload.
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
         ),
         // 设置语言，读取LocalModel的值，改变LocalModel的locale值会通过provider刷新页面
         locale: local.locale,
@@ -156,7 +166,7 @@ class AppPage extends StatelessWidget {
           Locale("zh"),
         ],
         // 初始路由
-        routerDelegate: _delegate,
+        routerDelegate: delegate,
         routeInformationParser: const AppRouteInfoParser(),
         builder: (context, child) {
           final botToastBuilder = BotToastInit();
@@ -170,6 +180,22 @@ class AppPage extends StatelessWidget {
         },
       );
     });
+  }
+
+  /// 创建App RouteDelegate
+  AppRouteDelegate _createRouteDelegate() {
+    return AppRouteDelegate(routers: Routers.routers, initialRoute: _initApp());
+  }
+
+  /// 获取第一个页面
+  static String _initApp() {
+    final String route;
+    if (SpUtil.getUserLoginState()) {
+      route = Routers.main;
+    } else {
+      route = Routers.login;
+    }
+    return route;
   }
 
   /// 初始化需要用到context的地方，在创建MaterialApp之后，使用的是全局的context

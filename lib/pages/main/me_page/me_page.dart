@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/models/provider_manager.dart';
 import 'package:flutter_ui/pages/main/me_page/me_router.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +17,7 @@ import '../../../entities/coin_entity.dart';
 import '../../../entities/user_entity.dart';
 import '../../../generated/l10n.dart';
 import '../../../http/http_manager.dart';
+import '../../../models/provider_manager.dart';
 import '../../../models/user_model.dart';
 import '../../study/study_router.dart';
 
@@ -213,8 +213,9 @@ class _MePageState extends State<MePage> {
   }
 
   void getData() async {
-    String ip = await DeviceUtil.getIP();
-    ProviderManager.me(context: context).updateIP(ip);
+    await DeviceUtil.getIP().then((ip) async {
+      ProviderManager.me(context: context).updateIP(ip);
+    });
   }
 
   Future<void> _getUserinfo() async {

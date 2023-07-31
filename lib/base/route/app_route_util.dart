@@ -49,25 +49,6 @@ class AppRouteSettings extends RouteSettings {
     this.body,
   });
 
-  @override
-  AppRouteSettings copyWith({
-    String? originPath,
-    String? name,
-    Object? arguments,
-    Map<String, dynamic>? paths,
-    Map<String, dynamic>? params,
-    dynamic body,
-  }) {
-    return AppRouteSettings(
-      originPath: originPath ?? '',
-      name: name,
-      arguments: arguments,
-      paths: paths,
-      params: params,
-      body: body,
-    );
-  }
-
   List<String> get pathSegments => Uri.parse(originPath).pathSegments;
 
   /// 处理 [url] 和 [segments]，转化成 [AppRouteSettings]
