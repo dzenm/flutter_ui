@@ -11,10 +11,10 @@ import '../../base/widgets/badge_tag.dart';
 import '../../base/widgets/keep_alive_wrapper.dart';
 import '../../base/widgets/tap_layout.dart';
 import '../../generated/l10n.dart';
-import 'home_page/home_page.dart';
+import 'home/home_page.dart';
 import 'main_model.dart';
-import 'me_page/me_page.dart';
-import 'nav_page/nav_page.dart';
+import 'me/me_page.dart';
+import 'nav/nav_page.dart';
 
 ///
 /// Created by a0010 on 2023/6/29 15:53
@@ -128,9 +128,10 @@ class _MainPageMobileState extends State<MainPageMobile> with WidgetsBindingObse
         children: _buildTabPage(length),
       ),
       bottomNavigationBar: BottomAppBar(
+        height: 56,
+        padding: const EdgeInsets.symmetric(vertical: 4),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          mainAxisSize: MainAxisSize.max,
           children: _buildBottomNavigationBar(length),
         ),
       ),
@@ -168,12 +169,10 @@ class BottomNavigationBarItemView extends StatelessWidget {
     AppTheme theme = context.watch<LocalModel>().theme;
     double width = 56, height = 56;
     return TapLayout(
-      height: height,
       foreground: theme.transparent,
       onTap: () => _jumpToPage(context),
       child: SizedBox(
         width: width,
-        height: height,
         child: Stack(alignment: Alignment.center, children: [
           // 图标和文字充满Stack并居中显示
           Positioned.fill(child: _builtItem(context)),
@@ -184,7 +183,7 @@ class BottomNavigationBarItemView extends StatelessWidget {
             child: Stack(
               alignment: Alignment.center,
               clipBehavior: Clip.none,
-              children: [Positioned(left: 16, top: 2, child: _buildBadge())],
+              children: [Positioned(left: 20, top: 8, child: _buildBadge())],
             ),
           ),
         ]),
@@ -229,7 +228,6 @@ class BottomNavigationBarItemView extends StatelessWidget {
         Color color = isSelected ? theme.blue : theme.hint;
         return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Icon(icon, color: color, size: 20),
-          const SizedBox(height: 2),
           Text(title, style: TextStyle(fontSize: 10, color: color)),
         ]);
       },

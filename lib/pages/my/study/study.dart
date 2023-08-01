@@ -1,5 +1,4 @@
-import 'package:flutter_ui/base/log/log.dart';
-
+import '../../../base/log/log.dart';
 import 'future_study.dart';
 import 'math_study.dart';
 import 'sort_study.dart';

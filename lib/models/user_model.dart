@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/utils/sp_util.dart';
-import 'package:flutter_ui/entities/coin_entity.dart';
-import 'package:flutter_ui/entities/user_entity.dart';
+
+import '../base/utils/sp_util.dart';
+import '../entities/coin_entity.dart';
+import '../entities/user_entity.dart';
 
 ///
 /// Created by a0010 on 2023/2/23 14:26

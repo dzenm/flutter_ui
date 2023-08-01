@@ -1,7 +1,6 @@
 import 'package:extended_text_field/extended_text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/pages/main/me_page/me_router.dart';
 
 import '../../../base/log/build_config.dart';
 import '../../../base/log/log.dart';
@@ -20,6 +19,7 @@ import '../../../base/widgets/slide_verify_view.dart';
 import '../../../base/widgets/tap_layout.dart';
 import '../../../base/widgets/will_pop_view.dart';
 import '../../../generated/l10n.dart';
+import '../../main/me/me_router.dart';
 
 /// 文本展示测试页面
 class TextPage extends StatefulWidget {

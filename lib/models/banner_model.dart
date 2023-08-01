@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/entities/banner_entity.dart';
+
+import '../entities/banner_entity.dart';
 
 ///
 /// Created by a0010 on 2022/10/25 11:25

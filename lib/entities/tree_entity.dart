@@ -1,6 +1,6 @@
-import 'package:flutter_ui/base/db/db_base_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import '../base/db/db_base_model.dart';
 import 'article_entity.dart';
 
 part 'tree_entity.g.dart';
