@@ -54,7 +54,12 @@ class LoginPage extends StatelessWidget {
         child: Container(
           width: 400,
           padding: const EdgeInsets.all(24),
-          child: const _EditLoginInfoView(),
+          child: Column(children: [
+            const _EditLoginInfoView(),
+            Expanded(child: Container()),
+            ProtocolInfoView(onChanged: (value) => _EditLoginInfoView._isAgree = value),
+            const SizedBox(height: 72),
+          ]),
         ),
       ),
     );
@@ -169,7 +174,6 @@ class __EditLoginInfoViewState extends State<_EditLoginInfoView> {
 
   @override
   Widget build(BuildContext context) {
-
     log('build');
 
     AppTheme theme = context.watch<LocalModel>().theme;

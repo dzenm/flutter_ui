@@ -4,7 +4,17 @@ A new Flutter application.
 
 ## Getting Started
 
-## 一、项目结构
+
+## 使用
+
+* 1.在命令行执行命令，拉取相关的依赖
+> flutter pub get
+
+* 2.在生成相关的文件
+> flutter pub run build_runner build --delete-conflicting-outputs
+
+
+## 项目结构
 
 ```
 ├── main.dart 										// flutter程序main函数入口
@@ -31,7 +41,7 @@ A new Flutter application.
     │   ├── me_page								// 主页面的bottomBar显示的第三个页面
     │   │   ├── article
     │   │   ├── coin
-    │   │   ├── collect
+    │   │   ├── collect 
     │   │   ├── medicine
     │   │   ├── rank
     │   │   └── setting_page
@@ -59,7 +69,7 @@ A new Flutter application.
 * base文件夹里的可以选择性复制，封装的时候尽量让它们不相互依赖。
 * 程序入口主要在application，类似于Android原生，初始化第三方依赖配置，app_page是页面相关的初始化，比如model、国际化、主题、路由
 
-## 二、必要的依赖
+## 必要的依赖
 
 ```
   ########################################## BASE ########################################
@@ -104,7 +114,7 @@ A new Flutter application.
 
 
 
-## 三、程序运行流程
+## 程序运行流程
 
 * 文件
 
@@ -117,14 +127,6 @@ main.dart ---> application.dart ---> app_page.dart ---> login_page.dart/main_pag
 ```
 void main() ---> Application().main() ---> Application()._initApp() ---> LoginPage()/MainPage()
 ```
-
-## 四、使用
-
-* 1.在命令行执行命令，拉取相关的依赖
-> flutter pub get
-
-* 2.在生成相关的文件
-> flutter pub run build_runner build --delete-conflicting-outputs
 
 ## 联系我
 

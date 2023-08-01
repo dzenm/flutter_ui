@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_ui/base/db/db_manager.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:sqflite/sqflite.dart';
 
 ///
 /// Created by a0010 on 2022/9/1 11:56
@@ -44,7 +44,7 @@ class FileUtil {
 
   /// 获取数据库文件夹所有数据库文件
   Future<List<String>> getDBFiles() async {
-    String parent = await getDatabasesPath();
+    String parent = await DBManager().databasesPath;
     List<String> files = [];
     Directory(parent).listSync().forEach((element) {
       if (element.path.endsWith('.db')) {

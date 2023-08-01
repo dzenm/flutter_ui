@@ -41,8 +41,8 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   # 图片 https://pub.flutter-io.cn/packages/cupertino_icons
   cupertino_icons: 1.0.5
-  # sql https://pub.dev/packages/sqflite
-  sqflite: 2.3.0
+  # sql https://pub.dev/packages/sqflite_common_ffi
+  sqflite_common_ffi: ^2.3.0
   # 路径选择 https://pub.dev/packages/path_provider
   path_provider: 2.0.15
   # 本地化存储 https://pub.dev/packages/shared_preferences

@@ -1,9 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 // ignore_for_file: depend_on_referenced_packages
 import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'column_entity.dart';
 import 'db_sql.dart';
@@ -50,14 +48,22 @@ class DBManager {
 
   void init({Function? logPrint}) {
     _logPrint = logPrint;
+    sqfliteFfiInit();
+
   }
 
   /// 获取当前数据库对象, 未指定数据库名称时默认为用户名 [_userId]，切换数据库操作时要先关闭 [close] 再重新打开。
   Future<Database?> getDatabase({String? dbName}) async {
-    if (kIsWeb) return null;
     if (_database == null) {
+      var databaseFactory = databaseFactoryFfi;
+       databaseFactory.openDatabase(inMemoryDatabasePath);
       String path = await getPath(dbName: dbName);
-      _database = await openDatabase(path, version: Sql.dbVersion, onCreate: _onCreate, onUpgrade: _onUpgrade);
+      _database = await openDatabase(
+        path,
+        version: Sql.dbVersion,
+        onCreate: _onCreate,
+        onUpgrade: _onUpgrade,
+      );
     }
     return _database!;
   }
@@ -107,20 +113,16 @@ class DBManager {
 
   /// 获取数据库 [_userId] 的路径 [_dbPath]
   Future<String> getPath({String? dbName}) async {
-    String databasesPath = '';
-    if (Platform.isAndroid || Platform.isIOS || Platform.isMacOS) {
-      databasesPath = await getDatabasesPath();
-    } else if (Platform.isWindows) {
-      databasesPath = await getDatabasesPath();
-    }
-    databasesPath = databasesPath.replaceAll('/', Platform.pathSeparator);
+    String path = await databasesPath;
     if (_dbPath == null) {
       dbName ??= 'db_$_userId.db';
-      log('数据库路径=$databasesPath, 数据库名称=$dbName');
-      _dbPath = join(databasesPath, dbName);
+      log('数据库路径=$path, 数据库名称=$dbName');
+      _dbPath = join(path, dbName);
     }
     return _dbPath!;
   }
+
+  Future<String> get databasesPath async => await getDatabasesPath();
 
   /// 判断表是否存在
   Future<bool> isTableExist(String tableName, {String? dbName}) async {

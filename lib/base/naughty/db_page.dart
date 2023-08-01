@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sqflite/sqflite.dart';
 
+import '../db/db_manager.dart';
 import '../widgets/tap_layout.dart';
 import 'db_table_page.dart';
 import 'naughty.dart';
@@ -54,7 +54,7 @@ class _DBPageState extends State<DBPage> {
   Future<List<String>> getDBFiles() async {
     List<String> files = [];
     if (kIsWeb) return files;
-    String parent = await getDatabasesPath();
+    String parent = await DBManager().databasesPath;
     Directory(parent).listSync().forEach((element) {
       if (element.path.endsWith('.db')) {
         files.add(element.path);
@@ -66,7 +66,7 @@ class _DBPageState extends State<DBPage> {
   Future<List<String>> getSharedPreferencesFiles() async {
     List<String> files = [];
     if (kIsWeb) return files;
-    String parent = await getDatabasesPath();
+    String parent = await DBManager().databasesPath;
 
     Directory(parent).listSync().forEach((element) {
       if (element.path.endsWith('.db')) {
