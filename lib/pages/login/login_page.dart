@@ -65,7 +65,7 @@ class LoginPage extends StatelessWidget {
     AppTheme theme = context.watch<LocalModel>().theme;
     Size size = MediaQuery.of(context).size;
     double marginTop = size.height / 8;
-    double marginBottom = size.height / 4;
+    double marginBottom = size.height / 6;
     return Scaffold(
       backgroundColor: theme.background,
       body: SingleChildScrollView(
@@ -169,7 +169,6 @@ class __EditLoginInfoViewState extends State<_EditLoginInfoView> {
 
   @override
   Widget build(BuildContext context) {
-
     log('build');
 
     AppTheme theme = context.watch<LocalModel>().theme;
@@ -242,7 +241,10 @@ class __EditLoginInfoViewState extends State<_EditLoginInfoView> {
           borderRadius: const BorderRadius.all(Radius.circular(4)),
           onTap: _switchLoginType,
           child: Row(mainAxisSize: MainAxisSize.min, children: [
-            Text('${S.of(context).verifyCode}${S.of(context).login}', style: TextStyle(color: theme.button)),
+            Text(
+              '${_loginByPhone ? S.of(context).verifyCode : S.of(context).password}${S.of(context).login}',
+              style: TextStyle(color: theme.button),
+            ),
           ]),
         ),
         Expanded(child: Container()),

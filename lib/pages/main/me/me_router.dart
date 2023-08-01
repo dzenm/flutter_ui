@@ -1,15 +1,14 @@
-import 'package:flutter_ui/pages/main/me_page/info/info_page.dart';
-import 'package:flutter_ui/pages/main/me_page/setting_page/about/about_page.dart';
-
 import '../../../base/route/app_route_delegate.dart';
 import 'article/article_page.dart';
 import 'coin/coin_page.dart';
 import 'collect/collect_page.dart';
 import 'info/edit_info_page.dart';
+import 'info/info_page.dart';
 import 'info/view_info_page.dart';
 import 'medicine/medicine_page.dart';
 import 'rank/rank_page.dart';
-import 'setting_page/setting_page.dart';
+import 'setting/about/about_page.dart';
+import 'setting/setting_page.dart';
 
 ///
 /// Created by a0010 on 2023/5/23 14:50

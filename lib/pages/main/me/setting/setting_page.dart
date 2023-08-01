@@ -1,10 +1,10 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/log/handle_error.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../base/log/build_config.dart';
+import '../../../../base/log/handle_error.dart';
 import '../../../../base/log/log.dart';
 import '../../../../base/res/app_theme.dart';
 import '../../../../base/res/local_model.dart';

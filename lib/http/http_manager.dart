@@ -1,20 +1,19 @@
-import 'package:flutter_ui/base/http/https_client.dart';
-import 'package:flutter_ui/base/http/page_entity.dart';
-import 'package:flutter_ui/base/route/app_route_delegate.dart';
-import 'package:flutter_ui/entities/article_entity.dart';
-import 'package:flutter_ui/entities/banner_entity.dart';
-import 'package:flutter_ui/entities/coin_entity.dart';
-import 'package:flutter_ui/entities/coin_record_entity.dart';
-import 'package:flutter_ui/entities/collect_entity.dart';
-import 'package:flutter_ui/entities/hotkey_entity.dart';
-import 'package:flutter_ui/entities/navi_entity.dart';
-import 'package:flutter_ui/entities/tree_entity.dart';
-import 'package:flutter_ui/entities/website_entity.dart';
-import 'package:flutter_ui/pages/routers.dart';
-
 import '../application.dart';
+import '../base/http/https_client.dart';
+import '../base/http/page_entity.dart';
+import '../base/route/app_route_delegate.dart';
 import '../base/utils/sp_util.dart';
+import '../entities/article_entity.dart';
+import '../entities/banner_entity.dart';
+import '../entities/coin_entity.dart';
+import '../entities/coin_record_entity.dart';
+import '../entities/collect_entity.dart';
+import '../entities/hotkey_entity.dart';
+import '../entities/navi_entity.dart';
+import '../entities/tree_entity.dart';
+import '../entities/website_entity.dart';
 import '../models/provider_manager.dart';
+import '../pages/routers.dart';
 
 ///
 /// Created by a0010 on 2022/10/25 13:11
@@ -337,7 +336,7 @@ class HttpManager {
   Future<void> logout() async {
     await _httpClient.request(apiServices.logout(), success: (data) {
       SpUtil.clearUser();
-      ProviderManager.clear(Application().context);
+      ProviderManager.clear();
       AppRouteDelegate.of(Application().context).push(Routers.login, clearStack: true);
     });
   }

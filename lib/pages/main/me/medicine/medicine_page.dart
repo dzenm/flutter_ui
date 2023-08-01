@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_ui/base/res/app_theme.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../base/http/https_client.dart';
 import '../../../../base/log/build_config.dart';
+import '../../../../base/res/app_theme.dart';
 import '../../../../base/res/local_model.dart';
 import '../../../../entities/medicine_entity.dart';
 import '../../../../generated/l10n.dart';

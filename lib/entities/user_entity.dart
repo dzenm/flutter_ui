@@ -1,7 +1,8 @@
 import 'dart:convert';
 
-import 'package:flutter_ui/base/db/db_base_model.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import '../base/db/db_base_model.dart';
 
 part 'user_entity.g.dart';
 
@@ -44,20 +45,20 @@ class UserEntity extends DBBaseModel {
 
   @override
   Map<String, dynamic> toJson() => {
-    'admin': boolToInt(admin),
-    'chapterTops': jsonEncode(chapterTops),
-    'coinCount': coinCount,
-    'collectIds': jsonEncode(collectIds),
-    'email': email,
-    'icon': icon,
-    'id': id,
-    'nickname': nickname,
-    'password': password,
-    'publicName': publicName,
-    'token': token,
-    'type': type,
-    'username': username,
-  };
+        'admin': boolToInt(admin),
+        'chapterTops': jsonEncode(chapterTops),
+        'coinCount': coinCount,
+        'collectIds': jsonEncode(collectIds),
+        'email': email,
+        'icon': icon,
+        'id': id,
+        'nickname': nickname,
+        'password': password,
+        'publicName': publicName,
+        'token': token,
+        'type': type,
+        'username': username,
+      };
 
   @override
   DBBaseModel fromJson(Map<String, dynamic> json) => UserEntity.fromJson(json);

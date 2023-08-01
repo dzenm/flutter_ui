@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/base/log/log.dart';
-import 'package:flutter_ui/pages/main/me_page/me_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base/log/build_config.dart';
+import '../../../base/log/log.dart';
+import '../../main/me/me_model.dart';
 
 ///
 /// Created by a0010 on 2023/3/2 15:11

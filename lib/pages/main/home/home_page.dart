@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/base/http/https_client.dart';
-import 'package:flutter_ui/pages/routers.dart';
 import 'package:provider/provider.dart';
 
+import '../../../base/http/https_client.dart';
 import '../../../base/log/build_config.dart';
 import '../../../base/log/log.dart';
 import '../../../base/res/app_theme.dart';
@@ -24,6 +23,7 @@ import '../../../http/http_manager.dart';
 import '../../../models/article_model.dart';
 import '../../../models/banner_model.dart';
 import '../../../models/website_model.dart';
+import '../../routers.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56

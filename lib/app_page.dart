@@ -2,10 +2,9 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_ui/application.dart';
-import 'package:flutter_ui/pages/routers.dart';
 import 'package:provider/provider.dart';
 
+import 'application.dart';
 import 'base/log/build_config.dart';
 import 'base/res/app_theme.dart';
 import 'base/res/local_model.dart';
@@ -18,11 +17,12 @@ import 'models/article_model.dart';
 import 'models/banner_model.dart';
 import 'models/user_model.dart';
 import 'models/website_model.dart';
-import 'pages/main/home_page/home_model.dart';
+import 'pages/main/home/home_model.dart';
 import 'pages/main/main_model.dart';
-import 'pages/main/me_page/me_model.dart';
-import 'pages/main/nav_page/nav_model.dart';
+import 'pages/main/me/me_model.dart';
+import 'pages/main/nav/nav_model.dart';
 import 'pages/my/my_page.dart';
+import 'pages/routers.dart';
 import 'pages/study/study_model.dart';
 
 ///
@@ -188,7 +188,7 @@ class AppPage extends StatelessWidget {
   }
 
   /// 获取第一个页面
-  static String _initApp() {
+  String _initApp() {
     final String route;
     if (SpUtil.getUserLoginState()) {
       route = Routers.main;

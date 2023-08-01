@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/log/build_config.dart';
-import 'package:flutter_ui/pages/main/main_page_linux.dart';
-import 'package:flutter_ui/pages/main/main_page_mac.dart';
-import 'package:flutter_ui/pages/main/main_page_mobile.dart';
-import 'package:flutter_ui/pages/main/main_page_web.dart';
-import 'package:flutter_ui/pages/main/main_page_windows.dart';
+
+import '../../base/log/build_config.dart';
+import 'main_page_linux.dart';
+import 'main_page_mac.dart';
+import 'main_page_mobile.dart';
+import 'main_page_web.dart';
+import 'main_page_windows.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56

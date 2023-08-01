@@ -6,7 +6,7 @@ import 'common/web_view_page.dart';
 import 'login/login_page.dart';
 import 'login/register_page.dart';
 import 'main/main_page.dart';
-import 'main/me_page/me_router.dart';
+import 'main/me/me_router.dart';
 import 'study/study_router.dart';
 
 ///

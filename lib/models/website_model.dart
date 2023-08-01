@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/entities/website_entity.dart';
+
+import '../entities/website_entity.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/pages/main/me_page/me_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base/log/build_config.dart';
@@ -20,6 +19,7 @@ import '../../../http/http_manager.dart';
 import '../../../models/provider_manager.dart';
 import '../../../models/user_model.dart';
 import '../../study/study_router.dart';
+import 'me_router.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56

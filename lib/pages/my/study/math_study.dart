@@ -1,5 +1,4 @@
-
-import 'package:flutter_ui/pages/my/study/study.dart';
+import 'study.dart';
 
 ///
 /// Created by a0010 on 2022/9/20 14:47
