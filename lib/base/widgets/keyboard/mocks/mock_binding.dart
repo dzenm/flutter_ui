@@ -8,6 +8,7 @@ class MockBinding extends WidgetsFlutterBinding {
 
   @override
   void initInstances() {
+    // TODO: implement initInstances
     _binaryMessenger = MockBinaryMessenger(this);
     super.initInstances();
     _initFlag = true;
@@ -18,14 +19,16 @@ class MockBinding extends WidgetsFlutterBinding {
       MockBinding();
       _initFlag = true;
     }
+    // if (WidgetsBinding.instance == null) MockBinding();
     return WidgetsBinding.instance;
   }
 
   MockBinaryMessenger? _binaryMessenger;
-
   @override
   BinaryMessenger get defaultBinaryMessenger {
-    return _binaryMessenger != null ? _binaryMessenger! : super.defaultBinaryMessenger;
+    return _binaryMessenger != null
+        ? _binaryMessenger!
+        : super.defaultBinaryMessenger;
   }
 
   BinaryMessenger get superDefaultBinaryMessenger {
@@ -33,7 +36,7 @@ class MockBinding extends WidgetsFlutterBinding {
   }
 }
 
-runMockApp(Widget app) async {
+runMockApp(Widget app) {
   MockBinding.ensureInitialized()
     ..scheduleAttachRootWidget(app)
     ..scheduleWarmUpFrame();

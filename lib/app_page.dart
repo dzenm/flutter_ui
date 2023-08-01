@@ -124,6 +124,9 @@ class AppPage extends StatelessWidget {
           primaryColor: theme.appbar,
           appBarTheme: AppBarTheme(
             backgroundColor: theme.appbar,
+            iconTheme: IconThemeData(
+              color: theme.white,
+            ),
             systemOverlayStyle: SystemUiOverlayStyle.light,
           ),
           floatingActionButtonTheme: FloatingActionButtonThemeData(
