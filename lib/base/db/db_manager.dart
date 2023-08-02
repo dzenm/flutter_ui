@@ -1,5 +1,6 @@
-import 'package:flutter/foundation.dart';
 // ignore_for_file: depend_on_referenced_packages
+import 'dart:io';
+
 import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -48,22 +49,26 @@ class DBManager {
 
   void init({Function? logPrint}) {
     _logPrint = logPrint;
-    sqfliteFfiInit();
-
   }
 
   /// 获取当前数据库对象, 未指定数据库名称时默认为用户名 [_userId]，切换数据库操作时要先关闭 [close] 再重新打开。
   Future<Database?> getDatabase({String? dbName}) async {
     if (_database == null) {
-      var databaseFactory = databaseFactoryFfi;
-       databaseFactory.openDatabase(inMemoryDatabasePath);
-      String path = await getPath(dbName: dbName);
-      _database = await openDatabase(
-        path,
-        version: Sql.dbVersion,
-        onCreate: _onCreate,
-        onUpgrade: _onUpgrade,
-      );
+      if (Platform.isWindows || Platform.isLinux) {
+        // Windows端初始化数据库
+        sqfliteFfiInit();
+        // 获取databaseFactoryFfi对象
+        var databaseFactory = databaseFactoryFfi;
+        _database = await databaseFactory.openDatabase(inMemoryDatabasePath);
+      } else {
+        String path = await getPath(dbName: dbName);
+        _database = await openDatabase(
+          path,
+          version: Sql.dbVersion,
+          onCreate: _onCreate,
+          onUpgrade: _onUpgrade,
+        );
+      }
     }
     return _database!;
   }
