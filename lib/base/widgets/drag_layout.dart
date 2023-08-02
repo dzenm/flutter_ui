@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 /// 在屏幕范围内的拖动布局, 不超过范围
@@ -31,7 +29,7 @@ class _DragLayoutState extends State<DragLayout> {
   }
 
   Offset _dragWidget(Offset lastPosition, Offset offset) {
-    double statusBarHeight = MediaQueryData.fromWindow(window).padding.top;
+    double statusBarHeight = MediaQueryData.fromView(View.of(context)).padding.top;
     Size size = MediaQuery.of(context).size;
 
     double dx = lastPosition.dx + offset.dx;

@@ -12,6 +12,8 @@ class TextModel with ChangeNotifier {
     notifyListeners();
   }
 
+  int get value => _value;
+
   @override
   void dispose() {
     super.dispose();

@@ -53,14 +53,16 @@ class MockBinaryMessenger extends BinaryMessenger {
       ui.PlatformMessageResponseCallback? callback,
       ) {
     Future<ByteData?>? result;
-    if (_inboundHandlers.containsKey(channel))
+    if (_inboundHandlers.containsKey(channel)) {
       result = _inboundHandlers[channel]!(data);
+    }
     result ??= Future<ByteData?>.value(null);
-    if (callback != null)
+    if (callback != null) {
       result = result.then((ByteData? result) {
         callback(result);
         return result;
       });
+    }
     return result;
   }
 
@@ -103,9 +105,7 @@ class MockBinaryMessenger extends BinaryMessenger {
     }
     if (resultFuture != null) {
       _pendingMessages.add(resultFuture);
-      resultFuture.catchError((Object error) {
-        /* errors are the responsibility of the caller */
-      }).whenComplete(() => _pendingMessages.remove(resultFuture));
+      resultFuture.whenComplete(() => _pendingMessages.remove(resultFuture));
     }
     return resultFuture;
   }

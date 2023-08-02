@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:ui' as ui;
+import 'dart:ui';
 
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/material.dart';
@@ -125,15 +125,20 @@ class CoolKeyboard {
   }
 
   static void _updateEditingState() {
-    var callbackMethodCall = MethodCall("TextInputClient.updateEditingState",
-        [_keyboardController!.client.connectionId, _keyboardController!.value.toJSON()]);
-    WidgetsBinding.instance.defaultBinaryMessenger
-        .handlePlatformMessage("flutter/textinput", _codec.encodeMethodCall(callbackMethodCall), (data) {});
+    var callbackMethodCall = MethodCall("TextInputClient.updateEditingState", [
+      _keyboardController!.client.connectionId,
+      _keyboardController!.value.toJSON(),
+    ]);
+    ServicesBinding.instance.channelBuffers.push(
+      "flutter/textinput",
+      _codec.encodeMethodCall(callbackMethodCall),
+      (data) {},
+    );
   }
 
   static Future<ByteData?> _sendPlatformMessage(String channel, ByteData message) {
     final Completer<ByteData?> completer = Completer<ByteData?>();
-    ui.window.sendPlatformMessage(channel, message, (ByteData? reply) {
+    PlatformDispatcher.instance.sendPlatformMessage(channel, message, (ByteData? reply) {
       try {
         completer.complete(reply);
       } catch (exception, stack) {
@@ -236,10 +241,15 @@ class CoolKeyboard {
   }
 
   static sendPerformAction(TextInputAction action) {
-    var callbackMethodCall =
-        MethodCall("TextInputClient.performAction", [_keyboardController!.client.connectionId, action.toString()]);
-    WidgetsBinding.instance.defaultBinaryMessenger
-        .handlePlatformMessage("flutter/textinput", _codec.encodeMethodCall(callbackMethodCall), (data) {});
+    var callbackMethodCall = MethodCall("TextInputClient.performAction", [
+      _keyboardController!.client.connectionId,
+      action.toString(),
+    ]);
+    ServicesBinding.instance.channelBuffers.push(
+      "flutter/textinput",
+      _codec.encodeMethodCall(callbackMethodCall),
+      (data) {},
+    );
   }
 
   static updateKeyboardHeight() {
@@ -338,8 +348,7 @@ class CKTextInputType extends TextInputType {
   final String name;
   final String? params;
 
-  const CKTextInputType({required this.name, bool? signed, bool? decimal, this.params})
-      : super.numberWithOptions(signed: signed, decimal: decimal);
+  const CKTextInputType({required this.name, bool? signed, bool? decimal, this.params}) : super.numberWithOptions(signed: signed, decimal: decimal);
 
   @override
   Map<String, dynamic> toJson() {
@@ -368,8 +377,7 @@ class CKTextInputType extends TextInputType {
   int get hashCode => toString().hashCode;
 
   factory CKTextInputType.fromJSON(Map<String, dynamic> encoded) {
-    return CKTextInputType(
-        name: encoded['name'], signed: encoded['signed'], decimal: encoded['decimal'], params: encoded['params']);
+    return CKTextInputType(name: encoded['name'], signed: encoded['signed'], decimal: encoded['decimal'], params: encoded['params']);
   }
 }
 

@@ -142,7 +142,8 @@ class HttpsClient {
 
     if (!kIsWeb) {
       // 不验证https证书
-      (dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate = (HttpClient client) {
+      (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
+        HttpClient client = HttpClient();
         // config the http client
         // client.findProxy = (uri) {
         //  //proxy all request to localhost:8888
