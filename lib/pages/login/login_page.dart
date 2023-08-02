@@ -57,7 +57,7 @@ class LoginPage extends StatelessWidget {
           child: Column(children: [
             const _EditLoginInfoView(),
             Expanded(child: Container()),
-            ProtocolInfoView(onChanged: (value) => _EditLoginInfoView._isAgree = value),
+            const ProtocolInfoView(),
             const SizedBox(height: 72),
           ]),
         ),
@@ -88,7 +88,7 @@ class LoginPage extends StatelessWidget {
             child: const _EditLoginInfoView(),
           ),
           SizedBox(height: marginBottom),
-          ProtocolInfoView(onChanged: (value) => _EditLoginInfoView._isAgree = value),
+          const ProtocolInfoView(),
         ]),
       ),
     );
@@ -102,10 +102,10 @@ class _EditLoginInfoView extends StatefulWidget {
   const _EditLoginInfoView();
 
   @override
-  State<StatefulWidget> createState() => __EditLoginInfoViewState();
+  State<StatefulWidget> createState() => _EditLoginInfoViewState();
 }
 
-class __EditLoginInfoViewState extends State<_EditLoginInfoView> {
+class _EditLoginInfoViewState extends State<_EditLoginInfoView> {
   static const String _tag = 'LoginPage';
 
   final TextEditingController _usernameController = TextEditingController();
@@ -319,22 +319,20 @@ class __EditLoginInfoViewState extends State<_EditLoginInfoView> {
 
 /// 协议信息部分
 class ProtocolInfoView extends StatefulWidget {
-  final ValueChanged<bool>? onChanged;
-
-  const ProtocolInfoView({super.key, this.onChanged});
+  const ProtocolInfoView({super.key});
 
   @override
   State<StatefulWidget> createState() => _ProtocolInfoViewState();
 }
 
 class _ProtocolInfoViewState extends State<ProtocolInfoView> {
-  bool isAgree = false;
+  bool _isAgree = _EditLoginInfoView._isAgree;
 
   @override
   Widget build(BuildContext context) {
     AppTheme theme = context.watch<LocalModel>().theme;
-    IconData icon = isAgree ? Icons.check_box_sharp : Icons.check_box_outline_blank_sharp;
-    Color color = isAgree ? theme.blue : theme.hint;
+    IconData icon = _isAgree ? Icons.check_box_sharp : Icons.check_box_outline_blank_sharp;
+    Color color = _isAgree ? theme.blue : theme.hint;
     return Column(mainAxisSize: MainAxisSize.min, children: [
       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         const SizedBox(width: 16),
@@ -342,8 +340,8 @@ class _ProtocolInfoViewState extends State<ProtocolInfoView> {
           foreground: theme.transparent,
           padding: const EdgeInsets.all(8),
           onTap: () {
-            setState(() => isAgree = !isAgree);
-            if (widget.onChanged != null) widget.onChanged!(isAgree);
+            setState(() => _isAgree = !_isAgree);
+            _EditLoginInfoView._isAgree = _isAgree;
           },
           child: Icon(icon, color: color),
         ),
