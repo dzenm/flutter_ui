@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../db/db_manager.dart';
 
@@ -36,6 +37,8 @@ class _DBColumnPageState extends State<DBColumnPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.tableName),
+        toolbarTextStyle: const TextStyle(color: Colors.white),
+        systemOverlayStyle: SystemUiOverlayStyle.light,
       ),
       body: _init
           ? SingleChildScrollView(

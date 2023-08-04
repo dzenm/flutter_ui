@@ -2,13 +2,30 @@
 /// Created by a0010 on 2022/3/22 09:38
 /// 获取Assets文件夹的数据
 class Assets {
+  static const String filePath = 'assets/files/';
+  static const String fontsPath = 'assets/fonts/';
   static const String imagePath = 'assets/images/';
   static const String videoPath = 'assets/videos/';
-  static const String filePath = 'assets/files/';
 
-  static String image(String imageName) => imagePath + imageName;
+  ///================================ 文件 ================================
+  static const String chinaJson = '${filePath}china.json';
 
-  static String video(String videoName) => videoPath + videoName;
+  ///================================ 字体 ================================
+  static const String customIcons = '${fontsPath}CustomIcons.ttf';
 
-  static String file(String fileName) => filePath + fileName;
+  ///================================ 图片 ================================
+  static const String a = '${imagePath}a.jpg';
+  static const String b = '${imagePath}b.jpg';
+  static const String bgUpgradeTop = '${imagePath}bg_upgrade_top.png';
+  static const String c = '${imagePath}c.jpg';
+  static const String d = '${imagePath}d.jpg';
+  static const String e = '${imagePath}e.jpg';
+  static const String icBubbleGray = '${imagePath}ic_bubble_gray.png';
+  static const String icTop = '${imagePath}ic_top.png';
+  static const String icVNote = '${imagePath}ic_vnote.png';
+  static const String thumbVideoCover = '${imagePath}thumb_video_cover.png';
+
+  ///================================ 视频 ================================
+  static const String butterfly = '${videoPath}butterfly.mp4';
+
 }

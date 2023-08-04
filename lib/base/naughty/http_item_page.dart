@@ -35,12 +35,18 @@ class _HTTPItemPageState extends State<HTTPItemPage> with SingleTickerProviderSt
     return Scaffold(
       appBar: AppBar(
         title: Row(children: [
-          Text('${widget.entity.method}'),
+          Text('${widget.entity.method}', style: const TextStyle(color: Colors.white)),
           const SizedBox(width: 8),
           Expanded(
-            child: Text('${widget.entity.path}', maxLines: 1, overflow: TextOverflow.ellipsis),
+            child: Text(
+              '${widget.entity.path}',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(color: Colors.white),
+            ),
           ),
         ]),
+        systemOverlayStyle: SystemUiOverlayStyle.light,
         bottom: TabBar(
           controller: _tabController,
           indicatorColor: Colors.white,

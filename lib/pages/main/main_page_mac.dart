@@ -13,6 +13,11 @@ class MainPageMac extends StatefulWidget {
 class _MainPageMacState extends State<MainPageMac> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      body: Container(
+        color: Colors.white,
+        child: const Text('测试数据'),
+      ),
+    );
   }
 }

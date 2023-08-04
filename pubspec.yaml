@@ -46,8 +46,8 @@ dependencies:
   retrofit: 4.0.1                               # HTTP请求 https://pub.flutter-io.cn/packages/retrofit
 #  dio_cookie_manager: 2.0.0                     # cookie管理 https://pub.flutter-io.cn/packages/dio_cookie_manager
 #  cookie_jar: 3.0.1                             # cookie持久化 https://pub.flutter-io.cn/packages/cookie_jar
-  package_info_plus: 4.0.2                      # 获取版本信息 https://pub.dev/packages/package_info_plus
-  device_info_plus: 9.0.2                       # 获取设备信息 https://pub.flutter-io.cn/packages/device_info_plus
+  package_info_plus: 4.1.0                      # 获取版本信息 https://pub.dev/packages/package_info_plus
+  device_info_plus: 9.0.3                       # 获取设备信息 https://pub.flutter-io.cn/packages/device_info_plus
   flutter_local_notifications: 15.1.0+1         # 通知栏通知提醒 https://pub.flutter-io.cn/packages/flutter_local_notifications
   cached_network_image: 3.2.3                   # 图片缓存 https://pub.flutter-io.cn/packages/cached_network_image
   extended_text_field: 12.0.1                   # 输入框扩展 https://pub.flutter-io.cn/packages/extended_text_field
@@ -74,9 +74,9 @@ dependencies:
   transparent_image: 2.0.1                      # 图片选择器 https://pub.flutter-io.cn/packages/transparent_image
   image_picker: 1.0.1                           # 图片选择器 https://pub.flutter-io.cn/packages/image_picker
   photo_view: 0.14.0                            # 图片预览控件 https://pub.flutter-io.cn/packages/photo_view
-  video_player: 2.3.0                           # 视频播放 https://pub.flutter-io.cn/packages/video_player
-  fijkplayer: 0.10.1                            # 视频播放 https://pub.flutter-io.cn/packages/fijkplayer
-  flutter_vlc_player: 7.1.5                     # 视频播放 https://pub.flutter-io.cn/packages/fijkplayer
+  video_player: 2.7.0                           # 视频播放 https://pub.flutter-io.cn/packages/video_player
+  fijkplayer: 0.11.0                            # 视频播放 https://pub.flutter-io.cn/packages/fijkplayer
+  flutter_vlc_player: 7.2.0                     # 视频播放 https://pub.flutter-io.cn/packages/fijkplayer
 
   ########################################## 基础 ########################################
   intl: 0.18.0                                  # 时间格式化 https://pub.dev/packages/intl
@@ -156,9 +156,9 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
   fonts:
-    - family: CustomIcon
+    - family: CustomIcons
       fonts:
-        - asset: assets/fonts/CustomIcon.ttf
+        - asset: assets/fonts/CustomIcons.ttf
 flutter_intl:
   enabled: true
 

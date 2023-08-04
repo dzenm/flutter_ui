@@ -40,12 +40,16 @@ class _ViewInfoPageState extends State<ViewInfoPage> {
       body: Container(
         color: theme.background,
         child: Column(children: [
-          CommonBar(title: S.of(context).profile, centerTitle: true, actions: [
-            IconButton(
-              icon: const Icon(Icons.edit_sharp),
-              onPressed: () => AppRouteDelegate.of(context).push(MeRouter.editInfo),
-            ),
-          ]),
+          CommonBar(
+            title: S.of(context).profile,
+            centerTitle: true,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.edit_sharp),
+                onPressed: () => AppRouteDelegate.of(context).push(MeRouter.editInfo),
+              ),
+            ],
+          ),
           Selector<UserModel, String>(
             builder: (context, value, widget) => TapLayout(
               onTap: () => {},

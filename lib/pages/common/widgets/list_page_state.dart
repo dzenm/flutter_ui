@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../../../base/db/db_base_model.dart';
+import '../../../base/widgets/common_bar.dart';
 import '../../../base/widgets/refresh_list_view.dart';
 import '../../../base/widgets/state_view.dart';
 
@@ -9,7 +9,7 @@ import '../../../base/widgets/state_view.dart';
 /// Created by a0010 on 2023/2/23 13:35
 /// 列表页面State
 /// 页面UI只有一个带 [RefreshIndicator] 的 [ListView] ，请求数据实现 [ListPageState.getData] ，
-/// 创建 [ListView] Item实现 [ListPageState.buildItem]，修改 [AppBar] 实现 [ListPageState.buildAppbar]
+/// 创建 [ListView] Item实现 [ListPageState.buildItem]，修改 [CommonBar] 实现 [ListPageState.buildAppbar]
 ///
 /// 创建自己的 [State] 直接继承 [ListPageState]，[D] 为列表的数据结构类型，[T] 为StateWidget类型
 ///
@@ -33,11 +33,8 @@ class ListPageState<D extends DBBaseModel, T extends StatefulWidget> extends Sta
     );
   }
 
-  AppBar buildAppbar() {
-    return AppBar(
-      title: Text(getTitle(), style: const TextStyle(color: Colors.white)),
-      systemOverlayStyle: SystemUiOverlayStyle.light,
-    );
+  CommonBar buildAppbar() {
+    return CommonBar(title: getTitle());
   }
 
   String getTitle() {

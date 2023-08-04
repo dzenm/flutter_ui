@@ -58,7 +58,8 @@ class CitySelectedView extends StatefulWidget {
   final List<String>? hotCities;
   final ValueChanged<CityModel>? onTap;
 
-  const CitySelectedView({super.key, 
+  const CitySelectedView({
+    super.key,
     required this.cities,
     this.hotCities,
     this.onTap,
@@ -68,7 +69,7 @@ class CitySelectedView extends StatefulWidget {
   static Future<List<CityModel>> loadAssetsData() async {
     List<CityModel> cityList = [];
     //加载城市列表
-    String jsonString = await rootBundle.loadString(Assets.file('china.json'));
+    String jsonString = await rootBundle.loadString(Assets.chinaJson);
     Map countyMap = json.decode(jsonString);
     List list = countyMap['china'];
     for (var map in list) {
@@ -146,22 +147,22 @@ class _CitySelectedViewState extends State<CitySelectedView> {
           },
           physics: const BouncingScrollPhysics(),
           indexBarData: const [_top, _star, ...kIndexBarData],
-          indexBarOptions: IndexBarOptions(
+          indexBarOptions: const IndexBarOptions(
             needRebuild: true,
             ignoreDragCancel: true,
-            downTextStyle: const TextStyle(fontSize: 12, color: Colors.white),
-            downItemDecoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.green),
+            downTextStyle: TextStyle(fontSize: 12, color: Colors.white),
+            downItemDecoration: BoxDecoration(shape: BoxShape.circle, color: Colors.green),
             indexHintWidth: 120 / 2,
             indexHintHeight: 100 / 2,
             indexHintDecoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(Assets.image('ic_bubble_gray.png')),
+                image: AssetImage(Assets.icBubbleGray),
                 fit: BoxFit.contain,
               ),
             ),
             indexHintAlignment: Alignment.centerRight,
-            indexHintChildAlignment: const Alignment(-0.25, 0.0),
-            indexHintOffset: const Offset(-20, 0),
+            indexHintChildAlignment: Alignment(-0.25, 0.0),
+            indexHintOffset: Offset(-20, 0),
           ),
         ),
       )

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../db/db_manager.dart';
 import '../widgets/tap_layout.dart';
@@ -37,7 +38,8 @@ class _DBTablePageState extends State<DBTablePage> {
     String title = Naughty.instance.getFileName(widget.dbName);
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: Text(title, style: const TextStyle(color: Colors.white)),
+        systemOverlayStyle: SystemUiOverlayStyle.light,
       ),
       body: RefreshIndicator(
         onRefresh: _onRefresh,

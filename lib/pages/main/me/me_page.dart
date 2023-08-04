@@ -78,11 +78,7 @@ class _MePageState extends State<MePage> {
         children: [
           // toolbar背景色块
           Column(children: [
-            const CommonBar(
-              systemOverlayStyle: SystemUiOverlayStyle(
-                statusBarIconBrightness: Brightness.light,
-              ),
-            ),
+            const CommonBar(),
             Expanded(child: Container(color: theme.divide)),
           ]),
           // body
@@ -116,7 +112,7 @@ class _MePageState extends State<MePage> {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(64),
-            child: Image.asset(Assets.image('a.jpg'), fit: BoxFit.cover, width: 64, height: 64),
+            child: Image.asset(Assets.a, fit: BoxFit.cover, width: 64, height: 64),
           ),
         ),
       ]),

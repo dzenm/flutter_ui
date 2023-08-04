@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 import '../db/db_manager.dart';
@@ -30,7 +31,8 @@ class _DBPageState extends State<DBPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Database'),
+        title: const Text('Database', style: TextStyle(color: Colors.white)),
+        systemOverlayStyle: SystemUiOverlayStyle.light,
       ),
       body: RefreshIndicator(
         onRefresh: _onRefresh,

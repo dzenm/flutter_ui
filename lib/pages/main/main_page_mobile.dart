@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/res/app_theme.dart';
-import 'package:flutter_ui/base/res/local_model.dart';
-import 'package:flutter_ui/models/provider_manager.dart';
 import 'package:provider/provider.dart';
 
 import '../../base/log/build_config.dart';
 import '../../base/log/log.dart';
 import '../../base/naughty/naughty.dart';
+import '../../base/res/app_theme.dart';
+import '../../base/res/local_model.dart';
 import '../../base/widgets/badge_tag.dart';
 import '../../base/widgets/keep_alive_wrapper.dart';
 import '../../base/widgets/tap_layout.dart';
 import '../../generated/l10n.dart';
+import '../../models/provider_manager.dart';
 import 'home/home_page.dart';
 import 'main_model.dart';
 import 'me/me_page.dart';
@@ -66,18 +66,20 @@ class _MainPageMobileState extends State<MainPageMobile> with WidgetsBindingObse
 
   /// 初始化Provider数据，使用context并且异步加载，必须放在页面执行
   Future<void> _initProvider() async {
-    // 表相关的Model
-    ProviderManager.article(context: context).init();
-    ProviderManager.banner(context: context).init();
-    ProviderManager.user(context: context).init();
-    ProviderManager.website(context: context).init();
+    await Future.wait([
+      // 表相关的Model
+      ProviderManager.article(context: context).init(),
+      ProviderManager.banner(context: context).init(),
+      ProviderManager.user(context: context).init(),
+      ProviderManager.website(context: context).init(),
 
-    // 页面相关的Model
-    ProviderManager.main(context: context).init();
-    ProviderManager.home(context: context).init();
-    ProviderManager.me(context: context).init();
-    ProviderManager.nav(context: context).init();
-    ProviderManager.study(context: context).init();
+      // 页面相关的Model
+      ProviderManager.main(context: context).init(),
+      ProviderManager.home(context: context).init(),
+      ProviderManager.me(context: context).init(),
+      ProviderManager.nav(context: context).init(),
+      ProviderManager.study(context: context).init(),
+    ]);
   }
 
   /// 在[build]之前使用使用[context]初始化数据

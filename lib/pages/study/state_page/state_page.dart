@@ -39,18 +39,18 @@ class _StatePageState extends State<StatePage> {
                   _controller.loading();
                 } else if (item.index == 1) {
                   _controller.loadFailed();
-                  _image = 'a.jpg';
+                  _image = Assets.a;
                 } else if (item.index == 2) {
                   _controller.loadEmpty();
-                  _image = 'b.jpg';
+                  _image = Assets.b;
                 } else if (item.index == 3) {
                   _controller.loadSuccess();
-                  _image = 'c.jpg';
+                  _image = Assets.c;
                 } else if (item.index == 4) {
                   _controller.loadComplete();
                 } else {
                   _controller.loadNone();
-                  _image = 'd.jpg';
+                  _image = Assets.d;
                 }
               });
             },
@@ -62,7 +62,7 @@ class _StatePageState extends State<StatePage> {
       ),
       body: StateView(
         controller: _controller,
-        image: Image.asset(Assets.image(_image), fit: BoxFit.cover, width: 96, height: 96),
+        image: Image.asset(_image, fit: BoxFit.cover, width: 96, height: 96),
         child: const Center(
           child: Text('展示成功页面'),
         ),

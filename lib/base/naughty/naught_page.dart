@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'db_page.dart';
 import 'http_list_widget.dart';
@@ -39,28 +40,32 @@ class _NaughtPageState extends State<NaughtPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Debug Mode'), actions: [
-        PopupMenuButton<String>(
-          elevation: 4.0,
-          onSelected: (String item) {
-            int index = _items.indexWhere((e) => e == item);
-            if (index == 0) {
-              Naughty.instance.push(context, const DBPage());
-            } else if (index == 1) {
-            } else if (index == 2) {
-            } else if (index == 3) {
-              Naughty.instance.httpRequests.clear();
-              setState(() {});
-            } else if (index == 4) {
-              Naughty.instance.dispose();
-              Navigator.pop(context);
-            }
-          },
-          itemBuilder: (BuildContext context) {
-            return _items.map((value) => PopupMenuItem(value: value, child: Text(value))).toList();
-          },
-        )
-      ]),
+      appBar: AppBar(
+        title: const Text('Debug Mode', style: TextStyle(color: Colors.white)),
+        systemOverlayStyle: SystemUiOverlayStyle.light,
+        actions: [
+          PopupMenuButton<String>(
+            elevation: 4.0,
+            onSelected: (String item) {
+              int index = _items.indexWhere((e) => e == item);
+              if (index == 0) {
+                Naughty.instance.push(context, const DBPage());
+              } else if (index == 1) {
+              } else if (index == 2) {
+              } else if (index == 3) {
+                Naughty.instance.httpRequests.clear();
+                setState(() {});
+              } else if (index == 4) {
+                Naughty.instance.dispose();
+                Navigator.pop(context);
+              }
+            },
+            itemBuilder: (BuildContext context) {
+              return _items.map((value) => PopupMenuItem(value: value, child: Text(value))).toList();
+            },
+          )
+        ],
+      ),
       body: const Column(children: [
         Expanded(child: HTTPListWidget()),
       ]),

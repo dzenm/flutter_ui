@@ -7,13 +7,12 @@ import '../../../base/log/build_config.dart';
 import '../../../base/log/log.dart';
 import '../../../base/res/app_theme.dart';
 import '../../../base/res/assets.dart';
-import '../../../base/res/custom_icon.dart';
+import '../../../base/res/custom_icons.dart';
 import '../../../base/res/local_model.dart';
 import '../../../base/route/app_route_delegate.dart';
 import '../../../base/utils/str_util.dart';
 import '../../../base/widgets/banner_view.dart';
 import '../../../base/widgets/common_bar.dart';
-import '../../../base/widgets/common_dialog.dart';
 import '../../../base/widgets/refresh_list_view.dart';
 import '../../../base/widgets/state_view.dart';
 import '../../../base/widgets/tap_layout.dart';
@@ -260,7 +259,7 @@ class ArticleItemView extends StatelessWidget {
               builder: (context, value, child) {
                 return Offstage(
                   offstage: !value,
-                  child: Image(image: AssetImage(Assets.image('ic_top.png')), width: 24, height: 24),
+                  child: const Image(image: AssetImage(Assets.icTop), width: 24, height: 24),
                 );
               },
               selector: (context, model) => model.getArticle(index)?.type == 1,
@@ -330,7 +329,7 @@ class ArticleItemView extends StatelessWidget {
               builder: (context, value, child) {
                 if (value == 0) return Container();
                 return Row(children: [
-                  Icon(CustomIcon.thumbs_up, color: theme.blue, size: 16),
+                  Icon(CustomIcons.thumbs_up, color: theme.blue, size: 16),
                   const SizedBox(width: 4),
                   Text(
                     '$value',
@@ -363,7 +362,7 @@ class ArticleItemView extends StatelessWidget {
             // 文章收藏的状态
             Selector<ArticleModel, bool>(
               builder: (context, value, child) {
-                IconData icon = value ? CustomIcon.heart : CustomIcon.heart_empty;
+                IconData icon = value ? CustomIcons.heart : CustomIcons.heart_empty;
                 Color? color = value ? theme.red : theme.hint;
                 return TapLayout(
                   height: 48,
@@ -400,13 +399,15 @@ class Banner extends StatelessWidget {
     Log.p('build', tag: _tag);
 
     return Selector<BannerModel, List<BannerEntity>>(
-      builder: (context, value, widget) {
+      builder: (context, banners, widget) {
         return BannerView(
           repeat: true,
           builder: (imagePath) => Image.network(imagePath ?? '', fit: BoxFit.cover),
-          data: value.map((banner) => BannerData(title: banner.title, data: banner.imagePath)).toList(),
+          data: banners.map((banner) => BannerData(title: banner.title, data: banner.imagePath)).toList(),
           onTap: (index) {
-            CommonDialog.showToast(index.toString());
+            BannerEntity banner = banners[index];
+            String params = '?title=${banner.title}&url=${banner.url}';
+            AppRouteDelegate.of(context).push(Routers.webView + params);
           },
         );
       },

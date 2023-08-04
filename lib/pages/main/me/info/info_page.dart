@@ -32,7 +32,10 @@ class _InfoPageState extends State<InfoPage> {
       body: Container(
         color: theme.background,
         child: Column(children: [
-          CommonBar(title: S.of(context).profile, centerTitle: true),
+          CommonBar(
+            title: S.of(context).profile,
+            centerTitle: true,
+          ),
           ...buildChildrenButtons(theme),
         ]),
       ),
@@ -50,8 +53,8 @@ class _InfoPageState extends State<InfoPage> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             onTap: () => PreviewPhotoPage.show(context, [
               "https://www.wanandroid.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png",
-              Assets.image('a.jpg'),
-              Assets.image('a.jpg'),
+              Assets.a,
+              Assets.a,
             ]),
             child: SingleTextLayout(
               icon: Icons.account_circle,
@@ -59,7 +62,7 @@ class _InfoPageState extends State<InfoPage> {
               isTextLeft: false,
               suffix: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                child: Image.asset(Assets.image('a.jpg'), fit: BoxFit.cover, width: 24, height: 24),
+                child: Image.asset(Assets.a, fit: BoxFit.cover, width: 24, height: 24),
               ),
               isShowForward: true,
             ),

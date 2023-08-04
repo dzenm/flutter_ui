@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:provider/provider.dart';
 
 import '../../../../base/http/https_client.dart';
 import '../../../../base/log/build_config.dart';
-import '../../../../base/res/app_theme.dart';
-import '../../../../base/res/local_model.dart';
+import '../../../../base/widgets/common_bar.dart';
 import '../../../../entities/medicine_entity.dart';
 import '../../../../generated/l10n.dart';
 
@@ -35,11 +32,9 @@ class _MedicinePageState extends State<MedicinePage> {
 
   @override
   Widget build(BuildContext context) {
-    AppTheme theme = context.watch<LocalModel>().theme;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(S.of(context).chineseMedicine, style: TextStyle(color: theme.text)),
-        systemOverlayStyle: SystemUiOverlayStyle.light,
+      appBar: CommonBar(
+        title: S.of(context).chineseMedicine,
       ),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16),

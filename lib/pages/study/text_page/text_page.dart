@@ -198,7 +198,7 @@ class _TextPageState extends State<TextPage> {
                     suffix: ClipRRect(
                       borderRadius: BorderRadius.circular(16),
                       child: Image.asset(
-                        Assets.image('a.jpg'),
+                        Assets.a,
                         fit: BoxFit.cover,
                         width: 24,
                         height: 24,

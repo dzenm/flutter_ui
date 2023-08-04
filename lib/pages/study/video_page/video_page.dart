@@ -41,7 +41,7 @@ class _VideoPageState extends State<VideoPage> {
       MaterialButton(
         textColor: Colors.white,
         color: Colors.blue,
-        onPressed: () => RouteManager.push(context, IjkVideoPage(url: 'asset:///${Assets.video('butterfly.mp4')}')),
+        onPressed: () => RouteManager.push(context, const IjkVideoPage(url: Assets.butterfly)),
         child: _text('IJK视频播放'),
       ),
       const SizedBox(height: 8),

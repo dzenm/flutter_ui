@@ -34,7 +34,7 @@ class _LoadImagePageState extends State<LoadImagePage> {
               CommonWidget.titleView('FadeInImage.assetNetwork'),
               const SizedBox(height: 8),
               FadeInImage.assetNetwork(
-                placeholder: Assets.image(('ic_vnote.png')),
+                placeholder: Assets.icVNote,
                 image: 'https://www.wanandroid.com/blogimgs/62c1bd68-b5f3-4a3c-a649-7ca8c7dfabe6.png',
               ),
               const SizedBox(height: 8),

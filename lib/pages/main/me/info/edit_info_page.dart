@@ -51,12 +51,17 @@ class _EditInfoPageState extends State<EditInfoPage> {
           body: Container(
             color: theme.background,
             child: Column(children: [
-              CommonBar(title: S.of(context).editProfile, centerTitle: true, actions: [
-                if (!_disableButton) IconButton(
-                  icon: const Icon(Icons.check),
-                  onPressed: () => _disableButton ? null : _submit(),
-                ),
-              ]),
+              CommonBar(
+                title: S.of(context).editProfile,
+                centerTitle: true,
+                actions: [
+                  if (!_disableButton)
+                    IconButton(
+                      icon: const Icon(Icons.check),
+                      onPressed: () => _disableButton ? null : _submit(),
+                    ),
+                ],
+              ),
               SingleEditLayout(title: S.of(context).username, controller: _controller, maxLength: 16),
             ]),
           ),

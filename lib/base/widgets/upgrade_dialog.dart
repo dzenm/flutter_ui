@@ -140,7 +140,7 @@ class _UpgradeDialogState extends State<UpgradeDialog> {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(Assets.image('bg_upgrade_top.png')),
+          Image.asset(Assets.bgUpgradeTop),
           Container(
             decoration: const BoxDecoration(
               color: Colors.white,

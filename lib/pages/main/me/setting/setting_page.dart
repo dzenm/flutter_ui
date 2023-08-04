@@ -1,6 +1,7 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../base/log/build_config.dart';
@@ -9,6 +10,7 @@ import '../../../../base/log/log.dart';
 import '../../../../base/res/app_theme.dart';
 import '../../../../base/res/local_model.dart';
 import '../../../../base/route/app_route_delegate.dart';
+import '../../../../base/widgets/common_bar.dart';
 import '../../../../base/widgets/common_dialog.dart';
 import '../../../../base/widgets/common_widget.dart';
 import '../../../../base/widgets/single_text_layout.dart';
@@ -69,8 +71,8 @@ class _SettingPageState extends State<SettingPage> {
 
     String currentVersion = HandleError.packageInfo.version;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(S.of(context).setting, style: TextStyle(color: theme.text)),
+      appBar: CommonBar(
+        title: S.of(context).setting,
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
