@@ -36,7 +36,7 @@ class SubTree<T> {
   bool get hasVarPaths =>
       regexes.isNotEmpty ||
       varSubTree != null ||
-      globValue.isNotEmpty; // TODO cache this
+      globValue.isNotEmpty;
 }
 
 class PathTree<T> {
@@ -58,7 +58,6 @@ class PathTree<T> {
       if (i == numSeg - 1 &&
           (seg == '*' || (seg.startsWith(':') && seg.endsWith('*')))) {
         for (String tag in tags) {
-          // TODO what if there is already a value here?
           subtree.globValue[tag] = value;
         }
         return;
@@ -87,7 +86,6 @@ class PathTree<T> {
     }
 
     for (String tag in tags) {
-      // TODO what if there is already a value here?
       subtree.value[tag] = value;
     }
   }
