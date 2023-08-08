@@ -12,7 +12,8 @@ class CheckBox extends StatefulWidget {
   final Color? unselectColor;
   final ValueChanged<bool>? onChanged;
 
-  const CheckBox({super.key,
+  const CheckBox({
+    super.key,
     required this.text,
     this.color,
     this.selectColor,
@@ -50,6 +51,7 @@ class _CheckBoxState extends State<CheckBox> {
   }
 }
 
+///
 /// CheckGroup(
 ///   list: ['左上', '正左', '左下', '上左', '正上', '上右', '右上', '正右', '右下', '下右', '正下', '下左'],
 ///   padding: EdgeInsets.symmetric(vertical: 16),
@@ -78,7 +80,8 @@ class CheckGroup extends StatefulWidget {
   final EdgeInsetsGeometry? padding;
   final ValueChanged<int>? onChanged;
 
-  const CheckGroup({super.key,
+  const CheckGroup({
+    super.key,
     required this.list,
     this.initialValue = 0,
     this.color,
@@ -98,6 +101,7 @@ class CheckGroup extends StatefulWidget {
 
 class _CheckGroupState extends State<CheckGroup> {
   int _selectedIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -158,7 +162,8 @@ class CheckItem extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final ValueChanged<int>? onChanged;
 
-  const CheckItem({super.key,
+  const CheckItem({
+    super.key,
     required this.index,
     required this.selectedIndex,
     required this.text,

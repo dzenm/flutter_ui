@@ -4,6 +4,16 @@ import 'state_view.dart';
 
 typedef RefreshFunction = Future<void> Function(bool refresh);
 
+/// 带下拉刷新的[ListView]
+/// RefreshListView(
+///   controller: _controller,
+///   itemCount: articleList.length,
+///   builder: (BuildContext context, int index) {
+///     return _buildArticleItem(articleList[index], index);
+///   },
+///   refresh: _onRefresh,
+///   showFooter: true,
+/// )
 class RefreshListView extends StatefulWidget {
   final StateController? controller; // 加载状态控制器
   final int itemCount; // item数量

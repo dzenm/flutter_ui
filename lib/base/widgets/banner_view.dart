@@ -14,7 +14,18 @@ typedef ParentBuilder = Widget Function(Widget child);
 /// 自定义指示器布局
 typedef IndicatorItemBuilder = Widget Function(bool isSelected);
 
+///
 /// 轮播图展示
+/// BannerView(
+///   repeat: true,
+///   builder: (imagePath) => Image.network(imagePath ?? '', fit: BoxFit.cover),
+///   data: banners.map((banner) => BannerData(title: banner.title, data: banner.imagePath)).toList(),
+///   onTap: (index) {
+///     BannerEntity banner = banners[index];
+///     String params = '?title=${banner.title}&url=${banner.url}';
+///     AppRouteDelegate.of(context).push(Routers.webView + params);
+///   },
+/// )
 class BannerView extends StatefulWidget {
   final ItemBuilder builder;
   final List<BannerData> data;

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../utils/native_channel_util.dart';
 
+///
 /// 监听返回键的动作
 class WillPopView extends StatelessWidget {
   final Widget child; //如果对返回键进行监听，必须放在最顶层

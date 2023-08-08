@@ -4,6 +4,14 @@ import 'dart:ui' as ui show TextHeightBehavior;
 ///
 /// Created by a0010 on 2023/5/30 10:27
 /// 在设置的行数 [maxLines] ，展示所有文本，如果超过限制，将自动调低文本的大小并且自己设置的文本大小 [TextStyle.fontSize] 将会失效
+/// const AdapterSizeText(
+///   '故常无欲，以观其妙，常有欲，以观其徼。',
+///   style: TextStyle(color: Colors.red),
+/// ),
+/// const AdapterSizeText(
+///   '此两者，同出而异名，同谓之玄，玄之又玄，众妙之门。',
+///   style: TextStyle(color: Colors.red),
+/// ),
 class AdapterSizeText extends StatefulWidget {
   final String data;
   final TextStyle? style;

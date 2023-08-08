@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 ///
 /// Created by a0010 on 2023/2/10 13:33
 /// 缓存PageView的子页面，使其不被销毁
+/// KeepAliveWrapper(
+///   child: TabBarView(children: _tabItems),
+/// )
 class KeepAliveWrapper extends StatefulWidget {
   final bool keepAlive;
   final Widget child;

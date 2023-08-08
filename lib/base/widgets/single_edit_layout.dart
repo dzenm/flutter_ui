@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+///
 /// 单行输入框布局
+/// SingleEditLayout(
+///   title: '账户',
+///   onChanged: (value) => setState(() => newText = value),
+///   controller: _controller,
+///   maxLength: 12,
+///   fontSize: 14,
+///   horizontalPadding: 0,
+///   keyboardType: CustomKeywordBoard.license,
+/// ),
+///
 class SingleEditLayout extends StatefulWidget {
   final String? title; // 标题文本
   final Color? titleColor; // 标题文本颜色

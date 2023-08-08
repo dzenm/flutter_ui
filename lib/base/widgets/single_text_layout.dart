@@ -2,7 +2,15 @@ import 'package:flutter/material.dart';
 
 import 'badge_tag.dart';
 
+///
 /// 单行文本布局
+/// SingleTextLayout(
+///   icon: Icons.language,
+///   title: S.of(context).language,
+///   isShowForward: true,
+///   text: _convertLocale(locale),
+///   isTextLeft: false,
+/// )
 class SingleTextLayout extends StatelessWidget {
   final IconData? icon; // 标题图标
   final Color? iconColor; // 标题图标颜色

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 enum LinearStrokeCap { butt, round, roundAll }
 
-// ignore: must_be_immutable
 class LinearPercentIndicator extends StatefulWidget {
   ///Percent value between 0.0 and 1.0
   final double percent;
@@ -17,9 +16,8 @@ class LinearPercentIndicator extends StatefulWidget {
   ///First color applied to the complete line
   final Color backgroundColor;
 
-  Color? get progressColor => _progressColor;
-
-  Color? _progressColor;
+  ///Progress color applied to the progress line
+  final Color? progressColor;
 
   ///true if you want the Line to have animation
   final bool animation;
@@ -81,7 +79,7 @@ class LinearPercentIndicator extends StatefulWidget {
       this.width,
       this.backgroundColor = const Color(0xFFB8C7CB),
       this.linearGradient,
-      Color? progressColor,
+      this.progressColor = Colors.red,
       this.animation = false,
       this.animationDuration = 500,
       this.animateFromLastPercent = false,
@@ -98,10 +96,9 @@ class LinearPercentIndicator extends StatefulWidget {
       this.curve = Curves.linear,
       this.restartAnimation = false})
       : super(key: key) {
-    if (linearGradient != null && progressColor != null) {
+    if (linearGradient != null) {
       throw ArgumentError('Cannot provide both linearGradient and progressColor');
     }
-    _progressColor = progressColor ?? Colors.red;
 
     if (percent < 0.0 || percent > 1.0) {
       throw Exception("Percent value must be a double between 0.0 and 1.0");

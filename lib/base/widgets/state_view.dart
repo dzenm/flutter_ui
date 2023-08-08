@@ -3,7 +3,15 @@ import 'package:flutter/material.dart';
 import '../../generated/l10n.dart';
 import 'tap_layout.dart';
 
-/// 状态展示
+///
+/// 状态展示，[StateController] 用于控制状态的展示
+/// StateView(
+///   controller: _controller,
+///   image: Image.asset(_image, fit: BoxFit.cover, width: 96, height: 96),
+///   child: const Center(
+///      child: Text('展示成功页面'),
+///   ),
+/// )
 class StateView extends StatelessWidget {
   final Widget? child;
   final Color? color;

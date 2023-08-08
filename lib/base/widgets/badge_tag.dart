@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-// 徽章标签
+///
+/// 徽章标签
+/// BadgeTag(count: 10),
 class BadgeTag extends StatelessWidget {
   final int count; // 展示的数量, 为0时展示小红点不展示数量，为-1时不展示
   final Color color; // 背景颜色

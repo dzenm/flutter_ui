@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 
 ///
 /// Created by a0010 on 2022/6/16 16:42
-///
+/// 往右滑动验证得到结果
+/// SlideVerifyView(
+///   slideColor: Colors.green,
+///   backgroundColor: const Color(0xFFE5E5E5),
+///   borderColor: const Color(0xFFE5E5E5),
+///   onChanged: () async => CommonDialog.showToast('验证成功'),
+/// )
 class SlideVerifyView extends StatefulWidget {
   /// 背景色
   final Color backgroundColor;
