@@ -214,10 +214,13 @@ class HttpManager {
     bool collect = true,
     bool isShowDialog = true,
     void Function()? success,
+    void Function()? failed,
   }) async {
     var future = collect ? apiServices.collectArticle(id) : apiServices.uncollectArticle(id);
     await _httpClient.request(future, isShowDialog: isShowDialog, success: (data) async {
       if (success != null) success();
+    }, failed: (e) {
+      if (failed != null) failed();
     });
   }
 
@@ -331,7 +334,6 @@ class HttpManager {
       }
     });
   }
-
 
   Future<void> logout() async {
     await _httpClient.request(apiServices.logout(), success: (data) {

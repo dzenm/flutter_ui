@@ -175,6 +175,13 @@ class _StudyPageState extends State<StudyPage> {
         child: _text('路由测试'),
       ),
       const SizedBox(height: 8),
+      // 左右滑动
+      MaterialButton(
+        textColor: Colors.white,
+        color: theme.button,
+        onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.slide),
+        child: _text('左右滑动'),
+      ),
       // 加载状态
       MaterialButton(
         textColor: Colors.white,

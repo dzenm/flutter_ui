@@ -58,6 +58,7 @@ dependencies:
   ########################################## UI ##########################################
   webview_flutter: 4.2.2                        # WebView https://pub.dev/packages/webview_flutter
   azlistview: 2.0.0                             # az列表 https://pub.flutter-io.cn/packages/azlistview
+  flutter_slidable: 3.0.0                       # 可滑动的列表展示 https://pub.flutter-io.cn/packages/flutter_slidable
 #  flutter_echarts: 2.0.0                        # EChart 图表（缩放手势冲突） https://pub.flutter-io.cn/packages/flutter_echarts
 #  badges: 1.2.0                                 # 小红点 https://pub.flutter-io.cn/packages/badges
 #  flutter_swiper: 1.1.6                         # 滑动 https://pub.dev/packages/flutter_swiper
@@ -72,7 +73,7 @@ dependencies:
 
   ########################################## 音视频 ######################################
   transparent_image: 2.0.1                      # 图片选择器 https://pub.flutter-io.cn/packages/transparent_image
-  image_picker: 1.0.1                           # 图片选择器 https://pub.flutter-io.cn/packages/image_picker
+  image_picker: 1.0.2                           # 图片选择器 https://pub.flutter-io.cn/packages/image_picker
   photo_view: 0.14.0                            # 图片预览控件 https://pub.flutter-io.cn/packages/photo_view
   video_player: 2.7.0                           # 视频播放 https://pub.flutter-io.cn/packages/video_player
   fijkplayer: 0.11.0                            # 视频播放 https://pub.flutter-io.cn/packages/fijkplayer

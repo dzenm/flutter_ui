@@ -13,6 +13,7 @@ import 'popup_page/popup_page.dart';
 import 'provider_page/provider_page.dart';
 import 'qr_page/qr_page.dart';
 import 'router/router_page.dart';
+import 'slider_page/slide_page.dart';
 import 'state_page/state_page.dart';
 import 'study_page.dart';
 import 'text_page/text_page.dart';
@@ -37,6 +38,7 @@ class StudyRouter {
   static const String provider = '$study/provider';
   static const String qr = '$study/qr';
   static const String router = '$study/router';
+  static const String slide = '$study/slide';
   static const String state = '$study/state';
   static const String text = '$study/text';
   static const String video = '$study/video';
@@ -130,6 +132,12 @@ class StudyRouter {
           name: router,
           builder: (settings) {
             return const RouterPage();
+          },
+        ),
+        AppRoutePage(
+          name: slide,
+          builder: (settings) {
+            return const SlidePage();
           },
         ),
         AppRoutePage(

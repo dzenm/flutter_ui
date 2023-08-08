@@ -49,34 +49,43 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
     packagingOptions {
         jniLibs {
             pickFirsts += ['lib/**/libc++_shared.so']
         }
     }
+
     signingConfigs {
         release {
-            // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             keyAlias "dy"
             keyPassword "123456a"
             storeFile file("../keystore.jks")
             storePassword "123456a"
         }
-//        debug {
-//            // TODO: Add your own signing config for the release build.
-//            // Signing with the debug keys for now, so `flutter run --debug` works.
-//            keyPassword "android"
-//            storeFile file("../debug.keystore")
-//        }
+        debug {
+            // Signing with the debug keys for now, so `flutter run --debug` works.
+            storeFile file('../debug.keystore')
+        }
     }
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.release
+            //开启代码压缩、优化功能
             minifyEnabled true
+            //开启资源压缩功能
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

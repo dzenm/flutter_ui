@@ -192,6 +192,34 @@ class _HomePageState extends State<HomePage> {
   void log(String msg) => BuildConfig.showPageLog ? Log.p(msg, tag: _tag) : null;
 }
 
+/// 轮播图 widget
+class Banner extends StatelessWidget {
+  static const String _tag = 'Banner';
+
+  const Banner({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    Log.p('build', tag: _tag);
+
+    return Selector<BannerModel, List<BannerEntity>>(
+      builder: (context, banners, widget) {
+        return BannerView(
+          repeat: true,
+          builder: (imagePath) => Image.network(imagePath ?? '', fit: BoxFit.cover),
+          data: banners.map((banner) => BannerData(title: banner.title, data: banner.imagePath)).toList(),
+          onTap: (index) {
+            BannerEntity banner = banners[index];
+            String params = '?title=${banner.title}&url=${banner.url}';
+            AppRouteDelegate.of(context).push(Routers.webView + params);
+          },
+        );
+      },
+      selector: (context, model) => model.banners,
+    );
+  }
+}
+
 /// 文章列表 widget
 class ArticleListView extends StatelessWidget {
   static const String _tag = 'ArticleListView';
@@ -360,27 +388,7 @@ class ArticleItemView extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             // 文章收藏的状态
-            Selector<ArticleModel, bool>(
-              builder: (context, value, child) {
-                IconData icon = value ? CustomIcons.heart : CustomIcons.heart_empty;
-                Color? color = value ? theme.red : theme.hint;
-                return TapLayout(
-                  height: 48,
-                  width: 48,
-                  foreground: theme.transparent,
-                  onTap: () {
-                    ArticleEntity? article = context.read<ArticleModel>().getArticle(index);
-                    if (article == null) return;
-                    HttpManager.instance.collect(article.id ?? 0, collect: !value, isShowDialog: false, success: () {
-                      article.collect = !value;
-                      context.read<ArticleModel>().updateArticle(article);
-                    });
-                  },
-                  child: Icon(icon, color: color),
-                );
-              },
-              selector: (context, model) => model.getArticle(index)?.collect ?? false,
-            ),
+            CollectArticleView(index: index),
           ]),
         ],
       ),
@@ -388,30 +396,37 @@ class ArticleItemView extends StatelessWidget {
   }
 }
 
-/// 轮播图 widget
-class Banner extends StatelessWidget {
-  static const String _tag = 'Banner';
+/// 收藏文章状态布局
+class CollectArticleView extends StatelessWidget {
+  final int index;
 
-  const Banner({super.key});
+  const CollectArticleView({super.key, required this.index});
 
   @override
   Widget build(BuildContext context) {
-    Log.p('build', tag: _tag);
-
-    return Selector<BannerModel, List<BannerEntity>>(
-      builder: (context, banners, widget) {
-        return BannerView(
-          repeat: true,
-          builder: (imagePath) => Image.network(imagePath ?? '', fit: BoxFit.cover),
-          data: banners.map((banner) => BannerData(title: banner.title, data: banner.imagePath)).toList(),
-          onTap: (index) {
-            BannerEntity banner = banners[index];
-            String params = '?title=${banner.title}&url=${banner.url}';
-            AppRouteDelegate.of(context).push(Routers.webView + params);
+    AppTheme theme = context.watch<LocalModel>().theme;
+    return Selector<ArticleModel, bool>(
+      builder: (context, value, child) {
+        IconData icon = value ? CustomIcons.heart : CustomIcons.heart_empty;
+        Color? color = value ? theme.red : theme.hint;
+        return TapLayout(
+          height: 48,
+          width: 48,
+          foreground: theme.transparent,
+          onTap: () {
+            ArticleEntity? article = context.read<ArticleModel>().getArticle(index);
+            if (article == null) return;
+            article.collect = !value;
+            context.read<ArticleModel>().updateArticle(article);
+            HttpManager.instance.collect(article.id ?? 0, collect: !value, isShowDialog: false, failed: () {
+              article.collect = value;
+              context.read<ArticleModel>().updateArticle(article);
+            });
           },
+          child: Icon(icon, color: color),
         );
       },
-      selector: (context, model) => model.banners,
+      selector: (context, model) => model.getArticle(index)?.collect ?? false,
     );
   }
 }
