@@ -17,6 +17,7 @@ import '../../../generated/l10n.dart';
 import '../../../http/http_manager.dart';
 import '../../../models/provider_manager.dart';
 import '../../../models/user_model.dart';
+import '../../common/preview_picture_page.dart';
 import '../../study/study_router.dart';
 import 'me_router.dart';
 
@@ -103,15 +104,16 @@ class _MePageState extends State<MePage> {
             ..._buildChildrenButtons(theme),
           ]),
         ),
-        Container(
-          margin: const EdgeInsets.only(right: 32),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
+        Positioned(
+          right: 32,
+          child: TapLayout(
+            isCircle: true,
             border: Border.all(width: 3.0, color: const Color(0xfffcfcfc)),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(64),
-            child: Image.asset(Assets.a, fit: BoxFit.cover, width: 64, height: 64),
+            onTap: () => PreviewPicturePage.show(context, [Assets.a]),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(64),
+              child: Image.asset(Assets.a, fit: BoxFit.cover, width: 64, height: 64),
+            ),
           ),
         ),
       ]),

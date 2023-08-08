@@ -19,7 +19,7 @@ class TapLayout extends StatefulWidget {
   final BoxBorder? border;
   final List<BoxShadow>? boxShadow;
   final Gradient? gradient;
-  final DecorationImage? decorationImage;
+  final DecorationImage? image;
   final BorderRadius? borderRadius;
   final bool isCircle; //是否为圆形
 
@@ -40,7 +40,7 @@ class TapLayout extends StatefulWidget {
     this.alignment = Alignment.center,
     this.foreground,
     this.background = Colors.transparent,
-    this.decorationImage,
+    this.image,
     this.border,
     this.borderRadius,
     this.boxShadow,
@@ -60,68 +60,75 @@ class _TapLayoutState extends State<TapLayout> {
 
   @override
   Widget build(BuildContext context) {
-    final Color? color = widget.isRipple
-        ? null
-        : _isTouchDown
-            ? widget.foreground ?? Theme.of(context).highlightColor
-            : widget.background;
+    bool isRipple = widget.isRipple;
 
-    double? radius = widget.isRipple ? null : 0.0;
+    Widget child = Align(alignment: widget.alignment, child: widget.child);
+    if (widget.padding != null) {
+      child = Padding(padding: widget.padding!, child: child);
+    }
+
+    Color? foreground;
+    Color? background;
+    double? radius;
+    if (isRipple) {
+      if (widget.onTap != null) {
+        foreground = widget.foreground;
+      }
+      background = widget.background;
+    } else {
+      foreground = Colors.transparent;
+      Color touchBackground = widget.foreground ?? Theme.of(context).highlightColor;
+      background = _isTouchDown ? touchBackground : widget.background;
+      // 表示水波纹效果不显示
+      radius = 0;
+    }
     BoxShape shape = widget.isCircle ? BoxShape.circle : BoxShape.rectangle;
-    Color? foreground = widget.isRipple && widget.onTap != null ? widget.foreground : Colors.transparent;
-
-    return Container(
-      width: widget.width,
-      height: widget.height,
-      margin: widget.margin,
-      // 设置形状
+    child = Material(
+      color: Colors.transparent,
+      animationDuration: Duration(milliseconds: widget.delay - 100),
       clipBehavior: Clip.hardEdge,
-      decoration: BoxDecoration(
-        boxShadow: widget.boxShadow,
-        borderRadius: widget.borderRadius,
-        shape: shape,
-      ),
-      child: Material(
-        color: Colors.transparent,
-        animationDuration: Duration(milliseconds: widget.delay - 100),
-        child: Ink(
-          decoration: BoxDecoration(
-            color: widget.background,
-            gradient: widget.gradient,
-            border: widget.border,
-          ),
-          child: InkResponse(
-            onTap: () async => Future.delayed(Duration(milliseconds: widget.delay), () {
-              int currentTime = DateTime.now().millisecondsSinceEpoch;
-              if (currentTime - _tapTime > 500) {
-                if (widget.onTap != null) widget.onTap!();
-              }
-              _tapTime = currentTime;
-            }),
-            onLongPress: widget.onLongPress,
-            onDoubleTap: widget.onDoubleTap,
-            onHighlightChanged: (value) => setState(() => _isTouchDown = value),
-            borderRadius: widget.borderRadius,
-            radius: radius,
-            highlightShape: shape,
-            highlightColor: Colors.transparent,
-            splashColor: foreground,
-            containedInkWell: true,
-            // 不要在这里设置背景色，否则会遮挡水波纹效果,如果设置的话尽量设置Material下面的color来实现背景色
-            child: Container(
-              decoration: BoxDecoration(
-                color: color,
-                image: widget.decorationImage,
-                borderRadius: widget.borderRadius,
-              ),
-              // 设置child 居中
-              alignment: widget.alignment,
-              padding: widget.padding,
-              child: widget.child,
-            ),
-          ),
+      // 点击圆角
+      borderRadius: widget.borderRadius,
+      child: Ink(
+        width: widget.width,
+        height: widget.height,
+        decoration: BoxDecoration(
+          // 水波纹时的背景色
+          color: background,
+          image: widget.image,
+          border: widget.border,
+          borderRadius: widget.borderRadius,
+          boxShadow: widget.boxShadow,
+          gradient: widget.gradient,
+          shape: shape,
+        ),
+        // 设置背景颜色
+        child: InkResponse(
+          onTap: () async => Future.delayed(Duration(milliseconds: widget.delay), () {
+            int currentTime = DateTime.now().millisecondsSinceEpoch;
+            if (currentTime - _tapTime > 500) {
+              if (widget.onTap != null) widget.onTap!();
+            }
+            _tapTime = currentTime;
+          }),
+          onLongPress: widget.onLongPress,
+          onDoubleTap: widget.onDoubleTap,
+          onHighlightChanged: (value) => setState(() => _isTouchDown = value),
+          // 水波纹圆角
+          borderRadius: widget.borderRadius,
+          radius: radius,
+          highlightShape: shape,
+          highlightColor: Colors.transparent,
+          splashColor: foreground,
+          containedInkWell: true,
+          child: child,
         ),
       ),
     );
+
+    if (widget.margin != null) {
+      child = Padding(padding: widget.margin!, child: child);
+    }
+    return child;
   }
 }

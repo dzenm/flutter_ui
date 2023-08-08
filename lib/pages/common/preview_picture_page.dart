@@ -6,49 +6,55 @@ import '../../base/widgets/tap_layout.dart';
 typedef DownloadCallback = void Function(String url);
 
 /// 图片预览页面
-class PreviewPhotoPage extends StatefulWidget {
+class PreviewPicturePage extends StatefulWidget {
   final List<String> url;
+  final int initialItem;
   final ImageProvider<Object>? imageProvider;
   final DownloadCallback? onDownload;
 
-  const PreviewPhotoPage(
+  const PreviewPicturePage(
     this.url, {
     super.key,
+    this.initialItem = 0,
     this.imageProvider,
     this.onDownload,
   });
 
   /// 跳转图片预览页面
-  static void show(
+  static Future<T?> show<T>(
     BuildContext context,
     List<String> url, {
     ImageProvider<Object>? imageProvider,
+    int initialItem = 0,
     DownloadCallback? onDownload,
-  }) {
-    Navigator.of(context).push(
-      CustomerPageRoute(
-        PreviewPhotoPage(
+    AnimatorStyle animator = AnimatorStyle.fade,
+  }) async {
+    return await Navigator.of(context).push<T>(
+      CustomerPageRoute<T>(
+        PreviewPicturePage(
           url,
+          initialItem: initialItem,
           imageProvider: imageProvider,
           onDownload: onDownload,
         ),
-        style: AnimatorStyle.fade,
+        style: animator,
       ),
     );
   }
 
   @override
-  State<StatefulWidget> createState() => _PreviewPhotoPageState();
+  State<StatefulWidget> createState() => _PreviewPicturePageState();
 }
 
-class _PreviewPhotoPageState extends State<PreviewPhotoPage> {
-  final List<String> _list = [];
+class _PreviewPicturePageState extends State<PreviewPicturePage> {
+  final List<dynamic> _list = [];
   int _currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
     _list.addAll(widget.url);
+    _currentIndex = widget.initialItem;
   }
 
   @override
@@ -74,7 +80,7 @@ class _PreviewPhotoPageState extends State<PreviewPhotoPage> {
       scrollDirection: Axis.horizontal,
       reverse: false,
       controller: PageController(
-        initialPage: 0, //初始化第一次默认的位置
+        initialPage: _currentIndex, //初始化第一次默认的位置
         viewportFraction: 1, //占屏幕多少，1为占满整个屏幕
         keepPage: true, //是否保存当前Page的状态，如果保存，下次进入对应保存的page，如果为false。下次总是从initialPage开始。
       ),
@@ -86,8 +92,9 @@ class _PreviewPhotoPageState extends State<PreviewPhotoPage> {
         return PhotoView(
           imageProvider: widget.imageProvider ?? _imageProvider(url),
           initialScale: PhotoViewComputedScale.contained,
+          wantKeepAlive: true,
           minScale: PhotoViewComputedScale.contained,
-          maxScale: PhotoViewComputedScale.contained * 2,
+          maxScale: PhotoViewComputedScale.contained * 3,
           gestureDetectorBehavior: HitTestBehavior.translucent,
           scaleStateChangedCallback: (isZoom) {},
           onTapUp: (context, details, controllerValue) => Navigator.pop(context),
@@ -149,7 +156,7 @@ class _PreviewPhotoPageState extends State<PreviewPhotoPage> {
 }
 
 /// 自定义动画样式
-class CustomerPageRoute extends PageRouteBuilder {
+class CustomerPageRoute<T> extends PageRouteBuilder<T> {
   final Widget widget;
   final AnimatorStyle style;
 

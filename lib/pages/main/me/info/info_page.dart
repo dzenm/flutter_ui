@@ -10,7 +10,7 @@ import '../../../../base/widgets/single_text_layout.dart';
 import '../../../../base/widgets/tap_layout.dart';
 import '../../../../generated/l10n.dart';
 import '../../../../models/user_model.dart';
-import '../../../common/preview_photo_page.dart';
+import '../../../common/preview_picture_page.dart';
 import '../../../study/study_model.dart';
 import '../me_router.dart';
 
@@ -51,7 +51,7 @@ class _InfoPageState extends State<InfoPage> {
             height: 50,
             background: theme.white,
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            onTap: () => PreviewPhotoPage.show(context, [
+            onTap: () => PreviewPicturePage.show(context, [
               "https://www.wanandroid.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png",
               Assets.a,
               Assets.a,
