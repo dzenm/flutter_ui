@@ -146,7 +146,7 @@ class _SettingPageState extends State<SettingPage> {
                 background: theme.white,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 onTap: () => AppRouteDelegate.of(context).push(MeRouter.about),
-                child: SingleTextLayout(title: S.of(context).about, isShowForward: true),
+                child: SingleTextLayout(title: S.of(context).aboutMe, isShowForward: true),
               ),
               CommonWidget.divider(height: 8),
               TapLayout(

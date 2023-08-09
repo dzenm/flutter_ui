@@ -29,7 +29,7 @@ class MainPageMobile extends StatefulWidget {
 class _MainPageMobileState extends State<MainPageMobile> with WidgetsBindingObserver {
   static const String _tag = 'MainPage';
 
-  // 感知生命周期变化
+  /// 感知生命周期变化
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
@@ -54,7 +54,7 @@ class _MainPageMobileState extends State<MainPageMobile> with WidgetsBindingObse
     log('initState');
 
     WidgetsBinding.instance.addObserver(this);
-    context.read<MainModel>().initController(controller: PageController(initialPage: 0));
+    ProviderManager.main(context: context).init();
     Future.delayed(Duration.zero, () => _initData());
   }
 
@@ -74,7 +74,6 @@ class _MainPageMobileState extends State<MainPageMobile> with WidgetsBindingObse
       ProviderManager.website(context: context).init(),
 
       // 页面相关的Model
-      ProviderManager.main(context: context).init(),
       ProviderManager.home(context: context).init(),
       ProviderManager.me(context: context).init(),
       ProviderManager.nav(context: context).init(),
@@ -121,8 +120,8 @@ class _MainPageMobileState extends State<MainPageMobile> with WidgetsBindingObse
 
     _useContextBeforeBuild(context);
 
-    int length = context.read<MainModel>().length;
-    PageController controller = context.read<MainModel>().controller;
+    int length = context.watch<MainModel>().length;
+    PageController controller = context.watch<MainModel>().controller;
     return Scaffold(
       body: PageView(
         controller: controller,
@@ -227,7 +226,7 @@ class BottomNavigationBarItemView extends StatelessWidget {
     return Selector<MainModel, int>(
       builder: (context, value, widget) {
         bool isSelected = value == index; // 是否是选中的索引
-        Color color = isSelected ? theme.blue : theme.hint;
+        Color color = isSelected ? theme.appbar : theme.hint;
         return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Icon(icon, color: color, size: 20),
           Text(title, style: TextStyle(fontSize: 10, color: color)),

@@ -18,7 +18,7 @@ class _AboutPageState extends State<AboutPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(children: [
-        CommonBar(title: S.of(context).about, centerTitle: true),
+        CommonBar(title: S.of(context).aboutMe, centerTitle: true),
       ]),
     );
   }

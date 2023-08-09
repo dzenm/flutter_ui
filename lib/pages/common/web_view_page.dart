@@ -7,6 +7,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import '../../base/log/build_config.dart';
 import '../../base/log/log.dart';
 import '../../base/widgets/will_pop_view.dart';
+import '../../generated/l10n.dart';
 
 /// WebView内容改变时的回调
 typedef WebViewCallback = void Function(dynamic data);
@@ -31,12 +32,6 @@ class WebViewPage extends StatefulWidget {
 class _WebViewPageState extends State<WebViewPage> {
   String _title = '';
   WebViewController? _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _title = widget.title;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,17 +94,20 @@ class _FlutterWebViewState extends State<FlutterWebView> {
           NavigationDelegate(
             onProgress: (int progress) {
               setState(() => _progressValue = progress / 100);
+            },
+            onPageStarted: (String url) {
+              setState(() => _isLoading = true);
+              if (widget.onTitleChange != null) {
+                widget.onTitleChange!(S.of(context).loading);
+              }
+            },
+            onPageFinished: (String url) {
+              setState(() => _isLoading = false);
               _controller?.getTitle().then((value) {
                 if (widget.onTitleChange != null) {
                   widget.onTitleChange!(value);
                 }
               });
-            },
-            onPageStarted: (String url) {
-              setState(() => _isLoading = true);
-            },
-            onPageFinished: (String url) {
-              setState(() => _isLoading = false);
               //调用JS得到实际高度
               _controller?.runJavaScript("document.documentElement.clientHeight;").then((result) {
                 setState(() {
@@ -132,7 +130,7 @@ class _FlutterWebViewState extends State<FlutterWebView> {
         );
     if (_controller != null) {
       if (url.startsWith('http://') || url.startsWith('https://')) {
-        _controller!.loadRequest(Uri.parse(url));
+        _controller?.loadRequest(Uri.parse(url));
       } else {
         _loadHtmlAssets(_controller!);
       }
