@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import '../../../base/log/build_config.dart';
-import '../../../base/log/log.dart';
 import '../../../base/res/app_theme.dart';
 import '../../../base/res/local_model.dart';
 import '../../../base/widgets/common_bar.dart';
@@ -19,15 +17,9 @@ import 'tab_tutorial_page.dart';
 ///
 /// Created by a0010 on 2022/7/28 10:56
 /// 分类页面
-class NavPage extends StatefulWidget {
-  const NavPage({super.key});
+class NavPage extends StatelessWidget {
+  NavPage({super.key});
 
-  @override
-  State<StatefulWidget> createState() => _NavPageState();
-}
-
-class _NavPageState extends State<NavPage> {
-  static const String _tag = 'NavPage';
   final List<Widget> _tabItems = [
     const TabPlazaPage(),
     const TabTutorialPage(),
@@ -38,38 +30,7 @@ class _NavPageState extends State<NavPage> {
   ];
 
   @override
-  void initState() {
-    super.initState();
-    log('initState');
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    log('didChangeDependencies');
-  }
-
-  @override
-  void didUpdateWidget(covariant NavPage oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    log('didUpdateWidget');
-  }
-
-  @override
-  void deactivate() {
-    super.deactivate();
-    log('deactivate');
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    log('dispose');
-  }
-
-  @override
   Widget build(BuildContext context) {
-    log('build');
     AppTheme theme = context.watch<LocalModel>().theme;
     List<String> tabs = [
       S.of(context).plaza,
@@ -106,6 +67,4 @@ class _NavPageState extends State<NavPage> {
       ),
     );
   }
-
-  void log(String msg) => BuildConfig.showPageLog ? Log.p(msg, tag: _tag) : null;
 }

@@ -14,8 +14,10 @@ abstract class ApiServices {
   /// 1.1 获取首页文章列表 [ https://www.wanandroid.com/article/list/0/json ]
   @GET('article/list/{pageNumber}/json')
   Future<DataEntity> articleList(
-    @Path("pageNumber") int pageNumber,
-  );
+    @Path("pageNumber") int pageNumber, // 页码拼接在链接上，从0开始,
+    {
+    @Query('page_size') int? pageSize, // 取值为[1-40]，不传则使用默认值，一旦传入了 page_size，后续该接口分页都需要带上，否则会造成分页读取错误。
+  });
 
   /// 1.2 获取首页banner [ https://www.wanandroid.com/banner/json ]
   @GET('banner/json')
@@ -43,14 +45,18 @@ abstract class ApiServices {
   Future<DataEntity> treeArticleListByCid(
     @Path("pageNumber") int pageNumber, // 页码拼接在链接上，从0开始
     @Query('cid') int cid, // 分类的id，上述二级目录的id
-  );
+    {
+    @Query('page_size') int? pageSize, // 取值为[1-40]，不传则使用默认值，一旦传入了 page_size，后续该接口分页都需要带上，否则会造成分页读取错误。
+  });
 
   /// 2.3 获取作者昵称搜索文章 [ https://wanandroid.com/article/list/0/json?author=鸿洋 ]
   @GET('article/list/{pageNumber}/json')
   Future<DataEntity> treeArticleListByAuthor(
     @Path("pageNumber") int pageNumber, // 页码拼接在链接上，从0开始
     @Query('author') String author, // 作者昵称，不支持模糊匹配。
-  );
+    {
+    @Query('page_size') int? pageSize, // 取值为[1-40]，不传则使用默认值，一旦传入了 page_size，后续该接口分页都需要带上，否则会造成分页读取错误。
+  });
 
   ///=============================== 三、导航 ==============================================
   /// 3.1 获取导航数据 [ https://www.wanandroid.com/navi/json ]
@@ -67,7 +73,9 @@ abstract class ApiServices {
   Future<DataEntity> projectArticleListByCid(
     @Path("pageNumber") int pageNumber, // 页码拼接在链接上，从1开始
     @Query('cid') int cid, // 分类的id，上面项目分类接口
-  );
+    {
+    @Query('page_size') int? pageSize, // 取值为[1-40]，不传则使用默认值，一旦传入了 page_size，后续该接口分页都需要带上，否则会造成分页读取错误。
+  });
 
   ///=============================== 五、登录与注册 ==============================================
   /// 5.1 登录 [ https://www.wanandroid.com/user/login ]
@@ -101,7 +109,9 @@ abstract class ApiServices {
   @GET('lg/collect/list/{pageNumber}/json')
   Future<DataEntity> collect(
     @Path("pageNumber") int pageNumber, // 页码拼接在链接上，从0开始
-  );
+    {
+    @Query('page_size') int? pageSize, // 取值为[1-40]，不传则使用默认值，一旦传入了 page_size，后续该接口分页都需要带上，否则会造成分页读取错误。
+  });
 
   /// 6.2 收藏站内文章请求 [ https://www.wanandroid.com/lg/collect/1165/json ]
   @POST('lg/collect/{id}/json')
@@ -168,54 +178,68 @@ abstract class ApiServices {
   /// 7.1 搜索 [ https://www.wanandroid.com/article/query/0/json ]
   @POST('article/query/{pageNumber}/json')
   Future<DataEntity> query(
-    @Path("pageNumber") int pageNumber, // 页码拼接在链接上，从0开始，取值为[1-40]，不传则使用默认值
+    @Path("pageNumber") int pageNumber, // 页码拼接在链接上，从0开始
     @Query("k") String k, // 搜索关键词，支持多个关键词，用空格隔开
-  );
+    {
+    @Query('page_size') int? pageSize, // 取值为[1-40]，不传则使用默认值，一旦传入了 page_size，后续该接口分页都需要带上，否则会造成分页读取错误。
+  });
 
   ///=============================== 八、TO DO 工具 ==============================================
   /// 8.1 搜索 [ https://www.wanandroid.com/article/query/0/json ]
   @POST('article/query/{pageNumber}/json')
   Future<DataEntity> todo(
-    @Path("pageNumber") int pageNumber, // 页码拼接在链接上，从0开始，取值为[1-40]，不传则使用默认值
+    @Path("pageNumber") int pageNumber, // 页码拼接在链接上，从0开始
     @Query("k") String k, // 搜索关键词，支持多个关键词，用空格隔开
-  );
+    {
+    @Query('page_size') int? pageSize, // 取值为[1-40]，不传则使用默认值，一旦传入了 page_size，后续该接口分页都需要带上，否则会造成分页读取错误。
+  });
 
   ///=============================== 九、积分 ==============================================
   /// 9.1 积分排行榜 [ https://www.wanandroid.com/coin/rank/1/json ]
   @GET('coin/rank/{pageNumber}/json')
   Future<DataEntity> rankCoin(
     @Path("pageNumber") int pageNumber, // 页码拼接在链接上，从1开始
-  );
+    {
+    @Query('page_size') int? pageSize, // 取值为[1-40]，不传则使用默认值，一旦传入了 page_size，后续该接口分页都需要带上，否则会造成分页读取错误。
+  });
 
   /// 9.2 获取个人积分 [ https://www.wanandroid.com/lg/coin/userinfo/json ]
   @GET('coin/userinfo/json')
   Future<DataEntity> userCoin();
 
-  /// 9.3 获取个人积分获取列表 [ https://www.wanandroid.com/lg/coin/list/1/json ]
+  /// 9.3 获取个人积分获列表 [ https://www.wanandroid.com/lg/coin/list/1/json ]
   @GET('lg/coin/list/{pageNumber}/json')
   Future<DataEntity> coins(
     @Path("pageNumber") int pageNumber, // 页码拼接在链接上，从1开始
-  );
+    {
+    @Query('page_size') int? pageSize, // 取值为[1-40]，不传则使用默认值，一旦传入了 page_size，后续该接口分页都需要带上，否则会造成分页读取错误。
+  });
 
   ///=============================== 十、广场 ==============================================
   /// 10.1 广场列表数据 [ https://wanandroid.com/user_article/list/0/json ]
   @GET('user_article/list/{pageNumber}/json')
   Future<DataEntity> userArticles(
     @Path("pageNumber") int pageNumber, // 页码拼接在链接上，从0开始
-  );
+    {
+    @Query('page_size') int? pageSize, // 取值为[1-40]，不传则使用默认值，一旦传入了 page_size，后续该接口分页都需要带上，否则会造成分页读取错误。
+  });
 
   /// 10.2 分享人对应列表数据 [ https://www.wanandroid.com/user/2/share_articles/1/json ]
   @GET('user/{id}/share_articles/{pageNumber}/json')
   Future<DataEntity> shareArticles(
     @Path("id") int id, // 用户id，拼接在链接中。
     @Path("pageNumber") int pageNumber, // 页码拼接在链接上，从1开始
-  );
+    {
+    @Query('page_size') int? pageSize, // 取值为[1-40]，不传则使用默认值，一旦传入了 page_size，后续该接口分页都需要带上，否则会造成分页读取错误。
+  });
 
   /// 10.3 自己的分享的文章列表 [ https://wanandroid.com/user/lg/private_articles/1/json ]
   @GET('user/lg/private_articles/{pageNumber}/json')
   Future<DataEntity> privateArticles(
-    @Path("pageNumber") int pageNumber, // 页码拼接在链接上，从1开始，取值为[1-40]
-  );
+    @Path("pageNumber") int pageNumber, // 页码拼接在链接上，从1开始
+    {
+    @Query('page_size') int? pageSize, // 取值为[1-40]，不传则使用默认值，一旦传入了 page_size，后续该接口分页都需要带上，否则会造成分页读取错误。
+  });
 
   /// 10.4 删除自己分享的文章 [ https://wanandroid.com/lg/user_article/delete/9475/json ]
   @POST('lg/user_article/delete/{id}/json')
@@ -257,14 +281,18 @@ abstract class ApiServices {
   /// 14.2 已读消息列表 [ https://wanandroid.com/message/lg/readed_list/1/json ]
   @GET('message/lg/readed_list/{pageNumber}/json')
   Future<DataEntity> readMessages(
-    @Path("pageNumber") int pageNumber, // 页码拼接在链接上，从1开始，取值为[1-40]
-  );
+    @Path("pageNumber") int pageNumber, // 页码拼接在链接上，从1开始
+    {
+    @Query('page_size') int? pageSize, // 取值为[1-40]，不传则使用默认值，一旦传入了 page_size，后续该接口分页都需要带上，否则会造成分页读取错误。
+  });
 
   /// 14.3 未读消息列表 [ https://wanandroid.com/message/lg/unread_list/1/json ]
   @GET('message/lg/unread_list/{pageNumber}/json')
   Future<DataEntity> unreadMessages(
-    @Path("pageNumber") int pageNumber, // 页码拼接在链接上，从1开始，取值为[1-40]
-  );
+    @Path("pageNumber") int pageNumber, // 页码拼接在链接上，从1开始
+    {
+    @Query('page_size') int? pageSize, // 取值为[1-40]，不传则使用默认值，一旦传入了 page_size，后续该接口分页都需要带上，否则会造成分页读取错误。
+  });
 
   ///=============================== 十五、公众号Tab ==============================================
   /// 15.1 获取公众号列表 [ https://wanandroid.com/wxarticle/chapters/json ]
@@ -275,23 +303,29 @@ abstract class ApiServices {
   @GET('wxarticle/list/{id}/{pageNumber}/json')
   Future<DataEntity> chapterList(
     @Path("id") int id, // 公众号 id，可以通过问答列表获取，拼接在链接上
-    @Path("pageNumber") int pageNumber, // 页码拼接在链接上，从1开始，取值为[1-40]
-  );
+    @Path("pageNumber") int pageNumber, // 页码拼接在链接上，从1开始
+    {
+    @Query('page_size') int? pageSize, // 取值为[1-40]，不传则使用默认值，一旦传入了 page_size，后续该接口分页都需要带上，否则会造成分页读取错误。
+  });
 
   /// 15.3 在某个公众号中搜索历史文章 [ https://wanandroid.com/wxarticle/list/405/1/json?k=Java ]
   @GET('wxarticle/list/{id}/{pageNumber}/json')
   Future<DataEntity> chapterQuery(
     @Path("id") int id, // 公众号 id，可以通过问答列表获取，拼接在链接上
-    @Path("pageNumber") int pageNumber, // 页码拼接在链接上，从1开始，取值为[1-40]
+    @Path("pageNumber") int pageNumber, // 页码拼接在链接上，从1开始
     @Query("k") String k, // 搜索关键词
-  );
+    {
+    @Query('page_size') int? pageSize, // 取值为[1-40]，不传则使用默认值，一旦传入了 page_size，后续该接口分页都需要带上，否则会造成分页读取错误。
+  });
 
   ///=============================== 十六、最新项目 Tab ==============================================
   /// 16.1 最新项目tab [ https://wanandroid.com/article/listproject/0/json ]
   @GET('article/listproject/{pageNumber}/json')
   Future<DataEntity> projects(
-    @Path("pageNumber") int pageNumber, // 页码拼接在链接上，从0开始，取值为[1-40]
-  );
+    @Path("pageNumber") int pageNumber, // 页码拼接在链接上，从1开始
+    {
+    @Query('page_size') int? pageSize, // 取值为[1-40]，不传则使用默认值，一旦传入了 page_size，后续该接口分页都需要带上，否则会造成分页读取错误。
+  });
 
   ///=============================== 十七、工具列表接口 ==============================================
   /// 17.1 工具列表 [ https://wanandroid.com/tools/list/json ]

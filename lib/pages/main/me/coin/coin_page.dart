@@ -31,24 +31,12 @@ class _CoinPageState extends ListPageState<CoinRecordEntity, CoinPage> {
   }
 
   @override
-  Future<void> getData({bool reset = false}) async {
-    super.getData(reset: reset);
-    await HttpManager.instance.getCoinList(
+  Future<void> getData(int pageIndex) async {
+    await HttpManager.instance.getCoins(
       page: pageIndex,
       isShowDialog: false,
-      success: (list, pageCount) {
-        controller.loadComplete(); // 加载成功
-        if (pageIndex >= (pageCount ?? 0)) {
-          controller.loadEmpty(); // 加载完所有页面
-        } else {
-          // 加载数据成功，保存数据，下次加载下一页
-          updatePage();
-          data = list;
-          controller.loadMore();
-        }
-        if (mounted) setState(() {});
-      },
-      failed: (error) => setState(() => controller.loadFailed()),
+      success: (list, pageCount) => updateState(list, pageCount),
+      failed: (error) => updateFailedState(),
     );
   }
 }

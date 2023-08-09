@@ -31,24 +31,12 @@ class _RankPageState extends ListPageState<CoinEntity, RankPage> {
   }
 
   @override
-  Future<void> getData({bool reset = false}) async {
-    super.getData(reset: reset);
-    await HttpManager.instance.getRankCoinList(
+  Future<void> getData(int pageIndex) async {
+    await HttpManager.instance.getRankCoins(
       page: pageIndex,
       isShowDialog: false,
-      success: (list, pageCount) {
-        controller.loadComplete(); // 加载成功
-        if (pageIndex >= (pageCount ?? 0)) {
-          controller.loadEmpty(); // 加载完所有页面
-        } else {
-          // 加载数据成功，保存数据，下次加载下一页
-          data = list;
-          updatePage();
-          controller.loadMore();
-        }
-        if (mounted) setState(() {});
-      },
-      failed: (error) => setState(() => controller.loadFailed()),
+      success: (list, pageCount) => updateState(list, pageCount),
+      failed: (error) => updateFailedState(),
     );
   }
 }

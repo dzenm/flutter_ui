@@ -13,25 +13,34 @@ import '../../../base/widgets/state_view.dart';
 ///
 /// 创建自己的 [State] 直接继承 [ListPageState]，[D] 为列表的数据结构类型，[T] 为StateWidget类型
 ///
-class ListPageState<D extends DBBaseModel, T extends StatefulWidget> extends State<T> {
+abstract class ListPageState<D extends DBBaseModel, T extends StatefulWidget> extends State<T> {
   final StateController _controller = StateController();
-  int _pageIndex = 1; // 加载的页数
-  final List<D> _list = []; // 加载的数据
+
+  /// 加载的页数
+  int _pageIndex = 1;
+
+  /// 加载的数据
+  final List<D> _list = [];
 
   @override
   void initState() {
     super.initState();
 
-    getData(reset: true); // 第一次加载数据
+    _getData(_pageIndex); // 第一次加载数据
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: buildAppbar(),
-      body: buildBody(),
-    );
+    if (showAppBar) {
+      return Scaffold(
+        appBar: buildAppbar(),
+        body: buildBody(),
+      );
+    }
+    return buildBody();
   }
+
+  bool get showAppBar => true;
 
   CommonBar buildAppbar() {
     return CommonBar(title: getTitle());
@@ -50,7 +59,7 @@ class ListPageState<D extends DBBaseModel, T extends StatefulWidget> extends Sta
           builder: (BuildContext context, int index) {
             return buildItem(_list[index], index);
           },
-          refresh: onRefresh,
+          refresh: _onRefresh,
           showFooter: true,
         ),
       ),
@@ -61,33 +70,39 @@ class ListPageState<D extends DBBaseModel, T extends StatefulWidget> extends Sta
     return Container();
   }
 
-  // 下拉刷新方法,为list重新赋值
-  Future<void> onRefresh(bool refresh) async => getData(reset: refresh);
+  /// 下拉刷新方法,为list重新赋值
+  Future<void> _onRefresh(bool refresh) async => _getData(_pageIndex = (refresh ? 1 : _pageIndex));
 
-  // 根据页数获取收藏
-  Future<void> getData({bool reset = false}) async {
+  /// 加载数据，如果pageIndex为1表示从新加载
+  Future<void> _getData(int pageIndex) async {
+    bool reset = pageIndex == 1;
     if (reset) {
       _list.clear();
-      _pageIndex = 1;
     }
     await Future.delayed(Duration(milliseconds: reset ? 500 : 0));
+    await getData(pageIndex);
   }
 
-  // 获取数据
-  List<D> get data => _list;
+  // 加载数据
+  Future<void> getData(int pageIndex);
 
-  // 更新数据
-  set data(List<D> list) {
-    _list.addAll(list);
+  /// 更新加载成功的状态
+  void updateState(List<D> list, int? totalCount) {
+    _controller.loadComplete(); // 加载成功
+    if (_pageIndex >= (totalCount ?? 0)) {
+      _controller.loadEmpty(); // 加载完所有页面
+    } else {
+      // 加载数据成功，保存数据，下次加载下一页
+      _list.addAll(list);
+      _pageIndex++;
+      _controller.loadMore();
+    }
+    if (mounted) setState(() {});
   }
 
-  // 获取请求页数下标
-  int get pageIndex => _pageIndex;
-
-  // 更新请求页数下标
-  void updatePage() {
-    _pageIndex++;
+  /// 更新加载失败的状态
+  void updateFailedState() {
+    _controller.loadFailed();
+    if (mounted) setState(() {});
   }
-
-  StateController get controller => _controller;
 }

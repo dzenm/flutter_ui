@@ -1,3 +1,7 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_ui/pages/main/nav/nav_model.dart';
+import 'package:provider/provider.dart';
+
 import '../application.dart';
 import '../base/http/https_client.dart';
 import '../base/http/page_entity.dart';
@@ -5,11 +9,13 @@ import '../base/route/app_route_delegate.dart';
 import '../base/utils/sp_util.dart';
 import '../entities/article_entity.dart';
 import '../entities/banner_entity.dart';
+import '../entities/chapter_entity.dart';
 import '../entities/coin_entity.dart';
 import '../entities/coin_record_entity.dart';
 import '../entities/collect_entity.dart';
 import '../entities/hotkey_entity.dart';
 import '../entities/navi_entity.dart';
+import '../entities/tool_entity.dart';
 import '../entities/tree_entity.dart';
 import '../entities/website_entity.dart';
 import '../models/provider_manager.dart';
@@ -41,8 +47,8 @@ class HttpManager {
     });
   }
 
-  /// 获取article，并保存article数据
-  Future<void> getArticleList({
+  /// 获取文章列表，并保存文章数据
+  Future<void> getArticles({
     int page = 0,
     void Function(List<ArticleEntity> list, int? pageCount)? success,
     Failed? failed,
@@ -62,8 +68,8 @@ class HttpManager {
     });
   }
 
-  /// 获取置顶article，并保存article数据
-  Future<void> getTopArticleList({
+  /// 获取置顶文章列表，并保存文章数据
+  Future<void> getTopArticles({
     void Function(List<ArticleEntity> list)? success,
     Failed? failed,
     bool isShowDialog = true,
@@ -80,7 +86,7 @@ class HttpManager {
   }
 
   /// 获取常用网站，并保存网站数据
-  Future<void> getWebsiteList({
+  Future<void> getWebsites({
     void Function(List<WebsiteEntity> list)? success,
     Failed? failed,
     bool isShowDialog = true,
@@ -97,7 +103,7 @@ class HttpManager {
   }
 
   /// 获取热词
-  Future<void> getHotkeyList({
+  Future<void> getHotkeys({
     void Function(List<HotkeyEntity> list)? success,
     Failed? failed,
     bool isShowDialog = true,
@@ -114,7 +120,7 @@ class HttpManager {
   }
 
   /// 获取体系数据
-  Future<void> getTreeList({
+  Future<void> getTrees({
     void Function(List<TreeEntity> list)? success,
     Failed? failed,
     bool isShowDialog = true,
@@ -131,7 +137,7 @@ class HttpManager {
   }
 
   /// 获取知识体系下的文章
-  Future<void> getTreeArticleListByCid({
+  Future<void> getTreeArticlesByCid({
     int page = 0,
     int cid = 0,
     void Function(List<TreeEntity> list)? success,
@@ -155,7 +161,7 @@ class HttpManager {
   }
 
   /// 获取导航数据
-  Future<void> getNaviList({
+  Future<void> getNavigates({
     void Function(List<NaviEntity> list)? success,
     Failed? failed,
     bool isShowDialog = true,
@@ -172,7 +178,7 @@ class HttpManager {
   }
 
   /// 获取项目分类数据
-  Future<void> getProjectList({
+  Future<void> getProject({
     void Function(List<TreeEntity> list)? success,
     Failed? failed,
     bool isShowDialog = true,
@@ -188,27 +194,7 @@ class HttpManager {
     });
   }
 
-  /// 获取我收藏的article
-  Future<void> getCollectArticleList({
-    int page = 0,
-    void Function(List<CollectEntity> list, int? pageCount)? success,
-    Failed? failed,
-    bool isShowDialog = true,
-  }) async {
-    await _httpClient.request(apiServices.collect(page), isShowDialog: isShowDialog, success: (data) async {
-      PageEntity page = PageEntity.fromJson(data);
-
-      List<dynamic> datas = page.datas ?? [];
-      List<CollectEntity> list = datas.map((e) => CollectEntity.fromJson(e)).toList();
-      if (success != null) success(list, page.pageCount);
-    }, failed: (error) {
-      if (failed != null) {
-        failed(error);
-      }
-    });
-  }
-
-  /// 根据id收藏/取消收藏article
+  /// 根据id收藏/取消收藏文章
   Future<void> collect(
     int id, {
     bool collect = true,
@@ -224,80 +210,241 @@ class HttpManager {
     });
   }
 
+  /// 获取我的收藏文章列表
+  Future<void> getCollectArticles({
+    int page = 0,
+    void Function(List<CollectEntity> list, int? pageCount)? success,
+    Failed? failed,
+    bool isShowDialog = true,
+  }) async {
+    await _httpClient.request(
+      apiServices.collect(page),
+      isShowDialog: isShowDialog,
+      success: (data) async {
+        PageEntity page = PageEntity.fromJson(data);
+
+        List<dynamic> datas = page.datas ?? [];
+        List<CollectEntity> list = datas.map((e) => CollectEntity.fromJson(e)).toList();
+        if (success != null) success(list, page.pageCount);
+      },
+      failed: (error) {
+        if (failed != null) {
+          failed(error);
+        }
+      },
+    );
+  }
+
   /// 获取积分排行榜
-  Future<void> getRankCoinList({
+  Future<void> getRankCoins({
     int page = 1,
     void Function(List<CoinEntity> list, int? pageCount)? success,
     Failed? failed,
     bool isShowDialog = true,
   }) async {
-    await _httpClient.request(apiServices.rankCoin(page), isShowDialog: isShowDialog, success: (data) async {
-      PageEntity page = PageEntity.fromJson(data);
+    await _httpClient.request(
+      apiServices.rankCoin(page),
+      isShowDialog: isShowDialog,
+      success: (data) async {
+        PageEntity page = PageEntity.fromJson(data);
 
-      List<dynamic> datas = page.datas ?? [];
-      List<CoinEntity> list = datas.map((e) => CoinEntity.fromJson(e)).toList();
-      if (success != null) success(list, page.pageCount);
-    }, failed: (error) {
-      if (failed != null) {
-        failed(error);
-      }
-    });
+        List<dynamic> datas = page.datas ?? [];
+        List<CoinEntity> list = datas.map((e) => CoinEntity.fromJson(e)).toList();
+        if (success != null) success(list, page.pageCount);
+      },
+      failed: (error) {
+        if (failed != null) {
+          failed(error);
+        }
+      },
+    );
   }
 
-  /// 获取积分排行榜
-  Future<void> getCoinList({
+  /// 获取个人积分获列表
+  Future<void> getCoins({
     int page = 1,
     void Function(List<CoinRecordEntity> list, int? pageCount)? success,
     Failed? failed,
     bool isShowDialog = true,
   }) async {
-    await _httpClient.request(apiServices.coins(page), isShowDialog: isShowDialog, success: (data) async {
-      PageEntity page = PageEntity.fromJson(data);
+    await _httpClient.request(
+      apiServices.coins(page),
+      isShowDialog: isShowDialog,
+      success: (data) async {
+        PageEntity page = PageEntity.fromJson(data);
 
-      List<dynamic> datas = page.datas ?? [];
-      List<CoinRecordEntity> list = datas.map((e) => CoinRecordEntity.fromJson(e)).toList();
-      if (success != null) success(list, page.pageCount);
-    }, failed: (error) {
-      if (failed != null) {
-        failed(error);
-      }
-    });
+        List<dynamic> datas = page.datas ?? [];
+        List<CoinRecordEntity> list = datas.map((e) => CoinRecordEntity.fromJson(e)).toList();
+        if (success != null) success(list, page.pageCount);
+      },
+      failed: (error) {
+        if (failed != null) {
+          failed(error);
+        }
+      },
+    );
   }
 
-  /// 获取积分排行榜
-  Future<void> getQuestions({
-    int pageId = 1,
-    void Function(dynamic data)? success,
+  /// 获取广场列表数据
+  Future<void> getPlazas({
+    int page = 0,
+    void Function(int? pageCount)? success,
     Failed? failed,
-    bool isShowDialog = true,
   }) async {
-    await _httpClient.request(apiServices.questions(pageId), isShowDialog: isShowDialog, success: (data) async {
-      // PageEntity page = PageEntity.fromJson(data);
-      //
-      // List<dynamic> datas = page.datas ?? [];
-      // List<CoinRecordEntity> list = datas.map((e) => CoinRecordEntity.fromJson(e)).toList();
-      // if (success != null) success(list, page.pageCount);
-    }, failed: (error) {
-      if (failed != null) {
-        failed(error);
-      }
-    });
+    await HttpsClient.instance.request(
+      apiServices.userArticles(page),
+      isShowDialog: false,
+      success: (data) async {
+        PageEntity page = PageEntity.fromJson(data);
+
+        List<dynamic> datas = page.datas ?? [];
+        List<ArticleEntity> list = datas.map((e) => ArticleEntity.fromJson(e)).toList();
+        context.read<NavModel>().updatePlazaArticles(list);
+        if (success != null) success(page.pageCount);
+      },
+      failed: (error) {
+        if (failed != null) {
+          failed(error);
+        }
+      },
+    );
+  }
+
+  /// 获取教程数据
+  Future<void> getChapters({
+    void Function()? success,
+    Failed? failed,
+  }) async {
+    await HttpsClient.instance.request(
+      apiServices.chapter(),
+      isShowDialog: false,
+      success: (data) async {
+        List<dynamic> datas = data;
+        List<ChapterEntity> list = datas.map((e) => ChapterEntity.fromJson(e)).toList();
+        context.read<NavModel>().updateChapters(list);
+        if (success != null) success();
+      },
+      failed: (error) {
+        if (failed != null) {
+          failed(error);
+        }
+      },
+    );
+  }
+
+  /// 获取问答列表
+  Future<void> getQuestions({
+    int page = 0,
+    void Function(List<ArticleEntity> list, int? pageCount)? success,
+    Failed? failed,
+  }) async {
+    await HttpsClient.instance.request(
+      apiServices.userArticles(page),
+      isShowDialog: false,
+      success: (data) async {
+        PageEntity page = PageEntity.fromJson(data);
+
+        List<dynamic> datas = page.datas ?? [];
+        List<ArticleEntity> list = datas.map((e) => ArticleEntity.fromJson(e)).toList();
+        context.read<NavModel>().updateQAArticles(list);
+        if (success != null) success(list, page.pageCount);
+      },
+      failed: (error) {
+        if (failed != null) {
+          failed(error);
+        }
+      },
+    );
+  }
+
+  /// 获取最新项目列表
+  Future<void> getProjects({
+    int page = 0,
+    void Function(List<ArticleEntity> list, int? pageCount)? success,
+    Failed? failed,
+  }) async {
+    await HttpsClient.instance.request(
+      apiServices.projects(page),
+      isShowDialog: false,
+      success: (data) async {
+        PageEntity page = PageEntity.fromJson(data);
+
+        List<dynamic> datas = page.datas ?? [];
+        List<ArticleEntity> list = datas.map((e) => ArticleEntity.fromJson(e)).toList();
+        context.read<NavModel>().updateProjectArticles(list);
+        if (success != null) success(list, page.pageCount);
+      },
+      failed: (error) {
+        if (failed != null) {
+          failed(error);
+        }
+      },
+    );
+  }
+
+  /// 获取公众号数据
+  Future<void> getBlogChapters({
+    void Function()? success,
+    Failed? failed,
+  }) async {
+    await HttpsClient.instance.request(
+      apiServices.chapters(),
+      isShowDialog: false,
+      success: (data) async {
+        List<dynamic> datas = data;
+        List<ChapterEntity> list = datas.map((e) => ChapterEntity.fromJson(e)).toList();
+        context.read<NavModel>().updateBlogChapters(list);
+        if (success != null) success();
+      },
+      failed: (error) {
+        if (failed != null) {
+          failed(error);
+        }
+      },
+    );
+  }
+
+  /// 获取工具数据
+  Future<void> getTools({
+    void Function()? success,
+    Failed? failed,
+  }) async {
+    await HttpsClient.instance.request(
+      apiServices.tools(),
+      isShowDialog: false,
+      success: (data) async {
+        List<dynamic> datas = data;
+        List<ToolEntity> list = datas.map((e) => ToolEntity.fromJson(e)).toList();
+        context.read<NavModel>().updateTools(list);
+        if (success != null) success();
+      },
+      failed: (error) {
+        if (failed != null) {
+          failed(error);
+        }
+      },
+    );
   }
 
   /// 获取我分享的文章列表
-  Future<void> getPrivateArticleList({
+  Future<void> getPrivateArticles({
     int page = 1,
     void Function(dynamic data)? success,
     Failed? failed,
     bool isShowDialog = true,
   }) async {
-    await _httpClient.request(apiServices.privateArticles(page), isShowDialog: isShowDialog, success: (data) async {
-      if (success != null) success(data);
-    }, failed: (error) {
-      if (failed != null) {
-        failed(error);
-      }
-    });
+    await _httpClient.request(
+      apiServices.privateArticles(page),
+      isShowDialog: isShowDialog,
+      success: (data) async {
+        if (success != null) success(data);
+      },
+      failed: (error) {
+        if (failed != null) {
+          failed(error);
+        }
+      },
+    );
   }
 
   /// 获取用户信息
@@ -314,27 +461,6 @@ class HttpManager {
     });
   }
 
-  /// 获取问答article，并保存article数据
-  Future<void> getQuestionsList({
-    int page = 0,
-    void Function(List<ArticleEntity> list, int? pageCount)? success,
-    Failed? failed,
-    bool isShowDialog = true,
-    bool isShowToast = true,
-  }) async {
-    await HttpsClient.instance.request(apiServices.questions(page), isShowDialog: isShowDialog, isShowToast: isShowToast, success: (data) async {
-      PageEntity page = PageEntity.fromJson(data);
-
-      List<dynamic> datas = page.datas ?? [];
-      List<ArticleEntity> list = datas.map((e) => ArticleEntity.fromJson(e)).toList();
-      if (success != null) success(list, page.pageCount);
-    }, failed: (error) {
-      if (failed != null) {
-        failed(error);
-      }
-    });
-  }
-
   Future<void> logout() async {
     await _httpClient.request(apiServices.logout(), success: (data) {
       SpUtil.clearUser();
@@ -342,4 +468,6 @@ class HttpManager {
       AppRouteDelegate.of(Application().context).push(Routers.login, clearStack: true);
     });
   }
+
+  BuildContext get context => Application().context;
 }

@@ -35,9 +35,8 @@ class _ArticlePageState extends ListPageState<ArticleEntity, ArticlePage> {
   }
 
   @override
-  Future<void> getData({bool reset = false}) async {
-    super.getData(reset: reset);
-    await HttpManager.instance.getPrivateArticleList(
+  Future<void> getData(int pageIndex) async {
+    await HttpManager.instance.getPrivateArticles(
       page: pageIndex,
       isShowDialog: false,
       success: (data) {
@@ -47,18 +46,9 @@ class _ArticlePageState extends ListPageState<ArticleEntity, ArticlePage> {
         List<ArticleEntity> list = datas.map((e) => ArticleEntity.fromJson(e)).toList();
 
         context.read<UserModel>().coin = coin;
-        controller.loadComplete(); // 加载成功
-        if (pageIndex >= (page.pageCount ?? 0)) {
-          controller.loadEmpty(); // 加载完所有页面
-        } else {
-          // 加载数据成功，保存数据，下次加载下一页
-          data = list;
-          updatePage();
-          controller.loadMore();
-        }
-        if (mounted) setState(() {});
+        updateState(list, page.pageCount);
       },
-      failed: (error) => setState(() => controller.loadFailed()),
+      failed: (error) => updateFailedState(),
     );
   }
 }

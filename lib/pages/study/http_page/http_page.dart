@@ -115,7 +115,7 @@ class _HTTPListPageState extends State<HTTPListPage> {
   }
 
   void _getArticle() {
-    HttpManager.instance.getArticleList(
+    HttpManager.instance.getArticles(
       page: 0,
       isShowDialog: isShowDialog,
       isShowToast: isShowToast,

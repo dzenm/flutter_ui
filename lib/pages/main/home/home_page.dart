@@ -126,7 +126,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _getTopArticle() async {
-    await HttpManager.instance.getTopArticleList(
+    await HttpManager.instance.getTopArticles(
       isShowDialog: false,
       success: (list) {
         context.read<ArticleModel>().updateArticles(list);
@@ -136,7 +136,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _getArticle({bool isReset = false}) async {
     _page = isReset ? 0 : _page;
-    await HttpManager.instance.getArticleList(
+    await HttpManager.instance.getArticles(
       page: _page,
       isShowDialog: false,
       success: (list, pageCount) {
@@ -157,31 +157,31 @@ class _HomePageState extends State<HomePage> {
   Future<void> _getDataList() async {
     if (_init) return;
     if (!_init) return;
-    await HttpManager.instance.getWebsiteList(
+    await HttpManager.instance.getWebsites(
       isShowDialog: false,
       success: (list) {
         context.read<WebsiteModel>().updateWebsites(list);
       },
     );
-    await HttpManager.instance.getHotkeyList(
+    await HttpManager.instance.getHotkeys(
       isShowDialog: false,
       success: (list) {
         // context.read<WebsiteModel>().updateWebsites(list);
       },
     );
-    await HttpManager.instance.getTreeList(
+    await HttpManager.instance.getTrees(
       isShowDialog: false,
       success: (list) {
         // context.read<TreeEntity>().updateWebsites(list);
       },
     );
-    await HttpManager.instance.getNaviList(
+    await HttpManager.instance.getNavigates(
       isShowDialog: false,
       success: (list) {
         // context.read<TreeEntity>().updateWebsites(list);
       },
     );
-    await HttpManager.instance.getProjectList(
+    await HttpManager.instance.getProject(
       isShowDialog: false,
       success: (list) {
         // context.read<TreeEntity>().updateWebsites(list);

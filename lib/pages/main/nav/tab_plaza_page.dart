@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../../../base/res/app_theme.dart';
 import '../../../base/res/local_model.dart';
 import '../../../http/http_manager.dart';
-import '../../../models/article_model.dart';
 
 ///
 /// Created by a0010 on 2023/7/21 13:13
@@ -17,10 +16,12 @@ class TabPlazaPage extends StatefulWidget {
 }
 
 class _TabPlazaPageState extends State<TabPlazaPage> {
+  int _page = 0;
+
   @override
   void initState() {
     super.initState();
-    _getTopArticle();
+    _getData();
   }
 
   @override
@@ -46,11 +47,11 @@ class _TabPlazaPageState extends State<TabPlazaPage> {
     );
   }
 
-  Future<void> _getTopArticle() async {
-    await HttpManager.instance.getTopArticleList(
-      isShowDialog: false,
-      success: (list) {
-        context.read<ArticleModel>().updateArticles(list);
+  Future<void> _getData() async {
+    await HttpManager.instance.getPlazas(
+      page: _page,
+      success: (pageCount) {
+        _page = pageCount ?? 0;
       },
     );
   }

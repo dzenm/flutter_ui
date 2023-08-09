@@ -71,7 +71,7 @@ class _ListPageState extends State<ListPage> {
   void _getArticle({bool isReset = false}) {
     Future.delayed(Duration(milliseconds: isReset ? 500 : 0), () {
       _page = isReset ? 0 : _page;
-      HttpManager.instance.getArticleList(
+      HttpManager.instance.getArticles(
         page: _page,
         isShowDialog: false,
         success: (list, pageCount) {

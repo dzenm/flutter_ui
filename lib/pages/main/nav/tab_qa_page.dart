@@ -21,9 +21,6 @@ class _TabQAPageState extends State<TabQAPage> {
   int _page = 0; // 加载的页数
 
   @override
-
-
-
   void initState() {
     super.initState();
 
@@ -39,9 +36,8 @@ class _TabQAPageState extends State<TabQAPage> {
 
   Future<void> _getQuestions({bool isReset = false}) async {
     _page = isReset ? 0 : _page;
-    await HttpManager.instance.getQuestionsList(
+    await HttpManager.instance.getQuestions(
       page: _page,
-      isShowDialog: false,
       success: (list, pageCount) {
         _controller.loadComplete(); // 加载成功
         if (_page >= (pageCount ?? 0)) {
@@ -54,13 +50,6 @@ class _TabQAPageState extends State<TabQAPage> {
         }
         setState(() {});
       },
-    );
-  }
-
-  Future<void> _getTopArticle() async {
-    await HttpManager.instance.getQuestions(
-      isShowDialog: false,
-      success: (list) {},
     );
   }
 }

@@ -142,7 +142,7 @@ class _MainPageMobileState extends State<MainPageMobile> with WidgetsBindingObse
 
   /// Page widget
   List<Widget> _buildTabPage(int length) {
-    List<Widget> list = [const HomePage(), const NavPage(), const MePage()];
+    List<Widget> list = [const HomePage(), NavPage(), const MePage()];
     return List.generate(
       length,
       (index) => KeepAliveWrapper(child: index < list.length ? list[index] : Container()),
