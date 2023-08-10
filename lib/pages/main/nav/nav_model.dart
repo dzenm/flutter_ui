@@ -14,7 +14,7 @@ class NavModel with ChangeNotifier {
   /// 广场文章的数据
   final List<ArticleEntity> _plazaArticles = [];
 
-  List<ArticleEntity> get plazaArticles => _plazaArticles;
+  List<ArticleEntity> get plazaArticles => List.generate(_plazaArticles.length, (index) => _plazaArticles[index]);
 
   void updatePlazaArticles(List<ArticleEntity> articles) {
     for (var article in articles) {
@@ -31,7 +31,7 @@ class NavModel with ChangeNotifier {
   /// 教程的数据
   final List<ChapterEntity> _chapters = [];
 
-  List<ChapterEntity> get chapters => _chapters;
+  List<ChapterEntity> get chapters => List.generate(_chapters.length, (index) => _chapters[index]);
 
   void updateChapters(List<ChapterEntity> chapters) {
     for (var chapter in chapters) {
@@ -48,7 +48,7 @@ class NavModel with ChangeNotifier {
   /// 问答文章的数据
   final List<ArticleEntity> _qaArticles = [];
 
-  List<ArticleEntity> get qaArticles => _qaArticles;
+  List<ArticleEntity> get qaArticles => List.generate(_qaArticles.length, (index) => _qaArticles[index]);
 
   void updateQAArticles(List<ArticleEntity> articles) {
     for (var article in articles) {
@@ -65,7 +65,7 @@ class NavModel with ChangeNotifier {
   /// 项目文章的数据
   final List<ArticleEntity> _projectArticles = [];
 
-  List<ArticleEntity> get projectArticles => _projectArticles;
+  List<ArticleEntity> get projectArticles => List.generate(_projectArticles.length, (index) => _projectArticles[index]);
 
   void updateProjectArticles(List<ArticleEntity> articles) {
     for (var article in articles) {
@@ -82,7 +82,7 @@ class NavModel with ChangeNotifier {
   /// 公众号的数据
   final List<ChapterEntity> _blogChapters = [];
 
-  List<ChapterEntity> get blogChapters => _blogChapters;
+  List<ChapterEntity> get blogChapters => List.generate(_blogChapters.length, (index) => _blogChapters[index]);
 
   void updateBlogChapters(List<ChapterEntity> chapters) {
     for (var chapter in chapters) {
@@ -99,7 +99,7 @@ class NavModel with ChangeNotifier {
   /// 工具的数据
   final List<ToolEntity> _tools = [];
 
-  List<ToolEntity> get tools => _tools;
+  List<ToolEntity> get tools => List.generate(_tools.length, (index) => _tools[index]);
 
   void updateTools(List<ToolEntity> tools) {
     for (var tool in tools) {

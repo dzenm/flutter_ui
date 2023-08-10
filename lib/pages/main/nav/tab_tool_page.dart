@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/config/consts.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base/res/app_theme.dart';
@@ -49,16 +50,35 @@ class _TabToolPageState extends State<TabToolPage> {
           runSpacing: 16,
           children: tools.map((tool) {
             String name = tool.name ?? '';
+            String icon = '${Consts.toolsImageUrlPrefix}${tool.icon}';
             return TapLayout(
               onTap: () {
                 String params = '?title=${tool.name}&url=${tool.link}';
                 AppRouteDelegate.of(context).push(Routers.webView + params);
               },
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              background: theme.purple200,
+              background: theme.black150,
+              boxShadow: const [
+                BoxShadow(
+                  offset: Offset(0, 1),
+                  blurRadius: 10.0,
+                  spreadRadius: 0.0,
+                  color: Color(0x0D000000),
+                ),
+                BoxShadow(
+                  offset: Offset(0, 4),
+                  blurRadius: 4.0,
+                  spreadRadius: 0.0,
+                  color: Color(0x14000000),
+                ),
+              ],
               alignment: null,
               borderRadius: const BorderRadius.all(Radius.circular(16)),
-              child: Text(name),
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                Image.network(icon, width: 20, height: 20),
+                const SizedBox(width: 4),
+                Text(name),
+              ]),
             );
           }).toList(),
         );

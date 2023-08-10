@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../base/log/log.dart';
 import '../../../base/res/app_theme.dart';
 import '../../../base/res/local_model.dart';
 import '../../../base/route/app_route_delegate.dart';
@@ -44,6 +45,7 @@ class _TabOfficialPageState extends State<TabOfficialPage> {
     AppTheme theme = context.watch<LocalModel>().theme;
     return Selector<NavModel, List<ChapterEntity>>(
       builder: (c, tools, w) {
+        Log.d('新增数据：len=${tools.length}');
         return Wrap(
           spacing: 16,
           runSpacing: 16,

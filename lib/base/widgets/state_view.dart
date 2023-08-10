@@ -30,6 +30,27 @@ class StateView extends StatelessWidget {
     this.image,
   });
 
+  static String getStateText(BuildContext context, LoadState state) {
+    switch (state) {
+      case LoadState.none:
+        return S.of(context).none;
+      case LoadState.loading:
+        return S.of(context).loading;
+      case LoadState.empty:
+        return S.of(context).loadEmpty;
+      case LoadState.success:
+        return S.of(context).loadSuccess;
+      case LoadState.complete:
+        return S.of(context).loadComplete;
+      case LoadState.failed:
+        return S.of(context).loadFailed;
+      case LoadState.more:
+        return S.of(context).loadMore;
+      case LoadState.end:
+        return S.of(context).loadEnd;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (controller.none) return Container();
@@ -93,7 +114,8 @@ class LinearStateView extends StatelessWidget {
   final Widget? image;
   final bool isVertical;
 
-  const LinearStateView({super.key,
+  const LinearStateView({
+    super.key,
     required this.controller,
     required this.size,
     this.title,
@@ -134,7 +156,7 @@ class LinearStateView extends StatelessWidget {
     // 图片和文本之间的间距
     widgets.add(const SizedBox(width: 16, height: 32));
     // 加载展示的文本信息
-    widgets.add(title ?? Text(controller.stateText(context)));
+    widgets.add(title ?? Text(StateView.getStateText(context, controller.state)));
     return widgets;
   }
 }
@@ -198,27 +220,6 @@ class StateController with ChangeNotifier {
     _isInit = false;
     _isMore = false;
     notifyListeners();
-  }
-
-  String stateText(BuildContext context) {
-    switch (_state) {
-      case LoadState.none:
-        return S.of(context).none;
-      case LoadState.loading:
-        return S.of(context).loading;
-      case LoadState.empty:
-        return S.of(context).loadEmpty;
-      case LoadState.success:
-        return S.of(context).loadSuccess;
-      case LoadState.complete:
-        return S.of(context).loadComplete;
-      case LoadState.failed:
-        return S.of(context).loadFailed;
-      case LoadState.more:
-        return S.of(context).loadMore;
-      case LoadState.end:
-        return S.of(context).loadEnd;
-    }
   }
 
   LoadState get state => _state;
