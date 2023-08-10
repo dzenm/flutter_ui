@@ -132,4 +132,24 @@ class StrUtil {
     }
     return '';
   }
+
+  /// 字符串转int，如果不是为null或者包含非数字字符，结果为[defaultValue]
+  static int parseInt(String? source, {int defaultValue = 0}) {
+    if (source == null) return defaultValue;
+    try {
+      return int.parse(source);
+    } catch (e) {
+      return defaultValue;
+    }
+  }
+
+  /// 字符串转double，如果不是为null或者包含非数字字符，结果为[defaultValue]
+  static double parseDouble(String? source, {double defaultValue = 0}) {
+    if (source == null) return defaultValue;
+    try {
+      return double.parse(source);
+    } catch (e) {
+      return defaultValue;
+    }
+  }
 }

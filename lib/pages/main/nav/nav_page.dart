@@ -61,8 +61,8 @@ class NavPage extends StatelessWidget {
             }).toList(),
           ),
         ),
-        body: KeepAliveWrapper(
-          child: TabBarView(children: _tabItems),
+        body: TabBarView(
+          children: _tabItems.map((tabView) => KeepAliveWrapper(child: tabView)).toList(),
         ),
       ),
     );
