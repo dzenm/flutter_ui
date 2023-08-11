@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/pages/main/nav/nav_model.dart';
 import 'package:provider/provider.dart';
 
 import '../application.dart';
@@ -19,6 +18,7 @@ import '../entities/tool_entity.dart';
 import '../entities/tree_entity.dart';
 import '../entities/website_entity.dart';
 import '../models/provider_manager.dart';
+import '../pages/main/nav/nav_model.dart';
 import '../pages/routers.dart';
 
 ///

@@ -110,8 +110,11 @@ class AppTheme {
 
   ///================================ 根据功能命名(局部) ================================
   Color get statusBar => purple700; // appbar背景颜色
-  Color get  appbar => purple700; // appbar背景颜色
+  Color get appbar => purple700; // appbar背景颜色
   Color get bottomBar => white; // bottomBar背景颜色
+  Color get cardBackgroundLight => black50; // 卡片背景颜色(浅色)
+  Color get cardBackground => black100; // 卡片背景颜色
+  Color get cardBackgroundDark => black150; // 卡片背景颜色(深色)
 
   ///================================ 常用颜色设置 ================================
 

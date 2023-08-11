@@ -14,10 +14,10 @@ mixin class DBDao {
     if (data is List) {
       for (var element in data) {
         await DBManager().insertItem(
-            element.tableName,
-            element.toJson(),
-            conflictAlgorithm: conflictAlgorithm,
-          );
+          element.tableName,
+          element.toJson(),
+          conflictAlgorithm: conflictAlgorithm,
+        );
       }
     } else if (data is T) {
       await DBManager().insertItem(

@@ -55,7 +55,7 @@ class NavPage extends StatelessWidget {
             indicatorSize: TabBarIndicatorSize.tab,
             unselectedLabelColor: theme.hint,
             labelColor: theme.primaryText,
-            indicatorColor: theme.accent,
+            indicatorColor: theme.appbar,
             tabs: tabs.map((text) {
               return Tab(text: text);
             }).toList(),

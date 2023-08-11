@@ -33,27 +33,32 @@ class ArticleModel with ChangeNotifier {
 
   /// 更新文章列表
   void updateArticles(List<ArticleEntity> articles) async {
-    await Future.forEach(articles, (ArticleEntity article) async => await _handleArticle(article));
+    await _handleArticle(articles);
     notifyListeners();
   }
 
   /// 更新单篇文章
   void updateArticle(ArticleEntity article) async {
-    await _handleArticle(article);
+    await _handleArticle([article]);
     notifyListeners();
   }
 
   /// 处理文章数据
-  Future<void> _handleArticle(ArticleEntity article) async {
-    int index = _allArticle.indexWhere((e) => e.id == article.id);
-
-    if (index == -1) {
-      _allArticle.add(article);
-      _entity.insert(article); // 保存为DB中的article数据
-    } else {
-      _allArticle[index] = article;
-      _entity.update(article); // 更新DB中的article数据
+  Future<void> _handleArticle(List<ArticleEntity> articles) async {
+    List<ArticleEntity> inserts = [];
+    Map<int, ArticleEntity> updates = {};
+    for (var article in articles) {
+      int index = _allArticle.indexWhere((e) => e.id == article.id);
+      if (index == -1) {
+        inserts.add(article);
+        _entity.insert(article); // 保存为DB中的article数据
+      } else {
+        updates[index] = article;
+        _entity.update(article); // 更新DB中的article数据
+      }
     }
+    _allArticle.addAll(inserts);
+    updates.forEach((index, article) => _allArticle[index] = article);
   }
 
   /// 清空数据

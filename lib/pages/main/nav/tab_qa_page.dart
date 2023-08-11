@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../base/res/app_theme.dart';
+import '../../../base/res/local_model.dart';
+import '../../../base/route/app_route_delegate.dart';
 import '../../../base/widgets/state_view.dart';
+import '../../../base/widgets/tap_layout.dart';
+import '../../../entities/article_entity.dart';
 import '../../../http/http_manager.dart';
 import '../../../models/article_model.dart';
-import '../home/home_page.dart';
+import '../../routers.dart';
+import 'nav_model.dart';
 
 ///
 /// Created by a0010 on 2023/7/21 13:14
@@ -29,10 +35,66 @@ class _TabQAPageState extends State<TabQAPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ArticleListView(controller: _controller, refresh: _onRefresh);
+    return Selector<NavModel, int>(
+      selector: (_, model) => model.qaArticles.length,
+      builder: (c, len, w) {
+        return RefreshIndicator(
+          onRefresh: () => _getQuestions(),
+          child: ListView.builder(
+            controller: ScrollController(),
+            itemCount: len,
+            padding: const EdgeInsets.all(16),
+            itemBuilder: (context, index) => _buildItem(index),
+          ),
+        );
+      },
+    );
   }
 
-  Future<void> _onRefresh(bool refresh) async => await _getQuestions(isReset: refresh);
+  Widget _buildItem(int index) {
+    AppTheme theme = context.watch<LocalModel>().theme;
+    return Selector<NavModel, ArticleEntity>(
+      selector: (_, model) => model.qaArticles[index],
+      builder: (c, project, w) {
+        String name = project.title ?? '';
+        String desc = project.desc ?? '';
+        return TapLayout(
+          onTap: () {
+            String params = '?title=${project.title}&url=${project.link}';
+            AppRouteDelegate.of(context).push(Routers.webView + params);
+          },
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.all(16),
+          background: theme.cardBackgroundDark,
+          boxShadow: const [
+            BoxShadow(
+              offset: Offset(0, 1),
+              blurRadius: 10.0,
+              spreadRadius: 0.0,
+              color: Color(0x0D000000),
+            ),
+            BoxShadow(
+              offset: Offset(0, 4),
+              blurRadius: 4.0,
+              spreadRadius: 0.0,
+              color: Color(0x14000000),
+            ),
+          ],
+          alignment: null,
+          borderRadius: const BorderRadius.all(Radius.circular(16)),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(name, style: TextStyle(color: theme.primaryText)),
+              const SizedBox(height: 8),
+              Text(desc, maxLines: 2, style: TextStyle(color: theme.secondaryText, fontSize: 12)),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   Future<void> _getQuestions({bool isReset = false}) async {
     _page = isReset ? 0 : _page;
@@ -44,7 +106,6 @@ class _TabQAPageState extends State<TabQAPage> {
           _controller.loadEmpty(); // 加载完所有页面
         } else {
           // 加载数据成功，保存数据，下次加载下一页
-          context.read<ArticleModel>().updateArticles(list);
           ++_page;
           _controller.loadMore();
         }

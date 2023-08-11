@@ -3,7 +3,12 @@ import 'package:provider/provider.dart';
 
 import '../../../base/res/app_theme.dart';
 import '../../../base/res/local_model.dart';
+import '../../../base/route/app_route_delegate.dart';
+import '../../../base/widgets/tap_layout.dart';
+import '../../../entities/article_entity.dart';
 import '../../../http/http_manager.dart';
+import '../../routers.dart';
+import 'nav_model.dart';
 
 ///
 /// Created by a0010 on 2023/7/21 13:13
@@ -26,24 +31,64 @@ class _TabPlazaPageState extends State<TabPlazaPage> {
 
   @override
   Widget build(BuildContext context) {
-    AppTheme theme = context.watch<LocalModel>().theme;
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(height: 8),
-          MaterialButton(
-            textColor: theme.background,
-            color: theme.appbar,
-            onPressed: () {},
-            child: const Text('进入下一个页面'),
+    return Selector<NavModel, int>(
+      selector: (_, model) => model.plazaArticles.length,
+      builder: (c, len, w) {
+        return RefreshIndicator(
+          onRefresh: () => _getData(),
+          child: ListView.builder(
+            controller: ScrollController(),
+            itemCount: len,
+            padding: const EdgeInsets.all(16),
+            itemBuilder: (context, index) => _buildItem(index),
           ),
-          const SizedBox(height: 8),
-        ],
-      ),
+        );
+      },
+    );
+  }
+
+  Widget _buildItem(int index) {
+    AppTheme theme = context.watch<LocalModel>().theme;
+    return Selector<NavModel, ArticleEntity>(
+      selector: (_, model) => model.plazaArticles[index],
+      builder: (c, project, w) {
+        String name = project.title ?? '';
+        String desc = project.desc ?? '';
+        return TapLayout(
+          onTap: () {
+            String params = '?title=${project.title}&url=${project.link}';
+            AppRouteDelegate.of(context).push(Routers.webView + params);
+          },
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.all(16),
+          background: theme.cardBackgroundDark,
+          boxShadow: const [
+            BoxShadow(
+              offset: Offset(0, 1),
+              blurRadius: 10.0,
+              spreadRadius: 0.0,
+              color: Color(0x0D000000),
+            ),
+            BoxShadow(
+              offset: Offset(0, 4),
+              blurRadius: 4.0,
+              spreadRadius: 0.0,
+              color: Color(0x14000000),
+            ),
+          ],
+          alignment: null,
+          borderRadius: const BorderRadius.all(Radius.circular(16)),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(name, style: TextStyle(color: theme.primaryText)),
+              const SizedBox(height: 8),
+              Text(desc, maxLines: 2, style: TextStyle(color: theme.secondaryText, fontSize: 12)),
+            ],
+          ),
+        );
+      },
     );
   }
 

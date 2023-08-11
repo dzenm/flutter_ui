@@ -83,37 +83,39 @@ class _TapLayoutState extends State<TapLayout> {
       child = Padding(padding: widget.padding!, child: child);
     }
     BoxShape shape = widget.isCircle ? BoxShape.circle : BoxShape.rectangle;
-    return Material(
-      color: Colors.transparent,
-      // 水波纹圆角
-      borderRadius: widget.borderRadius,
-      clipBehavior: Clip.hardEdge,
-      child: Ink(
-        width: widget.width,
-        height: widget.height,
-        decoration: BoxDecoration(
-          // 水波纹的背景色
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        image: widget.image,
+        border: widget.border,
+        borderRadius: widget.borderRadius,
+        boxShadow: widget.boxShadow,
+        gradient: widget.gradient,
+        shape: shape,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        // Widget展示的背景圆角
+        borderRadius: widget.borderRadius,
+        clipBehavior: Clip.hardEdge,
+        child: Ink(
+          width: widget.width,
+          height: widget.height,
+          // Widget展示的背景色
           color: widget.background,
-          image: widget.image,
-          border: widget.border,
-          borderRadius: widget.borderRadius,
-          boxShadow: widget.boxShadow,
-          gradient: widget.gradient,
-          shape: shape,
-        ),
-        child: InkResponse(
-          onTap: () => _onTap(),
-          onLongPress: widget.onLongPress,
-          onDoubleTap: widget.onDoubleTap,
-          onHighlightChanged: (value) => setState(() => _isTouchDown = value),
-          // 水波纹圆角
-          borderRadius: widget.borderRadius,
-          highlightShape: shape,
-          highlightColor: Colors.transparent,
-          // 水波纹的前景色
-          splashColor: widget.foreground,
-          containedInkWell: true,
-          child: child,
+          child: InkResponse(
+            onTap: () => _onTap(),
+            onLongPress: widget.onLongPress,
+            onDoubleTap: widget.onDoubleTap,
+            onHighlightChanged: (value) => setState(() => _isTouchDown = value),
+            // 点击时的水波纹圆角
+            borderRadius: widget.borderRadius,
+            highlightShape: shape,
+            highlightColor: Colors.transparent,
+            // 点击时的水波纹前景色
+            splashColor: widget.foreground,
+            containedInkWell: true,
+            child: child,
+          ),
         ),
       ),
     );

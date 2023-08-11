@@ -209,7 +209,7 @@ class DBManager {
         where: whereString.toString(),
         whereArgs: whereArgs,
       );
-      log('表$tableName 符合 ${params.toString()} 条件共删除数据$count条');
+      log('表`$tableName`符合`${params.toString()}`条件共删除数据$count条');
     }
     return count;
   }
@@ -237,7 +237,7 @@ class DBManager {
       whereArgs: whereArgs,
       conflictAlgorithm: conflictAlgorithm ?? ConflictAlgorithm.replace,
     );
-    log('表$tableName 符合 ${params.toString()} 条件共更新数据$count条');
+    log('表`$tableName`符合`${params.toString()}`条件共更新数据$count条');
     return count;
   }
 
@@ -265,7 +265,7 @@ class DBManager {
         where: whereString.toString(),
         whereArgs: whereArgs,
       );
-      log('表$tableName 符合 ${paramsString.toString()} 条件共查询数据${list.length}条, data=$list');
+      log('表`$tableName`符合`${paramsString.toString()}`条件共查询数据${list.length}条, data=$list');
     }
 
     // map转换为List集合
@@ -282,7 +282,7 @@ class DBManager {
       if (where.isNotEmpty) where.write(',');
       where.write('$key = ?');
       whereArgs.add(value);
-      paramsString.write('key=$key, value=$value');
+      paramsString.write('$key=$value');
     });
   }
 
