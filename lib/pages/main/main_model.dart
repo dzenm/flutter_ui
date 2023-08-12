@@ -4,6 +4,16 @@ import 'package:flutter/material.dart';
 /// Created by a0010 on 2022/7/28 10:56
 /// Provider中共享的主页页面数据
 class MainModel with ChangeNotifier {
+  /// 主页是否初始化完成
+  bool _initial = false;
+
+  bool get initial => _initial;
+
+  void initialComplete() {
+    _initial = true;
+    notifyListeners();
+  }
+
   /// 初始化数据
   Future<void> init() async {
     _badges = List.generate(3, (index) => 0);

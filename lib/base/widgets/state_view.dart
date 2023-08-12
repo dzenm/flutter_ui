@@ -58,6 +58,7 @@ class StateView extends StatelessWidget {
     return TapLayout(
       onTap: controller.load ? null : onTap,
       background: color,
+      foreground: Colors.transparent,
       child: LinearStateView(
         controller: controller,
         size: 56,

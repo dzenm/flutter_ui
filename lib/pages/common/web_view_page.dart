@@ -169,5 +169,6 @@ class _FlutterWebViewState extends State<FlutterWebView> {
     ));
   }
 
+
   void log(String msg) => BuildConfig.showPageLog ? Log.p(msg, tag: _tag) : null;
 }
