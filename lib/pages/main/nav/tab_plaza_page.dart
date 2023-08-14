@@ -9,6 +9,7 @@ import '../../../entities/article_entity.dart';
 import '../../../http/http_manager.dart';
 import '../../routers.dart';
 import 'nav_model.dart';
+import 'tab_list_page_state.dart';
 
 ///
 /// Created by a0010 on 2023/7/21 13:13
@@ -20,34 +21,20 @@ class TabPlazaPage extends StatefulWidget {
   State<StatefulWidget> createState() => _TabPlazaPageState();
 }
 
-class _TabPlazaPageState extends State<TabPlazaPage> {
-  int _page = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _getData();
-  }
+class _TabPlazaPageState extends TabListPageState<TabPlazaPage> {
 
   @override
   Widget build(BuildContext context) {
     return Selector<NavModel, int>(
-      selector: (_, model) => model.plazaArticles.length,
-      builder: (c, len, w) {
-        return RefreshIndicator(
-          onRefresh: () => _getData(),
-          child: ListView.builder(
-            controller: ScrollController(),
-            itemCount: len,
-            padding: const EdgeInsets.all(16),
-            itemBuilder: (context, index) => _buildItem(index),
-          ),
-        );
+      builder: (context, len, child) {
+        return buildContent(len);
       },
+      selector: (context, model) => model.plazaArticles.length,
     );
   }
 
-  Widget _buildItem(int index) {
+  @override
+  Widget buildItem(int index) {
     AppTheme theme = context.watch<LocalModel>().theme;
     return Selector<NavModel, ArticleEntity>(
       selector: (_, model) => model.plazaArticles[index],
@@ -92,12 +79,12 @@ class _TabPlazaPageState extends State<TabPlazaPage> {
     );
   }
 
-  Future<void> _getData() async {
+  @override
+  Future<void> getData(int page) async {
     await HttpManager.instance.getPlazas(
-      page: _page,
-      success: (pageCount) {
-        _page = pageCount ?? 0;
-      },
+      page: page,
+      success: (pageCount) => updateState(pageCount),
+      failed: (e) => updateFailedState(),
     );
   }
 }
