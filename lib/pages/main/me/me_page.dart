@@ -107,8 +107,8 @@ class _MePageState extends State<MePage> {
         Positioned(
           right: 32,
           child: TapLayout(
-            isCircle: true,
             border: Border.all(width: 3.0, color: const Color(0xfffcfcfc)),
+            borderRadius: const BorderRadius.all(Radius.circular(64)),
             onTap: () => PreviewPicturePage.show(context, [Assets.a]),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(64),
@@ -228,5 +228,5 @@ class _MePageState extends State<MePage> {
     });
   }
 
-  void log(String msg) => BuildConfig.showPageLog ? Log.p(msg, tag: _tag) : null;
+    void log(String msg) => Log.p(msg, tag: _tag);
 }

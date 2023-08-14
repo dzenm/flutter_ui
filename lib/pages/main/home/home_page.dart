@@ -189,7 +189,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void log(String msg) => BuildConfig.showPageLog ? Log.p(msg, tag: _tag) : null;
+    void log(String msg) => Log.p(msg, tag: _tag);
 }
 
 /// 轮播图 widget

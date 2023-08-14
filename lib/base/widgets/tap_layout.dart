@@ -100,8 +100,16 @@ class _TapLayoutState extends State<TapLayout> {
         child: Ink(
           width: widget.width,
           height: widget.height,
+          decoration: BoxDecoration(
+            color: widget.background,
+            image: widget.image,
+            border: widget.border,
+            borderRadius: widget.borderRadius,
+            boxShadow: widget.boxShadow,
+            gradient: widget.gradient,
+            shape: shape,
+          ),
           // Widget展示的背景色
-          color: widget.background,
           child: InkResponse(
             onTap: () => _onTap(),
             onLongPress: widget.onLongPress,
@@ -109,7 +117,6 @@ class _TapLayoutState extends State<TapLayout> {
             onHighlightChanged: (value) => setState(() => _isTouchDown = value),
             // 点击时的水波纹圆角
             borderRadius: widget.borderRadius,
-            highlightShape: shape,
             highlightColor: Colors.transparent,
             // 点击时的水波纹前景色
             splashColor: widget.foreground,

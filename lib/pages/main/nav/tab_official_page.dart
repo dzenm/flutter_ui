@@ -45,7 +45,6 @@ class _TabOfficialPageState extends State<TabOfficialPage> {
     AppTheme theme = context.watch<LocalModel>().theme;
     return Selector<NavModel, List<ChapterEntity>>(
       builder: (c, tools, w) {
-        Log.d('新增数据：len=${tools.length}');
         return Wrap(
           spacing: 16,
           runSpacing: 16,

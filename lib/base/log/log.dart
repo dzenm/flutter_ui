@@ -66,7 +66,7 @@ class Log {
   }
 
   static void p(dynamic message, {String tag = ''}) {
-    if (!BuildConfig.showPageLog) return;
+    if (!BuildConfig.showPageLog || message == null) return;
     _printLog(tag, message, Level.page);
   }
 

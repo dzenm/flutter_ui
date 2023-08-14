@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../../../base/log/build_config.dart';
+import '../../../base/log/log.dart';
 import '../../../base/res/app_theme.dart';
 import '../../../base/res/local_model.dart';
 import '../../../base/widgets/common_bar.dart';
@@ -18,6 +20,8 @@ import 'tab_tutorial_page.dart';
 /// Created by a0010 on 2022/7/28 10:56
 /// 分类页面
 class NavPage extends StatelessWidget {
+  static const String _tag = 'MePage';
+
   NavPage({super.key});
 
   final List<Widget> _tabItems = [
@@ -31,6 +35,8 @@ class NavPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log('build');
+
     AppTheme theme = context.watch<LocalModel>().theme;
     List<String> tabs = [
       S.of(context).plaza,
@@ -67,4 +73,6 @@ class NavPage extends StatelessWidget {
       ),
     );
   }
+
+  void log(String msg) => Log.p(msg, tag: _tag);
 }

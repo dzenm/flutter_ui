@@ -13,7 +13,8 @@ A new Flutter application.
 * 2.生成相关的文件
 > flutter pub run build_runner build --delete-conflicting-outputs
 
-
+* 3.打包apk
+> flutter build apk --target-platform android-arm,android-arm64,android-x64 --split-per-abi --no-sound-null-safety
 ## 项目结构
 
 ```
@@ -98,8 +99,6 @@ A new Flutter application.
   provider: 6.0.5                               # 状态管理 https://pub.dev/packages/provider
   json_annotation: 4.8.1                        # Json序列化 https://pub.dev/packages/json_annotation
 ```
-
-
 
 ## 程序运行流程
 

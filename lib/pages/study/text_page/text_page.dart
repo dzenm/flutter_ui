@@ -263,5 +263,5 @@ class _TextPageState extends State<TextPage> {
     );
   }
 
-  void log(String msg) => BuildConfig.showPageLog ? Log.p(msg, tag: _tag) : null;
+    void log(String msg) => Log.p(msg, tag: _tag);
 }
