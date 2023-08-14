@@ -4,4 +4,6 @@
 class Consts {
   /// 工具页面图片的前缀
   static const String toolsImageUrlPrefix = 'https://www.wanandroid.com/resources/image/pc/tools/';
+
+
 }

@@ -44,8 +44,10 @@ class StateView extends StatelessWidget {
         return S.of(context).loadComplete;
       case LoadState.failed:
         return S.of(context).loadFailed;
+      case LoadState.sliding:
+        return S.of(context).keepSliding;
       case LoadState.more:
-        return S.of(context).loadMore;
+        return '${S.of(context).releaseFinger}, ${S.of(context).loadMore}';
       case LoadState.end:
         return S.of(context).loadEnd;
     }
@@ -210,6 +212,12 @@ class StateController with ChangeNotifier {
     notifyListeners();
   }
 
+  void loadSliding() {
+    if (!_isInit) return;
+    _state = LoadState.sliding;
+    notifyListeners();
+  }
+
   void loadMore() {
     if (!_isInit) return;
     _isMore = true;
@@ -246,8 +254,9 @@ enum LoadState {
   failed(3), // 加载错误
   success(4), // 加载成功
   complete(5), // 加载完成
-  more(6), // 底部显示，加载部分页数，还有更多页面可以加载
-  end(7); // 底部显示，加载数据完成，没有数据可以加载
+  sliding(6), // 滑动正在进行时
+  more(7), // 底部显示，加载部分页数，还有更多页面可以加载
+  end(8); // 底部显示，加载数据完成，没有数据可以加载
 
   final int value;
 

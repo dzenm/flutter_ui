@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base/http/https_client.dart';
-import '../../../base/log/build_config.dart';
 import '../../../base/log/log.dart';
 import '../../../base/res/app_theme.dart';
 import '../../../base/res/assets.dart';
@@ -199,7 +198,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void log(String msg) => BuildConfig.showPageLog ? Log.p(msg, tag: _tag) : null;
+  void log(String msg) => Log.p(msg, tag: _tag);
 }
 
 /// 轮播图 widget

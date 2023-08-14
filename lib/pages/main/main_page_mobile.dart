@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../base/log/build_config.dart';
 import '../../base/log/log.dart';
 import '../../base/naughty/naughty.dart';
 import '../../base/res/app_theme.dart';
@@ -162,7 +161,7 @@ class _MainPageMobileState extends State<MainPageMobile> with WidgetsBindingObse
     ); // bottomNavigation list
   }
 
-  void log(String msg) => BuildConfig.showPageLog ? Log.p(msg, tag: _tag) : null;
+  void log(String msg) => Log.p(msg, tag: _tag);
 }
 
 /// 底部Item布局

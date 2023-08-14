@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import '../../base/log/build_config.dart';
 import '../../base/log/log.dart';
 import '../../base/widgets/will_pop_view.dart';
 import '../../generated/l10n.dart';
@@ -92,46 +91,46 @@ class _FlutterWebViewState extends State<FlutterWebView> {
 
   void _initWebViewController(String url) {
     _controller ??= WebViewController()
-        ..setJavaScriptMode(JavaScriptMode.unrestricted)
-        ..setBackgroundColor(const Color(0x00000000))
-        ..setNavigationDelegate(
-          NavigationDelegate(
-            onProgress: (int progress) {
-              setState(() => _progressValue = progress / 100);
-            },
-            onPageStarted: (String url) {
-              setState(() => _isLoading = true);
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0x00000000))
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onProgress: (int progress) {
+            setState(() => _progressValue = progress / 100);
+          },
+          onPageStarted: (String url) {
+            setState(() => _isLoading = true);
+            if (widget.onTitleChange != null) {
+              widget.onTitleChange!(S.of(context).loading);
+            }
+          },
+          onPageFinished: (String url) {
+            setState(() => _isLoading = false);
+            _controller?.getTitle().then((value) {
               if (widget.onTitleChange != null) {
-                widget.onTitleChange!(S.of(context).loading);
+                widget.onTitleChange!(value);
               }
-            },
-            onPageFinished: (String url) {
-              setState(() => _isLoading = false);
-              _controller?.getTitle().then((value) {
-                if (widget.onTitleChange != null) {
-                  widget.onTitleChange!(value);
-                }
+            });
+            //调用JS得到实际高度
+            _controller?.runJavaScript("document.documentElement.clientHeight;").then((result) {
+              setState(() {
+                // double _height = double.parse(result);
+                // Log.d("高度: $_height");
               });
-              //调用JS得到实际高度
-              _controller?.runJavaScript("document.documentElement.clientHeight;").then((result) {
-                setState(() {
-                  // double _height = double.parse(result);
-                  // Log.d("高度: $_height");
-                });
-              });
-            },
-            onWebResourceError: (WebResourceError error) {
-              setState(() => _isLoading = false);
-            },
-            onNavigationRequest: (NavigationRequest request) {
-              if (request.url.startsWith('myapp://')) {
-                log('即将打开 ${request.url}');
-                return NavigationDecision.prevent;
-              }
-              return NavigationDecision.navigate;
-            },
-          ),
-        );
+            });
+          },
+          onWebResourceError: (WebResourceError error) {
+            setState(() => _isLoading = false);
+          },
+          onNavigationRequest: (NavigationRequest request) {
+            if (request.url.startsWith('myapp://')) {
+              log('即将打开 ${request.url}');
+              return NavigationDecision.prevent;
+            }
+            return NavigationDecision.navigate;
+          },
+        ),
+      );
     if (_controller != null) {
       if (url.startsWith('http://') || url.startsWith('https://')) {
         _controller?.loadRequest(Uri.parse(url));
@@ -170,5 +169,5 @@ class _FlutterWebViewState extends State<FlutterWebView> {
   }
 
 
-  void log(String msg) => BuildConfig.showPageLog ? Log.p(msg, tag: _tag) : null;
+  void log(String msg) => Log.p(msg, tag: _tag);
 }

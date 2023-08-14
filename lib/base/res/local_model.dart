@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
+import '../../entities/setting_entity.dart';
 import '../utils/sp_util.dart';
 import 'app_theme.dart';
 
@@ -9,8 +12,31 @@ import 'app_theme.dart';
 class LocalModel with ChangeNotifier {
   /// 初始化主题设置
   LocalModel() {
-    _themeMode = _getMode(SpUtil.getTheme());
-    _locale = Locale(SpUtil.getLocale());
+    _initSetting();
+    _themeMode = _getMode(_setting.theme ?? 'blue');
+    _locale = Locale(_setting.locale ?? 'zh');
+  }
+
+  /// 初始化设置
+  void _initSetting() {
+    String settings = SpUtil.getSettings();
+    if (settings.isEmpty) {
+      _setting = SettingEntity();
+    } else {
+      _setting = SettingEntity.fromJson(jsonDecode(settings));
+    }
+  }
+
+  late SettingEntity _setting;
+
+  /// 获取设置
+  SettingEntity get setting => _setting;
+
+  /// 更新设置
+  void updateSetting() {
+    String settings = jsonEncode(_setting.toJson());
+    SpUtil.setSettings(settings);
+    notifyListeners();
   }
 
   /// 当前设置的主题模式
@@ -22,8 +48,8 @@ class LocalModel with ChangeNotifier {
   /// 设置新的主题模式
   void setThemeMode(AppThemeMode themeMode) {
     _themeMode = themeMode;
-    SpUtil.setTheme(themeMode.name);
-    notifyListeners();
+    _setting.theme = themeMode.name;
+    updateSetting();
   }
 
   /// 获取设置的主题包
@@ -38,8 +64,8 @@ class LocalModel with ChangeNotifier {
   /// 设置新的语言
   void setLocale(Locale locale) {
     _locale = locale;
-    SpUtil.setLocale(locale.languageCode);
-    notifyListeners();
+    _setting.locale = locale.languageCode;
+    updateSetting();
   }
 
   final Map<AppThemeMode, AppTheme> _appThemes = AppTheme.appTheme;
