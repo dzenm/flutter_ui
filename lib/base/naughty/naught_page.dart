@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'db_page.dart';
+import 'http_entity.dart';
 import 'http_list_widget.dart';
 import 'naughty.dart';
 
@@ -24,11 +25,22 @@ class _NaughtPageState extends State<NaughtPage> {
     'Clear',
     'Quit',
   ];
+  final List<HTTPEntity> _list = [];
 
   @override
   void initState() {
     super.initState();
     Naughty.instance.dismiss();
+
+    _getData();
+  }
+
+  //列表要展示的数据
+  Future<void> _getData() async {
+    Future.delayed(Duration.zero, () {
+      _list.clear();
+      setState(() => _list.addAll(Naughty.instance.httpRequests));
+    });
   }
 
   @override
@@ -53,8 +65,7 @@ class _NaughtPageState extends State<NaughtPage> {
               } else if (index == 1) {
               } else if (index == 2) {
               } else if (index == 3) {
-                Naughty.instance.httpRequests.clear();
-                setState(() {});
+                setState(() => _list.clear());
               } else if (index == 4) {
                 Naughty.instance.dispose();
                 Navigator.pop(context);
@@ -66,8 +77,13 @@ class _NaughtPageState extends State<NaughtPage> {
           )
         ],
       ),
-      body: const Column(children: [
-        Expanded(child: HTTPListWidget()),
+      body: Column(children: [
+        Expanded(
+          child: HTTPListWidget(
+            list: _list,
+            onRefresh: _getData,
+          ),
+        ),
       ]),
     );
   }

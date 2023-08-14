@@ -6,44 +6,30 @@ import 'http_item_page.dart';
 import 'naughty.dart';
 
 /// naughty 主页
-class HTTPListWidget extends StatefulWidget {
-  const HTTPListWidget({super.key});
+class HTTPListWidget extends StatelessWidget {
+  final List<HTTPEntity> list;
+  final RefreshCallback onRefresh;
 
-  @override
-  State<StatefulWidget> createState() => _HTTPListWidgetState();
-}
-
-class _HTTPListWidgetState extends State<HTTPListWidget> {
-  List<HTTPEntity> _list = [];
-
-  @override
-  void initState() {
-    super.initState();
-
-    _getData();
-  }
-
-  //列表要展示的数据
-  Future _getData() async {
-    Future.delayed(Duration.zero, () {
-      setState(() => _list = Naughty.instance.httpRequests);
-    });
-  }
+  const HTTPListWidget({
+    super.key,
+    required this.list,
+    required this.onRefresh,
+  });
 
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: _getData,
+      onRefresh: onRefresh,
       child: ListView.builder(
         itemBuilder: _buildItem,
-        itemCount: _list.length,
+        itemCount: list.length,
       ),
     );
   }
 
   /// 列表item布局
   Widget _buildItem(BuildContext context, int index) {
-    HTTPEntity entity = _list[index];
+    HTTPEntity entity = list[index];
     return ClipRRect(
       borderRadius: const BorderRadius.all(Radius.circular(8.0)),
       child: Container(
