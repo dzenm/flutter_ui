@@ -2,7 +2,6 @@ import 'package:extended_text_field/extended_text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../base/log/build_config.dart';
 import '../../../base/log/log.dart';
 import '../../../base/res/assets.dart';
 import '../../../base/route/app_route_delegate.dart';
@@ -263,5 +262,5 @@ class _TextPageState extends State<TextPage> {
     );
   }
 
-    void log(String msg) => Log.p(msg, tag: _tag);
+  void log(String msg) => Log.p(msg, tag: _tag);
 }

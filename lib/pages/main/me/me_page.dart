@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../base/log/build_config.dart';
 import '../../../base/log/log.dart';
 import '../../../base/res/app_theme.dart';
 import '../../../base/res/assets.dart';
@@ -91,7 +90,9 @@ class _MePageState extends State<MePage> {
   Widget _buildBody(AppTheme theme, double statusBarHeight) {
     return SingleChildScrollView(
       padding: EdgeInsets.only(left: 16, right: 16, top: statusBarHeight),
-      physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()), // 上拉下拉弹簧效果
+      // AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()): iOS上拉下拉弹簧效果，
+      // AlwaysScrollableScrollPhysics(parent: ClampingScrollPhysics()): Android微光效果
+      physics: const AlwaysScrollableScrollPhysics(parent: ClampingScrollPhysics()),
       child: Stack(alignment: Alignment.topRight, children: [
         Container(
           margin: const EdgeInsets.only(top: 24),
@@ -228,5 +229,5 @@ class _MePageState extends State<MePage> {
     });
   }
 
-    void log(String msg) => Log.p(msg, tag: _tag);
+  void log(String msg) => Log.p(msg, tag: _tag);
 }

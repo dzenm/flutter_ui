@@ -37,6 +37,7 @@ class RefreshListView extends StatefulWidget {
 class _RefreshListViewState extends State<RefreshListView> {
   final ScrollController _controller = ScrollController(); // listView的控制器
   StateController? _stateController;
+  bool _isFooter = false;
 
   @override
   void initState() {
@@ -44,9 +45,10 @@ class _RefreshListViewState extends State<RefreshListView> {
 
     _stateController = widget.controller ?? StateController();
     _controller.addListener(() {
-      if (_controller.position.pixels == _controller.position.maxScrollExtent) {
-        _loadingMore();
-      }
+      // pixels：当前滚动的像素点
+      // maxScrollExtent：当前最大可滚动的位置
+      bool isFooter = _controller.position.pixels == _controller.position.maxScrollExtent;
+      setState(() => _isFooter = isFooter);
     });
   }
 
@@ -66,19 +68,36 @@ class _RefreshListViewState extends State<RefreshListView> {
     // 列表数量
     int itemCount = widget.itemCount + (!widget.showFooter ? 0 : 1);
 
-    return StateView(
-      controller: _stateController!,
-      onTap: () => _refresh(init: init),
-      child: !init
-          ? null
-          : RefreshIndicator(
-              onRefresh: _refresh,
-              child: ListView.builder(
-                itemBuilder: _buildItem,
-                itemCount: itemCount,
-                controller: _controller,
+    return Listener(
+      onPointerMove: (event) {
+        if (!init) return;
+        if (_isFooter) {
+          _stateController!.loadMore();
+        } else {
+          _stateController!.loadSliding();
+        }
+        setState(() {});
+      },
+      onPointerUp: (event) {
+        if (!init) return;
+        if (_isFooter) {
+          _loadingMore();
+        }
+      },
+      child: StateView(
+        controller: _stateController!,
+        onTap: () => _refresh(init: init),
+        child: !init
+            ? null
+            : RefreshIndicator(
+                onRefresh: _refresh,
+                child: ListView.builder(
+                  itemBuilder: _buildItem,
+                  itemCount: itemCount,
+                  controller: _controller,
+                ),
               ),
-            ),
+      ),
     );
   }
 

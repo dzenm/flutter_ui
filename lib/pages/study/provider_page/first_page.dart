@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../base/log/build_config.dart';
 import '../../../base/log/log.dart';
 import '../../../base/widgets/common_bar.dart';
 
@@ -61,5 +60,5 @@ class _FirstPageState extends State<FirstPage> {
     );
   }
 
-    void log(String msg) => Log.p(msg, tag: _tag);
+  void log(String msg) => Log.p(msg, tag: _tag);
 }

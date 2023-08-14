@@ -265,5 +265,5 @@ class __EditRegisterInfoViewState extends State<_EditRegisterInfoView> {
     AppRouteDelegate.of(context).push(Routers.main, clearStack: true);
   }
 
-    void log(String msg) => Log.p(msg, tag: _tag);
+  void log(String msg) => Log.p(msg, tag: _tag);
 }

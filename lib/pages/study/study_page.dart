@@ -24,6 +24,7 @@ class _StudyPageState extends State<StudyPage> {
   Widget build(BuildContext context) {
     AppTheme theme = context.watch<LocalModel>().theme;
     return NestedScrollView(
+      floatHeaderSlivers: true,
       headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
         return [
           SliverAppBar(
@@ -52,7 +53,6 @@ class _StudyPageState extends State<StudyPage> {
           ),
         ];
       },
-      physics: const AlwaysScrollableScrollPhysics(),
       body: _buildBody(theme),
     );
   }

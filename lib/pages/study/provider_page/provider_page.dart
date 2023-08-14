@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import '../../../base/log/build_config.dart';
 import '../../../base/log/log.dart';
 import '../../main/me/me_model.dart';
 
@@ -215,8 +214,7 @@ class _ProviderPageState extends State<ProviderPage> {
     );
   }
 
-    void log(String msg) => Log.p(msg, tag: _tag);
-
+  void log(String msg) => Log.p(msg, tag: _tag);
 }
 
 class _ProviderWidget extends StatefulWidget {
@@ -250,5 +248,5 @@ class _ProviderWidgetState extends State<_ProviderWidget> {
     );
   }
 
-    void log(String msg) => Log.p(msg, tag: _tag);
+  void log(String msg) => Log.p(msg, tag: _tag);
 }

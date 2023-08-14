@@ -27,8 +27,7 @@ class SpUtil {
   static const String _userCookie = 'u_cookie'; // 登录的cookie信息
 
   /// APP设置相关的信息
-  static const String _settingTheme = 's_theme'; // APP展示的主题
-  static const String _settingLocale = 's_locale'; // APP展示的语言
+  static const String _settings = 'settings'; // APP相关的设置
 
   Future init({Function? logPrint}) async {
     _prefs = await SharedPreferences.getInstance();
@@ -116,26 +115,15 @@ class SpUtil {
     remove(_userCookie);
   }
 
-  /// 获取主题样式
-  static String getTheme() {
-    String theme = getString(_settingTheme);
-    return theme.isEmpty ? 'gray' : theme;
+  /// 获取APP设置
+  static String getSettings() {
+    String settings = getString(_settings);
+    return settings;
   }
 
-  /// 保存主题样式
-  static void setTheme(String? theme) {
-    setString(_settingTheme, theme);
-  }
-
-  /// 获取语言设置
-  static String getLocale() {
-    String locale = getString(_settingLocale);
-    return locale.isEmpty ? 'zh' : locale;
-  }
-
-  /// 保存语言设置
-  static void setLocale(String? locale) {
-    setString(_settingLocale, locale);
+  /// 保存APP设置
+  static void setSettings(String? settings) {
+    setString(_settings, settings);
   }
 
   static String getString(String key) {
