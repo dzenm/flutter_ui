@@ -36,7 +36,7 @@ abstract class TabListPageState<T extends StatefulWidget> extends State<T> {
 
   Future<void> _getData({bool isReset = false}) async {
     _page = isReset ? 0 : _page;
-    getData(_page);
+    await getData(_page);
   }
 
   Future<void> getData(int page);
