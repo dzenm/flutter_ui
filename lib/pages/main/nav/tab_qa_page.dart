@@ -8,7 +8,6 @@ import '../../../base/widgets/state_view.dart';
 import '../../../base/widgets/tap_layout.dart';
 import '../../../entities/article_entity.dart';
 import '../../../http/http_manager.dart';
-import '../../../models/article_model.dart';
 import '../../routers.dart';
 import 'nav_model.dart';
 
