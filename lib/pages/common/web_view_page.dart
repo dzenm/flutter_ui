@@ -168,5 +168,6 @@ class _FlutterWebViewState extends State<FlutterWebView> {
     ));
   }
 
+
   void log(String msg) => Log.p(msg, tag: _tag);
 }

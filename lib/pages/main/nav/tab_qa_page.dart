@@ -4,12 +4,12 @@ import 'package:provider/provider.dart';
 import '../../../base/res/app_theme.dart';
 import '../../../base/res/local_model.dart';
 import '../../../base/route/app_route_delegate.dart';
-import '../../../base/widgets/state_view.dart';
 import '../../../base/widgets/tap_layout.dart';
 import '../../../entities/article_entity.dart';
 import '../../../http/http_manager.dart';
 import '../../routers.dart';
 import 'nav_model.dart';
+import 'tab_list_page_state.dart';
 
 ///
 /// Created by a0010 on 2023/7/21 13:14
@@ -21,36 +21,20 @@ class TabQAPage extends StatefulWidget {
   State<StatefulWidget> createState() => _TabQAPageState();
 }
 
-class _TabQAPageState extends State<TabQAPage> {
-  final StateController _controller = StateController();
-  int _page = 0; // 加载的页数
-
-  @override
-  void initState() {
-    super.initState();
-
-    _getQuestions();
-  }
+class _TabQAPageState extends TabListPageState<TabQAPage> {
 
   @override
   Widget build(BuildContext context) {
     return Selector<NavModel, int>(
-      selector: (_, model) => model.qaArticles.length,
-      builder: (c, len, w) {
-        return RefreshIndicator(
-          onRefresh: () => _getQuestions(),
-          child: ListView.builder(
-            controller: ScrollController(),
-            itemCount: len,
-            padding: const EdgeInsets.all(16),
-            itemBuilder: (context, index) => _buildItem(index),
-          ),
-        );
+      builder: (context, len, child) {
+        return buildContent(len);
       },
+      selector: (context, model) => model.qaArticles.length,
     );
   }
 
-  Widget _buildItem(int index) {
+  @override 
+  Widget buildItem(int index) {
     AppTheme theme = context.watch<LocalModel>().theme;
     return Selector<NavModel, ArticleEntity>(
       selector: (_, model) => model.qaArticles[index],
@@ -95,21 +79,12 @@ class _TabQAPageState extends State<TabQAPage> {
     );
   }
 
-  Future<void> _getQuestions({bool isReset = false}) async {
-    _page = isReset ? 0 : _page;
+  @override
+  Future<void> getData(int page) async   {
     await HttpManager.instance.getQuestions(
-      page: _page,
-      success: (list, pageCount) {
-        _controller.loadComplete(); // 加载成功
-        if (_page >= (pageCount ?? 0)) {
-          _controller.loadEmpty(); // 加载完所有页面
-        } else {
-          // 加载数据成功，保存数据，下次加载下一页
-          ++_page;
-          _controller.loadMore();
-        }
-        setState(() {});
-      },
+      page: page,
+      success: (pageCount) => updateState(pageCount),
+      failed: (e) => updateFailedState(),
     );
   }
 }

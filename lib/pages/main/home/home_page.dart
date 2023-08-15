@@ -22,6 +22,7 @@ import '../../../models/article_model.dart';
 import '../../../models/banner_model.dart';
 import '../../../models/website_model.dart';
 import '../../routers.dart';
+import '../main_model.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56
@@ -83,7 +84,16 @@ class _HomePageState extends State<HomePage> {
         toolbarHeight: 0,
         backgroundColor: theme.transparent,
       ),
-      body: _buildBody(),
+      body: Selector<MainModel, bool>(
+        selector: (_, model) => model.initial,
+        builder: (c, initial, w) {
+          if (initial) {
+            // 初始化完成如果有数据，先展示数据
+            _controller.loadComplete();
+          }
+          return _buildBody();
+        },
+      ),
     );
   }
 
@@ -165,7 +175,7 @@ class _HomePageState extends State<HomePage> {
     await HttpManager.instance.getHotkeys(
       isShowDialog: false,
       success: (list) {
-        // context.read<WebsiteModel>().updateWebsites(list);
+        // context.read<HotkeyEntity>().updateWebsites(list);
       },
     );
     await HttpManager.instance.getTrees(
@@ -235,11 +245,11 @@ class ArticleListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Selector<ArticleModel, int>(
-      builder: (context, value, child) {
+      builder: (context, len, child) {
         Log.p('build', tag: _tag);
         return RefreshListView(
           controller: controller,
-          itemCount: value,
+          itemCount: len,
           builder: (context, index) {
             return ArticleItemView(index);
           },

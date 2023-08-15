@@ -335,7 +335,7 @@ class HttpManager {
   /// 获取问答列表
   Future<void> getQuestions({
     int page = 0,
-    void Function(List<ArticleEntity> list, int? pageCount)? success,
+    void Function(int? pageCount)? success,
     Failed? failed,
   }) async {
     await HttpsClient.instance.request(
@@ -347,7 +347,7 @@ class HttpManager {
         List<dynamic> datas = page.datas ?? [];
         List<ArticleEntity> list = datas.map((e) => ArticleEntity.fromJson(e)).toList();
         context.read<NavModel>().updateQAArticles(list);
-        if (success != null) success(list, page.pageCount);
+        if (success != null) success(page.pageCount);
       },
       failed: (error) {
         if (failed != null) {
@@ -360,7 +360,7 @@ class HttpManager {
   /// 获取最新项目列表
   Future<void> getProjects({
     int page = 0,
-    void Function(List<ArticleEntity> list, int? pageCount)? success,
+    void Function(int? pageCount)? success,
     Failed? failed,
   }) async {
     await HttpsClient.instance.request(
@@ -372,7 +372,7 @@ class HttpManager {
         List<dynamic> datas = page.datas ?? [];
         List<ArticleEntity> list = datas.map((e) => ArticleEntity.fromJson(e)).toList();
         context.read<NavModel>().updateProjectArticles(list);
-        if (success != null) success(list, page.pageCount);
+        if (success != null) success(page.pageCount);
       },
       failed: (error) {
         if (failed != null) {

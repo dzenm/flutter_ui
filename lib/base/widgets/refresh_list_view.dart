@@ -41,6 +41,7 @@ class RefreshListView extends StatefulWidget {
 class _RefreshListViewState extends State<RefreshListView> {
   final ScrollController _controller = ScrollController(); // listView的控制器
   StateController? _stateController;
+  bool _isTouch = false;
   bool _isFooter = false;
 
   @override
@@ -54,6 +55,9 @@ class _RefreshListViewState extends State<RefreshListView> {
       // 判断是否滑动到最底部
       bool isFooter = _controller.position.pixels == _controller.position.maxScrollExtent;
       _isFooter = isFooter;
+      if (!_isTouch && _isFooter) {
+        _loadingMore();
+      }
     });
   }
 
@@ -84,6 +88,10 @@ class _RefreshListViewState extends State<RefreshListView> {
       }
     }
     return Listener(
+      onPointerDown: (event) {
+        _isTouch = true;
+        setState(() {});
+      },
       onPointerMove: (event) {
         if (!init) return;
         // 手指移动过程中，如果已经到最底部了，就提示松开手指进行加载，如果未滑动到最底部就提示继续滑动
@@ -100,6 +108,7 @@ class _RefreshListViewState extends State<RefreshListView> {
         if (_isFooter) {
           _loadingMore();
         }
+        _isTouch = false;
       },
       child: StateView(
         controller: _stateController!,
