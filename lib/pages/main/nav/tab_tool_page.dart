@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../base/res/app_theme.dart';
 import '../../../base/res/local_model.dart';
 import '../../../base/route/app_route_delegate.dart';
+import '../../../base/widgets/image_view.dart';
 import '../../../base/widgets/tap_layout.dart';
 import '../../../config/consts.dart';
 import '../../../entities/tool_entity.dart';
@@ -83,7 +84,7 @@ class _TabToolPageState extends State<TabToolPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(children: [
-                Image.network(icon, width: 20, height: 20),
+                ImageView(url: icon, width: 20, height: 20),
                 const SizedBox(width: 8),
                 Expanded(child: Text(name, style: TextStyle(color: theme.primaryText))),
               ]),

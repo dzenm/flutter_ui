@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../base/res/app_theme.dart';
 import '../../base/res/local_model.dart';
 import '../../base/route/app_route_delegate.dart';
+import '../../base/widgets/image_view.dart';
 import '../../generated/l10n.dart';
 import '../main/main_model.dart';
 import 'study_router.dart';
@@ -44,8 +45,8 @@ class _StudyPageState extends State<StudyPage> {
             //一个显示在 AppBar 下方的控件，高度和 AppBar 高度一样， // 可以实现一些特殊的效果，该属性通常在 SliverAppBar 中使用
             flexibleSpace: FlexibleSpaceBar(
               title: Text(S.of(context).studyMainPage('(自定义语言)'), style: TextStyle(color: theme.background)),
-              background: Image.network(
-                'http://img.haote.com/upload/20180918/2018091815372344164.jpg',
+              background: const ImageView(
+                url: 'http://img.haote.com/upload/20180918/2018091815372344164.jpg',
                 fit: BoxFit.cover,
               ),
             ),

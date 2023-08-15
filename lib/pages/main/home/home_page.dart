@@ -12,6 +12,7 @@ import '../../../base/route/app_route_delegate.dart';
 import '../../../base/utils/str_util.dart';
 import '../../../base/widgets/banner_view.dart';
 import '../../../base/widgets/common_bar.dart';
+import '../../../base/widgets/image_view.dart';
 import '../../../base/widgets/refresh_list_view.dart';
 import '../../../base/widgets/state_view.dart';
 import '../../../base/widgets/tap_layout.dart';
@@ -215,7 +216,7 @@ class Banner extends StatelessWidget {
       builder: (context, banners, widget) {
         return BannerView(
           repeat: true,
-          builder: (imagePath) => Image.network(imagePath ?? '', fit: BoxFit.cover),
+          builder: (imagePath) => ImageView(url: imagePath ?? '', fit: BoxFit.cover),
           data: banners.map((banner) => BannerData(title: banner.title, data: banner.imagePath)).toList(),
           onTap: (index) {
             BannerEntity banner = banners[index];

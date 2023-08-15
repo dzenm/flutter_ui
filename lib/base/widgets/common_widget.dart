@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class CommonWidget {
@@ -50,50 +49,6 @@ class CommonWidget {
       ),
     );
   }
-
-  static CachedNetworkImage networkImage(
-    String? url, {
-    int? version,
-    Widget? placeholder,
-    BoxFit? fit,
-    double? width,
-    double? height,
-  }) {
-    String currentUrl = '';
-    if (url != null && url.isNotEmpty) {
-      currentUrl = '$url?${version ?? 0}';
-    }
-    return CachedNetworkImage(
-      imageUrl: currentUrl,
-      fit: fit,
-      width: width,
-      height: height,
-      placeholder: placeholder != null
-          ? (_, url) {
-              return placeholder;
-            }
-          : null,
-      errorWidget: placeholder != null
-          ? (_, url, error) {
-              return placeholder;
-            }
-          : null,
-    );
-  }
-
-  static imagePlaceholder({required double width, double? height}) {
-    return Container(
-      width: width,
-      height: height ?? width,
-      color: const Color(0xffafafaf),
-      alignment: Alignment.center,
-      child: Icon(
-        Icons.ac_unit_outlined,
-        size: width * 0.5,
-        color: Colors.white,
-      ),
-    );
-  }
 }
 
 class FileImageExt extends FileImage {
@@ -114,5 +69,4 @@ class FileImageExt extends FileImage {
 
   @override
   int get hashCode => Object.hash(file.path, scale);
-
 }
