@@ -17,7 +17,7 @@ abstract class ListPageState<D extends DBBaseModel, T extends StatefulWidget> ex
   final StateController _controller = StateController();
 
   /// 加载的页数
-  int _pageIndex = 1;
+  int _pageIndex = -1;
 
   /// 加载的数据
   final List<D> _list = [];
@@ -26,8 +26,12 @@ abstract class ListPageState<D extends DBBaseModel, T extends StatefulWidget> ex
   void initState() {
     super.initState();
 
+    /// 初始页面下标
+    _pageIndex = pageIndex;
     _getData(_pageIndex); // 第一次加载数据
   }
+
+  int get pageIndex => 1;
 
   @override
   Widget build(BuildContext context) {
@@ -71,11 +75,11 @@ abstract class ListPageState<D extends DBBaseModel, T extends StatefulWidget> ex
   }
 
   /// 下拉刷新方法,为list重新赋值
-  Future<void> _onRefresh(bool refresh) async => _getData(_pageIndex = (refresh ? 1 : _pageIndex));
+  Future<void> _onRefresh(bool refresh) async => _getData(_pageIndex = (refresh ? pageIndex : _pageIndex));
 
   /// 加载数据，如果pageIndex为1表示从新加载
   Future<void> _getData(int pageIndex) async {
-    bool reset = pageIndex == 1;
+    bool reset = pageIndex == this.pageIndex;
     if (reset) {
       _list.clear();
     }
