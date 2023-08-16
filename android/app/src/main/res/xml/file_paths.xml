@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <paths>
+        <external-path
+            name="external"
+            path="." />
+        <external-cache-path
+            name="external_cache"
+            path="." />
+
+        <files-path
+            name="name"
+            path="path" />
+        <cache-path
+            name="name"
+            path="path" />
+        <external-path
+            name="name"
+            path="path" />
+        <external-files-path
+            name="name"
+            path="path" />
+        <external-cache-path
+            name="name"
+            path="path" />
+        <external-path
+            name="external"
+            path="path" />
+        <external-path
+            name="external_storage_root"
+            path="." />
+        <root-path
+            name="root_path"
+            path="." />
+        <!--root_path：加载聊天文件时需要-->
+    </paths>
+</resources>

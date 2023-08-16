@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/base/channel/plugin_manager.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
 import 'app_page.dart';
@@ -11,7 +12,6 @@ import 'base/log/log.dart';
 import 'base/naughty/http_interceptor.dart';
 import 'base/route/route_manager.dart';
 import 'base/utils/file_util.dart';
-import 'base/utils/native_channel_util.dart';
 import 'base/utils/sp_util.dart';
 import 'base/widgets/common_dialog.dart';
 import 'base/widgets/keyboard/mocks/mock_binding.dart';
@@ -99,7 +99,7 @@ class Application {
     FileUtil.instance.init(logPrint: Log.i);
 
     log('初始化 NativeChannelUtil');
-    NativeChannelUtil.init(logPrint: Log.d);
+    PluginManager.init(logPrint: Log.d);
 
     NumberKeyboard.register();
 

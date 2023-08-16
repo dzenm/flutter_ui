@@ -272,9 +272,7 @@ class HttpsClient {
     }
     // 下载结果
     if (error == null) return;
-    if (failed != null) {
-      failed(error);
-    }
+    if (failed != null) failed(error);
   }
 
   Future<void> upload() async {}

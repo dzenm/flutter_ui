@@ -4,15 +4,16 @@ import 'dart:math';
 // ignore_for_file: depend_on_referenced_packages
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/http/https_client.dart';
-import 'package:flutter_ui/base/log/handle_error.dart';
-import 'package:flutter_ui/base/log/log.dart';
-import 'package:flutter_ui/base/res/assets.dart';
-import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../channel/plugin_manager.dart';
+import '../http/https_client.dart';
+import '../log/handle_error.dart';
+import '../log/log.dart';
+import '../res/assets.dart';
 import 'common_dialog.dart';
 import 'linear_percent_indicator.dart';
+import 'tap_layout.dart';
 
 ///
 /// Created by a0010 on 2022/3/28 16:28
@@ -34,12 +35,14 @@ class UpgradeDialog extends StatefulWidget {
       uid: '1',
       title: '测试',
       content: '不知道更新了什么',
-      url: 'https://dl.google.com/chrome/mac/stable/GGRO/googlechrome.dmg',
+      url: 'https://ucdl.25pp.com/fs08/2023/08/14/6/110_612a0e357913d43e504044debbddff35.apk?cc=850312032&nrd=0&f'
+          'name=%E7%99%BE%E5%BA%A6%E5%9C%B0%E5%9B%BE&productid=&packageid=601220125&pkg=com.baidu.BaiduMap&vcode=1'
+          '277&yingid=pp_wap_ppcn&vh=7641e6ccaaae10b280b634ba8e225deb&sf=133168324&sh=10&appid=29805&apprd=',
       version: '1.2.0',
     );
     if (!needUpgrade(currentVersion, appVersion.version)) return;
     if (Platform.isIOS) {
-      // String url = 'itms-apps://itunes.apple.com/cn/app/id414478124?mt=8'; // 这是微信的地址，到时候换成自己的应用的地址
+      String url = 'itms-apps://itunes.apple.com/cn/app/id414478124'; // 这是微信的地址，到时候换成自己的应用的地址
       // if (await canLaunch(url)) {
       //   await launch(url);
       // } else {
@@ -66,7 +69,7 @@ class UpgradeDialog extends StatefulWidget {
     }
   }
 
-  // 根据旧版本号和新版本号判断是否需要更新
+  /// 根据旧版本号和新版本号判断是否需要更新
   static bool needUpgrade(String? oldVersion, String? newVersion) {
     if (oldVersion == null || newVersion == null) return false;
     List<String> newVersions = newVersion.split('.');
@@ -98,38 +101,49 @@ class _UpgradeDialogState extends State<UpgradeDialog> {
   bool _running = false;
   CancelToken? _cancel;
 
-  void start() async {
+  void _download() async {
+    if (_running) return;
+    String filePath = await _defaultInstallAPKPath();
+    File file = File(filePath);
+    if (file.existsSync()) {
+      PluginManager.installAPK(filePath);
+      return;
+    }
     _running = false;
     _cancel = CancelToken();
-    var external = await getExternalCacheDirectories();
-    var cachePath = external?.first.path;
-    String savePath = '$cachePath/yunyuApkUpdate.apk';
-    File file = File(savePath);
-    if (file.existsSync()) {
-      file.deleteSync();
-    }
-    Log.d('下载路径：${file.path}');
-    Log.d('下载路径：${widget.appVersion.url!}');
     HttpsClient.instance.download(
       widget.appVersion.url!,
       file.path,
       cancel: _cancel,
       success: (data) {
+        PluginManager.installAPK(filePath);
         _running = false;
         setState(() {});
       },
       progress: (percent, count, total) {
-        Log.d('下载路径：$percent');
+        // 减少重复刷新
+        if (_percent == percent) return;
+        Log.d('文件下载进度：percent=$percent');
         _running = true;
         _percent = percent;
         setState(() {});
       },
       failed: (e) {
-        Log.d('下载路径：${e.msg}');
+        Log.d('文件下载错误：error=${e.msg}');
         _running = false;
         setState(() {});
       },
     );
+  }
+
+  /// 获取安装包的路径
+  Future<String> _defaultInstallAPKPath() async {
+    var external = await getExternalCacheDirectories();
+    // /storage/emulated/0/Android/data/packageName/cache/
+    String? cachePath = external?.first.path;
+    String savePath = '$cachePath/app_release v${widget.appVersion.version}.apk';
+    Log.d('文件路径：savePath=$savePath');
+    return savePath;
   }
 
   @override
@@ -183,6 +197,7 @@ class _UpgradeDialogState extends State<UpgradeDialog> {
     );
   }
 
+  /// 底部的下载和取消按钮
   List<Widget> _buildBottomButton() {
     return [
       if (_running)
@@ -207,7 +222,7 @@ class _UpgradeDialogState extends State<UpgradeDialog> {
           background: widget.color,
           alignment: Alignment.center,
           borderRadius: const BorderRadius.all(Radius.circular(4)),
-          onTap: () => start(),
+          onTap: () => _download(),
           child: const Text(
             '立即升级',
             style: TextStyle(color: Colors.white),
@@ -219,7 +234,7 @@ class _UpgradeDialogState extends State<UpgradeDialog> {
         alignment: Alignment.center,
         borderRadius: const BorderRadius.all(Radius.circular(4)),
         onTap: () {
-          _cancel?.cancel();
+          _cancel?.cancel('取消下载');
           Navigator.pop(context);
         },
         child: const Text('稍后升级'),
