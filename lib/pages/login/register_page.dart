@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/http/http_manager.dart';
 import 'package:provider/provider.dart';
 
-import '../../base/http/https_client.dart';
 import '../../base/log/build_config.dart';
 import '../../base/log/log.dart';
 import '../../base/res/app_theme.dart';
 import '../../base/res/local_model.dart';
-import '../../base/route/app_route_delegate.dart';
-import '../../base/utils/sp_util.dart';
 import '../../base/widgets/common_bar.dart';
 import '../../base/widgets/tap_layout.dart';
-import '../../entities/user_entity.dart';
 import '../../generated/l10n.dart';
-import '../../models/user_model.dart';
-import '../routers.dart';
 import 'login_page.dart';
 
 class RegisterPage extends StatelessWidget {
@@ -247,22 +242,7 @@ class __EditRegisterInfoViewState extends State<_EditRegisterInfoView> {
   // 注册按钮点击事件
   void _register() {
     FocusScope.of(context).unfocus();
-    HttpsClient.instance.request(apiServices.login(_username, _password), success: (data) {
-      UserEntity user = UserEntity.fromJson(data);
-
-      // 先保存SP，数据库创建需要用到SP的userId
-      SpUtil.setUserLoginState(true);
-      SpUtil.setUsername(user.username);
-      SpUtil.setUserId(user.id.toString());
-
-      // 更新数据
-      context.read<UserModel>().user = user;
-      _pushMainPage();
-    });
-  }
-
-  void _pushMainPage() {
-    AppRouteDelegate.of(context).push(Routers.main, clearStack: true);
+    HttpManager.instance.register(_username, _password, _rPassword);
   }
 
   void log(String msg) => Log.p(msg, tag: _tag);

@@ -22,7 +22,13 @@ class ImageView extends StatelessWidget {
   Widget build(BuildContext context) {
     return CachedNetworkImage(
       // 加载网络图片过程中显示的内容 , 这里显示进度条
-      placeholder: (context, url) => const CircularProgressIndicator(),
+      placeholder: (context, url) => const Center(
+        child: SizedBox(
+          width: 42,
+          height: 42,
+          child: CircularProgressIndicator(),
+        ),
+      ),
       width: width,
       height: height,
       fit: fit,

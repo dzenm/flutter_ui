@@ -16,8 +16,10 @@ import '../entities/hotkey_entity.dart';
 import '../entities/navi_entity.dart';
 import '../entities/tool_entity.dart';
 import '../entities/tree_entity.dart';
+import '../entities/user_entity.dart';
 import '../entities/website_entity.dart';
 import '../models/provider_manager.dart';
+import '../models/user_model.dart';
 import '../pages/main/nav/nav_model.dart';
 import '../pages/routers.dart';
 
@@ -34,6 +36,38 @@ class HttpManager {
   static final HttpManager instance = HttpManager._internal();
 
   late HttpsClient _httpClient;
+
+  /// 登录并进入到主页
+  Future<void> login(String username, String password) async {
+    await _httpClient.request(apiServices.login(username, password), success: (data) {
+      UserEntity user = UserEntity.fromJson(data);
+
+      // 先保存SP，数据库创建需要用到SP的userId
+      SpUtil.setUserLoginState(true);
+      SpUtil.setUsername(user.username);
+      SpUtil.setUserId(user.id.toString());
+
+      // 更新数据
+      context.read<UserModel>().user = user;
+      AppRouteDelegate.of(context).push(Routers.main, clearStack: true);
+    });
+  }
+
+  /// 注册并进入到主页
+  Future<void> register(String username, String password, String rPassword) async {
+    await _httpClient.request(apiServices.register(username, password, rPassword), success: (data) {
+      UserEntity user = UserEntity.fromJson(data);
+
+      // 先保存SP，数据库创建需要用到SP的userId
+      SpUtil.setUserLoginState(true);
+      SpUtil.setUsername(user.username);
+      SpUtil.setUserId(user.id.toString());
+
+      // 更新数据
+      context.read<UserModel>().user = user;
+      AppRouteDelegate.of(context).push(Routers.main, clearStack: true);
+    });
+  }
 
   /// 获取Banner，并保存banner数据
   Future<void> banner({

@@ -39,8 +39,8 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: 1.0.5                        # 图片 https://pub.flutter-io.cn/packages/cupertino_icons
-  sqflite_common_ffi: 2.3.0                     # sql https://pub.dev/packages/sqflite_common_ffi
-  path_provider: 2.0.15                         # 路径选择 https://pub.dev/packages/path_provider
+  sqflite_common_ffi: 2.3.0+2                     # sql https://pub.dev/packages/sqflite_common_ffi
+  path_provider: 2.1.0                         # 路径选择 https://pub.dev/packages/path_provider
   shared_preferences: 2.2.0                     # 本地化存储 https://pub.dev/packages/shared_preferences
   bot_toast: 4.0.4                              # Toast https://pub.flutter-io.cn/packages/bot_toast
   retrofit: 4.0.1                               # HTTP请求 https://pub.flutter-io.cn/packages/retrofit
@@ -51,7 +51,7 @@ dependencies:
   flutter_local_notifications: 15.1.0+1         # 通知栏通知提醒 https://pub.flutter-io.cn/packages/flutter_local_notifications
   cached_network_image: 3.2.3                   # 图片缓存 https://pub.flutter-io.cn/packages/cached_network_image
   extended_text_field: 12.0.1                   # 输入框扩展 https://pub.flutter-io.cn/packages/extended_text_field
-  back_button_interceptor: 6.0.2                # 返回按钮拦截 https://pub.flutter-io.cn/packages/back_button_interceptor
+  back_button_interceptor: 7.0.0                # 返回按钮拦截 https://pub.flutter-io.cn/packages/back_button_interceptor
   provider: 6.0.5                               # 状态管理 https://pub.dev/packages/provider
   json_annotation: 4.8.1                        # Json序列化 https://pub.dev/packages/json_annotation
 

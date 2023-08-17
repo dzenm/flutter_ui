@@ -2,6 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 import '../base/db/db_base_model.dart';
 import 'article_entity.dart';
+import 'convert/bool_convert.dart';
 
 part 'tree_entity.g.dart';
 
@@ -23,50 +24,19 @@ class TreeEntity extends DBBaseModel {
   int? order;
   int? parentChapterId;
   int? type;
+  @BoolConvert()
   bool? userControlSetTop;
   int? visible;
 
   TreeEntity();
 
-  TreeEntity.fromJson(Map<String, dynamic> json) {
-    articleList = toList(json['articleList']).map((e) => ArticleEntity.fromJson(e)).toList();
-    author = json['author'];
-    children = toList(json['children']).map((e) => TreeEntity.fromJson(e)).toList();
-    courseId = json['courseId'];
-    id = json['id'];
-    cover = json['cover'];
-    desc = json['desc'];
-    lisense = json['lisense'];
-    lisenseLink = json['lisenseLink'];
-    name = json['name'];
-    order = json['order'];
-    parentChapterId = json['parentChapterId'];
-    type = json['type'];
-    userControlSetTop = toBool(json['userControlSetTop']);
-    visible = json['visible'];
-  }
+  factory TreeEntity.fromJson(Map<String, dynamic> json) => _$TreeEntityFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$TreeEntityToJson(this);
 
   @override
   DBBaseModel fromJson(Map<String, dynamic> json) => TreeEntity.fromJson(json);
-
-  @override
-  Map<String, dynamic> toJson() => {
-        'articleList': toJsonString(articleList),
-        'author': author,
-        'children': toJsonString(children),
-        'courseId': courseId,
-        'id': id,
-        'cover': cover,
-        'desc': desc,
-        'lisense': lisense,
-        'lisenseLink': lisenseLink,
-        'name': name,
-        'order': order,
-        'parentChapterId': parentChapterId,
-        'type': type,
-        'userControlSetTop': boolToInt(userControlSetTop),
-        'visible': visible,
-      };
 
   @override
   String get primaryKey => 'id';

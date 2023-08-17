@@ -42,7 +42,7 @@ class UpgradeDialog extends StatefulWidget {
     );
     if (!needUpgrade(currentVersion, appVersion.version)) return;
     if (Platform.isIOS) {
-      String url = 'itms-apps://itunes.apple.com/cn/app/id414478124'; // 这是微信的地址，到时候换成自己的应用的地址
+      // String url = 'itms-apps://itunes.apple.com/cn/app/id414478124'; // 这是微信的地址，到时候换成自己的应用的地址
       // if (await canLaunch(url)) {
       //   await launch(url);
       // } else {

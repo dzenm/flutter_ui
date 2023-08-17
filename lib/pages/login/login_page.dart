@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/http/http_manager.dart';
 import 'package:provider/provider.dart';
 
-import '../../base/http/https_client.dart';
 import '../../base/log/build_config.dart';
 import '../../base/log/log.dart';
 import '../../base/res/app_theme.dart';
@@ -14,9 +14,7 @@ import '../../base/utils/sp_util.dart';
 import '../../base/widgets/common_bar.dart';
 import '../../base/widgets/common_dialog.dart';
 import '../../base/widgets/tap_layout.dart';
-import '../../entities/user_entity.dart';
 import '../../generated/l10n.dart';
-import '../../models/user_model.dart';
 import '../routers.dart';
 
 ///
@@ -291,27 +289,12 @@ class _EditLoginInfoViewState extends State<_EditLoginInfoView> {
     } else {
       password = _verifyCode;
     }
-    HttpsClient.instance.request(apiServices.login(_username, password), success: (data) {
-      UserEntity user = UserEntity.fromJson(data);
-
-      // 先保存SP，数据库创建需要用到SP的userId
-      SpUtil.setUserLoginState(true);
-      SpUtil.setUsername(user.username);
-      SpUtil.setUserId(user.id.toString());
-
-      // 更新数据
-      context.read<UserModel>().user = user;
-      _pushMainPage();
-    });
+    HttpManager.instance.login(_username, password);
   }
 
   void _register() {
     FocusScope.of(context).unfocus();
     AppRouteDelegate.of(context).push(Routers.register);
-  }
-
-  void _pushMainPage() {
-    AppRouteDelegate.of(context).push(Routers.main, clearStack: true);
   }
 
   void log(String msg) => Log.p(msg, tag: _tag);
