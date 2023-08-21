@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../base/log/build_config.dart';
-import 'main_page_desktop.dart';
 import 'main_page_mobile.dart';
 import 'main_page_web.dart';
 
@@ -18,7 +17,7 @@ class MainPage extends StatelessWidget {
     } else if (BuildConfig.isWeb) {
       return const MainPageWeb();
     } else if (BuildConfig.isDesktop) {
-      return const MainPageWindows();
+      return const MainPageMobile();
     }
     return const Center(
       child: Text('未知平台'),

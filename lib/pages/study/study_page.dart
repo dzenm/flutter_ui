@@ -183,6 +183,7 @@ class _StudyPageState extends State<StudyPage> {
         onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.slide),
         child: _text('左右滑动'),
       ),
+      const SizedBox(height: 8),
       // 加载状态
       MaterialButton(
         textColor: Colors.white,

@@ -16,6 +16,7 @@ class TapLayout extends StatefulWidget {
 
   final Color? foreground;
   final Color? background;
+  final Color? highlightColor;
 
   final BoxBorder? border;
   final List<BoxShadow>? boxShadow;
@@ -41,6 +42,7 @@ class TapLayout extends StatefulWidget {
     this.alignment = Alignment.center,
     this.foreground,
     this.background = Colors.transparent,
+    this.highlightColor,
     this.image,
     this.border,
     this.borderRadius,
@@ -94,7 +96,7 @@ class _TapLayoutState extends State<TapLayout> {
       ),
       child: Material(
         color: Colors.transparent,
-        // Widget展示的背景圆角
+        // Widget展示的背景圆角，控件背景区域圆角以及水波纹扩散填充的圆角
         borderRadius: widget.borderRadius,
         clipBehavior: Clip.hardEdge,
         child: Ink(
@@ -116,10 +118,12 @@ class _TapLayoutState extends State<TapLayout> {
             onDoubleTap: widget.onDoubleTap,
             onHighlightChanged: (value) => setState(() => _isTouchDown = value),
             // 点击时的水波纹圆角
+            highlightShape: BoxShape.rectangle,
             borderRadius: widget.borderRadius,
-            highlightColor: Colors.transparent,
-            // 点击时的水波纹前景色
-            splashColor: widget.foreground,
+            // 点击|触摸的时候,高亮显示的颜色
+            highlightColor: widget.highlightColor ?? Theme.of(context).highlightColor,
+            // 点击时的水波纹扩散颜色
+            splashColor: widget.foreground ?? Theme.of(context).splashColor,
             containedInkWell: true,
             child: child,
           ),
