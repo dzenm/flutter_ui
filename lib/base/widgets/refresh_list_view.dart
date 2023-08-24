@@ -18,19 +18,17 @@ class RefreshListView extends StatefulWidget {
   final StateController? controller; // 加载状态控制器
   final int itemCount; // item数量
   final IndexedWidgetBuilder builder; // 子item样式
-  final RefreshFunction refresh; // refresh为true表示下拉刷新的回调, 为false表示上拉加载更多的回调
+  final RefreshFunction? refresh; // refresh为true表示下拉刷新的回调, 为false表示上拉加载更多的回调
   final EdgeInsetsGeometry? padding;
-  final bool showRefresh;
   final bool showFooter;
 
   const RefreshListView({
     super.key,
     required this.itemCount,
     required this.builder,
-    required this.refresh,
+    this.refresh,
     this.controller,
     this.padding,
-    this.showRefresh = true,
     this.showFooter = false,
   });
 
@@ -81,7 +79,7 @@ class _RefreshListViewState extends State<RefreshListView> {
     int itemCount = widget.itemCount + (!widget.showFooter ? 0 : 1);
     Widget child = Container();
     if (init) {
-      if (widget.showRefresh) {
+      if (widget.refresh != null) {
         child = RefreshIndicator(
           onRefresh: _refresh,
           child: _buildListView(itemCount),
@@ -143,7 +141,9 @@ class _RefreshListViewState extends State<RefreshListView> {
   /// 第一次加载数据
   Future<void> _refresh({bool init = true}) async {
     if (!init) setState(() => _stateController!.loading());
-    await widget.refresh(true);
+    if (widget.refresh != null) {
+      await widget.refresh!(true);
+    }
   }
 
   /// 加载更多的数据
@@ -153,7 +153,9 @@ class _RefreshListViewState extends State<RefreshListView> {
 
     _isLoading = true;
     setState(() => _stateController!.loading());
-    await widget.refresh(false);
+    if (widget.refresh != null) {
+      await widget.refresh!(false);
+    }
     _isLoading = false;
   }
 }
