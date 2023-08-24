@@ -81,6 +81,16 @@ class AppTheme {
   Color get transparent => Colors.transparent; // 透明色
   Color get red => Colors.red; // 红色
   Color get blue => Colors.blue; // 蓝色
+  Color get green => Colors.green; // 绿色
+  Color get yellow => Colors.yellow; // 黄色
+  Color get pink => Colors.pink; // 粉红色
+  Color get amber => Colors.amber; // 琥珀色
+  Color get brown => Colors.brown; // 棕色
+  Color get cyan => Colors.cyan; // 青色
+  Color get grey => Colors.grey; // 灰色
+  Color get lime => Colors.lime; // 柠檬色
+  Color get teal => Colors.teal; // 青色
+  Color get orange => Colors.orange; // 橘色
 
   /// 默认颜色值
   Color get purple700 => const Color(0xFF3700B3); // default dark primary color
@@ -98,8 +108,9 @@ class AppTheme {
   Color get disableButton => purple200; // 禁用的按钮颜色
   Color get selected => purple500; // 选中的颜色
   Color get unselected => purple200; // 未选中的颜色
-  Color get text => white; // 文本颜色(浅色white, 深色black900)
   Color get icon => white; // 图标颜色(浅色white, 深色black900)
+  Color get text => white; // 文本颜色(浅色white, 深色black900)
+  Color get signText => blue; // 标记提醒文本颜色
   Color get background => black50; // 普通背景色
   Color get foreground => black50; // 普通前景色
   Color get divide => black300; // 分割线颜色
@@ -115,6 +126,10 @@ class AppTheme {
   Color get cardBackgroundLight => black50; // 卡片背景颜色(浅色)
   Color get cardBackground => black100; // 卡片背景颜色
   Color get cardBackgroundDark => black150; // 卡片背景颜色(深色)
+  Color get collect => red; // 收藏的颜色
+  Color get notCollect => black400; // 未收藏的颜色
+  Color get checked => blue; // 勾选(CheckBox)的颜色
+  Color get unchecked => black400; // 未勾选(CheckBox)的颜色
 
   ///================================ 常用颜色设置 ================================
 

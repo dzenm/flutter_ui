@@ -4,6 +4,14 @@ import 'package:flutter/material.dart';
 /// Created by a0010 on 2022/7/28 10:56
 /// Provider中共享的主页页面数据
 class MainModel with ChangeNotifier {
+  /// 初始化数据
+  Future<void> init() async {
+    _initial = false;
+    _selectedIndex = 0;
+    _badges = List.generate(3, (index) => 0);
+    _controller = PageController(initialPage: _selectedIndex);
+  }
+
   /// 主页是否初始化完成
   bool _initial = false;
 
@@ -12,12 +20,6 @@ class MainModel with ChangeNotifier {
   void initialComplete() {
     _initial = true;
     notifyListeners();
-  }
-
-  /// 初始化数据
-  Future<void> init() async {
-    _badges = List.generate(3, (index) => 0);
-    _controller = PageController(initialPage: _selectedIndex);
   }
 
   /// 首页面切换的PageController
@@ -31,9 +33,6 @@ class MainModel with ChangeNotifier {
   /// 获取当前选中的item索引
   int get selectedIndex => _selectedIndex;
 
-  /// 根据索引判断索引是否是选中的索引
-  bool isSelected(int index) => _selectedIndex == index;
-
   /// 更新当前选中的item索引
   set selectedIndex(int selectedIndex) {
     if (_selectedIndex == selectedIndex) return;
@@ -45,6 +44,9 @@ class MainModel with ChangeNotifier {
     );
     notifyListeners();
   }
+
+  /// 根据索引判断索引是否是选中的索引
+  bool isSelected(int index) => _selectedIndex == index;
 
   /// 主页底部的小红点数量列表
   List<int> _badges = [];
@@ -70,6 +72,7 @@ class MainModel with ChangeNotifier {
 
   /// 清空数据
   void clear() {
+    _initial = false;
     _selectedIndex = 0;
     _controller?.dispose();
     _controller = null;

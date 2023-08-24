@@ -55,7 +55,7 @@ class _TabOfficialPageState extends State<TabOfficialPage> {
                 AppRouteDelegate.of(context).push(Routers.webView + params);
               },
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              background: theme.purple200,
+              background: theme.primaryLight,
               alignment: null,
               borderRadius: const BorderRadius.all(Radius.circular(16)),
               child: Text(name),

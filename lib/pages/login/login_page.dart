@@ -315,7 +315,7 @@ class _ProtocolInfoViewState extends State<ProtocolInfoView> {
   Widget build(BuildContext context) {
     AppTheme theme = context.watch<LocalModel>().theme;
     IconData icon = _isAgree ? Icons.check_box_sharp : Icons.check_box_outline_blank_sharp;
-    Color color = _isAgree ? theme.blue : theme.hint;
+    Color color = _isAgree ? theme.checked : theme.unchecked;
     return Column(mainAxisSize: MainAxisSize.min, children: [
       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         const SizedBox(width: 16),
@@ -331,11 +331,11 @@ class _ProtocolInfoViewState extends State<ProtocolInfoView> {
         Text(S.of(context).readAndAgree, style: TextStyle(color: theme.hint, fontSize: 12)),
         TapLayout(
           onTap: () {},
-          child: Text(S.of(context).registerProtocol, style: TextStyle(color: theme.blue, fontSize: 12)),
+          child: Text(S.of(context).registerProtocol, style: TextStyle(color: theme.signText, fontSize: 12)),
         ),
         TapLayout(
           onTap: () {},
-          child: Text(S.of(context).privateProtocol, style: TextStyle(color: theme.blue, fontSize: 12)),
+          child: Text(S.of(context).privateProtocol, style: TextStyle(color: theme.signText, fontSize: 12)),
         ),
         const SizedBox(width: 16),
       ]),

@@ -56,7 +56,7 @@ class _MainPageMobileState extends State<MainPageMobile> with WidgetsBindingObse
     // 先初始化页面
     ProviderManager.main(context: context).init();
 
-    Future.delayed(Duration.zero, () => _initData());
+    _initData();
   }
 
   /// 初始化数据
@@ -67,6 +67,7 @@ class _MainPageMobileState extends State<MainPageMobile> with WidgetsBindingObse
 
   /// 初始化Provider数据，使用context并且异步加载，必须放在页面执行
   Future<void> _initProvider() async {
+    log('initProvider');
     // 再初始化数据
     await Future.wait([
       // 表相关的Model
@@ -82,6 +83,7 @@ class _MainPageMobileState extends State<MainPageMobile> with WidgetsBindingObse
       ProviderManager.study(context: context).init(),
     ]).whenComplete(() {
       // 数据初始化完成进行标记
+      log('model数据获取完成');
       context.read<MainModel>().initialComplete();
     });
   }

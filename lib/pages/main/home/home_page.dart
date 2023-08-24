@@ -326,7 +326,7 @@ class ArticleItemView extends StatelessWidget {
                         padding: const EdgeInsets.all(4),
                         child: Text(
                           val.name ?? '',
-                          style: TextStyle(fontSize: 12, color: theme.blue),
+                          style: TextStyle(fontSize: 12, color: theme.signText),
                         ),
                         onTap: () {
                           /// 处理url
@@ -367,11 +367,11 @@ class ArticleItemView extends StatelessWidget {
               builder: (context, value, child) {
                 if (value == 0) return Container();
                 return Row(children: [
-                  Icon(CustomIcons.thumbs_up, color: theme.blue, size: 16),
+                  Icon(CustomIcons.thumbs_up, color: theme.signText, size: 16),
                   const SizedBox(width: 4),
                   Text(
                     '$value',
-                    style: TextStyle(color: theme.blue),
+                    style: TextStyle(color: theme.signText),
                   ),
                   const SizedBox(width: 8),
                 ]);
@@ -418,7 +418,7 @@ class CollectArticleView extends StatelessWidget {
     return Selector<ArticleModel, bool>(
       builder: (context, value, child) {
         IconData icon = value ? CustomIcons.heart : CustomIcons.heart_empty;
-        Color? color = value ? theme.red : theme.hint;
+        Color? color = value ? theme.collect : theme.notCollect;
         return TapLayout(
           height: 48,
           width: 48,

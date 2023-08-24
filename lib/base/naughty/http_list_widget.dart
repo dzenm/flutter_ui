@@ -64,21 +64,35 @@ class HTTPListWidget extends StatelessWidget {
 
   /// 请求状态布局
   Widget _buildStatusView(HTTPEntity entity) {
-    String text = entity.status == Status.running
-        ? 'Running'
-        : entity.status == Status.success
-            ? 'Success'
-            : entity.status == Status.failed
-                ? 'Failed'
-                : 'None';
+    Widget child;
+    if (entity.status == Status.running) {
+      String text = entity.status == Status.running
+          ? 'Running'
+          : entity.status == Status.success
+              ? 'Success'
+              : entity.status == Status.failed
+                  ? 'Failed'
+                  : 'None';
+      child = Text(text, style: const TextStyle(color: Colors.white));
+      child = const SizedBox(
+        width: 8,
+        height: 8,
+        child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+      );
+    } else {
+      child = _buildStatusCodeView(entity);
+    }
+    child = Row(mainAxisAlignment: MainAxisAlignment.center, children: [child]);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 4),
+      height: 18,
+      width: 56,
+      padding: const EdgeInsets.symmetric(horizontal: 2),
       decoration: BoxDecoration(
         color: _stateColor(entity.status),
         shape: BoxShape.rectangle,
         borderRadius: const BorderRadius.only(topRight: Radius.circular(7), bottomLeft: Radius.circular(7)),
       ),
-      child: Text(text, style: const TextStyle(color: Colors.white)),
+      child: child,
     );
   }
 
@@ -86,23 +100,15 @@ class HTTPListWidget extends StatelessWidget {
   Widget _buildContentView(HTTPEntity entity) {
     return Container(
       padding: const EdgeInsets.only(left: 16.0, top: 8.0, right: 16.0, bottom: 16.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildStatusCodeView(entity),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              children: [
-                _buildMethodView(entity),
-                const SizedBox(height: 8),
-                const SizedBox(height: 8),
-                _buildDetailView(entity),
-              ],
-            ),
-          ),
-        ],
-      ),
+      child: Row(children: [
+        Expanded(
+          child: Column(children: [
+            _buildMethodView(entity),
+            const SizedBox(height: 16),
+            _buildDetailView(entity),
+          ]),
+        ),
+      ]),
     );
   }
 
@@ -110,19 +116,25 @@ class HTTPListWidget extends StatelessWidget {
   Widget _buildStatusCodeView(HTTPEntity entity) {
     return Text(
       entity.statusCode.toString(),
-      style: TextStyle(fontWeight: FontWeight.bold, color: _stateColor(entity.status)),
+      style: const TextStyle(color: Colors.white),
     );
   }
 
   /// 请求方法和请求路径布局
   Widget _buildMethodView(HTTPEntity entity) {
-    return Row(children: [
+    return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(
         entity.method ?? '',
         style: const TextStyle(fontWeight: FontWeight.bold),
       ),
       const SizedBox(width: 8),
-      Expanded(child: Text('${entity.path ?? ''}(第${entity.index}次)', maxLines: 2, overflow: TextOverflow.ellipsis)),
+      Expanded(
+          child: Text(
+        '${entity.path ?? ''}(第${entity.index}次)',
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      )),
     ]);
   }
 
