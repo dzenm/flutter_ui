@@ -41,8 +41,9 @@ class RefreshListView extends StatefulWidget {
 class _RefreshListViewState extends State<RefreshListView> {
   final ScrollController _controller = ScrollController(); // listView的控制器
   StateController? _stateController;
-  bool _isTouch = false;
-  bool _isFooter = false;
+  bool _isTouch = false; // 手指是否已经触摸到屏幕
+  bool _isFooter = false; // 是否滑动到最底部
+  bool _isLoading = false; // 是否正在加载数据中
 
   @override
   void initState() {
@@ -50,12 +51,14 @@ class _RefreshListViewState extends State<RefreshListView> {
 
     _stateController = widget.controller ?? StateController();
     _controller.addListener(() {
+      // 如果正在加载数据中，不处理
+      if (_isLoading) return;
       // pixels：当前滚动的像素点
       // maxScrollExtent：当前最大可滚动的位置
       // 判断是否滑动到最底部
-      bool isFooter = _controller.position.pixels == _controller.position.maxScrollExtent;
-      _isFooter = isFooter;
-      if (!_isTouch && _isFooter) {
+      _isFooter = _controller.position.pixels == _controller.position.maxScrollExtent;
+      // 手指已离开屏幕并且滑动到底部时加载更多数据
+      if (_isFooter) {
         _loadingMore();
       }
     });
@@ -88,12 +91,12 @@ class _RefreshListViewState extends State<RefreshListView> {
       }
     }
     return Listener(
-      onPointerDown: (event) {
-        _isTouch = true;
-        setState(() {});
-      },
+      // 手指按下屏幕
+      onPointerDown: (event) => _isTouch = true,
+      // 手指按下屏幕未离开并且在滑动
       onPointerMove: (event) {
-        if (!init) return;
+        // 未初始化/正在加载中时，不处理
+        if (!init || _isLoading) return;
         // 手指移动过程中，如果已经到最底部了，就提示松开手指进行加载，如果未滑动到最底部就提示继续滑动
         if (_isFooter) {
           _stateController!.loadMore();
@@ -102,13 +105,15 @@ class _RefreshListViewState extends State<RefreshListView> {
         }
         setState(() {});
       },
+      // 手指离开屏幕
       onPointerUp: (event) {
-        if (!init) return;
-        // 手指松开时如果滑动到最底部就加载更多数据
+        // 未初始化/正在加载中时，不处理
+        if (!init || _isLoading) return;
+        _isTouch = false;
+        // 手指已离开屏幕并且滑动到底部时加载更多数据
         if (_isFooter) {
           _loadingMore();
         }
-        _isTouch = false;
       },
       child: StateView(
         controller: _stateController!,
@@ -143,7 +148,12 @@ class _RefreshListViewState extends State<RefreshListView> {
 
   /// 加载更多的数据
   Future<void> _loadingMore() async {
+    // 正在加载中/正在触摸屏幕时，不处理（防止多次处理）
+    if (_isLoading || _isTouch) return;
+
+    _isLoading = true;
     setState(() => _stateController!.loading());
     await widget.refresh(false);
+    _isLoading = false;
   }
 }

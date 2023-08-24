@@ -27,7 +27,7 @@ class BannerModel with ChangeNotifier {
   List<BannerEntity> _banners = [];
 
   /// 获取所有Banner数据
-  List<BannerEntity> get banners => _banners;
+  List<BannerEntity> get banners => List.generate(_banners.length, (index) => _banners[index]);
 
   /// 更新所有Banner数据
   set banners(List<BannerEntity> list) {
