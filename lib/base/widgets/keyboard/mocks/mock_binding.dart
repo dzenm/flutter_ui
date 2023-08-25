@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -36,7 +38,8 @@ class MockBinding extends WidgetsFlutterBinding {
 
 void runMockApp(Widget app) {
   final WidgetsBinding binding = MockBinding.ensureInitialized();
-  binding
-    ..scheduleAttachRootWidget(binding.wrapWithDefaultView(app))
-    ..scheduleWarmUpFrame();
+  Timer.run(() {
+    binding.attachRootWidget(binding.wrapWithDefaultView(app));
+  });
+  binding.scheduleWarmUpFrame();
 }

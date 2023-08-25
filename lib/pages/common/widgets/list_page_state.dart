@@ -75,7 +75,7 @@ abstract class ListPageState<D extends DBBaseModel, T extends StatefulWidget> ex
   }
 
   /// 下拉刷新方法,为list重新赋值
-  Future<void> _onRefresh(bool refresh) async => _getData(_pageIndex = (refresh ? pageIndex : _pageIndex));
+  Future<void> _onRefresh(bool refresh) async => await _getData(_pageIndex = (refresh ? pageIndex : _pageIndex));
 
   /// 加载数据，如果pageIndex为1表示从新加载
   Future<void> _getData(int pageIndex) async {
