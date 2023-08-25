@@ -172,14 +172,11 @@ class AppPage extends StatelessWidget {
         routerDelegate: delegate,
         routeInformationParser: const AppRouteInfoParser(),
         builder: (context, child) {
-          final botToastBuilder = BotToastInit();
-          Widget widget = botToastBuilder(context, child);
-          widget = MediaQuery(
+          return MediaQuery(
             //设置文字大小不随系统设置改变
             data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-            child: widget,
+            child: BotToastInit()(context, child),
           );
-          return widget;
         },
       );
     });
