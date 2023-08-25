@@ -48,7 +48,7 @@ dependencies:
 #  cookie_jar: 3.0.1                             # cookie持久化 https://pub.flutter-io.cn/packages/cookie_jar
   package_info_plus: 4.1.0                      # 获取版本信息 https://pub.dev/packages/package_info_plus
   device_info_plus: 9.0.3                       # 获取设备信息 https://pub.flutter-io.cn/packages/device_info_plus
-  flutter_local_notifications: 15.1.0+1         # 通知栏通知提醒 https://pub.flutter-io.cn/packages/flutter_local_notifications
+  flutter_local_notifications: 15.1.1         # 通知栏通知提醒 https://pub.flutter-io.cn/packages/flutter_local_notifications
   cached_network_image: 3.2.3                   # 图片缓存 https://pub.flutter-io.cn/packages/cached_network_image
   extended_text_field: 12.0.1                   # 输入框扩展 https://pub.flutter-io.cn/packages/extended_text_field
   back_button_interceptor: 7.0.0                # 返回按钮拦截 https://pub.flutter-io.cn/packages/back_button_interceptor
@@ -56,7 +56,7 @@ dependencies:
   json_annotation: 4.8.1                        # Json序列化 https://pub.dev/packages/json_annotation
 
   ########################################## UI ##########################################
-  webview_flutter: 4.2.2                        # WebView https://pub.dev/packages/webview_flutter
+  webview_flutter: 4.2.3                        # WebView https://pub.dev/packages/webview_flutter
   azlistview: 2.0.0                             # az列表 https://pub.flutter-io.cn/packages/azlistview
   flutter_slidable: 3.0.0                       # 可滑动的列表展示 https://pub.flutter-io.cn/packages/flutter_slidable
 #  flutter_echarts: 2.0.0                        # EChart 图表（缩放手势冲突） https://pub.flutter-io.cn/packages/flutter_echarts
@@ -91,7 +91,7 @@ dependencies:
   ########################################## 工具 ########################################
   scan: 1.6.0                                   # 扫描二维码 https://pub.flutter-io.cn/packages/scan
   lpinyin: 2.0.3                                # 汉字转拼音 https://pub.flutter-io.cn/packages/lpinyin
-  flutter_screenutil: 5.8.4                     # 屏幕参数适配 https://pub.flutter-io.cn/packages/flutter_screenutil
+  flutter_screenutil: 5.9.0                     # 屏幕参数适配 https://pub.flutter-io.cn/packages/flutter_screenutil
   date_format: 2.0.7                            # 时间格式转换 https://pub.flutter-io.cn/packages/date_format
   url_launcher: 6.1.12                          # 网页打开工具 https://pub.flutter-io.cn/packages/url_launcher
   flustars: 2.0.1                               # Flutter 常用工具类库（本地化 屏幕适配） https://pub.flutter-io.cn/packages/flustars
