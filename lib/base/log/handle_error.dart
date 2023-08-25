@@ -74,13 +74,11 @@ class HandleError {
     //               style: TextStyle(color: Colors.red, fontSize: 14),
     //             )
     //           ],
-
     //         ),
     //       ),
     //     ),
     //   );
     // };
-
     // flutter sdk 3.3之后使用下面的方式捕获异常
     PlatformDispatcher.instance.onError = (dynamic error, StackTrace stackTrace) {
       // 处理异常信息

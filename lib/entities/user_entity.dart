@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import '../base/db/db_base_model.dart';
-import 'convert/bool_convert.dart';
+import 'converts/bool_convert.dart';
 
 part 'user_entity.g.dart';
 

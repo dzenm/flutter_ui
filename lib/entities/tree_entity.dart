@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 import '../base/db/db_base_model.dart';
 import 'article_entity.dart';
-import 'convert/bool_convert.dart';
+import 'converts/bool_convert.dart';
 
 part 'tree_entity.g.dart';
 
