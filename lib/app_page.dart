@@ -107,7 +107,7 @@ class AppPage extends StatelessWidget {
   /// 全局设置（主题、语言、屏幕适配、路由设置）
   Widget _buildMaterialApp() {
     AppRouteDelegate delegate = _createRouteDelegate();
-    return Consumer<LocalModel>(builder: (ctx, local, widget) {
+    return Consumer<LocalModel>(builder: (context, locale, widget) {
       // 初始化需要用到context的地方，在创建MaterialApp之后
       Future.delayed(Duration.zero, () {
         BuildContext context = delegate.context;
@@ -115,7 +115,7 @@ class AppPage extends StatelessWidget {
         _useContextAfterBuild(context);
       });
       // Page必须放在MaterialApp中运行
-      AppTheme theme = local.theme;
+      AppTheme theme = locale.theme;
       return MaterialApp.router(
         title: 'FlutterUI',
         debugShowCheckedModeBanner: false,
@@ -155,7 +155,7 @@ class AppPage extends StatelessWidget {
           useMaterial3: true,
         ),
         // 设置语言，读取LocalModel的值，改变LocalModel的locale值会通过provider刷新页面
-        locale: local.locale,
+        locale: locale.locale,
         // 国际化
         localizationsDelegates: const [
           S.delegate,

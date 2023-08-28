@@ -17,23 +17,6 @@ import 'website_model.dart';
 /// Created by a0010 on 2022/7/28 10:56
 /// 管理所有Provider Model状态
 class ProviderManager {
-  /// 清空所有数据
-  static void clear({BuildContext? context}) {
-    context ??= _context;
-    // 表相关的Model
-    context.read<ArticleModel>().clear();
-    context.read<BannerModel>().clear();
-    context.read<UserModel>().clear();
-    context.read<ArticleModel>().clear();
-
-    // 页面相关的Model
-    context.read<MainModel>().clear();
-    context.read<HomeModel>().clear();
-    context.read<MeModel>().clear();
-    context.read<NavModel>().clear();
-    context.read<StudyModel>().clear();
-  }
-
   static LocalModel local({BuildContext? context, bool listen = false}) {
     return Provider.of<LocalModel>(context ?? _context, listen: listen);
   }
@@ -72,6 +55,23 @@ class ProviderManager {
 
   static StudyModel study({BuildContext? context, bool listen = false}) {
     return Provider.of<StudyModel>(context ?? _context, listen: listen);
+  }
+
+  /// 清空所有数据
+  static void clear({BuildContext? context}) {
+    context ??= _context;
+    // 表相关的Model
+    context.read<ArticleModel>().clear();
+    context.read<BannerModel>().clear();
+    context.read<UserModel>().clear();
+    context.read<ArticleModel>().clear();
+
+    // 页面相关的Model
+    context.read<MainModel>().clear();
+    context.read<HomeModel>().clear();
+    context.read<MeModel>().clear();
+    context.read<NavModel>().clear();
+    context.read<StudyModel>().clear();
   }
 
   static BuildContext get _context => Application().context;

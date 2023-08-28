@@ -68,14 +68,10 @@ class HttpsClient {
 
   final Map<String, ApiServices> _apiServices = {};
 
-  ApiServices apiServices(int index) => _apiServices[baseUrls[index]]!;
+  ApiServices apiServices(int index) => _apiServices[_baseUrls[index]]!;
 
   /// 如果存在多个url的情况，在这里添加，默认使用 [apiServices] ，其他使用 [api] 请求接口
-  final List<String> baseUrls = [
-    'https://www.wanandroid.com/',
-    'http://api.tianapi.com/',
-    'http://192.168.2.30:8080/api/v1/',
-  ];
+  final List<String> _baseUrls = [];
 
   /// 日志打印，如果不设置，将不打印日志，如果要设置在使用数据库之前调用 [init]
   Function? _logPrint;
@@ -99,6 +95,7 @@ class HttpsClient {
     void Function()? loading,
     Function? toast,
     List<Interceptor>? interceptors,
+    List<String>? baseUrls,
   }) {
     _logPrint = logPrint;
     _toast = toast;
@@ -114,7 +111,10 @@ class HttpsClient {
     // cookie持久化
     // _interceptors.add(CookieInterceptor.instance);
 
-    for (var url in baseUrls) {
+    if (baseUrls != null) {
+      _baseUrls.addAll(baseUrls);
+    }
+    for (var url in _baseUrls) {
       _apiServices[url] ??= ApiServices(_createDio(baseUrl: url), baseUrl: url);
     }
   }

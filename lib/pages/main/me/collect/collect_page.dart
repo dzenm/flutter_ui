@@ -18,7 +18,7 @@ class CollectPage extends StatefulWidget {
 
 class _CollectPageState extends ListPageState<CollectEntity, CollectPage> {
   @override
-  int get pageIndex => 0;
+  int get initialPageIndex => 0;
 
   @override
   String getTitle() => S.of(context).collect;

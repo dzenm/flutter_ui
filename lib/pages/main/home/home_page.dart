@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/config/consts.dart';
 import 'package:provider/provider.dart';
 
-import '../../../base/http/https_client.dart';
 import '../../../base/log/log.dart';
 import '../../../base/res/app_theme.dart';
 import '../../../base/res/assets.dart';
@@ -38,7 +38,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   static const String _tag = 'HomePage';
   final StateController _controller = StateController();
-  int _page = 0; // 加载的页数
+  int _pageIndex = 0; // 加载的页数
   bool _init = false;
 
   @override
@@ -109,13 +109,16 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<void> _onRefresh(bool refresh) async => await _getArticle(isReset: refresh);
+  Future<void> _onRefresh(bool refresh) async {
+    _pageIndex = (refresh ? 0 : _pageIndex);
+    await _getData();
+  }
 
   Future<void> _getData() async {
     log('开始加载网络数据...');
     await Future.wait([
       _getBanner(),
-      _getArticle(isReset: true),
+      _getArticle(),
       _getTopArticle(),
       _getDataList(),
     ]).then((value) {
@@ -144,19 +147,18 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<void> _getArticle({bool isReset = false}) async {
-    _page = isReset ? 0 : _page;
+  Future<void> _getArticle() async {
     await HttpManager.instance.getArticles(
-      page: _page,
+      page: _pageIndex,
       isShowDialog: false,
       success: (list, pageCount) {
         _controller.loadComplete(); // 加载成功
-        if (_page >= (pageCount ?? 0)) {
+        if (_pageIndex >= (pageCount ?? 0)) {
           _controller.loadEmpty(); // 加载完所有页面
         } else {
           // 加载数据成功，保存数据，下次加载下一页
           context.read<ArticleModel>().updateArticles(list);
-          ++_page;
+          ++_pageIndex;
           _controller.loadMore();
         }
         setState(() {});
@@ -332,7 +334,7 @@ class ArticleItemView extends StatelessWidget {
                           /// 处理url
                           String path = val.url ?? '';
                           int start = path.indexOf('/');
-                          String url = HttpsClient().baseUrls[0] + path.substring(start);
+                          String url = Consts.baseUrl + path.substring(start);
                           String params = '?title=${val.name}&url=$url';
                           AppRouteDelegate.of(context).push(Routers.webView + params);
                         },

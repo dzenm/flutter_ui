@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ui/base/channel/plugin_manager.dart';
+import 'package:flutter_ui/config/consts.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
 import 'app_page.dart';
@@ -90,6 +91,7 @@ class Application {
       loading: CommonDialog.loading,
       toast: CommonDialog.showToast,
       interceptors: [HttpInterceptor(), CookieInterceptor()],
+      baseUrls: [Consts.baseUrl, Consts.apiUrl, Consts.localhostUrl],
     );
 
     log('初始化 RouteManager');

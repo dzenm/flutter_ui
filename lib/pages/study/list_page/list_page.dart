@@ -19,12 +19,12 @@ class ListPage extends StatefulWidget {
 class _ListPageState extends State<ListPage> {
   final StateController _controller = StateController();
   final List<ArticleEntity> _articles = [];
-  int _page = 0; // 加载的页数
+  int _pageIndex = 0; // 加载的页数
 
   @override
   void initState() {
     super.initState();
-    _getArticle(isReset: true);
+    _getData();
   }
 
   @override
@@ -63,26 +63,29 @@ class _ListPageState extends State<ListPage> {
   }
 
   // 下拉刷新方法,为list重新赋值
-  Future<void> _onRefresh(bool refresh) async => await _getArticle(isReset: refresh);
+  Future<void> _onRefresh(bool refresh) async {
+    _pageIndex = (refresh ? 0 : _pageIndex);
+    await _getData();
+  }
 
   // 根据页数获取文章
-  Future<void> _getArticle({bool isReset = false}) async {
-    await Future.delayed(Duration(milliseconds: isReset ? 500 : 0));
-    if (isReset) {
-      _page = 0;
+  Future<void> _getData() async {
+    bool reset = _pageIndex == 0;
+    if (reset) {
       _articles.clear();
     }
+    await Future.delayed(Duration(milliseconds: reset ? 500 : 0));
     await HttpManager.instance.getArticles(
-      page: _page,
+      page: _pageIndex,
       isShowDialog: false,
       success: (list, pageCount) {
         _controller.loadComplete(); // 加载成功
-        if (_page >= (pageCount ?? 0)) {
+        if (_pageIndex >= (pageCount ?? 0)) {
           _controller.loadEmpty(); // 加载完所有页面
         } else {
           // 加载数据成功，下次加载下一页
           _articles.addAll(list);
-          ++_page;
+          ++_pageIndex;
           _controller.loadMore();
         }
         setState(() {});

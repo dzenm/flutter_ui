@@ -27,11 +27,11 @@ abstract class ListPageState<D extends DBBaseModel, T extends StatefulWidget> ex
     super.initState();
 
     /// 初始页面下标
-    _pageIndex = pageIndex;
-    _getData(_pageIndex); // 第一次加载数据
+    _pageIndex = initialPageIndex;
+    _getData(); // 第一次加载数据
   }
 
-  int get pageIndex => 1;
+  int get initialPageIndex => 1;
 
   @override
   Widget build(BuildContext context) {
@@ -74,20 +74,23 @@ abstract class ListPageState<D extends DBBaseModel, T extends StatefulWidget> ex
     return Container();
   }
 
-  /// 下拉刷新方法,为list重新赋值
-  Future<void> _onRefresh(bool refresh) async => await _getData(_pageIndex = (refresh ? pageIndex : _pageIndex));
+  /// [refresh]为true表示下拉刷新方法，为false表示上拉加载更多
+  Future<void> _onRefresh(bool refresh) async {
+    _pageIndex = (refresh ? initialPageIndex : _pageIndex);
+    await _getData();
+  }
 
   /// 加载数据，如果pageIndex为1表示从新加载
-  Future<void> _getData(int pageIndex) async {
-    bool reset = pageIndex == this.pageIndex;
+  Future<void> _getData() async {
+    bool reset = _pageIndex == initialPageIndex;
     if (reset) {
       _list.clear();
     }
     await Future.delayed(Duration(milliseconds: reset ? 500 : 0));
-    await getData(pageIndex);
+    await getData(_pageIndex);
   }
 
-  // 加载数据
+  /// 加载数据
   Future<void> getData(int pageIndex);
 
   /// 更新加载成功的状态
@@ -98,7 +101,7 @@ abstract class ListPageState<D extends DBBaseModel, T extends StatefulWidget> ex
     } else {
       // 加载数据成功，保存数据，下次加载下一页
       _list.addAll(list);
-      _pageIndex++;
+      ++_pageIndex;
       _controller.loadMore();
     }
     if (mounted) setState(() {});
