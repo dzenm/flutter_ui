@@ -1,8 +1,12 @@
 // ignore_for_file: depend_on_referenced_packages
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sqlite3/open.dart' as open;
+import 'package:sqlite3/sqlite3.dart' as sqlite3;
 
 import 'column_entity.dart';
 import 'db_sql.dart';
@@ -49,6 +53,28 @@ class DBManager {
 
   void init({Function? logPrint}) {
     _logPrint = logPrint;
+    setupDatabase();
+  }
+
+  /// 设置Windows数据库
+  static void setupDatabase() {
+    if (Platform.isWindows) {
+      String location = Directory.current.path;
+      _windowsInit(join(location, 'sqlite3.dll'));
+    }
+  }
+
+  /// Windows数据库初始化
+  static void _windowsInit(String path) {
+    open.open.overrideFor(open.OperatingSystem.windows, () {
+      try {
+        return DynamicLibrary.open(path);
+      } catch (e) {
+        stderr.writeln('Failed to load sqlite3.dll at $path');
+        rethrow;
+      }
+    });
+    sqlite3.sqlite3.openInMemory().dispose();
   }
 
   /// 获取当前数据库对象, 未指定数据库名称时默认为用户名 [_userId]，切换数据库操作时要先关闭 [close] 再重新打开。
@@ -127,7 +153,26 @@ class DBManager {
     return _dbPath!;
   }
 
-  Future<String> get databasesPath async => await getDatabasesPath();
+  /// 获取数据库所在的路径
+  /// macOS/iOS: /Users/a0010/Library/Containers/<package_name>/Data/Documents/databases
+  /// Windows:   C:\Users\Administrator\Documents
+  /// Android:   /data/user/0/<package_name>/databases
+  Future<String> get databasesPath async {
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String dirName = 'databases';
+    String dirPath = join(appDocDir.path, dirName);
+    if (Platform.isAndroid) {
+      dirPath = join(appDocDir.parent.path, dirName);
+    }
+    if (Platform.isWindows || Platform.isLinux) {
+      dirPath = join(appDocDir.path, 'Flutter', dirName);
+    }
+    Directory result = Directory(dirPath);
+    if (!result.existsSync()) {
+      result.createSync(recursive: true);
+    }
+    return dirPath;
+  }
 
   /// 判断表是否存在
   Future<bool> isTableExist(String tableName, {String? dbName}) async {

@@ -36,7 +36,7 @@ class _DBColumnPageState extends State<DBColumnPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.tableName),
+        title: Text(widget.tableName, style: const TextStyle(color: Colors.white)),
         toolbarTextStyle: const TextStyle(color: Colors.white),
         systemOverlayStyle: SystemUiOverlayStyle.light,
       ),
