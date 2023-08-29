@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/config/consts.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base/log/log.dart';
@@ -16,6 +15,7 @@ import '../../../base/widgets/image_view.dart';
 import '../../../base/widgets/refresh_list_view.dart';
 import '../../../base/widgets/state_view.dart';
 import '../../../base/widgets/tap_layout.dart';
+import '../../../config/configs.dart';
 import '../../../entities/article_entity.dart';
 import '../../../entities/banner_entity.dart';
 import '../../../http/http_manager.dart';
@@ -334,7 +334,7 @@ class ArticleItemView extends StatelessWidget {
                           /// 处理url
                           String path = val.url ?? '';
                           int start = path.indexOf('/');
-                          String url = Consts.baseUrl + path.substring(start);
+                          String url = Configs.baseUrl + path.substring(start);
                           String params = '?title=${val.name}&url=$url';
                           AppRouteDelegate.of(context).push(Routers.webView + params);
                         },

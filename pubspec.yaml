@@ -1,6 +1,5 @@
 name: flutter_ui
 description: A new Flutter application.
-author: dzenm
 homepage: https://github.com/dzenm/flutter_ui
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.

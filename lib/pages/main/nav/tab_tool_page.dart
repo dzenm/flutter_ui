@@ -6,7 +6,7 @@ import '../../../base/res/local_model.dart';
 import '../../../base/route/app_route_delegate.dart';
 import '../../../base/widgets/image_view.dart';
 import '../../../base/widgets/tap_layout.dart';
-import '../../../config/consts.dart';
+import '../../../config/configs.dart';
 import '../../../entities/tool_entity.dart';
 import '../../../http/http_manager.dart';
 import '../../routers.dart';
@@ -53,7 +53,7 @@ class _TabToolPageState extends State<TabToolPage> {
       selector: (_, model) => model.tools[index],
       builder: (c, tool, w) {
         String name = tool.name ?? '';
-        String icon = '${Consts.toolsImageUrlPrefix}${tool.icon}';
+        String icon = '${Configs.toolsImageUrlPrefix}${tool.icon}';
         String desc = tool.desc ?? '';
         return TapLayout(
           onTap: () {

@@ -17,7 +17,7 @@ import 'base/utils/sp_util.dart';
 import 'base/widgets/common_dialog.dart';
 import 'base/widgets/keyboard/mocks/mock_binding.dart';
 import 'base/widgets/keyboard/number_keyboard.dart';
-import 'config/consts.dart';
+import 'config/configs.dart';
 import 'http/cookie_interceptor.dart';
 
 ///
@@ -92,7 +92,7 @@ class Application {
       loading: CommonDialog.loading,
       toast: CommonDialog.showToast,
       interceptors: [HttpInterceptor(), CookieInterceptor()],
-      baseUrls: [Consts.baseUrl, Consts.apiUrl, Consts.localhostUrl],
+      baseUrls: [Configs.baseUrl, Configs.apiUrl, Configs.localhostUrl],
     );
 
     log('初始化 RouteManager');

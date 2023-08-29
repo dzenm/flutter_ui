@@ -12,7 +12,7 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (BuildConfig.isPhone) {
+    if (BuildConfig.isMobile) {
       return const MainPageMobile();
     } else if (BuildConfig.isWeb) {
       return const MainPageWeb();

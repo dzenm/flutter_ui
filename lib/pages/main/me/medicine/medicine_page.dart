@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 
 import '../../../../base/http/https_client.dart';
-import '../../../../base/log/build_config.dart';
 import '../../../../base/widgets/common_bar.dart';
+import '../../../../config/configs.dart';
 import '../../../../entities/medicine_entity.dart';
 import '../../../../generated/l10n.dart';
 
@@ -20,7 +20,7 @@ class MedicinePage extends StatefulWidget {
 }
 
 class _MedicinePageState extends State<MedicinePage> {
-  final String _key = BuildConfig.medicineKey;
+  final String _key = Configs.apiUrlKey;
   List<MedicineEntity> _list = [];
 
   @override
