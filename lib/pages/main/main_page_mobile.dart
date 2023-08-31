@@ -102,7 +102,7 @@ class _MainPageMobileState extends State<MainPageMobile> with WidgetsBindingObse
   }
 
   @override
-  void didUpdateWidget(covariant MainPageMobile oldWidget) {
+  void didUpdateWidget(MainPageMobile oldWidget) {
     super.didUpdateWidget(oldWidget);
     log('didUpdateWidget');
   }

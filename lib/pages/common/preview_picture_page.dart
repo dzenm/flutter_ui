@@ -122,7 +122,7 @@ class _PreviewPicturePageState extends State<PreviewPicturePage> {
       bottom: 40,
       child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
         Offstage(
-          offstage: _list.length <= 1,
+          offstage: _list.isEmpty,
           child: Text(
             '${_currentIndex + 1}/${_list.length}',
             style: const TextStyle(color: Colors.white),
