@@ -89,11 +89,13 @@ class Naughty {
 
   /// 打开一个新的页面
   void push(BuildContext context, Widget page) {
-    Route route = MaterialPageRoute(
-      builder: (BuildContext context) => page,
-      settings: RouteSettings(name: page.toStringShort()),
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => page,
+        settings: RouteSettings(name: page.toStringShort()),
+      ),
     );
-    Navigator.push(context, route);
   }
 
   /// 获取文件名通过路径或者文件，例：

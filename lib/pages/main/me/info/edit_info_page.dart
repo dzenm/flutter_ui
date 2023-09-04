@@ -29,7 +29,7 @@ class _EditInfoPageState extends State<EditInfoPage> {
   void initState() {
     super.initState();
 
-    Future.delayed(Duration.zero, () => _getData());
+    _getData();
   }
 
   Future<void> _getData() async {

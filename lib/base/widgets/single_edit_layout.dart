@@ -16,7 +16,8 @@ import 'package:flutter/services.dart';
 class SingleEditLayout extends StatefulWidget {
   final String? title; // 标题文本
   final Color? titleColor; // 标题文本颜色
-  final Color? textColor; // 文本颜色
+  final String? initialText; // 标题文本
+  final Color? color; // 文本颜色
   final String? hintText; // 提示文字
   final double fontSize; // 字体大小
   final int? maxLength; // 设置最大字数长度
@@ -31,11 +32,12 @@ class SingleEditLayout extends StatefulWidget {
     super.key,
     this.title,
     this.onChanged,
+    this.initialText,
     this.titleColor,
-    this.textColor,
+    this.color,
     this.hintText,
     this.fontSize = 16,
-    this.maxLength = 0,
+    this.maxLength,
     this.enabled = true,
     this.controller,
     this.keyboardType = TextInputType.text,
@@ -103,17 +105,31 @@ class SingleEditLayout extends StatefulWidget {
 }
 
 class _SingleEditLayoutState extends State<SingleEditLayout> {
-  var currentLength = 0;
+  /// 判断和控制焦点的获取
+  final FocusNode _focusNode = FocusNode();
 
-  // 判断和控制焦点的获取
-  var focusNode = FocusNode();
-  var hasFocus = false;
+  /// 是否获取焦点
+  bool _hasFocus = false;
+
+  /// 当前文本的长度
+  int _currentLength = 0;
+
+  /// 文本编辑控制器
+  late TextEditingController _controller;
 
   @override
   void initState() {
     super.initState();
-    currentLength = widget.controller?.text.length ?? 0;
-    focusNode.addListener(() => setState(() => hasFocus = focusNode.hasFocus));
+    _focusNode.addListener(() => setState(() => _hasFocus = _focusNode.hasFocus));
+    _controller = widget.controller ?? TextEditingController(text: widget.initialText ?? '');
+    _currentLength = _controller.text.length;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    // 释放
+    _focusNode.dispose();
   }
 
   @override
@@ -135,27 +151,27 @@ class _SingleEditLayoutState extends State<SingleEditLayout> {
         // 输入文本
         Expanded(
           child: SingleEditLayout.textField(
-            focusNode,
+            _focusNode,
             widget.fontSize,
             widget.hintText ?? '',
             (value) => _onChanged(value),
             enabled: widget.enabled,
-            textColor: widget.textColor,
+            textColor: widget.color,
             keyboardType: widget.keyboardType,
             inputFormatters: inputFormatters.isNotEmpty ? inputFormatters : null,
             maxLength: widget.maxLength,
-            controller: widget.controller,
+            controller: _controller,
           ),
         ),
 
         // 输入最大文本数量的提示
         Offstage(
           // 根据是否设置最大长度和是否获取焦点显示
-          offstage: (widget.maxLength == null ? true : !hasFocus),
+          offstage: (widget.maxLength == null ? true : !_hasFocus),
           child: Row(children: [
             const SizedBox(width: 12),
             Text(
-              '$currentLength/${widget.maxLength}',
+              '$_currentLength/${widget.maxLength}',
               style: TextStyle(fontSize: widget.fontSize - 2, color: Colors.grey),
             ),
           ]),
@@ -170,7 +186,7 @@ class _SingleEditLayoutState extends State<SingleEditLayout> {
       if (widget.onChanged != null) {
         widget.onChanged!(value);
       }
-      currentLength = value.length;
+      _currentLength = value.length;
     });
   }
 }

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/pages/study/provider_page/model_page.dart';
+import 'package:flutter_ui/pages/study/study_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base/log/log.dart';
-import '../../main/me/me_model.dart';
+import '../../../base/route/route_manager.dart';
+import 'lifecycle_page.dart';
 
 ///
 /// Created by a0010 on 2023/3/2 15:11
@@ -18,34 +21,16 @@ class ProviderPage extends StatefulWidget {
 class _ProviderPageState extends State<ProviderPage> {
   static const String _tag = 'ProviderPage';
 
-  Person? person;
+  User? _user;
 
   @override
   void initState() {
     super.initState();
     log('initState');
     Future.delayed(Duration.zero, () {
-      person = context.read<MeModel>().persons.first;
+      _user = context.read<StudyModel>().getUser(1);
       setState(() {});
     });
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    log('didChangeDependencies');
-  }
-
-  @override
-  void didUpdateWidget(covariant ProviderPage oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    log('didUpdateWidget');
-  }
-
-  @override
-  void deactivate() {
-    super.deactivate();
-    log('deactivate');
   }
 
   @override
@@ -82,9 +67,42 @@ class _ProviderPageState extends State<ProviderPage> {
   List<Widget> _buildChildrenButtons() {
     return [
       const SizedBox(height: 16),
+      MaterialButton(
+        textColor: Colors.white,
+        color: Colors.blue,
+        onPressed: () {
+          RouteManager.push(context, const ModelPage());
+        },
+        child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Text('Selector和Provider监听的变化'),
+        ]),
+      ),
+      const SizedBox(height: 16),
+      MaterialButton(
+        textColor: Colors.white,
+        color: Colors.blue,
+        onPressed: () {
+          RouteManager.push(context, const LifecyclePage());
+        },
+        child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Text('Model的生命周期跟随页面'),
+        ]),
+      ),
+    ];
+    return [
+      const SizedBox(height: 16),
+      MaterialButton(
+        textColor: Colors.white,
+        color: Colors.blue,
+        onPressed: () {
+          RouteManager.push(context, const ModelPage());
+        },
+        child: const Text('Selector和Provider监听的变化'),
+      ),
+      const SizedBox(height: 16),
       const Text('监听setState更新UI'),
       const SizedBox(height: 8),
-      _buildSetStateWidget(person: person),
+      _buildSetStateWidget(user: _user),
       const SizedBox(height: 16),
       const Text('监听Provider更新UI'),
       const SizedBox(height: 8),
@@ -106,9 +124,9 @@ class _ProviderPageState extends State<ProviderPage> {
             // I/ProviderPage  Selector name: build
             // I/ProviderPage  Selector address: build
             // I/ProviderPage  Selector age: build
-            person?.name = '通过state更新名字';
-            person?.age = 10;
-            person?.address = 'setState Beijing';
+            _user?.username = '通过state更新名字';
+            _user?.age = 10;
+            _user?.address = 'setState Beijing';
 
             setState(() {});
           },
@@ -119,11 +137,11 @@ class _ProviderPageState extends State<ProviderPage> {
           color: Colors.blue,
           onPressed: () {
             // I/ProviderWidget  build
-            Person person = context.read<MeModel>().persons[1];
-            person.name = '通过Provider更新名字';
-            person.age = 20;
-            person.address = 'Provider Shanghai';
-            context.read<MeModel>().updatePerson(1, person);
+            User? user = context.read<StudyModel>().getUser(2);
+            user?.username = '通过Provider更新名字';
+            user?.age = 20;
+            user?.address = 'Provider Shanghai';
+            context.read<StudyModel>().updateUser(user);
           },
           child: const Text('Provider'),
         ),
@@ -135,11 +153,11 @@ class _ProviderPageState extends State<ProviderPage> {
             // I/ProviderPage  Selector name: build
             // I/ProviderPage  Selector age: build
             // I/ProviderPage  Selector address: build
-            Person person = context.read<MeModel>().persons.last;
-            person.name = '通过Selector更新名字';
-            person.age = 30;
-            person.address = 'Selector JiangSu';
-            context.read<MeModel>().updatePerson(2, person);
+            User? user = context.read<StudyModel>().getUser(2);
+            user?.username = '通过Selector更新名字';
+            user?.age = 30;
+            user?.address = 'Selector JiangSu';
+            context.read<StudyModel>().updateUser(user);
           },
           child: const Text('Selector'),
         ),
@@ -147,7 +165,7 @@ class _ProviderPageState extends State<ProviderPage> {
     ];
   }
 
-  Widget _buildSetStateWidget({Person? person}) {
+  Widget _buildSetStateWidget({User? user}) {
     log('buildSetStateWidget');
 
     // setState 当前所在的widget及子widget都会被重建
@@ -158,11 +176,11 @@ class _ProviderPageState extends State<ProviderPage> {
       ),
       padding: const EdgeInsets.all(16),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Row(children: [Text('${person?.name}')]),
+        Row(children: [Text('${user?.username}')]),
         const SizedBox(height: 8),
-        Row(children: [Text('${person?.address}')]),
+        Row(children: [Text('${user?.address}')]),
         const SizedBox(height: 8),
-        Row(children: [Text('${person?.age}')]),
+        Row(children: [Text('${user?.age}')]),
       ]),
     );
   }
@@ -179,35 +197,35 @@ class _ProviderPageState extends State<ProviderPage> {
       padding: const EdgeInsets.all(16),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
-          Selector<MeModel, String>(
+          Selector<StudyModel, String>(
             builder: (context, value, widget) {
               log('Selector name: build');
 
               return Text(value);
             },
-            selector: (context, model) => model.persons.last.name ?? '',
+            selector: (context, model) => model.getUser(1)?.username ?? '',
           )
         ]),
         const SizedBox(height: 8),
         Row(children: [
-          Selector<MeModel, String>(
+          Selector<StudyModel, String>(
             builder: (context, value, widget) {
               log('Selector address: build');
 
               return Text(value);
             },
-            selector: (context, model) => model.persons.last.address ?? '',
+            selector: (context, model) => model.getUser(1)?.address ?? '',
           ),
         ]),
         const SizedBox(height: 8),
         Row(children: [
-          Selector<MeModel, int>(
+          Selector<StudyModel, int>(
             builder: (context, value, widget) {
               log('Selector age: build');
 
               return Text('$value');
             },
-            selector: (context, model) => model.persons.last.age ?? 0,
+            selector: (context, model) => model.getUser(1)?.age ?? 0,
           ),
         ]),
       ]),
@@ -231,7 +249,7 @@ class _ProviderWidgetState extends State<_ProviderWidget> {
 
     // watch 当前widget存在监听的对象有任一细微的变化都会影响build及子widget进行重建
     // 比如监听的是List或者List的其中一个item，如果List的其他item发生变化都会影响监听了List或者List的其中一个item的widget进行重建
-    Person person = context.watch<MeModel>().persons[1];
+    User? user = context.watch<StudyModel>().getUser(2);
     return Container(
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(16)),
@@ -239,11 +257,11 @@ class _ProviderWidgetState extends State<_ProviderWidget> {
       ),
       padding: const EdgeInsets.all(16),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Row(children: [Text('${person.name}')]),
+        Row(children: [Text('${user?.username}')]),
         const SizedBox(height: 8),
-        Row(children: [Text('${person.address}')]),
+        Row(children: [Text('${user?.address}')]),
         const SizedBox(height: 8),
-        Row(children: [Text('${person.age}')]),
+        Row(children: [Text('${user?.age}')]),
       ]),
     );
   }

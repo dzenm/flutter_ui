@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:provider/provider.dart';
 
 import 'app_page.dart';
 import 'base/channel/plugin_manager.dart';
@@ -53,6 +54,7 @@ class Application {
       log('╚══════════════════════════════════════════════════════════════════════════════════════════════════╝');
       // 让 Flutter 使用 path 策略
       usePathUrlStrategy();
+      Provider.debugCheckInvalidValueType = null;
       //启动第一个页面(必须使用AppPage作为最顶层页面，包含一些页面初始化相关的信息)
       runMockApp(const AppPage());
     }, handleMsg: (message) async {

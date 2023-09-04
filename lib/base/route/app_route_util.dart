@@ -13,7 +13,7 @@ class AppRouteUtil {
   static final RouterRegister register = RouterRegister();
 
   /// 创建 [CustomPage]
-  static CustomPage createPage(AppRouteSettings setting, {PageTransitionsBuilder? pageTransitions}) {
+  static Page<dynamic> createPage(AppRouteSettings setting, {PageTransitionsBuilder? pageTransitions}) {
     String path = setting.originPath;
     // 查找注册的页面
     AppRoutePage? routePage = register.match(Uri.parse(path));

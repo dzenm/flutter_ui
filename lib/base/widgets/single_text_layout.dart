@@ -23,7 +23,7 @@ class SingleTextLayout extends StatelessWidget {
   final Widget? prefix; // 标题后内容前的布局
   final bool isDense; // 标题和内容是否存在间距
 
-  final Widget? content; // 内容布局
+  final Widget? child; // 内容布局
   final String? text; // 内容文本
   final Color? textColor; // 内容文本颜色
 
@@ -50,7 +50,7 @@ class SingleTextLayout extends StatelessWidget {
     this.prefix,
     this.isDense = false,
     this.text,
-    this.content,
+    this.child,
     this.textColor,
     this.summary,
     this.summaryColor,
@@ -127,7 +127,7 @@ class SingleTextLayout extends StatelessWidget {
     // Expanded用于解决文本过长导致布局溢出的错误
     return text == null
         ? Expanded(
-            child: Row(children: [content ?? const SizedBox(width: 0)]),
+            child: Row(children: [child ?? const SizedBox(width: 0)]),
           )
         : Expanded(
             flex: 1,

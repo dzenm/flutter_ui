@@ -80,8 +80,8 @@ class CustomPage<T extends Object?> extends Page<T> {
 }
 
 /// Navigator 2.0
-class CustomPageRoute2<T> extends PageRoute<T> {
-  CustomPageRoute2({
+class DefaultPageRoute2<T> extends PageRoute<T> {
+  DefaultPageRoute2({
     required CustomPage<T> page,
     this.pageTransitionsBuilder,
   }) : super(settings: page);
@@ -150,9 +150,9 @@ mixin CustomRouteTransitionMixin<T> on PageRoute<T> {
   }
 }
 
-class PageBasedCustomPageRoute = CustomPageRoute2 with CustomRouteTransitionMixin;
+class PageBasedCustomPageRoute = DefaultPageRoute2 with CustomRouteTransitionMixin;
 
-class CupertinoModalPopupRoute2 = CustomPageRoute2 with CupertinoModalPopupRouteMixin;
+class CupertinoModalPopupRoute2 = DefaultPageRoute2 with CupertinoModalPopupRouteMixin;
 
 mixin CupertinoModalPopupRouteMixin<T> on PageRoute<T> {
   Animation<double>? _animation;

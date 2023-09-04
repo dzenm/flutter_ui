@@ -28,7 +28,7 @@ class AppRouteInfoParser extends RouteInformationParser<Page<dynamic>> {
       );
     }
 
-    CustomPage page = AppRouteUtil.createPage(settings);
+    Page<dynamic> page = AppRouteUtil.createPage(settings);
     return SynchronousFuture(page);
   }
 

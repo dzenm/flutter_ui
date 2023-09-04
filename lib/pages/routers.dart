@@ -2,6 +2,7 @@ import '../app_page.dart';
 import '../base/route/app_route_delegate.dart';
 import 'common/example_page.dart';
 import 'common/not_found_page.dart';
+import 'common/preview_picture_page.dart';
 import 'common/web_view_page.dart';
 import 'login/login_page.dart';
 import 'login/register_page.dart';
@@ -20,6 +21,7 @@ class Routers {
   static const String main = '/main';
   static const String example = '/example';
   static const String webView = '/webView';
+  static const String preview = '/preview';
 
   static List<AppRoutePage> get routers => [
         AppRoutePage(
@@ -65,6 +67,15 @@ class Routers {
             String title = args['title'] ?? '';
             String url = args['url'] ?? '';
             return WebViewPage(title: title, url: url);
+          },
+        ),
+        AppRoutePage(
+          name: preview,
+          builder: (settings) {
+            dynamic args = settings.params;
+            String title = args['title'] ?? '';
+            String url = args['url'] ?? '';
+            return const PreviewPicturePage([]);
           },
         ),
         ...MeRouter.routers,

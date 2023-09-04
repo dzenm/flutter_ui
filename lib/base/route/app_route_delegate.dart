@@ -159,7 +159,7 @@ class AppRouteDelegate extends RouterDelegate<Page<dynamic>> with ChangeNotifier
       pathSegments: pathSegments,
       body: body,
     );
-    CustomPage page = AppRouteUtil.createPage(settings, pageTransitions: pageTransitions);
+    Page<dynamic> page = AppRouteUtil.createPage(settings, pageTransitions: pageTransitions);
     dynamic navigateResult = await _pushPage(page);
     return SynchronousFuture(navigateResult);
   }

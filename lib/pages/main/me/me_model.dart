@@ -4,19 +4,8 @@ import 'package:flutter/widgets.dart';
 /// Created by a0010 on 2022/7/28 10:56
 /// Provider中共享的Me页面数据
 class MeModel with ChangeNotifier {
-  List<Person> persons = [
-    Person('张三', 21, 'Beijing'),
-    Person('李四', 22, 'Shanghai'),
-    Person('王五', 23, 'JiangSu'),
-  ];
-
   /// 初始化数据
   Future<void> init() async {}
-
-  void updatePerson(int index, Person person) {
-    persons[index] = person;
-    notifyListeners();
-  }
 
   String _ip = 'IP';
 
@@ -31,12 +20,4 @@ class MeModel with ChangeNotifier {
   void clear() {
     notifyListeners();
   }
-}
-
-class Person {
-  String? name;
-  int? age;
-  String? address;
-
-  Person(this.name, this.age, this.address);
 }
