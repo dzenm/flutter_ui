@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/base/log/build_config.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56
@@ -9,6 +10,8 @@ class MainModel with ChangeNotifier {
     _initial = false;
     _selectedIndex = 0;
     _badges = List.generate(3, (index) => 0);
+
+    if (BuildConfig.isDesktop) return;
     _controller = PageController(initialPage: _selectedIndex);
   }
 
@@ -37,11 +40,13 @@ class MainModel with ChangeNotifier {
   set selectedIndex(int selectedIndex) {
     if (_selectedIndex == selectedIndex) return;
     _selectedIndex = selectedIndex;
-    _controller?.animateToPage(
-      selectedIndex,
-      duration: const Duration(milliseconds: 250),
-      curve: Curves.ease,
-    );
+    if (_controller != null) {
+      _controller?.animateToPage(
+        selectedIndex,
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.ease,
+      );
+    }
     notifyListeners();
   }
 

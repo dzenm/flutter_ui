@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/http/http_manager.dart';
 import 'package:provider/provider.dart';
 
 import '../../base/log/build_config.dart';
@@ -10,6 +9,7 @@ import '../../base/res/local_model.dart';
 import '../../base/widgets/common_bar.dart';
 import '../../base/widgets/tap_layout.dart';
 import '../../generated/l10n.dart';
+import '../../http/http_manager.dart';
 import 'login_page.dart';
 
 class RegisterPage extends StatelessWidget {

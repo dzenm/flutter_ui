@@ -38,12 +38,12 @@ dependencies:
     sdk: flutter
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: 1.0.5                        # 图片 https://pub.flutter-io.cn/packages/cupertino_icons
+  cupertino_icons: 1.0.6                        # 图片 https://pub.flutter-io.cn/packages/cupertino_icons
   sqlite3: 2.1.0                                # sql https://pub.dev/packages/sqlite3
   sqflite_common_ffi: 2.3.0+2                   # sql https://pub.dev/packages/sqflite_common_ffi
-  path_provider: 2.1.0                          # 路径选择 https://pub.dev/packages/path_provider
-  shared_preferences: 2.2.0                     # 本地化存储 https://pub.dev/packages/shared_preferences
-  bot_toast: 4.0.4                              # Toast https://pub.flutter-io.cn/packages/bot_toast
+  path_provider: 2.1.1                          # 路径选择 https://pub.dev/packages/path_provider
+  shared_preferences: 2.2.1                     # 本地化存储 https://pub.dev/packages/shared_preferences
+  bot_toast: 4.1.3                              # Toast https://pub.flutter-io.cn/packages/bot_toast
   retrofit: 4.0.1                               # HTTP请求 https://pub.flutter-io.cn/packages/retrofit
   #  dio_cookie_manager: 2.0.0                     # cookie管理 https://pub.flutter-io.cn/packages/dio_cookie_manager
   #  cookie_jar: 3.0.1                             # cookie持久化 https://pub.flutter-io.cn/packages/cookie_jar
@@ -58,7 +58,7 @@ dependencies:
   window_manager: 0.3.6                         # 桌面端尺寸设置 https://pub.dev/packages/window_manager
 
   ########################################## UI ##########################################
-  webview_flutter: 4.2.3                        # WebView https://pub.dev/packages/webview_flutter
+  webview_flutter: 4.2.4                        # WebView https://pub.dev/packages/webview_flutter
   azlistview: 2.0.0                             # az列表 https://pub.flutter-io.cn/packages/azlistview
   flutter_slidable: 3.0.0                       # 可滑动的列表展示 https://pub.flutter-io.cn/packages/flutter_slidable
   #  flutter_echarts: 2.0.0                        # EChart 图表（缩放手势冲突） https://pub.flutter-io.cn/packages/flutter_echarts
@@ -75,11 +75,11 @@ dependencies:
 
   ########################################## 音视频 ######################################
   transparent_image: 2.0.1                      # 图片选择器 https://pub.flutter-io.cn/packages/transparent_image
-  image_picker: 1.0.2                           # 图片选择器 https://pub.flutter-io.cn/packages/image_picker
+  image_picker: 1.0.4                           # 图片选择器 https://pub.flutter-io.cn/packages/image_picker
   photo_view: 0.14.0                            # 图片预览控件 https://pub.flutter-io.cn/packages/photo_view
-  video_player: 2.7.0                           # 视频播放 https://pub.flutter-io.cn/packages/video_player
+  video_player: 2.7.2                           # 视频播放 https://pub.flutter-io.cn/packages/video_player
   fijkplayer: 0.11.0                            # 视频播放 https://pub.flutter-io.cn/packages/fijkplayer
-  flutter_vlc_player: 7.2.0                     # 视频播放 https://pub.flutter-io.cn/packages/fijkplayer
+  flutter_vlc_player: 7.3.1                     # 视频播放 https://pub.flutter-io.cn/packages/fijkplayer
 
   ########################################## 基础 ########################################
   intl: 0.18.0                                  # 时间格式化 https://pub.dev/packages/intl
@@ -95,7 +95,7 @@ dependencies:
   lpinyin: 2.0.3                                # 汉字转拼音 https://pub.flutter-io.cn/packages/lpinyin
   flutter_screenutil: 5.9.0                     # 屏幕参数适配 https://pub.flutter-io.cn/packages/flutter_screenutil
   date_format: 2.0.7                            # 时间格式转换 https://pub.flutter-io.cn/packages/date_format
-  url_launcher: 6.1.12                          # 网页打开工具 https://pub.flutter-io.cn/packages/url_launcher
+  url_launcher: 6.1.14                          # 网页打开工具 https://pub.flutter-io.cn/packages/url_launcher
   flustars: 2.0.1                               # Flutter 常用工具类库（本地化 屏幕适配） https://pub.flutter-io.cn/packages/flustars
   flutter_html: 3.0.0-beta.2                    # Flutter 加载html https://pub.flutter-io.cn/packages/flutter_html
 
@@ -112,7 +112,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: 2.0.2                          # lints检测 https://pub.flutter-io.cn/packages/flutter_lints
+  flutter_lints: 2.0.3                          # lints检测 https://pub.flutter-io.cn/packages/flutter_lints
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

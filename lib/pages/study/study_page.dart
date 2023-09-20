@@ -207,7 +207,7 @@ class _StudyPageState extends State<StudyPage> {
         onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.video),
         child: _text('视频播放'),
       ),
-      const SizedBox(height: 16),
+      const SizedBox(height: 8),
       MaterialButton(
         textColor: Colors.white,
         color: theme.button,

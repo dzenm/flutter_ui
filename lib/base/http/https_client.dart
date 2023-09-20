@@ -312,7 +312,7 @@ class HttpsClient {
     } else if (error != null) {
       exception = _HttpException.runtime;
     }
-    return HttpError(exception.code, exception.msg);
+    return HttpError(exception.code, error == null ? exception.msg : ', ${error.toString()}');
   }
 }
 

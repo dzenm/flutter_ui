@@ -106,7 +106,7 @@ class Application {
     log('初始化 PluginManager');
     PluginManager.init(logPrint: Log.d);
 
-    DesktopHelper.setFixSize();
+    await DesktopHelper.init();
     NumberKeyboard.register();
 
     int end = DateTime.now().millisecondsSinceEpoch;

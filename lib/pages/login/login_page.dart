@@ -1,26 +1,43 @@
 import 'dart:async';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/http/http_manager.dart';
 import 'package:provider/provider.dart';
+import 'package:window_manager/window_manager.dart';
 
 import '../../base/log/build_config.dart';
 import '../../base/log/log.dart';
 import '../../base/res/app_theme.dart';
 import '../../base/res/local_model.dart';
 import '../../base/route/app_route_delegate.dart';
+import '../../base/utils/desktop_helper.dart';
 import '../../base/utils/sp_util.dart';
 import '../../base/widgets/common_bar.dart';
 import '../../base/widgets/common_dialog.dart';
 import '../../base/widgets/tap_layout.dart';
 import '../../generated/l10n.dart';
+import '../../http/http_manager.dart';
 import '../routers.dart';
 
 ///
 /// 登录页面
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  @override
+  void initState() {
+    super.initState();
+    DesktopHelper.setFixSize(
+      size: const Size(400, 600),
+      minimumSize: const Size(400, 600),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +67,19 @@ class LoginPage extends StatelessWidget {
     return Material(
       child: Center(
         child: Container(
-          width: 400,
           padding: const EdgeInsets.all(24),
           child: Column(children: [
+            // 右上角关闭按钮
+            Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+              TapLayout(
+                padding: const EdgeInsets.all(4),
+                onTap: () {
+                  windowManager.close();
+                },
+                child: const Icon(Icons.close_rounded, color: Colors.grey, size: 24),
+              ),
+            ]),
+            const SizedBox(height: 72),
             const _EditLoginInfoView(),
             Expanded(child: Container()),
             const ProtocolInfoView(),
@@ -115,7 +142,7 @@ class _EditLoginInfoViewState extends State<_EditLoginInfoView> {
   String _verifyCode = ''; // 验证码
 
   bool _isShowPwd = false; // 是否显示输入的密码
-  bool _loginByPhone = true; // 是否通过手机号验证码登录
+  bool _loginByPhone = false; // 是否通过手机号验证码登录
   bool _isDisableLoginButton = true; // 是否禁用点击按钮，根据输入的内容_isLogin为true禁用登陆按钮，为false禁用注册按钮
 
   @override
@@ -151,6 +178,7 @@ class _EditLoginInfoViewState extends State<_EditLoginInfoView> {
 
     _usernameController.dispose();
     _passwordController.dispose();
+    _verifyCodeController.dispose();
   }
 
   // 初始化输入框的内容，如果本地储存账号和密码，获取并填充到输入框
@@ -245,7 +273,7 @@ class _EditLoginInfoViewState extends State<_EditLoginInfoView> {
           onTap: _switchLoginType,
           child: Row(mainAxisSize: MainAxisSize.min, children: [
             Text(
-              '${_loginByPhone ? S.of(context).verifyCode : S.of(context).password}${S.of(context).login}',
+              '${_loginByPhone ? S.of(context).password : S.of(context).verifyCode}${S.of(context).login}',
               style: TextStyle(color: theme.button),
             ),
           ]),
@@ -310,6 +338,8 @@ class ProtocolInfoView extends StatefulWidget {
 
 class _ProtocolInfoViewState extends State<ProtocolInfoView> {
   bool _isAgree = _EditLoginInfoView._isAgree;
+  final TapGestureRecognizer _registerRecognizer = TapGestureRecognizer();
+  final TapGestureRecognizer _privateRecognizer = TapGestureRecognizer();
 
   @override
   Widget build(BuildContext context) {
@@ -317,29 +347,50 @@ class _ProtocolInfoViewState extends State<ProtocolInfoView> {
     IconData icon = _isAgree ? Icons.check_box_sharp : Icons.check_box_outline_blank_sharp;
     Color color = _isAgree ? theme.checked : theme.unchecked;
     return Column(mainAxisSize: MainAxisSize.min, children: [
-      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+      Row(children: [
         const SizedBox(width: 16),
         TapLayout(
           foreground: theme.transparent,
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(4),
           onTap: () {
             setState(() => _isAgree = !_isAgree);
             _EditLoginInfoView._isAgree = _isAgree;
           },
-          child: Icon(icon, color: color),
+          child: Icon(icon, color: color, size: 24),
         ),
-        Text(S.of(context).readAndAgree, style: TextStyle(color: theme.hint, fontSize: 12)),
-        TapLayout(
-          onTap: () {},
-          child: Text(S.of(context).registerProtocol, style: TextStyle(color: theme.signText, fontSize: 12)),
-        ),
-        TapLayout(
-          onTap: () {},
-          child: Text(S.of(context).privateProtocol, style: TextStyle(color: theme.signText, fontSize: 12)),
+        Expanded(
+          child: RichText(
+            text: TextSpan(children: [
+              TextSpan(text: S.of(context).readAndAgree, style: TextStyle(color: theme.hint, fontSize: 12)),
+              TextSpan(
+                text: S.of(context).registerProtocol,
+                style: TextStyle(color: theme.signText, fontSize: 12),
+                recognizer: _registerRecognizer
+                  ..onTap = () {
+                    CommonDialog.showToast('隐私协议');
+                  },
+              ),
+              TextSpan(
+                text: S.of(context).privateProtocol,
+                style: TextStyle(color: theme.signText, fontSize: 12),
+                recognizer: _privateRecognizer
+                  ..onTap = () {
+                    CommonDialog.showToast('隐私协议');
+                  },
+              ),
+            ]),
+          ),
         ),
         const SizedBox(width: 16),
       ]),
     ]);
+  }
+
+  @override
+  void dispose() {
+    _registerRecognizer.dispose();
+    _privateRecognizer.dispose();
+    super.dispose();
   }
 }
 
