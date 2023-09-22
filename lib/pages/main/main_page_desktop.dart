@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../base/res/app_theme.dart';
+import '../../base/res/assets.dart';
 import '../../base/res/local_model.dart';
 import '../../base/widgets/keep_alive_wrapper.dart';
+import '../../base/widgets/tap_layout.dart';
 import '../../generated/l10n.dart';
+import '../common/preview_picture_page.dart';
 import 'home/home_page.dart';
 import 'main_model.dart';
 import 'me/me_page.dart';
@@ -31,12 +34,25 @@ class MainPageDesktop extends StatelessWidget {
               context.read<MainModel>().selectedIndex = index;
             },
             labelType: NavigationRailLabelType.all,
+            leading: _buildLeadingView(context),
             destinations: _buildNavigationRailItem(context, length, selectedIndex),
           ),
           const VerticalDivider(thickness: 1, width: 1),
           // 主要的展示内容，Expanded 占满剩下屏幕空间
           Expanded(child: _buildTabPage(length)[selectedIndex])
         ]),
+      ),
+    );
+  }
+
+  Widget _buildLeadingView(BuildContext context) {
+    return TapLayout(
+      border: Border.all(width: 3.0, color: const Color(0xfffcfcfc)),
+      borderRadius: const BorderRadius.all(Radius.circular(32)),
+      onTap: () => PreviewPicturePage.show(context, [Assets.a]),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(32),
+        child: Image.asset(Assets.a, fit: BoxFit.cover, width: 32, height: 32),
       ),
     );
   }

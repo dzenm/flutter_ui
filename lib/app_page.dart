@@ -10,6 +10,7 @@ import 'base/res/app_theme.dart';
 import 'base/res/local_model.dart';
 import 'base/route/app_route_delegate.dart';
 import 'base/route/app_route_info_parser.dart';
+import 'base/utils/desktop_helper.dart';
 import 'base/utils/sp_util.dart';
 import 'base/widgets/common_dialog.dart';
 import 'generated/l10n.dart';
@@ -45,8 +46,10 @@ class AppPage extends StatelessWidget {
     // Provider
     // Keyboard
     // 返回键监听
-    return _buildProviderApp(
-      child: _buildMaterialApp(),
+    return DesktopGlobalBox(
+      child: _buildProviderApp(
+        child: _buildMaterialApp(),
+      ),
     );
   }
 
