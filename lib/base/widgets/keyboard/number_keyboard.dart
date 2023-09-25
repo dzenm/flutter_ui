@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'keyboard_controller.dart';
 import 'keyboard_manager.dart';
 
-class NumberKeyboard extends StatelessWidget {
+class MyNumberKeyboard extends StatelessWidget {
   static const CKTextInputType inputType = CKTextInputType(name: 'CKNumberKeyboard');
 
   static double getHeight(BuildContext ctx) {
@@ -13,16 +13,16 @@ class NumberKeyboard extends StatelessWidget {
 
   final KeyboardController controller;
 
-  const NumberKeyboard({super.key, required this.controller});
+  const MyNumberKeyboard({super.key, required this.controller});
 
   static register() {
     CoolKeyboard.addKeyboard(
-        NumberKeyboard.inputType,
+        MyNumberKeyboard.inputType,
         KeyboardConfig(
             builder: (context, controller, params) {
-              return NumberKeyboard(controller: controller);
+              return MyNumberKeyboard(controller: controller);
             },
-            getHeight: NumberKeyboard.getHeight));
+            getHeight: MyNumberKeyboard.getHeight));
   }
 
   @override

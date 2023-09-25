@@ -3,9 +3,8 @@ import 'dart:ffi';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/app_page.dart';
-import 'package:flutter_ui/base/log/log.dart';
 
+import '../log/log.dart';
 import 'app_route_util.dart';
 import 'custom_page_route.dart';
 

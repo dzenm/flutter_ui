@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/tap_layout.dart';
+import '../widgets/widget.dart';
 import 'http_entity.dart';
 import 'http_item_page.dart';
 import 'naughty.dart';

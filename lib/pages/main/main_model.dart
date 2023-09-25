@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/log/build_config.dart';
+
+import '../../base/base.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56

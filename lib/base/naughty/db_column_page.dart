@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../db/db_manager.dart';
+import '../db/db.dart';
 
 /// 数据库表列表展示页面
 class DBColumnPage extends StatefulWidget {

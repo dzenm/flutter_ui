@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../base/widgets/common_bar.dart';
+import '../../../../../base/base.dart';
 import '../../../../../generated/l10n.dart';
 
 ///

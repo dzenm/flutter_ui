@@ -5,14 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'application.dart';
-import 'base/log/build_config.dart';
-import 'base/res/app_theme.dart';
-import 'base/res/local_model.dart';
-import 'base/route/app_route_delegate.dart';
-import 'base/route/app_route_info_parser.dart';
-import 'base/utils/desktop_helper.dart';
-import 'base/utils/sp_util.dart';
-import 'base/widgets/common_dialog.dart';
+import 'base/base.dart';
 import 'generated/l10n.dart';
 import 'models/article_model.dart';
 import 'models/banner_model.dart';

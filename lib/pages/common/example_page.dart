@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../base/widgets/common_bar.dart';
+import '../../base/base.dart';
+
 
 ///
 /// Created by a0010 on 2023/3/23 09:01

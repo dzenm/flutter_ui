@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/route/route_manager.dart';
-import 'package:flutter_ui/pages/study/provider_page/consumer_model.dart';
 import 'package:provider/provider.dart';
 
-import '../../../base/log/log.dart';
-import '../../../base/widgets/common_bar.dart';
+import '../../../base/base.dart';
+import 'consumer_model.dart';
 
 ///
 /// Created by a0010 on 2023/3/23 09:01

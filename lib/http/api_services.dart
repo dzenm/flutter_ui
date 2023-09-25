@@ -2,7 +2,7 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/http.dart';
 
-import '../base/http/data_entity.dart';
+import '../base/http/http.dart';
 
 part 'api_services.g.dart';
 

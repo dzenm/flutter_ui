@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../base/res/app_theme.dart';
-import '../../base/res/local_model.dart';
-import '../../base/widgets/badge_tag.dart';
-import '../../base/widgets/keep_alive_wrapper.dart';
-import '../../base/widgets/tap_layout.dart';
+import '../../base/base.dart';
 import '../../generated/l10n.dart';
 import 'home/home_page.dart';
 import 'main_model.dart';

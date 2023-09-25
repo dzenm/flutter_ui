@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/res/assets.dart';
-import 'package:flutter_ui/base/route/route_manager.dart';
-import 'package:flutter_ui/base/widgets/license_view.dart';
-
+import '../../../base/base.dart';
 import 'ijk_list_video_page.dart';
 import 'ijk_video_page.dart';
 import 'vlc_video_page.dart';

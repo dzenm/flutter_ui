@@ -1,11 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../base/widgets/check_box.dart';
-import '../../../base/widgets/common_dialog.dart';
-import '../../../base/widgets/custom_popup_window.dart';
-import '../../../base/widgets/single_text_layout.dart';
-import '../../../base/widgets/tap_layout.dart';
+import '../../../base/base.dart';
 
 ///
 /// Created by a0010 on 2023/6/9 10:16

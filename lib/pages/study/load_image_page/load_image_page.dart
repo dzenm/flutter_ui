@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/res/assets.dart';
-import 'package:flutter_ui/base/widgets/common_widget.dart';
 
-import '../../../base/widgets/image_view.dart';
+import '../../../base/base.dart';
 
 /// 加载图片
 class LoadImagePage extends StatefulWidget {

@@ -1,5 +1,4 @@
-import 'package:flutter_ui/base/utils/str_util.dart';
-
+import '../../../base/base.dart';
 import 'study.dart';
 
 ///
@@ -11,16 +10,7 @@ class ConvertStudy {
   }
 
   void string2Num() {
-    List<String?> list = [
-      'a',
-      '189',
-      '8u',
-      'null',
-      '98',
-      '',
-      '7',
-      '汉'
-    ];
+    List<String?> list = ['a', '189', '8u', 'null', '98', '', '7', '汉'];
 
     for (var item in list) {
       int value = StrUtil.parseInt(item);

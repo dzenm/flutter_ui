@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../application.dart';
-import '../base/http/https_client.dart';
-import '../base/http/page_entity.dart';
-import '../base/route/app_route_delegate.dart';
-import '../base/utils/sp_util.dart';
+import '../base/base.dart';
 import '../entities/article_entity.dart';
 import '../entities/banner_entity.dart';
 import '../entities/chapter_entity.dart';

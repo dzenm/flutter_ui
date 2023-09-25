@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../base/route/app_route_delegate.dart';
-import '../../../base/widgets/refresh_list_view.dart';
-import '../../../base/widgets/state_view.dart';
-import '../../../base/widgets/tap_layout.dart';
+import '../../../base/base.dart';
 import '../../../entities/article_entity.dart';
 import '../../../http/http_manager.dart';
 import '../../routers.dart';

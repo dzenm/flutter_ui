@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import '../../../base/log/log.dart';
-import '../../../base/res/app_theme.dart';
-import '../../../base/res/local_model.dart';
-import '../../../base/route/route_manager.dart';
+import '../../../base/base.dart';
 import '../study_model.dart';
 import 'update_page.dart';
 
@@ -67,7 +64,7 @@ class ModelPage extends StatelessWidget {
 
 /// 通过Selector监听的数据变化
 class _SelectorWidget extends StatelessWidget {
-  const _SelectorWidget({super.key});
+  const _SelectorWidget();
 
   static const String _tag = 'SelectorWidget';
 
@@ -96,7 +93,7 @@ class _SelectorWidget extends StatelessWidget {
 
 /// 通过Provider监听的数据变化
 class _ProviderWidget extends StatelessWidget {
-  const _ProviderWidget({super.key});
+  const _ProviderWidget();
 
   static const String _tag = 'ProviderWidget';
 

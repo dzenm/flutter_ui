@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../utils/notification_util.dart';
+import '../utils/util.dart';
 import 'floating_button.dart';
 import 'http_entity.dart';
 import 'naught_page.dart';

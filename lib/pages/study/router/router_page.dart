@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/res/local_model.dart';
-import 'package:flutter_ui/base/res/app_theme.dart';
-import 'package:flutter_ui/base/route/route_manager.dart';
 import 'package:provider/provider.dart';
 
+import '../../../base/base.dart';
 import 'first_page.dart';
 
 ///

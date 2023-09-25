@@ -1,13 +1,8 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/widgets/upgrade_dialog.dart';
 import 'package:provider/provider.dart';
 
-import '../../../base/res/app_theme.dart';
-import '../../../base/res/local_model.dart';
-import '../../../base/widgets/common_dialog.dart';
-import '../../../base/widgets/menu_item.dart';
-import '../../../base/widgets/picker/picker_view.dart';
+import '../../../base/base.dart';
 
 ///
 /// Created by a0010 on 2023/3/23 09:01

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/res/assets.dart';
-import 'package:flutter_ui/base/widgets/menu_item.dart';
-import 'package:flutter_ui/base/widgets/state_view.dart';
+
+import '../../../base/base.dart';
 
 /// 加载状态页面
 class StatePage extends StatefulWidget {

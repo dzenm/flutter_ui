@@ -1,10 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/utils/sp_util.dart';
-import 'package:flutter_ui/base/utils/str_util.dart';
-import 'package:flutter_ui/base/widgets/common_widget.dart';
 import 'package:flutter_ui/entities/user_entity.dart';
+
+import '../../../base/base.dart';
 
 /// 字符转化
 class ConvertPage extends StatefulWidget {

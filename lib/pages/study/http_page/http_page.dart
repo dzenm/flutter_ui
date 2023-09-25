@@ -1,16 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/utils/str_util.dart';
-import 'package:flutter_ui/base/widgets/common_dialog.dart';
-import 'package:flutter_ui/base/widgets/single_text_layout.dart';
-import 'package:flutter_ui/base/widgets/tap_layout.dart';
-import 'package:flutter_ui/base/widgets/wrap_button.dart';
-import 'package:flutter_ui/entities/article_entity.dart';
-import 'package:flutter_ui/http/http_manager.dart';
-import 'package:flutter_ui/models/article_model.dart';
 import 'package:provider/provider.dart';
 
+import '../../../base/base.dart';
+import '../../../entities/article_entity.dart';
 import '../../../generated/l10n.dart';
+import '../../../http/http_manager.dart';
+import '../../../models/article_model.dart';
 
 /// HTTP请求
 class HTTPListPage extends StatefulWidget {

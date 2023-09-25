@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../base/log/build_config.dart';
-import '../../base/log/log.dart';
-import '../../base/naughty/naughty.dart';
-import '../../base/utils/desktop_helper.dart';
+import '../../base/base.dart';
 import '../../models/provider_manager.dart';
 import 'main_model.dart';
 import 'main_page_desktop.dart';

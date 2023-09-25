@@ -2,21 +2,7 @@ import 'package:extended_text_field/extended_text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../base/log/log.dart';
-import '../../../base/res/assets.dart';
-import '../../../base/route/app_route_delegate.dart';
-import '../../../base/widgets/adapter_size_text.dart';
-import '../../../base/widgets/badge_tag.dart';
-import '../../../base/widgets/common_dialog.dart';
-import '../../../base/widgets/common_widget.dart';
-import '../../../base/widgets/extend_text/my_special_text_span_builder.dart';
-import '../../../base/widgets/keyboard/custom_keyword_board.dart';
-import '../../../base/widgets/keyboard/keyboard_media_query.dart';
-import '../../../base/widgets/single_edit_layout.dart';
-import '../../../base/widgets/single_text_layout.dart';
-import '../../../base/widgets/slide_verify_view.dart';
-import '../../../base/widgets/tap_layout.dart';
-import '../../../base/widgets/will_pop_view.dart';
+import '../../../base/base.dart';
 import '../../../generated/l10n.dart';
 import '../../main/me/me_router.dart';
 

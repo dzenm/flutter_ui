@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../base/http/page_entity.dart';
-import '../../../../base/widgets/tap_layout.dart';
+import '../../../../base/base.dart';
 import '../../../../entities/article_entity.dart';
 import '../../../../entities/coin_entity.dart';
 import '../../../../generated/l10n.dart';

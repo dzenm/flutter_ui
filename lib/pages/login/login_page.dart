@@ -6,16 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
 
-import '../../base/log/build_config.dart';
-import '../../base/log/log.dart';
-import '../../base/res/app_theme.dart';
-import '../../base/res/local_model.dart';
-import '../../base/route/app_route_delegate.dart';
-import '../../base/utils/desktop_helper.dart';
-import '../../base/utils/sp_util.dart';
-import '../../base/widgets/common_bar.dart';
-import '../../base/widgets/common_dialog.dart';
-import '../../base/widgets/tap_layout.dart';
+import '../../base/base.dart';
 import '../../generated/l10n.dart';
 import '../../http/http_manager.dart';
 import '../routers.dart';

@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../base/res/app_theme.dart';
-import '../../../../base/res/local_model.dart';
-import '../../../../base/widgets/common_bar.dart';
-import '../../../../base/widgets/single_edit_layout.dart';
-import '../../../../base/widgets/will_pop_view.dart';
+import '../../../../base/base.dart';
 import '../../../../entities/user_entity.dart';
 import '../../../../generated/l10n.dart';
 import '../../../../models/user_model.dart';

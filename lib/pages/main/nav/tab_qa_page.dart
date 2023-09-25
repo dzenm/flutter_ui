@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../base/res/app_theme.dart';
-import '../../../base/res/local_model.dart';
-import '../../../base/route/app_route_delegate.dart';
-import '../../../base/widgets/tap_layout.dart';
+import '../../../base/base.dart';
 import '../../../entities/article_entity.dart';
 import '../../../http/http_manager.dart';
 import '../../routers.dart';

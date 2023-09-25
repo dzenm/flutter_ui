@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/widgets/float_navigation_bar.dart';
+
+import '../../../base/base.dart';
 
 /// 浮动的导航栏和PopupWindow
 class FloatNavigationPage extends StatefulWidget {

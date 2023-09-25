@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../base/widgets/refresh_list_view.dart';
-import '../../../base/widgets/state_view.dart';
+import '../../../base/base.dart';
 
 abstract class TabListPageState<T extends StatefulWidget> extends State<T> {
   final StateController _controller = StateController();

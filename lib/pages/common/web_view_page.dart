@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import '../../base/log/log.dart';
-import '../../base/widgets/will_pop_view.dart';
+import '../../base/base.dart';
 import '../../generated/l10n.dart';
 
 /// WebView内容改变时的回调

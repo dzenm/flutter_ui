@@ -1,4 +1,4 @@
-import '../../../base/route/app_route_delegate.dart';
+import '../../../base/base.dart';
 import 'article/article_page.dart';
 import 'coin/coin_page.dart';
 import 'collect/collect_page.dart';

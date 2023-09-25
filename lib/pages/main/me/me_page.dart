@@ -1,15 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../base/log/log.dart';
-import '../../../base/res/app_theme.dart';
-import '../../../base/res/assets.dart';
-import '../../../base/res/local_model.dart';
-import '../../../base/route/app_route_delegate.dart';
-import '../../../base/utils/device_util.dart';
-import '../../../base/widgets/common_bar.dart';
-import '../../../base/widgets/single_text_layout.dart';
-import '../../../base/widgets/tap_layout.dart';
+import '../../../base/base.dart';
 import '../../../entities/coin_entity.dart';
 import '../../../entities/user_entity.dart';
 import '../../../generated/l10n.dart';

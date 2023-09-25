@@ -7,10 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../channel/plugin_manager.dart';
-import '../http/https_client.dart';
+import '../http/http.dart';
 import '../log/handle_error.dart';
 import '../log/log.dart';
-import '../res/assets.dart';
+import '../res/res.dart';
 import 'common_dialog.dart';
 import 'linear_percent_indicator.dart';
 import 'tap_layout.dart';

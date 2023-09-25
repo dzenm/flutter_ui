@@ -1,4 +1,4 @@
-import '../../../base/log/log.dart';
+import '../../../base/base.dart';
 import 'convert_study.dart';
 import 'future_study.dart';
 import 'math_study.dart';

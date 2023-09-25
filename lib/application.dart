@@ -4,20 +4,7 @@ import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:provider/provider.dart';
 
 import 'app_page.dart';
-import 'base/channel/plugin_manager.dart';
-import 'base/db/db_manager.dart';
-import 'base/http/https_client.dart';
-import 'base/log/build_config.dart';
-import 'base/log/handle_error.dart';
-import 'base/log/log.dart';
-import 'base/naughty/http_interceptor.dart';
-import 'base/route/route_manager.dart';
-import 'base/utils/desktop_helper.dart';
-import 'base/utils/file_util.dart';
-import 'base/utils/sp_util.dart';
-import 'base/widgets/common_dialog.dart';
-import 'base/widgets/keyboard/mocks/mock_binding.dart';
-import 'base/widgets/keyboard/number_keyboard.dart';
+import 'base/base.dart';
 import 'config/configs.dart';
 import 'http/cookie_interceptor.dart';
 
@@ -107,7 +94,6 @@ class Application {
     PluginManager.init(logPrint: Log.d);
 
     await DesktopHelper.init();
-    NumberKeyboard.register();
 
     int end = DateTime.now().millisecondsSinceEpoch;
     duration = end - now;

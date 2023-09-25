@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../base/db/db_base_model.dart';
-import '../../../base/widgets/common_bar.dart';
-import '../../../base/widgets/refresh_list_view.dart';
-import '../../../base/widgets/state_view.dart';
+import '../../../base/base.dart';
 
 ///
 /// Created by a0010 on 2023/2/23 13:35

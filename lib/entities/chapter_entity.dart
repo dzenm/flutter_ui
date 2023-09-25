@@ -1,7 +1,7 @@
 import 'package:flutter_ui/entities/article_entity.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-import '../base/db/db_base_model.dart';
+import '../base/db/db.dart';
 
 part 'chapter_entity.g.dart';
 

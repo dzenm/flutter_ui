@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../base/db/db_base_model.dart';
+import '../base/db/db.dart';
 
 part 'coin_record_entity.g.dart';
 

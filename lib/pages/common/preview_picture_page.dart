@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 
-import '../../base/widgets/tap_layout.dart';
+import '../../base/base.dart';
 
 typedef DownloadCallback = void Function(String url);
 

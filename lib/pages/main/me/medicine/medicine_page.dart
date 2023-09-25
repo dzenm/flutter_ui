@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 
-import '../../../../base/http/https_client.dart';
-import '../../../../base/widgets/common_bar.dart';
+import '../../../../base/base.dart';
 import '../../../../config/configs.dart';
 import '../../../../entities/medicine_entity.dart';
 import '../../../../generated/l10n.dart';

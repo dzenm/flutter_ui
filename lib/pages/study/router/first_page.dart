@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import '../../../base/res/app_theme.dart';
-import '../../../base/res/local_model.dart';
-import '../../../base/route/route_manager.dart';
+import '../../../base/base.dart';
 import 'router_page.dart';
 
 ///

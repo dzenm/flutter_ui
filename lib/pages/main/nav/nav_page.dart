@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import '../../../base/log/log.dart';
-import '../../../base/res/app_theme.dart';
-import '../../../base/res/local_model.dart';
-import '../../../base/widgets/common_bar.dart';
-import '../../../base/widgets/keep_alive_wrapper.dart';
+import '../../../base/base.dart';
 import '../../../generated/l10n.dart';
 import 'tab_official_page.dart';
 import 'tab_plaza_page.dart';

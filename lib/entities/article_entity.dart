@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../base/db/db_base_model.dart';
+import '../base/db/db.dart';
 import 'converts/bool_convert.dart';
 import 'converts/list_convert.dart';
 

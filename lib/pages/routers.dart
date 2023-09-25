@@ -1,5 +1,5 @@
 import '../app_page.dart';
-import '../base/route/app_route_delegate.dart';
+import '../base/base.dart';
 import 'common/example_page.dart';
 import 'common/not_found_page.dart';
 import 'common/preview_picture_page.dart';
@@ -72,9 +72,9 @@ class Routers {
         AppRoutePage(
           name: preview,
           builder: (settings) {
-            dynamic args = settings.params;
-            String title = args['title'] ?? '';
-            String url = args['url'] ?? '';
+            // dynamic args = settings.params;
+            // String title = args['title'] ?? '';
+            // String url = args['url'] ?? '';
             return const PreviewPicturePage([]);
           },
         ),

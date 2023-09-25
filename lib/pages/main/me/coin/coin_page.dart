@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../base/widgets/tap_layout.dart';
+import '../../../../base/base.dart';
 import '../../../../entities/coin_record_entity.dart';
 import '../../../../generated/l10n.dart';
 import '../../../../http/http_manager.dart';

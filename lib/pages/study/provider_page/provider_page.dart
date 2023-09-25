@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/pages/study/provider_page/model_page.dart';
-import 'package:flutter_ui/pages/study/study_model.dart';
 import 'package:provider/provider.dart';
 
-import '../../../base/log/log.dart';
-import '../../../base/route/route_manager.dart';
+import '../../../base/base.dart';
+import '../study_model.dart';
 import 'lifecycle_page.dart';
+import 'model_page.dart';
 
 ///
 /// Created by a0010 on 2023/3/2 15:11

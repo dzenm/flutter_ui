@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/base/log/log.dart';
-import 'package:flutter_ui/base/route/route_manager.dart';
-import 'package:flutter_ui/base/utils/str_util.dart';
-import 'package:flutter_ui/base/widgets/single_edit_layout.dart';
-import 'package:flutter_ui/base/widgets/single_text_layout.dart';
-import 'package:flutter_ui/base/widgets/tap_layout.dart';
-import 'package:flutter_ui/pages/study/study_model.dart';
 import 'package:provider/provider.dart';
 
-import '../../../base/widgets/picker/picker_view.dart';
+import '../../../base/base.dart';
+import '../study_model.dart';
 
 ///
 /// Created by a0010 on 2023/8/31 17:00
@@ -25,7 +19,7 @@ class UpdatePage extends StatefulWidget {
 }
 
 class _UpdatePageState extends State<UpdatePage> {
-   User? _user;
+  User? _user;
 
   @override
   void initState() {

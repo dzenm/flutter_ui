@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../db/db_manager.dart';
-import '../widgets/tap_layout.dart';
+import '../db/db.dart';
+import '../widgets/widget.dart';
 import 'db_column_page.dart';
 import 'naughty.dart';
 

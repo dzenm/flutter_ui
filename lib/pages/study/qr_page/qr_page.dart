@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/widgets/common_dialog.dart';
-import 'package:flutter_ui/base/widgets/tap_layout.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:scan/scan.dart';
+
+import '../../../base/base.dart';
 
 /// 二维码扫描页面, 在进入页面之前先请求权限
 class QRPage extends StatefulWidget {
