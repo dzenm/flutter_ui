@@ -39,7 +39,7 @@ class Routers {
         AppRoutePage(
           name: login,
           builder: (settings) {
-            return const LoginPage();
+            return LoginPage();
           },
         ),
         AppRoutePage(

@@ -13,17 +13,8 @@ import '../routers.dart';
 
 ///
 /// 登录页面
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
-
-  @override
-  State<StatefulWidget> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  @override
-  void initState() {
-    super.initState();
+class LoginPage extends StatelessWidget {
+  LoginPage({super.key}) {
     DesktopHelper.setFixSize(
       size: const Size(400, 600),
       minimumSize: const Size(400, 600),

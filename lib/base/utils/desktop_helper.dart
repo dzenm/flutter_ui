@@ -73,6 +73,9 @@ class DesktopGlobalBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (Platform.isAndroid || Platform.isIOS) {
+      return Container(child: child);
+    }
     return Container(
       width: double.infinity,
       height: double.infinity,
@@ -80,7 +83,6 @@ class DesktopGlobalBox extends StatelessWidget {
       padding: Platform.isAndroid ? const EdgeInsets.symmetric(horizontal: 374, vertical: 173) : EdgeInsets.zero,
       child: Container(
         clipBehavior: Clip.antiAliasWithSaveLayer,
-        margin: const EdgeInsets.all(10),
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(8)),
           boxShadow: [
