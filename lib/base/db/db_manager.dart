@@ -9,6 +9,7 @@ import 'package:sqlite3/open.dart' as open;
 import 'package:sqlite3/sqlite3.dart' as sqlite3;
 
 import 'column_entity.dart';
+import 'db_base_model.dart';
 import 'db_sql.dart';
 import 'table_entity.dart';
 
@@ -51,8 +52,14 @@ class DBManager {
   /// 日志打印，如果不设置，将不打印日志，如果要设置在使用数据库之前调用 [init]
   Function? _logPrint;
 
-  void init({Function? logPrint}) {
+  /// 注册数据表，需要使用的数据表进行注册
+  List<DBBaseModel> tables = [];
+
+  void init({Function? logPrint, List<DBBaseModel>? tables}) {
     _logPrint = logPrint;
+    if (tables != null) {
+      this.tables.addAll(tables);
+    }
     setupDatabase();
   }
 

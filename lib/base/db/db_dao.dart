@@ -2,7 +2,6 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'db_base_model.dart';
 import 'db_manager.dart';
-import 'db_sql.dart';
 
 /// 数据库操作(增删改查)
 class DBDao {
@@ -71,7 +70,7 @@ class DBDao {
   }
 
   static dynamic getTable<T extends DBBaseModel>() {
-    for (var tab in Sql.tables) {
+    for (var tab in DBManager.instance.tables) {
       if (tab is! T) continue;
       return tab;
     }

@@ -6,6 +6,10 @@ import 'package:provider/provider.dart';
 import 'app_page.dart';
 import 'base/base.dart';
 import 'config/configs.dart';
+import 'entities/article_entity.dart';
+import 'entities/banner_entity.dart';
+import 'entities/user_entity.dart';
+import 'entities/website_entity.dart';
 import 'http/cookie_interceptor.dart';
 
 ///
@@ -73,7 +77,12 @@ class Application {
     _initIOSSettings();
 
     log('初始化 DBManager');
-    DBManager.instance.init(logPrint: Log.b);
+    DBManager.instance.init(logPrint: Log.b, tables: [
+      UserEntity(),
+      BannerEntity(),
+      ArticleEntity(),
+      WebsiteEntity(),
+    ]);
 
     log('初始化 HttpsClient');
     HttpsClient.instance.init(
