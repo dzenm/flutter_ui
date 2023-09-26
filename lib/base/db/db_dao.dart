@@ -2,20 +2,21 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'db_base_model.dart';
 import 'db_manager.dart';
+import 'db_sql.dart';
 
-/// 数据库操作(增删改查), 在model中使用with混入即可。
-mixin class DBDao {
+/// 数据库操作(增删改查)
+class DBDao {
   /// 插入数据
-  Future<void> insert<T extends DBBaseModel>(
+  static Future<void> insert<T extends DBBaseModel>(
     dynamic data, {
     ConflictAlgorithm? conflictAlgorithm,
   }) async {
     if (data == null) return;
-    if (data is List) {
-      for (var element in data) {
+    if (data is List<T>) {
+      for (var table in data) {
         await DBManager().insertItem(
-          element.tableName,
-          element.toJson(),
+          table.tableName,
+          table.toJson(),
           conflictAlgorithm: conflictAlgorithm,
         );
       }
@@ -29,19 +30,19 @@ mixin class DBDao {
   }
 
   /// 删除数据
-  Future<int> delete<T extends DBBaseModel>(
-    T? data, {
+  static Future<int> delete<T extends DBBaseModel>({
     Map<String, String>? where,
   }) async {
-    if (data == null) return 0;
+    dynamic table = getTable<T>();
+    if (table == null) return 0;
     return DBManager().deleteItem(
-      data.tableName,
+      table.tableName,
       where: where,
     );
   }
 
   /// 更新数据
-  Future<int> update<T extends DBBaseModel>(
+  static Future<int> update<T extends DBBaseModel>(
     T? data, {
     Map<String, dynamic>? where,
     ConflictAlgorithm? conflictAlgorithm,
@@ -56,16 +57,23 @@ mixin class DBDao {
   }
 
   /// 查询数据
-  Future<List<DBBaseModel>> where<T extends DBBaseModel>(
-    T? data, {
+  static Future<List<T>> where<T extends DBBaseModel>({
     Map<String, String>? where,
   }) async {
-    if (data == null) return [];
+    dynamic table = getTable<T>();
+    if (table == null) return [];
     return DBManager()
         .where(
-          data.tableName,
+          table.tableName,
           where: where,
         )
-        .then((value) => value.map((e) => data.fromJson(e)).toList());
+        .then((value) => value.map((e) => table.fromJson(e) as T).toList());
+  }
+
+  static dynamic getTable<T extends DBBaseModel>() {
+    for (var tab in Sql.tables) {
+      if (tab is! T) continue;
+      return tab;
+    }
   }
 }

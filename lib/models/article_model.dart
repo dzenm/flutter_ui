@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 
+import '../base/base.dart';
 import '../entities/article_entity.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56
 /// Provider中共享的文章数据
 class ArticleModel with ChangeNotifier {
-  final ArticleEntity _entity = ArticleEntity();
-
   /// 数据库对应的所有数据
   List<ArticleEntity> _allArticle = [];
 
   /// 初始化文章数据，从数据库获取所有的文章数据
   Future<void> init() async {
-    List list = await _entity.where(_entity);
-    List<ArticleEntity> articles = list.map((e) => e as ArticleEntity).toList();
+    List<ArticleEntity> articles = await DBDao.where<ArticleEntity>();
     _allArticle = articles;
     notifyListeners();
   }
@@ -51,10 +49,10 @@ class ArticleModel with ChangeNotifier {
       int index = _allArticle.indexWhere((e) => e.id == article.id);
       if (index == -1) {
         inserts.add(article);
-        _entity.insert(article); // 保存为DB中的article数据
+        DBDao.insert(article); // 保存为DB中的article数据
       } else {
         updates[index] = article;
-        _entity.update(article); // 更新DB中的article数据
+        DBDao.update(article); // 更新DB中的article数据
       }
     }
     _allArticle.addAll(inserts);

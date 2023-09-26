@@ -14,9 +14,9 @@ class UserModel with ChangeNotifier {
 
   /// 初始化用户数据，从数据库获取所有的用户数据
   Future<void> init() async {
-    List list = await _user.where(_user, where: {'id': SpUtil.getUserId()});
+    List<UserEntity> list = await DBDao.where(where: {'id': SpUtil.getUserId()});
     if (list.isEmpty) return;
-    _user = list.map((e) => e as UserEntity).first;
+    _user = list.first;
     notifyListeners();
   }
 
@@ -26,7 +26,7 @@ class UserModel with ChangeNotifier {
   /// 更新当前登录的用户信息
   set user(UserEntity user) {
     _user = user;
-    _user.insert(user);
+    DBDao.insert(user);
     notifyListeners();
   }
 

@@ -1,9 +1,7 @@
 import 'dart:convert';
 
-import 'db_dao.dart';
-
 /// 数据的基类，数据和实体类的转换，数据库表的信息
-abstract class DBBaseModel with DBDao {
+abstract class DBBaseModel {
   DBBaseModel();
 
   DBBaseModel.fromJson(Map<String, dynamic> json);

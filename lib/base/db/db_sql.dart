@@ -1,3 +1,9 @@
+import 'package:flutter_ui/entities/article_entity.dart';
+import 'package:flutter_ui/entities/banner_entity.dart';
+import 'package:flutter_ui/entities/user_entity.dart';
+import 'package:flutter_ui/entities/website_entity.dart';
+
+import 'db_base_model.dart';
 import 'db_manager.dart';
 
 class Sql {
@@ -8,6 +14,13 @@ class Sql {
   static const String createTable = 'CREATE TABLE IF NOT EXISTS';
   static const String pragmaTable = 'PRAGMA table_info';
   static const String selectAllTable = "SELECT * FROM sqlite_master WHERE TYPE='table'";
+
+  static List<DBBaseModel> tables = [
+    UserEntity(),
+    BannerEntity(),
+    ArticleEntity(),
+    WebsiteEntity(),
+  ];
 
   /// 创建数据表的语句
   static const List<String> createTables = [

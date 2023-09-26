@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
 
+import '../base/base.dart';
 import '../entities/website_entity.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56
 /// Provider中共享的网站数据
 class WebsiteModel with ChangeNotifier {
-  final WebsiteEntity _entity = WebsiteEntity();
-
   /// 数据库对应的所有数据
   List<WebsiteEntity> _websites = [];
 
   /// 初始化网站数据，从数据库获取所有的网站数据
   Future<void> init() async {
-    List list = await _entity.where(_entity);
-    List<WebsiteEntity> articles = list.map((e) => e as WebsiteEntity).toList();
-    _websites = articles;
+    List<WebsiteEntity> websites = await DBDao.where();
+    _websites = websites;
     notifyListeners();
   }
 
@@ -44,10 +42,10 @@ class WebsiteModel with ChangeNotifier {
     int index = _websites.indexWhere((web) => web.id == website.id);
     if (index == -1) {
       _websites.add(website);
-      _entity.insert(website); // 保存为DB中的website数据
+      DBDao.insert(website); // 保存为DB中的website数据
     } else {
       _websites[index] = website;
-      _entity.update(website); // 更新DB中的website数据
+      DBDao.update(website); // 更新DB中的website数据
     }
   }
 
