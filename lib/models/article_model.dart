@@ -59,6 +59,21 @@ class ArticleModel with ChangeNotifier {
     updates.forEach((index, article) => _allArticle[index] = article);
   }
 
+  /// 删除文章数据
+  void deleteArticle(int? id) {
+    _deleteArticle(id);
+    notifyListeners();
+  }
+
+  /// 删除文章数据
+  void _deleteArticle(int? id) {
+    if (id == null) return;
+    int index = _allArticle.indexWhere((article) => article.id == id);
+    if (index == -1) return;
+    _allArticle.removeAt(index);
+    DBDao.delete<ArticleEntity>(where: {'id': id});
+  }
+
   /// 清空数据
   void clear() {
     _allArticle.clear();

@@ -242,7 +242,7 @@ class DBManager {
   /// 删除数据，当key和value存在时，删除对应表中的数据，当key和value不存在时，删除该表
   Future<int> deleteItem(
     String tableName, {
-    Map<String, String>? where,
+    Map<String, dynamic>? where,
   }) async {
     Database? db = await getDatabase();
     int count = 0;
@@ -294,7 +294,7 @@ class DBManager {
   /// 查询数据，当key和value存在时，查询对应表中的数据，当key和value不存在时，查询对应表中所有数据
   Future<List<Map<String, dynamic>>> query(
     String tableName, {
-    Map<String, String>? where,
+    Map<String, dynamic>? where,
     int? limit,
     int? offset,
   }) async {

@@ -6,6 +6,8 @@ import 'db_manager.dart';
 /// 数据库操作(增删改查)
 class DBDao {
   /// 插入数据
+  /// 使用
+  ///  DBDao.insert(article);
   static Future<void> insert<T extends DBBaseModel>(
     dynamic data, {
     ConflictAlgorithm? conflictAlgorithm,
@@ -21,6 +23,8 @@ class DBDao {
   }
 
   /// 更新数据
+  /// 使用
+  ///  DBDao.update(article);
   static Future<int> update<T extends DBBaseModel>(
     T? data, {
     Map<String, dynamic>? where,
@@ -36,8 +40,10 @@ class DBDao {
   }
 
   /// 删除数据
+  /// 使用
+  ///  DBDao.delete<ArticleEntity>(where: {'id': id});
   static Future<int> delete<T extends DBBaseModel>({
-    Map<String, String>? where,
+    Map<String, dynamic>? where,
   }) async {
     DBBaseModel? table = _getRuntimeTableType<T>();
     if (table == null) return 0;
@@ -48,8 +54,10 @@ class DBDao {
   }
 
   /// 查询数据
+  /// 使用
+  ///  await DBDao.query<ArticleEntity>();
   static Future<List<T>> query<T extends DBBaseModel>({
-    Map<String, String>? where,
+    Map<String, dynamic>? where,
     int? limit,
     int? offset,
   }) async {
