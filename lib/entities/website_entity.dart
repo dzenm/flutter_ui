@@ -25,7 +25,7 @@ class WebsiteEntity extends DBBaseModel {
   Map<String, dynamic> toJson() => _$WebsiteEntityToJson(this);
 
   @override
-  DBBaseModel fromJson(Map<String, dynamic> json) => WebsiteEntity.fromJson(json);
+  DBBaseModel fromJson(Map<String, dynamic> json) => _$WebsiteEntityFromJson(json);
 
   @override
   String get primaryKey => 'id';

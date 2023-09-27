@@ -57,7 +57,6 @@ class ArticleEntity extends DBBaseModel {
 
   ArticleEntity() : super();
 
-  @override
   factory ArticleEntity.fromJson(Map<String, dynamic> json) => _$ArticleEntityFromJson(json);
 
   @override

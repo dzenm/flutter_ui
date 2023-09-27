@@ -52,7 +52,7 @@ class DBManager {
   /// 日志打印，如果不设置，将不打印日志，如果要设置在使用数据库之前调用 [init]
   Function? _logPrint;
 
-  /// 注册数据表，需要使用的数据表进行注册
+  /// 注册数据表
   List<DBBaseModel> tables = [];
 
   void init({Function? logPrint, List<DBBaseModel>? tables}) {
@@ -228,9 +228,8 @@ class DBManager {
     ConflictAlgorithm? conflictAlgorithm,
   }) async {
     Database? db = await getDatabase();
-    if (db == null) return -1;
-
-    int id = 0;
+    int id = -1;
+    if (db == null) return id;
     id = await db.insert(
       tableName,
       values,
@@ -246,9 +245,8 @@ class DBManager {
     Map<String, String>? where,
   }) async {
     Database? db = await getDatabase();
-    if (db == null) return -1;
-
     int count = 0;
+    if (db == null) return count;
     if (where == null) {
       count = await db.delete(tableName);
     } else {
@@ -294,16 +292,18 @@ class DBManager {
   }
 
   /// 查询数据，当key和value存在时，查询对应表中的数据，当key和value不存在时，查询对应表中所有数据
-  Future<List<Map<String, dynamic>>> where(
+  Future<List<Map<String, dynamic>>> query(
     String tableName, {
     Map<String, String>? where,
+    int? limit,
+    int? offset,
   }) async {
     Database? db = await getDatabase();
     if (db == null) return [];
 
     List<Map<String, dynamic>> list = [];
 
-    if (where == null) {
+    if (where == null || where.isEmpty) {
       list = await db.query(tableName);
       log('表$tableName查询数据${list.length}条, data=$list');
     } else {
@@ -316,6 +316,8 @@ class DBManager {
         tableName,
         where: whereString.toString(),
         whereArgs: whereArgs,
+        limit: limit,
+        offset: offset,
       );
       log('表`$tableName`符合`${paramsString.toString()}`条件共查询数据${list.length}条, data=$list');
     }
@@ -328,13 +330,13 @@ class DBManager {
     Map<String, dynamic>? whereMap,
     List<String> whereArgs,
     StringBuffer where,
-    StringBuffer paramsString,
+    StringBuffer params,
   ) {
     whereMap?.forEach((key, value) {
       if (where.isNotEmpty) where.write(',');
       where.write('$key = ?');
       whereArgs.add(value);
-      paramsString.write('$key=$value');
+      params.write('$key=$value');
     });
   }
 

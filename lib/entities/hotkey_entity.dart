@@ -23,7 +23,7 @@ class HotkeyEntity extends DBBaseModel {
   Map<String, dynamic> toJson() => _$HotkeyEntityToJson(this);
 
   @override
-  DBBaseModel fromJson(Map<String, dynamic> json) => HotkeyEntity.fromJson(json);
+  DBBaseModel fromJson(Map<String, dynamic> json) => _$HotkeyEntityFromJson(json);
 
   @override
   String get primaryKey => 'id';

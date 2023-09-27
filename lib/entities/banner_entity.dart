@@ -27,7 +27,7 @@ class BannerEntity extends DBBaseModel {
   Map<String, dynamic> toJson() => _$BannerEntityToJson(this);
 
   @override
-  BannerEntity fromJson(Map<String, dynamic> json) => BannerEntity.fromJson(json);
+  BannerEntity fromJson(Map<String, dynamic> json) => _$BannerEntityFromJson(json);
 
   @override
   String get primaryKey => 'id';

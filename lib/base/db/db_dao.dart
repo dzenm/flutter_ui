@@ -11,33 +11,13 @@ class DBDao {
     ConflictAlgorithm? conflictAlgorithm,
   }) async {
     if (data == null) return;
-    if (data is List<T>) {
-      for (var table in data) {
-        await DBManager().insertItem(
-          table.tableName,
-          table.toJson(),
-          conflictAlgorithm: conflictAlgorithm,
-        );
-      }
-    } else if (data is T) {
+    _handleData<T>(data, (table) async {
       await DBManager().insertItem(
-        data.tableName,
-        data.toJson(),
+        table.tableName,
+        table.toJson(),
         conflictAlgorithm: conflictAlgorithm,
       );
-    }
-  }
-
-  /// 删除数据
-  static Future<int> delete<T extends DBBaseModel>({
-    Map<String, String>? where,
-  }) async {
-    dynamic table = getTable<T>();
-    if (table == null) return 0;
-    return DBManager().deleteItem(
-      table.tableName,
-      where: where,
-    );
+    });
   }
 
   /// 更新数据
@@ -47,7 +27,7 @@ class DBDao {
     ConflictAlgorithm? conflictAlgorithm,
   }) async {
     if (data == null) return 0;
-    return DBManager().updateItem(
+    return await DBManager().updateItem(
       data.tableName,
       data.toJson(),
       where: where ?? {data.primaryKey: data.primaryValue},
@@ -55,24 +35,53 @@ class DBDao {
     );
   }
 
-  /// 查询数据
-  static Future<List<T>> where<T extends DBBaseModel>({
+  /// 删除数据
+  static Future<int> delete<T extends DBBaseModel>({
     Map<String, String>? where,
   }) async {
-    dynamic table = getTable<T>();
+    DBBaseModel? table = _getRuntimeTableType<T>();
+    if (table == null) return 0;
+    return await DBManager().deleteItem(
+      table.tableName,
+      where: where,
+    );
+  }
+
+  /// 查询数据
+  static Future<List<T>> query<T extends DBBaseModel>({
+    Map<String, String>? where,
+    int? limit,
+    int? offset,
+  }) async {
+    DBBaseModel? table = _getRuntimeTableType<T>();
     if (table == null) return [];
-    return DBManager()
-        .where(
+    return await DBManager()
+        .query(
           table.tableName,
           where: where,
+          limit: limit,
+          offset: offset,
         )
         .then((value) => value.map((e) => table.fromJson(e) as T).toList());
   }
 
-  static dynamic getTable<T extends DBBaseModel>() {
+  /// 处理数据
+  static void _handleData<T extends DBBaseModel>(dynamic data, void Function(T) result) {
+    if (data is List<T>) {
+      for (var table in data) {
+        result(table);
+      }
+    } else if (data is T) {
+      result(data);
+    }
+  }
+
+  /// 获取运行时的表类型
+  static T? _getRuntimeTableType<T extends DBBaseModel>() {
     for (var tab in DBManager.instance.tables) {
       if (tab is! T) continue;
       return tab;
     }
+    return null;
   }
 }

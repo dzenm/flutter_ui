@@ -17,7 +17,7 @@ class BannerModel with ChangeNotifier {
     // _images.add("http://n.sinaimg.cn/news/1_img/vcg/2b0c102b/99/w1024h675/20181024/FGXD-hmuuiyw6863401.jpg");
     // _images.add("http://n.sinaimg.cn/news/1_img/vcg/2b0c102b/107/w1024h683/20181024/kZj2-hmuuiyw6863420.jpg");
     // _images.add("http://n.sinaimg.cn/news/1_img/vcg/2b0c102b/105/w1024h681/20181024/tOiL-hmuuiyw6863462.jpg");
-    List<BannerEntity> banners = await DBDao.where<BannerEntity>();
+    List<BannerEntity> banners = await DBDao.query<BannerEntity>();
     _banners = banners;
   }
 

@@ -22,7 +22,7 @@ class NaviEntity extends DBBaseModel {
   Map<String, dynamic> toJson() => _$NaviEntityToJson(this);
 
   @override
-  DBBaseModel fromJson(Map<String, dynamic> json) => NaviEntity.fromJson(json);
+  DBBaseModel fromJson(Map<String, dynamic> json) => _$NaviEntityFromJson(json);
 
   @override
   String get primaryKey => 'cid';

@@ -4,8 +4,6 @@ import 'dart:convert';
 abstract class DBBaseModel {
   DBBaseModel();
 
-  DBBaseModel.fromJson(Map<String, dynamic> json);
-
   /// 将map类型数据转化为实体类
   DBBaseModel fromJson(Map<String, dynamic> json);
 

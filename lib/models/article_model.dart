@@ -12,7 +12,7 @@ class ArticleModel with ChangeNotifier {
 
   /// 初始化文章数据，从数据库获取所有的文章数据
   Future<void> init() async {
-    List<ArticleEntity> articles = await DBDao.where<ArticleEntity>();
+    List<ArticleEntity> articles = await DBDao.query<ArticleEntity>();
     _allArticle = articles;
     notifyListeners();
   }

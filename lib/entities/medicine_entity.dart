@@ -20,7 +20,7 @@ class MedicineEntity extends DBBaseModel {
   Map<String, dynamic> toJson() => _$MedicineEntityToJson(this);
 
   @override
-  MedicineEntity fromJson(Map<String, dynamic> json) => MedicineEntity.fromJson(json);
+  MedicineEntity fromJson(Map<String, dynamic> json) => _$MedicineEntityFromJson(json);
 
   @override
   String get primaryKey => '$title';

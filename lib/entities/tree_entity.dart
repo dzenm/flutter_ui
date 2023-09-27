@@ -36,7 +36,7 @@ class TreeEntity extends DBBaseModel {
   Map<String, dynamic> toJson() => _$TreeEntityToJson(this);
 
   @override
-  DBBaseModel fromJson(Map<String, dynamic> json) => TreeEntity.fromJson(json);
+  DBBaseModel fromJson(Map<String, dynamic> json) => _$TreeEntityFromJson(json);
 
   @override
   String get primaryKey => 'id';

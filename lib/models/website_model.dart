@@ -12,7 +12,7 @@ class WebsiteModel with ChangeNotifier {
 
   /// 初始化网站数据，从数据库获取所有的网站数据
   Future<void> init() async {
-    List<WebsiteEntity> websites = await DBDao.where();
+    List<WebsiteEntity> websites = await DBDao.query();
     _websites = websites;
     notifyListeners();
   }

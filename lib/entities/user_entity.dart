@@ -33,7 +33,7 @@ class UserEntity extends DBBaseModel {
   Map<String, dynamic> toJson() => _$UserEntityToJson(this);
 
   @override
-  DBBaseModel fromJson(Map<String, dynamic> json) => UserEntity.fromJson(json);
+  DBBaseModel fromJson(Map<String, dynamic> json) => _$UserEntityFromJson(json);
 
   @override
   String get primaryKey => 'id';
