@@ -31,10 +31,14 @@ class DBDao {
     ConflictAlgorithm? conflictAlgorithm,
   }) async {
     if (data == null) return 0;
+    Map<String, dynamic>? defaultWhere;
+    if (data.primaryKey.isNotEmpty && data.primaryValue.isNotEmpty) {
+      defaultWhere = {data.primaryKey: data.primaryValue};
+    }
     return await DBManager().updateItem(
       data.tableName,
       data.toJson(),
-      where: where ?? {data.primaryKey: data.primaryValue},
+      where: where ?? defaultWhere,
       conflictAlgorithm: conflictAlgorithm,
     );
   }
