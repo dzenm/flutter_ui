@@ -29,7 +29,7 @@ class WebsiteEntity extends DBBaseEntity {
 
   @override
   String get createTableSql => '''$tableName(
-    id INTEGER PRIMARY KEY NOT NULL, 
+    id INTEGER PRIMARY KEY NOT NULL,  
     category TEXT, 
     icon TEXT, 
     link TEXT, 

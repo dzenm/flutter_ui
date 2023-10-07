@@ -358,7 +358,11 @@ class DBManagerDelegate {
   Future<List<Map<String, dynamic>>> queries(
     String tableName, {
     String? dbName,
+    bool? distinct,
     Map<String, dynamic>? where,
+    String? groupBy,
+    String? having,
+    String? orderBy,
     int? limit,
     int? offset,
   }) async {
@@ -378,8 +382,12 @@ class DBManagerDelegate {
 
       list = await db.query(
         tableName,
+        distinct: distinct,
         where: whereString.toString(),
         whereArgs: whereArgs,
+        groupBy: groupBy,
+        having: having,
+        orderBy: orderBy,
         limit: limit,
         offset: offset,
       );

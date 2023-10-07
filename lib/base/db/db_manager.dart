@@ -168,18 +168,36 @@ class DBManager {
   Future<List<Map<String, dynamic>>> queries(
     String tableName, {
     String? dbName,
+    bool? distinct,
     Map<String, dynamic>? where,
+    String? groupBy,
+    String? having,
+    String? orderBy,
     int? limit,
     int? offset,
   }) async {
-    return await _delegate.queries(tableName, dbName: dbName, where: where, limit: limit, offset: offset);
+    return await _delegate.queries(
+      tableName,
+      dbName: dbName,
+      distinct: distinct,
+      where: where,
+      groupBy: groupBy,
+      having: having,
+      orderBy: orderBy,
+      limit: limit,
+      offset: offset,
+    );
   }
 
   /// 查询数据
   /// 使用
   ///  await DBManager().query<ArticleEntity>();
   Future<List<T>> query<T extends DBBaseEntity>({
+    bool? distinct,
     Map<String, dynamic>? where,
+    String? groupBy,
+    String? having,
+    String? orderBy,
     int? limit,
     int? offset,
   }) async {
@@ -188,6 +206,9 @@ class DBManager {
     return await queries(
       table.tableName,
       where: where,
+      groupBy: groupBy,
+      having: having,
+      orderBy: orderBy,
       limit: limit,
       offset: offset,
     ).then((value) => value.map((e) => table.fromJson(e) as T).toList());
