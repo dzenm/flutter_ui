@@ -71,7 +71,7 @@ class ArticleModel with ChangeNotifier {
     int index = _allArticle.indexWhere((article) => article.id == id);
     if (index == -1) return;
     _allArticle.removeAt(index);
-    DBManager().delete<ArticleEntity>(where: {'id': id});
+    ArticleEntity().delete(id);
   }
 
   /// 清空数据

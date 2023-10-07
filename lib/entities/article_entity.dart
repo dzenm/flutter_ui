@@ -119,6 +119,10 @@ class ArticleEntity extends DBBaseEntity {
   Future<int> update(ArticleEntity article) async {
     return await DBManager().update<ArticleEntity>(article);
   }
+
+  Future<int> delete(int id) async {
+    return await DBManager().delete<ArticleEntity>(where: {'id': id});
+  }
 }
 
 @JsonSerializable()
