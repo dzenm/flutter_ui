@@ -1,11 +1,7 @@
-// ignore_for_file: depend_on_referenced_packages
-
+import 'package:flutter_ui/base/base.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-import 'column_entity.dart';
-import 'db_base_entity.dart';
 import 'db_manager_delegate.dart';
-import 'table_entity.dart';
 
 /// 数据库升级
 typedef UpgradeDatabase = List<String> Function(int oldVersion, int newVersion);
@@ -54,19 +50,13 @@ class DBManager {
   }
 
   /// 删除数据库
-  Future<void> drop() async {
-    await _delegate.drop();
-  }
+  Future<void> drop() async => await _delegate.drop();
 
   /// 关闭数据库
-  Future<void> close() async {
-    await _delegate.close();
-  }
+  Future<void> close() async => await _delegate.close();
 
   /// 获取数据库
-  Future<String> getPath({String? dbName}) async {
-    return await _delegate.getPath(dbName: dbName);
-  }
+  Future<String> getPath({String? dbName}) async => await _delegate.getPath(dbName: dbName);
 
   /// 获取数据库所在的路径
   /// macOS/iOS: /Users/a0010/Library/Containers/<package_name>/Data/Documents/databases
@@ -102,18 +92,21 @@ class DBManager {
   /// 插入数据
   /// 使用
   ///  DBManager().insert(article);
-  Future<void> insert<T extends DBBaseEntity>(
+  Future<List<int>> insert<T extends DBBaseEntity>(
     dynamic data, {
     ConflictAlgorithm? conflictAlgorithm,
   }) async {
-    if (data == null) return;
-    _handleData<T>(data, (table) async {
-      await insertItem(
+    List<int> results = [];
+    if (data == null) return results;
+    _handleSingleData<T>(data, (table) async {
+      int result = await insertItem(
         table.tableName,
         table.toJson(),
         conflictAlgorithm: conflictAlgorithm,
       );
+      results.add(result);
     });
+    return results;
   }
 
   /// 删除数据，当key和value存在时，删除对应表中的数据，当key和value不存在时，删除该表
@@ -131,7 +124,7 @@ class DBManager {
   Future<int> delete<T extends DBBaseEntity>({
     Map<String, dynamic>? where,
   }) async {
-    DBBaseEntity? table = _getRuntimeTableType<T>();
+    DBBaseEntity? table = _getRuntimeTypeTable<T>();
     if (table == null) return 0;
     return await deleteItem(
       table.tableName,
@@ -160,8 +153,8 @@ class DBManager {
   }) async {
     if (data == null) return 0;
     Map<String, dynamic>? defaultWhere;
-    if (data.primaryKey.isNotEmpty && data.primaryValue.isNotEmpty) {
-      defaultWhere = {data.primaryKey: data.primaryValue};
+    if (data.primaryKey.isNotEmpty) {
+      defaultWhere = data.primaryKey;
     }
     return await updateItem(
       data.tableName,
@@ -190,7 +183,7 @@ class DBManager {
     int? limit,
     int? offset,
   }) async {
-    DBBaseEntity? table = _getRuntimeTableType<T>();
+    DBBaseEntity? table = _getRuntimeTypeTable<T>();
     if (table == null) return [];
     return await queries(
       table.tableName,
@@ -201,19 +194,21 @@ class DBManager {
   }
 
   /// 处理数据
-  static void _handleData<T extends DBBaseEntity>(dynamic data, void Function(T) result) {
+  void _handleSingleData<T extends DBBaseEntity>(dynamic data, void Function(T) result) {
     if (data is List<T>) {
       for (var table in data) {
         result(table);
       }
     } else if (data is T) {
       result(data);
+    } else {
+      log('插入的数据不是正确的实体类型');
     }
   }
 
   /// 获取运行时的表类型
-  static T? _getRuntimeTableType<T extends DBBaseEntity>() {
-    for (var tab in DBManager.instance.tables) {
+  T? _getRuntimeTypeTable<T extends DBBaseEntity>() {
+    for (var tab in tables) {
       if (tab is! T) continue;
       return tab;
     }

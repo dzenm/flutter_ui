@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../base/db/db.dart';
 import '../entities/banner_entity.dart';
 
 ///
@@ -17,7 +16,7 @@ class BannerModel with ChangeNotifier {
     // _images.add("http://n.sinaimg.cn/news/1_img/vcg/2b0c102b/99/w1024h675/20181024/FGXD-hmuuiyw6863401.jpg");
     // _images.add("http://n.sinaimg.cn/news/1_img/vcg/2b0c102b/107/w1024h683/20181024/kZj2-hmuuiyw6863420.jpg");
     // _images.add("http://n.sinaimg.cn/news/1_img/vcg/2b0c102b/105/w1024h681/20181024/tOiL-hmuuiyw6863462.jpg");
-    List<BannerEntity> banners = await DBManager().query<BannerEntity>();
+    List<BannerEntity> banners = await BannerEntity().query();
     _banners = banners;
   }
 
@@ -40,11 +39,11 @@ class BannerModel with ChangeNotifier {
     int index = _banners.indexWhere((e) => e.id == banner.id);
     if (index == -1) {
       // 保存banner
-      DBManager().insert(banner);
+      BannerEntity().insert(banner);
       _banners.add(banner);
     } else {
       // 更新banner
-      DBManager().update(banner);
+      BannerEntity().update(banner);
       _banners[index] = banner;
     }
   }

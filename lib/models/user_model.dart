@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../base/base.dart';
 import '../entities/coin_entity.dart';
 import '../entities/user_entity.dart';
 
@@ -14,9 +13,9 @@ class UserModel with ChangeNotifier {
 
   /// 初始化用户数据，从数据库获取所有的用户数据
   Future<void> init() async {
-    List<UserEntity> list = await DBManager().query(where: {'id': SpUtil.getUserId()});
-    if (list.isEmpty) return;
-    _user = list.first;
+    UserEntity? user = await _user.querySelf();
+    if (user == null) return;
+    _user = user;
     notifyListeners();
   }
 
@@ -26,7 +25,7 @@ class UserModel with ChangeNotifier {
   /// 更新当前登录的用户信息
   set user(UserEntity user) {
     _user = user;
-    DBManager().insert(user);
+    _user.insert(user);
     notifyListeners();
   }
 

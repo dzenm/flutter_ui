@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../base/base.dart';
 import '../entities/website_entity.dart';
 
 ///
@@ -12,7 +11,7 @@ class WebsiteModel with ChangeNotifier {
 
   /// 初始化网站数据，从数据库获取所有的网站数据
   Future<void> init() async {
-    List<WebsiteEntity> websites = await DBManager().query();
+    List<WebsiteEntity> websites = await WebsiteEntity().query();
     _websites = websites;
     notifyListeners();
   }
@@ -42,10 +41,10 @@ class WebsiteModel with ChangeNotifier {
     int index = _websites.indexWhere((web) => web.id == website.id);
     if (index == -1) {
       _websites.add(website);
-      DBManager().insert(website); // 保存为DB中的website数据
+      WebsiteEntity().insert(website); // 保存为DB中的website数据
     } else {
       _websites[index] = website;
-      DBManager().update(website); // 更新DB中的website数据
+      WebsiteEntity().update(website); // 更新DB中的website数据
     }
   }
 

@@ -16,11 +16,8 @@ abstract class DBBaseEntity {
   /// 表名，获取运行时的当前文件名称，转成小写字母，并将entity后缀删除
   String get tableName => 't_${runtimeType.toString().toLowerCase().replaceAll('entity', '')}';
 
-  /// 主键ID键
-  String get primaryKey => '';
-
-  /// 主键ID值
-  String get primaryValue => '';
+  /// 主键Id
+  Map<String, String> get primaryKey => {};
 
   /// 将dynamic类型(只处理了string和List类型)转化为List类型
   List<dynamic> toList(dynamic data) {

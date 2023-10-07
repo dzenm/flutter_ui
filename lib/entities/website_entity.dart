@@ -9,9 +9,9 @@ part 'website_entity.g.dart';
 /// 常用网站
 @JsonSerializable()
 class WebsiteEntity extends DBBaseEntity {
+  int? id;
   String? category;
   String? icon;
-  int? id;
   String? link;
   String? name;
   int? order;
@@ -39,8 +39,17 @@ class WebsiteEntity extends DBBaseEntity {
   );''';
 
   @override
-  String get primaryKey => 'id';
+  Map<String, String> get primaryKey => {'id': '$id'};
 
-  @override
-  String get primaryValue => '$id';
+  Future<List<WebsiteEntity>> query() async {
+    return await DBManager().query<WebsiteEntity>();
+  }
+
+  Future<List<int>> insert(dynamic article) async {
+    return await DBManager().insert<WebsiteEntity>(article);
+  }
+
+  Future<int> update(WebsiteEntity article) async {
+    return await DBManager().update<WebsiteEntity>(article);
+  }
 }

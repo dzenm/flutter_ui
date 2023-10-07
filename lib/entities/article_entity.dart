@@ -106,10 +106,19 @@ class ArticleEntity extends DBBaseEntity {
   );''';
 
   @override
-  String get primaryKey => 'id';
+  Map<String, String> get primaryKey => {'id': '$id'};
 
-  @override
-  String get primaryValue => '$id';
+  Future<List<ArticleEntity>> query() async {
+    return await DBManager().query<ArticleEntity>();
+  }
+
+  Future<List<int>> insert(dynamic article) async {
+    return await DBManager().insert<ArticleEntity>(article);
+  }
+
+  Future<int> update(ArticleEntity article) async {
+    return await DBManager().update<ArticleEntity>(article);
+  }
 }
 
 @JsonSerializable()
@@ -127,10 +136,4 @@ class TagEntity extends DBBaseEntity {
 
   @override
   TagEntity fromJson(Map<String, dynamic> json) => TagEntity.fromJson(json);
-
-  @override
-  String get primaryKey => 'name';
-
-  @override
-  String get primaryValue => '$name';
 }

@@ -37,8 +37,5 @@ class CollectEntity extends DBBaseEntity {
   CollectEntity fromJson(Map<String, dynamic> json) => _$CollectEntityFromJson(json);
 
   @override
-  String get primaryKey => 'id';
-
-  @override
-  String get primaryValue => '$id';
+  Map<String, String> get primaryKey => {'id': '$id'};
 }

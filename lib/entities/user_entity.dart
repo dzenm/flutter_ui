@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../base/db/db.dart';
+import '../base/base.dart';
 import 'converts/bool_convert.dart';
 
 part 'user_entity.g.dart';
@@ -53,8 +53,23 @@ class UserEntity extends DBBaseEntity {
   );''';
 
   @override
-  String get primaryKey => 'id';
+  Map<String, String> get primaryKey => {'id': '$id'};
 
-  @override
-  String get primaryValue => '$id';
+  Future<UserEntity?> querySelf() async {
+    List<UserEntity> users = await DBManager().query<UserEntity>(where: {'id': SpUtil.getUserId()});
+    return users.firstOrNull;
+  }
+
+  Future<void> insert(dynamic article) async {
+    UserEntity? user = await querySelf();
+    if (user == null) {
+      await DBManager().insert<UserEntity>(article);
+    } else {
+      await DBManager().update<UserEntity>(article);
+    }
+  }
+
+  Future<int> update(UserEntity article) async {
+    return await DBManager().update<UserEntity>(article);
+  }
 }

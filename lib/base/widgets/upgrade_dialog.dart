@@ -140,7 +140,7 @@ class _UpgradeDialogState extends State<UpgradeDialog> {
   Future<String> _defaultInstallAPKPath() async {
     var external = await getExternalCacheDirectories();
     // /storage/emulated/0/Android/data/packageName/cache/
-    String? cachePath = external?.first.path;
+    String? cachePath = external?.firstOrNull?.path;
     String savePath = '$cachePath/app_release v${widget.appVersion.version}.apk';
     Log.d('文件路径：savePath=$savePath');
     return savePath;

@@ -42,8 +42,17 @@ class BannerEntity extends DBBaseEntity {
   );''';
 
   @override
-  String get primaryKey => 'id';
+  Map<String, String> get primaryKey => {'id': '$id'};
 
-  @override
-  String get primaryValue => '$id';
+  Future<List<BannerEntity>> query() async {
+    return await DBManager().query<BannerEntity>();
+  }
+
+  Future<List<int>> insert(dynamic article) async {
+    return await DBManager().insert<BannerEntity>(article);
+  }
+
+  Future<int> update(BannerEntity article) async {
+    return await DBManager().update<BannerEntity>(article);
+  }
 }
