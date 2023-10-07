@@ -60,16 +60,16 @@ class UserEntity extends DBBaseEntity {
     return users.firstOrNull;
   }
 
-  Future<void> insert(dynamic article) async {
+  Future<void> insert(dynamic user) async {
     UserEntity? user = await querySelf();
     if (user == null) {
-      await DBManager().insert<UserEntity>(article);
+      await DBManager().insert<UserEntity>(user);
     } else {
-      await DBManager().update<UserEntity>(article);
+      await DBManager().update<UserEntity>(user);
     }
   }
 
-  Future<int> update(UserEntity article) async {
-    return await DBManager().update<UserEntity>(article);
+  Future<int> update(UserEntity user) async {
+    return await DBManager().update<UserEntity>(user);
   }
 }

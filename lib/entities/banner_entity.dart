@@ -48,11 +48,11 @@ class BannerEntity extends DBBaseEntity {
     return await DBManager().query<BannerEntity>();
   }
 
-  Future<List<int>> insert(dynamic article) async {
-    return await DBManager().insert<BannerEntity>(article);
+  Future<List<int>> insert(dynamic banner) async {
+    return await DBManager().insert<BannerEntity>(banner);
   }
 
-  Future<int> update(BannerEntity article) async {
-    return await DBManager().update<BannerEntity>(article);
+  Future<int> update(BannerEntity banner) async {
+    return await DBManager().update<BannerEntity>(banner);
   }
 }

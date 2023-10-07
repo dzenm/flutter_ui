@@ -45,11 +45,11 @@ class WebsiteEntity extends DBBaseEntity {
     return await DBManager().query<WebsiteEntity>();
   }
 
-  Future<List<int>> insert(dynamic article) async {
-    return await DBManager().insert<WebsiteEntity>(article);
+  Future<List<int>> insert(dynamic website) async {
+    return await DBManager().insert<WebsiteEntity>(website);
   }
 
-  Future<int> update(WebsiteEntity article) async {
-    return await DBManager().update<WebsiteEntity>(article);
+  Future<int> update(WebsiteEntity website) async {
+    return await DBManager().update<WebsiteEntity>(website);
   }
 }
