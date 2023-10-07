@@ -8,7 +8,7 @@ part 'hotkey_entity.g.dart';
 /// Created by a0010 on 2023/2/23 14:26
 /// 热词
 @JsonSerializable()
-class HotkeyEntity extends DBBaseModel {
+class HotkeyEntity extends DBBaseEntity {
   int? id;
   String? link;
   String? name;
@@ -23,7 +23,7 @@ class HotkeyEntity extends DBBaseModel {
   Map<String, dynamic> toJson() => _$HotkeyEntityToJson(this);
 
   @override
-  DBBaseModel fromJson(Map<String, dynamic> json) => _$HotkeyEntityFromJson(json);
+  DBBaseEntity fromJson(Map<String, dynamic> json) => _$HotkeyEntityFromJson(json);
 
   @override
   String get primaryKey => 'id';

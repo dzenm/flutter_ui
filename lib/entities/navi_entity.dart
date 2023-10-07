@@ -9,7 +9,7 @@ part 'navi_entity.g.dart';
 /// Created by a0010 on 2023/2/23 14:26
 /// 导航
 @JsonSerializable(explicitToJson: true)
-class NaviEntity extends DBBaseModel {
+class NaviEntity extends DBBaseEntity {
   List<ArticleEntity> articles = [];
   String? name;
   int? cid;
@@ -22,7 +22,7 @@ class NaviEntity extends DBBaseModel {
   Map<String, dynamic> toJson() => _$NaviEntityToJson(this);
 
   @override
-  DBBaseModel fromJson(Map<String, dynamic> json) => _$NaviEntityFromJson(json);
+  DBBaseEntity fromJson(Map<String, dynamic> json) => _$NaviEntityFromJson(json);
 
   @override
   String get primaryKey => 'cid';

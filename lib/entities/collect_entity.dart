@@ -8,7 +8,7 @@ part 'collect_entity.g.dart';
 /// Created by a0010 on 2023/2/23 14:26
 /// 收藏
 @JsonSerializable()
-class CollectEntity extends DBBaseModel {
+class CollectEntity extends DBBaseEntity {
   String? author;
   int? chapterId;
   String? chapterName;

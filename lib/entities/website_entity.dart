@@ -8,7 +8,7 @@ part 'website_entity.g.dart';
 /// Created by a0010 on 2023/2/16 16:50
 /// 常用网站
 @JsonSerializable()
-class WebsiteEntity extends DBBaseModel {
+class WebsiteEntity extends DBBaseEntity {
   String? category;
   String? icon;
   int? id;
@@ -25,7 +25,18 @@ class WebsiteEntity extends DBBaseModel {
   Map<String, dynamic> toJson() => _$WebsiteEntityToJson(this);
 
   @override
-  DBBaseModel fromJson(Map<String, dynamic> json) => _$WebsiteEntityFromJson(json);
+  DBBaseEntity fromJson(Map<String, dynamic> json) => _$WebsiteEntityFromJson(json);
+
+  @override
+  String get createTableSql => '''$tableName(
+    id INTEGER PRIMARY KEY NOT NULL, 
+    category TEXT, 
+    icon TEXT, 
+    link TEXT, 
+    name TEXT, 
+    "order" INTEGER, 
+    visible INTEGER
+  );''';
 
   @override
   String get primaryKey => 'id';

@@ -12,7 +12,7 @@ class ArticleModel with ChangeNotifier {
 
   /// 初始化文章数据，从数据库获取所有的文章数据
   Future<void> init() async {
-    List<ArticleEntity> articles = await DBDao.query<ArticleEntity>();
+    List<ArticleEntity> articles = await DBManager().query<ArticleEntity>();
     _allArticle = articles;
     notifyListeners();
   }
@@ -49,10 +49,10 @@ class ArticleModel with ChangeNotifier {
       int index = _allArticle.indexWhere((e) => e.id == article.id);
       if (index == -1) {
         inserts.add(article);
-        DBDao.insert(article); // 保存为DB中的article数据
+        DBManager().insert(article); // 保存为DB中的article数据
       } else {
         updates[index] = article;
-        DBDao.update(article); // 更新DB中的article数据
+        DBManager().update(article); // 更新DB中的article数据
       }
     }
     _allArticle.addAll(inserts);
@@ -71,7 +71,7 @@ class ArticleModel with ChangeNotifier {
     int index = _allArticle.indexWhere((article) => article.id == id);
     if (index == -1) return;
     _allArticle.removeAt(index);
-    DBDao.delete<ArticleEntity>(where: {'id': id});
+    DBManager().delete<ArticleEntity>(where: {'id': id});
   }
 
   /// 清空数据

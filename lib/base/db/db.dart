@@ -4,8 +4,7 @@
 library db;
 
 export 'column_entity.dart';
-export 'db_base_model.dart';
-export 'db_dao.dart';
+export 'db_base_entity.dart';
 export 'db_manager.dart';
 export 'db_sql.dart';
 export 'table_entity.dart';

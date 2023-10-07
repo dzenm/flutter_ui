@@ -8,7 +8,7 @@ part 'medicine_entity.g.dart';
 /// Created by a0010 on 2023/2/16 16:50
 ///
 @JsonSerializable()
-class MedicineEntity extends DBBaseModel {
+class MedicineEntity extends DBBaseEntity {
   String? title;
   String? content;
 

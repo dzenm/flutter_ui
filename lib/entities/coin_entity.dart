@@ -8,7 +8,7 @@ part 'coin_entity.g.dart';
 /// Created by a0010 on 2023/2/23 14:26
 /// 用户积分表
 @JsonSerializable()
-class CoinEntity extends DBBaseModel {
+class CoinEntity extends DBBaseEntity {
   int? coinCount;
   int? level;
   String? nickname;
@@ -24,7 +24,7 @@ class CoinEntity extends DBBaseModel {
   Map<String, dynamic> toJson() => _$CoinEntityToJson(this);
 
   @override
-  DBBaseModel fromJson(Map<String, dynamic> json) => _$CoinEntityFromJson(json);
+  DBBaseEntity fromJson(Map<String, dynamic> json) => _$CoinEntityFromJson(json);
 
   @override
   String get primaryKey => 'userId';

@@ -10,7 +10,7 @@ part 'tree_entity.g.dart';
 /// Created by a0010 on 2023/2/23 14:26
 /// 体系
 @JsonSerializable(explicitToJson: true)
-class TreeEntity extends DBBaseModel {
+class TreeEntity extends DBBaseEntity {
   List<ArticleEntity> articleList = [];
   String? author;
   List<TreeEntity> children = [];
@@ -36,7 +36,7 @@ class TreeEntity extends DBBaseModel {
   Map<String, dynamic> toJson() => _$TreeEntityToJson(this);
 
   @override
-  DBBaseModel fromJson(Map<String, dynamic> json) => _$TreeEntityFromJson(json);
+  DBBaseEntity fromJson(Map<String, dynamic> json) => _$TreeEntityFromJson(json);
 
   @override
   String get primaryKey => 'id';

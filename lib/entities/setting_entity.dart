@@ -8,7 +8,7 @@ part 'setting_entity.g.dart';
 /// Created by a0010 on 2023/8/14 09:58
 /// 设置的实体类
 @JsonSerializable(explicitToJson: true)
-class SettingEntity extends DBBaseModel {
+class SettingEntity extends DBBaseEntity {
   String? id;
   String? theme; // 主题设置
   String? locale; // 语言设置
@@ -21,7 +21,7 @@ class SettingEntity extends DBBaseModel {
   Map<String, dynamic> toJson() => _$SettingEntityToJson(this);
 
   @override
-  DBBaseModel fromJson(Map<String, dynamic> json) => _$SettingEntityFromJson(json);
+  DBBaseEntity fromJson(Map<String, dynamic> json) => _$SettingEntityFromJson(json);
 
   @override
   String get primaryKey => 'id';

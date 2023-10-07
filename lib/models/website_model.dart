@@ -12,7 +12,7 @@ class WebsiteModel with ChangeNotifier {
 
   /// 初始化网站数据，从数据库获取所有的网站数据
   Future<void> init() async {
-    List<WebsiteEntity> websites = await DBDao.query();
+    List<WebsiteEntity> websites = await DBManager().query();
     _websites = websites;
     notifyListeners();
   }
@@ -42,10 +42,10 @@ class WebsiteModel with ChangeNotifier {
     int index = _websites.indexWhere((web) => web.id == website.id);
     if (index == -1) {
       _websites.add(website);
-      DBDao.insert(website); // 保存为DB中的website数据
+      DBManager().insert(website); // 保存为DB中的website数据
     } else {
       _websites[index] = website;
-      DBDao.update(website); // 更新DB中的website数据
+      DBManager().update(website); // 更新DB中的website数据
     }
   }
 

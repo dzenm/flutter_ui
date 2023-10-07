@@ -10,7 +10,7 @@ part 'article_entity.g.dart';
 /// Created by a0010 on 2023/2/23 14:26
 /// 文章
 @JsonSerializable(explicitToJson: true)
-class ArticleEntity extends DBBaseModel {
+class ArticleEntity extends DBBaseEntity {
   @BoolConvert()
   bool? adminAdd;
   String? apkLink;
@@ -66,6 +66,46 @@ class ArticleEntity extends DBBaseModel {
   ArticleEntity fromJson(Map<String, dynamic> json) => ArticleEntity.fromJson(json);
 
   @override
+  String get createTableSql => '''$tableName(
+    id INTEGER PRIMARY KEY NOT NULL, 
+    adminAdd BIT,
+    apkLink TEXT,
+    audit INTEGER,
+    author TEXT,
+    canEdit BIT,
+    chapterId INTEGER,
+    chapterName TEXT,
+    collect BIT,
+    courseId INTEGER,
+    "desc" TEXT,
+    descMd TEXT,
+    envelopePic TEXT,
+    fresh BIT,
+    host TEXT,
+    isAdminAdd BIT,
+    link TEXT,
+    niceDate TEXT,
+    niceShareDate TEXT,
+    origin TEXT,
+    prefix TEXT,
+    projectLink TEXT,
+    publishTime INTEGER,
+    realSuperChapterId INTEGER,
+    route BIT,
+    selfVisible INTEGER,
+    shareDate INTEGER,
+    shareUser TEXT,
+    superChapterId INTEGER,
+    superChapterName TEXT,
+    title TEXT,
+    tags TEXT,
+    type INTEGER,
+    userId INTEGER,
+    visible INTEGER,
+    zan INTEGER
+  );''';
+
+  @override
   String get primaryKey => 'id';
 
   @override
@@ -73,7 +113,7 @@ class ArticleEntity extends DBBaseModel {
 }
 
 @JsonSerializable()
-class TagEntity extends DBBaseModel {
+class TagEntity extends DBBaseEntity {
   String? name;
   String? url;
 

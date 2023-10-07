@@ -1,0 +1,408 @@
+// ignore_for_file: depend_on_referenced_packages
+import 'dart:ffi';
+import 'dart:io';
+
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sqlite3/open.dart' as open;
+import 'package:sqlite3/sqlite3.dart' as sqlite3;
+
+import 'column_entity.dart';
+import 'db_base_entity.dart';
+import 'db_manager.dart';
+import 'db_sql.dart';
+import 'table_entity.dart';
+
+/// 临时表后缀
+const _tempSuffix = '_TEMP';
+
+///
+/// Created by a0010 on 2023/9/28 11:13
+///
+class DBManagerDelegate {
+  DBManagerDelegate();
+
+  Database? _database;
+
+  /// 当前打开的数据库名称
+  String? _currentDBName;
+
+  /// 当前打开的数据库路径
+  String? _dbPath;
+
+  /// 数据库名称，根据用户信息设置，如果不设置，默认使用userId
+  String _userId = 'userId';
+
+  set userId(String userId) {
+    _userId = userId;
+  }
+
+  /// 日志打印，如果不设置，将不打印日志，如果要设置在使用数据库之前调用 [init]
+  Function? _logPrint;
+
+  /// 注册的所有数据表
+  final List<DBBaseEntity> _tables = [];
+
+  List<DBBaseEntity> get tables => _tables;
+
+  void init({Function? logPrint, List<DBBaseEntity>? tables}) {
+    _logPrint = logPrint;
+    if (tables != null) {
+      _tables.addAll(tables);
+    }
+    _setupDatabase();
+  }
+
+  /// 设置Windows数据库
+  void _setupDatabase() {
+    if (Platform.isWindows) {
+      String location = Directory.current.path;
+      _windowsInit(join(location, 'sqlite3.dll'));
+    }
+  }
+
+  /// Windows数据库初始化
+  void _windowsInit(String path) {
+    open.open.overrideFor(open.OperatingSystem.windows, () {
+      try {
+        return DynamicLibrary.open(path);
+      } catch (e) {
+        stderr.writeln('Failed to load sqlite3.dll at $path');
+        rethrow;
+      }
+    });
+    sqlite3.sqlite3.openInMemory().dispose();
+  }
+
+  /// 获取当前数据库对象, 未指定数据库名称时默认为用户名 [_userId]，切换数据库操作时要先关闭 [close] 再重新打开。
+  Future<Database?> getDatabase({String? dbName}) async {
+    if (_database == null || _currentDBName != dbName) {
+      if (Platform.isWindows || Platform.isLinux) {
+        // Windows端初始化数据库
+        sqfliteFfiInit();
+        // 获取databaseFactoryFfi对象
+        var databaseFactory = databaseFactoryFfi;
+        _database = await databaseFactory.openDatabase(inMemoryDatabasePath);
+      } else {
+        String path = await getPath(dbName: dbName);
+        _database = await openDatabase(
+          path,
+          version: Sql.dbVersion,
+          onCreate: _onCreate,
+          onUpgrade: _onUpgrade,
+        );
+      }
+      _currentDBName = dbName;
+    }
+    return _database!;
+  }
+
+  /// 当数据库不存在时调用并进行创建, 只在创建第一次时调用
+  void _onCreate(Database db, int version) async {
+    log('创建数据库：initVersion=$version');
+
+    // 创建数据表
+    for (var table in _tables) {
+      await _createTable(db, sql: '${Sql.createTable} ${table.createTableSql}');
+    }
+  }
+
+  /// 当数据库版本变化时调用并进行升级，所有数据库变动均需通过代码更新
+  void _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    log('升级数据库：oldVersion=$oldVersion, newVersion=$newVersion');
+
+    // 方式一，使用sql进行更新。
+    Batch batch = db.batch();
+    for (UpgradeDatabase upgradeDatabase in Sql.upgrades) {
+      List<String> list = upgradeDatabase(oldVersion, newVersion);
+      if (list.isEmpty) continue;
+      for (var sql in list) {
+        batch.execute(sql);
+      }
+    }
+    // 方式二，通过创建临时表更新
+    await batch.commit();
+    log('升级数据库完成');
+  }
+
+  /// 生成临时表，将原表数据进行迁移
+  Future<void> _generateTempTables(String tableName, {String? dbName}) async {
+    Database? db = await getDatabase(dbName: dbName);
+    if (db == null) return;
+    bool existTable = await isTableExist(tableName);
+    if (!existTable) {
+      DBBaseEntity? table = _getTable(tableName);
+      if (table != null) {
+        await db.execute('${Sql.createTable} ${table.createTableSql}');
+      }
+    }
+    String tempTableName = '$tableName$_tempSuffix';
+    String sql = 'CREATE TEMP TABLE $tempTableName AS SELECT * FROM $tableName;';
+    await db.execute(sql);
+    log('创建临时表：tempTableName=$tempTableName, sql=$sql');
+  }
+
+  /// 删除表
+  Future<void> _dropTableString(String tableName, {String? dbName}) async {
+    Database? db = await getDatabase(dbName: dbName);
+    if (db == null) return;
+    await db.execute('${Sql.dropTable} $tableName;');
+  }
+
+  /// 创建新表，将临时表数据进行迁移至新表
+  Future<void> _restoreData(String tableName, List<String> newColumns, {String? dbName}) async {
+    Database? db = await getDatabase(dbName: dbName);
+    if (db == null) return;
+    String tempTableName = '$tableName$_tempSuffix';
+    var result = await db.rawQuery('SELECT * FROM $tempTableName limit 1', null);
+    // 表数据不为空，进行数据表的迁移
+    if (result.isNotEmpty) {
+      // 获取原数据表(临时表)的列名
+      List<String> oldColumns = result.first.keys.toList();
+      // 判断新旧表是否存在字段的增删
+      List<String> diffProperties = [];
+      for (var property in newColumns) {
+        if (!oldColumns.contains(property)) continue;
+        diffProperties.add(property);
+      }
+      log('新旧数据表的差异: diffProperties=$diffProperties');
+      if (diffProperties.isNotEmpty) {
+        final String columnSQL = _combineColumn(diffProperties);
+        String sql = 'INSERT INTO $tableName ($columnSQL) SELECT $columnSQL FROM $tempTableName;';
+        await db.execute(sql);
+        log('临时表数据迁移至新数据表: tableName=$tableName, sql=$sql');
+      }
+    }
+    // 删除临时表
+    await db.execute('${Sql.dropTable} $tempTableName');
+  }
+
+  /// 根据表名获取对应的实体类
+  DBBaseEntity? _getTable(String tableName) {
+    for (var table in _tables) {
+      if (table.tableName == tableName) return table;
+    }
+    return null;
+  }
+
+  /// 合并列名
+  String _combineColumn(List<String> columns) {
+    String sql = '';
+    for (var element in columns) {
+      sql += '$element,';
+    }
+    return sql.isEmpty ? sql : sql.substring(0, sql.length - 1);
+  }
+
+  /// 删除数据库 [_userId]
+  Future<void> drop() async {
+    String path = await getPath();
+    await deleteDatabase(path).then((value) => log('删除数据库成功'));
+  }
+
+  /// 关闭数据库
+  Future<void> close() async {
+    // 如果数据库存在，而且数据库没有关闭，关闭数据库
+    if (_database != null && _database!.isOpen) {
+      await _database?.close().then((value) => _database = null);
+      log('关闭数据库');
+    }
+  }
+
+  /// 获取数据库 [_userId] 的路径 [_dbPath]
+  Future<String> getPath({String? dbName}) async {
+    String path = await databasesPath;
+    if (_dbPath == null) {
+      dbName ??= 'db_$_userId.db';
+      log('数据库路径=$path, 数据库名称=$dbName');
+      _dbPath = join(path, dbName);
+    }
+    return _dbPath!;
+  }
+
+  /// 获取数据库所在的路径
+  /// macOS/iOS: /Users/a0010/Library/Containers/<package_name>/Data/Documents/databases
+  /// Windows:   C:\Users\Administrator\Documents
+  /// Android:   /data/user/0/<package_name>/databases
+  Future<String> get databasesPath async {
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String dirName = 'databases';
+    String dirPath = join(appDocDir.path, dirName);
+    if (Platform.isAndroid) {
+      dirPath = join(appDocDir.parent.path, dirName);
+    }
+    if (Platform.isWindows || Platform.isLinux) {
+      dirPath = join(appDocDir.path, 'Flutter', dirName);
+    }
+    Directory result = Directory(dirPath);
+    if (!result.existsSync()) {
+      result.createSync(recursive: true);
+    }
+    return dirPath;
+  }
+
+  /// 判断表是否存在
+  Future<bool> isTableExist(String tableName, {String? dbName}) async {
+    Database? db = await getDatabase(dbName: dbName);
+    if (db == null) return false;
+    List list = await db.rawQuery("${Sql.selectTable} AND NAME='$tableName'");
+    return list.isNotEmpty;
+  }
+
+  /// 如果表不存在，进行创建表
+  Future<void> checkTable(String tableName, String columnString, {String? dbName}) async {
+    bool existTable = await isTableExist(tableName);
+    if (existTable) return;
+    await _createTable(_database!, tableName: tableName, columnString: columnString);
+  }
+
+  /// 创建新表, 参数[tableName] 和 [columnString] 通过拼接一起使用, 参数[sql]通过自定义创建新表。
+  Future<void> _createTable(Database db, {String? tableName, String? columnString, String? sql}) async {
+    String sqlString = sql ?? '${Sql.createTable} $tableName ($columnString)';
+    await db.execute(sqlString).then((value) => log('创建${tableName ?? '新'}表: $sqlString'));
+  }
+
+  /// 获取数据中所有表的数据
+  Future<List<TableEntity>> getTables({String? dbName}) async {
+    Database? db = await getDatabase(dbName: dbName);
+    if (db == null) return [];
+    List<dynamic> list = await db.rawQuery(Sql.selectTable);
+    log('查询所有表: $list');
+    return list.map((table) => TableEntity.fromJson(table)).toList();
+  }
+
+  /// 获取数据库中表的所有列结构的数据
+  Future<List<ColumnEntity>> getTableColumn(String dbName, String tableName) async {
+    Database? db = await getDatabase(dbName: dbName);
+    if (db == null) return [];
+    List list = await db.rawQuery('${Sql.pragmaTable} ($tableName)');
+    log('查询表列名: $list');
+    return list.map((column) => ColumnEntity.fromJson(column)).toList();
+  }
+
+  /// 插入数据
+  Future<int> insertItem(
+    String tableName,
+    Map<String, dynamic> values, {
+    String? dbName,
+    ConflictAlgorithm? conflictAlgorithm,
+  }) async {
+    Database? db = await getDatabase(dbName: dbName);
+    int id = -1;
+    if (db == null) return id;
+    id = await db.insert(
+      tableName,
+      values,
+      conflictAlgorithm: conflictAlgorithm ?? ConflictAlgorithm.replace,
+    );
+    log('表$tableName新增数据 id=$id, data=$values ');
+    return id;
+  }
+
+  /// 删除数据，当key和value存在时，删除对应表中的数据，当key和value不存在时，删除该表
+  Future<int> deleteItem(
+    String tableName, {
+    String? dbName,
+    Map<String, dynamic>? where,
+  }) async {
+    Database? db = await getDatabase(dbName: dbName);
+    int count = 0;
+    if (db == null) return count;
+    if (where == null) {
+      count = await db.delete(tableName);
+    } else {
+      StringBuffer params = StringBuffer();
+      StringBuffer whereString = StringBuffer();
+      List<String> whereArgs = [];
+      _handleMap(where, whereArgs, whereString, params);
+      count = await db.delete(
+        tableName,
+        where: whereString.toString(),
+        whereArgs: whereArgs,
+      );
+      log('表`$tableName`符合`${params.toString()}`条件共删除数据$count条');
+    }
+    return count;
+  }
+
+  /// 更新数据，更新对应key和value表中的数据
+  Future<int> updateItem(
+    String tableName,
+    Map<String, dynamic> values, {
+    String? dbName,
+    Map<String, dynamic>? where,
+    ConflictAlgorithm? conflictAlgorithm,
+  }) async {
+    Database? db = await getDatabase(dbName: dbName);
+    if (db == null) return -1;
+
+    StringBuffer params = StringBuffer();
+    StringBuffer whereString = StringBuffer();
+    List<String> whereArgs = [];
+    _handleMap(where, whereArgs, whereString, params);
+    int count = 0;
+    // 更新数据
+    count = await db.update(
+      tableName,
+      values,
+      where: whereString.toString(),
+      whereArgs: whereArgs,
+      conflictAlgorithm: conflictAlgorithm ?? ConflictAlgorithm.replace,
+    );
+    log('表`$tableName`符合`${params.toString()}`条件共更新数据$count条');
+    return count;
+  }
+
+  /// 查询数据，当key和value存在时，查询对应表中的数据，当key和value不存在时，查询对应表中所有数据
+  Future<List<Map<String, dynamic>>> queries(
+    String tableName, {
+    String? dbName,
+    Map<String, dynamic>? where,
+    int? limit,
+    int? offset,
+  }) async {
+    Database? db = await getDatabase(dbName: dbName);
+    if (db == null) return [];
+
+    List<Map<String, dynamic>> list = [];
+
+    if (where == null || where.isEmpty) {
+      list = await db.query(tableName);
+      log('表$tableName查询数据${list.length}条, data=$list');
+    } else {
+      StringBuffer paramsString = StringBuffer();
+      StringBuffer whereString = StringBuffer();
+      List<String> whereArgs = [];
+      _handleMap(where, whereArgs, whereString, paramsString);
+
+      list = await db.query(
+        tableName,
+        where: whereString.toString(),
+        whereArgs: whereArgs,
+        limit: limit,
+        offset: offset,
+      );
+      log('表`$tableName`符合`${paramsString.toString()}`条件共查询数据${list.length}条, data=$list');
+    }
+
+    // map转换为List集合
+    return list;
+  }
+
+  void _handleMap(
+    Map<String, dynamic>? whereMap,
+    List<String> whereArgs,
+    StringBuffer where,
+    StringBuffer params,
+  ) {
+    whereMap?.forEach((key, value) {
+      if (where.isNotEmpty) where.write(',');
+      where.write('$key = ?');
+      whereArgs.add(value);
+      params.write('$key=$value');
+    });
+  }
+
+  void log(String text) => _logPrint == null ? null : _logPrint!(text, tag: 'DBManager');
+}

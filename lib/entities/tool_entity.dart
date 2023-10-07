@@ -8,7 +8,7 @@ part 'tool_entity.g.dart';
 /// Created by a0010 on 2023/8/9 16:27
 /// 工具实体类
 @JsonSerializable()
-class ToolEntity extends DBBaseModel {
+class ToolEntity extends DBBaseEntity {
   String? desc;
   String? icon;
   int? id;

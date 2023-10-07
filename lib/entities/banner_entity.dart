@@ -9,7 +9,7 @@ part 'banner_entity.g.dart';
 ///
 /// 轮播图
 @JsonSerializable()
-class BannerEntity extends DBBaseModel {
+class BannerEntity extends DBBaseEntity {
   String? desc;
   int? id;
   String? imagePath;
@@ -28,6 +28,18 @@ class BannerEntity extends DBBaseModel {
 
   @override
   BannerEntity fromJson(Map<String, dynamic> json) => _$BannerEntityFromJson(json);
+
+  @override
+  String get createTableSql => '''$tableName(
+    id INTEGER PRIMARY KEY NOT NULL, 
+    "desc" TEXT, 
+    imagePath TEXT, 
+    isVisible INTEGER, 
+    "order" INTEGER, 
+    title TEXT, 
+    type INTEGER, 
+    url TEXT
+  );''';
 
   @override
   String get primaryKey => 'id';

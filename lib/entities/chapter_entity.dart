@@ -10,7 +10,7 @@ part 'chapter_entity.g.dart';
 ///
 /// 公众号/教程实体类
 @JsonSerializable()
-class ChapterEntity extends DBBaseModel {
+class ChapterEntity extends DBBaseEntity {
   List<ArticleEntity>? articleList;
   String? author;
   List children = [];

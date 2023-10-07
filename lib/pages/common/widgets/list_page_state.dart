@@ -10,7 +10,7 @@ import '../../../base/base.dart';
 ///
 /// 创建自己的 [State] 直接继承 [ListPageState]，[D] 为列表的数据结构类型，[T] 为StateWidget类型
 ///
-abstract class ListPageState<D extends DBBaseModel, T extends StatefulWidget> extends State<T> {
+abstract class ListPageState<D extends DBBaseEntity, T extends StatefulWidget> extends State<T> {
   final StateController _controller = StateController();
 
   /// 加载的页数

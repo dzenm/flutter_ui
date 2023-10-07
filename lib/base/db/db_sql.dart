@@ -4,19 +4,11 @@ class Sql {
   //// 数据库版本
   static const dbVersion = 1;
 
-  /// 常用数据库语句
+  /// 常用数据库语句，使用以下语句记得需要跟其他字符串中间加空格，否则执行时会识别为错误
   static const String createTable = 'CREATE TABLE IF NOT EXISTS';
   static const String pragmaTable = 'PRAGMA table_info';
-  static const String selectAllTable = "SELECT * FROM sqlite_master WHERE TYPE='table'";
-
-  /// 创建数据表的语句
-  static const List<String> createTables = [
-    _createUserTable,
-    _createBannerTable,
-    _createArticleTable,
-    _createWebsiteTable,
-    _createSystemTable,
-  ];
+  static const String dropTable = 'DROP TABLE IF EXISTS';
+  static const String selectTable = "SELECT * FROM sqlite_master WHERE TYPE='table'";
 
   /// 更新数据库的语句
   static const List<UpgradeDatabase> upgrades = [
