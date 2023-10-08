@@ -48,6 +48,6 @@ class WebsiteEntity extends DBBaseEntity {
   }
 
   Future<int> update(WebsiteEntity website) async {
-    return await DBManager().update(tableName, website.toJson());
+    return await DBManager().update(tableName, website.toJson(), where: 'id = ?', whereArgs: [website.id]);
   }
 }

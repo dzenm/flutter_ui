@@ -53,7 +53,8 @@ class UserEntity extends DBBaseEntity {
   Map<String, String> get primaryKey => {'id': '$id'};
 
   Future<UserEntity?> querySelf() async {
-    List<dynamic> users = await DBManager().query(tableName, where: 'id = ?', whereArgs: [SpUtil.getUserId()]);
+    List<dynamic> list = await DBManager().query(tableName, where: 'id = ?', whereArgs: [SpUtil.getUserId()]);
+    List<UserEntity> users = list.map((e) => UserEntity.fromJson(e)).toList();
     return users.firstOrNull;
   }
 
@@ -62,11 +63,11 @@ class UserEntity extends DBBaseEntity {
     if (oldUser == null) {
       await DBManager().insert(tableName, user.toJson());
     } else {
-      await DBManager().update(tableName, user.toJson());
+      await DBManager().update(tableName, user.toJson(), where: 'id = ?', whereArgs: [user.id]);
     }
   }
 
   Future<int> update(UserEntity user) async {
-    return await DBManager().update(tableName, user.toJson());
+    return await DBManager().update(tableName, user.toJson(), where: 'id = ?', whereArgs: [user.id]);
   }
 }

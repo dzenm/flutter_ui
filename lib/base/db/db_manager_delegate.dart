@@ -316,7 +316,7 @@ class DBManagerDelegate {
       where: where,
       whereArgs: whereArgs,
     );
-    log('表`$tableName`符合`${_mergeSql(where, whereArgs)}`条件共删除数据$count条');
+    log('表`$tableName`${_mergeSql(where, whereArgs)}条件共删除数据$count条');
     return count;
   }
 
@@ -341,7 +341,7 @@ class DBManagerDelegate {
       whereArgs: whereArgs,
       conflictAlgorithm: conflictAlgorithm ?? ConflictAlgorithm.replace,
     );
-    log('表`$tableName`符合`${_mergeSql(where, whereArgs)}`条件共更新数据$count条');
+    log('表`$tableName`${_mergeSql(where, whereArgs)}条件共更新数据$count条');
     return count;
   }
 
@@ -374,7 +374,7 @@ class DBManagerDelegate {
       limit: limit,
       offset: offset,
     );
-    log('表`$tableName`符合`${_mergeSql(where, whereArgs)}`条件共查询数据${list.length}条, data=$list');
+    log('表`$tableName`${_mergeSql(where, whereArgs)}条件共查询数据${list.length}条, data=$list');
     return list;
   }
 
@@ -404,7 +404,7 @@ class DBManagerDelegate {
   /// 将查询语句和对应的值合并为完整的sql
   String _mergeSql(String? where, List<Object?>? args) {
     if ((where ?? '').isEmpty) return '';
-    if ((args ?? []).isEmpty) return where!;
+    if ((args ?? []).isEmpty) return '符合`$where`';
 
     StringBuffer sb = StringBuffer();
     for (int i = 0, j = 0; i < where!.length; i++) {
@@ -414,7 +414,7 @@ class DBManagerDelegate {
       }
       sb.write(where[i]);
     }
-    return sb.toString();
+    return '符合`${sb.toString()}`';
   }
 
   void log(String text) => _logPrint == null ? null : _logPrint!(text, tag: 'DBManager');

@@ -51,6 +51,6 @@ class BannerEntity extends DBBaseEntity {
   }
 
   Future<int> update(BannerEntity banner) async {
-    return await DBManager().update(tableName, banner.toJson());
+    return await DBManager().update(tableName, banner.toJson(), where: 'id = ?', whereArgs: [banner.id]);
   }
 }
