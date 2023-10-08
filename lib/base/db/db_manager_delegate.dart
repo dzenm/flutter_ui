@@ -78,14 +78,21 @@ class DBManagerDelegate {
   /// 获取当前数据库对象, 未指定数据库名称时默认为用户名 [_userId]，切换数据库操作时要先关闭 [close] 再重新打开。
   Future<Database?> getDatabase({String? dbName}) async {
     if (_database == null || _currentDBName != dbName) {
+      String path = await getPath(dbName: dbName);
       if (Platform.isWindows || Platform.isLinux) {
         // Windows端初始化数据库
         sqfliteFfiInit();
         // 获取databaseFactoryFfi对象
         var databaseFactory = databaseFactoryFfi;
-        _database = await databaseFactory.openDatabase(inMemoryDatabasePath);
+        _database = await databaseFactory.openDatabase(
+          path,
+          options: OpenDatabaseOptions(
+            version: Sql.dbVersion,
+            onCreate: _onCreate,
+            onUpgrade: _onUpgrade,
+          )
+        );
       } else {
-        String path = await getPath(dbName: dbName);
         _database = await openDatabase(
           path,
           version: Sql.dbVersion,
