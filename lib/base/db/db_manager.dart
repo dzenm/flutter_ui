@@ -1,7 +1,9 @@
-import 'package:flutter_ui/base/base.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
+import 'column_entity.dart';
+import 'db_base_entity.dart';
 import 'db_manager_delegate.dart';
+import 'table_entity.dart';
 
 /// 数据库升级
 typedef UpgradeDatabase = List<String> Function(int oldVersion, int newVersion);
@@ -169,18 +171,37 @@ class DBManager {
     String tableName, {
     String? dbName,
     bool? distinct,
-    Map<String, dynamic>? where,
+    List<String>? columns,
+    String? where,
+    List<Object?>? whereArgs,
+    Map<String, dynamic>? whereParams,
     String? groupBy,
     String? having,
     String? orderBy,
     int? limit,
     int? offset,
   }) async {
+    if ((where ?? '').isNotEmpty) {
+      return await _delegate.query(
+        tableName,
+        dbName: dbName,
+        distinct: distinct,
+        columns: columns,
+        where: where,
+        whereArgs: whereArgs,
+        groupBy: groupBy,
+        having: having,
+        orderBy: orderBy,
+        limit: limit,
+        offset: offset,
+      );
+    }
     return await _delegate.queries(
       tableName,
       dbName: dbName,
       distinct: distinct,
-      where: where,
+      columns: columns,
+      whereParams: whereParams,
       groupBy: groupBy,
       having: having,
       orderBy: orderBy,
@@ -194,7 +215,10 @@ class DBManager {
   ///  await DBManager().query<ArticleEntity>();
   Future<List<T>> query<T extends DBBaseEntity>({
     bool? distinct,
-    Map<String, dynamic>? where,
+    List<String>? columns,
+    String? where,
+    List<Object?>? whereArgs,
+    Map<String, dynamic>? whereParams,
     String? groupBy,
     String? having,
     String? orderBy,
@@ -205,7 +229,11 @@ class DBManager {
     if (table == null) return [];
     return await queries(
       table.tableName,
+      distinct: distinct,
+      columns: columns,
       where: where,
+      whereArgs: whereArgs,
+      whereParams: whereParams,
       groupBy: groupBy,
       having: having,
       orderBy: orderBy,

@@ -56,7 +56,7 @@ class UserEntity extends DBBaseEntity {
   Map<String, String> get primaryKey => {'id': '$id'};
 
   Future<UserEntity?> querySelf() async {
-    List<UserEntity> users = await DBManager().query<UserEntity>(where: {'id': SpUtil.getUserId()});
+    List<UserEntity> users = await DBManager().query<UserEntity>(whereParams: {'id': SpUtil.getUserId()});
     return users.firstOrNull;
   }
 

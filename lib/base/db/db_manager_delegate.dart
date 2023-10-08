@@ -354,12 +354,47 @@ class DBManagerDelegate {
     return count;
   }
 
+  /// 查询数据，使用sql查询
+  Future<List<Map<String, dynamic>>> query(
+    String tableName, {
+    String? dbName,
+    bool? distinct,
+    List<String>? columns,
+    String? where,
+    List<Object?>? whereArgs,
+    String? groupBy,
+    String? having,
+    String? orderBy,
+    int? limit,
+    int? offset,
+  }) async {
+    Database? db = await getDatabase(dbName: dbName);
+    if (db == null) return [];
+
+    List<Map<String, dynamic>> list = await db.query(
+      tableName,
+      distinct: distinct,
+      columns: columns,
+      where: where,
+      whereArgs: whereArgs,
+      groupBy: groupBy,
+      having: having,
+      orderBy: orderBy,
+      limit: limit,
+      offset: offset,
+    );
+    log('表`$tableName`符合`$where`, `${whereArgs.toString()}`条件共查询数据${list.length}条, data=$list');
+
+    return list;
+  }
+
   /// 查询数据，当key和value存在时，查询对应表中的数据，当key和value不存在时，查询对应表中所有数据
   Future<List<Map<String, dynamic>>> queries(
     String tableName, {
     String? dbName,
     bool? distinct,
-    Map<String, dynamic>? where,
+    List<String>? columns,
+    Map<String, dynamic>? whereParams,
     String? groupBy,
     String? having,
     String? orderBy,
@@ -371,18 +406,19 @@ class DBManagerDelegate {
 
     List<Map<String, dynamic>> list = [];
 
-    if (where == null || where.isEmpty) {
+    if ((whereParams ?? {}).isEmpty) {
       list = await db.query(tableName);
       log('表$tableName查询数据${list.length}条, data=$list');
     } else {
       StringBuffer paramsString = StringBuffer();
       StringBuffer whereString = StringBuffer();
       List<String> whereArgs = [];
-      _handleMap(where, whereArgs, whereString, paramsString);
+      _handleMap(whereParams, whereArgs, whereString, paramsString);
 
       list = await db.query(
         tableName,
         distinct: distinct,
+        columns: columns,
         where: whereString.toString(),
         whereArgs: whereArgs,
         groupBy: groupBy,
@@ -394,7 +430,6 @@ class DBManagerDelegate {
       log('表`$tableName`符合`${paramsString.toString()}`条件共查询数据${list.length}条, data=$list');
     }
 
-    // map转换为List集合
     return list;
   }
 
