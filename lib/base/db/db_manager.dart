@@ -82,164 +82,64 @@ class DBManager {
   }
 
   /// 插入数据
-  Future<int> insertItem(
+  Future<int> insert(
     String tableName,
     Map<String, dynamic> values, {
     String? dbName,
     ConflictAlgorithm? conflictAlgorithm,
   }) async {
-    return await _delegate.insertItem(tableName, values, dbName: dbName, conflictAlgorithm: conflictAlgorithm);
-  }
-
-  /// 插入数据
-  /// 使用
-  ///  DBManager().insert(article);
-  Future<List<int>> insert<T extends DBBaseEntity>(
-    dynamic data, {
-    ConflictAlgorithm? conflictAlgorithm,
-  }) async {
-    List<int> results = [];
-    if (data == null) return results;
-    _handleSingleData<T>(data, (table) async {
-      int result = await insertItem(
-        table.tableName,
-        table.toJson(),
-        conflictAlgorithm: conflictAlgorithm,
-      );
-      results.add(result);
-    });
-    return results;
-  }
-
-  /// 删除数据，当key和value存在时，删除对应表中的数据，当key和value不存在时，删除该表
-  Future<int> deleteItem(
-    String tableName, {
-    String? dbName,
-    Map<String, dynamic>? where,
-  }) async {
-    return await _delegate.deleteItem(tableName, dbName: dbName, where: where);
+    return await _delegate.insert(tableName, values, dbName: dbName, conflictAlgorithm: conflictAlgorithm);
   }
 
   /// 删除数据
-  /// 使用
-  ///  DBManager().delete<ArticleEntity>(where: {'id': id});
-  Future<int> delete<T extends DBBaseEntity>({
-    Map<String, dynamic>? where,
-  }) async {
-    DBBaseEntity? table = _getRuntimeTypeTable<T>();
-    if (table == null) return 0;
-    return await deleteItem(
-      table.tableName,
-      where: where,
-    );
-  }
-
-  /// 更新数据，更新对应key和value表中的数据
-  Future<int> updateItem(
-    String tableName,
-    Map<String, dynamic> values, {
+  Future<int> delete(
+    String tableName, {
     String? dbName,
-    Map<String, dynamic>? where,
-    ConflictAlgorithm? conflictAlgorithm,
+    String? where,
+    List<Object?>? whereArgs,
   }) async {
-    return await _delegate.updateItem(tableName, values, dbName: dbName, where: where, conflictAlgorithm: conflictAlgorithm);
+    return await _delegate.delete(tableName, dbName: dbName, where: where, whereArgs: whereArgs);
   }
 
   /// 更新数据
-  /// 使用
-  ///  DBManager().update(article);
-  Future<int> update<T extends DBBaseEntity>(
-    T? data, {
-    Map<String, dynamic>? where,
+  Future<int> update(
+    String tableName,
+    Map<String, dynamic> values, {
+    String? dbName,
+    String? where,
+    List<Object?>? whereArgs,
     ConflictAlgorithm? conflictAlgorithm,
   }) async {
-    if (data == null) return 0;
-    Map<String, dynamic>? defaultWhere;
-    if (data.primaryKey.isNotEmpty) {
-      defaultWhere = data.primaryKey;
-    }
-    return await updateItem(
-      data.tableName,
-      data.toJson(),
-      where: where ?? defaultWhere,
-      conflictAlgorithm: conflictAlgorithm,
-    );
+    return await _delegate.update(tableName, values, dbName: dbName, where: where, whereArgs: whereArgs, conflictAlgorithm: conflictAlgorithm);
   }
 
-  /// 查询数据，当key和value存在时，查询对应表中的数据，当key和value不存在时，查询对应表中所有数据
-  Future<List<Map<String, dynamic>>> queries(
+  /// 查询数据
+  Future<List<Map<String, dynamic>>> query(
     String tableName, {
     String? dbName,
     bool? distinct,
     List<String>? columns,
     String? where,
     List<Object?>? whereArgs,
-    Map<String, dynamic>? whereParams,
     String? groupBy,
     String? having,
     String? orderBy,
     int? limit,
     int? offset,
   }) async {
-    if ((where ?? '').isNotEmpty) {
-      return await _delegate.query(
-        tableName,
-        dbName: dbName,
-        distinct: distinct,
-        columns: columns,
-        where: where,
-        whereArgs: whereArgs,
-        groupBy: groupBy,
-        having: having,
-        orderBy: orderBy,
-        limit: limit,
-        offset: offset,
-      );
-    }
-    return await _delegate.queries(
+    return await _delegate.query(
       tableName,
       dbName: dbName,
       distinct: distinct,
       columns: columns,
-      whereParams: whereParams,
+      where: where,
+      whereArgs: whereArgs,
       groupBy: groupBy,
       having: having,
       orderBy: orderBy,
       limit: limit,
       offset: offset,
     );
-  }
-
-  /// 查询数据
-  /// 使用
-  ///  await DBManager().query<ArticleEntity>();
-  Future<List<T>> query<T extends DBBaseEntity>({
-    bool? distinct,
-    List<String>? columns,
-    String? where,
-    List<Object?>? whereArgs,
-    Map<String, dynamic>? whereParams,
-    String? groupBy,
-    String? having,
-    String? orderBy,
-    int? limit,
-    int? offset,
-  }) async {
-    DBBaseEntity? table = _getRuntimeTypeTable<T>();
-    if (table == null) return [];
-    return await queries(
-      table.tableName,
-      distinct: distinct,
-      columns: columns,
-      where: where,
-      whereArgs: whereArgs,
-      whereParams: whereParams,
-      groupBy: groupBy,
-      having: having,
-      orderBy: orderBy,
-      limit: limit,
-      offset: offset,
-    ).then((value) => value.map((e) => table.fromJson(e) as T).toList());
   }
 
   /// 处理数据

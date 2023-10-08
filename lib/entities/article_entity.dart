@@ -63,9 +63,6 @@ class ArticleEntity extends DBBaseEntity {
   Map<String, dynamic> toJson() => _$ArticleEntityToJson(this);
 
   @override
-  ArticleEntity fromJson(Map<String, dynamic> json) => ArticleEntity.fromJson(json);
-
-  @override
   String get createTableSql => '''$tableName(
     id INTEGER PRIMARY KEY NOT NULL, 
     adminAdd BIT,
@@ -109,19 +106,20 @@ class ArticleEntity extends DBBaseEntity {
   Map<String, String> get primaryKey => {'id': '$id'};
 
   Future<List<ArticleEntity>> query() async {
-    return await DBManager().query<ArticleEntity>();
+    List<dynamic> list = await DBManager().query(tableName);
+    return list.map((e) => ArticleEntity.fromJson(e)).toList();
   }
 
-  Future<List<int>> insert(dynamic article) async {
-    return await DBManager().insert<ArticleEntity>(article);
+  Future<int> insert(ArticleEntity article) async {
+    return await DBManager().insert(tableName, article.toJson());
   }
 
   Future<int> update(ArticleEntity article) async {
-    return await DBManager().update<ArticleEntity>(article);
+    return await DBManager().update(tableName, article.toJson());
   }
 
   Future<int> delete(int id) async {
-    return await DBManager().delete<ArticleEntity>(where: {'id': id});
+    return await DBManager().delete(tableName, where: 'id = ?', whereArgs: [id]);
   }
 }
 
@@ -138,6 +136,4 @@ class TagEntity extends DBBaseEntity {
   @override
   Map<String, dynamic> toJson() => _$TagEntityToJson(this);
 
-  @override
-  TagEntity fromJson(Map<String, dynamic> json) => TagEntity.fromJson(json);
 }

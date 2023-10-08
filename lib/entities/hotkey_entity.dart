@@ -23,8 +23,5 @@ class HotkeyEntity extends DBBaseEntity {
   Map<String, dynamic> toJson() => _$HotkeyEntityToJson(this);
 
   @override
-  DBBaseEntity fromJson(Map<String, dynamic> json) => _$HotkeyEntityFromJson(json);
-
-  @override
   Map<String, String> get primaryKey => {'id': '$id'};
 }

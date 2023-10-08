@@ -35,8 +35,5 @@ class ChapterEntity extends DBBaseEntity {
   Map<String, dynamic> toJson() => _$ChapterEntityToJson(this);
 
   @override
-  ChapterEntity fromJson(Map<String, dynamic> json) => _$ChapterEntityFromJson(json);
-
-  @override
   Map<String, String> get primaryKey => {'id': '$id'};
 }

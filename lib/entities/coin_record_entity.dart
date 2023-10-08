@@ -26,8 +26,5 @@ class CoinRecordEntity extends DBBaseEntity {
   Map<String, dynamic> toJson() => _$CoinRecordEntityToJson(this);
 
   @override
-  DBBaseEntity fromJson(Map<String, dynamic> json) => _$CoinRecordEntityFromJson(json);
-
-  @override
   Map<String, String> get primaryKey => {'id': '$id'};
 }

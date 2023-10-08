@@ -33,9 +33,6 @@ class UserEntity extends DBBaseEntity {
   Map<String, dynamic> toJson() => _$UserEntityToJson(this);
 
   @override
-  DBBaseEntity fromJson(Map<String, dynamic> json) => _$UserEntityFromJson(json);
-
-  @override
   String get createTableSql => '''$tableName(
     id INTEGER PRIMARY KEY NOT NULL, 
     admin BIT, 
@@ -56,20 +53,20 @@ class UserEntity extends DBBaseEntity {
   Map<String, String> get primaryKey => {'id': '$id'};
 
   Future<UserEntity?> querySelf() async {
-    List<UserEntity> users = await DBManager().query<UserEntity>(whereParams: {'id': SpUtil.getUserId()});
+    List<dynamic> users = await DBManager().query(tableName, where: 'id = ?', whereArgs: [SpUtil.getUserId()]);
     return users.firstOrNull;
   }
 
-  Future<void> insert(dynamic user) async {
-    UserEntity? user = await querySelf();
-    if (user == null) {
-      await DBManager().insert<UserEntity>(user);
+  Future<void> insert(UserEntity user) async {
+    UserEntity? oldUser = await querySelf();
+    if (oldUser == null) {
+      await DBManager().insert(tableName, user.toJson());
     } else {
-      await DBManager().update<UserEntity>(user);
+      await DBManager().update(tableName, user.toJson());
     }
   }
 
   Future<int> update(UserEntity user) async {
-    return await DBManager().update<UserEntity>(user);
+    return await DBManager().update(tableName, user.toJson());
   }
 }

@@ -27,7 +27,7 @@ class _DBColumnPageState extends State<DBColumnPage> {
   }
 
   Future<void> getData() async {
-    _rows = await DBManager().queries(widget.tableName);
+    _rows = await DBManager().query(widget.tableName);
     _columns = await DBManager().getTableColumn(widget.dbName, widget.tableName);
     setState(() => _init = true);
   }

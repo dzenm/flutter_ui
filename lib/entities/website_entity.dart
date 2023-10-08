@@ -25,9 +25,6 @@ class WebsiteEntity extends DBBaseEntity {
   Map<String, dynamic> toJson() => _$WebsiteEntityToJson(this);
 
   @override
-  DBBaseEntity fromJson(Map<String, dynamic> json) => _$WebsiteEntityFromJson(json);
-
-  @override
   String get createTableSql => '''$tableName(
     id INTEGER PRIMARY KEY NOT NULL,  
     category TEXT, 
@@ -42,14 +39,15 @@ class WebsiteEntity extends DBBaseEntity {
   Map<String, String> get primaryKey => {'id': '$id'};
 
   Future<List<WebsiteEntity>> query() async {
-    return await DBManager().query<WebsiteEntity>();
+    List<dynamic> list = await DBManager().query(tableName);
+    return list.map((e) => WebsiteEntity.fromJson(e)).toList();
   }
 
-  Future<List<int>> insert(dynamic website) async {
-    return await DBManager().insert<WebsiteEntity>(website);
+  Future<int> insert(WebsiteEntity website) async {
+    return await DBManager().insert(tableName, website.toJson());
   }
 
   Future<int> update(WebsiteEntity website) async {
-    return await DBManager().update<WebsiteEntity>(website);
+    return await DBManager().update(tableName, website.toJson());
   }
 }

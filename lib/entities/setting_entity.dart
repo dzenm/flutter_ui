@@ -21,8 +21,5 @@ class SettingEntity extends DBBaseEntity {
   Map<String, dynamic> toJson() => _$SettingEntityToJson(this);
 
   @override
-  DBBaseEntity fromJson(Map<String, dynamic> json) => _$SettingEntityFromJson(json);
-
-  @override
   Map<String, String> get primaryKey => {'id': '$id'};
 }

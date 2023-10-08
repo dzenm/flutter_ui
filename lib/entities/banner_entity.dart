@@ -27,9 +27,6 @@ class BannerEntity extends DBBaseEntity {
   Map<String, dynamic> toJson() => _$BannerEntityToJson(this);
 
   @override
-  BannerEntity fromJson(Map<String, dynamic> json) => _$BannerEntityFromJson(json);
-
-  @override
   String get createTableSql => '''$tableName(
     id INTEGER PRIMARY KEY NOT NULL, 
     "desc" TEXT, 
@@ -45,14 +42,15 @@ class BannerEntity extends DBBaseEntity {
   Map<String, String> get primaryKey => {'id': '$id'};
 
   Future<List<BannerEntity>> query() async {
-    return await DBManager().query<BannerEntity>();
+    List<dynamic> list = await DBManager().query(tableName);
+    return list.map((e) => BannerEntity.fromJson(e)).toList();
   }
 
-  Future<List<int>> insert(dynamic banner) async {
-    return await DBManager().insert<BannerEntity>(banner);
+  Future<int> insert(BannerEntity banner) async {
+    return await DBManager().insert(tableName, banner.toJson());
   }
 
   Future<int> update(BannerEntity banner) async {
-    return await DBManager().update<BannerEntity>(banner);
+    return await DBManager().update(tableName, banner.toJson());
   }
 }

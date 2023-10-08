@@ -282,7 +282,7 @@ class DBManagerDelegate {
   }
 
   /// 插入数据
-  Future<int> insertItem(
+  Future<int> insert(
     String tableName,
     Map<String, dynamic> values, {
     String? dbName,
@@ -300,62 +300,53 @@ class DBManagerDelegate {
     return id;
   }
 
-  /// 删除数据，当key和value存在时，删除对应表中的数据，当key和value不存在时，删除该表
-  Future<int> deleteItem(
+  /// 删除数据
+  Future<int> delete(
     String tableName, {
     String? dbName,
-    Map<String, dynamic>? where,
+    String? where,
+    List<Object?>? whereArgs,
   }) async {
     Database? db = await getDatabase(dbName: dbName);
     int count = 0;
     if (db == null) return count;
-    if (where == null) {
-      count = await db.delete(tableName);
-    } else {
-      StringBuffer params = StringBuffer();
-      StringBuffer whereString = StringBuffer();
-      List<String> whereArgs = [];
-      _handleMap(where, whereArgs, whereString, params);
-      count = await db.delete(
-        tableName,
-        where: whereString.toString(),
-        whereArgs: whereArgs,
-      );
-      log('表`$tableName`符合`${params.toString()}`条件共删除数据$count条');
-    }
+
+    count = await db.delete(
+      tableName,
+      where: where,
+      whereArgs: whereArgs,
+    );
+    log('表`$tableName`符合`${_mergeSql(where, whereArgs)}`条件共删除数据$count条');
     return count;
   }
 
-  /// 更新数据，更新对应key和value表中的数据
-  Future<int> updateItem(
+  /// 更新数据
+  Future<int> update(
     String tableName,
     Map<String, dynamic> values, {
     String? dbName,
-    Map<String, dynamic>? where,
+    String? where,
+    List<Object?>? whereArgs,
     ConflictAlgorithm? conflictAlgorithm,
   }) async {
     Database? db = await getDatabase(dbName: dbName);
     if (db == null) return -1;
 
-    StringBuffer params = StringBuffer();
-    StringBuffer whereString = StringBuffer();
-    List<String> whereArgs = [];
-    _handleMap(where, whereArgs, whereString, params);
     int count = 0;
     // 更新数据
     count = await db.update(
       tableName,
       values,
-      where: whereString.toString(),
+      where: where,
       whereArgs: whereArgs,
       conflictAlgorithm: conflictAlgorithm ?? ConflictAlgorithm.replace,
     );
-    log('表`$tableName`符合`${params.toString()}`条件共更新数据$count条');
+    log('表`$tableName`符合`${_mergeSql(where, whereArgs)}`条件共更新数据$count条');
     return count;
   }
 
   /// 查询数据，使用sql查询
-  Future<List<Map<String, dynamic>>> query(
+  Future<List<Map<String, dynamic>>> query<T extends DBBaseEntity>(
     String tableName, {
     String? dbName,
     bool? distinct,
@@ -383,54 +374,17 @@ class DBManagerDelegate {
       limit: limit,
       offset: offset,
     );
-    log('表`$tableName`符合`$where`, `${whereArgs.toString()}`条件共查询数据${list.length}条, data=$list');
-
+    log('表`$tableName`符合`${_mergeSql(where, whereArgs)}`条件共查询数据${list.length}条, data=$list');
     return list;
   }
 
-  /// 查询数据，当key和value存在时，查询对应表中的数据，当key和value不存在时，查询对应表中所有数据
-  Future<List<Map<String, dynamic>>> queries(
-    String tableName, {
-    String? dbName,
-    bool? distinct,
-    List<String>? columns,
-    Map<String, dynamic>? whereParams,
-    String? groupBy,
-    String? having,
-    String? orderBy,
-    int? limit,
-    int? offset,
-  }) async {
-    Database? db = await getDatabase(dbName: dbName);
-    if (db == null) return [];
-
-    List<Map<String, dynamic>> list = [];
-
-    if ((whereParams ?? {}).isEmpty) {
-      list = await db.query(tableName);
-      log('表$tableName查询数据${list.length}条, data=$list');
-    } else {
-      StringBuffer paramsString = StringBuffer();
-      StringBuffer whereString = StringBuffer();
-      List<String> whereArgs = [];
-      _handleMap(whereParams, whereArgs, whereString, paramsString);
-
-      list = await db.query(
-        tableName,
-        distinct: distinct,
-        columns: columns,
-        where: whereString.toString(),
-        whereArgs: whereArgs,
-        groupBy: groupBy,
-        having: having,
-        orderBy: orderBy,
-        limit: limit,
-        offset: offset,
-      );
-      log('表`$tableName`符合`${paramsString.toString()}`条件共查询数据${list.length}条, data=$list');
+  /// 获取运行时的表类型
+  T? _getRuntimeTypeTable<T extends DBBaseEntity>() {
+    for (var tab in tables) {
+      if (tab is! T) continue;
+      return tab;
     }
-
-    return list;
+    return null;
   }
 
   void _handleMap(
@@ -445,6 +399,22 @@ class DBManagerDelegate {
       whereArgs.add(value);
       params.write('$key=$value');
     });
+  }
+
+  /// 将查询语句和对应的值合并为完整的sql
+  String _mergeSql(String? where, List<Object?>? args) {
+    if ((where ?? '').isEmpty) return '';
+    if ((args ?? []).isEmpty) return where!;
+
+    StringBuffer sb = StringBuffer();
+    for (int i = 0, j = 0; i < where!.length; i++) {
+      if (where[i] == '?') {
+        sb.write(args![j++]);
+        continue;
+      }
+      sb.write(where[i]);
+    }
+    return sb.toString();
   }
 
   void log(String text) => _logPrint == null ? null : _logPrint!(text, tag: 'DBManager');
