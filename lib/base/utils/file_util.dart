@@ -23,7 +23,10 @@ class FileUtil {
     _logPrint = logPrint;
   }
 
-  /// 此方法返回本地文件地址
+  /// 返回本地文档下的APP的路径
+  /// macOS/iOS: /Users/a0010/Library/Containers/<package_name>/Data/Documents
+  /// Windows:   C:\Users\Administrator\Documents
+  /// Android:   /data/user/0/<package_name>/
   Future<Directory> getParent({String? dir}) async {
     // 获取文档目录的路径
     // getTemporaryDirectory()	              Future<Directory>	          临时目录

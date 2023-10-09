@@ -113,6 +113,15 @@ class DBManager {
     return await _delegate.update(tableName, values, dbName: dbName, where: where, whereArgs: whereArgs, conflictAlgorithm: conflictAlgorithm);
   }
 
+  /// 更新数据
+  Future<int> rawUpdate(
+    String sql,
+    List<Object?>? args, {
+    String? dbName,
+  }) async {
+    return await _delegate.rawUpdate(sql, args, dbName: dbName);
+  }
+
   /// 查询数据
   Future<List<Map<String, dynamic>>> query(
     String tableName, {

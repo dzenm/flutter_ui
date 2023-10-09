@@ -84,14 +84,12 @@ class DBManagerDelegate {
         sqfliteFfiInit();
         // 获取databaseFactoryFfi对象
         var databaseFactory = databaseFactoryFfi;
-        _database = await databaseFactory.openDatabase(
-          path,
-          options: OpenDatabaseOptions(
-            version: Sql.dbVersion,
-            onCreate: _onCreate,
-            onUpgrade: _onUpgrade,
-          )
-        );
+        _database = await databaseFactory.openDatabase(path,
+            options: OpenDatabaseOptions(
+              version: Sql.dbVersion,
+              onCreate: _onCreate,
+              onUpgrade: _onUpgrade,
+            ));
       } else {
         _database = await openDatabase(
           path,
@@ -230,7 +228,7 @@ class DBManagerDelegate {
 
   /// 获取数据库所在的路径
   /// macOS/iOS: /Users/a0010/Library/Containers/<package_name>/Data/Documents/databases
-  /// Windows:   C:\Users\Administrator\Documents
+  /// Windows:   C:\Users\Administrator\Documents\FlutterUI\databases
   /// Android:   /data/user/0/<package_name>/databases
   Future<String> get databasesPath async {
     Directory appDocDir = await getApplicationDocumentsDirectory();
@@ -240,7 +238,7 @@ class DBManagerDelegate {
       dirPath = join(appDocDir.parent.path, dirName);
     }
     if (Platform.isWindows || Platform.isLinux) {
-      dirPath = join(appDocDir.path, 'Flutter', dirName);
+      dirPath = join(appDocDir.path, 'FlutterUI', dirName);
     }
     Directory result = Directory(dirPath);
     if (!result.existsSync()) {
@@ -349,6 +347,22 @@ class DBManagerDelegate {
       conflictAlgorithm: conflictAlgorithm ?? ConflictAlgorithm.replace,
     );
     log('表`$tableName`${_mergeSql(where, whereArgs)}条件共更新数据$count条');
+    return count;
+  }
+
+  /// 更新数据
+  Future<int> rawUpdate(
+    String sql,
+    List<Object?>? args, {
+    String? dbName,
+  }) async {
+    Database? db = await getDatabase(dbName: dbName);
+    if (db == null) return -1;
+
+    int count = 0;
+    // 更新数据
+    count = await db.rawUpdate(sql, args);
+    log('根据${_mergeSql(sql, args)}条件共更新数据$count条');
     return count;
   }
 
