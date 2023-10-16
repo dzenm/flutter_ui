@@ -34,7 +34,4 @@ class TreeEntity extends DBBaseEntity {
 
   @override
   Map<String, dynamic> toJson() => _$TreeEntityToJson(this);
-
-  @override
-  Map<String, String> get primaryKey => {'id': '$id'};
 }

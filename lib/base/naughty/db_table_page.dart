@@ -28,7 +28,7 @@ class _DBTablePageState extends State<DBTablePage> {
   //列表要展示的数据
   Future getData() async {
     await Future.delayed(Duration.zero, () async {
-      _list = await DBManager().getTableList(dbName: widget.dbName);
+      _list = await DBManager().getTables(dbName: widget.dbName);
       setState(() => {});
     });
   }

@@ -7,3 +7,4 @@ export 'app_theme.dart';
 export 'assets.dart';
 export 'custom_icons.dart';
 export 'local_model.dart';
+export 'setting_entity.dart';

@@ -18,7 +18,4 @@ class MedicineEntity extends DBBaseEntity {
 
   @override
   Map<String, dynamic> toJson() => _$MedicineEntityToJson(this);
-
-  @override
-  Map<String, String> get primaryKey => {'title': '$title'};
 }

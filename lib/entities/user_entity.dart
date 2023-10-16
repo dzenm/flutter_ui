@@ -49,9 +49,6 @@ class UserEntity extends DBBaseEntity {
     username TEXT
   );''';
 
-  @override
-  Map<String, String> get primaryKey => {'id': '$id'};
-
   Future<UserEntity?> querySelf() async {
     List<dynamic> list = await DBManager().query(tableName, where: 'id = ?', whereArgs: [SpUtil.getUserId()]);
     List<UserEntity> users = list.map((e) => UserEntity.fromJson(e)).toList();

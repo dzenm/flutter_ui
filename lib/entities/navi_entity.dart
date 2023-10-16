@@ -20,7 +20,4 @@ class NaviEntity extends DBBaseEntity {
 
   @override
   Map<String, dynamic> toJson() => _$NaviEntityToJson(this);
-
-  @override
-  Map<String, String> get primaryKey => {'cid': '$cid'};
 }

@@ -102,9 +102,6 @@ class ArticleEntity extends DBBaseEntity {
     zan INTEGER
   );''';
 
-  @override
-  Map<String, String> get primaryKey => {'id': '$id'};
-
   Future<List<ArticleEntity>> query() async {
     List<dynamic> list = await DBManager().query(tableName);
     return list.map((e) => ArticleEntity.fromJson(e)).toList();
@@ -135,5 +132,4 @@ class TagEntity extends DBBaseEntity {
 
   @override
   Map<String, dynamic> toJson() => _$TagEntityToJson(this);
-
 }

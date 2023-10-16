@@ -26,7 +26,4 @@ class ToolEntity extends DBBaseEntity {
 
   @override
   Map<String, dynamic> toJson() => _$ToolEntityToJson(this);
-
-  @override
-  Map<String, String> get primaryKey => {'id': '$id'};
 }

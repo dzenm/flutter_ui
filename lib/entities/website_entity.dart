@@ -35,9 +35,6 @@ class WebsiteEntity extends DBBaseEntity {
     visible INTEGER
   );''';
 
-  @override
-  Map<String, String> get primaryKey => {'id': '$id'};
-
   Future<List<WebsiteEntity>> query() async {
     List<dynamic> list = await DBManager().query(tableName);
     return list.map((e) => WebsiteEntity.fromJson(e)).toList();

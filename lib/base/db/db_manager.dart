@@ -46,6 +46,8 @@ class DBManager {
     _delegate.init(logPrint: logPrint, tables: tables);
   }
 
+  ///============================== 基本的数据库操作 ================================
+
   /// 获取当前数据库对象
   Future<Database?> getDatabase({String? dbName}) async {
     return _delegate.getDatabase(dbName: dbName);
@@ -72,14 +74,16 @@ class DBManager {
   }
 
   /// 获取数据库中表的所有列结构的数据
-  Future<List<ColumnEntity>> getTableColumn(String dbName, String tableName) async {
-    return await _delegate.getTableColumn(dbName, tableName);
+  Future<List<ColumnEntity>> getTableColumns(String dbName, String tableName) async {
+    return await _delegate.getTableColumns(dbName, tableName);
   }
 
   /// 获取数据中所有表的数据
-  Future<List<TableEntity>> getTableList({String? dbName}) async {
+  Future<List<TableEntity>> getTables({String? dbName}) async {
     return await _delegate.getTables(dbName: dbName);
   }
+
+  ///============================== SQL增删改查操作 ================================
 
   /// 插入数据
   Future<int> insert(

@@ -17,114 +17,106 @@ class SpUtil {
   /// 日志打印，如果不设置，将不打印日志，如果要设置在使用数据库之前调用 [init]
   Function? _logPrint;
 
-  /// 用户登录相关的信息
-  static const String _userInfo = 'u_info'; // 登录的用户信息
-  static const String _userLoginState = 'u_login_state'; // 登录状态的信息
-  static const String _user = 'u_user';
-  static const String _userName = 'u_name'; // 登录的用户名
-  static const String _userId = 'u_id'; // 登录的用户ID
-  static const String _userToken = 'u_token'; // 登录的token信息
-  static const String _userCookie = 'u_cookie'; // 登录的cookie信息
-
-  /// APP设置相关的信息
-  static const String _settings = 'settings'; // APP相关的设置
-
   Future init({Function? logPrint}) async {
     _prefs = await SharedPreferences.getInstance();
     _logPrint = logPrint;
     return _prefs != null;
   }
 
+  ///============================== SP对外提供增加/获取的方法 @see [SPValue] ================================
+
   /// 登录状态信息
   static bool getUserLoginState() {
-    return getBool(_userLoginState);
+    return getBool(SPValue.userLoginState.value);
   }
 
   /// 保存登录状态信息
   static void setUserLoginState(bool? isLogin) {
-    setBool(_userLoginState, isLogin);
-  }
-
-  /// 获取用户信息
-  static String getUserInfo() {
-    return getString(_userInfo);
-  }
-
-  /// 保存用户信息
-  static void setUserInfo(String? user) {
-    setString(_userInfo, user);
+    setBool(SPValue.userLoginState.value, isLogin);
   }
 
   /// 获取用户信息
   static String getUser() {
-    return getString(_user);
+    return getString(SPValue.user.value);
   }
 
   /// 保存用户信息
   static void setUser(String? user) {
-    setString(_user, user);
-  }
-
-  /// 获取用户名
-  static String getUsername() {
-    return getString(_userName);
-  }
-
-  /// 保存用户名
-  static void setUsername(String? username) {
-    setString(_userName, username);
+    setString(SPValue.user.value, user);
   }
 
   /// 获取登录用户ID
   static String getUserId() {
-    return getString(_userId);
+    return getString(SPValue.userId.value);
   }
 
   /// 保存登录用户ID
   static void setUserId(String? userId) {
-    setString(_userId, userId);
+    setString(SPValue.userId.value, userId);
+  }
+
+  /// 获取用户名
+  static String getUsername() {
+    return getString(SPValue.userName.value);
+  }
+
+  /// 保存用户名
+  static void setUsername(String? username) {
+    setString(SPValue.userName.value, username);
+  }
+
+  /// 获取用户信息
+  static String getUserInfo() {
+    return getString(SPValue.userInfo.value);
+  }
+
+  /// 保存用户信息
+  static void setUserInfo(String? user) {
+    setString(SPValue.userInfo.value, user);
   }
 
   /// 获取登录用户token
   static String getToken() {
-    return getString(_userToken);
+    return getString(SPValue.userToken.value);
   }
 
   /// 保存登录用户token
   static void setToken(String? token) {
-    setString(_userToken, token);
+    setString(SPValue.userToken.value, token);
   }
 
   /// 获取登录用户cookie
   static String getCookie() {
-    return getString(_userCookie);
+    return getString(SPValue.userCookie.value);
   }
 
   /// 保存登录用户cookie
   static void setCookie(String? cookie) {
-    setString(_userCookie, cookie);
+    setString(SPValue.userCookie.value, cookie);
   }
 
   /// 重置登录用户信息
   static void clearUser() {
-    remove(_userInfo);
-    remove(_userLoginState);
-    remove(_user);
-    remove(_userId);
-    remove(_userToken);
-    remove(_userCookie);
+    remove(SPValue.userInfo.value);
+    remove(SPValue.userLoginState.value);
+    remove(SPValue.user.value);
+    remove(SPValue.userId.value);
+    remove(SPValue.userToken.value);
+    remove(SPValue.userCookie.value);
   }
 
   /// 获取APP设置
   static String getSettings() {
-    String settings = getString(_settings);
+    String settings = getString(SPValue.settings.value);
     return settings;
   }
 
   /// 保存APP设置
   static void setSettings(String? settings) {
-    setString(_settings, settings);
+    setString(SPValue.settings.value, settings);
   }
+
+  ///============================== SP基本数据类型的操作 ================================
 
   static String getString(String key) {
     String value = _instance._prefs?.getString(key) ?? '';
@@ -168,4 +160,21 @@ class SpUtil {
   }
 
   void log(String text) => _logPrint == null ? null : _logPrint!(text, tag: 'SpUtil');
+}
+
+enum SPValue {
+  /// 用户登录相关的信息
+  userLoginState('u_login_state'), // 登录状态的信息
+  user('u_user'), // 登录的用户
+  userId('u_id'), // 用户ID
+  userName('u_name'), // 用户名
+  userInfo('u_info'), // 用户信息
+  userToken('u_token'), // 登录的token信息
+  userCookie('u_cookie'), // 登录的cookie信息
+  /// APP设置相关的信息
+  settings('settings'); // APP相关的设置
+
+  final String value;
+
+  const SPValue(this.value);
 }

@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../base/db/db.dart';
+import '../db/db.dart';
 
 part 'setting_entity.g.dart';
 
@@ -19,7 +19,4 @@ class SettingEntity extends DBBaseEntity {
 
   @override
   Map<String, dynamic> toJson() => _$SettingEntityToJson(this);
-
-  @override
-  Map<String, String> get primaryKey => {'id': '$id'};
 }

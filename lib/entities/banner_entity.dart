@@ -38,9 +38,6 @@ class BannerEntity extends DBBaseEntity {
     url TEXT
   );''';
 
-  @override
-  Map<String, String> get primaryKey => {'id': '$id'};
-
   Future<List<BannerEntity>> query() async {
     List<dynamic> list = await DBManager().query(tableName);
     return list.map((e) => BannerEntity.fromJson(e)).toList();

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-import '../../entities/setting_entity.dart';
+import 'setting_entity.dart';
 import '../utils/util.dart';
 import 'app_theme.dart';
 

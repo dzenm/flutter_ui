@@ -278,7 +278,7 @@ class DBManagerDelegate {
   }
 
   /// 获取数据库中表的所有列结构的数据
-  Future<List<ColumnEntity>> getTableColumn(String dbName, String tableName) async {
+  Future<List<ColumnEntity>> getTableColumns(String dbName, String tableName) async {
     Database? db = await getDatabase(dbName: dbName);
     if (db == null) return [];
     List list = await db.rawQuery('${Sql.pragmaTable} ($tableName)');
