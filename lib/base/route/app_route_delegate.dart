@@ -80,7 +80,7 @@ class AppRouteDelegate extends RouterDelegate<Page<dynamic>> with ChangeNotifier
   /// 配合 [AppRouteInfoParser] 使用，与自定义管理路由栈没有关系
   @override
   Future<Void> setNewRoutePath(Page<dynamic> configuration) async {
-    debugPrint('setNewRoutePath：configuration=$configuration');
+    _log('setNewRoutePath：configuration=$configuration');
     // 打开一个新的页面，由于进入了一个新的页面，同时需要更新ChangeNotifier
     dynamic navigateResult = await _pushPage(configuration);
     return SynchronousFuture(navigateResult);
@@ -199,7 +199,7 @@ class AppRouteDelegate extends RouterDelegate<Page<dynamic>> with ChangeNotifier
 
   /// 进入下一个页面
   Future<dynamic> _pushPage(Page<dynamic> page) async {
-    Log.d('进入下一个页面：page=${page.name}');
+    _log('进入页面：page=${page.name}');
     _pages.add(page);
     _markNeedsUpdate();
     return await (page as CustomPage).completerResult.future;
@@ -207,7 +207,9 @@ class AppRouteDelegate extends RouterDelegate<Page<dynamic>> with ChangeNotifier
 
   /// 关闭页面
   Page _removePage() {
-    return _pages.removeLast();
+    Page<dynamic> page = _pages.removeLast();
+    _log('关闭页面：page=${page.name}');
+    return page;
   }
 
   /// 是否需要更新绘制
@@ -236,4 +238,6 @@ class AppRouteDelegate extends RouterDelegate<Page<dynamic>> with ChangeNotifier
         });
     return result ?? true;
   }
+
+  void _log(String msg) => Log.d(msg, tag: 'AppRouteDelegate');
 }

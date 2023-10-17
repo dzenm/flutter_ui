@@ -35,9 +35,7 @@ class DBManager {
 
   static const tempSuffix = '_TEMP';
 
-  set userId(String userId) {
-    _delegate.userId = userId;
-  }
+  set userId(String userId) => _delegate.userId = userId;
 
   /// 注册数据表
   List<DBBaseEntity> get tables => _delegate.tables;

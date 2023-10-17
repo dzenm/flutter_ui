@@ -62,7 +62,7 @@ class LoggerInterceptor extends Interceptor {
   ///  ...
   ///  await sink.close();
   ///```
-  void Function(Object object)? logPrint;
+  void Function(Object object, {String tag})? logPrint;
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
@@ -203,6 +203,6 @@ class LoggerInterceptor extends Interceptor {
   /// 日志打印
   void _logPrint(String msg) {
     if (logPrint == null) return;
-    logPrint!(msg);
+    logPrint!(msg, tag: 'LoggerInterceptor');
   }
 }

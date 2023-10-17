@@ -91,7 +91,7 @@ class HttpsClient {
   /// [toast] 全局的自定义toast提醒
   /// [interceptors] 自定义拦截器
   void init({
-    void Function(Object object)? logPrint,
+    void Function(Object object, {String tag})? logPrint,
     void Function()? loading,
     Function? toast,
     List<Interceptor>? interceptors,
