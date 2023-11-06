@@ -58,7 +58,7 @@ class _SettingPageState extends State<SettingPage> {
     AppTheme theme = context.watch<LocalModel>().theme;
     Locale locale = context.watch<LocalModel>().locale;
 
-    String currentVersion = HandleError.packageInfo.version;
+    String currentVersion = BuildConfig.packageInfo.version;
     return Scaffold(
       appBar: CommonBar(
         title: S.of(context).setting,

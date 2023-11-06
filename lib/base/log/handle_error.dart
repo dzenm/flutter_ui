@@ -29,15 +29,6 @@ typedef HandleMsg = void Function(String message);
 ///   await FileUtil.instance.save(logFileName, message, dir: 'crash').then((String? filePath) async {});
 /// });
 class HandleError {
-  /// 包名相关的信息
-  static late PackageInfo packageInfo;
-
-  /// Android设备相关的信息
-  static late AndroidDeviceInfo androidDeviceInfo;
-
-  /// iOS设备相关的信息
-  static late IosDeviceInfo iosDeviceInfo;
-
   /// 捕获flutter运行时的错误
   Future catchFlutterError(
     Function runApp, {
@@ -86,7 +77,6 @@ class HandleError {
       return true;
     };
     // 进入App前先初始化信息
-    await _initInfo();
     runApp();
     return;
     // flutter sdk 3.3之前使用下面的方式捕获异常
@@ -97,17 +87,6 @@ class HandleError {
     //   // 处理异常信息
     //   _handleMessage(error, stackTrace, handleMsg, showPackageInfo, showDeviceInfo, showStackInfo, showLogInConsole);
     // });
-  }
-
-  /// 初始化设备/包名相关的信息
-  Future<void> _initInfo() async {
-    packageInfo = await PackageInfo.fromPlatform();
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    if (BuildConfig.isAndroid) {
-      androidDeviceInfo = await deviceInfo.androidInfo;
-    } else if (BuildConfig.isIOS) {
-      iosDeviceInfo = await deviceInfo.iosInfo;
-    }
   }
 
   /// 处理信息
@@ -184,6 +163,7 @@ class HandleError {
 
   /// 获取APP信息
   Map<String, dynamic> getPackageInfo() {
+    PackageInfo packageInfo = BuildConfig.packageInfo;
     return {
       'appName': packageInfo.appName,
       'packageName': packageInfo.packageName,
@@ -197,6 +177,7 @@ class HandleError {
   Map<String, dynamic> getDeviceInfo() {
     Map<String, dynamic> map = {};
     if (BuildConfig.isAndroid) {
+      AndroidDeviceInfo androidDeviceInfo = BuildConfig.androidDeviceInfo;
       Map<String, dynamic> temp = {
         'baseOS': androidDeviceInfo.version.baseOS,
         'codename': androidDeviceInfo.version.codename,
@@ -210,6 +191,7 @@ class HandleError {
       map.addAll(androidDeviceInfo.data);
       map.remove('version');
     } else if (BuildConfig.isIOS) {
+      IosDeviceInfo iosDeviceInfo = BuildConfig.iosDeviceInfo;
       Map<String, dynamic> temp = {
         'sysname': iosDeviceInfo.utsname.sysname,
         'nodename': iosDeviceInfo.utsname.nodename,

@@ -8,7 +8,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../channel/plugin_manager.dart';
 import '../http/http.dart';
-import '../log/handle_error.dart';
+import '../log/build_config.dart';
 import '../log/log.dart';
 import '../res/res.dart';
 import 'common_dialog.dart';
@@ -30,7 +30,7 @@ class UpgradeDialog extends StatefulWidget {
 
   ///苹果导到应用商店，安卓内测时应用内下载apk
   static void upgrade(BuildContext context, {AppVersionEntity? appVersion}) async {
-    String currentVersion = HandleError.packageInfo.version;
+    String currentVersion = BuildConfig.packageInfo.version;
     appVersion = AppVersionEntity(
       uid: '1',
       title: '测试',

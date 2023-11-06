@@ -53,15 +53,14 @@ class Application {
 
   // 初始化信息
   Future<void> _init() async {
+    MockBinding.ensureInitialized();
+    await BuildConfig.init();
     log('═══════════════════════════════════════════ 开始初始化 ══════════════════════════════════════════════');
 
     int now = DateTime.now().millisecondsSinceEpoch;
     int duration = 0;
     log('启动: now=$now, duration=$duration');
     log('Application是否单例: ${Application.instance == Application()}');
-
-    log('初始化 WidgetsFlutterBinding');
-    MockBinding.ensureInitialized();
 
     log('初始化 SharedPreferences');
     bool res = await SpUtil.instance.init(logPrint: Log.i);

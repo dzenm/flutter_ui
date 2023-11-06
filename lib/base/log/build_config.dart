@@ -1,4 +1,6 @@
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 ///
 /// Created by a0010 on 2023/2/10 15:16
@@ -45,4 +47,24 @@ class BuildConfig {
 
   /// 判断是否是Web端
   static bool get isWeb => !(isDesktop || isMobile || isFuchsia);
+
+  /// 包名相关的信息
+  static late PackageInfo packageInfo;
+
+  /// Android设备相关的信息
+  static late AndroidDeviceInfo androidDeviceInfo;
+
+  /// iOS设备相关的信息
+  static late IosDeviceInfo iosDeviceInfo;
+
+  /// 初始化设备/包名相关的信息
+  static Future<void> init() async {
+    packageInfo = await PackageInfo.fromPlatform();
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    if (BuildConfig.isAndroid) {
+      androidDeviceInfo = await deviceInfo.androidInfo;
+    } else if (BuildConfig.isIOS) {
+      iosDeviceInfo = await deviceInfo.iosInfo;
+    }
+  }
 }

@@ -100,6 +100,9 @@ class Log {
     String time = '$year-$month-$day $hour:$minute:$second $millisecond';
 
     StringBuffer sb = StringBuffer();
+    String packageName = BuildConfig.packageInfo.packageName;
+    sb.write(packageName);
+    sb.write(' ');
     sb.write(time);
     sb.write(' ');
     sb.write(levelTag);
