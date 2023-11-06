@@ -11,9 +11,10 @@ class TapLayout extends StatelessWidget {
   final GestureLongPressCallback? onLongPress;
   final double? width;
   final double? height;
+  final BoxConstraints? constraints;
   final EdgeInsetsGeometry? margin;
   final EdgeInsetsGeometry? padding;
-  final AlignmentGeometry? alignment; // 设置Alignment.center会占用整行大小
+  final AlignmentGeometry? alignment; // 设置Alignment.center会占用整行大小，此时可以设置alignment为null
   final Color? foreground;
   final Color? background;
   final Color? highlightColor;
@@ -34,6 +35,7 @@ class TapLayout extends StatelessWidget {
     this.onLongPress,
     this.width,
     this.height,
+    this.constraints,
     this.margin,
     this.padding,
     this.alignment = Alignment.center,
@@ -47,7 +49,7 @@ class TapLayout extends StatelessWidget {
     this.gradient,
     this.isCircle = false,
     this.isRipple = true,
-    this.delay = 150,
+    this.delay = 100,
     required this.child,
   });
 
@@ -95,6 +97,9 @@ class TapLayout extends StatelessWidget {
         delay: delay,
         child: child,
       );
+    }
+    if (constraints != null) {
+      child = ConstrainedBox(constraints: constraints!, child: child);
     }
     if (margin != null) {
       child = Padding(padding: margin!, child: child);
@@ -224,7 +229,7 @@ class _TapLayoutRipple extends StatelessWidget {
   final bool isCircle; //是否为圆形
   final int delay;
 
-  const _TapLayoutRipple({
+  _TapLayoutRipple({
     required this.child,
     this.onTap,
     this.onDoubleTap,
@@ -232,7 +237,7 @@ class _TapLayoutRipple extends StatelessWidget {
     this.width,
     this.height,
     this.padding,
-    this.alignment = Alignment.center,
+    this.alignment,
     this.foreground,
     this.background = Colors.transparent,
     this.highlightColor,
@@ -245,7 +250,7 @@ class _TapLayoutRipple extends StatelessWidget {
     this.delay = 150,
   });
 
-  static int _tapTime = 0;
+  int _tapTime = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -311,13 +316,11 @@ class _TapLayoutRipple extends StatelessWidget {
 
   /// 点击事件
   void _onTap() {
-    Future.delayed(Duration(milliseconds: delay), () {
-      // 短时间内禁止重复点击
-      int currentTime = DateTime.now().millisecondsSinceEpoch;
-      if (currentTime - _tapTime > 500) {
-        if (onTap != null) onTap!();
-      }
-      _tapTime = currentTime;
-    });
+    // 短时间内禁止重复点击
+    int currentTime = DateTime.now().millisecondsSinceEpoch;
+    if (currentTime - _tapTime > delay) {
+      if (onTap != null) onTap!();
+    }
+    _tapTime = currentTime;
   }
 }
