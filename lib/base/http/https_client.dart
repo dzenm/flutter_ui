@@ -280,8 +280,8 @@ class HttpsClient {
 
   void log(dynamic text) => _logPrint == null ? null : _logPrint!(text, tag: 'HttpsClient');
 
-  // 处理异常
-  HttpError parse({dynamic error, int? code = 0, String? msg = ''}) {
+  /// 处理异常
+  HttpError parse({dynamic error, int? code, String? msg}) {
     if ((code ?? 0) > 0 && (msg ?? '').isNotEmpty) {
       return HttpError(code!, msg!);
     }
