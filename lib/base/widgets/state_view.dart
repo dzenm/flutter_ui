@@ -164,10 +164,11 @@ class LinearStateView extends StatelessWidget {
   }
 }
 
-/// 状态控制器
+/// 状态控制器，初始化 [LoadState] 使用 [initialState] ，需要不想通过 [StateController] 的其他方法
+/// 改变状态直接初始化请将 [isInit] 设置为true，如果不需要展示底部加载更多，请将 [isShowFooterState] 设置为false
 class StateController with ChangeNotifier {
   LoadState initialState;
-  bool isShowFooterState;
+  bool _isShowFooterState = true;
   bool _isInit = false;
   bool _isMore = false;
 
@@ -175,9 +176,12 @@ class StateController with ChangeNotifier {
 
   StateController({
     this.initialState = LoadState.loading,
-    this.isShowFooterState = true,
+    bool isShowFooterState = true,
+    bool isInit = false,
   }) {
     _state = initialState;
+    _isShowFooterState = isShowFooterState;
+    _isInit = isInit;
   }
 
   void loadNone() {
@@ -191,7 +195,7 @@ class StateController with ChangeNotifier {
   }
 
   void loadEmpty() {
-    _state = _isMore && isShowFooterState ? LoadState.end : LoadState.empty;
+    _state = _isMore && _isShowFooterState ? LoadState.end : LoadState.empty;
     notifyListeners();
   }
 
