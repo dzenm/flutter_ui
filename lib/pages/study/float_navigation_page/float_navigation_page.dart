@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../base/base.dart';
+import '../study_model.dart';
 
 /// 浮动的导航栏和PopupWindow
 class FloatNavigationPage extends StatefulWidget {
@@ -29,7 +31,45 @@ class _FloatNavigationPageState extends State<FloatNavigationPage> {
         title: const Text('导航栏', style: TextStyle(color: Colors.white)),
         centerTitle: true,
       ),
+      body: const ContentWidget(),
       bottomNavigationBar: FloatNavigationBar(_nav, title: _title),
     );
+  }
+}
+
+class ContentWidget extends StatelessWidget {
+  const ContentWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    Log.d('build', tag: 'ContentWidget');
+    String? username = context.watch<StudyModel>().username;
+    return Column(children: [
+      if (username != null) const UserNameWidget(),
+      const SizedBox(height: 16),
+      WrapButton(
+        text: '修改',
+        width: 100.0,
+        onTap: () {
+          String? value = context.read<StudyModel>().username;
+          if (value == null) {
+            context.read<StudyModel>().username = 'new value';
+          } else {
+            context.read<StudyModel>().username = null;
+          }
+        },
+      ),
+    ]);
+  }
+}
+
+class UserNameWidget extends StatelessWidget {
+  const UserNameWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    Log.d('build', tag: 'UserNameWidget');
+    String username = context.watch<StudyModel>().username!;
+    return Text(username);
   }
 }

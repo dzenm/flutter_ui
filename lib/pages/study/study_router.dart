@@ -1,3 +1,5 @@
+import 'package:flutter_ui/pages/study/chat_page/chat_page.dart';
+
 import '../../base/base.dart';
 import 'city_page/city_page.dart';
 import 'convert_page/convert_page.dart';
@@ -24,6 +26,7 @@ import 'video_page/video_page.dart';
 ///
 class StudyRouter {
   static const String study = '/study';
+  static const String chat = '$study/chat';
   static const String city = '$study/city';
   static const String convert = '$study/convert';
   static const String dialog = '$study/dialog';
@@ -48,6 +51,12 @@ class StudyRouter {
           name: study,
           builder: (settings) {
             return const StudyPage();
+          },
+        ),
+        AppRoutePage(
+          name: chat,
+          builder: (settings) {
+            return const ChatPage();
           },
         ),
         AppRoutePage(

@@ -13,6 +13,15 @@ class StudyModel with ChangeNotifier {
     notifyListeners();
   }
 
+  String? _username = 'yuadi';
+
+  String? get username => _username;
+
+  set username(String? username) {
+    _username = username;
+    notifyListeners();
+  }
+
   final List<User> _users = [];
 
   List<User> get users => List.generate(_users.length, (index) => _users[index]);

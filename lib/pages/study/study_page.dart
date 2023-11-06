@@ -69,6 +69,15 @@ class _StudyPageState extends State<StudyPage> {
     AppTheme theme = context.watch<LocalModel>().theme;
     return [
       const SizedBox(height: 16),
+      // 聊天列表
+      MaterialButton(
+        textColor: Colors.white,
+        color: theme.button,
+        onPressed: () => AppRouteDelegate.of(context).push(StudyRouter.chat),
+        child: _text('聊天列表'),
+      ),
+      const SizedBox(height: 8),
+      // 字符转化
       // 城市选择
       MaterialButton(
         textColor: Colors.white,
