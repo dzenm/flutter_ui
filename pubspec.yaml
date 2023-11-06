@@ -40,27 +40,28 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: 1.0.6                        # 图片 https://pub.flutter-io.cn/packages/cupertino_icons
   sqlite3: 2.1.0                                # sql https://pub.dev/packages/sqlite3
-  sqflite_common_ffi: 2.3.0+2                   # sql https://pub.dev/packages/sqflite_common_ffi
+  sqflite_common_ffi: 2.3.0+3                   # sql https://pub.dev/packages/sqflite_common_ffi
   path_provider: 2.1.1                          # 路径选择 https://pub.dev/packages/path_provider
-  shared_preferences: 2.2.1                     # 本地化存储 https://pub.dev/packages/shared_preferences
+  shared_preferences: 2.2.2                     # 本地化存储 https://pub.dev/packages/shared_preferences
   bot_toast: 4.1.3                              # Toast https://pub.flutter-io.cn/packages/bot_toast
-  retrofit: 4.0.1                               # HTTP请求 https://pub.flutter-io.cn/packages/retrofit
+  retrofit: 4.0.3                               # HTTP请求 https://pub.flutter-io.cn/packages/retrofit
   #  dio_cookie_manager: 2.0.0                     # cookie管理 https://pub.flutter-io.cn/packages/dio_cookie_manager
   #  cookie_jar: 3.0.1                             # cookie持久化 https://pub.flutter-io.cn/packages/cookie_jar
-  package_info_plus: 4.1.0                      # 获取版本信息 https://pub.dev/packages/package_info_plus
+  package_info_plus: 4.2.0                      # 获取版本信息 https://pub.dev/packages/package_info_plus
   device_info_plus: 9.0.3                       # 获取设备信息 https://pub.flutter-io.cn/packages/device_info_plus
-  flutter_local_notifications: 15.1.1           # 通知栏通知提醒 https://pub.flutter-io.cn/packages/flutter_local_notifications
-  cached_network_image: 3.2.3                   # 图片缓存 https://pub.flutter-io.cn/packages/cached_network_image
+  flutter_local_notifications: 16.1.0           # 通知栏通知提醒 https://pub.flutter-io.cn/packages/flutter_local_notifications
+  cached_network_image: 3.3.0                   # 图片缓存 https://pub.flutter-io.cn/packages/cached_network_image
   extended_text_field: 12.0.1                   # 输入框扩展 https://pub.flutter-io.cn/packages/extended_text_field
   back_button_interceptor: 7.0.0                # 返回按钮拦截 https://pub.flutter-io.cn/packages/back_button_interceptor
   provider: 6.0.5                               # 状态管理 https://pub.dev/packages/provider
   json_annotation: 4.8.1                        # Json序列化 https://pub.dev/packages/json_annotation
-  window_manager: 0.3.6                         # 桌面端尺寸设置 https://pub.dev/packages/window_manager
+  window_manager: 0.3.7                         # 桌面端尺寸设置 https://pub.dev/packages/window_manager
+  easy_refresh: ^3.3.2+1
 
   ########################################## UI ##########################################
-  webview_flutter: 4.2.4                        # WebView https://pub.dev/packages/webview_flutter
+  webview_flutter: 4.4.2                        # WebView https://pub.dev/packages/webview_flutter
   azlistview: 2.0.0                             # az列表 https://pub.flutter-io.cn/packages/azlistview
-  flutter_slidable: 3.0.0                       # 可滑动的列表展示 https://pub.flutter-io.cn/packages/flutter_slidable
+  flutter_slidable: 3.0.1                       # 可滑动的列表展示 https://pub.flutter-io.cn/packages/flutter_slidable
   #  flutter_echarts: 2.0.0                        # EChart 图表（缩放手势冲突） https://pub.flutter-io.cn/packages/flutter_echarts
   #  badges: 1.2.0                                 # 小红点 https://pub.flutter-io.cn/packages/badges
   #  flutter_swiper: 1.1.6                         # 滑动 https://pub.dev/packages/flutter_swiper
@@ -79,7 +80,7 @@ dependencies:
   photo_view: 0.14.0                            # 图片预览控件 https://pub.flutter-io.cn/packages/photo_view
   video_player: 2.7.2                           # 视频播放 https://pub.flutter-io.cn/packages/video_player
   fijkplayer: 0.11.0                            # 视频播放 https://pub.flutter-io.cn/packages/fijkplayer
-  flutter_vlc_player: 7.3.1                     # 视频播放 https://pub.flutter-io.cn/packages/fijkplayer
+  flutter_vlc_player: 7.4.0                     # 视频播放 https://pub.flutter-io.cn/packages/fijkplayer
 
   ########################################## 基础 ########################################
   intl: 0.18.0                                  # 时间格式化 https://pub.dev/packages/intl
@@ -102,7 +103,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  retrofit_generator: 7.0.8                     # retrofit自动生成工具 https://pub.flutter-io.cn/packages/retrofit_generator
+  retrofit_generator: 8.0.3                     # retrofit自动生成工具 https://pub.flutter-io.cn/packages/retrofit_generator
   build_runner: 2.4.6                           # 自动生成工具 https://pub.flutter-io.cn/packages/build_runner
   # 执行生成文件命令：flutter pub run build_runner build --delete-conflicting-outputs
   json_serializable: 6.7.1                      # json序列化 https://pub.flutter-io.cn/packages/json_serializable
@@ -112,7 +113,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: 2.0.3                          # lints检测 https://pub.flutter-io.cn/packages/flutter_lints
+  flutter_lints: 3.0.1                          # lints检测 https://pub.flutter-io.cn/packages/flutter_lints
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
