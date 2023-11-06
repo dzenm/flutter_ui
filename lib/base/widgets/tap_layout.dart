@@ -166,8 +166,8 @@ class _TapLayoutState extends State<_TapLayout> {
     Color? color = widget.onTap == null
         ? widget.background
         : _isTouchDown
-            ? widget.foreground ?? Theme.of(context).highlightColor
-            : widget.background;
+        ? widget.foreground ?? Theme.of(context).highlightColor
+        : widget.background;
     return GestureDetector(
       onTap: () => _onTap(),
       onLongPress: widget.onLongPress,
@@ -197,14 +197,12 @@ class _TapLayoutState extends State<_TapLayout> {
 
   /// 点击事件
   void _onTap() {
-    Future.delayed(Duration(milliseconds: widget.delay), () {
-      // 短时间内禁止重复点击
-      int currentTime = DateTime.now().millisecondsSinceEpoch;
-      if (currentTime - _tapTime > 500) {
-        if (widget.onTap != null) widget.onTap!();
-      }
-      _tapTime = currentTime;
-    });
+    // 短时间内禁止重复点击
+    int currentTime = DateTime.now().millisecondsSinceEpoch;
+    if (currentTime - _tapTime > 500) {
+      if (widget.onTap != null) widget.onTap!();
+    }
+    _tapTime = currentTime;
   }
 }
 
