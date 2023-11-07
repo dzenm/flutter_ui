@@ -17,3 +17,4 @@ export 'tool_entity.dart';
 export 'tree_entity.dart';
 export 'user_entity.dart';
 export 'website_entity.dart';
+export 'order_entity.dart';
