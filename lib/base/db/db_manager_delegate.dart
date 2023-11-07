@@ -265,7 +265,11 @@ class DBManagerDelegate {
   /// 创建新表, 参数[tableName] 和 [columnString] 通过拼接一起使用, 参数[sql]通过自定义创建新表。
   Future<void> _createTable(Database db, {String? tableName, String? columnString, String? sql}) async {
     String sqlString = sql ?? '${Sql.createTable} $tableName ($columnString)';
-    await db.execute(sqlString).then((value) => log('创建${tableName ?? '新'}表: $sqlString'));
+    try {
+      await db.execute(sqlString).then((value) => log('创建${tableName ?? '新'}表: $sqlString'));
+    } catch (err) {
+      log('创建${tableName ?? '新'}表失败：err=$err');
+    }
   }
 
   /// 获取数据中所有表的数据
