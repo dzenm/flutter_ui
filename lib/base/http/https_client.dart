@@ -31,8 +31,9 @@ ApiServices api({int index = 0}) => HttpsClient.instance.apiServices(index);
 class HttpError {
   int code;
   String msg;
+  String error;
 
-  HttpError(this.code, this.msg);
+  HttpError(this.code, this.msg, this.error);
 }
 
 ///
@@ -174,15 +175,15 @@ class HttpsClient {
   /// [isCustomResult] 是否自定义处理response body，@see [success]
   /// [loading] 自定义加载弹窗提示，@see [isShowDialog]
   Future<void> request(
-    Future<DataEntity> future, {
-    Success? success,
-    Failed? failed,
-    Complete? complete,
-    bool isShowDialog = true,
-    bool isShowToast = true,
-    bool isCustomResult = false,
-    void Function()? loading,
-  }) async {
+      Future<DataEntity> future, {
+        Success? success,
+        Failed? failed,
+        Complete? complete,
+        bool isShowDialog = true,
+        bool isShowToast = true,
+        bool isCustomResult = false,
+        void Function()? loading,
+      }) async {
     Function? cancel;
     if (isShowDialog) {
       // 优先使用局部的加载提示框
@@ -199,12 +200,12 @@ class HttpsClient {
         // 根据前后端协议
         if (data.errorCode == 0 || data.errorCode == 200) {
           if (success != null) success(data.data);
-        } else if (data.errorCode == -1) {
-          error = parse(code: data.errorCode, msg: data.errorMsg);
-        } else if (data.errorCode == -1001) {
-          error = parse(code: data.errorCode, msg: data.errorMsg);
         } else {
-          error = parse(code: data.errorCode, msg: data.errorMsg);
+          if (999 > (data.errorCode ?? 0) && (data.errorCode ?? 0) > 300) {
+            error = parse(code: data.errorCode, msg: data.errorMsg);
+          } else {
+            error = parse(error: data.errorMsg);
+          }
         }
       }).catchError((err) {
         error = parse(error: err);
@@ -219,10 +220,10 @@ class HttpsClient {
     if (error == null) return;
 
     // 如果有异常通过toast提醒
-    if (isShowToast && _toast != null) _toast!('${error!.msg}，code=${error!.code}');
+    if (isShowToast && _toast != null) _toast!('请求错误：${error!.msg}');
     // 如果需要自定义处理异常，进行自定义异常处理
     if (failed != null) failed(error!);
-    log('HTTP请求错误: code=${error!.code}, msg=${error!.msg}');
+    log('HTTP请求错误: code=${error!.code}, msg=${error!.msg}, error=${error!.error}');
   }
 
   /// 下载文件
@@ -233,13 +234,13 @@ class HttpsClient {
   /// [progress] 下载的进度
   /// [failed] 下载失败返回的结果
   Future<void> download(
-    String url,
-    dynamic savePath, {
-    CancelToken? cancel,
-    Success? success,
-    Progress? progress,
-    Failed? failed,
-  }) async {
+      String url,
+      dynamic savePath, {
+        CancelToken? cancel,
+        Success? success,
+        Progress? progress,
+        Failed? failed,
+      }) async {
     HttpError? error;
     try {
       Response response = await Dio().download(
@@ -264,11 +265,11 @@ class HttpsClient {
         }
       } else {
         // 下载请求失败的错误信息
-        error = HttpError(response.statusCode ?? 1000, response.statusMessage ?? '');
+        error = HttpError(response.statusCode ?? 1000, response.statusMessage ?? '', error.toString());
       }
     } on DioException catch (e) {
       // 下载失败的错误信息
-      error = HttpError(1000, e.message ?? '');
+      error = HttpError(1000, e.message ?? '', error.toString());
     }
     // 下载结果
     if (error == null) return;
@@ -281,51 +282,63 @@ class HttpsClient {
   void log(dynamic text) => _logPrint == null ? null : _logPrint!(text, tag: 'HttpsClient');
 
   /// 处理异常
-  HttpError parse({dynamic error, int? code, String? msg}) {
-    if ((code ?? 0) > 0 && (msg ?? '').isNotEmpty) {
-      return HttpError(code!, msg!);
+  HttpError parse({dynamic error, int? code = 0, String? msg = ''}) {
+    if ((code ?? 0) > 0 || (msg ?? '').isNotEmpty) {
+      return HttpError(code ?? 0, msg ?? '未知状态码错误', 'HTTP状态码错误');
     }
     _HttpException exception = _HttpException.unknown;
-    if (error != null && error is DioException) {
-      if (error.type == DioExceptionType.badResponse) {
-        return HttpError(error.response?.statusCode ?? 0, error.response?.statusMessage ?? '');
-      } else if (error.type == DioExceptionType.connectionTimeout) {
-        exception = _HttpException.connection;
-      } else if (error.type == DioExceptionType.sendTimeout) {
-        exception = _HttpException.send;
-      } else if (error.type == DioExceptionType.receiveTimeout) {
-        exception = _HttpException.receive;
-      } else if (error.type == DioExceptionType.badCertificate) {
-        exception = _HttpException.badCertificate;
-      } else if (error.type == DioExceptionType.cancel) {
-        exception = _HttpException.cancel;
-      } else if (error.type == DioExceptionType.connectionError) {
-        exception = _HttpException.error;
-      } else if (error.error is FormatException) {
-        exception = _HttpException.format;
-      } else if (error.error is HttpException) {
+    if (error != null) {
+      if (error is HttpException) {
         exception = _HttpException.http;
-      } else if (error.error is SocketException) {
+      } else if (error is FormatException) {
+        exception = _HttpException.format;
+      } else if (error is SocketException) {
         exception = _HttpException.socket;
+      } else if (error is DioException) {
+        switch (error.type) {
+          case DioExceptionType.connectionTimeout:
+            exception = _HttpException.connect;
+            break;
+          case DioExceptionType.sendTimeout:
+            exception = _HttpException.send;
+            break;
+          case DioExceptionType.receiveTimeout:
+            exception = _HttpException.receive;
+            break;
+          case DioExceptionType.badCertificate:
+            exception = _HttpException.badCertificate;
+            break;
+          case DioExceptionType.badResponse:
+            exception = _HttpException.badResponse;
+            break;
+          case DioExceptionType.cancel:
+            exception = _HttpException.cancel;
+            break;
+          case DioExceptionType.connectionError:
+            exception = _HttpException.connection;
+            break;
+          case DioExceptionType.unknown:
+            exception = _HttpException.runtime;
+            break;
+        }
       }
-      exception = _HttpException.unknown;
-    } else if (error != null) {
-      exception = _HttpException.runtime;
     }
-    return HttpError(exception.code, error == null ? exception.msg : ', ${error.toString()}');
+    return HttpError(exception.code, exception.msg, error.toString());
   }
 }
 
 enum _HttpException {
-  socket(1001, '网络异常，请检查你的网络'),
-  http(1002, '服务器异常'),
-  error(1003, '连接异常'),
-  format(1004, '数据解析异常'),
-  connection(1006, '连接超时'),
+  http(1001, '服务器异常'),
+  socket(1002, 'Socket异常'),
+  format(1003, '数据解析异常'),
+  error(1004, '连接异常'),
+  connect(1006, '连接超时'),
   send(1007, '请求超时'),
   receive(1008, '响应超时'),
-  badCertificate(1009, '无效的证书'),
-  cancel(1010, '请求被取消'),
+  badCertificate(1009, '证书错误'),
+  badResponse(10010, '响应错误'),
+  cancel(1011, '请求被取消'),
+  connection(1012, '连接失败'),
   unknown(1109, '未知异常'),
   runtime(1120, '运行时的异常');
 
