@@ -53,7 +53,7 @@ class OrderEntity extends DBBaseEntity {
     weight INTEGER, 
     estimatedPrice DOUBLE, 
     actualPrice DOUBLE, 
-    toBePaid INTEGER, 
+    payMethod INTEGER, 
     isDelete INTEGER
   );''';
 

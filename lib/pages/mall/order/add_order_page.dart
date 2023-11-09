@@ -74,7 +74,9 @@ class _OrderPageState extends State<AddOrderPage> {
     order.receiveAddress = _addressController.text;
     order.receivePhone = _phoneController.text;
     order.trackingNumber = _trackingNumberController.text;
+    order.orderUid = _trackingNumberController.text;
 
     context.read<OrderModel>().updateOrder(order);
+    AppRouteDelegate.of(context).pop();
   }
 }
