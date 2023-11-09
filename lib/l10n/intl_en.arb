@@ -70,5 +70,7 @@
   "studyMainPage": "Study MainPage{name}",
   "readAndAgree": "Read And Agree",
   "registerProtocol": "<Register Protocol>",
-  "privateProtocol": "<Private Protocol>"
+  "privateProtocol": "<Private Protocol>",
+
+  "mall": "Mall"
 }

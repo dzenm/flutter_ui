@@ -70,5 +70,7 @@
   "studyMainPage": "学习主页{name}",
   "readAndAgree": "阅读并同意",
   "registerProtocol": "《软件注册协议》",
-  "privateProtocol": "《隐私协议》"
+  "privateProtocol": "《隐私协议》",
+
+  "mall": "商城"
 }

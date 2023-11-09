@@ -9,6 +9,7 @@ import '../../../http/http_manager.dart';
 import '../../../models/provider_manager.dart';
 import '../../../models/user_model.dart';
 import '../../common/preview_picture_page.dart';
+import '../../mall/mall_router.dart';
 import '../../study/study_router.dart';
 import 'me_router.dart';
 
@@ -185,6 +186,16 @@ class _MePageState extends State<MePage> {
         child: SingleTextLayout(
           icon: Icons.supervised_user_circle_sharp,
           title: S.of(context).profile,
+          isShowForward: true,
+        ),
+      ),
+      TapLayout(
+        height: 50.0,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        onTap: () => AppRouteDelegate.of(context).push(MallRouter.mall),
+        child: SingleTextLayout(
+          icon: Icons.local_mall_rounded,
+          title: S.of(context).mall,
           isShowForward: true,
         ),
       ),
