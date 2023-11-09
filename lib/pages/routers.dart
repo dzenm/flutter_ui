@@ -8,6 +8,7 @@ import 'login/login_page.dart';
 import 'login/register_page.dart';
 import 'main/main_page.dart';
 import 'main/me/me_router.dart';
+import 'mall/mall_router.dart';
 import 'study/study_router.dart';
 
 ///
@@ -80,5 +81,6 @@ class Routers {
         ),
         ...MeRouter.routers,
         ...StudyRouter.routers,
+        ...MallRouter.routers,
       ];
 }

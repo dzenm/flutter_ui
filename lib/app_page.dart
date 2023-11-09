@@ -15,6 +15,7 @@ import 'pages/main/home/home_model.dart';
 import 'pages/main/main_model.dart';
 import 'pages/main/me/me_model.dart';
 import 'pages/main/nav/nav_model.dart';
+import 'pages/mall/order/order_model.dart';
 import 'pages/my/my_page.dart';
 import 'pages/routers.dart';
 import 'pages/study/study_model.dart';
@@ -86,6 +87,7 @@ class AppPage extends StatelessWidget {
       ChangeNotifierProvider(create: (context) => ArticleModel()),
       ChangeNotifierProvider(create: (context) => WebsiteModel()),
       ChangeNotifierProvider(create: (context) => StudyModel()),
+      ChangeNotifierProvider(create: (context) => OrderModel()),
     ], child: child);
   }
 
