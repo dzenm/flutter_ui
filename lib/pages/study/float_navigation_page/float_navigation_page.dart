@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/base/widgets/custom_popup_submenu.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base/base.dart';
@@ -31,14 +32,19 @@ class _FloatNavigationPageState extends State<FloatNavigationPage> {
         title: const Text('导航栏', style: TextStyle(color: Colors.white)),
         centerTitle: true,
       ),
-      body: const ContentWidget(),
+      body: Container(
+        padding: const EdgeInsets.all(16),
+        child: ContentWidget(),
+      ),
       bottomNavigationBar: FloatNavigationBar(_nav, title: _title),
     );
   }
 }
 
 class ContentWidget extends StatelessWidget {
-  const ContentWidget({super.key});
+  ContentWidget({super.key});
+
+  final GlobalKey _globalKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +63,36 @@ class ContentWidget extends StatelessWidget {
           } else {
             context.read<StudyModel>().username = null;
           }
+        },
+      ),
+      const SizedBox(height: 16),
+      WrapButton(
+        key: _globalKey,
+        text: '显示Popup',
+        width: 100.0,
+        onTap: () {
+          CustomPopupMenu.show(
+            context: context,
+            targetScopeKey: _globalKey,
+            barrierColor: Colors.transparent,
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+              decoration: const BoxDecoration(color: Colors.white60, borderRadius: BorderRadius.all(Radius.circular(4))),
+              child: const Column(children: [
+                Text('测试'),
+                SizedBox(height: 12),
+                Text('测试'),
+                SizedBox(height: 12),
+                Text('测试'),
+                SizedBox(height: 12),
+                Text('测试'),
+                SizedBox(height: 12),
+                Text('测试'),
+                SizedBox(height: 12),
+                Text('测试'),
+              ]),
+            ),
+          );
         },
       ),
     ]);
