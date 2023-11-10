@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:math';
 
+import 'package:convert/convert.dart';
 import 'package:flutter/services.dart';
 
 ///
@@ -151,5 +153,68 @@ class StrUtil {
     } catch (e) {
       return defaultValue;
     }
+  }
+
+  /// 校验参数
+  static const String secretCode = 'SeCreTCode';
+
+  /// 将校验参数的每一位字符隔三位插入随机数中，最后转换为base64码
+  static String generateRandomCode(String random) {
+    List<String> randoms = List.generate(random.length, (index) => random[index]);
+    for (int i = 0; i < secretCode.length; i++) {
+      randoms.insert(i * 3 + 1, secretCode[i]);
+    }
+
+    // 将字符数组转为字符串
+    String code = randoms.join('');
+    return code;
+  }
+
+  /// 生成一个随机字符数
+  static String generateUUidString() {
+    List<String> randoms = [];
+    String hexDigits = '0123456789abcdef';
+    for (int i = 0; i < 36; i++) {
+      int index = Random().nextInt(15);
+      randoms.add(hexDigits.substring(index, index + 1));
+    }
+    return List.generate(randoms.length, (i) => randoms[i]).join('');
+  }
+
+  /// 生成二维码字符
+  static String generateQRCode(String uuid) {
+    String suf = '?md=webscan&uid=';
+    return '$suf$uuid';
+  }
+
+  /// 生成一个32位的随机uuid，前19位是随机数，后13位是当前时间戳
+  static String generateUuidNumber() {
+    String randomStr = '';
+    for (int i = 0; i < 19; i++) {
+      int str = Random().nextInt(10);
+      randomStr += '$str';
+    }
+    int time = DateTime.now().millisecondsSinceEpoch;
+    return '$randomStr$time';
+  }
+
+  /// Generates a RNG version 4 UUID
+  static String generateUid() {
+    // Use provided values over RNG
+    var uid = mathRNG();
+    // per 4.4, set bits for version and clockSeq high and reserved
+    uid[6] = (uid[6] & 0x0f) | 0x40;
+    uid[8] = (uid[8] & 0x3f) | 0x80;
+    return hex.encode(uid);
+  }
+
+  /// Math.Random()-based RNG. All platforms, fast, not cryptographically strong. Optional Seed passable.
+  static List<int> mathRNG({int seed = -1}) {
+    final b = Uint8List(16);
+    final rand = (seed == -1) ? Random() : Random(seed);
+    for (var i = 0; i < 16; i++) {
+      b[i] = rand.nextInt(256);
+    }
+    return b;
   }
 }
