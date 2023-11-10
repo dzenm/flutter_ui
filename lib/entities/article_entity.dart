@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:json_annotation/json_annotation.dart';
 
 import '../base/db/db.dart';
@@ -48,7 +50,7 @@ class ArticleEntity extends DBBaseEntity {
   int? superChapterId;
   String? superChapterName;
   String? title;
-  @ListConvert()
+  @TagsConvert()
   List<TagEntity> tags = [];
   int? type;
   int? userId;
@@ -120,6 +122,7 @@ class ArticleEntity extends DBBaseEntity {
   }
 }
 
+/// 标签
 @JsonSerializable()
 class TagEntity extends DBBaseEntity {
   String? name;
@@ -132,4 +135,29 @@ class TagEntity extends DBBaseEntity {
 
   @override
   Map<String, dynamic> toJson() => _$TagEntityToJson(this);
+}
+
+/// 标签数据转换器
+class TagsConvert implements JsonConverter<List<TagEntity>, dynamic> {
+  const TagsConvert();
+
+  @override
+  List<TagEntity> fromJson(dynamic json) {
+    List<dynamic> list = [];
+    if (json is List) {
+      list = json;
+    } else if (json is String) {
+      list = jsonDecode(json) as List<dynamic>;
+    }
+    return list.map((e) => TagEntity.fromJson(e)).toList();
+  }
+
+  @override
+  dynamic toJson(List<TagEntity> object) {
+    try {
+      return jsonEncode(object.map((e) => e.toJson()).toList());
+    } catch (e) {
+      return jsonEncode(object);
+    }
+  }
 }
