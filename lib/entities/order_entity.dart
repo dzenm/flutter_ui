@@ -6,7 +6,7 @@ part 'order_entity.g.dart';
 
 ///
 /// Created by a0010 on 2023/2/23 14:26
-/// 导航
+/// 订单
 @JsonSerializable()
 class OrderEntity extends DBBaseEntity {
   String? orderUid; // 订单编号
@@ -18,14 +18,8 @@ class OrderEntity extends DBBaseEntity {
   String? receivePhone; // 收获人手机号
   String? receiveAddress; // 收获地址
   String? receiveTime; // 收获时间
-  String? trackingNumber; // 快递单号
-  double freight = 0.0; // 运费
-  OrderStatus status = OrderStatus.create; // 订单状态
-  int piece = 0; // 件数
-  int weight = 0; // 重量(kg)
-  double estimatedPrice = 0.0; // 预估价格
-  double actualPrice = 0.0; // 实际卖出的价格
   PayMethod payMethod = PayMethod.toBePaid; // 支付方式（默认为0）：0=待支付；1=已支付
+  List<ProductEntity> products = []; // 商品列表
   int isDelete = 0; // 是否删除
 
   OrderEntity();
@@ -46,14 +40,8 @@ class OrderEntity extends DBBaseEntity {
     receivePhone TEXT, 
     receiveAddress TEXT, 
     receiveTime TEXT, 
-    trackingNumber TEXT, 
-    freight DOUBLE, 
-    status INTEGER, 
-    piece INTEGER, 
-    weight INTEGER, 
-    estimatedPrice DOUBLE, 
-    actualPrice DOUBLE, 
     payMethod INTEGER, 
+    products TEXT, 
     isDelete INTEGER
   );''';
 
@@ -70,6 +58,7 @@ class OrderEntity extends DBBaseEntity {
     return await DBManager().update(tableName, order.toJson(), where: 'orderUid = ?', whereArgs: [order.orderUid]);
   }
 }
+
 
 /// 订单状态
 enum OrderStatus {
@@ -93,4 +82,50 @@ enum PayMethod {
   toBePaid, // 待支付
   @JsonValue(1)
   paid, // 已支付
+}
+
+@JsonSerializable()
+class ProductEntity  extends DBBaseEntity {
+  String? productUid; // 订单编号
+  OrderStatus status = OrderStatus.create; // 订单状态
+  String? trackingNumber; // 快递单号
+  double freight = 0.0; // 运费
+  int piece = 0; // 件数
+  int weight = 0; // 重量(kg)
+  double estimatedPrice = 0.0; // 预估价格
+  double actualPrice = 0.0; // 实际卖出的价格
+  int isDelete = 0; // 是否删除
+
+  ProductEntity();
+
+  factory ProductEntity.fromJson(Map<String, dynamic> json) => _$ProductEntityFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$ProductEntityToJson(this);
+
+  @override
+  String get createTableSql => '''$tableName(
+    productUid TEXT PRIMARY KEY NOT NULL, 
+    trackingNumber TEXT, 
+    status INTEGER, 
+    freight DOUBLE, 
+    piece INTEGER, 
+    weight INTEGER, 
+    estimatedPrice DOUBLE, 
+    actualPrice DOUBLE, 
+    isDelete INTEGER
+  );''';
+
+  Future<List<OrderEntity>> query() async {
+    List<dynamic> list = await DBManager().query(tableName);
+    return list.map((e) => OrderEntity.fromJson(e)).toList();
+  }
+
+  Future<int> insert(OrderEntity order) async {
+    return await DBManager().insert(tableName, order.toJson());
+  }
+
+  Future<int> update(OrderEntity order) async {
+    return await DBManager().update(tableName, order.toJson(), where: 'orderUid = ?', whereArgs: [order.orderUid]);
+  }
 }
