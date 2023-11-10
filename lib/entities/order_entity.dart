@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:json_annotation/json_annotation.dart';
 
 import '../base/db/db.dart';
@@ -19,6 +21,7 @@ class OrderEntity extends DBBaseEntity {
   String? receiveAddress; // 收获地址
   String? receiveTime; // 收获时间
   PayMethod payMethod = PayMethod.toBePaid; // 支付方式（默认为0）：0=待支付；1=已支付
+  @ProductConvert()
   List<ProductEntity> products = []; // 商品列表
   int isDelete = 0; // 是否删除
 
@@ -59,7 +62,6 @@ class OrderEntity extends DBBaseEntity {
   }
 }
 
-
 /// 订单状态
 enum OrderStatus {
   @JsonValue(0)
@@ -84,8 +86,9 @@ enum PayMethod {
   paid, // 已支付
 }
 
+/// 商品表
 @JsonSerializable()
-class ProductEntity  extends DBBaseEntity {
+class ProductEntity extends DBBaseEntity {
   String? productUid; // 订单编号
   OrderStatus status = OrderStatus.create; // 订单状态
   String? trackingNumber; // 快递单号
@@ -127,5 +130,30 @@ class ProductEntity  extends DBBaseEntity {
 
   Future<int> update(OrderEntity order) async {
     return await DBManager().update(tableName, order.toJson(), where: 'orderUid = ?', whereArgs: [order.orderUid]);
+  }
+}
+
+/// 标签数据转换器
+class ProductConvert implements JsonConverter<List<ProductEntity>, dynamic> {
+  const ProductConvert();
+
+  @override
+  List<ProductEntity> fromJson(dynamic json) {
+    List<dynamic> list = [];
+    if (json is List) {
+      list = json;
+    } else if (json is String) {
+      list = jsonDecode(json) as List<dynamic>;
+    }
+    return list.map((e) => ProductEntity.fromJson(e)).toList();
+  }
+
+  @override
+  dynamic toJson(List<ProductEntity> object) {
+    List<String> list = [];
+    for (var product in object) {
+      list.add(product.productUid!);
+    }
+    return jsonEncode(list);
   }
 }

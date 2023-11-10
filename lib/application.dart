@@ -75,6 +75,7 @@ class Application {
     log('初始化 DBManager');
     DBManager.instance.init(logPrint: Log.b, tables: [
       OrderEntity(),
+      ProductEntity(),
       UserEntity(),
       BannerEntity(),
       ArticleEntity(),
