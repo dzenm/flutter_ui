@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/widgets/custom_popup_submenu.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base/base.dart';
@@ -70,30 +69,7 @@ class ContentWidget extends StatelessWidget {
         key: _globalKey,
         text: '显示Popup',
         width: 100.0,
-        onTap: () {
-          CustomPopupMenu.show(
-            context: context,
-            targetScopeKey: _globalKey,
-            barrierColor: Colors.transparent,
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-              decoration: const BoxDecoration(color: Colors.white60, borderRadius: BorderRadius.all(Radius.circular(4))),
-              child: const Column(children: [
-                Text('测试'),
-                SizedBox(height: 12),
-                Text('测试'),
-                SizedBox(height: 12),
-                Text('测试'),
-                SizedBox(height: 12),
-                Text('测试'),
-                SizedBox(height: 12),
-                Text('测试'),
-                SizedBox(height: 12),
-                Text('测试'),
-              ]),
-            ),
-          );
-        },
+        onTap: () {},
       ),
     ]);
   }
