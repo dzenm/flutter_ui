@@ -9,6 +9,7 @@ class TapLayout extends StatelessWidget {
   final GestureTapCallback? onTap;
   final GestureTapCallback? onDoubleTap;
   final GestureLongPressCallback? onLongPress;
+  final GestureTapCallback? onSecondaryTap;
   final double? width;
   final double? height;
   final BoxConstraints? constraints;
@@ -33,6 +34,7 @@ class TapLayout extends StatelessWidget {
     this.onTap,
     this.onDoubleTap,
     this.onLongPress,
+    this.onSecondaryTap,
     this.width,
     this.height,
     this.constraints,
@@ -61,6 +63,7 @@ class TapLayout extends StatelessWidget {
         onTap: onTap,
         onDoubleTap: onDoubleTap,
         onLongPress: onLongPress,
+        onSecondaryTap: onSecondaryTap,
         width: width,
         height: height,
         padding: padding,
@@ -82,6 +85,7 @@ class TapLayout extends StatelessWidget {
         onTap: onTap,
         onDoubleTap: onDoubleTap,
         onLongPress: onLongPress,
+        onSecondaryTap: onSecondaryTap,
         width: width,
         height: height,
         padding: padding,
@@ -114,6 +118,7 @@ class _TapLayout extends StatefulWidget {
   final GestureTapCallback? onTap;
   final GestureTapCallback? onDoubleTap;
   final GestureLongPressCallback? onLongPress;
+  final GestureTapCallback? onSecondaryTap;
   final double? width;
   final double? height;
   final EdgeInsetsGeometry? padding;
@@ -133,6 +138,7 @@ class _TapLayout extends StatefulWidget {
     this.onTap,
     this.onDoubleTap,
     this.onLongPress,
+    this.onSecondaryTap,
     this.width,
     this.height,
     this.padding,
@@ -166,8 +172,8 @@ class _TapLayoutState extends State<_TapLayout> {
     Color? color = widget.onTap == null
         ? widget.background
         : _isTouchDown
-        ? widget.foreground ?? Theme.of(context).highlightColor
-        : widget.background;
+            ? widget.foreground ?? Theme.of(context).highlightColor
+            : widget.background;
     return GestureDetector(
       onTap: () => _onTap(),
       onLongPress: widget.onLongPress,
@@ -175,6 +181,7 @@ class _TapLayoutState extends State<_TapLayout> {
       onTapDown: (d) => setState(() => _isTouchDown = true),
       onTapUp: (d) => setState(() => _isTouchDown = false),
       onTapCancel: () => setState(() => _isTouchDown = false),
+      onSecondaryTap: widget.onSecondaryTap,
       child: Container(
         padding: widget.padding,
         alignment: widget.alignment,
@@ -212,6 +219,7 @@ class _TapLayoutRipple extends StatelessWidget {
   final GestureTapCallback? onTap;
   final GestureTapCallback? onDoubleTap;
   final GestureLongPressCallback? onLongPress;
+  final GestureTapCallback? onSecondaryTap;
   final double? width;
   final double? height;
   final EdgeInsetsGeometry? padding;
@@ -232,6 +240,7 @@ class _TapLayoutRipple extends StatelessWidget {
     this.onTap,
     this.onDoubleTap,
     this.onLongPress,
+    this.onSecondaryTap,
     this.width,
     this.height,
     this.padding,
@@ -297,6 +306,7 @@ class _TapLayoutRipple extends StatelessWidget {
             onTap: () => _onTap(),
             onLongPress: onLongPress,
             onDoubleTap: onDoubleTap,
+            onSecondaryTap: onSecondaryTap,
             // 点击时的水波纹圆角
             highlightShape: BoxShape.rectangle,
             borderRadius: borderRadius,
