@@ -217,4 +217,23 @@ class StrUtil {
     }
     return b;
   }
+
+  /// 使用Uri解析网址
+  ///  例：Uri uri = Uri.parse(url);
+  /// path=https://192.168.0.104/images/app/chat/20231120101757039.mp4?size=100*320
+  /// path=/images/app/chat/20231120101757039.mp4
+  /// pathSegments=[images, app, chat, 20231120101757039.mp4]
+  /// query=size=100*320
+  /// queryParameters={size: 100*320}
+  /// queryParametersAll={size: [100*320]}
+  /// data=null
+  /// authority=192.168.0.104
+  /// fragment=
+  /// userInfo=
+  /// scheme=https
+  /// port=443
+  /// origin=https://192.168.0.104
+  static Uri parseUrl(String url) {
+    return Uri.parse(url);
+  }
 }
