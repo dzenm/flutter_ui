@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-///create by elileo on 2018/12/21
-///https://github.com/elileo1/flutter_travel_friends/blob/master/lib/widget/PopupWindow.dart
-///
-/// weilu update： 去除了IntrinsicWidth限制，添加了默认蒙版
+import 'tap_layout.dart';
+
+typedef RouteBuilder = Widget Function(PopupRoute route);
+
 const Duration _kWindowDuration = Duration(milliseconds: 0);
 const double _kWindowCloseIntervalEnd = 2.0 / 3.0;
 const double _kWindowMaxWidth = 240.0;
@@ -11,128 +11,148 @@ const double _kWindowMinWidth = 48.0;
 const double _kWindowVerticalPadding = 0.0;
 const double _kWindowScreenPadding = 0.0;
 
-/// 自定义弹窗控件：对自定义的弹窗内容进行再包装，添加长宽、动画等约束条件
-class CustomPopupMenu<T> extends StatelessWidget {
-  /// [delegate] CustomPopupMenu在目标所在范围的Key
+/// 自定义弹窗控件：对自定义的弹窗内容长宽进行包装
+class CustomPopupSubmenu<T> extends StatelessWidget {
+  const CustomPopupSubmenu({
+    super.key,
+    required this.child,
+    this.semanticLabel,
+    this.constraints,
+  });
+
+  final Widget child;
+  final String? semanticLabel;
+  final BoxConstraints? constraints;
+
+  ///弹窗方法
   static Future<T?> show<T>({
     required BuildContext context,
-    required GlobalKey targetScopeKey,
     required Widget child,
-    Color barrierColor = const Color(0x99000000),
-    SingleChildLayoutDelegate? delegate,
+    required RelativeRect position,
     double elevation = 8.0,
-  }) {
-    Route<T> route = _CustomPopupRoute(
-      delegate: delegate ?? _buildDelegate(context, targetScopeKey),
-      theme: Theme.of(context),
+    String? semanticLabel,
+    BoxConstraints? constraints,
+  }) async {
+    Route<T> route = _CustomPopupSubmenuRoute(
+      position: position,
       elevation: elevation,
-      color: barrierColor,
+      theme: Theme.of(context),
       barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-      child: CustomPopupMenu<T>(child: child),
+      builder: (route) {
+        return CustomPopupSubmenu<T>(
+          semanticLabel: semanticLabel ?? MaterialLocalizations.of(context).popupMenuLabel,
+          constraints: constraints,
+          child: child,
+        );
+      },
     );
-    return Navigator.push(context, route);
+    return await Navigator.push<T>(context, route);
   }
 
-  static Future<T?> showPopupMoreMenu<T>(
+  static Future<T?> showList<T>(
     BuildContext context,
-    GlobalKey targetScopeKey,
-    GlobalKey moreKey,
-    List<String> optionList,
-    Function menuItem,
+    GlobalKey targetKey,
+    List<String> items,
+    void Function(String item) onTap,
   ) async {
-    final RenderBox button = moreKey.currentContext!.findRenderObject() as RenderBox;
-    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
-    var a = button.localToGlobal(Offset(button.size.width - 8.0, button.size.height - 12.0), ancestor: overlay);
-    var b = button.localToGlobal(button.size.bottomLeft(const Offset(0, -12.0)), ancestor: overlay);
-    final RelativeRect position = RelativeRect.fromRect(
+    GlobalKey popupKey = GlobalKey();
+    RenderBox targetView = targetKey.currentContext!.findRenderObject() as RenderBox;
+    RenderBox popupChildView = popupKey.currentContext!.findRenderObject() as RenderBox;
+    RenderBox popupView = Overlay.of(context).context.findRenderObject() as RenderBox;
+    Offset a = targetView.localToGlobal(Offset(targetView.size.width, targetView.size.height), ancestor: popupView);
+    Offset b;
+
+    double fromTopDis = targetView.localToGlobal(const Offset(0, 0)).dy;
+    double popHeight = popupChildView.size.height;
+    if (fromTopDis - popHeight > 32) {
+      //menu不能覆盖到toolbar上方
+      b = targetView.localToGlobal(targetView.size.topLeft(Offset(0, -popHeight)), ancestor: popupView);
+    } else {
+      b = targetView.localToGlobal(targetView.size.bottomLeft(const Offset(0, 0.0)), ancestor: popupView);
+    }
+    RelativeRect position = RelativeRect.fromRect(
       Rect.fromPoints(a, b),
-      Offset.zero & overlay.size,
+      Offset.zero & popupView.size,
     );
-    return await show(
+
+    return await show<T>(
       context: context,
-      targetScopeKey: targetScopeKey,
+      position: position,
       elevation: 0.0,
       child: GestureDetector(
         onTap: () => Navigator.pop(context),
         child: Container(
-          width: 120,
+          key: popupKey,
+          width: 100,
+          padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(5),
-            border: Border.all(color: const Color(0xffcccccc), width: 1),
+            border: Border.all(color: const Color(0xffE6E6E6), width: 1),
           ),
           child: Column(
-            children: optionList.map<Widget>((title) {
-              return menuItem(title);
-            }).toList(),
+            mainAxisSize: MainAxisSize.min,
+            children: items
+                .map(
+                  (item) => Column(children: [
+                    TapLayout(
+                      height: 35,
+                      alignment: Alignment.center,
+                      foreground: Colors.transparent,
+                      onTap: () {
+                        Navigator.pop(context);
+                        onTap(item);
+                      },
+                      child: Text(item, style: const TextStyle(fontSize: 16)),
+                    ),
+                    if (items.indexOf(item) != items.length - 1)
+                      const Divider(
+                        height: 0.5,
+                        indent: 0,
+                        endIndent: 0,
+                        color: Color(0xFFEEEEEE),
+                      ),
+                  ]),
+                )
+                .toList(),
           ),
         ),
       ),
     );
   }
 
-  static SingleChildLayoutDelegate _buildDelegate(BuildContext context, GlobalKey targetScopeKey) {
-    // Popup展示所在的target布局
-    RenderBox target = Overlay.of(context).context.findRenderObject() as RenderBox;
-    // 弹窗限制的范围的布局
-    RenderBox scope = targetScopeKey.currentContext!.findRenderObject() as RenderBox;
-    // 获取限制范围的大小
-    Size scopeSize = scope.size;
-    // 组件(scope)的坐标值(参数Offset)为相对ancestor参数(target)的坐标值(返回的参数Offset)
-    Offset a = scope.localToGlobal(Offset(scopeSize.width, scopeSize.height), ancestor: target);
-    Offset b;
-    // 组件相对全屏的坐标y值(到顶部的距离)
-    double fromTop = scope.localToGlobal(Offset.zero).dy;
-    // 计算Popup的高度
-    double popupHeight = 0;
-    if (fromTop - popupHeight > 32) {
-      // 如果Popup的高度未超出顶部的屏幕范围
-      // 优先展示在上方
-      b = scope.localToGlobal(scopeSize.topLeft(Offset(0, -popupHeight)), ancestor: target);
-    } else {
-      // 展示在下面
-      b = scope.localToGlobal(scopeSize.bottomLeft(Offset.zero), ancestor: target);
-    }
-
-    RelativeRect position = RelativeRect.fromRect(
-      Rect.fromPoints(a, b),
-      Offset.zero & target.size,
-    );
-    return _PopupWindowLayoutDelegate(position, Directionality.of(context));
-  }
-
-  const CustomPopupMenu({
-    super.key,
-    required this.child,
-  });
-
-  final Widget child; // 弹出框展示的布局
-
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(vertical: _kWindowVerticalPadding),
-      child: child,
+    return ConstrainedBox(
+      constraints: constraints ??
+          const BoxConstraints(
+            minWidth: _kWindowMinWidth,
+            maxWidth: _kWindowMaxWidth,
+          ),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(vertical: _kWindowVerticalPadding),
+        child: child,
+      ),
     );
   }
 }
 
-/// 自定义弹窗路由
-class _CustomPopupRoute<T> extends PopupRoute<T> {
-  _CustomPopupRoute({
-    required this.delegate,
-    required this.child,
-    this.theme,
+/// 自定义弹窗路由：添加弹出位置、动画等约束条件
+class _CustomPopupSubmenuRoute<T> extends PopupRoute<T> {
+  _CustomPopupSubmenuRoute({
+    required this.builder,
+    required this.position,
     this.elevation = 8.0,
+    this.theme,
+    this.backgroundColor = Colors.transparent,
     this.barrierLabel,
-    required this.color,
   }) : super();
 
-  final SingleChildLayoutDelegate delegate;
-  final Widget child;
-  final ThemeData? theme;
+  final RouteBuilder builder;
+  final RelativeRect position;
   final double elevation;
-  final Color color;
+  final ThemeData? theme;
+  final Color? backgroundColor; // const Color(0x99000000)
 
   @override
   bool get barrierDismissible => true;
@@ -154,7 +174,36 @@ class _CustomPopupRoute<T> extends PopupRoute<T> {
 
   @override
   Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
-    Widget child = this.child;
+    const double length = 10.0;
+    const double unit = 1.0 / (length + 1.5); // 1.0 for the width and 0.5 for the last item's fade.
+    CurveTween opacity = CurveTween(curve: const Interval(0.0, 1.0 / 3.0));
+    CurveTween width = CurveTween(curve: const Interval(0.0, unit));
+    CurveTween height = CurveTween(curve: const Interval(0.0, unit * length));
+
+    Widget child = AnimatedBuilder(
+      animation: animation,
+      builder: (BuildContext context, Widget? child) {
+        return Opacity(
+          opacity: opacity.evaluate(animation),
+          child: Material(
+            type: elevation == 0 ? MaterialType.transparency : MaterialType.card,
+            elevation: elevation,
+            child: Align(
+              alignment: AlignmentDirectional.topEnd,
+              widthFactor: width.evaluate(animation),
+              heightFactor: height.evaluate(animation),
+              child: Semantics(
+                scopesRoute: true,
+                namesRoute: true,
+                explicitChildNodes: true,
+                child: child,
+              ),
+            ),
+          ),
+        );
+      },
+      child: builder(this),
+    );
     if (theme != null) {
       child = Theme(data: theme!, child: child);
     }
@@ -173,47 +222,10 @@ class _CustomPopupRoute<T> extends PopupRoute<T> {
               child: Container(
                 width: double.infinity,
                 height: double.infinity,
-                color: color,
+                color: backgroundColor,
                 child: CustomSingleChildLayout(
-                  delegate: delegate,
-                  child: AnimatedBuilder(
-                    animation: animation,
-                    builder: (BuildContext context, Widget? child) {
-                      const double length = 10.0;
-                      const double unit = 1.0 / (length + 1.5); // 1.0 for the width and 0.5 for the last item's fade.
-                      final CurveTween opacity = CurveTween(curve: const Interval(0.0, 1.0 / 3.0));
-                      final CurveTween width = CurveTween(curve: const Interval(0.0, unit));
-                      final CurveTween height = CurveTween(curve: const Interval(0.0, unit * length));
-                      return Opacity(
-                        opacity: opacity.evaluate(animation),
-                        child: Material(
-                          type: elevation == 0 ? MaterialType.transparency : MaterialType.card,
-                          elevation: elevation,
-                          child: Align(
-                            alignment: AlignmentDirectional.topEnd,
-                            widthFactor: width.evaluate(animation),
-                            heightFactor: height.evaluate(animation),
-                            child: Semantics(
-                              scopesRoute: true,
-                              namesRoute: true,
-                              explicitChildNodes: true,
-                              child: child,
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(
-                        minWidth: _kWindowMinWidth,
-                        maxWidth: _kWindowMaxWidth,
-                      ),
-                      child: SingleChildScrollView(
-                        padding: const EdgeInsets.symmetric(vertical: _kWindowVerticalPadding),
-                        child: child,
-                      ),
-                    ),
-                  ),
+                  delegate: _CustomPopupSubmenuLayoutDelegate(position, null, Directionality.of(context)),
+                  child: child,
                 ),
               ),
             ),
@@ -228,17 +240,20 @@ class _CustomPopupRoute<T> extends PopupRoute<T> {
 }
 
 /// 自定义委托内容：子控件大小及其位置计算
-class _PopupWindowLayoutDelegate extends SingleChildLayoutDelegate {
-  _PopupWindowLayoutDelegate(this.position, this.textDirection);
+class _CustomPopupSubmenuLayoutDelegate extends SingleChildLayoutDelegate {
+  _CustomPopupSubmenuLayoutDelegate(this.position, this.selectedItemOffset, this.textDirection);
 
   final RelativeRect position;
+  final double? selectedItemOffset;
   final TextDirection textDirection;
 
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
     // The menu can be at most the size of the overlay minus 8.0 pixels in each
     // direction.
-    return BoxConstraints.loose((constraints.biggest - const Offset(_kWindowScreenPadding * 2.0, _kWindowScreenPadding * 2.0)) as Size);
+    return BoxConstraints.loose(
+      (constraints.biggest - const Offset(_kWindowScreenPadding * 2.0, _kWindowScreenPadding * 2.0)) as Size,
+    );
   }
 
   @override
@@ -248,7 +263,13 @@ class _PopupWindowLayoutDelegate extends SingleChildLayoutDelegate {
     // getConstraintsForChild.
 
     // Find the ideal vertical position.
-    double y = position.top;
+    double y;
+    if (selectedItemOffset == null) {
+      y = position.top;
+    } else {
+      y = position.top + (size.height - position.top - position.bottom) / 2.0 - (selectedItemOffset ?? 0);
+    }
+
     // Find the ideal horizontal position.
     double x;
     if (position.left > position.right) {
@@ -285,7 +306,7 @@ class _PopupWindowLayoutDelegate extends SingleChildLayoutDelegate {
   }
 
   @override
-  bool shouldRelayout(_PopupWindowLayoutDelegate oldDelegate) {
+  bool shouldRelayout(_CustomPopupSubmenuLayoutDelegate oldDelegate) {
     return position != oldDelegate.position;
   }
 }
