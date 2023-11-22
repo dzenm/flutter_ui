@@ -33,6 +33,9 @@ class CustomPopupWindow extends StatefulWidget {
   /// 如果超过范围是否使箭头的位置固定居中
   final bool? isPin;
 
+  /// z轴的高度
+  final double elevation;
+
   const CustomPopupWindow({
     super.key,
     required this.targetKey,
@@ -43,6 +46,7 @@ class CustomPopupWindow extends StatefulWidget {
     this.arrowOffset,
     this.isCollapsed,
     this.isPin,
+    this.elevation = 0,
   });
 
   /// 创建一个自定义的PopupWindow
@@ -56,6 +60,7 @@ class CustomPopupWindow extends StatefulWidget {
     Offset? arrowOffset,
     bool? isCollapsed,
     bool? isPin,
+    double elevation = 0,
   }) async {
     return await Navigator.push(
       context,
@@ -68,6 +73,7 @@ class CustomPopupWindow extends StatefulWidget {
           arrowOffset: arrowOffset,
           isCollapsed: isCollapsed,
           isPin: isPin,
+          elevation: elevation,
           child: child,
         ),
       ),
@@ -112,6 +118,7 @@ class CustomPopupWindow extends StatefulWidget {
     Color color = const Color(0xff4c4c4c),
     Color? textColor,
     ItemTapCallback? onItemTap,
+    double elevation = 0,
   }) async {
     return await show(
       context,
@@ -122,6 +129,7 @@ class CustomPopupWindow extends StatefulWidget {
       arrowOffset: arrowOffset,
       isCollapsed: isCollapsed,
       isPin: isPin,
+      elevation: elevation,
       child: _buildContentView(
         color: color,
         radius: radius,
@@ -382,7 +390,7 @@ class _PopupWindowState extends State<CustomPopupWindow> {
   void _fixVertical(Offset target, double height, double arrowHeight) {
     Offset offset = widget.offset ?? const Offset(0, 0);
     // offset是包含箭头和Popup主体的偏移
-    double dy = target.dy + offset.dy ;
+    double dy = target.dy + offset.dy;
     // 0.5是为了消除箭头和Popup主体之间的间距
     double offsetY = _arrowOffset.dy + 0.5;
     // 正值为往下偏移，负值为往上偏移
@@ -484,11 +492,15 @@ class _PopupWindowState extends State<CustomPopupWindow> {
 
   /// 自定义的Popup Widget布局
   Widget _buildCustomView() {
-    return SizedBox(
-      key: _popupKey,
-      width: _width,
-      height: _height,
-      child: widget.child,
+    return Material(
+      type: widget.elevation == 0 ? MaterialType.transparency : MaterialType.card,
+      elevation: widget.elevation,
+      child: SizedBox(
+        key: _popupKey,
+        width: _width,
+        height: _height,
+        child: widget.child,
+      ),
     );
   }
 
