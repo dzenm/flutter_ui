@@ -146,17 +146,18 @@ class Log {
   List<String> _handlerPrefixTextColor(Level level) {
     switch (level) {
       case Level.verbose:
-        return ['\x1B[35m ', ' \x1B[0m'];
+        return ['\x1B[36m ', ' \x1B[0m'];
       case Level.debug:
         return ['\x1B[35m ', ' \x1B[0m'];
       case Level.info:
-        return ['\x1B[35m ', ' \x1B[0m'];
+        return ['\x1B[34m ', ' \x1B[0m'];
       case Level.warm:
-        return ['\x1B[35m ', ' \x1B[0m'];
+        return ['\x1B[33m ', ' \x1B[0m'];
       case Level.error:
         return ['\x1B[31m ', ' \x1B[0m'];
       default:
         return ['', ''];
+
     }
   }
 }
