@@ -1,9 +1,3 @@
-/*
- * @Author: LinXunFeng linxunfeng@yeah.net
- * @Repo: https://github.com/LinXunFeng/flutter_scrollview_observer
- * @Date: 2022-10-31 15:40:04
- */
-
 import 'package:flutter/material.dart';
 
 class ChatUnreadTipView extends StatelessWidget {

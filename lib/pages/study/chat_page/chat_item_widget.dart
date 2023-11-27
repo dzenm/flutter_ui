@@ -1,9 +1,3 @@
-/*
- * @Author: LinXunFeng linxunfeng@yeah.net
- * @Repo: https://github.com/LinXunFeng/flutter_scrollview_observer
- * @Date: 2022-09-27 22:46:36
- */
-
 import 'package:flutter/material.dart';
 
 import 'chat_model.dart';

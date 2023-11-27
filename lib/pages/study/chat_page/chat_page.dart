@@ -1,14 +1,9 @@
 import 'dart:math';
 
-import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 
+import '../../../base/base.dart';
 import 'chat_item_widget.dart';
-import 'chat_list/chat/chat_observer_scroll_physics.dart';
-import 'chat_list/chat/chat_scroll_observer.dart';
-import 'chat_list/chat/chat_scroll_observer_model.dart';
-import 'chat_list/listview/list_observer_controller.dart';
-import 'chat_list/listview/list_observer_view.dart';
 import 'chat_model.dart';
 import 'chat_unread_tip_view.dart';
 
@@ -23,26 +18,17 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  final ScrollController _controller = ScrollController();
-
-  late ListObserverController observerController;
-
-  late ChatScrollObserver chatObserver;
+  final ScrollController _scrollerController = ScrollController();
+  late ListObserverController _controller;
+  late ChatScrollObserver _chatObserver;
 
   List<ChatModel> chatModels = [];
-
   ValueNotifier<int> unreadMsgCount = ValueNotifier<int>(0);
-
   bool needIncrementUnreadMsgCount = false;
-
   bool editViewReadOnly = false;
-
   TextEditingController editViewController = TextEditingController();
-
   BuildContext? pageOverlayContext;
-
   final LayerLink layerLink = LayerLink();
-
   bool isShowClassicHeaderAndFooter = false;
 
   @override
@@ -50,9 +36,9 @@ class _ChatPageState extends State<ChatPage> {
     super.initState();
 
     chatModels = createChatModels();
-    _controller.addListener(scrollControllerListener);
-    observerController = ListObserverController(controller: _controller)..cacheJumpIndexOffset = false;
-    chatObserver = ChatScrollObserver(observerController)
+    _scrollerController.addListener(scrollControllerListener);
+    _controller = ListObserverController(controller: _scrollerController)..cacheJumpIndexOffset = false;
+    _chatObserver = ChatScrollObserver(_controller)
       ..fixedPositionOffset = 5
       ..toRebuildScrollViewCallback = () {
         setState(() {});
@@ -74,7 +60,7 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   void dispose() {
-    observerController.controller?.dispose();
+    _controller.controller?.dispose();
     editViewController.dispose();
     super.dispose();
   }
@@ -178,7 +164,7 @@ class _ChatPageState extends State<ChatPage> {
         return ChatUnreadTipView(
           unreadMsgCount: unreadMsgCount.value,
           onTap: () {
-            _controller.animateTo(
+            _scrollerController.animateTo(
               0,
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut,
@@ -192,76 +178,24 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget _buildListView() {
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        Widget resultWidget = EasyRefresh.builder(
-          header: isShowClassicHeaderAndFooter ? const ClassicHeader() : const MaterialHeader(),
-          footer: isShowClassicHeaderAndFooter
-              ? const ClassicFooter(
-                  position: IndicatorPosition.above,
-                  infiniteOffset: null,
-                )
-              : const MaterialFooter(),
-          onRefresh: () async {
-            await Future.delayed(const Duration(seconds: 2));
-          },
-          onLoad: () async {
-            await Future.delayed(const Duration(seconds: 2));
-          },
-          childBuilder: (context, physics) {
-            var scrollViewPhysics = physics.applyTo(ChatObserverClampingScrollPhysics(
-              observer: chatObserver,
-            ));
-            Widget resultWidget = ListView.builder(
-              physics: chatObserver.isShrinkWrap ? const NeverScrollableScrollPhysics() : scrollViewPhysics,
-              padding: const EdgeInsets.only(
-                left: 10,
-                right: 10,
-                top: 15,
-                bottom: 15,
-              ),
-              shrinkWrap: chatObserver.isShrinkWrap,
-              reverse: true,
-              controller: _controller,
-              itemBuilder: ((context, index) {
-                return ChatItemWidget(
-                  chatModel: chatModels[index],
-                  index: index,
-                  itemCount: chatModels.length,
-                  onRemove: () {
-                    chatObserver.standby(isRemove: true);
-                    setState(() {
-                      chatModels.removeAt(index);
-                    });
-                  },
-                );
-              }),
-              itemCount: chatModels.length,
-            );
-            if (chatObserver.isShrinkWrap) {
-              resultWidget = SingleChildScrollView(
-                reverse: true,
-                physics: scrollViewPhysics,
-                child: Container(
-                  alignment: Alignment.topCenter,
-                  height: constraints.maxHeight + 0.001,
-                  child: resultWidget,
-                ),
-              );
-            }
-            return resultWidget;
+    return ChatView(
+      itemCount: chatModels.length,
+      scrollerController: _scrollerController,
+      controller: _controller,
+      observer: _chatObserver,
+      isMaterialRefresh: !isShowClassicHeaderAndFooter,
+      itemBuilder: (context, index) {
+        return ChatItemWidget(
+          chatModel: chatModels[index],
+          index: index,
+          itemCount: chatModels.length,
+          onRemove: () {
+            _chatObserver.standby(isRemove: true);
+            setState(() {
+              chatModels.removeAt(index);
+            });
           },
         );
-
-        resultWidget = ListViewObserver(
-          controller: observerController,
-          child: resultWidget,
-        );
-        resultWidget = Align(
-          alignment: Alignment.topCenter,
-          child: resultWidget,
-        );
-        return resultWidget;
       },
     );
   }
@@ -289,7 +223,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   _addMessage(int count) {
-    chatObserver.standby(changeCount: count);
+    _chatObserver.standby(changeCount: count);
     setState(() {
       needIncrementUnreadMsgCount = true;
       for (var i = 0; i < count; i++) {
@@ -311,7 +245,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   scrollControllerListener() {
-    if (_controller.offset < 50) {
+    if (_scrollerController.offset < 50) {
       updateUnreadMsgCount(isReset: true);
     }
   }
