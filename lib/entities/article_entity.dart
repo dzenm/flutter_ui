@@ -4,7 +4,6 @@ import 'package:json_annotation/json_annotation.dart';
 
 import '../base/db/db.dart';
 import 'converts/bool_convert.dart';
-import 'converts/list_convert.dart';
 
 part 'article_entity.g.dart';
 

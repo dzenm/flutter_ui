@@ -40,7 +40,7 @@ class SingleTextLayout extends StatelessWidget {
   final Color? forwardColor; // 指向下一级图标颜色
 
   const SingleTextLayout({
-    Key? key,
+    super.key,
     this.icon,
     this.iconColor,
     this.image,
@@ -60,7 +60,7 @@ class SingleTextLayout extends StatelessWidget {
     this.isShowForward = false,
     this.badgeCount = -1,
     this.forwardColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

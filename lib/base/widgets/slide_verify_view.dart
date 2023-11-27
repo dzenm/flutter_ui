@@ -25,14 +25,14 @@ class SlideVerifyView extends StatefulWidget {
   final VoidCallback onChanged;
 
   const SlideVerifyView({
-    Key? key,
+    super.key,
     this.backgroundColor = Colors.blueGrey,
     this.slideColor = Colors.green,
     this.borderColor = Colors.grey,
     this.height = 44,
     this.width = 260,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() => _SlideVerifyViewState();

@@ -348,7 +348,7 @@ class CKTextInputType extends TextInputType {
   final String name;
   final String? params;
 
-  const CKTextInputType({required this.name, bool? signed, bool? decimal, this.params}) : super.numberWithOptions(signed: signed, decimal: decimal);
+  const CKTextInputType({required this.name, super.signed = null, super.decimal = null, this.params}) : super.numberWithOptions();
 
   @override
   Map<String, dynamic> toJson() {
@@ -385,7 +385,7 @@ class KeyboardPage extends StatefulWidget {
   final Widget? Function(BuildContext context) builder;
   final double height;
 
-  const KeyboardPage({required this.builder, this.height = 0, Key? key}) : super(key: key);
+  const KeyboardPage({required this.builder, this.height = 0, super.key});
 
   @override
   State<StatefulWidget> createState() => KeyboardPageState();

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../base/base.dart';
 import '../entities/article_entity.dart';
 
 ///

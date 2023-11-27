@@ -39,12 +39,11 @@ class CustomPage<T extends Object?> extends Page<T> {
     this.filter,
     this.semanticsDismissible = true,
     this.barrierDismissible = true,
-    LocalKey? key,
-    String? name,
-    Object? arguments,
-    String? restorationId,
-  })  : completerResult = Completer(),
-        super(key: key, name: name, arguments: arguments, restorationId: restorationId);
+    super.key,
+    super.name,
+    super.arguments,
+    super.restorationId,
+  })  : completerResult = Completer();
 
   final BuildCustomRoute<T> buildCustomRoute;
 

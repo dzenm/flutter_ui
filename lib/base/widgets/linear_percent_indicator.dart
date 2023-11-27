@@ -72,7 +72,7 @@ class LinearPercentIndicator extends StatefulWidget {
   final bool restartAnimation;
 
   LinearPercentIndicator(
-      {Key? key,
+      {super.key,
       this.fillColor = Colors.transparent,
       this.percent = 0.0,
       this.lineHeight = 5.0,
@@ -94,8 +94,7 @@ class LinearPercentIndicator extends StatefulWidget {
       this.maskFilter,
       this.clipLinearGradient = false,
       this.curve = Curves.linear,
-      this.restartAnimation = false})
-      : super(key: key) {
+      this.restartAnimation = false}) {
     if (linearGradient != null) {
       throw ArgumentError('Cannot provide both linearGradient and progressColor');
     }

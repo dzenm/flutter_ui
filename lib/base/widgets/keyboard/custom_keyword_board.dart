@@ -214,7 +214,7 @@ class CellInput extends StatefulWidget {
   final int? verifyCodeType;
 
   const CellInput({
-    Key? key,
+    super.key,
     this.cellCount = 4,
     this.inputType = InputType.number,
     this.autofocus = true,
@@ -230,7 +230,7 @@ class CellInput extends StatefulWidget {
     this.controller,
     this.fontSize = 22,
     this.verifyCodeType = 0,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() => _CellInputState();

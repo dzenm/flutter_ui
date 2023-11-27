@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 class CommonWidget {
@@ -52,7 +50,7 @@ class CommonWidget {
 }
 
 class FileImageExt extends FileImage {
-  const FileImageExt(File file, {double scale = 1.0}) : super(file, scale: scale);
+  const FileImageExt(super.file, {super.scale});
 
   @override
   bool operator ==(dynamic other) {

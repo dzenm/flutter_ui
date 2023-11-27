@@ -228,10 +228,10 @@ class ArticleListView extends StatelessWidget {
   final RefreshFunction refresh;
 
   const ArticleListView({
-    Key? key,
+    super.key,
     required this.controller,
     required this.refresh,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -258,7 +258,7 @@ class ArticleItemView extends StatelessWidget {
   static const String _tag = 'ArticleItemView';
   final int index;
 
-  const ArticleItemView(this.index, {Key? key}) : super(key: key);
+  const ArticleItemView(this.index, {super.key});
 
   @override
   Widget build(BuildContext context) {

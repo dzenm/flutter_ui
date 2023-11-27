@@ -9,7 +9,7 @@ class KeyboardRootWidget extends StatefulWidget {
   /// The text direction for this subtree.
   final TextDirection textDirection;
 
-  const KeyboardRootWidget({Key? key, required this.child, this.textDirection = TextDirection.ltr}) : super(key: key);
+  const KeyboardRootWidget({super.key, required this.child, this.textDirection = TextDirection.ltr});
 
   @override
   State<StatefulWidget> createState() {

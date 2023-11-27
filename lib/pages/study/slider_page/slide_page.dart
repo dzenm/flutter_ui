@@ -8,8 +8,8 @@ import '../../../base/base.dart';
 ///
 class SlidePage extends StatelessWidget {
   const SlidePage({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

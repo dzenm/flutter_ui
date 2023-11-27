@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../entities/entity.dart';
 
 class OrderModel with ChangeNotifier {
-  Map<String, OrderEntity> _orders = {};
+  final Map<String, OrderEntity> _orders = {};
 
   Future<void> init() async {
     List<OrderEntity> list = await OrderEntity().query();

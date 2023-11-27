@@ -20,17 +20,15 @@ class DesktopMenu extends StatefulWidget {
 class _DesktopMenuState extends State<DesktopMenu> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        _buildPrimaryMenu(),
-        const VerticalDivider(thickness: 1, width: 1),
-        Expanded(child: _buildSecondaryMenu()),
-      ]),
-    );
+    return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      _buildPrimaryMenu(),
+      const VerticalDivider(thickness: 1, width: 1),
+      Expanded(child: _buildSecondaryMenu()),
+    ]);
   }
 
   Widget _buildPrimaryMenu() {
-    return Container(
+    return SizedBox(
       width: 150,
       child: widget.child,
     );

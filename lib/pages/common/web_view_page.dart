@@ -65,11 +65,11 @@ class FlutterWebView extends StatefulWidget {
   final ControllerCallback? onControllerCallback;
 
   const FlutterWebView({
-    Key? key,
+    super.key,
     required this.url,
     this.onTitleChange,
     this.onControllerCallback,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() => _FlutterWebViewState();

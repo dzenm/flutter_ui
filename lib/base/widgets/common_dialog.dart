@@ -237,14 +237,14 @@ class DialogWrapper extends StatelessWidget {
   final BorderRadius borderRadius;
 
   const DialogWrapper({
-    Key? key,
+    super.key,
     this.touchOutsideDismiss = false,
     this.backDismiss = true,
     this.dismissCallback,
     this.child,
     this.color = Colors.white,
     this.borderRadius = const BorderRadius.all(Radius.circular(16)),
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

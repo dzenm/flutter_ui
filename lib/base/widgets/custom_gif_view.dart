@@ -1,4 +1,3 @@
-part of appcommon;
 
 // import 'dart:async';
 // import 'dart:io';
@@ -7,19 +6,6 @@ part of appcommon;
 //
 // import 'package:flutter/foundation.dart';
 // import 'package:flutter/material.dart';
-
-///
-/// Created by
-///
-/// ─▄▀─▄▀
-/// ──▀──▀
-/// █▀▀▀▀▀█▄
-/// █░░░░░█─█
-/// ▀▄▄▄▄▄▀▀
-///
-/// Rafaelbarbosatec
-/// on 23/09/21
-
 // final Map<String, List<ImageInfo>> _cache = {};
 
 // class CustomGiftView extends StatefulWidget {
