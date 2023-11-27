@@ -1,17 +1,10 @@
-/*
- * @Author: LinXunFeng linxunfeng@yeah.net
- * @Repo: https://github.com/LinXunFeng/flutter_scrollview_observer
- * @Date: 2022-08-21 00:53:44
- */
-
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-import '../../common/models/observe_model.dart';
-import '../../listview/models/listview_observe_model.dart';
-import 'log.dart';
+import '../common/models/observe_model.dart';
+import '../listview/models/listview_observe_model.dart';
 
 class ObserverUtils {
   ObserverUtils._();
@@ -39,26 +32,26 @@ class ObserverUtils {
   /// Calculate the anchor tab index.
   static int calcAnchorTabIndex({
     required ObserveModel observeModel,
-    required List<int> tabIndexs,
+    required List<int> tabIndexes,
     required int currentTabIndex,
   }) {
-    if (currentTabIndex >= tabIndexs.length) {
+    if (currentTabIndex >= tabIndexes.length) {
       return currentTabIndex;
     }
     if (observeModel is ListViewObserveModel) {
       final topIndex = observeModel.firstChild?.index ?? 0;
-      final index = tabIndexs.indexOf(topIndex);
+      final index = tabIndexes.indexOf(topIndex);
       if (isValidListIndex(index)) {
         return index;
       }
       var targetTabIndex = currentTabIndex - 1;
-      if (targetTabIndex < 0 || targetTabIndex >= tabIndexs.length) {
+      if (targetTabIndex < 0 || targetTabIndex >= tabIndexes.length) {
         return currentTabIndex;
       }
-      var curIndex = tabIndexs[currentTabIndex];
-      var lastIndex = tabIndexs[currentTabIndex - 1];
+      var curIndex = tabIndexes[currentTabIndex];
+      var lastIndex = tabIndexes[currentTabIndex - 1];
       if (curIndex > topIndex && lastIndex < topIndex) {
-        final lastTabIndex = tabIndexs.indexOf(lastIndex);
+        final lastTabIndex = tabIndexes.indexOf(lastIndex);
         if (isValidListIndex(lastTabIndex)) {
           return lastTabIndex;
         }
@@ -207,7 +200,7 @@ class ObserverUtils {
       // It throws an exception when getting renderObject of inactive element.
       return context?.findRenderObject();
     } catch (e) {
-      Log.warning('Cannot get renderObject of inactive element.\n'
+      debugPrint('Cannot get renderObject of inactive element.\n'
           'Please call the reattach method of ObserverController to re-record '
           'BuildContext.');
       return null;

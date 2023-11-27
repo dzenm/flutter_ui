@@ -5,10 +5,10 @@ class SliverObserveContextToBoxAdapter extends SliverToBoxAdapter {
   final void Function(BuildContext) onObserve;
 
   const SliverObserveContextToBoxAdapter({
-    Key? key,
-    required Widget? child,
+    super.key,
+    required super.child,
     required this.onObserve,
-  }) : super(key: key, child: child);
+  });
 
   @override
   RenderSliverToBoxAdapter createRenderObject(BuildContext context) {

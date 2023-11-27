@@ -1,16 +1,9 @@
-/*
- * @Author: LinXunFeng linxunfeng@yeah.net
- * @Repo: https://github.com/LinXunFeng/flutter_scrollview_observer
- * @Date: 2022-07-20 00:32:40
- */
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import '../common/models/observer_handle_contexts_result_model.dart';
 import '../common/observer_controller.dart';
-import '../common/observer_typedef.dart';
-import '../common/typedefs.dart';
-import '../notification.dart';
+import '../common/observer_widget.dart';
 import 'list_observer_notification_result.dart';
 import 'models/listview_observe_displaying_child_model.dart';
 import 'models/listview_observe_model.dart';
@@ -24,7 +17,7 @@ class ListObserverController extends ObserverController
     super.controller,
   });
 
-  /// Dispatch a [ListViewOnceObserveNotification]
+  /// Dispatch a [ScrollViewOnceObserveNotification]
   Future<ListViewOnceObserveNotificationResult> dispatchOnceObserve({
     BuildContext? sliverContext,
     bool isForce = false,
@@ -32,7 +25,7 @@ class ListObserverController extends ObserverController
   }) {
     return innerDispatchOnceObserve(
       sliverContext: sliverContext,
-      notification: ListViewOnceObserveNotification(
+      notification: ScrollViewOnceObserveNotification(
         isForce: isForce,
         isDependObserveCallback: isDependObserveCallback,
       ),

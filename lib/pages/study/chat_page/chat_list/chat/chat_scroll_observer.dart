@@ -1,18 +1,11 @@
-/*
- * @Author: LinXunFeng linxunfeng@yeah.net
- * @Repo: https://github.com/LinXunFeng/flutter_scrollview_observer
- * @Date: 2022-09-27 23:01:58
- */
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-import '../../../common/typedefs.dart';
-import '../../../listview/list_observer_controller.dart';
-import '../../../listview/models/listview_observe_displaying_child_model.dart';
-import '../observer_utils.dart';
+import '../common/observer_controller.dart';
+import '../listview/list_observer_controller.dart';
+import '../listview/models/listview_observe_displaying_child_model.dart';
+import '../utils/observer_utils.dart';
 import 'chat_scroll_observer_model.dart';
-import 'chat_scroll_observer_typedefs.dart';
 
 class ChatScrollObserver {
   ChatScrollObserver(this.observerController) {
@@ -78,7 +71,7 @@ class ChatScrollObserver {
   /// The mode of processing.
   ChatScrollObserverHandleMode innerMode = ChatScrollObserverHandleMode.normal;
 
-  /// Observation result of reference subparts after ScrollView children update.
+  /// Observation result of reference subParts after ScrollView children update.
   ListViewObserveDisplayingChildModel? observeRefItem() {
     return observerController.observeItem(
       index: refItemIndexAfterUpdate,
@@ -116,14 +109,14 @@ class ChatScrollObserver {
       sliverContext: sliverContext,
     );
     if (firstItemModel == null) return;
-    int _innerRefItemIndex;
-    int _innerRefItemIndexAfterUpdate;
-    double _innerRefItemLayoutOffset;
+    int innerRefItemIndex;
+    int innerRefItemIndexAfterUpdate;
+    double innerRefItemLayoutOffset;
     switch (mode) {
       case ChatScrollObserverHandleMode.normal:
-        _innerRefItemIndex = firstItemModel.index;
-        _innerRefItemIndexAfterUpdate = _innerRefItemIndex + changeCount;
-        _innerRefItemLayoutOffset = firstItemModel.layoutOffset;
+        innerRefItemIndex = firstItemModel.index;
+        innerRefItemIndexAfterUpdate = innerRefItemIndex + changeCount;
+        innerRefItemLayoutOffset = firstItemModel.layoutOffset;
         break;
       case ChatScrollObserverHandleMode.generative:
         int index = firstItemModel.index + changeCount;
@@ -132,9 +125,9 @@ class ChatScrollObserver {
           index: index,
         );
         if (model == null) return;
-        _innerRefItemIndex = index;
-        _innerRefItemIndexAfterUpdate = index;
-        _innerRefItemLayoutOffset = model.layoutOffset;
+        innerRefItemIndex = index;
+        innerRefItemIndexAfterUpdate = index;
+        innerRefItemLayoutOffset = model.layoutOffset;
         break;
       case ChatScrollObserverHandleMode.specified:
         int index = firstItemModel.index + refItemRelativeIndex;
@@ -143,17 +136,17 @@ class ChatScrollObserver {
           index: index,
         );
         if (model == null) return;
-        _innerRefItemIndex = index;
-        _innerRefItemIndexAfterUpdate =
+        innerRefItemIndex = index;
+        innerRefItemIndexAfterUpdate =
             firstItemModel.index + refItemRelativeIndexAfterUpdate;
-        _innerRefItemLayoutOffset = model.layoutOffset;
+        innerRefItemLayoutOffset = model.layoutOffset;
         break;
     }
     // Record value.
     innerIsNeedFixedPosition = true;
-    innerRefItemIndex = _innerRefItemIndex;
-    innerRefItemIndexAfterUpdate = _innerRefItemIndexAfterUpdate;
-    innerRefItemLayoutOffset = _innerRefItemLayoutOffset;
+    innerRefItemIndex = innerRefItemIndex;
+    innerRefItemIndexAfterUpdate = innerRefItemIndexAfterUpdate;
+    innerRefItemLayoutOffset = innerRefItemLayoutOffset;
   }
 
   observeSwitchShrinkWrap() {

@@ -4,13 +4,13 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 
 import 'chat_item_widget.dart';
+import 'chat_list/chat/chat_observer_scroll_physics.dart';
+import 'chat_list/chat/chat_scroll_observer.dart';
+import 'chat_list/chat/chat_scroll_observer_model.dart';
+import 'chat_list/listview/list_observer_controller.dart';
+import 'chat_list/listview/list_observer_view.dart';
 import 'chat_model.dart';
 import 'chat_unread_tip_view.dart';
-import 'src/listview/list_observer_controller.dart';
-import 'src/listview/list_observer_view.dart';
-import 'src/utils/src/chat/chat_observer_scroll_physics.dart';
-import 'src/utils/src/chat/chat_scroll_observer.dart';
-import 'src/utils/src/chat/chat_scroll_observer_typedefs.dart';
 
 ///
 /// Created by a0010 on 2023/10/30 16:27
@@ -23,7 +23,7 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  ScrollController scrollController = ScrollController();
+  final ScrollController _controller = ScrollController();
 
   late ListObserverController observerController;
 
@@ -50,8 +50,8 @@ class _ChatPageState extends State<ChatPage> {
     super.initState();
 
     chatModels = createChatModels();
-    scrollController.addListener(scrollControllerListener);
-    observerController = ListObserverController(controller: scrollController)..cacheJumpIndexOffset = false;
+    _controller.addListener(scrollControllerListener);
+    observerController = ListObserverController(controller: _controller)..cacheJumpIndexOffset = false;
     chatObserver = ChatScrollObserver(observerController)
       ..fixedPositionOffset = 5
       ..toRebuildScrollViewCallback = () {
@@ -178,7 +178,7 @@ class _ChatPageState extends State<ChatPage> {
         return ChatUnreadTipView(
           unreadMsgCount: unreadMsgCount.value,
           onTap: () {
-            scrollController.animateTo(
+            _controller.animateTo(
               0,
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut,
@@ -222,7 +222,7 @@ class _ChatPageState extends State<ChatPage> {
               ),
               shrinkWrap: chatObserver.isShrinkWrap,
               reverse: true,
-              controller: scrollController,
+              controller: _controller,
               itemBuilder: ((context, index) {
                 return ChatItemWidget(
                   chatModel: chatModels[index],
@@ -311,7 +311,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   scrollControllerListener() {
-    if (scrollController.offset < 50) {
+    if (_controller.offset < 50) {
       updateUnreadMsgCount(isReset: true);
     }
   }

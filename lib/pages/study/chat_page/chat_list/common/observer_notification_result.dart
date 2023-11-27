@@ -1,16 +1,10 @@
-/*
- * @Author: LinXunFeng linxunfeng@yeah.net
- * @Repo: https://github.com/LinXunFeng/flutter_scrollview_observer
- * @Date: 2023-08-12 20:09:46
- */
-
 import 'package:flutter/material.dart';
 
 import 'models/observe_model.dart';
 import 'models/observer_handle_contexts_result_model.dart';
-import 'typedefs.dart';
+import 'observer_widget.dart';
 
-class CommonOnceObserveNotificationResult<M extends ObserveModel,
+class OnceObserveNotificationResult<M extends ObserveModel,
     R extends ObserverHandleContextsResultModel<M>> {
   bool get isSuccess => ObserverWidgetObserveResultType.success == type;
 
@@ -25,7 +19,7 @@ class CommonOnceObserveNotificationResult<M extends ObserveModel,
   /// Corresponding to [onObserveAll] in [ObserverWidget].
   final Map<BuildContext, M> observeAllResult;
 
-  CommonOnceObserveNotificationResult({
+  OnceObserveNotificationResult({
     required this.type,
     required this.observeResult,
     required this.observeAllResult,

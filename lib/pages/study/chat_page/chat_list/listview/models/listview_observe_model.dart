@@ -12,14 +12,12 @@ import 'listview_observe_displaying_child_model.dart';
 class ListViewObserveModel extends ObserveModel {
   ListViewObserveModel({
     required this.sliverList,
-    required RenderViewportBase viewport,
+    required super.viewport,
     required this.firstChild,
     required this.displayingChildModelList,
-    required bool visible,
+    required super.visible,
   }) : super(
-          visible: visible,
           sliver: sliverList,
-          viewport: viewport,
           innerDisplayingChildModelList: displayingChildModelList,
         );
 

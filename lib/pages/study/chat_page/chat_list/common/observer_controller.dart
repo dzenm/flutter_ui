@@ -1,24 +1,15 @@
-/*
- * @Author: LinXunFeng linxunfeng@yeah.net
- * @Repo: https://github.com/LinXunFeng/flutter_scrollview_observer
- * @Date: 2022-08-08 00:20:03
- */
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import '../utils/observer_utils.dart';
-import '../utils/src/log.dart';
 import 'models/observe_find_child_model.dart';
 import 'models/observe_model.dart';
 import 'models/observe_scroll_child_model.dart';
-import 'models/observe_scroll_to_index_fixed_height_result_model.dart';
 import 'models/observer_handle_contexts_result_model.dart';
-import 'models/observer_index_position_model.dart';
 import 'observer_notification_result.dart';
-import 'observer_typedef.dart';
-import 'typedefs.dart';
+import 'observer_widget.dart';
 
 class ObserverController {
   ObserverController({this.controller});
@@ -49,11 +40,11 @@ class ObserverController {
 
   /// Get the target sliver [BuildContext]
   BuildContext? fetchSliverContext({BuildContext? sliverContext}) {
-    BuildContext? _sliverContext = sliverContext;
-    if (_sliverContext == null && sliverContexts.isNotEmpty) {
-      _sliverContext = sliverContexts.first;
+    BuildContext? sliverContext0 = sliverContext;
+    if (sliverContext0 == null && sliverContexts.isNotEmpty) {
+      sliverContext0 = sliverContexts.first;
     }
-    return _sliverContext;
+    return sliverContext0;
   }
 
   /// Get the latest target sliver [BuildContext] and reset some of the old data.
@@ -65,7 +56,7 @@ class ObserverController {
   }
 }
 
-mixin ObserverControllerForNotification<M extends ObserveModel, R extends ObserverHandleContextsResultModel<M>, S extends CommonOnceObserveNotificationResult<M, R>> on ObserverController {
+mixin ObserverControllerForNotification<M extends ObserveModel, R extends ObserverHandleContextsResultModel<M>, S extends OnceObserveNotificationResult<M, R>> on ObserverController {
   /// A completer for dispatch once observation
   Completer<S>? innerDispatchOnceObserveCompleter;
 
@@ -76,10 +67,10 @@ mixin ObserverControllerForNotification<M extends ObserveModel, R extends Observ
   }) {
     Completer<S> completer = Completer();
     innerDispatchOnceObserveCompleter = completer;
-    BuildContext? _sliverContext = fetchSliverContext(
+    BuildContext? sliverContext0 = fetchSliverContext(
       sliverContext: sliverContext,
     );
-    notification.dispatch(_sliverContext);
+    notification.dispatch(sliverContext0);
     return completer.future;
   }
 
@@ -360,8 +351,8 @@ mixin ObserverControllerForScroll on ObserverControllerForInfo {
   }) async {
     assert(alignment.clamp(0, 1) == alignment, 'The [alignment] is expected to be a value in the range [0.0, 1.0]');
     assert(controller != null);
-    var _controller = controller;
-    if (_controller == null || !_controller.hasClients) return;
+    var myController = controller;
+    if (myController == null || !myController.hasClients) return;
 
     final ctx = fetchSliverContext(sliverContext: sliverContext);
     var obj = ObserverUtils.findRenderObject(ctx);
@@ -386,14 +377,14 @@ mixin ObserverControllerForScroll on ObserverControllerForInfo {
         final precedingScrollExtent = constraints.precedingScrollExtent;
         double paintScrollExtent = precedingScrollExtent + (obj.geometry?.maxPaintExtent ?? 0);
         double targetScrollExtent = precedingScrollExtent;
-        if (_controller.position.pixels > paintScrollExtent) {
+        if (myController.position.pixels > paintScrollExtent) {
           targetScrollExtent = paintScrollExtent;
         }
         if (targetScrollExtent > maxScrollExtent) {
           targetScrollExtent = maxScrollExtent;
         }
         innerIsHandlingScroll = true;
-        await _controller.animateTo(
+        await myController.animateTo(
           targetScrollExtent,
           duration: _findingDuration,
           curve: _findingCurve,
@@ -410,7 +401,7 @@ mixin ObserverControllerForScroll on ObserverControllerForInfo {
           innerIsHandlingScroll = true;
           double targetOffset = precedingScrollExtent - viewportBoundaryExtent;
           if (targetOffset > maxScrollExtent) targetOffset = maxScrollExtent;
-          await _controller.animateTo(
+          await myController.animateTo(
             targetOffset,
             duration: _findingDuration,
             curve: _findingCurve,
@@ -434,13 +425,13 @@ mixin ObserverControllerForScroll on ObserverControllerForInfo {
         offset: offset,
       );
       if (isAnimateTo) {
-        await _controller.animateTo(
+        await myController.animateTo(
           targetOffset,
           duration: duration,
           curve: curve,
         );
       } else {
-        _controller.jumpTo(targetOffset);
+        myController.jumpTo(targetOffset);
       }
       if (innerNeedOnceObserveCallBack != null) {
         ambiguate(WidgetsBinding.instance)?.addPostFrameCallback((_) {
@@ -507,8 +498,8 @@ mixin ObserverControllerForScroll on ObserverControllerForInfo {
     ObserverRenderSliverType? renderSliverType,
   }) async {
     assert(controller != null);
-    var _controller = controller;
-    if (_controller == null || !_controller.hasClients) return;
+    var myController = controller;
+    if (myController == null || !myController.hasClients) return;
     innerIsHandlingScroll = true;
     bool isAnimateTo = (duration != null) && (curve != null);
 
@@ -553,15 +544,15 @@ mixin ObserverControllerForScroll on ObserverControllerForInfo {
       offset: offset,
     );
     if (isAnimateTo) {
-      Duration _duration = isAnimateTo ? duration : const Duration(milliseconds: 1);
-      Curve _curve = isAnimateTo ? curve : Curves.linear;
-      await _controller.animateTo(
+      Duration myDuration = isAnimateTo ? duration : const Duration(milliseconds: 1);
+      Curve myCurve = isAnimateTo ? curve : Curves.linear;
+      await myController.animateTo(
         childLayoutOffset,
-        duration: _duration,
-        curve: _curve,
+        duration: myDuration,
+        curve: myCurve,
       );
     } else {
-      _controller.jumpTo(childLayoutOffset);
+      myController.jumpTo(childLayoutOffset);
     }
     if (innerNeedOnceObserveCallBack != null) {
       ambiguate(WidgetsBinding.instance)?.addPostFrameCallback((_) {
@@ -588,8 +579,8 @@ mixin ObserverControllerForScroll on ObserverControllerForInfo {
     ObserverLocateIndexOffsetCallback? offset,
     double? lastPageTurningOffset,
   }) async {
-    var _controller = controller;
-    if (_controller == null || !_controller.hasClients) return;
+    var myController = controller;
+    if (myController == null || !myController.hasClients) return;
 
     final viewport = _findViewport(obj);
     if (viewport == null) return;
@@ -618,19 +609,19 @@ mixin ObserverControllerForScroll on ObserverControllerForInfo {
       // which means the [index] is wrong.
       if (lastPageTurningOffset == prevPageOffset) {
         innerIsHandlingScroll = false;
-        Log.warning('The child corresponding to the index cannot be found.\n'
+        debugPrint('The child corresponding to the index cannot be found.\n'
             'Please make sure the index is correct.');
         return;
       }
       lastPageTurningOffset = prevPageOffset;
       if (isAnimateTo) {
-        await _controller.animateTo(
+        await myController.animateTo(
           prevPageOffset,
           duration: _findingDuration,
           curve: _findingCurve,
         );
       } else {
-        _controller.jumpTo(prevPageOffset);
+        myController.jumpTo(prevPageOffset);
       }
 
       ambiguate(WidgetsBinding.instance)?.addPostFrameCallback((_) {
@@ -671,19 +662,19 @@ mixin ObserverControllerForScroll on ObserverControllerForInfo {
       // which means the [index] is wrong.
       if (lastPageTurningOffset == nextPageOffset) {
         innerIsHandlingScroll = false;
-        Log.warning('The child corresponding to the index cannot be found.\n'
+        debugPrint('The child corresponding to the index cannot be found.\n'
             'Please make sure the index is correct.');
         return;
       }
       lastPageTurningOffset = nextPageOffset;
       if (isAnimateTo) {
-        await _controller.animateTo(
+        await myController.animateTo(
           nextPageOffset,
           duration: _findingDuration,
           curve: _findingCurve,
         );
       } else {
-        _controller.jumpTo(nextPageOffset);
+        myController.jumpTo(nextPageOffset);
       }
 
       ambiguate(WidgetsBinding.instance)?.addPostFrameCallback((_) {
@@ -745,15 +736,15 @@ mixin ObserverControllerForScroll on ObserverControllerForInfo {
             offset: offset,
           );
           if (isAnimateTo) {
-            Duration _duration = isAnimateTo ? duration : const Duration(milliseconds: 1);
-            Curve _curve = isAnimateTo ? curve : Curves.linear;
-            await _controller.animateTo(
+            Duration myDuration = isAnimateTo ? duration : const Duration(milliseconds: 1);
+            Curve myCurve = isAnimateTo ? curve : Curves.linear;
+            await myController.animateTo(
               targetOffset,
-              duration: _duration,
-              curve: _curve,
+              duration: myDuration,
+              curve: myCurve,
             );
           } else {
-            _controller.jumpTo(targetOffset);
+            myController.jumpTo(targetOffset);
           }
           if (innerNeedOnceObserveCallBack != null) {
             ambiguate(WidgetsBinding.instance)?.addPostFrameCallback((_) {
@@ -956,3 +947,19 @@ mixin ObserverControllerForScroll on ObserverControllerForInfo {
     indexOffsetMap[ctx] = map;
   }
 }
+
+/// This allows a value of type T or T?
+/// to be treated as a value of type T?.
+///
+/// We use this so that APIs that have become
+/// non-nullable can still be used with `!` and `?`
+/// to support older versions of the API as well.
+T? ambiguate<T>(T? value) => value;
+
+/// Signature for the callback when scrolling to the specified index location
+/// with offset.
+/// For example, return the height of the sticky widget.
+///
+/// The [targetOffset] property is the offset of the planned locate.
+typedef ObserverLocateIndexOffsetCallback = double Function(
+    double targetOffset);

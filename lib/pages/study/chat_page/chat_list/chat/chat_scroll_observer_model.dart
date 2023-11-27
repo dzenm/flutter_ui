@@ -1,8 +1,19 @@
-/*
- * @Author: LinXunFeng linxunfeng@yeah.net
- * @Repo: https://github.com/LinXunFeng/flutter_scrollview_observer
- * @Date: 2022-10-31 14:57:45
- */
+class ChatScrollObserverHandlePositionResultModel {
+  /// The type of processing location.
+  final ChatScrollObserverHandlePositionType type;
+
+  /// The mode of processing.
+  final ChatScrollObserverHandleMode mode;
+
+  /// The number of messages added.
+  final int changeCount;
+
+  ChatScrollObserverHandlePositionResultModel({
+    required this.type,
+    required this.mode,
+    required this.changeCount,
+  });
+}
 
 enum ChatScrollObserverHandlePositionType {
   /// Nothing will be done.

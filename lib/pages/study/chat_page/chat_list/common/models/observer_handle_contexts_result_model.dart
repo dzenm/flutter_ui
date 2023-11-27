@@ -1,9 +1,3 @@
-/*
- * @Author: LinXunFeng linxunfeng@yeah.net
- * @Repo: https://github.com/LinXunFeng/flutter_scrollview_observer
- * @Date: 2023-08-12 16:01:29
- */
-
 import 'package:flutter/material.dart';
 
 import 'observe_model.dart';

@@ -1,28 +1,18 @@
-/*
- * @Author: LinXunFeng linxunfeng@yeah.net
- * @Repo: https://github.com/LinXunFeng/flutter_scrollview_observer
- * @Date: 2022-08-08 00:20:03
- */
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-import '../notification.dart';
-import '../utils/src/log.dart';
 import 'models/observe_model.dart';
 import 'models/observer_handle_contexts_result_model.dart';
 import 'observer_controller.dart';
-import 'observer_typedef.dart';
-import 'typedefs.dart';
 
 class ObserverWidget<C extends ObserverController, M extends ObserveModel,
     N extends ScrollViewOnceObserveNotification> extends StatefulWidget {
   final Widget child;
 
-  /// An object that can be used to dispatch a [ListViewOnceObserveNotification]
-  /// or [GridViewOnceObserveNotification].
+  /// An object that can be used to dispatch a [ScrollViewOnceObserveNotification]
   final C? sliverController;
 
   /// The callback of getting all sliver's buildContext.
@@ -69,7 +59,7 @@ class ObserverWidget<C extends ObserverController, M extends ObserveModel,
   final M? Function(BuildContext)? customHandleObserve;
 
   const ObserverWidget({
-    Key? key,
+    super.key,
     required this.child,
     this.sliverController,
     this.sliverContexts,
@@ -83,8 +73,7 @@ class ObserverWidget<C extends ObserverController, M extends ObserveModel,
         ObserverTriggerOnObserveType.displayingItemsChange,
     this.customHandleObserve,
     this.customTargetRenderSliverType,
-  })  : assert(toNextOverPercent > 0 && toNextOverPercent <= 1),
-        super(key: key);
+  })  : assert(toNextOverPercent > 0 && toNextOverPercent <= 1);
 
   @override
   State<ObserverWidget> createState() =>
@@ -201,11 +190,11 @@ class ObserverWidgetState<
       if (sliverListContexts != null) {
         ctxs = sliverListContexts();
       } else {
-        List<BuildContext> _ctxs = [];
+        List<BuildContext> contexts = [];
         void visitor(Element element) {
           if (isTargetSliverContextType(element.renderObject)) {
             /// Find the target sliver context
-            _ctxs.add(element);
+            contexts.add(element);
             return;
           }
           element.visitChildren(visitor);
@@ -215,13 +204,13 @@ class ObserverWidgetState<
           // https://github.com/LinXunFeng/flutter_scrollview_observer/issues/35
           context.visitChildElements(visitor);
         } catch (e) {
-          Log.warning(
+          debugPrint(
             'This widget has been unmounted, so the State no longer has a context (and should be considered defunct). \n'
             'Consider canceling any active work during "dispose" or using the "mounted" getter to determine if the State is still active.',
           );
         }
 
-        ctxs = _ctxs;
+        ctxs = contexts;
       }
     }
     return ctxs;
@@ -316,4 +305,47 @@ class ObserverWidgetState<
     }
     return null;
   }
+}
+
+class ScrollViewOnceObserveNotification extends Notification {
+  /// Whether to return the observation result directly without comparing.
+  final bool isForce;
+
+  /// Whether to depend on the observe callback.
+  ///
+  /// If true, the observe callback will be called when the observation result
+  /// come out.
+  final bool isDependObserveCallback;
+  ScrollViewOnceObserveNotification({
+    this.isForce = false,
+    this.isDependObserveCallback = true,
+  });
+}
+
+/// Define type that auto trigger observe.
+enum ObserverAutoTriggerObserveType {
+  scrollStart,
+  scrollUpdate,
+  scrollEnd,
+}
+
+/// Define type that trigger [onObserve] callback.
+enum ObserverTriggerOnObserveType {
+  directly,
+  displayingItemsChange,
+}
+
+/// Define type of the observed render sliver.
+enum ObserverRenderSliverType {
+  /// listView
+  list,
+
+  /// gridView
+  grid,
+}
+
+/// Observation result types in ObserverWidget.
+enum ObserverWidgetObserveResultType {
+  success,
+  interrupted,
 }

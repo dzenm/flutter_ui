@@ -1,9 +1,3 @@
-/*
- * @Author: LinXunFeng linxunfeng@yeah.net
- * @Repo: https://github.com/LinXunFeng/flutter_scrollview_observer
- * @Date: 2022-09-26 23:05:33
- */
-
 import 'package:flutter/rendering.dart';
 
 /// [ObserveFindChildModel] is used to pass data internally.

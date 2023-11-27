@@ -1,14 +1,43 @@
-/*
- * @Author: LinXunFeng linxunfeng@yeah.net
- * @Repo: https://github.com/LinXunFeng/flutter_scrollview_observer
- * @Date: 2022-09-29 22:47:10
- */
 import 'package:flutter/material.dart';
-
-import '../../../common/typedefs.dart';
+import '../common/observer_controller.dart';
 import 'chat_scroll_observer.dart';
 import 'chat_scroll_observer_model.dart';
-import 'chat_scroll_observer_typedefs.dart';
+
+class ChatObserverClampingScrollPhysics extends ClampingScrollPhysics
+    with ChatObserverScrollPhysicsMixin {
+  ChatObserverClampingScrollPhysics({
+    super.parent,
+    required ChatScrollObserver observer,
+  }) {
+    this.observer = observer;
+  }
+
+  @override
+  ChatObserverClampingScrollPhysics applyTo(ScrollPhysics? ancestor) {
+    return ChatObserverClampingScrollPhysics(
+      parent: buildParent(ancestor),
+      observer: observer,
+    );
+  }
+}
+
+class ChatObserverBouncingScrollPhysics extends BouncingScrollPhysics
+    with ChatObserverScrollPhysicsMixin {
+  ChatObserverBouncingScrollPhysics({
+    super.parent,
+    required ChatScrollObserver observer,
+  }) {
+    this.observer = observer;
+  }
+
+  @override
+  ChatObserverBouncingScrollPhysics applyTo(ScrollPhysics? ancestor) {
+    return ChatObserverBouncingScrollPhysics(
+      parent: buildParent(ancestor),
+      observer: observer,
+    );
+  }
+}
 
 mixin ChatObserverScrollPhysicsMixin on ScrollPhysics {
   late final ChatScrollObserver observer;
@@ -62,12 +91,10 @@ mixin ChatObserverScrollPhysicsMixin on ScrollPhysics {
   @override
   bool shouldAcceptUserOffset(ScrollMetrics position) => true;
 
-  /// Calling observer's [onHandlePositionCallback].
+  /// Calling observer's [onHandlePositionResultCallback].
   _handlePositionCallback(ChatScrollObserverHandlePositionResultModel result) {
     ambiguate(WidgetsBinding.instance)?.addPostFrameCallback((timeStamp) {
       observer.onHandlePositionResultCallback?.call(result);
-      // ignore: deprecated_member_use_from_same_package
-      observer.onHandlePositionCallback?.call(result.type);
     });
   }
 }
