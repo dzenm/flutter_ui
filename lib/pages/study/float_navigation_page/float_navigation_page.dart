@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +24,22 @@ class _FloatNavigationPageState extends State<FloatNavigationPage> {
   ]; // 导航项
 
   final List<String> _title = ['搜索', '视频', '音乐', '评论', '我的'];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _getData();
+  }
+
+  void _getData() async {
+    Directory rootDir = await FileUtil.instance.getAppRootDirectory();
+    Directory cacheDir = await FileUtil.instance.getCacheDirectory();
+    Directory imageDir = await FileUtil.instance.getCacheDirectory(dir: 'image');
+    Log.d('获取当前APP根目录：rootDir=${rootDir.path}');
+    Log.d('获取当前APP根目录：cacheDir=${cacheDir.path}');
+    Log.d('获取当前APP根目录：imageDir=${imageDir.path}');
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:path/path.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -9,6 +10,9 @@ import '../db/db.dart';
 /// Created by a0010 on 2022/9/1 11:56
 /// 文件工具类
 class FileUtil {
+  static const windowsAppRootDir = 'FlutterUI';
+  static const cacheName = 'cache';
+
   FileUtil._internal();
 
   static final FileUtil _instance = FileUtil._internal();
@@ -21,6 +25,46 @@ class FileUtil {
 
   void init({Function? logPrint}) {
     _logPrint = logPrint;
+  }
+
+  /// 获取App的根目录所在的路径
+  /// macOS/iOS: /Users/a0010/Library/Containers/<package_name>/Data/Documents
+  /// Windows:   C:\Users\Administrator\Documents\FlutterUI
+  /// Android:   /data/user/0/<package_name>
+  Future<Directory> getAppRootDirectory({String? dir}) async {
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String appRootDir = join(appDocDir.path);
+    if (Platform.isMacOS || Platform.isIOS) {
+      appRootDir = join(appDocDir.path);
+    }
+    if (Platform.isWindows || Platform.isLinux) {
+      appRootDir = join(appDocDir.path, windowsAppRootDir);
+    }
+    if (Platform.isAndroid) {
+      appRootDir = join(appDocDir.parent.path);
+    }
+    if (dir != null) {
+      appRootDir = join(appRootDir, dir);
+    }
+    Directory result = Directory(appRootDir);
+    if (!result.existsSync()) {
+      result.createSync(recursive: true);
+    }
+    return result;
+  }
+
+  /// 获取缓存的路径
+  /// macOS/iOS: /Users/a0010/Library/Containers/<package_name>/Data/Documents/cache
+  /// Windows:   C:\Users\Administrator\Documents\FlutterUI\cache
+  /// Android:   /data/user/0/<package_name>/cache
+  Future<Directory> getCacheDirectory({String? dir}) async {
+    Directory appDocDir = await getAppRootDirectory(dir: cacheName);
+    String dirName = join(appDocDir.path, dir);
+    Directory result = Directory(dirName);
+    if (!result.existsSync()) {
+      result.createSync(recursive: true);
+    }
+    return result;
   }
 
   /// 返回本地文档下的APP的路径
