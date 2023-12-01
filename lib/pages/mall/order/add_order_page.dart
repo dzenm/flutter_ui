@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/pages/mall/order/order_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base/base.dart';
 import '../../../entities/entity.dart';
+import 'order_model.dart';
 
 /// 订单页面
 class AddOrderPage extends StatefulWidget {
@@ -18,6 +18,7 @@ class _OrderPageState extends State<AddOrderPage> {
   late TextEditingController _addressController;
   late TextEditingController _phoneController;
   late TextEditingController _trackingNumberController;
+  List<ProductEntity> products = [];
 
   @override
   void initState() {
@@ -99,6 +100,8 @@ class _OrderPageState extends State<AddOrderPage> {
         maxLength: 25,
       ),
       const SizedBox(height: 8),
+      // Expanded(child: _buildProducts()),
+      // const SizedBox(height: 8),
       TapLayout(
         background: theme.appbar,
         borderRadius: const BorderRadius.all(Radius.circular(8)),
@@ -110,6 +113,15 @@ class _OrderPageState extends State<AddOrderPage> {
         ),
       ),
     ]);
+  }
+
+  Widget _buildProducts() {
+    return ListView.builder(
+      itemCount: products.length,
+      itemBuilder: (context, index) {
+        return Container();
+      },
+    );
   }
 
   void _createOrder() {

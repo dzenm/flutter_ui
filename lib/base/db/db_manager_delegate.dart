@@ -238,7 +238,7 @@ class DBManagerDelegate {
       dbDir = join(appDocDir.path, _userId, dirName);
     }
     if (Platform.isWindows || Platform.isLinux) {
-      dbDir = join(appDocDir.path, 'FlutterUI', dirName);
+      dbDir = join(appDocDir.path, 'FlutterUI', _userId, dirName);
     }
     if (Platform.isAndroid) {
       dbDir = join(appDocDir.parent.path, _userId, dirName);
