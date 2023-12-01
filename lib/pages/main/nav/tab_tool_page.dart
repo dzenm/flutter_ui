@@ -94,6 +94,6 @@ class _TabToolPageState extends State<TabToolPage> {
   }
 
   Future<void> _getData() async {
-    await HttpManager.instance.getTools();
+    await HttpManager().getTools();
   }
 }

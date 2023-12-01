@@ -49,7 +49,7 @@ class HTTPListWidget extends StatelessWidget {
         ),
         child: TapLayout(
           borderRadius: const BorderRadius.all(Radius.circular(7)),
-          onTap: () => Naughty.instance.push(context, HTTPItemPage(entity)),
+          onTap: () => Naughty().push(context, HTTPItemPage(entity)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [

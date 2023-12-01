@@ -65,6 +65,6 @@ class _TabOfficialPageState extends State<TabOfficialPage> {
   }
 
   Future<void> _getData() async {
-    await HttpManager.instance.getBlogChapters();
+    await HttpManager().getBlogChapters();
   }
 }

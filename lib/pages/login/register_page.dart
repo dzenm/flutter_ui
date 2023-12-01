@@ -237,7 +237,7 @@ class __EditRegisterInfoViewState extends State<_EditRegisterInfoView> {
   // 注册按钮点击事件
   void _register() {
     FocusScope.of(context).unfocus();
-    HttpManager.instance.register(_username, _password, _rPassword);
+    HttpManager().register(_username, _password, _rPassword);
   }
 
   void log(String msg) => Log.p(msg, tag: _tag);

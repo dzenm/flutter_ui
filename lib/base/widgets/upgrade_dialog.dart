@@ -111,7 +111,7 @@ class _UpgradeDialogState extends State<UpgradeDialog> {
     }
     _running = false;
     _cancel = CancelToken();
-    HttpsClient.instance.download(
+    HttpsClient().download(
       widget.appVersion.url!,
       file.path,
       cancel: _cancel,

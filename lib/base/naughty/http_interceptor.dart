@@ -28,10 +28,10 @@ class HttpInterceptor extends Interceptor {
     _countMap[options.path] = (index ?? 0) + 1;
     entity.index = _countMap[options.path]!;
     _cacheMap[options] = entity;
-    Naughty.instance.httpRequests.insert(0, entity);
+    Naughty().httpRequests.insert(0, entity);
 
     String body = '${options.method}  ${options.path}';
-    Naughty.instance.showNotification(body: body);
+    Naughty().showNotification(body: body);
   }
 
   @override
@@ -86,7 +86,7 @@ class HttpInterceptor extends Interceptor {
   /// 处理请求响应的信息
   void _handleResponse(Response? response, HTTPEntity entity) {
     if (response == null) return;
-    entity.size = Naughty.instance.formatSize(_getStringLength(response.data.toString()));
+    entity.size = Naughty().formatSize(_getStringLength(response.data.toString()));
     entity.statusCode = response.statusCode ?? -1;
     entity.realUrl = response.realUri.toString();
     entity.isRedirect = response.isRedirect;

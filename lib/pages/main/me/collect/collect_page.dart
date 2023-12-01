@@ -35,7 +35,7 @@ class _CollectPageState extends ListPageState<CollectEntity, CollectPage> {
 
   @override
   Future<void> getData(int pageIndex) async {
-    await HttpManager.instance.getCollectArticles(
+    await HttpManager().getCollectArticles(
       page: pageIndex,
       isShowDialog: false,
       success: (list, pageCount) => updateState(list, pageCount),

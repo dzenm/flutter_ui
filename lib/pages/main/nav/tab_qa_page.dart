@@ -78,7 +78,7 @@ class _TabQAPageState extends TabListPageState<TabQAPage> {
 
   @override
   Future<void> getData(int page) async   {
-    await HttpManager.instance.getQuestions(
+    await HttpManager().getQuestions(
       page: page,
       success: (pageCount) => updateState(pageCount),
       failed: (e) => updateFailedState(),

@@ -32,7 +32,7 @@ class _CoinPageState extends ListPageState<CoinRecordEntity, CoinPage> {
 
   @override
   Future<void> getData(int pageIndex) async {
-    await HttpManager.instance.getCoins(
+    await HttpManager().getCoins(
       page: pageIndex,
       isShowDialog: false,
       success: (list, pageCount) => updateState(list, pageCount),

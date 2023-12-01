@@ -118,7 +118,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _getBanner() async {
-    await HttpManager.instance.banner(
+    await HttpManager().banner(
       isShowDialog: false,
       success: (list) {
         context.read<BannerModel>().banners = list;
@@ -127,7 +127,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _getTopArticle() async {
-    await HttpManager.instance.getTopArticles(
+    await HttpManager().getTopArticles(
       isShowDialog: false,
       success: (list) {
         context.read<ArticleModel>().updateArticles(list);
@@ -136,7 +136,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _getArticle() async {
-    await HttpManager.instance.getArticles(
+    await HttpManager().getArticles(
       page: _pageIndex,
       isShowDialog: false,
       success: (list, pageCount) {
@@ -157,31 +157,31 @@ class _HomePageState extends State<HomePage> {
   Future<void> _getDataList() async {
     if (_init) return;
     if (!_init) return;
-    await HttpManager.instance.getWebsites(
+    await HttpManager().getWebsites(
       isShowDialog: false,
       success: (list) {
         context.read<WebsiteModel>().updateWebsites(list);
       },
     );
-    await HttpManager.instance.getHotkeys(
+    await HttpManager().getHotkeys(
       isShowDialog: false,
       success: (list) {
         // context.read<HotkeyEntity>().updateWebsites(list);
       },
     );
-    await HttpManager.instance.getTrees(
+    await HttpManager().getTrees(
       isShowDialog: false,
       success: (list) {
         // context.read<TreeEntity>().updateWebsites(list);
       },
     );
-    await HttpManager.instance.getNavigates(
+    await HttpManager().getNavigates(
       isShowDialog: false,
       success: (list) {
         // context.read<TreeEntity>().updateWebsites(list);
       },
     );
-    await HttpManager.instance.getProject(
+    await HttpManager().getProject(
       isShowDialog: false,
       success: (list) {
         // context.read<TreeEntity>().updateWebsites(list);
@@ -418,7 +418,7 @@ class CollectArticleView extends StatelessWidget {
             if (article == null) return;
             article.collect = !value;
             context.read<ArticleModel>().updateArticle(article);
-            HttpManager.instance.collect(article.id ?? 0, collect: !value, isShowDialog: false, failed: () {
+            HttpManager().collect(article.id ?? 0, collect: !value, isShowDialog: false, failed: () {
               article.collect = value;
               context.read<ArticleModel>().updateArticle(article);
             });

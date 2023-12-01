@@ -30,7 +30,7 @@ class _NaughtPageState extends State<NaughtPage> {
   @override
   void initState() {
     super.initState();
-    Naughty.instance.dismiss();
+    Naughty().dismiss();
 
     _getData();
   }
@@ -39,14 +39,14 @@ class _NaughtPageState extends State<NaughtPage> {
   Future<void> _getData() async {
     Future.delayed(Duration.zero, () {
       _list.clear();
-      setState(() => _list.addAll(Naughty.instance.httpRequests));
+      setState(() => _list.addAll(Naughty().httpRequests));
     });
   }
 
   @override
   void dispose() {
     super.dispose();
-    Naughty.instance.show();
+    Naughty().show();
   }
 
   @override
@@ -61,13 +61,13 @@ class _NaughtPageState extends State<NaughtPage> {
             onSelected: (String item) {
               int index = _items.indexWhere((e) => e == item);
               if (index == 0) {
-                Naughty.instance.push(context, const DBPage());
+                Naughty().push(context, const DBPage());
               } else if (index == 1) {
               } else if (index == 2) {
               } else if (index == 3) {
                 setState(() => _list.clear());
               } else if (index == 4) {
-                Naughty.instance.dispose();
+                Naughty().dispose();
                 Navigator.pop(context);
               }
             },

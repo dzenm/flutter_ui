@@ -47,7 +47,7 @@ class Application {
       runMockApp(const AppPage());
     }, handleMsg: (message) async {
       String logFileName = 'crash_${DateTime.now()}.log';
-      await FileUtil.instance.save(logFileName, message, dir: 'crash');
+      await FileUtil().save(logFileName, message, dir: 'crash');
     });
   }
 
@@ -63,7 +63,7 @@ class Application {
     log('Application是否单例: ${Application.instance == Application()}');
 
     log('初始化 SharedPreferences');
-    bool res = await SpUtil.instance.init(logPrint: Log.i);
+    bool res = await SpUtil().init(logPrint: Log.i);
     log('初始化 SharedPreferences ${res ? '成功' : '失败'}');
 
     log('初始化 Android设置');
@@ -73,7 +73,7 @@ class Application {
     _initIOSSettings();
 
     log('初始化 DBManager');
-    DBManager.instance.init(logPrint: Log.b, tables: [
+    DBManager().init(logPrint: Log.b, tables: [
       OrderEntity(),
       ProductEntity(),
       UserEntity(),
@@ -83,7 +83,7 @@ class Application {
     ]);
 
     log('初始化 HttpsClient');
-    HttpsClient.instance.init(
+    HttpsClient().init(
       logPrint: Log.h,
       loading: CommonDialog.loading,
       toast: CommonDialog.showToast,
@@ -95,7 +95,7 @@ class Application {
     RouteManager.init(logPrint: Log.i);
 
     log('初始化 FileUtil');
-    FileUtil.instance.init(logPrint: Log.i);
+    FileUtil().init(logPrint: Log.i);
 
     log('初始化 PluginManager');
     PluginManager.init(logPrint: Log.d);

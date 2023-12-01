@@ -65,6 +65,6 @@ class _TabTutorialPageState extends State<TabTutorialPage> {
   }
 
   Future<void> _getData() async {
-    await HttpManager.instance.getChapters();
+    await HttpManager().getChapters();
   }
 }

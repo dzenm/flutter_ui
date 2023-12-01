@@ -25,7 +25,7 @@ typedef Failed = void Function(HttpError error);
 ApiServices apiServices = api();
 
 /// 根据[HttpsClient._baseUrls]下标对应的[ApiServices]，用于获取请求
-ApiServices api({int index = 0}) => HttpsClient.instance.apiServices(index);
+ApiServices api({int index = 0}) => HttpsClient().apiServices(index);
 
 /// HTTP请求错误信息的处理
 class HttpError {
@@ -40,7 +40,7 @@ class HttpError {
 /// Created by a0010 on 2022/3/22 09:38
 /// HTTP请求
 /// 如果需要自定义处理，先初始化
-///   HttpsClient.instance.init(
+///   HttpsClient().init(
 ///     logPrint: Log.http,
 ///     loading: CommonDialog.loading,
 ///     toast: CommonDialog.showToast,

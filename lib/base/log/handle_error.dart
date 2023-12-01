@@ -26,7 +26,7 @@ typedef HandleMsg = void Function(String message);
 ///   runMockApp(AppPage(child: _initApp()));
 /// }, handleMsg: (message) async {
 ///   String logFileName = 'crash_${DateTime.now()}.log';
-///   await FileUtil.instance.save(logFileName, message, dir: 'crash').then((String? filePath) async {});
+///   await FileUtil()save(logFileName, message, dir: 'crash').then((String? filePath) async {});
 /// });
 class HandleError {
   /// 捕获flutter运行时的错误

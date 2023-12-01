@@ -72,7 +72,7 @@ class _ListPageState extends State<ListPage> {
       _articles.clear();
     }
     await Future.delayed(Duration(milliseconds: reset ? 500 : 0));
-    await HttpManager.instance.getArticles(
+    await HttpManager().getArticles(
       page: _pageIndex,
       isShowDialog: false,
       success: (list, pageCount) {

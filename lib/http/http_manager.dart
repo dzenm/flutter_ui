@@ -39,10 +39,15 @@ class HttpManager {
     await _httpClient.request(apiServices.login(username, password), success: (data) {
       UserEntity user = UserEntity.fromJson(data);
 
+      String userId = user.id.toString();
       // 先保存SP，数据库创建需要用到SP的userId
       SpUtil.setUserLoginState(true);
       SpUtil.setUsername(user.username);
-      SpUtil.setUserId(user.id.toString());
+      SpUtil.setUserId(userId);
+      // 设置用户数据库名称
+      DBManager().userId = userId;
+      // 设置用户文件夹路径
+      FileUtil().initLoginUserDirectory(userId);
 
       // 更新数据
       context.read<UserModel>().user = user;
@@ -322,7 +327,7 @@ class HttpManager {
     void Function(int? pageCount)? success,
     Failed? failed,
   }) async {
-    await HttpsClient.instance.request(
+    await HttpsClient().request(
       apiServices.userArticles(page),
       isShowDialog: false,
       success: (data) async {
@@ -346,7 +351,7 @@ class HttpManager {
     void Function()? success,
     Failed? failed,
   }) async {
-    await HttpsClient.instance.request(
+    await HttpsClient().request(
       apiServices.chapter(),
       isShowDialog: false,
       success: (data) async {
@@ -369,7 +374,7 @@ class HttpManager {
     void Function(int? pageCount)? success,
     Failed? failed,
   }) async {
-    await HttpsClient.instance.request(
+    await HttpsClient().request(
       apiServices.userArticles(page),
       isShowDialog: false,
       success: (data) async {
@@ -394,7 +399,7 @@ class HttpManager {
     void Function(int? pageCount)? success,
     Failed? failed,
   }) async {
-    await HttpsClient.instance.request(
+    await HttpsClient().request(
       apiServices.projects(page),
       isShowDialog: false,
       success: (data) async {
@@ -418,7 +423,7 @@ class HttpManager {
     void Function()? success,
     Failed? failed,
   }) async {
-    await HttpsClient.instance.request(
+    await HttpsClient().request(
       apiServices.chapters(),
       isShowDialog: false,
       success: (data) async {
@@ -440,7 +445,7 @@ class HttpManager {
     void Function()? success,
     Failed? failed,
   }) async {
-    await HttpsClient.instance.request(
+    await HttpsClient().request(
       apiServices.tools(),
       isShowDialog: false,
       success: (data) async {

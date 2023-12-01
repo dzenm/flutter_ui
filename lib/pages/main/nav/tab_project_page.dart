@@ -78,7 +78,7 @@ class _TabProjectPageState extends TabListPageState<TabProjectPage> {
 
   @override
   Future<void> getData(int page) async {
-    await HttpManager.instance.getProjects(
+    await HttpManager().getProjects(
       page: page,
       success: (pageCount) => updateState(pageCount),
       failed: (e) => updateFailedState(),

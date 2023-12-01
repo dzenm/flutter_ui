@@ -35,7 +35,7 @@ class _ArticlePageState extends ListPageState<ArticleEntity, ArticlePage> {
 
   @override
   Future<void> getData(int pageIndex) async {
-    await HttpManager.instance.getPrivateArticles(
+    await HttpManager().getPrivateArticles(
       page: pageIndex,
       isShowDialog: false,
       success: (data) {

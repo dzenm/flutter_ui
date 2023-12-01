@@ -32,7 +32,7 @@ class _RankPageState extends ListPageState<CoinEntity, RankPage> {
 
   @override
   Future<void> getData(int pageIndex) async {
-    await HttpManager.instance.getRankCoins(
+    await HttpManager().getRankCoins(
       page: pageIndex,
       isShowDialog: false,
       success: (list, pageCount) => updateState(list, pageCount),

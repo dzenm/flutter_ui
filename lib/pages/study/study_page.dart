@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../base/base.dart';
 import '../../generated/l10n.dart';
 import '../main/main_model.dart';
+import 'study_main.dart';
 import 'study_router.dart';
 
 ///
@@ -18,6 +19,12 @@ class StudyPage extends StatefulWidget {
 }
 
 class _StudyPageState extends State<StudyPage> {
+  @override
+  void initState() {
+    super.initState();
+    StudyMain.main();
+  }
+
   @override
   Widget build(BuildContext context) {
     AppTheme theme = context.watch<LocalModel>().theme;
