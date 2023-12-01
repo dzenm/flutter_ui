@@ -299,7 +299,7 @@ class _EditLoginInfoViewState extends State<_EditLoginInfoView> {
     } else {
       password = _verifyCode;
     }
-    HttpManager.instance.login(_username, password);
+    HttpManager().login(_username, password);
   }
 
   void _register() {
