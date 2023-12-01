@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:path/path.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../db/db.dart';
@@ -12,6 +12,7 @@ import '../db/db.dart';
 class FileUtil {
   static const windowsAppRootDir = 'FlutterUI';
   static const cacheName = 'cache';
+  static const databasesName = 'databases';
 
   FileUtil._internal();
 
@@ -21,10 +22,15 @@ class FileUtil {
 
   factory FileUtil() => instance;
 
+  static late Directory _appRootDir;
+  static final List<Directory> _appDirs = [];
+
   Function? _logPrint;
 
-  void init({Function? logPrint}) {
+  /// 初始化文件夹
+  Future<void> init({Function? logPrint}) async {
     _logPrint = logPrint;
+    _appRootDir = await getAppRootDirectory();
   }
 
   /// 获取App的根目录所在的路径
@@ -53,14 +59,47 @@ class FileUtil {
     return result;
   }
 
-  /// 获取缓存的路径
+  /// 初始化登录用户目录
+  void initLoginUserDirectory(String user) {
+    // 初始化常用文件夹
+    List<String> parentName = [
+      cacheName,
+      databasesName,
+    ];
+    for (var dir in parentName) {
+      String dirName = join(_appRootDir.path, user, dir);
+      Directory result = Directory(dirName);
+      if (!result.existsSync()) {
+        result.createSync(recursive: true);
+      }
+      _appDirs.add(result);
+      _log('初始化用户存储目录：path=${result.path}');
+    }
+  }
+
+  /// 缓存文件夹路径 @see [init]、[_appDirs]
+  Directory get cacheDirectory => _appDirs[0];
+
+  /// 图片文件路径
+  String getImagesPath(String user) => getCacheDirectory('Images', user: user).path;
+
+  /// 视频文件路径
+  String getVideosPath(String user) => getCacheDirectory('Videos', user: user).path;
+
+  /// 音频文件路径
+  String getAudiosPath(String user) => getCacheDirectory('Audios', user: user).path;
+
+  /// 文件路径
+  String getFilesPath(String user) => getCacheDirectory('Files', user: user).path;
+
+  /// 获取缓存文件的子目录
   /// macOS/iOS: /Users/a0010/Library/Containers/<package_name>/Data/Documents/cache
   /// Windows:   C:\Users\Administrator\Documents\FlutterUI\cache
   /// Android:   /data/user/0/<package_name>/cache
-  Future<Directory> getCacheDirectory({String? dir}) async {
-    Directory appDocDir = await getAppRootDirectory(dir: cacheName);
-    String dirName = join(appDocDir.path, dir);
-    Directory result = Directory(dirName);
+  Directory getCacheDirectory(String dir, {String? user}) {
+    String cache = cacheDirectory.path;
+    cache = join(cache, user, dir);
+    Directory result = Directory(cache);
     if (!result.existsSync()) {
       result.createSync(recursive: true);
     }
@@ -86,7 +125,7 @@ class FileUtil {
     if (!parent.existsSync()) {
       await parent.create();
     }
-    log('获取文件夹路径: ${parent.path}');
+    _log('获取文件夹路径: ${parent.path}');
     return parent;
   }
 
@@ -99,7 +138,7 @@ class FileUtil {
         files.add(element.path);
       }
     });
-    log('数据库文件夹: path=$parent, fileSize=${files.length}');
+    _log('数据库文件夹: path=$parent, fileSize=${files.length}');
     return files;
   }
 
@@ -125,10 +164,10 @@ class FileUtil {
       IOSink slink = file.openWrite(mode: FileMode.append);
       slink.write(text);
       await slink.close();
-      log('保存文件成功: ${file.path}');
+      _log('保存文件成功: ${file.path}');
       return Future.value(file.path);
     } catch (e) {
-      log('保存文件错误: $e');
+      _log('保存文件错误: $e');
       return Future.value(null);
     }
   }
@@ -150,9 +189,9 @@ class FileUtil {
     File oldFile = File(oldPath);
     try {
       oldFile.copySync(newPath);
-      log('文件复制成功: from=$oldPath to=$newPath');
+      _log('文件复制成功: from=$oldPath to=$newPath');
     } catch (e) {
-      log('文件复制失败: $e');
+      _log('文件复制失败: $e');
     }
   }
 
@@ -182,7 +221,7 @@ class FileUtil {
     Directory parent = await getParent(dir: dir);
     parent.listSync().forEach((element) async {
       await element.delete();
-      log('删除成功: ${element.path}');
+      _log('删除成功: ${element.path}');
     });
   }
 
@@ -199,14 +238,14 @@ class FileUtil {
         await file.delete(recursive: true);
       }
     } catch (err) {
-      FileUtil.instance.log(err.toString());
+      FileUtil()._log(err.toString());
     }
   }
 
   // 循环获取缓存大小
   static Future getTotalSizeOfFilesInDir(final FileSystemEntity file) async {
     if (file is File && file.existsSync()) {
-      // log("临时缓存目录路径:${file.path}");
+      // _log("临时缓存目录路径:${file.path}");
 
       int length = await file.length();
       return double.parse(length.toString());
@@ -249,5 +288,137 @@ class FileUtil {
     return PaintingBinding.instance.imageCache;
   }
 
-  void log(String text) => _logPrint == null ? null : _logPrint!(text, tag: 'FileUtil');
+  void _log(String text) => _logPrint == null ? null : _logPrint!(text, tag: 'FileUtil');
 }
+
+/// 处理文件的路径信息
+class PathInfo {
+  String? name; // 文件的名称，带后缀
+  String? fileName; // 文件的名称，不带后缀
+  String parent; // 文件所在的文件夹
+  String? mimeTypeSuffix; // 文件后缀类型
+
+  PathInfo({this.name, this.fileName, required this.parent, this.mimeTypeSuffix});
+
+  /// path=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x.png
+  /// name=336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x.png
+  /// fileName=336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x
+  /// parent=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images
+  /// mimeTypeSuffix=png
+  factory PathInfo.parse(String path) {
+    int separatorIndex = path.lastIndexOf(Platform.pathSeparator);
+    if (separatorIndex < 0) throw Exception('path=$path parse error, It is not contains directory');
+    int index = path.lastIndexOf('.');
+    String parent = path.substring(0, separatorIndex);
+    String name = path.substring(separatorIndex + 1);
+    String fileName;
+    String? mimeTypeSuffix;
+    if (index < 0) {
+      // 如果不存在.后缀的路径，直接裁剪到结尾
+      fileName = path.substring(separatorIndex + 1);
+    } else {
+      fileName = path.substring(separatorIndex + 1, index);
+      mimeTypeSuffix = path.substring(index + 1);
+    }
+    return PathInfo(
+      name: name,
+      fileName: fileName,
+      parent: parent,
+      mimeTypeSuffix: mimeTypeSuffix,
+    );
+  }
+
+  /// addFileNamePrefix=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/thumb_336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x.png
+  String addFileNamePrefix(String prefix) => join(parent, '$prefix$fileName.${mimeTypeSuffix ?? ''}');
+
+  /// removeFileNamePrefix=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x.png
+  String removeFileNamePrefix(String prefix) {
+    if (fileName == null) return '';
+    String name = fileName ?? '';
+    if (fileName!.startsWith(prefix)) {
+      name = fileName!.substring(prefix.length);
+    }
+    return join(parent, '$name.${mimeTypeSuffix ?? ''}');
+  }
+
+  /// addFileNameSuffix=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x_thumb.png
+  String addFileNameSuffix(String suffix) => join(parent, '$fileName$suffix.${mimeTypeSuffix ?? ''}');
+
+  /// removeFileNameSuffix=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x.png
+  String removeFileNameSuffix(String suffix) {
+    if (fileName == null) return '';
+    String name = fileName ?? '';
+    if (fileName!.endsWith(suffix)) {
+      name = fileName!.substring(0, fileName!.lastIndexOf(suffix));
+    }
+    return join(parent, '$name.${mimeTypeSuffix ?? ''}');
+  }
+
+  /// 复制到指定文件夹
+  String copyPath(String parent) => join(parent, fileName);
+
+  /// 获取文件类型
+  MimeType get mimeType => mimeTypes[mimeTypeSuffix] ?? MimeType.unknown;
+
+  /// 是否是Gif图
+  bool get isGif => mimeTypeSuffix?.toLowerCase() == 'gif';
+}
+
+/// 文件类型
+enum MimeType {
+  unknown(0, 'icon_unknown'),
+  image(1, 'icon_pic'),
+  video(2, 'icon_mp4'),
+  audio(3, 'icon_mp3'),
+  pdf(4, 'icon_pdf'),
+  word(5, 'icon_word'),
+  zip(6, 'icon_zip'),
+  excel(7, 'icon_xls'),
+  txt(8, 'icon_txt'),
+  ppt(9, 'icon_ppt'),
+  apk(10, 'icon_unknown');
+
+  final int value;
+  final String icon;
+
+  const MimeType(this.value, this.icon);
+}
+
+/// 根据路径后缀判断文件类型
+Map<String, MimeType> mimeTypes = {
+  'png': MimeType.image,
+  'jpg': MimeType.image,
+  'jpeg': MimeType.image,
+  'webp': MimeType.image,
+  'gif': MimeType.image,
+  'bmp': MimeType.image,
+  '3gp': MimeType.video,
+  '3gpp': MimeType.video,
+  '3gpp2': MimeType.video,
+  'avi': MimeType.video,
+  'mp4': MimeType.video,
+  'x-msvideo': MimeType.video,
+  'x-matroska': MimeType.video,
+  'mpeg': MimeType.video,
+  'webm': MimeType.video,
+  'mp2ts': MimeType.video,
+  'x-ms-wma': MimeType.audio,
+  'x-wav': MimeType.audio,
+  'amr': MimeType.audio,
+  'wav': MimeType.audio,
+  'aac': MimeType.audio,
+  'lamr': MimeType.audio,
+  'mp3': MimeType.audio,
+  'm4a': MimeType.audio,
+  'pdf': MimeType.pdf,
+  'docx': MimeType.pdf,
+  'doc': MimeType.word,
+  'zip': MimeType.zip,
+  'rar': MimeType.zip,
+  'xls': MimeType.excel,
+  'xlsx': MimeType.excel,
+  'txt': MimeType.txt,
+  'ppt': MimeType.ppt,
+  'pptx': MimeType.ppt,
+  'apk': MimeType.apk,
+};
