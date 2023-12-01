@@ -99,7 +99,7 @@ class _DBPageState extends State<DBPage> {
         ),
         child: TapLayout(
           borderRadius: const BorderRadius.all(Radius.circular(7)),
-          onTap: () => Naughty.instance.push(context, DBTablePage(_list[index])),
+          onTap: () => Naughty().push(context, DBTablePage(_list[index])),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -115,10 +115,10 @@ class _DBPageState extends State<DBPage> {
   /// 列表item详细信息布局
   List<Widget> _buildItemDetail(int index) {
     String path = _list[index];
-    String name = Naughty.instance.getFileName(path);
+    String name = Naughty().getFileName(path);
     File file = File(path);
     int len = file.lengthSync();
-    String size = Naughty.instance.formatSize(len);
+    String size = Naughty().formatSize(len);
     String modifyTime = DateFormat("yyyy-MM-dd HH:mm:ss").format(file.lastModifiedSync());
     return [
       Text(

@@ -141,6 +141,6 @@ class Sql {
     if (blank) {
       message = message.toString().replaceAll('\n', '    \n');
     }
-    DBManager.instance.log(message);
+    DBManager().log(message);
   }
 }

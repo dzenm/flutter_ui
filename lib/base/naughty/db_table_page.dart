@@ -35,7 +35,7 @@ class _DBTablePageState extends State<DBTablePage> {
 
   @override
   Widget build(BuildContext context) {
-    String title = Naughty.instance.getFileName(widget.dbName);
+    String title = Naughty().getFileName(widget.dbName);
     return Scaffold(
       appBar: AppBar(
         title: Text(title, style: const TextStyle(color: Colors.white)),
@@ -72,7 +72,7 @@ class _DBTablePageState extends State<DBTablePage> {
         ),
         child: TapLayout(
           borderRadius: const BorderRadius.all(Radius.circular(7)),
-          onTap: () => Naughty.instance.push(context, DBColumnPage(widget.dbName, _list[index].name ?? '')),
+          onTap: () => Naughty().push(context, DBColumnPage(widget.dbName, _list[index].name ?? '')),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Row(

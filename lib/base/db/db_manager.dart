@@ -10,9 +10,9 @@ typedef UpgradeDatabase = List<String> Function(int oldVersion, int newVersion);
 
 /// 数据库管理，包括打开，关闭，创建，升级，增删改查。
 /// 如果需要打印日志，在main注册
-///   DBManager.instance.init(logPrint: Log.db);
+///   DBManager().init(logPrint: Log.db);
 /// 如果需要重新设置数据库的名称
-///   DBManager.instance.userId = '123456';
+///   DBManager().userId = '123456';
 /// 在pubspec.yaml添加下列依赖
 /// dependencies:
 ///  ...
