@@ -114,7 +114,7 @@ class _UpgradeDialogState extends State<UpgradeDialog> {
     HttpsClient().download(
       widget.appVersion.url!,
       file.path,
-      cancel: _cancel,
+      cancelToken: _cancel,
       success: (data) {
         PluginManager.installAPK(filePath);
         _running = false;

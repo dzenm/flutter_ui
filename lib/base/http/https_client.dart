@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio/src/adapters/io_adapter.dart';
 import 'package:flutter/foundation.dart';
+import 'package:http_parser/http_parser.dart';
 
 import '../../http/api_services.dart';
 import 'data_entity.dart';
@@ -175,15 +176,15 @@ class HttpsClient {
   /// [isCustomResult] 是否自定义处理response body，@see [success]
   /// [loading] 自定义加载弹窗提示，@see [isShowDialog]
   Future<void> request(
-      Future<DataEntity> future, {
-        Success? success,
-        Failed? failed,
-        Complete? complete,
-        bool isShowDialog = true,
-        bool isShowToast = true,
-        bool isCustomResult = false,
-        void Function()? loading,
-      }) async {
+    Future<DataEntity> future, {
+    Success? success,
+    Failed? failed,
+    Complete? complete,
+    bool isShowDialog = true,
+    bool isShowToast = true,
+    bool isCustomResult = false,
+    void Function()? loading,
+  }) async {
     Function? cancel;
     if (isShowDialog) {
       // 优先使用局部的加载提示框
@@ -229,28 +230,29 @@ class HttpsClient {
   /// 下载文件
   /// [url] 下载文件的url
   /// [savePath] 保存文件的路径
-  /// [cancel] 取消下载请求的token
+  /// [cancelToken] 取消下载请求的token
   /// [success] 下载成功返回的结果
   /// [progress] 下载的进度
   /// [failed] 下载失败返回的结果
   Future<void> download(
-      String url,
-      dynamic savePath, {
-        CancelToken? cancel,
-        Success? success,
-        Progress? progress,
-        Failed? failed,
-      }) async {
+    String url,
+    dynamic savePath, {
+    CancelToken? cancelToken,
+    Success? success,
+    Progress? progress,
+    Failed? failed,
+  }) async {
     HttpError? error;
     try {
-      Response response = await Dio().download(
+      Dio dio = _createDio(baseUrl: _baseUrls.first);
+      Response response = await dio.download(
         url,
         savePath,
         options: Options(
           responseType: ResponseType.bytes,
           followRedirects: false,
         ),
-        cancelToken: cancel,
+        cancelToken: cancelToken,
         onReceiveProgress: (int count, int total) {
           if (progress == null) return;
           // 获取下载进度
@@ -258,10 +260,11 @@ class HttpsClient {
           progress(progressPercent, count, total);
         },
       );
+      final value = DataEntity<dynamic>.fromJson(response.data!);
       if (response.statusCode == 200 || response.statusCode == 206) {
         // 下载成功的返回结果
         if (success != null) {
-          success(response.data);
+          success(value);
         }
       } else {
         // 下载请求失败的错误信息
@@ -274,10 +277,73 @@ class HttpsClient {
     // 下载结果
     if (error == null) return;
     if (failed != null) failed(error);
+    log('下载错误: code=${error.code}, msg=${error.msg}, error=${error.error}');
   }
 
   /// 上传文件
-  Future<void> upload() async {}
+  /// [fileType] 文件类型：0=图片，1=文件，2=视频，3=音频；
+  /// [original] 是否是原文件(默认0)：0=不是，1=是;
+  /// [sceneType] 使用场景类型(默认0)：0=聊天，1=朋友圈
+  /// [cancelToken] 取消上传请求的token
+  /// [success] 上传成功返回的结果
+  /// [onSendProgress] 上传的进度
+  /// [failed] 上传失败返回的结果
+  Future<void> upload(
+    int fileType,
+    String path,
+    int original, {
+    CancelToken? cancelToken,
+    Success? success,
+    ProgressCallback? onSendProgress,
+    Failed? failed,
+  }) async {
+    int sceneType = 0;
+    MultipartFile multipartFile = MultipartFile.fromFileSync(
+      path,
+      filename: path.split(Platform.pathSeparator).last,
+      contentType: MediaType.parse('multipart/form-data'),
+    );
+    FormData data = FormData()
+      ..files.add(MapEntry('file', multipartFile))
+      ..fields.add(MapEntry('original', '$original'))
+      ..fields.add(MapEntry('sceneType', '$sceneType'));
+
+    HttpError? error;
+    try {
+      Dio dio = _createDio(baseUrl: _baseUrls.first);
+      final Response response = await dio.request(
+        '${_baseUrls.first}fileUpload/upload/$fileType',
+        data: data,
+        cancelToken: cancelToken,
+        options: Options(
+          method: 'POST',
+          // headers: {r'authorization': SpUtil.getToken()},
+          contentType: 'multipart/form-data',
+        ),
+        onSendProgress: onSendProgress,
+      );
+      log('上传结果: statusCode=${response.statusCode}, statusMessage=${response.statusMessage}, data=${response.data}');
+      final value = DataEntity<dynamic>.fromJson(response.data!);
+      if (response.statusCode == 200) {
+        // 下载成功的返回结果
+        if (success != null) {
+          success(value.data);
+        }
+      } else {
+        // 下载请求失败的错误信息
+        error = HttpError(response.statusCode ?? 1000, response.statusMessage ?? '', error.toString());
+      }
+      Future.value(value.data);
+    } on DioException catch (e) {
+      // 下载失败的错误信息
+      error = HttpError(1000, e.message ?? '', error.toString());
+      Future.value(false);
+    }
+    // 下载结果
+    if (error == null) return;
+    if (failed != null) failed(error);
+    log('上传错误: code=${error.code}, msg=${error.msg}, error=${error.error}');
+  }
 
   void log(dynamic text) => _logPrint == null ? null : _logPrint!(text, tag: 'HttpsClient');
 
