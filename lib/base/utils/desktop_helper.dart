@@ -1,66 +1,30 @@
 import 'dart:io';
 
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
-import 'package:window_manager/window_manager.dart';
 
 ///
 /// Created by a0010 on 2023/8/28 15:47
 /// 桌面端工具类
 class DesktopHelper {
-  static Future<void> init() async {
-    if (!isDesktop) return;
-
-    await windowManager.ensureInitialized();
-    await setFixSize(
-      size: const Size(400, 600),
-      minimumSize: const Size(400, 600),
-    );
-  }
-
-  /// 设置桌面端尺寸
-  static Future<void> setFixSize({
+  static Future<void> init({
     Size size = const Size(900, 680),
     Size minimumSize = const Size(900, 680),
   }) async {
     if (!isDesktop) return;
 
-    //仅对桌面端进行尺寸设置
-    WindowOptions windowOptions = WindowOptions(
-      size: size,
-      minimumSize: minimumSize,
-      center: true,
-      backgroundColor: Colors.transparent,
-      skipTaskbar: false,
-      titleBarStyle: TitleBarStyle.hidden, // 该属性隐藏导航栏
-    );
-    windowManager.waitUntilReadyToShow(windowOptions, () async {
-      await windowManager.show();
-      await windowManager.focus();
-      await windowManager.setAsFrameless();
+    doWhenWindowReady(() {
+      //仅对桌面端进行尺寸设置
+      final windows = appWindow;
+      windows.minSize = minimumSize;
+      windows.size = size;
+      windows.alignment = Alignment.center;
+      windows.title = '云鱼';
+      windows.show();
     });
   }
 
   static bool get isDesktop => Platform.isWindows || Platform.isMacOS || Platform.isLinux;
-}
-
-class DragToMoveAreaNoDouble extends StatelessWidget {
-  final Widget child;
-
-  const DragToMoveAreaNoDouble({
-    super.key,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onPanStart: (details) {
-        windowManager.startDragging();
-      },
-      child: child,
-    );
-  }
 }
 
 class DesktopGlobalBox extends StatelessWidget {
@@ -74,7 +38,7 @@ class DesktopGlobalBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (Platform.isAndroid || Platform.isIOS) {
-      return Container(child: child);
+      return child;
     }
     return Container(
       width: double.infinity,
@@ -89,8 +53,133 @@ class DesktopGlobalBox extends StatelessWidget {
             BoxShadow(color: Color(0x33000000), blurRadius: 8),
           ],
         ),
-        child: child,
+        child: WindowBorder(
+          color: const Color(0xFFF6A00C),
+          width: 1,
+          child: child,
+        ),
       ),
     );
+  }
+}
+
+class LeftSide extends StatelessWidget {
+  static const sidebarColor = Color(0xFFF6A00C);
+
+  const LeftSide({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 200,
+      child: Container(
+        color: sidebarColor,
+        child: Column(
+          children: [
+            WindowTitleBarBox(child: MoveWindow()),
+            Expanded(child: Container()),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class RightSide extends StatelessWidget {
+  static const backgroundStartColor = Color(0xFFFFD500);
+  static const backgroundEndColor = Color(0xFFF6A00C);
+  static const borderColor = Color(0xFF805306);
+
+  const RightSide({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [backgroundStartColor, backgroundEndColor],
+            stops: [0.0, 1.0],
+          ),
+        ),
+        child: Column(children: [
+          WindowTitleBarBox(
+            child: Row(children: [
+              Expanded(child: MoveWindow()),
+              const WindowButtons(),
+            ]),
+          )
+        ]),
+      ),
+    );
+  }
+}
+
+/// 桌面
+class WindowWrapper extends StatelessWidget {
+  final Widget child;
+  final bool showTitleBar;
+
+  const WindowWrapper({
+    super.key,
+    required this.child,
+    this.showTitleBar = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (showTitleBar) {
+      return WindowBorder(
+        color: Colors.white,
+        width: 1,
+        child: Column(children: [
+          WindowTitleBarBox(
+            child: Row(children: [
+              Expanded(child: MoveWindow()),
+              const WindowButtons(),
+            ]),
+          ),
+          child,
+        ],),
+      );
+    }
+    return WindowBorder(
+      color: Colors.white,
+      width: 1,
+      child: Stack(alignment: Alignment.topRight, children: [
+        child,
+        const WindowButtons(),
+      ],),
+    );
+  }
+}
+
+class WindowButtons extends StatelessWidget {
+  static final buttonColors = WindowButtonColors(
+    iconNormal: const Color(0xFF805306),
+    mouseOver: const Color(0xFFF6A00C),
+    mouseDown: const Color(0xFF805306),
+    iconMouseOver: const Color(0xFF805306),
+    iconMouseDown: const Color(0xFFFFD500),
+  );
+
+  static final closeButtonColors = WindowButtonColors(
+    mouseOver: const Color(0xFFD32F2F),
+    mouseDown: const Color(0xFFB71C1C),
+    iconNormal: const Color(0xFF805306),
+    iconMouseOver: Colors.white,
+  );
+
+  const WindowButtons({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(children: [
+      MinimizeWindowButton(colors: buttonColors),
+      MaximizeWindowButton(colors: buttonColors),
+      CloseWindowButton(colors: closeButtonColors),
+    ]);
   }
 }

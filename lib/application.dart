@@ -100,8 +100,6 @@ class Application {
     log('初始化 PluginManager');
     PluginManager.init(logPrint: Log.d);
 
-    await DesktopHelper.init();
-
     int end = DateTime.now().millisecondsSinceEpoch;
     duration = end - now;
     log('结束: now=$end, duration=$duration');

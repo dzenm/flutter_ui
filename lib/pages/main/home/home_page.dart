@@ -149,6 +149,7 @@ class _HomePageState extends State<HomePage> {
           ++_pageIndex;
           _controller.loadMore();
         }
+        if (!mounted) return;
         setState(() {});
       },
     );

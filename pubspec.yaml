@@ -47,16 +47,20 @@ dependencies:
   retrofit: 4.0.3                               # HTTP请求 https://pub.flutter-io.cn/packages/retrofit
   #  dio_cookie_manager: 2.0.0                     # cookie管理 https://pub.flutter-io.cn/packages/dio_cookie_manager
   #  cookie_jar: 3.0.1                             # cookie持久化 https://pub.flutter-io.cn/packages/cookie_jar
-  package_info_plus: 4.2.0                      # 获取版本信息 https://pub.dev/packages/package_info_plus
-  device_info_plus: 9.1.1                       # 获取设备信息 https://pub.flutter-io.cn/packages/device_info_plus
+  package_info_plus: 3.1.2                      # 获取版本信息 https://pub.dev/packages/package_info_plus
+  device_info_plus: 8.2.2                       # 获取设备信息 https://pub.flutter-io.cn/packages/device_info_plus
   flutter_local_notifications: 16.2.0           # 通知栏通知提醒 https://pub.flutter-io.cn/packages/flutter_local_notifications
   cached_network_image: 3.3.0                   # 图片缓存 https://pub.flutter-io.cn/packages/cached_network_image
   extended_text_field: 12.0.1                   # 输入框扩展 https://pub.flutter-io.cn/packages/extended_text_field
   back_button_interceptor: 7.0.0                # 返回按钮拦截 https://pub.flutter-io.cn/packages/back_button_interceptor
   provider: 6.1.1                               # 状态管理 https://pub.dev/packages/provider
   json_annotation: 4.8.1                        # Json序列化 https://pub.dev/packages/json_annotation
-  window_manager: 0.3.7                         # 桌面端尺寸设置 https://pub.dev/packages/window_manager
   easy_refresh: 3.3.2+4                         # 列表刷新 https://pub.flutter-io.cn/packages/easy_refresh
+  file_selector: 1.0.1                          # 文件选择 https://pub.flutter-io.cn/packages/file_selector
+  image: 4.1.3                                  # 图片压缩 https://pub.flutter-io.cn/packages/image
+  desktop_drop: 0.4.4                           # 文件拖动处理 https://pub.flutter-io.cn/packages/desktop_drop
+  tray_manager: 0.2.0                           # 系统托盘 https://pub.flutter-io.cn/packages/tray_manager
+  bitsdojo_window: 0.1.5                        # 定制桌面端窗口 https://pub.flutter-io.cn/packages/bitsdojo_window
 
   ########################################## UI ##########################################
   webview_flutter: 4.4.2                        # WebView https://pub.dev/packages/webview_flutter

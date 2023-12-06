@@ -1,3 +1,4 @@
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -19,6 +20,14 @@ class MainPageDesktop extends StatelessWidget {
   Widget build(BuildContext context) {
     int length = context.watch<MainModel>().length;
     int selectedIndex = context.watch<MainModel>().selectedIndex;
+    WindowBorder(
+      color: const Color(0xFFF6A00C),
+      width: 1,
+      child: const Row(children: [
+        LeftSide(),
+        RightSide(),
+      ]),
+    );
     return Scaffold(
       body: Container(
         color: Colors.transparent,

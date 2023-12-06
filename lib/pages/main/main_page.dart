@@ -45,7 +45,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     super.initState();
     log('initState');
 
-    DesktopHelper.setFixSize();
+    DesktopHelper.init();
 
     WidgetsBinding.instance.addObserver(this);
     // 先初始化页面

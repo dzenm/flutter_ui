@@ -4,7 +4,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:window_manager/window_manager.dart';
 
 import '../../base/base.dart';
 import '../../generated/l10n.dart';
@@ -15,7 +14,7 @@ import '../routers.dart';
 /// 登录页面
 class LoginPage extends StatelessWidget {
   LoginPage({super.key}) {
-    DesktopHelper.setFixSize(
+    DesktopHelper.init(
       size: const Size(400, 600),
       minimumSize: const Size(400, 600),
     );
@@ -46,6 +45,32 @@ class LoginPage extends StatelessWidget {
 
   /// Desktop桌面端展示的页面
   Widget _buildDeskTopPage(BuildContext context) {
+    return WindowWrapper(
+      child: Material(
+        child: Center(
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            child: Column(children: [
+              // 右上角关闭按钮
+              Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                TapLayout(
+                  padding: const EdgeInsets.all(4),
+                  onTap: () {
+                    // windowManager.close();
+                  },
+                  child: const Icon(Icons.close_rounded, color: Colors.grey, size: 24),
+                ),
+              ]),
+              const SizedBox(height: 72),
+              const _EditLoginInfoView(),
+              Expanded(child: Container()),
+              const ProtocolInfoView(),
+              const SizedBox(height: 72),
+            ]),
+          ),
+        ),
+      ),
+    );
     return Material(
       child: Center(
         child: Container(
@@ -56,7 +81,7 @@ class LoginPage extends StatelessWidget {
               TapLayout(
                 padding: const EdgeInsets.all(4),
                 onTap: () {
-                  windowManager.close();
+                  // windowManager.close();
                 },
                 child: const Icon(Icons.close_rounded, color: Colors.grey, size: 24),
               ),
