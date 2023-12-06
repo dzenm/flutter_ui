@@ -9,18 +9,20 @@ import 'package:flutter/material.dart';
 class WindowWrapper extends StatelessWidget {
   final Widget child;
   final bool showMoveBar;
+  final double height;
 
   const WindowWrapper({
     super.key,
     required this.child,
-    this.showMoveBar = false,
+    this.showMoveBar = true,
+    this.height = 30,
   });
 
   static Future<void> setWindow({
     Size size = const Size(900, 680),
     Size minimumSize = const Size(900, 680),
   }) async {
-    if (!isDesktop) return;
+    if (!_isDesktop) return;
 
     doWhenWindowReady(() {
       //仅对桌面端进行尺寸设置
@@ -33,15 +35,16 @@ class WindowWrapper extends StatelessWidget {
     });
   }
 
-  static bool get isDesktop => Platform.isWindows || Platform.isMacOS || Platform.isLinux;
+  static bool get _isDesktop => Platform.isWindows || Platform.isMacOS || Platform.isLinux;
 
   @override
   Widget build(BuildContext context) {
+    if (!_isDesktop) return child;
     return WindowBorder(
       color: Colors.white,
       child: Stack(alignment: Alignment.topRight, children: [
         child,
-        WindowButtons(showMoveBar: showMoveBar),
+        WindowButtons(showMoveBar: showMoveBar, height: height),
       ]),
     );
   }
@@ -64,18 +67,20 @@ class WindowButtons extends StatelessWidget {
   );
 
   final bool showMoveBar;
+  final double height;
   final MainAxisAlignment mainAxisAlignment;
 
   const WindowButtons({
     super.key,
     this.showMoveBar = false,
+    this.height = 30,
     this.mainAxisAlignment = MainAxisAlignment.end,
   });
 
   @override
   Widget build(BuildContext context) {
-    Widget moveWindow = Expanded(child: Container(height: 30, child: MoveWindow()));
-    return Row(mainAxisAlignment: mainAxisAlignment, children: [
+    Widget moveWindow = Expanded(child: SizedBox(height: height, child: MoveWindow()));
+    return Row(mainAxisAlignment: mainAxisAlignment, crossAxisAlignment: CrossAxisAlignment.start, children: [
       if (showMoveBar && mainAxisAlignment == MainAxisAlignment.end) moveWindow,
       MinimizeWindowButton(colors: buttonColors),
       MaximizeWindowButton(colors: buttonColors),
