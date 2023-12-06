@@ -43,4 +43,5 @@ export 'tap_layout.dart';
 export 'upgrade_dialog.dart';
 export 'verify_code_view.dart';
 export 'will_pop_view.dart';
+export 'window_wrapper.dart';
 export 'wrap_button.dart';

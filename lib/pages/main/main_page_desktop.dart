@@ -1,4 +1,3 @@
-import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,32 +19,26 @@ class MainPageDesktop extends StatelessWidget {
   Widget build(BuildContext context) {
     int length = context.watch<MainModel>().length;
     int selectedIndex = context.watch<MainModel>().selectedIndex;
-    WindowBorder(
-      color: const Color(0xFFF6A00C),
-      width: 1,
-      child: const Row(children: [
-        LeftSide(),
-        RightSide(),
-      ]),
-    );
-    return Scaffold(
-      body: Container(
-        color: Colors.transparent,
-        child: Row(children: [
-          NavigationRail(
-            minWidth: 56.0,
-            selectedIndex: selectedIndex,
-            onDestinationSelected: (int index) {
-              context.read<MainModel>().selectedIndex = index;
-            },
-            labelType: NavigationRailLabelType.all,
-            leading: _buildLeadingView(context),
-            destinations: _buildNavigationRailItem(context, length, selectedIndex),
-          ),
-          const VerticalDivider(thickness: 1, width: 1),
-          // 主要的展示内容，Expanded 占满剩下屏幕空间
-          Expanded(child: _buildTabPage(length)[selectedIndex])
-        ]),
+    return Material(
+      child: WindowWrapper(
+        child: Container(
+          color: Colors.transparent,
+          child: Row(children: [
+            NavigationRail(
+              minWidth: 56.0,
+              selectedIndex: selectedIndex,
+              onDestinationSelected: (int index) {
+                context.read<MainModel>().selectedIndex = index;
+              },
+              labelType: NavigationRailLabelType.all,
+              leading: _buildLeadingView(context),
+              destinations: _buildNavigationRailItem(context, length, selectedIndex),
+            ),
+            const VerticalDivider(thickness: 1, width: 1),
+            // 主要的展示内容，Expanded 占满剩下屏幕空间
+            Expanded(child: _buildTabPage(length)[selectedIndex])
+          ]),
+        ),
       ),
     );
   }

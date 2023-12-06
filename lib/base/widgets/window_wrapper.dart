@@ -5,9 +5,18 @@ import 'package:flutter/material.dart';
 
 ///
 /// Created by a0010 on 2023/8/28 15:47
-/// 桌面端工具类
-class DesktopHelper {
-  static Future<void> init({
+/// 桌面
+class WindowWrapper extends StatelessWidget {
+  final Widget child;
+  final bool showMoveBar;
+
+  const WindowWrapper({
+    super.key,
+    required this.child,
+    this.showMoveBar = false,
+  });
+
+  static Future<void> setWindow({
     Size size = const Size(900, 680),
     Size minimumSize = const Size(900, 680),
   }) async {
@@ -25,6 +34,55 @@ class DesktopHelper {
   }
 
   static bool get isDesktop => Platform.isWindows || Platform.isMacOS || Platform.isLinux;
+
+  @override
+  Widget build(BuildContext context) {
+    return WindowBorder(
+      color: Colors.white,
+      child: Stack(alignment: Alignment.topRight, children: [
+        child,
+        WindowButtons(showMoveBar: showMoveBar),
+      ]),
+    );
+  }
+}
+
+class WindowButtons extends StatelessWidget {
+  static final buttonColors = WindowButtonColors(
+    iconNormal: const Color(0xFF805306),
+    mouseOver: const Color(0xFFF6A00C),
+    mouseDown: const Color(0xFF805306),
+    iconMouseOver: Colors.white,
+    iconMouseDown: const Color(0xFFFFD500),
+  );
+
+  static final closeButtonColors = WindowButtonColors(
+    mouseOver: const Color(0xFFD32F2F),
+    mouseDown: const Color(0xFFB71C1C),
+    iconNormal: const Color(0xFF805306),
+    iconMouseOver: Colors.white,
+  );
+
+  final bool showMoveBar;
+  final MainAxisAlignment mainAxisAlignment;
+
+  const WindowButtons({
+    super.key,
+    this.showMoveBar = false,
+    this.mainAxisAlignment = MainAxisAlignment.end,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    Widget moveWindow = Expanded(child: Container(height: 30, child: MoveWindow()));
+    return Row(mainAxisAlignment: mainAxisAlignment, children: [
+      if (showMoveBar && mainAxisAlignment == MainAxisAlignment.end) moveWindow,
+      MinimizeWindowButton(colors: buttonColors),
+      MaximizeWindowButton(colors: buttonColors),
+      CloseWindowButton(colors: closeButtonColors),
+      if (showMoveBar && mainAxisAlignment == MainAxisAlignment.start) moveWindow,
+    ]);
+  }
 }
 
 class DesktopGlobalBox extends StatelessWidget {
@@ -114,72 +172,5 @@ class RightSide extends StatelessWidget {
         ]),
       ),
     );
-  }
-}
-
-/// 桌面
-class WindowWrapper extends StatelessWidget {
-  final Widget child;
-  final bool showTitleBar;
-
-  const WindowWrapper({
-    super.key,
-    required this.child,
-    this.showTitleBar = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    if (showTitleBar) {
-      return WindowBorder(
-        color: Colors.white,
-        width: 1,
-        child: Column(children: [
-          WindowTitleBarBox(
-            child: Row(children: [
-              Expanded(child: MoveWindow()),
-              const WindowButtons(),
-            ]),
-          ),
-          child,
-        ],),
-      );
-    }
-    return WindowBorder(
-      color: Colors.white,
-      width: 1,
-      child: Stack(alignment: Alignment.topRight, children: [
-        child,
-        const WindowButtons(),
-      ],),
-    );
-  }
-}
-
-class WindowButtons extends StatelessWidget {
-  static final buttonColors = WindowButtonColors(
-    iconNormal: const Color(0xFF805306),
-    mouseOver: const Color(0xFFF6A00C),
-    mouseDown: const Color(0xFF805306),
-    iconMouseOver: const Color(0xFF805306),
-    iconMouseDown: const Color(0xFFFFD500),
-  );
-
-  static final closeButtonColors = WindowButtonColors(
-    mouseOver: const Color(0xFFD32F2F),
-    mouseDown: const Color(0xFFB71C1C),
-    iconNormal: const Color(0xFF805306),
-    iconMouseOver: Colors.white,
-  );
-
-  const WindowButtons({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(children: [
-      MinimizeWindowButton(colors: buttonColors),
-      MaximizeWindowButton(colors: buttonColors),
-      CloseWindowButton(colors: closeButtonColors),
-    ]);
   }
 }

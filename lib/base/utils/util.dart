@@ -4,7 +4,6 @@
 library util;
 
 export 'date_util.dart';
-export 'desktop_helper.dart';
 export 'device_util.dart';
 export 'file_util.dart';
 export 'notification_util.dart';
