@@ -4,6 +4,7 @@
 class Assets {
   static const String filePath = 'assets/files/';
   static const String fontsPath = 'assets/fonts/';
+  static const String iconsPath = 'assets/icons/';
   static const String imagePath = 'assets/images/';
   static const String videoPath = 'assets/videos/';
 
@@ -12,6 +13,10 @@ class Assets {
 
   ///================================ 字体 ================================
   static const String customIcons = '${fontsPath}CustomIcons.ttf';
+
+  ///================================ 图标 ================================
+  static const String windowsSystemDrayIcons = '${iconsPath}icon_system_dray.ico';
+  static const String maxOSSystemDrayIcons = '${iconsPath}icon_system_dray.png';
 
   ///================================ 图片 ================================
   static const String a = '${imagePath}a.jpg';
@@ -27,5 +32,4 @@ class Assets {
 
   ///================================ 视频 ================================
   static const String butterfly = '${videoPath}butterfly.mp4';
-
 }

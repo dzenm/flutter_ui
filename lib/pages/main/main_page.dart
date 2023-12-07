@@ -45,9 +45,8 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     super.initState();
     log('initState');
 
-    WindowWrapper.setWindow();
-
     WidgetsBinding.instance.addObserver(this);
+
     // 先初始化页面
     ProviderManager.main(context: context).init();
 

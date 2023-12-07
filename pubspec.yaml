@@ -107,8 +107,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  retrofit_generator: 8.0.4                     # retrofit自动生成工具 https://pub.flutter-io.cn/packages/retrofit_generator
-  build_runner: 2.4.6                           # 自动生成工具 https://pub.flutter-io.cn/packages/build_runner
+  retrofit_generator: 8.0.5                     # retrofit自动生成工具 https://pub.flutter-io.cn/packages/retrofit_generator
+  build_runner: 2.4.7                           # 自动生成工具 https://pub.flutter-io.cn/packages/build_runner
   # 执行生成文件命令：flutter pub run build_runner build --delete-conflicting-outputs
   json_serializable: 6.7.1                      # json序列化 https://pub.flutter-io.cn/packages/json_serializable
 
@@ -136,6 +136,7 @@ flutter:
   assets:
     - assets/files/
     - assets/fonts/
+    - assets/icons/
     - assets/images/
     - assets/videos/
   # An image asset can refer to one or more resolution-specific "variants", see
