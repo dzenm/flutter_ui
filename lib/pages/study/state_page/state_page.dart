@@ -22,7 +22,7 @@ class _StatePageState extends State<StatePage> {
 
   String _image = 'a.jpg';
 
-  final StateController _controller = StateController(isShowFooterState: false);
+  final StateController _controller = StateController();
 
   @override
   Widget build(BuildContext context) {

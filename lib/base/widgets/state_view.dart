@@ -14,21 +14,24 @@ import 'tap_layout.dart';
 /// )
 class StateView extends StatelessWidget {
   final Widget? child;
+  final StateController? controller;
+  final LoadState state;
   final Color? color;
-  final StateController controller;
   final GestureTapCallback? onTap;
-  final Widget? title;
+  final Widget? text;
   final Widget? image;
 
-  const StateView({
+  StateView({
     super.key,
     this.child,
+    this.controller,
+    LoadState? state,
     this.color,
-    required this.controller,
     this.onTap,
-    this.title,
+    this.text,
     this.image,
-  });
+  })  : assert(state == null || controller == null, 'You can only pass state or controller, not both.'),
+        state = state ?? controller!.state;
 
   static String getStateText(BuildContext context, LoadState state) {
     switch (state) {
@@ -55,16 +58,24 @@ class StateView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (controller.none) return Container();
-    if (controller.init && child != null) return child!;
+    LoadState state = controller?.state ?? this.state;
+    bool showChild = false;
+    if (controller != null) {
+      showChild = controller!.isInit;
+    } else {
+      showChild = [LoadState.complete, LoadState.success].contains(state);
+    }
+    if (showChild && child != null) {
+      return child!;
+    }
     return TapLayout(
-      onTap: controller.load ? null : onTap,
+      onTap: state == LoadState.loading ? null : onTap,
       background: color,
       foreground: Colors.transparent,
       child: LinearStateView(
-        controller: controller,
+        state: state,
         size: 56,
-        title: title,
+        text: text,
         image: image,
         isVertical: false,
       ),
@@ -77,7 +88,7 @@ class FooterStateView extends StatelessWidget {
   final StateController controller;
   final GestureTapCallback? onTap;
   final Widget? title;
-  final Widget? image;
+  final Widget? text;
   final double loadingProgressSize;
 
   const FooterStateView({
@@ -85,23 +96,29 @@ class FooterStateView extends StatelessWidget {
     required this.controller,
     this.onTap,
     this.title,
-    this.image,
+    this.text,
     this.loadingProgressSize = 24,
   });
 
   @override
   Widget build(BuildContext context) {
-    // 未初始化/为空 不展示底部状态
-    bool offstage = !controller.init || controller.none;
+    // 展示底部状态只在以下四种情况展示，否则不予展示
+    bool showFooter = [
+      LoadState.loading,
+      LoadState.more,
+      LoadState.failed,
+      LoadState.end,
+    ].contains(controller.state);
+    bool offstage = controller.isInit && showFooter;
     return Offstage(
-      offstage: offstage,
+      offstage: false,
       child: TapLayout(
         height: 56,
         onTap: onTap,
         child: LinearStateView(
-          controller: controller,
+          state: controller.state,
           size: loadingProgressSize,
-          title: title,
+          text: text,
           isVertical: true,
         ),
       ),
@@ -111,17 +128,17 @@ class FooterStateView extends StatelessWidget {
 
 /// 主要控制的状态展示
 class LinearStateView extends StatelessWidget {
-  final StateController controller;
+  final LoadState state;
   final double size;
-  final Widget? title;
+  final Widget? text;
   final Widget? image;
   final bool isVertical;
 
   const LinearStateView({
     super.key,
-    required this.controller,
+    required this.state,
     required this.size,
-    this.title,
+    this.text,
     this.image,
     required this.isVertical,
   });
@@ -145,21 +162,23 @@ class LinearStateView extends StatelessWidget {
   List<Widget> _buildStateView(BuildContext context) {
     List<Widget> widgets = [];
     // 加载进度提示
-    if (controller.load) {
+    if (state == LoadState.loading) {
       widgets.add(SizedBox(
         width: size,
         height: size,
         child: const CircularProgressIndicator(),
       ));
     }
-    // 加载不成功的图片展示，只展示空白和失败的时候的图片
-    if (!controller.more && (controller.empty || controller.failed) && image != null) {
-      widgets.add(image!);
+    // 不是底部加载时，展示提示图片
+    if (state != LoadState.more && image != null) {
+      if ([LoadState.empty, LoadState.failed, LoadState.complete, LoadState.success].contains(state)) {
+        widgets.add(image!);
+      }
     }
     // 图片和文本之间的间距
     widgets.add(const SizedBox(width: 16, height: 32));
     // 加载展示的文本信息
-    widgets.add(title ?? Text(StateView.getStateText(context, controller.state)));
+    widgets.add(text ?? Text(StateView.getStateText(context, state)));
     return widgets;
   }
 }
@@ -167,22 +186,14 @@ class LinearStateView extends StatelessWidget {
 /// 状态控制器，初始化 [LoadState] 使用 [initialState] ，需要不想通过 [StateController] 的其他方法
 /// 改变状态直接初始化请将 [isInit] 设置为true，如果不需要展示底部加载更多，请将 [isShowFooterState] 设置为false
 class StateController with ChangeNotifier {
-  LoadState initialState;
-  bool _isShowFooterState = true;
-  bool _isInit = false;
   bool _isMore = false;
+  bool _isInit = false;
 
   LoadState _state = LoadState.loading;
 
   StateController({
-    this.initialState = LoadState.loading,
-    bool isShowFooterState = true,
-    bool isInit = false,
-  }) {
-    _state = initialState;
-    _isShowFooterState = isShowFooterState;
-    _isInit = isInit;
-  }
+    LoadState initialState = LoadState.loading,
+  }) : _state = initialState;
 
   void loadNone() {
     _state = LoadState.none;
@@ -195,7 +206,7 @@ class StateController with ChangeNotifier {
   }
 
   void loadEmpty() {
-    _state = _isMore && _isShowFooterState ? LoadState.end : LoadState.empty;
+    _state = _isMore ? LoadState.end : LoadState.empty;
     notifyListeners();
   }
 
@@ -229,25 +240,15 @@ class StateController with ChangeNotifier {
     notifyListeners();
   }
 
-  void reset() {
-    _isInit = false;
-    _isMore = false;
-    notifyListeners();
-  }
-
   LoadState get state => _state;
 
-  bool get none => _state == LoadState.none;
+  bool get isNone => _state == LoadState.none;
 
-  bool get init => _isInit;
+  bool get isInit => _isInit;
 
-  bool get load => _state == LoadState.loading;
+  bool get isLoading => _state == LoadState.loading;
 
-  bool get empty => _state == LoadState.empty;
-
-  bool get failed => _state == LoadState.failed;
-
-  bool get more => _isMore;
+  bool get isEmpty => _state == LoadState.empty;
 }
 
 /// 加载数据的状态
