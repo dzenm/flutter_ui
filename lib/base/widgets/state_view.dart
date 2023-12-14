@@ -69,7 +69,8 @@ class StateView extends StatelessWidget {
     LoadState state = controller?.state ?? this.state;
     bool showChild = false;
     if (controller != null) {
-      showChild = controller!.isInit;
+      if (controller!.isNone) return Container();
+      showChild = controller!.isInit && controller!.isMore;
     } else {
       showChild = [LoadState.complete, LoadState.success].contains(state);
     }
@@ -112,6 +113,7 @@ class FooterStateView extends StatelessWidget {
   Widget build(BuildContext context) {
     // 展示底部状态只在以下四种情况展示，否则不予展示
     bool showFooter = [
+      LoadState.sliding,
       LoadState.loading,
       LoadState.more,
       LoadState.failed,
@@ -257,6 +259,8 @@ class StateController with ChangeNotifier {
   bool get isLoading => _state == LoadState.loading;
 
   bool get isEmpty => _state == LoadState.empty;
+
+  bool get isMore => _isMore;
 }
 
 /// 加载数据的状态
