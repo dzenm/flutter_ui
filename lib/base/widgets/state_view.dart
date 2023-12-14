@@ -119,7 +119,7 @@ class FooterStateView extends StatelessWidget {
     ].contains(controller.state);
     bool offstage = controller.isInit && showFooter;
     return Offstage(
-      offstage: false,
+      offstage: !offstage,
       child: TapLayout(
         height: 56,
         onTap: onTap,
