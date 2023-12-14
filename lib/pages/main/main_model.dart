@@ -76,6 +76,16 @@ class MainModel with ChangeNotifier {
   /// 获取主页Tab长度
   int get length => _badges.length;
 
+  /// 是否正在拖动文件
+  bool _isDragFile = false;
+
+  bool get isDragFile => _isDragFile;
+
+  set isDragFile(bool isDragFile) {
+    _isDragFile = isDragFile;
+    notifyListeners();
+  }
+
   /// 清空数据
   void clear() {
     _initial = false;

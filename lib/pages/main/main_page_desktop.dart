@@ -30,7 +30,6 @@ class _MainPageDesktopState extends State<MainPageDesktop> with SystemTray, Tray
     WindowWrapper.setWindow();
     init();
     trayManager.addListener(this);
-
   }
 
   @override
@@ -65,28 +64,25 @@ class _MainPageDesktopState extends State<MainPageDesktop> with SystemTray, Tray
 
   @override
   Widget build(BuildContext context) {
-    int length = context
-        .watch<MainModel>()
-        .length;
-    int selectedIndex = context
-        .watch<MainModel>()
-        .selectedIndex;
+    int length = context.watch<MainModel>().length;
+    int selectedIndex = context.watch<MainModel>().selectedIndex;
     return Material(
       child: WindowWrapper(
         child: Container(
           color: Colors.transparent,
           child: Row(children: [
-            NavigationRail(
-              minWidth: 56.0,
-              selectedIndex: selectedIndex,
-              onDestinationSelected: (int index) {
-                context
-                    .read<MainModel>()
-                    .selectedIndex = index;
-              },
-              labelType: NavigationRailLabelType.all,
-              leading: _buildLeadingView(context),
-              destinations: _buildNavigationRailItem(context, length, selectedIndex),
+            Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: NavigationRail(
+                minWidth: 56.0,
+                selectedIndex: selectedIndex,
+                onDestinationSelected: (int index) {
+                  context.read<MainModel>().selectedIndex = index;
+                },
+                labelType: NavigationRailLabelType.all,
+                leading: _buildLeadingView(context),
+                destinations: _buildNavigationRailItem(context, length, selectedIndex),
+              ),
             ),
             const VerticalDivider(thickness: 1, width: 1),
             // 主要的展示内容，Expanded 占满剩下屏幕空间
@@ -113,33 +109,25 @@ class _MainPageDesktopState extends State<MainPageDesktop> with SystemTray, Tray
     List<Widget> list = [const HomePage(), NavPage(), const MePage()];
     return List.generate(
       length,
-          (index) => KeepAliveWrapper(child: index < list.length ? list[index] : Container()),
+      (index) => KeepAliveWrapper(child: index < list.length ? list[index] : Container()),
     );
   }
 
   List<NavigationRailDestination> _buildNavigationRailItem(BuildContext context, int length, int selectedIndex) {
     return List.generate(
       length,
-          (index) {
+      (index) {
         List<IconData> icons = [
           Icons.home,
           Icons.airplay_rounded,
           Icons.person,
         ];
         List<String> titles = [
-          S
-              .of(context)
-              .home,
-          S
-              .of(context)
-              .nav,
-          S
-              .of(context)
-              .me,
+          S.of(context).home,
+          S.of(context).nav,
+          S.of(context).me,
         ];
-        AppTheme theme = context
-            .watch<LocalModel>()
-            .theme;
+        AppTheme theme = context.watch<LocalModel>().theme;
         IconData icon = icons[index]; // 图标
         String title = titles[index]; // 标题
         bool isSelected = index == index; // 是否是选中的索引
