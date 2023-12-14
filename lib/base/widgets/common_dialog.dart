@@ -10,6 +10,9 @@ import 'will_pop_view.dart';
 
 typedef ItemClickCallback = void Function(int index);
 
+const kMaxWidthInDialog = 520.0;
+const kMaxHeightInDialog = 600.0;
+
 class CommonDialog {
   static void init(BuildContext? context) {
     _context = context;
@@ -248,18 +251,19 @@ class DialogWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopView(
-      behavior: BackBehavior.custom,
-      onWillPop: () => Future.value(backDismiss),
-      child: GestureDetector(
-        onTap: touchOutsideDismiss ? dismissCallback ?? () => Navigator.of(context).pop() : null,
-        behavior: HitTestBehavior.opaque,
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          resizeToAvoidBottomInset: false, // 防止软键盘弹出像素溢出
-          body: Container(
+    return GestureDetector(
+      onTap: touchOutsideDismiss ? dismissCallback ?? () => Navigator.of(context).pop() : null,
+      behavior: HitTestBehavior.opaque,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        resizeToAvoidBottomInset: false, // 防止软键盘弹出像素溢出
+        body: Center(
+          child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 32),
-            alignment: Alignment.center,
+            constraints: const BoxConstraints(
+              maxWidth: kMaxWidthInDialog,
+              maxHeight: kMaxHeightInDialog,
+            ),
             child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               ClipRRect(
                 borderRadius: borderRadius,
