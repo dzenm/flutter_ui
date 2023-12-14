@@ -4,13 +4,21 @@ import '../../generated/l10n.dart';
 import 'tap_layout.dart';
 
 ///
-/// 状态展示，[StateController] 用于控制状态的展示
+/// 状态展示
+/// 使用 [StateController] 控制状态的展示
 /// StateView(
 ///   controller: _controller,
 ///   image: Image.asset(_image, fit: BoxFit.cover, width: 96, height: 96),
 ///   child: const Center(
 ///      child: Text('展示成功页面'),
 ///   ),
+/// )
+/// 使用 [LoadState] 控制状态的展示
+/// StateView(
+///   color: isEmpty ? ColorConst.white : ColorConst.toolbar_color,
+///   image: Image.asset(Assets.noMsg, width: 128, height: 128),
+///   text: const Text('暂无任何消息~', style: TextStyle(color: ColorConst.txt_gray)),
+///   state: isEmpty ? LoadState.empty : LoadState.complete,
 /// )
 class StateView extends StatelessWidget {
   final Widget? child;
