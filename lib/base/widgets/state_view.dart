@@ -69,8 +69,7 @@ class StateView extends StatelessWidget {
     LoadState state = controller?.state ?? this.state;
     bool showChild = false;
     if (controller != null) {
-      if (controller!.isNone) return Container();
-      showChild = controller!.isInit && controller!.isMore;
+      showChild = controller!.isInit || controller!.isMore;
     } else {
       showChild = [LoadState.complete, LoadState.success].contains(state);
     }
@@ -221,6 +220,7 @@ class StateController with ChangeNotifier {
   }
 
   void loadSuccess() {
+    _isInit = true;
     _state = LoadState.success;
     notifyListeners();
   }
@@ -238,13 +238,13 @@ class StateController with ChangeNotifier {
   }
 
   void loadSliding() {
-    if (!_isInit) return;
+    if (_isMore) return;
     _state = LoadState.sliding;
     notifyListeners();
   }
 
   void loadMore() {
-    if (!_isInit) return;
+    _isInit = true;
     _isMore = true;
     _state = LoadState.more;
     notifyListeners();

@@ -92,7 +92,6 @@ abstract class ListPageState<D extends DBBaseEntity, T extends StatefulWidget> e
 
   /// 更新加载成功的状态
   void updateState(List<D> list, int? totalCount) {
-    _controller.loadComplete(); // 加载成功
     if (_pageIndex >= (totalCount ?? 0)) {
       _controller.loadEmpty(); // 加载完所有页面
     } else {

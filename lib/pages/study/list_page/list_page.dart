@@ -76,7 +76,6 @@ class _ListPageState extends State<ListPage> {
       page: _pageIndex,
       isShowDialog: false,
       success: (list, pageCount) {
-        _controller.loadComplete(); // 加载成功
         if (_pageIndex >= (pageCount ?? 0)) {
           _controller.loadEmpty(); // 加载完所有页面
         } else {

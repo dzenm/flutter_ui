@@ -48,7 +48,6 @@ abstract class TabListPageState<T extends StatefulWidget> extends State<T> {
 
   /// 更新加载成功的状态
   void updateState(int? pageCount) {
-    _controller.loadComplete(); // 加载成功
     if (_pageIndex >= (pageCount ?? 0)) {
       _controller.loadEmpty(); // 加载完所有页面
     } else {
