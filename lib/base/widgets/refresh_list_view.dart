@@ -21,6 +21,7 @@ class RefreshListView extends StatefulWidget {
   final RefreshFunction? refresh; // refresh为true表示下拉刷新的回调, 为false表示上拉加载更多的回调
   final EdgeInsetsGeometry? padding;
   final bool showFooter;
+  final bool slideListener;
 
   const RefreshListView({
     super.key,
@@ -30,6 +31,7 @@ class RefreshListView extends StatefulWidget {
     this.controller,
     this.padding,
     this.showFooter = false,
+    this.slideListener = true,
   });
 
   @override
@@ -54,7 +56,7 @@ class _RefreshListViewState extends State<RefreshListView> {
       // pixels：当前滚动的像素点
       // maxScrollExtent：当前最大可滚动的位置
       // 判断是否滑动到最底部
-      _isFooter = _controller.position.pixels == _controller.position.maxScrollExtent;
+      _isFooter = _controller.position.pixels >= _controller.position.maxScrollExtent;
       // 手指已离开屏幕并且滑动到底部时加载更多数据
       if (_isFooter) {
         _loadingMore();
@@ -74,11 +76,11 @@ class _RefreshListViewState extends State<RefreshListView> {
     // 初始时，显示加载状态，如加载成功后隐藏页面并显示数据，之后显示加载更多
 
     // 根据列表数量判断是否初始化
-    bool init = widget.itemCount != 0;
+    bool isInit = widget.itemCount != 0;
     // 列表数量
     int itemCount = widget.itemCount + (!widget.showFooter ? 0 : 1);
     Widget child = Container();
-    if (init) {
+    if (isInit) {
       if (widget.refresh != null) {
         child = RefreshIndicator(
           onRefresh: _refresh,
@@ -88,17 +90,24 @@ class _RefreshListViewState extends State<RefreshListView> {
         child = _buildListView(itemCount);
       }
     }
+    child = StateView(
+      controller: _stateController!,
+      onTap: () => _refresh(isInit: isInit),
+      child: child,
+    );
+
+    if (!widget.slideListener) {
+      return child;
+    }
     return Listener(
       // 手指按下屏幕
       onPointerDown: (event) => _isTouch = true,
       // 手指按下屏幕未离开并且在滑动
       onPointerMove: (event) {
         // 未初始化/正在加载中时，不处理
-        if (!init || _isLoading) return;
+        if (!isInit || _isLoading) return;
         // 手指移动过程中，如果已经到最底部了，就提示松开手指进行加载，如果未滑动到最底部就提示继续滑动
         if (_isFooter) {
-          _stateController!.loadMore();
-        } else {
           _stateController!.loadSliding();
         }
         setState(() {});
@@ -106,18 +115,14 @@ class _RefreshListViewState extends State<RefreshListView> {
       // 手指离开屏幕
       onPointerUp: (event) {
         // 未初始化/正在加载中时，不处理
-        if (!init || _isLoading) return;
+        if (!isInit || _isLoading) return;
         _isTouch = false;
         // 手指已离开屏幕并且滑动到底部时加载更多数据
         if (_isFooter) {
           _loadingMore();
         }
       },
-      child: StateView(
-        controller: _stateController!,
-        onTap: () => _refresh(init: init),
-        child: child,
-      ),
+      child: child,
     );
   }
 
@@ -139,8 +144,8 @@ class _RefreshListViewState extends State<RefreshListView> {
   }
 
   /// 第一次加载数据
-  Future<void> _refresh({bool init = true}) async {
-    if (!init) setState(() => _stateController!.loading());
+  Future<void> _refresh({bool isInit = true}) async {
+    if (!isInit) setState(() => _stateController!.loading());
     if (widget.refresh != null) {
       await widget.refresh!(true);
     }
