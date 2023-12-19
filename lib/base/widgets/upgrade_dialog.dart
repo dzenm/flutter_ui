@@ -56,8 +56,7 @@ class UpgradeDialog extends StatefulWidget {
           builder: (context) {
             return DialogWrapper(
               color: Colors.transparent,
-              touchOutsideDismiss: false,
-              backDismiss: false,
+              isTouchOutsideDismiss: false,
               borderRadius: const BorderRadius.all(Radius.circular(4)),
               child: UpgradeDialog(
                 appVersion: appVersion!,

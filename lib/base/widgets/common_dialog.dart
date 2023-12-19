@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:bot_toast/bot_toast.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../generated/l10n.dart';
 import 'common_widget.dart';
 import 'tap_layout.dart';
-import 'will_pop_view.dart';
 
 typedef ItemClickCallback = void Function(int index);
 
@@ -59,13 +59,13 @@ class CommonDialog {
         ),
         child: isVertical
             ? Column(
-                mainAxisSize: MainAxisSize.min,
-                children: widgets,
-              )
+          mainAxisSize: MainAxisSize.min,
+          children: widgets,
+        )
             : Row(
-                mainAxisSize: MainAxisSize.min,
-                children: widgets,
-              ),
+          mainAxisSize: MainAxisSize.min,
+          children: widgets,
+        ),
       ),
     );
   }
@@ -73,10 +73,10 @@ class CommonDialog {
   /// iOS风格底部选择图片对话框
   /// CommonDialog.showSelectImageBottomSheet(context)
   static Future<void> showSelectImageBottomSheet(
-    BuildContext context, {
-    Function? onCameraTap,
-    Function? onGalleryTap,
-  }) async {
+      BuildContext context, {
+        Function? onCameraTap,
+        Function? onGalleryTap,
+      }) async {
     return await showListBottomSheet(context, [
       S.of(context).camera,
       S.of(context).gallery,
@@ -94,12 +94,12 @@ class CommonDialog {
   ///   RouteManager.pop(context);
   /// })
   static Future<void> showListBottomSheet(
-    BuildContext context,
-    List<String> items,
-    ItemClickCallback? onTap, {
-    double height = 45.0,
-    bool isMaterial = false,
-  }) async {
+      BuildContext context,
+      List<String> items,
+      ItemClickCallback? onTap, {
+        double height = 45.0,
+        bool isMaterial = false,
+      }) async {
     List<String> data = [];
     for (var item in items) {
       data.add(item);
@@ -116,10 +116,10 @@ class CommonDialog {
         borderRadius = items.length == 1 // item只有一个按钮
             ? const BorderRadius.all(Radius.circular(8))
             : index == 0 || index == data.length - 1 // item的第一个按钮和取消按钮
-                ? const BorderRadius.vertical(top: Radius.circular(8))
-                : index == items.length - 1 // item的最后一个按钮
-                    ? const BorderRadius.vertical(bottom: Radius.circular(8))
-                    : null;
+            ? const BorderRadius.vertical(top: Radius.circular(8))
+            : index == items.length - 1 // item的最后一个按钮
+            ? const BorderRadius.vertical(bottom: Radius.circular(8))
+            : null;
       }
       return Container(
         decoration: BoxDecoration(
@@ -144,16 +144,16 @@ class CommonDialog {
     int index = -1;
     Widget child = realHeight > MediaQuery.of(context).size.width / 2
         ? ListView.builder(
-            itemCount: data.length,
-            itemBuilder: (BuildContext context, int index) => buildChild(index),
-          )
+      itemCount: data.length,
+      itemBuilder: (BuildContext context, int index) => buildChild(index),
+    )
         : Column(
-            mainAxisSize: MainAxisSize.min,
-            children: data.map((e) {
-              index++;
-              return buildChild(index);
-            }).toList(),
-          );
+      mainAxisSize: MainAxisSize.min,
+      children: data.map((e) {
+        index++;
+        return buildChild(index);
+      }).toList(),
+    );
 
     showModalBottomSheet(
       context: context,
@@ -185,35 +185,35 @@ class CommonDialog {
   ///   onPositiveTap: () => CommonDialog.showToast('修改成功'),
   /// )
   static Future<T> showPromptDialog<T>(
-    BuildContext context, {
-    bool touchOutsideDismiss = false,
-    String? titleString,
-    Widget? title,
-    Widget? content,
-    String? positiveText,
-    String? negativeText,
-    TextStyle? positiveStyle,
-    TextStyle? negativeStyle,
-    GestureTapCallback? onPositiveTap,
-    GestureTapCallback? onNegativeTap,
-    bool singleButton = false,
-  }) async {
+      BuildContext context, {
+        bool barrierDismissible = false,
+        String? titleString,
+        Widget? title,
+        Widget? content,
+        String? positiveText,
+        String? negativeText,
+        TextStyle? positiveStyle,
+        TextStyle? negativeStyle,
+        GestureTapCallback? onPositiveTap,
+        GestureTapCallback? onNegativeTap,
+        bool singleButton = false,
+      }) async {
     return await showDialog(
       context: context,
       builder: (context) {
         return DialogWrapper(
-          touchOutsideDismiss: touchOutsideDismiss,
+          isTouchOutsideDismiss: barrierDismissible,
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             SizedBox(height: content == null ? 36 : 20),
             title ?? Text(titleString ?? '', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             content == null
                 ? const SizedBox(width: 0, height: 36)
                 : Flexible(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-                      child: content,
-                    ),
-                  ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                child: content,
+              ),
+            ),
             CupertinoDialogButton(
               positiveText: positiveText,
               negativeText: negativeText,
@@ -228,49 +228,126 @@ class CommonDialog {
       },
     );
   }
+
+  /// 默认弹窗
+  static Future<T?> showDefaultDialog<T>(
+      BuildContext context, {
+        Widget? mainWidget,
+        String? contentText,
+        bool oneBtn = false,
+        String? cancelTxt,
+        String? confirmTxt,
+        Function? confirmCallback,
+        Function? dismissCallback,
+        Color? cancelColor, //l 取消按钮字体颜色
+        bool dismissible = false,
+      }) {
+    return showDialog<T>(
+      context: context,
+      barrierDismissible: dismissible,
+      builder: (context) {
+        return CupertinoAlertDialog(
+          content: Container(
+            alignment: Alignment.center,
+            constraints: const BoxConstraints(minHeight: 50),
+            child: mainWidget ?? Text(contentText!, style: const TextStyle(fontSize: 16)),
+          ),
+          actions: [
+            if (!oneBtn)
+              CupertinoDialogAction(
+                child: Text(
+                  cancelTxt ?? S.of(context).cancel,
+                  style: TextStyle(fontSize: 15, color: cancelColor),
+                ),
+                onPressed: () {
+                  dismissCallback == null ? Navigator.of(context).pop() : dismissCallback();
+                },
+              ),
+            CupertinoDialogAction(
+              child: Text(
+                confirmTxt ?? S.of(context).confirm,
+                style: const TextStyle(fontSize: 15),
+              ),
+              onPressed: () {
+                confirmCallback == null ? Navigator.of(context).pop() : confirmCallback();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  static Future<T> showCustomDialog<T>(
+      BuildContext context, {
+        bool barrierDismissible = false,
+        GestureTapCallback? dismissCallback,
+        Widget? child,
+        Color? barrierColor,
+        Color? color,
+        EdgeInsetsGeometry? padding,
+        BoxConstraints? constraints,
+        BorderRadius? borderRadius,
+      }) async {
+    return await showDialog(
+      context: context,
+      barrierDismissible: barrierDismissible,
+      barrierColor: barrierColor ?? Colors.black54,
+      builder: (context) {
+        return DialogWrapper(
+          dismissCallback: dismissCallback,
+          isTouchOutsideDismiss: barrierDismissible,
+          color: color ?? Colors.white,
+          padding: padding,
+          constraints: constraints,
+          borderRadius: borderRadius,
+          child: child,
+        );
+      },
+    );
+  }
 }
 
 /// Dialog设置是否可以点击外部取消显示
 class DialogWrapper extends StatelessWidget {
-  final bool touchOutsideDismiss; // 点击弹窗外部关闭弹窗，默认为true， true：可以关闭 false：不可以关闭
-  final bool backDismiss; // 点击返回键关闭弹窗，默认为true， true：关闭弹窗 false：不可以关闭弹窗
+  final bool isTouchOutsideDismiss; // 点击弹窗外部关闭弹窗，默认为true， true：可以关闭 false：不可以关闭
   final GestureTapCallback? dismissCallback; // 弹窗关闭回调
   final Widget? child;
   final Color color;
+  final EdgeInsetsGeometry padding;
+  final BoxConstraints constraints;
   final BorderRadius borderRadius;
 
   const DialogWrapper({
     super.key,
-    this.touchOutsideDismiss = false,
-    this.backDismiss = true,
+    this.isTouchOutsideDismiss = false,
     this.dismissCallback,
     this.child,
-    this.color = Colors.white,
-    this.borderRadius = const BorderRadius.all(Radius.circular(16)),
-  });
+    Color? color,
+    EdgeInsetsGeometry? padding,
+    BoxConstraints? constraints,
+    BorderRadius? borderRadius,
+  })  : color = color ?? Colors.white,
+        padding = padding ?? const EdgeInsets.symmetric(horizontal: 32),
+        constraints = constraints ?? const BoxConstraints(maxWidth: kMaxWidthInDialog, maxHeight: kMaxHeightInDialog),
+        borderRadius = borderRadius ?? const BorderRadius.all(Radius.circular(16));
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: touchOutsideDismiss ? dismissCallback ?? () => Navigator.of(context).pop() : null,
+      onTap: isTouchOutsideDismiss ? dismissCallback ?? () => Navigator.of(context).pop() : null,
       behavior: HitTestBehavior.opaque,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         resizeToAvoidBottomInset: false, // 防止软键盘弹出像素溢出
         body: Center(
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
-            constraints: const BoxConstraints(
-              maxWidth: kMaxWidthInDialog,
-              maxHeight: kMaxHeightInDialog,
-            ),
+            padding: padding,
+            constraints: constraints,
             child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               ClipRRect(
                 borderRadius: borderRadius,
-                child: Container(
-                  color: color,
-                  child: child,
-                ),
+                child: Container(color: color, child: child),
               )
             ]),
           ),
