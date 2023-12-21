@@ -86,7 +86,7 @@ class _PopupPageState extends State<PopupPage> {
       TapLayout(
         width: MediaQuery.of(context).size.width,
         height: 50.0,
-        child: SingleTextLayout(
+        child: SingleTextView(
           title: 'Popup在Target所在的方向等大',
           suffix: CupertinoSwitch(value: _isCollapsed, onChanged: (value) => setState(() => _isCollapsed = value)),
         ),
@@ -95,7 +95,7 @@ class _PopupPageState extends State<PopupPage> {
         TapLayout(
           width: MediaQuery.of(context).size.width,
           height: 50.0,
-          child: SingleTextLayout(
+          child: SingleTextView(
             title: '是否固定箭头(在上一个选项基础上)',
             suffix: CupertinoSwitch(value: _isPin, onChanged: (value) => setState(() => _isPin = value)),
           ),
@@ -103,7 +103,7 @@ class _PopupPageState extends State<PopupPage> {
       TapLayout(
         width: MediaQuery.of(context).size.width,
         height: 50.0,
-        child: SingleTextLayout(
+        child: SingleTextView(
           title: '开启自定义偏移量',
           suffix: CupertinoSwitch(value: _enabledOffset, onChanged: (value) => setState(() => _enabledOffset = value)),
         ),
@@ -147,7 +147,7 @@ class _PopupPageState extends State<PopupPage> {
       TapLayout(
         width: MediaQuery.of(context).size.width,
         height: 50.0,
-        child: SingleTextLayout(
+        child: SingleTextView(
           title: '开启自定义箭头偏移量',
           suffix: CupertinoSwitch(value: _enabledArrowOffset, onChanged: (value) => setState(() => _enabledArrowOffset = value)),
         ),

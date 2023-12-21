@@ -123,7 +123,7 @@ class _MePageState extends State<MePage> {
           String params = '?medicineName=金银花';
           AppRouteDelegate.of(context).push(MeRouter.medicine + params);
         },
-        child: SingleTextLayout(
+        child: SingleTextView(
           title: S.of(context).chineseMedicine,
           isShowForward: true,
         ),
@@ -133,7 +133,7 @@ class _MePageState extends State<MePage> {
         height: 50.0,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         onTap: () => AppRouteDelegate.of(context).push(MeRouter.collect),
-        child: SingleTextLayout(
+        child: SingleTextView(
           icon: Icons.collections,
           title: S.of(context).collect,
           isShowForward: true,
@@ -143,7 +143,7 @@ class _MePageState extends State<MePage> {
         height: 50.0,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         onTap: () => AppRouteDelegate.of(context).push(MeRouter.coin),
-        child: SingleTextLayout(
+        child: SingleTextView(
           icon: Icons.money,
           title: S.of(context).coinRecord,
           isShowForward: true,
@@ -153,7 +153,7 @@ class _MePageState extends State<MePage> {
         height: 50.0,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         onTap: () => AppRouteDelegate.of(context).push(MeRouter.rank),
-        child: SingleTextLayout(
+        child: SingleTextView(
           icon: Icons.money,
           title: S.of(context).integralRankingList,
           isShowForward: true,
@@ -163,7 +163,7 @@ class _MePageState extends State<MePage> {
         height: 50.0,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         onTap: () => AppRouteDelegate.of(context).push(MeRouter.article),
-        child: SingleTextLayout(
+        child: SingleTextView(
           icon: Icons.article,
           title: S.of(context).sharedArticle,
           isShowForward: true,
@@ -173,7 +173,7 @@ class _MePageState extends State<MePage> {
         height: 50.0,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         onTap: () => AppRouteDelegate.of(context).push(StudyRouter.study).then((value) => log(value)),
-        child: SingleTextLayout(
+        child: SingleTextView(
           icon: Icons.real_estate_agent_sharp,
           title: S.of(context).studyMainPage(''),
           isShowForward: true,
@@ -183,7 +183,7 @@ class _MePageState extends State<MePage> {
         height: 50.0,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         onTap: () => AppRouteDelegate.of(context).push(MeRouter.info),
-        child: SingleTextLayout(
+        child: SingleTextView(
           icon: Icons.supervised_user_circle_sharp,
           title: S.of(context).profile,
           isShowForward: true,
@@ -193,7 +193,7 @@ class _MePageState extends State<MePage> {
         height: 50.0,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         onTap: () => AppRouteDelegate.of(context).push(MallRouter.mall),
-        child: SingleTextLayout(
+        child: SingleTextView(
           icon: Icons.local_mall_rounded,
           title: S.of(context).mall,
           isShowForward: true,
@@ -204,7 +204,7 @@ class _MePageState extends State<MePage> {
         borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(5), bottomRight: Radius.circular(5)),
         padding: const EdgeInsets.symmetric(horizontal: 16),
         onTap: () => AppRouteDelegate.of(context).push(MeRouter.setting),
-        child: SingleTextLayout(
+        child: SingleTextView(
           icon: Icons.settings,
           title: S.of(context).setting,
           isShowForward: true,

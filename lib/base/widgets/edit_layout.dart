@@ -77,9 +77,10 @@ class _EditLayoutState extends State<EditLayout> {
 
   @override
   void dispose() {
-    super.dispose();
     // 释放
     _focusNode.dispose();
+    _controller.dispose();
+    super.dispose();
   }
 
   @override

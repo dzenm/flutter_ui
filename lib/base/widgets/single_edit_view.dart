@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 
 ///
 /// 单行输入框布局
-/// SingleEditLayout(
+/// SingleEditView(
 ///   title: '账户',
 ///   onChanged: (value) => setState(() => newText = value),
 ///   controller: _controller,
@@ -13,7 +13,7 @@ import 'package:flutter/services.dart';
 ///   keyboardType: CustomKeywordBoard.license,
 /// ),
 ///
-class SingleEditLayout extends StatefulWidget {
+class SingleEditView extends StatefulWidget {
   final String? title; // 标题文本
   final Color? titleColor; // 标题文本颜色
   final String? initialText; // 标题文本
@@ -28,7 +28,7 @@ class SingleEditLayout extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatters; // 输入文本的类型
   final double horizontalPadding; // 左右的内边距
 
-  const SingleEditLayout({
+  const SingleEditView({
     super.key,
     this.title,
     this.onChanged,
@@ -101,10 +101,10 @@ class SingleEditLayout extends StatefulWidget {
   }
 
   @override
-  State<StatefulWidget> createState() => _SingleEditLayoutState();
+  State<StatefulWidget> createState() => _SingleEditViewState();
 }
 
-class _SingleEditLayoutState extends State<SingleEditLayout> {
+class _SingleEditViewState extends State<SingleEditView> {
   /// 判断和控制焦点的获取
   final FocusNode _focusNode = FocusNode();
 
@@ -150,7 +150,7 @@ class _SingleEditLayoutState extends State<SingleEditLayout> {
 
         // 输入文本
         Expanded(
-          child: SingleEditLayout.textField(
+          child: SingleEditView.textField(
             _focusNode,
             widget.fontSize,
             widget.hintText ?? '',

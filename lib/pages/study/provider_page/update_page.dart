@@ -41,14 +41,14 @@ class _UpdatePageState extends State<UpdatePage> {
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                SingleEditLayout(
+                SingleEditView(
                   title: '用户名',
                   initialText: '${_user?.username}',
                   onChanged: (value) {
                     _user?.username = value;
                   },
                 ),
-                SingleEditLayout(
+                SingleEditView(
                   title: '年龄',
                   initialText: '${_user?.age}',
                   keyboardType: TextInputType.number,
@@ -67,20 +67,20 @@ class _UpdatePageState extends State<UpdatePage> {
                       _user?.sex = value == '男' ? 1 : 0;
                     },
                   ),
-                  child: SingleTextLayout(
+                  child: SingleTextView(
                     title: '性别',
                     fontSize: 16,
                     text: _user?.sex == 1 ? '男' : '女',
                   ),
                 ),
-                SingleEditLayout(
+                SingleEditView(
                   title: '地址',
                   initialText: '${_user?.address}',
                   onChanged: (value) {
                     _user?.address = value;
                   },
                 ),
-                SingleEditLayout(
+                SingleEditView(
                   title: '手机号',
                   initialText: '${_user?.phone}',
                   keyboardType: TextInputType.number,

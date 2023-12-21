@@ -50,10 +50,10 @@ class _InfoPageState extends State<InfoPage> {
               Assets.a,
               Assets.a,
             ]),
-            child: SingleTextLayout(
+            child: SingleTextView(
               icon: Icons.account_circle,
               title: S.of(context).avatar,
-              isTextLeft: false,
+              textAlign: TextAlign.right,
               suffix: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Image.asset(Assets.a, fit: BoxFit.cover, width: 24, height: 24),
@@ -72,11 +72,11 @@ class _InfoPageState extends State<InfoPage> {
             background: theme.white,
             padding: const EdgeInsets.symmetric(horizontal: 16),
             onTap: () => context.read<StudyModel>().setValue('new value'),
-            child: SingleTextLayout(
+            child: SingleTextView(
               icon: Icons.phone,
               title: S.of(context).id,
               text: id,
-              isTextLeft: false,
+              textAlign: TextAlign.right,
               isShowForward: true,
             ),
           );
@@ -91,11 +91,11 @@ class _InfoPageState extends State<InfoPage> {
             background: theme.white,
             padding: const EdgeInsets.symmetric(horizontal: 16),
             onTap: () => AppRouteDelegate.of(context).push(MeRouter.editInfo),
-            child: SingleTextLayout(
+            child: SingleTextView(
               icon: Icons.person,
               title: S.of(context).username,
               text: username,
-              isTextLeft: false,
+              textAlign: TextAlign.right,
               isShowForward: true,
             ),
           );
@@ -110,11 +110,11 @@ class _InfoPageState extends State<InfoPage> {
             background: theme.white,
             padding: const EdgeInsets.symmetric(horizontal: 16),
             onTap: () => context.read<StudyModel>().setValue('new value'),
-            child: SingleTextLayout(
+            child: SingleTextView(
               icon: Icons.email,
               title: S.of(context).email,
               text: email,
-              isTextLeft: false,
+              textAlign: TextAlign.right,
               isShowForward: true,
             ),
           );
@@ -129,11 +129,11 @@ class _InfoPageState extends State<InfoPage> {
             background: theme.white,
             padding: const EdgeInsets.symmetric(horizontal: 16),
             onTap: () => context.read<StudyModel>().setValue('new value'),
-            child: SingleTextLayout(
+            child: SingleTextView(
               icon: Icons.money,
               title: S.of(context).coin,
               text: coinCount,
-              isTextLeft: false,
+              textAlign: TextAlign.right,
               isShowForward: true,
             ),
           );

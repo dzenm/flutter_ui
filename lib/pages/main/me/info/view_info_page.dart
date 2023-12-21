@@ -51,7 +51,7 @@ class _ViewInfoPageState extends State<ViewInfoPage> {
               height: 50,
               background: theme.white,
               padding: const EdgeInsets.all(16),
-              child: SingleTextLayout(title: value),
+              child: SingleTextView(title: value),
             ),
             selector: (context, model) => model.user.username ?? '',
           )

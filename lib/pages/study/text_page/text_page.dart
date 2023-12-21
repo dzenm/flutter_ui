@@ -71,7 +71,7 @@ class _TextPageState extends State<TextPage> {
               padding: const EdgeInsets.all(16),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 CommonWidget.titleView('无边框带字数控制的输入框: '),
-                SingleEditLayout(
+                SingleEditView(
                   title: '账户',
                   onChanged: (value) => setState(() => newText = value),
                   controller: _controller,
@@ -135,7 +135,7 @@ class _TextPageState extends State<TextPage> {
                   height: 50.0,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   onTap: () => AppRouteDelegate.of(context).push(MeRouter.setting),
-                  child: SingleTextLayout(
+                  child: SingleTextView(
                     title: S.of(context).setting,
                     isShowForward: true,
                     prefix: const BadgeTag(count: 10),
@@ -144,31 +144,31 @@ class _TextPageState extends State<TextPage> {
                 TapLayout(
                   height: 50.0,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: SingleTextLayout(
+                  child: SingleTextView(
                     title: S.of(context).phone,
                     text: '17601487212',
-                    isTextLeft: false,
+                    textAlign: TextAlign.right,
                     isShowForward: true,
                   ),
                 ),
                 const TapLayout(
                   height: 50.0,
                   padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: SingleTextLayout(
+                  child: SingleTextView(
                     icon: Icons.date_range_outlined,
                     title: '生日',
                     text: '1997/2/12',
-                    isTextLeft: false,
+                    textAlign: TextAlign.right,
                     isShowForward: true,
                   ),
                 ),
                 const TapLayout(
                   height: 50.0,
                   padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: SingleTextLayout(
+                  child: SingleTextView(
                     icon: Icons.adb,
                     title: '关于',
-                    isTextLeft: false,
+                    textAlign: TextAlign.right,
                     isShowForward: true,
                     badgeCount: 0,
                   ),
@@ -176,10 +176,10 @@ class _TextPageState extends State<TextPage> {
                 TapLayout(
                   height: 50.0,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: SingleTextLayout(
+                  child: SingleTextView(
                     icon: Icons.person,
                     title: S.of(context).avatar,
-                    isTextLeft: false,
+                    textAlign: TextAlign.right,
                     suffix: ClipRRect(
                       borderRadius: BorderRadius.circular(16),
                       child: Image.asset(
@@ -195,7 +195,7 @@ class _TextPageState extends State<TextPage> {
                 TapLayout(
                   height: 50.0,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: SingleTextLayout(
+                  child: SingleTextView(
                     title: '通知切换',
                     suffix: CupertinoSwitch(
                       value: switchState,
@@ -206,12 +206,12 @@ class _TextPageState extends State<TextPage> {
                 const TapLayout(
                   height: 50.0,
                   padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: SingleTextLayout(title: '通知切换', text: '查看通知内容'),
+                  child: SingleTextView(title: '通知切换', text: '查看通知内容'),
                 ),
                 const TapLayout(
                   height: 60.0,
                   padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: SingleTextLayout(
+                  child: SingleTextView(
                     title: '登陆记录',
                     summary: '查看最近所有的登录记录',
                     badgeCount: 0,

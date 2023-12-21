@@ -72,7 +72,7 @@ class _SettingPageState extends State<SettingPage> {
               TapLayout(
                 height: 50.0,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: SingleTextLayout(
+                child: SingleTextView(
                   icon: Icons.notifications_on_sharp,
                   title: S.of(context).notification,
                   suffix: CupertinoSwitch(value: switchState, onChanged: (value) => setState(() => switchState = value)),
@@ -82,7 +82,7 @@ class _SettingPageState extends State<SettingPage> {
                 height: 50.0,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 onTap: () => _selectedTheme(),
-                child: SingleTextLayout(
+                child: SingleTextView(
                   icon: Icons.color_lens,
                   title: S.of(context).theme,
                   isShowForward: true,
@@ -98,12 +98,12 @@ class _SettingPageState extends State<SettingPage> {
                 height: 50.0,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 onTap: _selectedLanguage,
-                child: SingleTextLayout(
+                child: SingleTextView(
                   icon: Icons.language,
                   title: S.of(context).language,
                   isShowForward: true,
                   text: _convertLocale(locale),
-                  isTextLeft: false,
+                  textAlign: TextAlign.right,
                 ),
               ),
               CommonWidget.divider(height: 8),
@@ -111,7 +111,7 @@ class _SettingPageState extends State<SettingPage> {
                 height: 50.0,
                 background: theme.white,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: SingleTextLayout(title: S.of(context).loginRecord, badgeCount: 0, isShowForward: true),
+                child: SingleTextView(title: S.of(context).loginRecord, badgeCount: 0, isShowForward: true),
               ),
               TapLayout(
                 height: 50.0,
@@ -124,7 +124,7 @@ class _SettingPageState extends State<SettingPage> {
                     cancel();
                   });
                 },
-                child: SingleTextLayout(
+                child: SingleTextView(
                   title: S.of(context).checkUpgrade,
                   suffix: Text('v$currentVersion'),
                   badgeCount: 0,
@@ -136,7 +136,7 @@ class _SettingPageState extends State<SettingPage> {
                 background: theme.white,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 onTap: () => AppRouteDelegate.of(context).push(MeRouter.about),
-                child: SingleTextLayout(title: S.of(context).aboutMe, isShowForward: true),
+                child: SingleTextView(title: S.of(context).aboutMe, isShowForward: true),
               ),
               CommonWidget.divider(height: 8),
               TapLayout(
@@ -144,7 +144,7 @@ class _SettingPageState extends State<SettingPage> {
                 background: theme.white,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 onTap: () => HttpManager().logout(),
-                child: SingleTextLayout(title: S.of(context).exitLogout, isShowForward: true),
+                child: SingleTextView(title: S.of(context).exitLogout, isShowForward: true),
               ),
             ],
           ),

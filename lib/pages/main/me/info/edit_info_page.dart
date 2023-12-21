@@ -58,7 +58,7 @@ class _EditInfoPageState extends State<EditInfoPage> {
                     ),
                 ],
               ),
-              SingleEditLayout(title: S.of(context).username, controller: _controller, maxLength: 16),
+              SingleEditView(title: S.of(context).username, controller: _controller, maxLength: 16),
             ]),
           ),
         ));

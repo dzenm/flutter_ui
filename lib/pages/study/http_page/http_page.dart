@@ -42,7 +42,7 @@ class _HTTPListPageState extends State<HTTPListPage> {
                   width: MediaQuery.of(context).size.width,
                   height: 50.0,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: SingleTextLayout(
+                  child: SingleTextView(
                     title: '显示加载框',
                     titleColor: Colors.white,
                     suffix: CupertinoSwitch(value: isShowDialog, onChanged: (value) => setState(() => isShowDialog = value)),
@@ -52,7 +52,7 @@ class _HTTPListPageState extends State<HTTPListPage> {
                   width: MediaQuery.of(context).size.width,
                   height: 50.0,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: SingleTextLayout(
+                  child: SingleTextView(
                     title: '显示错误提示框',
                     titleColor: Colors.white,
                     suffix: CupertinoSwitch(value: isShowToast, onChanged: (value) => setState(() => isShowToast = value)),
