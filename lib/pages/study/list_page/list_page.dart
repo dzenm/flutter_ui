@@ -68,14 +68,14 @@ class _ListPageState extends State<ListPage> {
   // 根据页数获取文章
   Future<void> _getData() async {
     bool reset = _pageIndex == 0;
-    if (reset) {
-      _articles.clear();
-    }
     await Future.delayed(Duration(milliseconds: reset ? 500 : 0));
     await HttpManager().getArticles(
       page: _pageIndex,
       isShowDialog: false,
       success: (list, pageCount) {
+        if (reset) {
+          _articles.clear();
+        }
         if (_pageIndex >= (pageCount ?? 0)) {
           _controller.loadEmpty(); // 加载完所有页面
         } else {

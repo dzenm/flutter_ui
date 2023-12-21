@@ -80,9 +80,6 @@ abstract class ListPageState<D extends DBBaseEntity, T extends StatefulWidget> e
   /// 加载数据，如果pageIndex为1表示从新加载
   Future<void> _getData() async {
     bool reset = _pageIndex == initialPageIndex;
-    if (reset) {
-      _list.clear();
-    }
     await Future.delayed(Duration(milliseconds: reset ? 500 : 0));
     await getData(_pageIndex);
   }
@@ -92,6 +89,10 @@ abstract class ListPageState<D extends DBBaseEntity, T extends StatefulWidget> e
 
   /// 更新加载成功的状态
   void updateState(List<D> list, int? totalCount) {
+    bool reset = _pageIndex == initialPageIndex;
+    if (reset) {
+      _list.clear();
+    }
     if (_pageIndex >= (totalCount ?? 0)) {
       _controller.loadEmpty(); // 加载完所有页面
     } else {
