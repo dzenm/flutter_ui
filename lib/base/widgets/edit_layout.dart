@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/base/base.dart';
 
 ///
 /// Created by a0010 on 2023/11/10 09:50
@@ -7,7 +8,7 @@ import 'package:flutter/services.dart';
 class EditLayout extends StatefulWidget {
   final Widget? title;
   final EdgeInsetsGeometry? padding;
-  final EdgeInsetsGeometry? editPadding;
+  final EdgeInsetsGeometry editPadding;
   final double fontSize; // 字体大小
   final Color? textColor; // 文本颜色
   final String? hintText; // 提示文字
@@ -20,7 +21,7 @@ class EditLayout extends StatefulWidget {
   final Color focusedBorderColor; // 获取焦点的边框颜色
   final double borderRadius; // 边框圆角
   final double borderWidth; // 边框宽度
-  final TextInputType? keyboardType; // 文本输入类型
+  final TextInputType keyboardType; // 文本输入类型
   final ValueChanged<String>? onChanged; // 输入监听器
   final String? initialText; // 标题文本
   final TextEditingController? controller; // 输入控制器
@@ -30,25 +31,33 @@ class EditLayout extends StatefulWidget {
     super.key,
     this.title,
     this.padding,
-    this.editPadding,
-    this.fontSize = 14,
+    EdgeInsetsGeometry? editPadding,
+    double? fontSize,
     this.textColor,
     this.hintText,
     this.hintStyle,
-    this.color = Colors.transparent,
+    Color? color,
     this.maxLength,
     this.maxLines,
-    this.enabled = true,
-    this.enabledBorderColor = Colors.grey,
-    this.focusedBorderColor = Colors.blue,
-    this.borderRadius = 12,
-    this.borderWidth = 1,
-    this.keyboardType = TextInputType.text,
+    bool? enabled,
+    Color? enabledBorderColor,
+    Color? focusedBorderColor,
+    double? borderRadius,
+    double? borderWidth,
+    TextInputType? keyboardType,
     this.onChanged,
     this.initialText,
     this.controller,
     this.inputFormatters,
-  });
+  })  : editPadding = editPadding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        fontSize = fontSize ?? 14,
+        color = color ?? Colors.transparent,
+        enabled = enabled ?? true,
+        enabledBorderColor = enabledBorderColor ?? Colors.grey,
+        focusedBorderColor = focusedBorderColor ?? Colors.blue,
+        borderRadius = borderRadius ?? 12,
+        borderWidth = borderWidth ?? 1,
+        keyboardType = keyboardType ?? TextInputType.text;
 
   @override
   State<EditLayout> createState() => _EditLayoutState();
@@ -67,12 +76,39 @@ class _EditLayoutState extends State<EditLayout> {
   /// 文本编辑控制器
   late TextEditingController _controller;
 
+  final GlobalKey _key = GlobalKey();
+  final GlobalKey _targetKey = GlobalKey();
+  double padding = 0;
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _calculatorTextFieldHeight());
+
     _focusNode.addListener(() => setState(() => _hasFocus = _focusNode.hasFocus));
     _controller = widget.controller ?? TextEditingController(text: widget.initialText ?? '');
     _currentLength = _controller.text.length;
+  }
+
+  void _calculatorTextFieldHeight() {
+    RenderBox? view = _key.currentContext?.findRenderObject() as RenderBox?;
+    RenderBox? targetView = _targetKey.currentContext?.findRenderObject() as RenderBox?;
+    if (view == null || targetView == null) return;
+    EdgeInsets edgeInsets = widget.editPadding as EdgeInsets;
+    Size size = view.size;
+    Size targetSize = targetView.size;
+    // 总高度
+    double height = targetSize.height;
+    // 行数
+    int lines = widget.maxLines ?? 1;
+    // 上下间距
+    double vertical = edgeInsets.top + edgeInsets.bottom;
+    // item高度
+    double itemHeight = (height - vertical) / lines;
+    // 行高+间距-文本高度
+    padding = itemHeight + edgeInsets.top - size.height;
+    Log.d('文本高度：itemHeight=$itemHeight, top=${edgeInsets.top}, height=${size.height}, padding=$padding');
+    setState(() {});
   }
 
   @override
@@ -92,13 +128,18 @@ class _EditLayoutState extends State<EditLayout> {
         if (widget.title != null)
           Padding(
             padding: EdgeInsets.only(
-              right: widget.editPadding?.horizontal ?? 16,
-              top: widget.editPadding?.vertical ?? 12,
+              right: widget.editPadding.horizontal / 2,
+              top: widget.editPadding.vertical / 2,
             ),
-            child: widget.title!,
+            child: Container(
+              key: _key,
+              child: widget.title!,
+            ),
           ),
+
         Expanded(
           child: TextField(
+            key: _targetKey,
             enabled: widget.enabled,
             focusNode: _focusNode,
             keyboardType: widget.keyboardType,
@@ -112,7 +153,7 @@ class _EditLayoutState extends State<EditLayout> {
               filled: true,
               fillColor: widget.color,
               // isCollapsed 去除默认的最小高度，然后添加一个top padding就能使输入文字居中显示
-              contentPadding: widget.editPadding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              contentPadding: widget.editPadding,
               // 未获取焦点的边框
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: widget.enabledBorderColor, width: widget.borderWidth),

@@ -51,7 +51,7 @@ class _OrderPageState extends State<AddOrderPage> {
       EditLayout(
         title: const Text(
           '联系人\u3000',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
         ),
         hintText: '收件人姓名',
         color: const Color(0xFFE0E0E0),
@@ -63,7 +63,7 @@ class _OrderPageState extends State<AddOrderPage> {
       EditLayout(
         title: const Text(
           '收货地址',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
         ),
         hintText: '收件人详细地址',
         color: const Color(0xFFE0E0E0),

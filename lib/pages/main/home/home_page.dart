@@ -140,6 +140,8 @@ class _HomePageState extends State<HomePage> {
       page: _pageIndex,
       isShowDialog: false,
       success: (list, pageCount) {
+        if (!mounted) return;
+        setState(() {});
         if (_pageIndex >= (pageCount ?? 0)) {
           _controller.loadEmpty(); // 加载完所有页面
         } else {
@@ -148,8 +150,6 @@ class _HomePageState extends State<HomePage> {
           ++_pageIndex;
           _controller.loadMore();
         }
-        if (!mounted) return;
-        setState(() {});
       },
     );
   }
