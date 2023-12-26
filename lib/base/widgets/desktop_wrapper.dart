@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 ///
 /// Created by a0010 on 2023/8/28 15:47
 /// 桌面包装器
-class WindowWrapper extends StatelessWidget {
+class DesktopWrapper extends StatelessWidget {
   final Widget child;
   final double height;
   final bool showMoveBar;
@@ -15,7 +15,7 @@ class WindowWrapper extends StatelessWidget {
   final bool isShowMaximize;
   final bool isShowClose;
 
-  const WindowWrapper({
+  const DesktopWrapper({
     super.key,
     required this.child,
     this.height = 30,

@@ -27,7 +27,7 @@ class _MainPageDesktopState extends State<MainPageDesktop> with SystemTray, Tray
   void initState() {
     super.initState();
 
-    WindowWrapper.setWindow();
+    DesktopWrapper.setWindow();
     init();
     trayManager.addListener(this);
   }
@@ -67,7 +67,7 @@ class _MainPageDesktopState extends State<MainPageDesktop> with SystemTray, Tray
     int length = context.watch<MainModel>().length;
     int selectedIndex = context.watch<MainModel>().selectedIndex;
     return Material(
-      child: WindowWrapper(
+      child: DesktopWrapper(
         child: Container(
           color: Colors.transparent,
           child: Row(children: [

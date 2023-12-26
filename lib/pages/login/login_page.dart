@@ -14,7 +14,7 @@ import '../routers.dart';
 /// 登录页面
 class LoginPage extends StatelessWidget {
   LoginPage({super.key}) {
-    WindowWrapper.setWindow(
+    DesktopWrapper.setWindow(
       size: const Size(400, 600),
       minimumSize: const Size(400, 600),
     );
@@ -45,7 +45,7 @@ class LoginPage extends StatelessWidget {
 
   /// Desktop桌面端展示的页面
   Widget _buildDeskTopPage(BuildContext context) {
-    return WindowWrapper(
+    return DesktopWrapper(
       showMoveBar: true,
       child: Material(
         child: Center(

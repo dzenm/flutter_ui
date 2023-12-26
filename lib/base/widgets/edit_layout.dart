@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/base/base.dart';
 
 ///
 /// Created by a0010 on 2023/11/10 09:50
@@ -107,7 +106,6 @@ class _EditLayoutState extends State<EditLayout> {
     double itemHeight = (height - vertical) / lines;
     // 行高+间距-文本高度
     padding = itemHeight + edgeInsets.top - size.height;
-    Log.d('文本高度：itemHeight=$itemHeight, top=${edgeInsets.top}, height=${size.height}, padding=$padding');
     setState(() {});
   }
 
