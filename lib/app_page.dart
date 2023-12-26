@@ -40,7 +40,7 @@ class AppPage extends StatelessWidget {
     // Provider
     // Keyboard
     // 返回键监听
-    return DesktopGlobalBox(
+    return GlobalBox(
       child: _buildProviderApp(
         child: _buildMaterialApp(),
       ),

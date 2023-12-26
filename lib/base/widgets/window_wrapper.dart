@@ -1,21 +1,28 @@
 import 'dart:io';
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 ///
 /// Created by a0010 on 2023/8/28 15:47
-/// 桌面
+/// 桌面包装器
 class WindowWrapper extends StatelessWidget {
   final Widget child;
-  final bool showMoveBar;
   final double height;
+  final bool showMoveBar;
+  final bool isShowMinimize;
+  final bool isShowMaximize;
+  final bool isShowClose;
 
   const WindowWrapper({
     super.key,
     required this.child,
-    this.showMoveBar = true,
     this.height = 30,
+    this.showMoveBar = true,
+    this.isShowMinimize = true,
+    this.isShowMaximize = true,
+    this.isShowClose = true,
   });
 
   static Future<void> setWindow({
@@ -29,27 +36,34 @@ class WindowWrapper extends StatelessWidget {
       final windows = appWindow;
       windows.minSize = minimumSize;
       windows.size = size;
-      windows.alignment = Alignment.center;
       windows.title = '云鱼';
       windows.show();
     });
   }
 
-  static bool get _isDesktop => Platform.isWindows || Platform.isMacOS || Platform.isLinux;
+  static bool get _isDesktop => !kIsWeb && (Platform.isWindows || Platform.isMacOS || Platform.isLinux);
 
   @override
   Widget build(BuildContext context) {
     if (!_isDesktop) return child;
     return WindowBorder(
       color: Colors.white,
+      width: 0.1,
       child: Stack(alignment: Alignment.topRight, children: [
         child,
-        WindowButtons(showMoveBar: showMoveBar, height: height),
+        WindowButtons(
+          height: height,
+          showMoveBar: showMoveBar,
+          isShowMinimize: isShowMinimize,
+          isShowMaximize: isShowMaximize,
+          isShowClose: isShowClose,
+        ),
       ]),
     );
   }
 }
 
+/// 桌面窗口按钮
 class WindowButtons extends StatelessWidget {
   static final buttonColors = WindowButtonColors(
     iconNormal: const Color(0xFF805306),
@@ -66,15 +80,21 @@ class WindowButtons extends StatelessWidget {
     iconMouseOver: Colors.white,
   );
 
-  final bool showMoveBar;
   final double height;
   final MainAxisAlignment mainAxisAlignment;
+  final bool showMoveBar;
+  final bool isShowMinimize;
+  final bool isShowMaximize;
+  final bool isShowClose;
 
   const WindowButtons({
     super.key,
-    this.showMoveBar = false,
     this.height = 30,
     this.mainAxisAlignment = MainAxisAlignment.end,
+    this.showMoveBar = false,
+    this.isShowMinimize = true,
+    this.isShowMaximize = true,
+    this.isShowClose = true,
   });
 
   @override
@@ -82,21 +102,24 @@ class WindowButtons extends StatelessWidget {
     Widget moveWindow = Expanded(child: SizedBox(height: height, child: MoveWindow()));
     return Row(mainAxisAlignment: mainAxisAlignment, crossAxisAlignment: CrossAxisAlignment.start, children: [
       if (showMoveBar && mainAxisAlignment == MainAxisAlignment.end) moveWindow,
-      MinimizeWindowButton(colors: buttonColors),
-      MaximizeWindowButton(colors: buttonColors),
-      CloseWindowButton(colors: closeButtonColors),
-      if (showMoveBar && mainAxisAlignment == MainAxisAlignment.start) moveWindow,
+      if (isShowMinimize) MinimizeWindowButton(colors: buttonColors),
+      if (isShowMaximize) MaximizeWindowButton(colors: buttonColors),
+      if (isShowMinimize) CloseWindowButton(colors: closeButtonColors),
+      if (isShowClose && mainAxisAlignment == MainAxisAlignment.start) moveWindow,
     ]);
   }
 }
 
-class DesktopGlobalBox extends StatelessWidget {
-  const DesktopGlobalBox({
+/// 桌面端全局大小设置
+class GlobalBox extends StatelessWidget {
+  const GlobalBox({
     super.key,
     required this.child,
+    this.borderRadius = 8,
   });
 
   final Widget child;
+  final double borderRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -106,75 +129,17 @@ class DesktopGlobalBox extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: double.infinity,
-      // android伪全屏，加入边距
-      padding: Platform.isAndroid ? const EdgeInsets.symmetric(horizontal: 374, vertical: 173) : EdgeInsets.zero,
-      child: Container(
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-          boxShadow: [
-            BoxShadow(color: Color(0x33000000), blurRadius: 8),
-          ],
-        ),
-        child: WindowBorder(
-          color: const Color(0xFFF6A00C),
-          width: 1,
-          child: child,
-        ),
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
+        boxShadow: [
+          BoxShadow(color: const Color(0x22000000), blurRadius: borderRadius),
+        ],
       ),
-    );
-  }
-}
-
-class LeftSide extends StatelessWidget {
-  static const sidebarColor = Color(0xFFF6A00C);
-
-  const LeftSide({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 200,
-      child: Container(
-        color: sidebarColor,
-        child: Column(
-          children: [
-            WindowTitleBarBox(child: MoveWindow()),
-            Expanded(child: Container()),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class RightSide extends StatelessWidget {
-  static const backgroundStartColor = Color(0xFFFFD500);
-  static const backgroundEndColor = Color(0xFFF6A00C);
-  static const borderColor = Color(0xFF805306);
-
-  const RightSide({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [backgroundStartColor, backgroundEndColor],
-            stops: [0.0, 1.0],
-          ),
-        ),
-        child: Column(children: [
-          WindowTitleBarBox(
-            child: Row(children: [
-              Expanded(child: MoveWindow()),
-              const WindowButtons(),
-            ]),
-          )
-        ]),
+      child: WindowBorder(
+        color: Colors.white,
+        width: 0.1,
+        child: child,
       ),
     );
   }
