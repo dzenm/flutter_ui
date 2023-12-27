@@ -2,9 +2,10 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/widgets.dart';
 import 'package:window_manager/window_manager.dart';
 
-class _MoveWindow extends StatelessWidget {
-  const _MoveWindow({this.child, this.onDoubleTap});
+const kTitleBarHeight = 48.0;
 
+class _MoveWindow extends StatelessWidget {
+  _MoveWindow({Key? key, this.child, this.onDoubleTap}) : super(key: key);
   final Widget? child;
   final VoidCallback? onDoubleTap;
 
@@ -24,14 +25,14 @@ class MoveWindow extends StatelessWidget {
   final Widget? child;
   final VoidCallback? onDoubleTap;
 
-  const MoveWindow({super.key, this.child, this.onDoubleTap});
+  MoveWindow({Key? key, this.child, this.onDoubleTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    if (child == null) return _MoveWindow(onDoubleTap: onDoubleTap);
+    if (child == null) return _MoveWindow(onDoubleTap: this.onDoubleTap);
     return _MoveWindow(
-      onDoubleTap: onDoubleTap,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Expanded(child: child!)]),
+      onDoubleTap: this.onDoubleTap,
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Expanded(child: this.child!)]),
     );
   }
 }
@@ -39,14 +40,14 @@ class MoveWindow extends StatelessWidget {
 class WindowTitleBarBox extends StatelessWidget {
   final Widget? child;
 
-  const WindowTitleBarBox({super.key, this.child});
+  WindowTitleBarBox({Key? key, this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     if (kIsWeb) {
       return Container();
     }
-    const titleBarHeight = 40.0;
+    const titleBarHeight = kTitleBarHeight;
     return SizedBox(height: titleBarHeight, child: child ?? Container());
   }
 }
