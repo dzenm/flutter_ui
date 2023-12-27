@@ -8,7 +8,7 @@ import '../../../generated/l10n.dart';
 import '../../../http/http_manager.dart';
 import '../../../models/provider_manager.dart';
 import '../../../models/user_model.dart';
-import '../../common/preview_picture_page.dart';
+import '../../common/view_media_page.dart';
 import '../../mall/mall_router.dart';
 import '../../study/study_router.dart';
 import 'me_router.dart';
@@ -81,6 +81,11 @@ class _MePageState extends State<MePage> {
   }
 
   Widget _buildBody(AppTheme theme, double statusBarHeight) {
+    String heroTag = 'heroTag';
+    List<String> urls = [
+      Assets.a,
+    ];
+    List<MediaEntity> images = urls.map((url) => MediaEntity(url: url)).toList();
     return SingleChildScrollView(
       padding: EdgeInsets.only(left: 16, right: 16, top: statusBarHeight),
       // AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()): iOS上拉下拉弹簧效果，
@@ -103,10 +108,13 @@ class _MePageState extends State<MePage> {
           child: TapLayout(
             border: Border.all(width: 3.0, color: const Color(0xfffcfcfc)),
             borderRadius: const BorderRadius.all(Radius.circular(64)),
-            onTap: () => PreviewPicturePage.show(context, [Assets.a]),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(64),
-              child: Image.asset(Assets.a, fit: BoxFit.cover, width: 64, height: 64),
+            onTap: () => ViewMediaPage.show(context, medias: images, tag: heroTag),
+            child: Hero(
+              tag: heroTag,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(64),
+                child: Image.asset(Assets.a, fit: BoxFit.cover, width: 64, height: 64),
+              ),
             ),
           ),
         ),
@@ -121,7 +129,7 @@ class _MePageState extends State<MePage> {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         onTap: () {
           String params = '?medicineName=金银花';
-          AppRouteDelegate.of(context).push(MeRouter.medicine + params);
+          AppRouter.of(context).push(MeRouter.medicine + params);
         },
         child: SingleTextView(
           title: S.of(context).chineseMedicine,
@@ -132,7 +140,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => AppRouteDelegate.of(context).push(MeRouter.collect),
+        onTap: () => AppRouter.of(context).push(MeRouter.collect),
         child: SingleTextView(
           icon: Icons.collections,
           title: S.of(context).collect,
@@ -142,7 +150,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => AppRouteDelegate.of(context).push(MeRouter.coin),
+        onTap: () => AppRouter.of(context).push(MeRouter.coin),
         child: SingleTextView(
           icon: Icons.money,
           title: S.of(context).coinRecord,
@@ -152,7 +160,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => AppRouteDelegate.of(context).push(MeRouter.rank),
+        onTap: () => AppRouter.of(context).push(MeRouter.rank),
         child: SingleTextView(
           icon: Icons.money,
           title: S.of(context).integralRankingList,
@@ -162,7 +170,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => AppRouteDelegate.of(context).push(MeRouter.article),
+        onTap: () => AppRouter.of(context).push(MeRouter.article),
         child: SingleTextView(
           icon: Icons.article,
           title: S.of(context).sharedArticle,
@@ -172,7 +180,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => AppRouteDelegate.of(context).push(StudyRouter.study).then((value) => log(value)),
+        onTap: () => AppRouter.of(context).push(StudyRouter.study).then((value) => log(value ?? 'null')),
         child: SingleTextView(
           icon: Icons.real_estate_agent_sharp,
           title: S.of(context).studyMainPage(''),
@@ -182,7 +190,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => AppRouteDelegate.of(context).push(MeRouter.info),
+        onTap: () => AppRouter.of(context).push(MeRouter.info),
         child: SingleTextView(
           icon: Icons.supervised_user_circle_sharp,
           title: S.of(context).profile,
@@ -192,7 +200,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => AppRouteDelegate.of(context).push(MallRouter.mall),
+        onTap: () => AppRouter.of(context).push(MallRouter.mall),
         child: SingleTextView(
           icon: Icons.local_mall_rounded,
           title: S.of(context).mall,
@@ -203,7 +211,7 @@ class _MePageState extends State<MePage> {
         height: 50.0,
         borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(5), bottomRight: Radius.circular(5)),
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => AppRouteDelegate.of(context).push(MeRouter.setting),
+        onTap: () => AppRouter.of(context).push(MeRouter.setting),
         child: SingleTextView(
           icon: Icons.settings,
           title: S.of(context).setting,
@@ -226,6 +234,7 @@ class _MePageState extends State<MePage> {
       int count = data['collectArticleInfo']['count'];
       CoinEntity coin = CoinEntity.fromJson(data['coinInfo']);
 
+      if (!mounted) return;
       context.read<UserModel>().user = user;
       context.read<UserModel>().collectCount = count;
       context.read<UserModel>().coin = coin;

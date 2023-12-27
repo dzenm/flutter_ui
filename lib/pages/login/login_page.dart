@@ -296,7 +296,7 @@ class _EditLoginInfoViewState extends State<_EditLoginInfoView> {
 
   void _register() {
     FocusScope.of(context).unfocus();
-    AppRouteDelegate.of(context).push(Routers.register);
+    AppRouter.of(context).push(Routers.register);
   }
 
   void log(String msg) => Log.p(msg, tag: _tag);

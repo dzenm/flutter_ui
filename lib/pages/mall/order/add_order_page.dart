@@ -135,6 +135,6 @@ class _OrderPageState extends State<AddOrderPage> {
     order.products.add(product);
 
     context.read<OrderModel>().updateOrder(order);
-    AppRouteDelegate.of(context).pop();
+    AppRouter.of(context).pop();
   }
 }

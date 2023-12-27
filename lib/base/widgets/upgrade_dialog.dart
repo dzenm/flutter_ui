@@ -8,9 +8,9 @@ import 'package:path_provider/path_provider.dart';
 
 import '../channel/plugin_manager.dart';
 import '../http/http.dart';
-import '../log/build_config.dart';
-import '../log/log.dart';
-import '../res/res.dart';
+import '../config/build_config.dart';
+import '../config/log.dart';
+import '../resource/resource.dart';
 import 'common_dialog.dart';
 import 'linear_percent_indicator.dart';
 import 'tap_layout.dart';

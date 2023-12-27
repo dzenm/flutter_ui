@@ -23,7 +23,7 @@ typedef IndicatorItemBuilder = Widget Function(bool isSelected);
 ///   onTap: (index) {
 ///     BannerEntity banner = banners[index];
 ///     String params = '?title=${banner.title}&url=${banner.url}';
-///     AppRouteDelegate.of(context).push(Routers.webView + params);
+///     AppRouter.of(context).push(Routers.webView + params);
 ///   },
 /// )
 class BannerView extends StatefulWidget {

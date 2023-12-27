@@ -29,6 +29,7 @@ class DesktopWrapper extends StatelessWidget {
   });
 
   static Future<void> ensureInitialized() async {
+    if (!_isDesktop) return;
     // 必须加上这一行。
     await windowManager.ensureInitialized();
     windowManager.setOpacity(0);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/base/router/app_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base/base.dart';
@@ -34,7 +35,7 @@ class LifecyclePage extends StatelessWidget {
                     textColor: Colors.white,
                     color: Colors.blue,
                     onPressed: () {
-                      RouteManager.push(context, const ChildPage());
+                      AppRouter.of(context).pushPage(const ChildPage());
                     },
                     child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       Text('进入下一个页面更新值'),

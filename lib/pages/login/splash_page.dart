@@ -14,7 +14,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () => AppRouteDelegate.of(context).push(Routers.main, clearStack: true));
+    Future.delayed(Duration.zero, () => AppRouter.of(context).push(Routers.main, clearStack: true));
   }
 
   @override

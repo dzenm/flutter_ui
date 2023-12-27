@@ -2,7 +2,7 @@ import '../app_page.dart';
 import '../base/base.dart';
 import 'common/example_page.dart';
 import 'common/not_found_page.dart';
-import 'common/preview_picture_page.dart';
+import 'common/view_media_page.dart';
 import 'common/web_view_page.dart';
 import 'login/login_page.dart';
 import 'login/register_page.dart';
@@ -16,67 +16,69 @@ import 'study/study_router.dart';
 ///
 class Routers {
   static const String root = '/';
-  static const String notFound = '/notFound';
-  static const String login = '/login';
-  static const String register = '/register';
-  static const String main = '/main';
-  static const String example = '/example';
-  static const String webView = '/webView';
-  static const String preview = '/preview';
+  static const String notFound = '${root}notFound';
+  static const String login = '${root}login';
+  static const String register = '${root}register';
+  static const String main = '${root}main';
+  static const String example = '${root}example';
+  static const String webView = '${root}webView';
+  static const String viewMedia = '${root}viewMedia';
 
-  static List<AppRoutePage> get routers => [
-        AppRoutePage(
+  static List<AppPageConfig> get routers => [
+        AppPageConfig(
           name: root,
           builder: (settings) {
             return const AppPage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: notFound,
           builder: (settings) {
             return const NotFoundPage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: login,
           builder: (settings) {
             return LoginPage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: register,
           builder: (settings) {
             return const RegisterPage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: main,
           builder: (settings) {
             return const MainPage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: example,
           builder: (settings) {
             return const ExamplePage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: webView,
           builder: (settings) {
-            dynamic args = settings.params;
+            dynamic args = settings.queries;
             String title = args['title'] ?? '';
             String url = args['url'] ?? '';
             return WebViewPage(title: title, url: url);
           },
         ),
-        AppRoutePage(
-          name: preview,
+        AppPageConfig(
+          name: viewMedia,
           builder: (settings) {
-            // dynamic args = settings.params;
-            // String title = args['title'] ?? '';
-            // String url = args['url'] ?? '';
-            return const PreviewPicturePage([]);
+            dynamic args = settings.queries;
+            String title = args['title'] ?? '';
+            String url = args['url'] ?? '';
+            return const ViewMediaPage(
+              medias: [],
+            );
           },
         ),
         ...MeRouter.routers,

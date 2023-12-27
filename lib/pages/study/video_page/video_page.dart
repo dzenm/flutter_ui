@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import '../../../base/base.dart';
+import '../../../base/router/app_router.dart';
 import 'ijk_list_video_page.dart';
 import 'ijk_video_page.dart';
 import 'vlc_video_page.dart';
@@ -31,21 +33,21 @@ class _VideoPageState extends State<VideoPage> {
       MaterialButton(
         textColor: Colors.white,
         color: Colors.blue,
-        onPressed: () => RouteManager.push(context, const VlcVideoPage()),
+        onPressed: () => AppRouter.of(context).pushPage(const VlcVideoPage()),
         child: _text('VLC播放器'),
       ),
       const SizedBox(height: 8),
       MaterialButton(
         textColor: Colors.white,
         color: Colors.blue,
-        onPressed: () => RouteManager.push(context, const IjkVideoPage(url: Assets.butterfly)),
+        onPressed: () => AppRouter.of(context).pushPage(const IjkVideoPage(url: Assets.butterfly)),
         child: _text('IJK视频播放'),
       ),
       const SizedBox(height: 8),
       MaterialButton(
         textColor: Colors.white,
         color: Colors.blue,
-        onPressed: () => RouteManager.push(context, const IjkListVideoPage()),
+        onPressed: () => AppRouter.of(context).pushPage(const IjkListVideoPage()),
         child: _text('原生视频播放'),
       ),
       const SizedBox(height: 16),

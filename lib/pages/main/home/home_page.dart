@@ -121,6 +121,7 @@ class _HomePageState extends State<HomePage> {
     await HttpManager().banner(
       isShowDialog: false,
       success: (list) {
+        if (!mounted) return;
         context.read<BannerModel>().banners = list;
       },
     );
@@ -130,6 +131,7 @@ class _HomePageState extends State<HomePage> {
     await HttpManager().getTopArticles(
       isShowDialog: false,
       success: (list) {
+        if (!mounted) return;
         context.read<ArticleModel>().updateArticles(list);
       },
     );
@@ -140,6 +142,7 @@ class _HomePageState extends State<HomePage> {
       page: _pageIndex,
       isShowDialog: false,
       success: (list, pageCount) {
+        if (!mounted) return;
         setState(() {});
         if (_pageIndex >= (pageCount ?? 0)) {
           _controller.loadEmpty(); // 加载完所有页面
@@ -159,6 +162,7 @@ class _HomePageState extends State<HomePage> {
     await HttpManager().getWebsites(
       isShowDialog: false,
       success: (list) {
+        if (!mounted) return;
         context.read<WebsiteModel>().updateWebsites(list);
       },
     );
@@ -210,7 +214,7 @@ class Banner extends StatelessWidget {
           onTap: (index) {
             BannerEntity banner = banners[index];
             String params = '?title=${banner.title}&url=${banner.url}';
-            AppRouteDelegate.of(context).push(Routers.webView + params);
+            AppRouter.of(context).push(Routers.webView + params);
           },
         );
       },
@@ -274,7 +278,7 @@ class ArticleItemView extends StatelessWidget {
         ArticleEntity? article = context.read<ArticleModel>().getArticle(index);
         if (article == null) return;
         String params = '?title=${article.title}&url=${article.link}';
-        AppRouteDelegate.of(context).push(Routers.webView + params);
+        AppRouter.of(context).push(Routers.webView + params);
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -323,7 +327,7 @@ class ArticleItemView extends StatelessWidget {
                           int start = path.indexOf('/');
                           String url = Configs.baseUrl + path.substring(start);
                           String params = '?title=${val.name}&url=$url';
-                          AppRouteDelegate.of(context).push(Routers.webView + params);
+                          AppRouter.of(context).push(Routers.webView + params);
                         },
                       );
                     },

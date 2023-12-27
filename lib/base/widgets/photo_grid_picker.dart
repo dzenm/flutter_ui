@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'common_widget.dart';
+import 'image_view.dart';
 import 'tap_layout.dart';
 
 abstract class OnPhotoPickerClickListener {
@@ -91,11 +91,7 @@ class GridPickerState extends State<PhotoGridPicker> {
             : columnCount * itemWH +
 //            space * 2 +
                 (columnCount - 1) * widget.itemSpace,
-        margin: EdgeInsets.only(
-            left: widget.marginHorizontal,
-            right: widget.marginHorizontal,
-            top: widget.marginTop,
-            bottom: widget.marginBottom),
+        margin: EdgeInsets.only(left: widget.marginHorizontal, right: widget.marginHorizontal, top: widget.marginTop, bottom: widget.marginBottom),
         child: GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               //可以直接指定每行（列）显示多少个Item
@@ -288,7 +284,6 @@ class GridPickerState extends State<PhotoGridPicker> {
                       fit: BoxFit.cover,
                     )
                   : null); //本地图片不存在则为空
-
     } catch (e) {
       if (kDebugMode) {
         print(e.toString());

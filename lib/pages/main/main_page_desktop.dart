@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/pages/common/view_media_page.dart';
 import 'package:provider/provider.dart';
 import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
 
 import '../../base/base.dart';
 import '../../generated/l10n.dart';
-import '../common/preview_picture_page.dart';
 import 'home/home_page.dart';
 import 'main_model.dart';
 import 'me/me_page.dart';
@@ -69,7 +69,7 @@ class _MainPageDesktopState extends State<MainPageDesktop> with WindowListener, 
   @override
   Widget build(BuildContext context) {
     int length = context.watch<MainModel>().length;
-    int selectedIndex = context.watch<MainModel>().selectedIndex;
+    MainTab selectedTab = context.watch<MainModel>().selectedTab;
     return Material(
       child: DesktopWrapper(
         child: Container(
@@ -77,20 +77,18 @@ class _MainPageDesktopState extends State<MainPageDesktop> with WindowListener, 
           child: Row(children: [
             Padding(
               padding: const EdgeInsets.only(top: 20),
-              child: NavigationRail(
-                minWidth: 56.0,
-                selectedIndex: selectedIndex,
-                onDestinationSelected: (int index) {
-                  context.read<MainModel>().selectedIndex = index;
+              child: DesktopNavigationRail(
+                width: 56.0,
+                onSelected: (int index) {
+                  context.read<MainModel>().selectedTab = index;
                 },
-                labelType: NavigationRailLabelType.all,
                 leading: _buildLeadingView(context),
-                destinations: _buildNavigationRailItem(context, length, selectedIndex),
+                children: _buildDesktopNavigationRailItem(context, length, selectedTab),
               ),
             ),
             const VerticalDivider(thickness: 1, width: 1),
             // 主要的展示内容，Expanded 占满剩下屏幕空间
-            Expanded(child: _buildTabPage(length)[selectedIndex])
+            Expanded(child: _buildTabPage(length)[selectedTab.index])
           ]),
         ),
       ),
@@ -98,13 +96,21 @@ class _MainPageDesktopState extends State<MainPageDesktop> with WindowListener, 
   }
 
   Widget _buildLeadingView(BuildContext context) {
+    String heroTag = 'heroTag';
+    List<String> urls = [
+      Assets.a,
+    ];
+    List<MediaEntity> images = urls.map((url) => MediaEntity(url: url)).toList();
     return TapLayout(
       border: Border.all(width: 3.0, color: const Color(0xfffcfcfc)),
       borderRadius: const BorderRadius.all(Radius.circular(32)),
-      onTap: () => PreviewPicturePage.show(context, [Assets.a]),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(32),
-        child: Image.asset(Assets.a, fit: BoxFit.cover, width: 32, height: 32),
+      onTap: () => ViewMediaPage.show(context, medias: images, tag: heroTag),
+      child: Hero(
+        tag: heroTag,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(32),
+          child: Image.asset(Assets.a, fit: BoxFit.cover, width: 32, height: 32),
+        ),
       ),
     );
   }
@@ -117,32 +123,26 @@ class _MainPageDesktopState extends State<MainPageDesktop> with WindowListener, 
     );
   }
 
-  List<NavigationRailDestination> _buildNavigationRailItem(BuildContext context, int length, int selectedIndex) {
-    return List.generate(
-      length,
-      (index) {
-        List<IconData> icons = [
-          Icons.home,
-          Icons.airplay_rounded,
-          Icons.person,
-        ];
-        List<String> titles = [
-          S.of(context).home,
-          S.of(context).nav,
-          S.of(context).me,
-        ];
-        AppTheme theme = context.watch<LocalModel>().theme;
-        IconData icon = icons[index]; // 图标
-        String title = titles[index]; // 标题
-        bool isSelected = index == index; // 是否是选中的索引
-        Color color = isSelected ? theme.appbar : theme.hint;
-        return NavigationRailDestination(
-          icon: Icon(icon, color: color),
-          selectedIcon: Icon(icon, color: color),
-          label: Text(title),
-        );
-      },
-    );
+  List<Widget> _buildDesktopNavigationRailItem(BuildContext context, int length, MainTab selectedTab) {
+    return MainTab.values.map((tab) {
+      List<IconData> icons = [
+        Icons.home,
+        Icons.airplay_rounded,
+        Icons.person,
+      ];
+      List<String> titles = [
+        S.of(context).home,
+        S.of(context).nav,
+        S.of(context).me,
+      ];
+      int index = tab.index;
+      AppTheme theme = context.watch<LocalModel>().theme;
+      IconData icon = icons[index]; // 图标
+      String title = titles[index]; // 标题
+      bool isSelected = selectedTab == tab; // 是否是选中的索引
+      Color color = isSelected ? theme.appbar : theme.hint;
+      return Icon(icon, color: color);
+    }).toList();
   }
 
   @override

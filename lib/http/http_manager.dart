@@ -51,7 +51,7 @@ class HttpManager {
 
       // 更新数据
       context.read<UserModel>().user = user;
-      AppRouteDelegate.of(context).push(Routers.main, clearStack: true);
+      AppRouter.of(context).push(Routers.main, clearStack: true);
     });
   }
 
@@ -67,7 +67,7 @@ class HttpManager {
 
       // 更新数据
       context.read<UserModel>().user = user;
-      AppRouteDelegate.of(context).push(Routers.main, clearStack: true);
+      AppRouter.of(context).push(Routers.main, clearStack: true);
     });
   }
 
@@ -501,7 +501,7 @@ class HttpManager {
     await _httpClient.request(apiServices.logout(), success: (data) {
       SpUtil.clearUser();
       ProviderManager.clear();
-      AppRouteDelegate.of(Application().context).push(Routers.login, clearStack: true);
+      AppRouterDelegate.of(Application().context).push(Routers.login, clearStack: true);
     });
   }
 

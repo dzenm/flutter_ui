@@ -131,14 +131,15 @@ class HttpsClient {
       validateStatus: (status) => true,
       baseUrl: baseUrl!,
       headers: {
-        'Accept': 'application/json,*/*',
-        'Content-Type': 'application/json',
-
-        /// Web端报错处理
-        "Access-Control-Allow-Origin": "*", // Required for CORS support to work
-        "Access-Control-Allow-Credentials": 'true', // Required for cookies, authorization headers with HTTPS
-        "Access-Control-Allow-Headers": "Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,locale",
-        "Access-Control-Allow-Methods": "GET, POST, PUT, OPTIONS, DELETE",
+        HttpHeaders.acceptHeader: 'text/plain,text/html,text/json,text/javascript,'
+            'image/jpeg,image/png,multipart/form-data,'
+            'application/json,application/octet-stream,*/*',
+        HttpHeaders.contentTypeHeader: Headers.jsonContentType,
+        // Web端报错处理
+        HttpHeaders.accessControlAllowOriginHeader: '*', // Required for CORS support to work
+        HttpHeaders.accessControlAllowCredentialsHeader: 'true', // Required for cookies, authorization headers with HTTPS
+        HttpHeaders.accessControlAllowHeadersHeader: 'Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,locale',
+        HttpHeaders.accessControlAllowMethodsHeader: 'GET,POST,PUT,OPTIONS,DELETE',
       },
     ));
 
@@ -146,13 +147,14 @@ class HttpsClient {
       // 不验证https证书
       (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
         HttpClient client = HttpClient();
+        // 配制网络代理抓包
         // config the http client
         // client.findProxy = (uri) {
         //  //proxy all request to localhost:8888
         //  return "192.168.1.1:8888";
         //};
         client.badCertificateCallback = (X509Certificate cert, String host, int port) {
-          log("验证https证书: host=$host, port=$port");
+          // log("验证https证书: host=$host, port=$port");
           return true;
         };
         // you can also create a new HttpsClient to dio
@@ -234,6 +236,7 @@ class HttpsClient {
   /// [success] 下载成功返回的结果
   /// [progress] 下载的进度
   /// [failed] 下载失败返回的结果
+  /// [canCancel] 是否可以取消下载
   Future<void> download(
     String url,
     dynamic savePath, {
@@ -241,30 +244,37 @@ class HttpsClient {
     Success? success,
     Progress? progress,
     Failed? failed,
+    bool canCancel = true,
   }) async {
     HttpError? error;
     try {
       Dio dio = _createDio(baseUrl: _baseUrls.first);
-      Response response = await dio.download(
+      Response<dynamic> response = await dio.download(
         url,
         savePath,
         options: Options(
           responseType: ResponseType.bytes,
           followRedirects: false,
         ),
-        cancelToken: cancelToken,
+        cancelToken: canCancel ? cancelToken : null,
         onReceiveProgress: (int count, int total) {
-          if (progress == null) return;
-          // 获取下载进度
-          double progressPercent = double.parse((count / total).toStringAsFixed(2));
-          progress(progressPercent, count, total);
+          // 未实现/禁止取消/通过token取消下载等情况不能再进行处理
+          if (progress == null || canCancel && (cancelToken?.isCancelled ?? true)) return;
+          if (total == -1) {
+            // 无法获取文件大小
+            _HttpException ex = _HttpException.fileNotExist;
+            error = HttpError(ex.code, ex.msg, ex.msg);
+          } else {
+            // 获取下载进度
+            double progressPercent = double.parse((count / total).toStringAsFixed(2));
+            progress(progressPercent, count, total);
+          }
         },
       );
-      final value = DataEntity<dynamic>.fromJson(response.data!);
       if (response.statusCode == 200 || response.statusCode == 206) {
         // 下载成功的返回结果
         if (success != null) {
-          success(value);
+          success(savePath);
         }
       } else {
         // 下载请求失败的错误信息
@@ -276,8 +286,8 @@ class HttpsClient {
     }
     // 下载结果
     if (error == null) return;
-    if (failed != null) failed(error);
-    log('下载错误: code=${error.code}, msg=${error.msg}, error=${error.error}');
+    if (failed != null) failed(error!);
+    log('下载错误: code=${error!.code}, msg=${error!.msg}, error=${error!.error}');
   }
 
   /// 上传文件
@@ -398,6 +408,7 @@ enum _HttpException {
   socket(1002, 'Socket异常'),
   format(1003, '数据解析异常'),
   error(1004, '连接异常'),
+  fileNotExist(1004, '无法获取文件'),
   connect(1006, '连接超时'),
   send(1007, '请求超时'),
   receive(1008, '响应超时'),

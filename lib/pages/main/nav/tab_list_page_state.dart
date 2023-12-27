@@ -19,12 +19,6 @@ abstract class TabListPageState<T extends StatefulWidget> extends State<T> {
     return Container();
   }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
   Widget buildContent(int len) {
     return RefreshListView(
       controller: _controller,
@@ -54,6 +48,7 @@ abstract class TabListPageState<T extends StatefulWidget> extends State<T> {
 
   /// 更新加载成功的状态
   void updateState(int? pageCount) {
+    if (!mounted) return;
     if (_pageIndex >= (pageCount ?? 0)) {
       _controller.loadEmpty(); // 加载完所有页面
     } else {
@@ -61,7 +56,7 @@ abstract class TabListPageState<T extends StatefulWidget> extends State<T> {
       ++_pageIndex;
       _controller.loadMore();
     }
-    if (mounted) setState(() {});
+    setState(() {});
   }
 
   /// 更新加载失败的状态

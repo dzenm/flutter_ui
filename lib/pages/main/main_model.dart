@@ -9,11 +9,11 @@ class MainModel with ChangeNotifier {
   /// 初始化数据
   Future<void> init() async {
     _initial = false;
-    _selectedIndex = 0;
+    _selectedTab = MainTab.home;
     _badges = List.generate(3, (index) => 0);
 
     if (BuildConfig.isDesktop) return;
-    _controller = PageController(initialPage: _selectedIndex);
+    _controller = PageController(initialPage: _selectedTab.index);
   }
 
   /// 主页是否初始化完成
@@ -31,19 +31,27 @@ class MainModel with ChangeNotifier {
 
   PageController get controller => _controller!;
 
-  /// 主页选中的item索引，默认为第一个
-  int _selectedIndex = 0;
+  /// 主页选中的Tab，默认为第一个
+  MainTab _selectedTab = MainTab.home;
 
-  /// 获取当前选中的item索引
-  int get selectedIndex => _selectedIndex;
+  /// 获取当前选中的Tab
+  MainTab get selectedTab => _selectedTab;
 
-  /// 更新当前选中的item索引
-  set selectedIndex(int selectedIndex) {
-    if (_selectedIndex == selectedIndex) return;
-    _selectedIndex = selectedIndex;
+  /// 更新当前选中的Tab
+  set selectedTab(dynamic selectedTab) {
+    if (selectedTab is MainTab) {
+      if (_selectedTab == selectedTab) return;
+      _selectedTab = selectedTab;
+    } else if (selectedTab is int) {
+      if (_selectedTab.index == selectedTab) return;
+      for (var tab in MainTab.values) {
+        if (selectedTab != tab.index) continue;
+        _selectedTab = tab;
+      }
+    }
     if (_controller != null) {
       _controller?.animateToPage(
-        selectedIndex,
+        _selectedTab.index,
         duration: const Duration(milliseconds: 250),
         curve: Curves.ease,
       );
@@ -51,8 +59,8 @@ class MainModel with ChangeNotifier {
     notifyListeners();
   }
 
-  /// 根据索引判断索引是否是选中的索引
-  bool isSelected(int index) => _selectedIndex == index;
+  /// 根据索引判断索引是否是选中的Tab
+  bool isSelected(MainTab tab) => _selectedTab == tab;
 
   /// 主页底部的小红点数量列表
   List<int> _badges = [];
@@ -89,10 +97,17 @@ class MainModel with ChangeNotifier {
   /// 清空数据
   void clear() {
     _initial = false;
-    _selectedIndex = 0;
+    _selectedTab = MainTab.home;
     _controller?.dispose();
     _controller = null;
     _badges.clear();
     notifyListeners();
   }
+}
+
+/// 主页导航栏
+enum MainTab {
+  home,
+  nav,
+  me,
 }

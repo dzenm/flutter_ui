@@ -134,7 +134,7 @@ class _TextPageState extends State<TextPage> {
                 TapLayout(
                   height: 50.0,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  onTap: () => AppRouteDelegate.of(context).push(MeRouter.setting),
+                  onTap: () => AppRouter.of(context).push(MeRouter.setting),
                   child: SingleTextView(
                     title: S.of(context).setting,
                     isShowForward: true,

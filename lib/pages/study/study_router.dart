@@ -1,4 +1,5 @@
 import 'package:flutter_ui/pages/study/chat_page/chat_page.dart';
+import 'package:flutter_ui/pages/study/window_page/main_window_page.dart';
 
 import '../../base/base.dart';
 import 'city_page/city_page.dart';
@@ -14,7 +15,7 @@ import 'load_image_page/load_image_page.dart';
 import 'popup_page/popup_page.dart';
 import 'provider_page/provider_page.dart';
 import 'qr_page/qr_page.dart';
-import 'router/router_page.dart';
+import 'router_page/router_page.dart';
 import 'slider_page/slide_page.dart';
 import 'state_page/state_page.dart';
 import 'study_page.dart';
@@ -45,126 +46,133 @@ class StudyRouter {
   static const String state = '$study/state';
   static const String text = '$study/text';
   static const String video = '$study/video';
+  static const String multiWindow = '$study/multiWindow';
 
-  static List<AppRoutePage> get routers => [
-        AppRoutePage(
+  static List<AppPageConfig> get routers => [
+        AppPageConfig(
           name: study,
           builder: (settings) {
             return const StudyPage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: chat,
           builder: (settings) {
             return const ChatPage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: city,
           builder: (settings) {
             return const CitySelectedPage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: convert,
           builder: (settings) {
             return const ConvertPage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: dialog,
           builder: (settings) {
             return const DialogPage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: dragList,
           builder: (settings) {
             return const DragListPage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: floatNavigation,
           builder: (settings) {
             return const FloatNavigationPage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: http,
           builder: (settings) {
             return const HTTPListPage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: image,
           builder: (settings) {
             return const ImageEditorPage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: keyword,
           builder: (settings) {
             return const KeywordBoardPage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: list,
           builder: (settings) {
             return const ListPage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: loadImage,
           builder: (settings) {
             return const LoadImagePage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: popup,
           builder: (settings) {
             return const PopupPage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: provider,
           builder: (settings) {
             return const ProviderPage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: qr,
           builder: (settings) {
             return const QRPage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: router,
           builder: (settings) {
             return const RouterPage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: slide,
           builder: (settings) {
             return const SlidePage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: state,
           builder: (settings) {
             return const StatePage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: text,
           builder: (settings) {
             return const TextPage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: video,
           builder: (settings) {
             return const VideoPage();
+          },
+        ),
+        AppPageConfig(
+          name: multiWindow,
+          builder: (settings) {
+            return const MainWindowPage();
           },
         ),
       ];
