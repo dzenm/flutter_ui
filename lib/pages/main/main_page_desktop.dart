@@ -22,20 +22,22 @@ class MainPageDesktop extends StatefulWidget {
   State<MainPageDesktop> createState() => _MainPageDesktopState();
 }
 
-class _MainPageDesktopState extends State<MainPageDesktop> with WindowListener, SystemTray, TrayListener {
+class _MainPageDesktopState extends State<MainPageDesktop> with WindowListener, TrayListener, SystemTray {
   static const String _tag = 'MainPage';
 
   @override
   void initState() {
     super.initState();
+    windowManager.addListener(this);
+    trayManager.addListener(this);
 
     DesktopWrapper.setWindow();
     init();
-    trayManager.addListener(this);
   }
 
   @override
   void dispose() {
+    windowManager.removeListener(this);
     trayManager.removeListener(this);
     super.dispose();
   }
@@ -232,5 +234,4 @@ class _MainPageDesktopState extends State<MainPageDesktop> with WindowListener, 
   }
 
   void _log(String msg) => BuildConfig.isDebug ? Log.p(msg, tag: _tag) : null;
-
 }

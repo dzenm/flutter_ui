@@ -114,7 +114,7 @@ class WindowButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget moveWindow = Expanded(child: SizedBox(height: height, child: MoveWindow()));
+    Widget moveWindow = Expanded(child: SizedBox(height: height, child: const MoveWindow()));
     return Row(mainAxisAlignment: mainAxisAlignment, crossAxisAlignment: CrossAxisAlignment.start, children: [
       if (showMoveBar && mainAxisAlignment == MainAxisAlignment.end) moveWindow,
       if (isShowMinimize) MinimizeWindowButton(colors: buttonColors),

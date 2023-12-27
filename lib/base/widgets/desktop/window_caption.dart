@@ -5,7 +5,8 @@ import 'package:window_manager/window_manager.dart';
 const kTitleBarHeight = 48.0;
 
 class _MoveWindow extends StatelessWidget {
-  _MoveWindow({Key? key, this.child, this.onDoubleTap}) : super(key: key);
+  const _MoveWindow({this.child, this.onDoubleTap});
+
   final Widget? child;
   final VoidCallback? onDoubleTap;
 
@@ -25,7 +26,7 @@ class MoveWindow extends StatelessWidget {
   final Widget? child;
   final VoidCallback? onDoubleTap;
 
-  MoveWindow({Key? key, this.child, this.onDoubleTap}) : super(key: key);
+  const MoveWindow({super.key, this.child, this.onDoubleTap});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +41,7 @@ class MoveWindow extends StatelessWidget {
 class WindowTitleBarBox extends StatelessWidget {
   final Widget? child;
 
-  WindowTitleBarBox({Key? key, this.child}) : super(key: key);
+  const WindowTitleBarBox({super.key, this.child});
 
   @override
   Widget build(BuildContext context) {

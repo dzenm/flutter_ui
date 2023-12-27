@@ -2,11 +2,11 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/widgets/desktop/window_caption.dart';
 import 'package:window_manager/window_manager.dart';
 
 import './mouse_state_builder.dart';
 import 'icons.dart';
+import 'window_caption.dart';
 
 const kTitleBarButtonWidth = 48.0;
 const kTitleBarButtonHeight = 36.0;
@@ -20,7 +20,12 @@ class WindowButtonContext {
   Color? backgroundColor;
   Color iconColor;
 
-  WindowButtonContext({required this.context, required this.mouseState, this.backgroundColor, required this.iconColor});
+  WindowButtonContext({
+    required this.context,
+    required this.mouseState,
+    this.backgroundColor,
+    required this.iconColor,
+  });
 }
 
 class WindowButtonColors {
@@ -31,7 +36,14 @@ class WindowButtonColors {
   late Color iconMouseOver;
   late Color iconMouseDown;
 
-  WindowButtonColors({Color? normal, Color? mouseOver, Color? mouseDown, Color? iconNormal, Color? iconMouseOver, Color? iconMouseDown}) {
+  WindowButtonColors({
+    Color? normal,
+    Color? mouseOver,
+    Color? mouseDown,
+    Color? iconNormal,
+    Color? iconMouseOver,
+    Color? iconMouseDown,
+  }) {
     this.normal = normal ?? _defaultButtonColors.normal;
     this.mouseOver = mouseOver ?? _defaultButtonColors.mouseOver;
     this.mouseDown = mouseDown ?? _defaultButtonColors.mouseDown;
@@ -42,12 +54,13 @@ class WindowButtonColors {
 }
 
 final _defaultButtonColors = WindowButtonColors(
-    normal: Colors.transparent,
-    iconNormal: Color(0xFF805306),
-    mouseOver: Color(0xFF404040),
-    mouseDown: Color(0xFF202020),
-    iconMouseOver: Color(0xFFFFFFFF),
-    iconMouseDown: Color(0xFFF0F0F0));
+  normal: Colors.transparent,
+  iconNormal: const Color(0xFF805306),
+  mouseOver: const Color(0xFF404040),
+  mouseDown: const Color(0xFF202020),
+  iconMouseOver: const Color(0xFFFFFFFF),
+  iconMouseDown: const Color(0xFFF0F0F0),
+);
 
 class WindowButton extends StatelessWidget {
   final WindowButtonBuilder? builder;
@@ -58,14 +71,14 @@ class WindowButton extends StatelessWidget {
   final VoidCallback? onPressed;
 
   WindowButton({
-    Key? key,
+    super.key,
     WindowButtonColors? colors,
     this.builder,
     @required this.iconBuilder,
     this.padding,
     this.onPressed,
     this.animate = false,
-  }) : super(key: key) {
+  }) {
     this.colors = colors ?? _defaultButtonColors;
   }
 
@@ -100,7 +113,7 @@ class WindowButton extends StatelessWidget {
           iconColor: getIconColor(mouseState),
         );
 
-        var icon = (this.iconBuilder != null) ? this.iconBuilder!(buttonContext) : Container();
+        var icon = (iconBuilder != null) ? iconBuilder!(buttonContext) : Container();
         double borderSize = 1;
         double defaultPadding = (kTitleBarHeight - borderSize) / 3 - (borderSize / 2);
         // Used when buttonContext.backgroundColor is null, allowing the AnimatedContainer to fade-out smoothly.
@@ -114,11 +127,11 @@ class WindowButton extends StatelessWidget {
           color: buttonContext.backgroundColor ?? fadeOutColor,
           child: iconWithPadding,
         );
-        var button = (this.builder != null) ? this.builder!(buttonContext, icon) : iconWithPadding;
+        var button = (builder != null) ? builder!(buttonContext, icon) : iconWithPadding;
         return SizedBox(width: kTitleBarButtonWidth, height: kTitleBarButtonHeight, child: button);
       },
       onPressed: () {
-        if (this.onPressed != null) this.onPressed!();
+        if (onPressed != null) onPressed!();
       },
     );
   }
@@ -126,7 +139,7 @@ class WindowButton extends StatelessWidget {
 
 class MinimizeWindowButton extends WindowButton {
   MinimizeWindowButton({
-    Key? key,
+    super.key,
     WindowButtonColors? colors,
     VoidCallback? onPressed,
     bool? animate,
@@ -139,7 +152,7 @@ class MinimizeWindowButton extends WindowButton {
 
 class MaximizeWindowButton extends WindowButton {
   MaximizeWindowButton({
-    Key? key,
+    super.key,
     WindowButtonColors? colors,
     VoidCallback? onPressed,
     bool? animate,
@@ -151,8 +164,12 @@ class MaximizeWindowButton extends WindowButton {
 }
 
 class RestoreWindowButton extends WindowButton {
-  RestoreWindowButton({Key? key, WindowButtonColors? colors, VoidCallback? onPressed, bool? animate})
-      : super(
+  RestoreWindowButton({
+    super.key,
+    WindowButtonColors? colors,
+    VoidCallback? onPressed,
+    bool? animate,
+  }) : super(
           animate: animate ?? false,
           iconBuilder: (buttonContext) => RestoreIcon(color: buttonContext.iconColor),
           onPressed: onPressed ?? () async => await windowManager.isMaximized() ? windowManager.unmaximize() : windowManager.maximize(),
@@ -160,20 +177,19 @@ class RestoreWindowButton extends WindowButton {
 }
 
 final _defaultCloseButtonColors = WindowButtonColors(
-  mouseOver: Color(0xFFD32F2F),
-  mouseDown: Color(0xFFB71C1C),
-  iconNormal: Color(0xFF805306),
-  iconMouseOver: Color(0xFFFFFFFF),
+  mouseOver: const Color(0xFFD32F2F),
+  mouseDown: const Color(0xFFB71C1C),
+  iconNormal: const Color(0xFF805306),
+  iconMouseOver: const Color(0xFFFFFFFF),
 );
 
 class CloseWindowButton extends WindowButton {
   CloseWindowButton({
-    Key? key,
+    super.key,
     WindowButtonColors? colors,
     VoidCallback? onPressed,
     bool? animate,
   }) : super(
-          key: key,
           colors: colors ?? _defaultCloseButtonColors,
           animate: animate ?? false,
           iconBuilder: (buttonContext) => CloseIcon(color: buttonContext.iconColor),
