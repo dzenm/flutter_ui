@@ -80,21 +80,6 @@ class DesktopWrapper extends StatelessWidget {
 
 /// 桌面窗口按钮
 class WindowButtons extends StatelessWidget {
-  static final buttonColors = WindowButtonColors(
-    iconNormal: const Color(0xFF805306),
-    mouseOver: const Color(0xFFF6A00C),
-    mouseDown: const Color(0xFF805306),
-    iconMouseOver: Colors.white,
-    iconMouseDown: const Color(0xFFFFD500),
-  );
-
-  static final closeButtonColors = WindowButtonColors(
-    mouseOver: const Color(0xFFD32F2F),
-    mouseDown: const Color(0xFFB71C1C),
-    iconNormal: const Color(0xFF805306),
-    iconMouseOver: Colors.white,
-  );
-
   final double height;
   final MainAxisAlignment mainAxisAlignment;
   final bool showMoveBar;
@@ -117,9 +102,9 @@ class WindowButtons extends StatelessWidget {
     Widget moveWindow = Expanded(child: SizedBox(height: height, child: const MoveWindow()));
     return Row(mainAxisAlignment: mainAxisAlignment, crossAxisAlignment: CrossAxisAlignment.start, children: [
       if (showMoveBar && mainAxisAlignment == MainAxisAlignment.end) moveWindow,
-      if (isShowMinimize) MinimizeWindowButton(colors: buttonColors),
-      if (isShowMaximize) MaximizeWindowButton(colors: buttonColors),
-      if (isShowClose) CloseWindowButton(colors: closeButtonColors),
+      if (isShowMinimize) MinimizeWindowButton(),
+      if (isShowMaximize) MaximizeWindowButton(),
+      if (isShowClose) CloseWindowButton(),
       if (showMoveBar && mainAxisAlignment == MainAxisAlignment.start) moveWindow,
     ]);
   }

@@ -55,9 +55,9 @@ class WindowButtonColors {
 
 final _defaultButtonColors = WindowButtonColors(
   normal: Colors.transparent,
-  iconNormal: const Color(0xFF805306),
-  mouseOver: const Color(0xFF404040),
-  mouseDown: const Color(0xFF202020),
+  mouseOver: const Color(0x73FFFFFF),
+  mouseDown: const Color(0x73FFFFFF),
+  iconNormal: const Color(0xFFE0E0E0),
   iconMouseOver: const Color(0xFFFFFFFF),
   iconMouseDown: const Color(0xFFF0F0F0),
 );
