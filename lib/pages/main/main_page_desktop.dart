@@ -1,7 +1,7 @@
-import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tray_manager/tray_manager.dart';
+import 'package:window_manager/window_manager.dart';
 
 import '../../base/base.dart';
 import '../../generated/l10n.dart';
@@ -22,7 +22,9 @@ class MainPageDesktop extends StatefulWidget {
   State<MainPageDesktop> createState() => _MainPageDesktopState();
 }
 
-class _MainPageDesktopState extends State<MainPageDesktop> with SystemTray, TrayListener {
+class _MainPageDesktopState extends State<MainPageDesktop> with WindowListener, SystemTray, TrayListener {
+  static const String _tag = 'MainPage';
+
   @override
   void initState() {
     super.initState();
@@ -41,7 +43,7 @@ class _MainPageDesktopState extends State<MainPageDesktop> with SystemTray, Tray
   @override
   void onTrayIconMouseDown() {
     // 图标鼠标左键单击事件（显示程序）
-    final windows = appWindow;
+    final windows = windowManager;
     windows.restore();
   }
 
@@ -56,7 +58,7 @@ class _MainPageDesktopState extends State<MainPageDesktop> with SystemTray, Tray
     // 菜单选项点击事件
     switch (menuItem.key) {
       case 'exit':
-        final windows = appWindow;
+        final windows = windowManager;
         windows.close();
         break;
     }
@@ -140,4 +142,95 @@ class _MainPageDesktopState extends State<MainPageDesktop> with SystemTray, Tray
       },
     );
   }
+
+  @override
+  void onWindowEvent(String eventName) {
+    _log('onWindowEvent: eventName=$eventName');
+  }
+
+  @override
+  void onWindowClose() async {
+    // do something
+    bool isPreventClose = await windowManager.isPreventClose();
+    if (isPreventClose) {
+      showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            title: Text('Are you sure you want to close this window?'),
+            actions: [
+              TextButton(
+                child: Text('No'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text('Yes'),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  await windowManager.destroy();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  @override
+  void onWindowFocus() {
+    // Make sure to call once.
+    setState(() {});
+    // do something
+  }
+
+  @override
+  void onWindowBlur() {
+    // do something
+  }
+
+  @override
+  void onWindowMaximize() {
+    // do something
+  }
+
+  @override
+  void onWindowUnmaximize() {
+    // do something
+  }
+
+  @override
+  void onWindowMinimize() {
+    // do something
+  }
+
+  @override
+  void onWindowRestore() {
+    // do something
+  }
+
+  @override
+  void onWindowResize() {
+    // do something
+  }
+
+  @override
+  void onWindowMove() {
+    // do something
+  }
+
+  @override
+  void onWindowEnterFullScreen() {
+    // do something
+  }
+
+  @override
+  void onWindowLeaveFullScreen() {
+    // do something
+  }
+
+  void _log(String msg) => BuildConfig.isDebug ? Log.p(msg, tag: _tag) : null;
+
 }

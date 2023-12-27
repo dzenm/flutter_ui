@@ -1,13 +1,12 @@
 import Cocoa
 import FlutterMacOS
-import bitsdojo_window_macos // Add this line
+import window_manager
 
-class MainFlutterWindow: BitsdojoWindow {
-
-  override func bitsdojo_window_configure() -> UInt {
-    return BDW_CUSTOM_FRAME | BDW_HIDE_ON_STARTUP
+class MainFlutterWindow: NSWindow {
+  override public func order(_ place: NSWindow.OrderingMode, relativeTo otherWin: Int) {
+    super.order(place, relativeTo: otherWin)
+    hiddenWindowAtLaunch()
   }
-
   override func awakeFromNib() {
     let flutterViewController = FlutterViewController.init()
     let windowFrame = self.frame

@@ -19,6 +19,12 @@ abstract class TabListPageState<T extends StatefulWidget> extends State<T> {
     return Container();
   }
 
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   Widget buildContent(int len) {
     return RefreshListView(
       controller: _controller,

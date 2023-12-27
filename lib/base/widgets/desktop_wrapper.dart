@@ -1,8 +1,12 @@
 import 'dart:io';
+import 'dart:math';
 
-import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:window_manager/window_manager.dart';
+
+import 'desktop/window_button.dart';
+import 'desktop/window_caption.dart';
 
 ///
 /// Created by a0010 on 2023/8/28 15:47
@@ -25,19 +29,31 @@ class DesktopWrapper extends StatelessWidget {
     this.isShowClose = true,
   });
 
+  static Future<void> ensureInitialized() async {
+    // 必须加上这一行。
+    await windowManager.ensureInitialized();
+  }
+
   static Future<void> setWindow({
     Size size = const Size(900, 680),
     Size minimumSize = const Size(900, 680),
   }) async {
     if (!_isDesktop) return;
 
-    doWhenWindowReady(() {
-      //仅对桌面端进行尺寸设置
-      final windows = appWindow;
-      windows.minSize = minimumSize;
-      windows.size = size;
-      windows.title = '云鱼';
-      windows.show();
+    //仅对桌面端进行尺寸设置
+    WindowOptions windowOptions = WindowOptions(
+      size: size,
+      minimumSize: minimumSize,
+      center: true,
+      backgroundColor: Colors.transparent,
+      skipTaskbar: false,
+      title: '云鱼',
+      titleBarStyle: TitleBarStyle.hidden,
+      windowButtonVisibility: true,
+    );
+    windowManager.waitUntilReadyToShow(windowOptions, () async {
+      await windowManager.show();
+      await windowManager.focus();
     });
   }
 
@@ -46,20 +62,16 @@ class DesktopWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!_isDesktop) return child;
-    return WindowBorder(
-      color: Colors.white,
-      width: 0.1,
-      child: Stack(alignment: Alignment.topRight, children: [
-        child,
-        WindowButtons(
-          height: height,
-          showMoveBar: showMoveBar,
-          isShowMinimize: isShowMinimize,
-          isShowMaximize: isShowMaximize,
-          isShowClose: isShowClose,
-        ),
-      ]),
-    );
+    return Stack(alignment: Alignment.topRight, children: [
+      child,
+      WindowButtons(
+        height: height,
+        showMoveBar: showMoveBar,
+        isShowMinimize: isShowMinimize,
+        isShowMaximize: isShowMaximize,
+        isShowClose: isShowClose,
+      ),
+    ]);
   }
 }
 
@@ -133,14 +145,10 @@ class GlobalBox extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
         boxShadow: [
-          BoxShadow(color: const Color(0x22000000), blurRadius: borderRadius),
+          BoxShadow(color: const Color(0x20000000), blurRadius: borderRadius),
         ],
       ),
-      child: WindowBorder(
-        color: Colors.white,
-        width: 0.1,
-        child: child,
-      ),
+      child: child,
     );
   }
 }

@@ -45,6 +45,8 @@ class Application {
       Provider.debugCheckInvalidValueType = null;
       //启动第一个页面(必须使用AppPage作为最顶层页面，包含一些页面初始化相关的信息)
       runMockApp(const AppPage());
+
+      DesktopWrapper.ensureInitialized();
     }, handleMsg: (message) async {
       String logFileName = 'crash_${DateTime.now()}.log';
       await FileUtil().save(logFileName, message, dir: 'crash');

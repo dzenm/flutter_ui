@@ -16,7 +16,7 @@ class BuildConfig {
   static bool showDBLog = true;
 
   /// 是否打印HTTP请求日志
-  static bool showHTTPLog = true;
+  static bool showHTTPLog = false;
 
   /// 是否打印Page中的生命周期日志
   static bool showPageLog = true;
