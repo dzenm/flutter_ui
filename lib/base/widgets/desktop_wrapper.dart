@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +31,7 @@ class DesktopWrapper extends StatelessWidget {
   static Future<void> ensureInitialized() async {
     // 必须加上这一行。
     await windowManager.ensureInitialized();
+    windowManager.setOpacity(0);
   }
 
   static Future<void> setWindow({
@@ -51,9 +51,12 @@ class DesktopWrapper extends StatelessWidget {
       titleBarStyle: TitleBarStyle.hidden,
       windowButtonVisibility: true,
     );
+    windowManager.setOpacity(0);
     windowManager.waitUntilReadyToShow(windowOptions, () async {
+      await windowManager.setBackgroundColor(Colors.transparent);
       await windowManager.show();
       await windowManager.focus();
+      await windowManager.setOpacity(1.0);
     });
   }
 
@@ -111,13 +114,13 @@ class WindowButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget moveWindow = Expanded(child: SizedBox(height: height, child: MoveWindow()));
+    Widget moveWindow = Expanded(child: SizedBox(height: height, child: const MoveWindow()));
     return Row(mainAxisAlignment: mainAxisAlignment, crossAxisAlignment: CrossAxisAlignment.start, children: [
       if (showMoveBar && mainAxisAlignment == MainAxisAlignment.end) moveWindow,
       if (isShowMinimize) MinimizeWindowButton(colors: buttonColors),
       if (isShowMaximize) MaximizeWindowButton(colors: buttonColors),
-      if (isShowMinimize) CloseWindowButton(colors: closeButtonColors),
-      if (isShowClose && mainAxisAlignment == MainAxisAlignment.start) moveWindow,
+      if (isShowClose) CloseWindowButton(colors: closeButtonColors),
+      if (showMoveBar && mainAxisAlignment == MainAxisAlignment.start) moveWindow,
     ]);
   }
 }
