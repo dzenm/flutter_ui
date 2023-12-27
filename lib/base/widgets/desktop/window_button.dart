@@ -55,9 +55,9 @@ class WindowButtonColors {
 
 final _defaultButtonColors = WindowButtonColors(
   normal: Colors.transparent,
-  mouseOver: const Color(0x73FFFFFF),
-  mouseDown: const Color(0x73FFFFFF),
-  iconNormal: const Color(0xFFE0E0E0),
+  mouseOver: const Color(0x1F000000),
+  mouseDown: const Color(0x42000000),
+  iconNormal: const Color(0xFF757575),
   iconMouseOver: const Color(0xFFFFFFFF),
   iconMouseDown: const Color(0xFFF0F0F0),
 );
@@ -74,7 +74,7 @@ class WindowButton extends StatelessWidget {
     super.key,
     WindowButtonColors? colors,
     this.builder,
-    @required this.iconBuilder,
+    required this.iconBuilder,
     this.padding,
     this.onPressed,
     this.animate = false,
@@ -144,10 +144,10 @@ class MinimizeWindowButton extends WindowButton {
     VoidCallback? onPressed,
     bool? animate,
   }) : super(
-          animate: animate ?? false,
-          iconBuilder: (buttonContext) => MinimizeIcon(color: buttonContext.iconColor),
-          onPressed: onPressed ?? () => windowManager.minimize(),
-        );
+    animate: animate ?? false,
+    iconBuilder: (buttonContext) => MinimizeIcon(color: buttonContext.iconColor),
+    onPressed: onPressed ?? () => windowManager.minimize(),
+  );
 }
 
 class MaximizeWindowButton extends WindowButton {
@@ -157,10 +157,10 @@ class MaximizeWindowButton extends WindowButton {
     VoidCallback? onPressed,
     bool? animate,
   }) : super(
-          animate: animate ?? false,
-          iconBuilder: (buttonContext) => MaximizeIcon(color: buttonContext.iconColor),
-          onPressed: onPressed ?? () async => await windowManager.isMaximized() ? windowManager.unmaximize() : windowManager.maximize(),
-        );
+    animate: animate ?? false,
+    iconBuilder: (buttonContext) => MaximizeIcon(color: buttonContext.iconColor),
+    onPressed: onPressed ?? () async => await windowManager.isMaximized() ? windowManager.unmaximize() : windowManager.maximize(),
+  );
 }
 
 class RestoreWindowButton extends WindowButton {
@@ -170,17 +170,19 @@ class RestoreWindowButton extends WindowButton {
     VoidCallback? onPressed,
     bool? animate,
   }) : super(
-          animate: animate ?? false,
-          iconBuilder: (buttonContext) => RestoreIcon(color: buttonContext.iconColor),
-          onPressed: onPressed ?? () async => await windowManager.isMaximized() ? windowManager.unmaximize() : windowManager.maximize(),
-        );
+    animate: animate ?? false,
+    iconBuilder: (buttonContext) => RestoreIcon(color: buttonContext.iconColor),
+    onPressed: onPressed ?? () async => await windowManager.isMaximized() ? windowManager.unmaximize() : windowManager.maximize(),
+  );
 }
 
 final _defaultCloseButtonColors = WindowButtonColors(
+  normal: Colors.transparent,
   mouseOver: const Color(0xFFD32F2F),
   mouseDown: const Color(0xFFB71C1C),
-  iconNormal: const Color(0xFF805306),
+  iconNormal: const Color(0xFF757575),
   iconMouseOver: const Color(0xFFFFFFFF),
+  iconMouseDown: const Color(0xFFF0F0F0),
 );
 
 class CloseWindowButton extends WindowButton {
@@ -190,9 +192,9 @@ class CloseWindowButton extends WindowButton {
     VoidCallback? onPressed,
     bool? animate,
   }) : super(
-          colors: colors ?? _defaultCloseButtonColors,
-          animate: animate ?? false,
-          iconBuilder: (buttonContext) => CloseIcon(color: buttonContext.iconColor),
-          onPressed: onPressed ?? () => windowManager.close(),
-        );
+    colors: colors ?? _defaultCloseButtonColors,
+    animate: animate ?? false,
+    iconBuilder: (buttonContext) => CloseIcon(color: buttonContext.iconColor),
+    onPressed: onPressed ?? () => windowManager.close(),
+  );
 }
