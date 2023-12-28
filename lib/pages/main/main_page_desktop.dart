@@ -77,15 +77,13 @@ class _MainPageDesktopState extends State<MainPageDesktop> with WindowListener, 
           child: Row(children: [
             Padding(
               padding: const EdgeInsets.only(top: 20),
-              child: NavigationRail(
-                minWidth: 56.0,
-                selectedIndex: selectedIndex,
-                onDestinationSelected: (int index) {
+              child: DesktopNavigationRail(
+                width: 56.0,
+                onSelected: (int index) {
                   context.read<MainModel>().selectedIndex = index;
                 },
-                labelType: NavigationRailLabelType.all,
                 leading: _buildLeadingView(context),
-                destinations: _buildNavigationRailItem(context, length, selectedIndex),
+                children: _buildDesktopNavigationRailItem(context, length, selectedIndex),
               ),
             ),
             const VerticalDivider(thickness: 1, width: 1),
@@ -117,7 +115,7 @@ class _MainPageDesktopState extends State<MainPageDesktop> with WindowListener, 
     );
   }
 
-  List<NavigationRailDestination> _buildNavigationRailItem(BuildContext context, int length, int selectedIndex) {
+  List<Widget> _buildDesktopNavigationRailItem(BuildContext context, int length, int selectedIndex) {
     return List.generate(
       length,
       (index) {
@@ -134,13 +132,9 @@ class _MainPageDesktopState extends State<MainPageDesktop> with WindowListener, 
         AppTheme theme = context.watch<LocalModel>().theme;
         IconData icon = icons[index]; // 图标
         String title = titles[index]; // 标题
-        bool isSelected = index == index; // 是否是选中的索引
+        bool isSelected = selectedIndex == index; // 是否是选中的索引
         Color color = isSelected ? theme.appbar : theme.hint;
-        return NavigationRailDestination(
-          icon: Icon(icon, color: color),
-          selectedIcon: Icon(icon, color: color),
-          label: Text(title),
-        );
+        return Icon(icon, color: color);
       },
     );
   }

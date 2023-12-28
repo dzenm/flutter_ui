@@ -17,6 +17,7 @@ export 'common_bar.dart';
 export 'common_dialog.dart';
 export 'common_widget.dart';
 export 'custom_popup_window.dart';
+export 'desktop_navigation_rail.dart';
 export 'desktop_wrapper.dart';
 export 'drag_layout.dart';
 export 'edit_layout.dart';
