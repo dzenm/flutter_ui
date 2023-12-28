@@ -45,18 +45,19 @@ class MainPageMobile extends StatelessWidget {
 
   /// BottomNavigationBar widget
   List<Widget> _buildBottomNavigationBar(int length) {
-    return List.generate(
-      length,
-      (i) => Expanded(flex: 1, child: BottomNavigationBarItemView(index: i)),
-    ); // bottomNavigation list
+    return MainTab.values.map(
+      (tab) {
+        return Expanded(flex: 1, child: BottomNavigationBarItemView(tab: tab));
+      },
+    ).toList();
   }
 }
 
 /// 底部Item布局
 class BottomNavigationBarItemView extends StatelessWidget {
-  final int index;
+  final MainTab tab;
 
-  const BottomNavigationBarItemView({super.key, required this.index});
+  const BottomNavigationBarItemView({super.key, required this.tab});
 
   @override
   Widget build(BuildContext context) {
@@ -87,9 +88,9 @@ class BottomNavigationBarItemView extends StatelessWidget {
 
   /// 跳转页面
   void _jumpToPage(BuildContext context) {
-    bool isSelected = context.read<MainModel>().isSelected(index);
+    bool isSelected = context.read<MainModel>().isSelected(tab);
     if (!isSelected) {
-      context.read<MainModel>().selectedIndex = index;
+      context.read<MainModel>().selectedTab = tab;
     }
   }
 
@@ -98,7 +99,7 @@ class BottomNavigationBarItemView extends StatelessWidget {
       builder: (context, value, widget) {
         return BadgeTag(count: value);
       },
-      selector: (context, model) => model.badge(index),
+      selector: (context, model) => model.badge(tab.index),
     );
   }
 
@@ -114,18 +115,19 @@ class BottomNavigationBarItemView extends StatelessWidget {
       S.of(context).nav,
       S.of(context).me,
     ];
+    int index = tab.index;
     IconData icon = icons[index]; // 图标
     String title = titles[index]; // 标题
-    return Selector<MainModel, int>(
-      builder: (context, value, widget) {
-        bool isSelected = value == index; // 是否是选中的索引
+    return Selector<MainModel, MainTab>(
+      builder: (context, selectedTab, widget) {
+        bool isSelected = selectedTab == tab; // 是否是选中的索引
         Color color = isSelected ? theme.appbar : theme.hint;
         return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Icon(icon, color: color, size: 20),
           Text(title, style: TextStyle(fontSize: 10, color: color)),
         ]);
       },
-      selector: (context, model) => model.selectedIndex,
+      selector: (context, model) => model.selectedTab,
     );
   }
 }

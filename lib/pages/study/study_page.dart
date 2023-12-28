@@ -225,7 +225,7 @@ class _StudyPageState extends State<StudyPage> {
         textColor: Colors.white,
         color: theme.button,
         onPressed: () {
-          context.read<MainModel>().selectedIndex = 1;
+          context.read<MainModel>().selectedTab = MainTab.nav;
           AppRouteDelegate.of(context).pop('这是回调的数据');
         },
         child: _text('返回并传递数据'),

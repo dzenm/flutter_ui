@@ -69,7 +69,7 @@ class _MainPageDesktopState extends State<MainPageDesktop> with WindowListener, 
   @override
   Widget build(BuildContext context) {
     int length = context.watch<MainModel>().length;
-    int selectedIndex = context.watch<MainModel>().selectedIndex;
+    MainTab selectedTab = context.watch<MainModel>().selectedTab;
     return Material(
       child: DesktopWrapper(
         child: Container(
@@ -80,15 +80,15 @@ class _MainPageDesktopState extends State<MainPageDesktop> with WindowListener, 
               child: DesktopNavigationRail(
                 width: 56.0,
                 onSelected: (int index) {
-                  context.read<MainModel>().selectedIndex = index;
+                  context.read<MainModel>().selectedTab = index;
                 },
                 leading: _buildLeadingView(context),
-                children: _buildDesktopNavigationRailItem(context, length, selectedIndex),
+                children: _buildDesktopNavigationRailItem(context, length, selectedTab),
               ),
             ),
             const VerticalDivider(thickness: 1, width: 1),
             // 主要的展示内容，Expanded 占满剩下屏幕空间
-            Expanded(child: _buildTabPage(length)[selectedIndex])
+            Expanded(child: _buildTabPage(length)[selectedTab.index])
           ]),
         ),
       ),
@@ -115,28 +115,26 @@ class _MainPageDesktopState extends State<MainPageDesktop> with WindowListener, 
     );
   }
 
-  List<Widget> _buildDesktopNavigationRailItem(BuildContext context, int length, int selectedIndex) {
-    return List.generate(
-      length,
-      (index) {
-        List<IconData> icons = [
-          Icons.home,
-          Icons.airplay_rounded,
-          Icons.person,
-        ];
-        List<String> titles = [
-          S.of(context).home,
-          S.of(context).nav,
-          S.of(context).me,
-        ];
-        AppTheme theme = context.watch<LocalModel>().theme;
-        IconData icon = icons[index]; // 图标
-        String title = titles[index]; // 标题
-        bool isSelected = selectedIndex == index; // 是否是选中的索引
-        Color color = isSelected ? theme.appbar : theme.hint;
-        return Icon(icon, color: color);
-      },
-    );
+  List<Widget> _buildDesktopNavigationRailItem(BuildContext context, int length, MainTab selectedTab) {
+    return MainTab.values.map((tab) {
+      List<IconData> icons = [
+        Icons.home,
+        Icons.airplay_rounded,
+        Icons.person,
+      ];
+      List<String> titles = [
+        S.of(context).home,
+        S.of(context).nav,
+        S.of(context).me,
+      ];
+      int index = tab.index;
+      AppTheme theme = context.watch<LocalModel>().theme;
+      IconData icon = icons[index]; // 图标
+      String title = titles[index]; // 标题
+      bool isSelected = selectedTab == tab; // 是否是选中的索引
+      Color color = isSelected ? theme.appbar : theme.hint;
+      return Icon(icon, color: color);
+    }).toList();
   }
 
   @override
