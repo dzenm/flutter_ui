@@ -67,7 +67,6 @@ class _RefreshListViewState extends State<RefreshListView> {
   @override
   void dispose() {
     _controller.dispose();
-    _stateController?.dispose();
     super.dispose();
   }
 
