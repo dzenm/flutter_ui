@@ -53,7 +53,7 @@ class Application {
     });
   }
 
-  // 初始化信息
+  /// 初始化信息
   Future<void> _init() async {
     MockBinding.ensureInitialized();
     await BuildConfig.init();
