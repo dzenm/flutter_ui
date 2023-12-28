@@ -29,22 +29,45 @@ class AppPage extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // 简易模式测试页面
+    // 初始化需要用到context的地方，在创建MaterialApp之前
+    // 初始化其他需要context的组件
+    _useContextBeforeBuild(context);
+
+    Widget child;
+
     if (BuildConfig.isTestApp) {
-      return _buildEasyApp();
+      // 简易模式测试页面
+      child = _buildEasyApp();
+    } else {
+      child = _buildMaterialApp();
     }
 
-    // 初始化需要用到context的地方，在创建MaterialApp之前
-    _useContextBeforeBuild(context);
-    // 初始化其他需要context的组件
     // Provider
-    // Keyboard
-    // 返回键监听
     return GlobalBox(
       child: _buildProviderApp(
-        child: _buildMaterialApp(),
+        child: child,
       ),
     );
+  }
+
+  /// 初始化需要用到context的地方，在创建MaterialApp之前
+  void _useContextBeforeBuild(BuildContext context) {}
+
+  /// Provider 共享状态管理
+  Widget _buildProviderApp({Widget? child}) {
+    return MultiProvider(providers: [
+      ChangeNotifierProvider(create: (context) => LocalModel()),
+      ChangeNotifierProvider(create: (context) => MainModel()),
+      ChangeNotifierProvider(create: (context) => HomeModel()),
+      ChangeNotifierProvider(create: (context) => NavModel()),
+      ChangeNotifierProvider(create: (context) => MeModel()),
+      ChangeNotifierProvider(create: (context) => UserModel()),
+      ChangeNotifierProvider(create: (context) => BannerModel()),
+      ChangeNotifierProvider(create: (context) => ArticleModel()),
+      ChangeNotifierProvider(create: (context) => WebsiteModel()),
+      ChangeNotifierProvider(create: (context) => StudyModel()),
+      ChangeNotifierProvider(create: (context) => OrderModel()),
+    ], child: child);
   }
 
   /// 进入学习页面
@@ -74,23 +97,6 @@ class AppPage extends StatelessWidget {
     );
   }
 
-  /// Provider 共享状态管理
-  Widget _buildProviderApp({Widget? child}) {
-    return MultiProvider(providers: [
-      ChangeNotifierProvider(create: (context) => LocalModel()),
-      ChangeNotifierProvider(create: (context) => MainModel()),
-      ChangeNotifierProvider(create: (context) => HomeModel()),
-      ChangeNotifierProvider(create: (context) => NavModel()),
-      ChangeNotifierProvider(create: (context) => MeModel()),
-      ChangeNotifierProvider(create: (context) => UserModel()),
-      ChangeNotifierProvider(create: (context) => BannerModel()),
-      ChangeNotifierProvider(create: (context) => ArticleModel()),
-      ChangeNotifierProvider(create: (context) => WebsiteModel()),
-      ChangeNotifierProvider(create: (context) => StudyModel()),
-      ChangeNotifierProvider(create: (context) => OrderModel()),
-    ], child: child);
-  }
-
   /// 全局适配屏幕
   // Widget _buildScreenApp(Widget child) => ScreenUtilInit(
   //       designSize: const Size(414, 896),
@@ -98,9 +104,6 @@ class AppPage extends StatelessWidget {
   //       splitScreenMode: true,
   //       builder: () => child,
   //     );
-
-  /// 初始化需要用到context的地方，在创建MaterialApp之前
-  void _useContextBeforeBuild(BuildContext context) {}
 
   /// 全局设置（主题、语言、屏幕适配、路由设置）
   Widget _buildMaterialApp() {

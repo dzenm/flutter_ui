@@ -78,6 +78,7 @@ class Routers {
             // String url = args['url'] ?? '';
             return const PreviewPicturePage([]);
           },
+
         ),
         ...MeRouter.routers,
         ...StudyRouter.routers,

@@ -8,6 +8,7 @@ class DesktopNavigationRail extends StatefulWidget {
   final Widget? leading;
   final Widget? trailing;
   final Color? backgroundColor;
+  final double verticalPadding;
   final List<Widget> children;
   final ValueChanged<int>? onSelected;
 
@@ -17,7 +18,8 @@ class DesktopNavigationRail extends StatefulWidget {
     this.leading,
     this.trailing,
     this.backgroundColor,
-    this.children = const [],
+    this.verticalPadding = 32,
+    required this.children,
     this.onSelected,
   });
 
@@ -40,8 +42,6 @@ class _DesktopNavigationRailState extends State<DesktopNavigationRail> {
                 widget.leading!,
                 _verticalSpacer,
                 _verticalSpacer,
-                _verticalSpacer,
-                _verticalSpacer,
               ],
               for (var i = 0; i < widget.children.length; i++) ...[
                 GestureDetector(
@@ -52,10 +52,7 @@ class _DesktopNavigationRailState extends State<DesktopNavigationRail> {
                   },
                   child: widget.children[i],
                 ),
-                _verticalSpacer,
-                _verticalSpacer,
-                _verticalSpacer,
-                _verticalSpacer,
+                SizedBox(height: widget.verticalPadding),
               ],
               if (widget.trailing != null) ...[
                 _verticalSpacer,
@@ -72,3 +69,4 @@ class _DesktopNavigationRailState extends State<DesktopNavigationRail> {
 }
 
 const Widget _verticalSpacer = SizedBox(height: 8.0);
+
