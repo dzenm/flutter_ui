@@ -100,7 +100,7 @@ class Log {
     String time = '$year-$month-$day $hour:$minute:$second $millisecond';
 
     StringBuffer sb = StringBuffer();
-    String packageName = BuildConfig.packageInfo.packageName;
+    String packageName = BuildConfig.isInitialized ? BuildConfig.packageInfo.packageName : '';
     sb.write(packageName);
     sb.write(' ');
     sb.write(time);
@@ -157,7 +157,6 @@ class Log {
         return ['\x1B[31m ', ' \x1B[0m'];
       default:
         return ['', ''];
-
     }
   }
 }

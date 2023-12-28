@@ -48,6 +48,9 @@ class BuildConfig {
   /// 判断是否是Web端
   static bool get isWeb => !(isDesktop || isMobile || isFuchsia);
 
+  /// 是否初始化 [packageInfo]
+  static bool isInitialized = false;
+
   /// 包名相关的信息
   static late PackageInfo packageInfo;
 
@@ -58,7 +61,10 @@ class BuildConfig {
   static late IosDeviceInfo iosDeviceInfo;
 
   /// 初始化设备/包名相关的信息
-  static Future<void> init() async {
+  static Future<void> init({bool needInitialized = true}) async {
+    if (!needInitialized) return;
+    if (!isInitialized) return;
+    isInitialized = true;
     packageInfo = await PackageInfo.fromPlatform();
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     if (BuildConfig.isAndroid) {
