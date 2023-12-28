@@ -121,6 +121,7 @@ class _HomePageState extends State<HomePage> {
     await HttpManager().banner(
       isShowDialog: false,
       success: (list) {
+        if (!mounted) return;
         context.read<BannerModel>().banners = list;
       },
     );
@@ -130,6 +131,7 @@ class _HomePageState extends State<HomePage> {
     await HttpManager().getTopArticles(
       isShowDialog: false,
       success: (list) {
+        if (!mounted) return;
         context.read<ArticleModel>().updateArticles(list);
       },
     );
@@ -140,6 +142,7 @@ class _HomePageState extends State<HomePage> {
       page: _pageIndex,
       isShowDialog: false,
       success: (list, pageCount) {
+        if (!mounted) return;
         setState(() {});
         if (_pageIndex >= (pageCount ?? 0)) {
           _controller.loadEmpty(); // 加载完所有页面
@@ -159,6 +162,7 @@ class _HomePageState extends State<HomePage> {
     await HttpManager().getWebsites(
       isShowDialog: false,
       success: (list) {
+        if (!mounted) return;
         context.read<WebsiteModel>().updateWebsites(list);
       },
     );
