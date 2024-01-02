@@ -29,7 +29,7 @@ class _DesktopMenuState extends State<DesktopMenu> {
 
   Widget _buildPrimaryMenu() {
     return SizedBox(
-      width: 150,
+      width: 240,
       child: widget.child,
     );
   }
