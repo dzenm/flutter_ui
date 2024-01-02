@@ -9,7 +9,6 @@ import 'app_router.dart';
 import 'custom_page_route.dart';
 import 'path_tree.dart';
 
-
 ///
 /// Created by a0010 on 2023/6/13 16:29
 /// 路由管理，基于[ChangeNotifier]管理数据，页面进出栈，需要主动刷新，否则页面调整不起作用，
@@ -147,7 +146,7 @@ class AppRouteDelegate extends RouterDelegate<AppRouteInformation> with ChangeNo
   /// 进入下一个页面
   /// [clearStack] 是否清除栈内所有页面
   @override
-  Future<dynamic> push(
+  Future<T?> push<T>(
     String path, {
     List<String>? pathSegments,
     dynamic body,
@@ -162,12 +161,12 @@ class AppRouteDelegate extends RouterDelegate<AppRouteInformation> with ChangeNo
       pathSegments: pathSegments,
       body: body,
     );
-    dynamic navigateResult = await _pushPage(settings, pageTransitions: pageTransitions);
+    dynamic navigateResult = await _pushPage<T>(settings, pageTransitions: pageTransitions);
     return SynchronousFuture(navigateResult);
   }
 
   /// 进入下一个页面
-  Future<dynamic> _pushPage(AppRouteSettings settings, {PageTransitionsBuilder? pageTransitions}) async {
+  Future<T?> _pushPage<T>(AppRouteSettings settings, {PageTransitionsBuilder? pageTransitions}) async {
     Page<dynamic> page = _register.buildPage(settings, pageTransitions: pageTransitions);
     _log('进入页面：page=${page.name}');
     _pages.add(page);
@@ -177,7 +176,7 @@ class AppRouteDelegate extends RouterDelegate<AppRouteInformation> with ChangeNo
 
   /// 替换当前页面
   @override
-  Future<dynamic> pushReplace(
+  Future<T?> pushReplace<T extends Object?, TO extends Object?>(
     String path, {
     dynamic body,
     List<String>? pathSegments,
@@ -186,12 +185,12 @@ class AppRouteDelegate extends RouterDelegate<AppRouteInformation> with ChangeNo
     if (_pages.isNotEmpty) {
       _removePage();
     }
-    return await push(path, body: body, pathSegments: pathSegments, pageTransitions: pageTransitions);
+    return await push<T>(path, body: body, pathSegments: pathSegments, pageTransitions: pageTransitions);
   }
 
   /// 进入下一个页面，并且移出[predicate]之上的页面，
   @override
-  Future<dynamic> pushAndRemoveUntil(
+  Future<T?> pushAndRemoveUntil<T>(
     String path, {
     required String predicate,
     dynamic body,
@@ -199,11 +198,11 @@ class AppRouteDelegate extends RouterDelegate<AppRouteInformation> with ChangeNo
     PageTransitionsBuilder? pageTransitions,
   }) async {
     _removeUntil(predicate);
-    return await push(path, body: body, pathSegments: pathSegments, pageTransitions: pageTransitions);
+    return await push<T>(path, body: body, pathSegments: pathSegments, pageTransitions: pageTransitions);
   }
 
   @override
-  Future pushPage(Widget newPage, {bool clearStack = false}) {
+  Future<T?> pushPage<T>(Widget newPage, {bool clearStack = false}) {
     throw UnimplementedError();
   }
 

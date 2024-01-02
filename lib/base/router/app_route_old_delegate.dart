@@ -46,7 +46,7 @@ class AppRouterOldDelegate implements AppRouter {
   }
 
   @override
-  Future pushAndRemoveUntil(String path, {required String predicate, body, List<String>? pathSegments, PageTransitionsBuilder? pageTransitions}) {
+  Future<T?> pushAndRemoveUntil<T>(String path, {required String predicate, body, List<String>? pathSegments, PageTransitionsBuilder? pageTransitions}) {
     // 打开指定页面(同时指定到当前页面会被销毁)，例：A->B->C->D，由D页面进入A页面，B、C、D页面被销毁，打开A页面
     AppRouteSettings settings = AppRouteSettings.parse(
       path,
@@ -54,11 +54,11 @@ class AppRouterOldDelegate implements AppRouter {
       body: body,
     );
     _log('进入页面：page=${settings.name}');
-    return Navigator.of(context).pushNamedAndRemoveUntil(path, (route) => route.settings.name == predicate, arguments: settings);
+    return Navigator.of(context).pushNamedAndRemoveUntil<T>(path, (route) => route.settings.name == predicate, arguments: settings);
   }
 
   @override
-  Future pushReplace(String path, {body, List<String>? pathSegments, PageTransitionsBuilder? pageTransitions}) {
+  Future<T?> pushReplace<T extends Object?, TO extends Object?>(String path, {body, List<String>? pathSegments, PageTransitionsBuilder? pageTransitions}) {
     // 打开下一个页面(同时当前页面会被销毁)，例：A->B，由A页面进入B页面，A页面被销毁
     AppRouteSettings settings = AppRouteSettings.parse(
       path,
@@ -66,11 +66,11 @@ class AppRouterOldDelegate implements AppRouter {
       body: body,
     );
     _log('进入页面：page=${settings.name}');
-    return Navigator.of(context).pushReplacementNamed(path, arguments: settings);
+    return Navigator.of(context).pushReplacementNamed<T, TO>(path, arguments: settings);
   }
 
   @override
-  Future<dynamic> push(
+  Future<T?> push<T>(
     String path, {
     List<String>? pathSegments,
     dynamic body,
@@ -84,33 +84,33 @@ class AppRouterOldDelegate implements AppRouter {
       body: body,
     );
     _log('进入页面：page=${settings.name}');
-    return Navigator.of(context).pushNamed(path, arguments: settings);
+    return Navigator.of(context).pushNamed<T>(path, arguments: settings);
   }
 
   /// 打开一个新的页面
   @override
-  Future<dynamic> pushPage(
+  Future<T?> pushPage<T>(
     Widget newPage, {
     bool clearStack = false,
   }) async {
-    Route route = _buildDefaultRoute(newPage, false, null);
+    Route<T> route = _buildDefaultRoute<T>(newPage, false, null);
     if (clearStack) {
       // 打开指定页面(同时指定到当前页面会被销毁)，例：A->B->C->D，由D页面进入A页面，B、C、D页面被销毁，打开A页面
       // (Route route) => false 返回为false表示删除路由栈中的所有路由，返回true为不删除路由栈中的所有路由
-      return Navigator.pushAndRemoveUntil(context, route, (route) => route.settings.name == newPage.toStringShort());
+      return Navigator.pushAndRemoveUntil<T>(context, route, (route) => route.settings.name == newPage.toStringShort());
     }
     // 打开下一个页面，例：A->B，由A页面进入B页面
-    return Navigator.push(context, route);
+    return Navigator.push<T>(context, route);
   }
 
   /// 创建默认的页面跳转动画
-  PageRoute _buildDefaultRoute(Widget page, bool isMaterial, Object? args) {
+  PageRoute<T> _buildDefaultRoute<T>(Widget page, bool isMaterial, Object? args) {
     _log("打开新页面: RouterSettingsName=${page.toStringShort()}${args == null ? '' : ', args=${jsonEncode(args)}'}");
     // return FadeRoute(builder: (context) => page);
     if (isMaterial) {
-      return createMaterialRoute(page, args: args);
+      return createMaterialRoute<T>(page, args: args);
     } else {
-      return createCupertinoRoute(page, args: args);
+      return createCupertinoRoute<T>(page, args: args);
     }
   }
 
@@ -133,15 +133,15 @@ class AppRouterOldDelegate implements AppRouter {
     return "$registerPath?$result";
   }
 
-  PageRoute createMaterialRoute(Widget child, {Object? args}) {
-    return MaterialPageRoute(
+  PageRoute<T> createMaterialRoute<T>(Widget child, {Object? args}) {
+    return MaterialPageRoute<T>(
       builder: (BuildContext context) => child,
       settings: RouteSettings(name: child.toStringShort(), arguments: args),
     );
   }
 
-  PageRoute createCupertinoRoute(Widget child, {Object? args}) {
-    return CupertinoPageRoute(
+  PageRoute<T> createCupertinoRoute<T>(Widget child, {Object? args}) {
+    return CupertinoPageRoute<T>(
       builder: (BuildContext context) => child,
       settings: RouteSettings(name: child.toStringShort(), arguments: args),
     );

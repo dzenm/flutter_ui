@@ -32,36 +32,36 @@ abstract class AppRouter {
     return SynchronousFuture(null);
   }
 
-  Future<dynamic> push(
+  Future<T?> push<T>(
     String path, {
     List<String>? pathSegments,
     dynamic body,
     PageTransitionsBuilder? pageTransitions,
     bool clearStack = false,
   }) async {
-    return SynchronousFuture(null);
+    return null;
   }
 
-  Future<dynamic> pushReplace(
+  Future<T?> pushReplace<T extends Object?, TO extends Object?>(
     String path, {
     dynamic body,
     List<String>? pathSegments,
     PageTransitionsBuilder? pageTransitions,
   }) async {
-    return await push(path, body: body, pathSegments: pathSegments, pageTransitions: pageTransitions);
+    return await push<T>(path, body: body, pathSegments: pathSegments, pageTransitions: pageTransitions);
   }
 
-  Future<dynamic> pushAndRemoveUntil(
+  Future<T?> pushAndRemoveUntil<T>(
     String path, {
     required String predicate,
     dynamic body,
     List<String>? pathSegments,
     PageTransitionsBuilder? pageTransitions,
   }) async {
-    return await push(path, body: body, pathSegments: pathSegments, pageTransitions: pageTransitions);
+    return await push<T>(path, body: body, pathSegments: pathSegments, pageTransitions: pageTransitions);
   }
 
-  Future<dynamic> pushPage(
+  Future<T?> pushPage<T>(
     Widget newPage, {
     bool clearStack = false,
   }) async {
