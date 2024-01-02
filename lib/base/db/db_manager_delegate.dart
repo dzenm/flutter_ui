@@ -2,6 +2,7 @@
 import 'dart:ffi';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -56,6 +57,7 @@ class DBManagerDelegate {
 
   /// 设置Windows数据库
   void _setupDatabase() {
+    if (kIsWeb) return;
     if (Platform.isWindows) {
       String location = Directory.current.path;
       _windowsInit(join(location, 'sqlite3.dll'));
