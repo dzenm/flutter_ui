@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -8,6 +11,7 @@ import 'base/base.dart';
 import 'config/configs.dart';
 import 'entities/entity.dart';
 import 'http/cookie_interceptor.dart';
+import 'pages/study/window_page/sub_window_page.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56
@@ -31,31 +35,44 @@ class Application {
   }
 
   /// App入口
-  void main() async {
-    await _init();
-    // 运行flutter时全局异常捕获
-    HandleError().catchFlutterError(() {
-      log('╔══════════════════════════════════════════════════════════════════════════════════════════════════╗');
-      log('║                                                                                                  ║');
-      log('║                                        Start Flutter APP                                         ║');
-      log('║                                                                                                  ║');
-      log('╚══════════════════════════════════════════════════════════════════════════════════════════════════╝');
-      // 让 Flutter 使用 path 策略
-      usePathUrlStrategy();
-      Provider.debugCheckInvalidValueType = null;
-      //启动第一个页面(必须使用AppPage作为最顶层页面，包含一些页面初始化相关的信息)
-      runMockApp(const AppPage());
-
-      DesktopWrapper.ensureInitialized();
-    }, handleMsg: (message) async {
-      String logFileName = 'crash_${DateTime.now()}.log';
-      await FileUtil().save(logFileName, message, dir: 'crash');
-    });
+  void main(List<String> args) async {
+    bool isMainWindow = args.firstOrNull != 'multi_window';
+    if (isMainWindow) {
+      MockBinding.ensureInitialized();
+      await _initMainApp();
+      // 运行flutter时全局异常捕获
+      HandleError().catchFlutterError(() {
+        log('╔══════════════════════════════════════════════════════════════════════════════════════════════════╗');
+        log('║                                                                                                  ║');
+        log('║                                        Start Flutter APP                                         ║');
+        log('║                                                                                                  ║');
+        log('╚══════════════════════════════════════════════════════════════════════════════════════════════════╝');
+        // 让 Flutter 使用 path 策略
+        usePathUrlStrategy();
+        Provider.debugCheckInvalidValueType = null;
+        //启动第一个页面(必须使用AppPage作为最顶层页面，包含一些页面初始化相关的信息)
+        runMockApp(const AppPage());
+        // 初始化桌面端窗口
+        DesktopWrapper.ensureInitialized();
+      }, handleMsg: (message) async {
+        String logFileName = 'crash_${DateTime.now()}.log';
+        await FileUtil().save(logFileName, message, dir: 'crash');
+      });
+    } else {
+      log('APP初始运行时参数：args=${args.toString()}');
+      final windowId = int.parse(args[1]);
+      final argument = args[2].isEmpty ? const {} : jsonDecode(args[2]) as Map<String, dynamic>;
+      runMockApp(
+        SubWindowPage(
+          windowController: WindowController.fromWindowId(windowId),
+          args: argument,
+        ),
+      );
+    }
   }
 
   /// 初始化信息
-  Future<void> _init() async {
-    MockBinding.ensureInitialized();
+  Future<void> _initMainApp() async {
     await BuildConfig.init();
     log('═══════════════════════════════════════════ 开始初始化 ══════════════════════════════════════════════');
 
@@ -92,9 +109,6 @@ class Application {
       interceptors: [HttpInterceptor(), CookieInterceptor()],
       baseUrls: [Configs.baseUrl, Configs.apiUrl, Configs.localhostUrl],
     );
-
-    log('初始化 RouteManager');
-    RouteManager.init(logPrint: Log.i);
 
     log('初始化 FileUtil');
     FileUtil().init(logPrint: Log.i);

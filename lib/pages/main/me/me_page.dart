@@ -172,7 +172,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => AppRouter.of(context).push(StudyRouter.study).then((value) => log(value)),
+        onTap: () => AppRouter.of(context).push(StudyRouter.study).then((value) => log(value ?? 'null')),
         child: SingleTextView(
           icon: Icons.real_estate_agent_sharp,
           title: S.of(context).studyMainPage(''),

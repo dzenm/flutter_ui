@@ -1,3 +1,3 @@
 import 'application.dart';
 
-void main() => Application().main();
+void main(List<String> args) => Application().main(args);
