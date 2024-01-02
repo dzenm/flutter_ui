@@ -91,6 +91,15 @@ class Application {
     log('初始化 iOS设置');
     _initIOSSettings();
 
+    log('初始化 HttpsClient');
+    HttpsClient().init(
+      logPrint: Log.h,
+      loading: CommonDialog.loading,
+      toast: CommonDialog.showToast,
+      interceptors: [HttpInterceptor(), CookieInterceptor()],
+      baseUrls: [Configs.baseUrl, Configs.apiUrl, Configs.localhostUrl],
+    );
+
     log('初始化 DBManager');
     DBManager().init(logPrint: Log.b, tables: [
       OrderEntity(),
@@ -100,15 +109,6 @@ class Application {
       ArticleEntity(),
       WebsiteEntity(),
     ]);
-
-    log('初始化 HttpsClient');
-    HttpsClient().init(
-      logPrint: Log.h,
-      loading: CommonDialog.loading,
-      toast: CommonDialog.showToast,
-      interceptors: [HttpInterceptor(), CookieInterceptor()],
-      baseUrls: [Configs.baseUrl, Configs.apiUrl, Configs.localhostUrl],
-    );
 
     log('初始化 FileUtil');
     FileUtil().init(logPrint: Log.i);
