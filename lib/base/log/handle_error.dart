@@ -163,6 +163,7 @@ class HandleError {
 
   /// 获取APP信息
   Map<String, dynamic> getPackageInfo() {
+    if (!BuildConfig.isInitialized) return {};
     PackageInfo packageInfo = BuildConfig.packageInfo;
     return {
       'appName': packageInfo.appName,
@@ -175,6 +176,7 @@ class HandleError {
 
   /// 获取设备信息
   Map<String, dynamic> getDeviceInfo() {
+    if (!BuildConfig.isInitialized) return {};
     Map<String, dynamic> map = {};
     if (BuildConfig.isAndroid) {
       AndroidDeviceInfo androidDeviceInfo = BuildConfig.androidDeviceInfo;

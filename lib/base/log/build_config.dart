@@ -63,7 +63,7 @@ class BuildConfig {
   /// 初始化设备/包名相关的信息
   static Future<void> init({bool needInitialized = true}) async {
     if (!needInitialized) return;
-    if (!isInitialized) return;
+    if (isInitialized) return;
     isInitialized = true;
     packageInfo = await PackageInfo.fromPlatform();
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
