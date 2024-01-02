@@ -214,7 +214,7 @@ class Banner extends StatelessWidget {
           onTap: (index) {
             BannerEntity banner = banners[index];
             String params = '?title=${banner.title}&url=${banner.url}';
-            AppRouteDelegate.of(context).push(Routers.webView + params);
+            AppRouter.of(context).push(Routers.webView + params);
           },
         );
       },
@@ -278,7 +278,7 @@ class ArticleItemView extends StatelessWidget {
         ArticleEntity? article = context.read<ArticleModel>().getArticle(index);
         if (article == null) return;
         String params = '?title=${article.title}&url=${article.link}';
-        AppRouteDelegate.of(context).push(Routers.webView + params);
+        AppRouter.of(context).push(Routers.webView + params);
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -327,7 +327,7 @@ class ArticleItemView extends StatelessWidget {
                           int start = path.indexOf('/');
                           String url = Configs.baseUrl + path.substring(start);
                           String params = '?title=${val.name}&url=$url';
-                          AppRouteDelegate.of(context).push(Routers.webView + params);
+                          AppRouter.of(context).push(Routers.webView + params);
                         },
                       );
                     },

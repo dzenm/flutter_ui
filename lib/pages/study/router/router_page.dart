@@ -59,7 +59,7 @@ class RouterPage extends StatelessWidget {
         ..add(MaterialButton(
           textColor: Colors.white,
           color: theme.button,
-          onPressed: () => Navigator.push(context, RouteManager.createMaterialRoute(FirstPage(type: i, index: 0))),
+          onPressed: () => Navigator.push(context, AppRouterOldDelegate.of(context).createMaterialRoute(FirstPage(type: i, index: 0))),
           child: _text(list[i][0]),
         ));
     }

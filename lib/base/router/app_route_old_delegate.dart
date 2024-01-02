@@ -3,75 +3,109 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../log/log.dart';
+import 'app_route_delegate.dart';
+import 'app_route_settings.dart';
+import 'app_router.dart';
+
 /// 路由管理工具类
 /// 如果需要打印日志要先初始化
-///   RouteManager.init(logPrint: Log.i);
-class RouteManager {
-  /// 日志打印，如果不设置，将不打印日志，如果要设置在使用数据库之前调用 [init]
-  static Function? _logPrint;
+///   AppRouterOldDelegate.init(logPrint: Log.i);
+class AppRouterOldDelegate implements AppRouter {
+  /// 页面跳转时使用该方法获取 [AppRouteDelegate]
+  static AppRouterOldDelegate of(BuildContext context) {
+    return AppRouterOldDelegate._internal(context);
+  }
 
-  static void init({Function? logPrint}) {
-    _logPrint = logPrint;
+  BuildContext context;
+
+  AppRouterOldDelegate._internal(this.context);
+
+  @override
+  bool canPop() {
+    return Navigator.of(context).canPop();
+  }
+
+  /// 返回上一个页面，例：A->B->C->D, 现在在D页面调用pop回到C页面
+  @override
+  void pop<T extends Object?>([T? result]) {
+    FocusScope.of(context).unfocus();
+    Navigator.of(context).pop(result);
+  }
+
+  @override
+  Future<bool> maybePop<T extends Object?>([T? result]) {
+    return Navigator.of(context).maybePop(result);
+  }
+
+  /// 返回指定页面，例：A->B->C->D, 现在在D页面调用popUntil, 设置router.settings.name == 'A'，回到A页面
+  @override
+  Future<dynamic> popUntil(String predicate) async {
+    FocusScope.of(context).unfocus();
+    Navigator.of(context).popUntil(ModalRoute.withName(predicate));
+  }
+
+  @override
+  Future pushAndRemoveUntil(String path, {required String predicate, body, List<String>? pathSegments, PageTransitionsBuilder? pageTransitions}) {
+    // 打开指定页面(同时指定到当前页面会被销毁)，例：A->B->C->D，由D页面进入A页面，B、C、D页面被销毁，打开A页面
+    AppRouteSettings settings = AppRouteSettings.parse(
+      path,
+      pathSegments: pathSegments,
+      body: body,
+    );
+    _log('进入页面：page=${settings.name}');
+    return Navigator.of(context).pushNamedAndRemoveUntil(path, (route) => route.settings.name == predicate, arguments: settings);
+  }
+
+  @override
+  Future pushReplace(String path, {body, List<String>? pathSegments, PageTransitionsBuilder? pageTransitions}) {
+    // 打开下一个页面(同时当前页面会被销毁)，例：A->B，由A页面进入B页面，A页面被销毁
+    AppRouteSettings settings = AppRouteSettings.parse(
+      path,
+      pathSegments: pathSegments,
+      body: body,
+    );
+    _log('进入页面：page=${settings.name}');
+    return Navigator.of(context).pushReplacementNamed(path, arguments: settings);
+  }
+
+  @override
+  Future<dynamic> push(
+    String path, {
+    List<String>? pathSegments,
+    dynamic body,
+    PageTransitionsBuilder? pageTransitions,
+    bool clearStack = false,
+  }) async {
+    // 打开下一个页面，例：A->B，由A页面进入B页面
+    AppRouteSettings settings = AppRouteSettings.parse(
+      path,
+      pathSegments: pathSegments,
+      body: body,
+    );
+    _log('进入页面：page=${settings.name}');
+    return Navigator.of(context).pushNamed(path, arguments: settings);
   }
 
   /// 打开一个新的页面
-  static Future<dynamic> push(
-    BuildContext context,
+  @override
+  Future<dynamic> pushPage(
     Widget newPage, {
-    bool replace = false,
     bool clearStack = false,
-    bool isMaterial = false,
-    Object? args,
-  }) {
-    Route route = _buildDefaultRoute(newPage, isMaterial, args);
+  }) async {
+    Route route = _buildDefaultRoute(newPage, false, null);
     if (clearStack) {
       // 打开指定页面(同时指定到当前页面会被销毁)，例：A->B->C->D，由D页面进入A页面，B、C、D页面被销毁，打开A页面
       // (Route route) => false 返回为false表示删除路由栈中的所有路由，返回true为不删除路由栈中的所有路由
       return Navigator.pushAndRemoveUntil(context, route, (route) => route.settings.name == newPage.toStringShort());
-    } else if (replace) {
-      // 打开下一个页面(同时当前页面会被销毁)，例：A->B，由A页面进入B页面，A页面被销毁
-      return Navigator.pushReplacement(context, route);
     }
     // 打开下一个页面，例：A->B，由A页面进入B页面
     return Navigator.push(context, route);
   }
 
-  /// 通过路由名称打开页面，See [push]
-  static Future<dynamic> pushNamed(
-    BuildContext context,
-    String routeName, {
-    bool replace = false,
-    bool clearStack = false,
-    bool isMaterial = false,
-    Object? args,
-  }) {
-    log('打开新页面: $routeName${args == null ? '' : ', args=${jsonEncode(args)}'}');
-    if (clearStack) {
-      // 打开指定页面(同时指定到当前页面会被销毁)，例：A->B->C->D，由D页面进入A页面，B、C、D页面被销毁，打开A页面
-      return Navigator.pushNamedAndRemoveUntil(context, routeName, (route) => route.settings.name == routeName, arguments: args);
-    } else if (replace) {
-      // 打开下一个页面(同时当前页面会被销毁)，例：A->B，由A页面进入B页面，A页面被销毁
-      return Navigator.pushReplacementNamed(context, routeName, arguments: args);
-    }
-    // 打开下一个页面，例：A->B，由A页面进入B页面
-    return Navigator.pushNamed(context, routeName, arguments: args);
-  }
-
-  /// 返回上一个页面，例：A->B->C->D, 现在在D页面调用pop回到C页面
-  static void pop(BuildContext context, [dynamic result]) {
-    FocusScope.of(context).unfocus();
-    Navigator.pop(context, result);
-  }
-
-  /// 返回指定页面，例：A->B->C->D, 现在在D页面调用popUntil, 设置router.settings.name == 'A'，回到A页面
-  static void popUntil(BuildContext context, RoutePredicate predicate) {
-    FocusScope.of(context).unfocus();
-    Navigator.popUntil(context, predicate);
-  }
-
   /// 创建默认的页面跳转动画
-  static PageRoute _buildDefaultRoute(Widget page, bool isMaterial, Object? args) {
-    log("打开新页面: RouterSettingsName=${page.toStringShort()}${args == null ? '' : ', args=${jsonEncode(args)}'}");
+  PageRoute _buildDefaultRoute(Widget page, bool isMaterial, Object? args) {
+    _log("打开新页面: RouterSettingsName=${page.toStringShort()}${args == null ? '' : ', args=${jsonEncode(args)}'}");
     // return FadeRoute(builder: (context) => page);
     if (isMaterial) {
       return createMaterialRoute(page, args: args);
@@ -81,7 +115,7 @@ class RouteManager {
   }
 
   /// 将map转化为路径
-  static String path2Map(String registerPath, {Map<String, dynamic>? params}) {
+  String path2Map(String registerPath, {Map<String, dynamic>? params}) {
     if (params == null || params.isEmpty) {
       return registerPath;
     }
@@ -95,25 +129,65 @@ class RouteManager {
     });
     String paramStr = bufferStr.toString();
     String result = paramStr.substring(0, paramStr.length - 1);
-    log("传递的参数: $result");
+    _log("传递的参数: $result");
     return "$registerPath?$result";
   }
 
-  static PageRoute createMaterialRoute(Widget child, {Object? args}) {
+  PageRoute createMaterialRoute(Widget child, {Object? args}) {
     return MaterialPageRoute(
       builder: (BuildContext context) => child,
       settings: RouteSettings(name: child.toStringShort(), arguments: args),
     );
   }
 
-  static PageRoute createCupertinoRoute(Widget child, {Object? args}) {
+  PageRoute createCupertinoRoute(Widget child, {Object? args}) {
     return CupertinoPageRoute(
       builder: (BuildContext context) => child,
       settings: RouteSettings(name: child.toStringShort(), arguments: args),
     );
   }
 
-  static void log(String text) => _logPrint == null ? null : _logPrint!(text, tag: 'RouteManager');
+  void _log(String msg) => Log.d(msg, tag: 'AppRouteDelegate');
+}
+
+/// 注册路由信息
+class AppRouterOldRegister {
+  static final router = AppRouterOldRegister._internal();
+
+  factory AppRouterOldRegister() => router;
+
+  AppRouterOldRegister._internal();
+
+  /// 保存所有注册的路由信息
+  final Map<String, AppPageConfig> _routers = {};
+
+  /// 针对命名路由，跳转前拦截操作,找不到路由的时候才会走这里
+  Route<dynamic>? generator(RouteSettings settings) {
+    String? name = settings.name;
+    if (name == null) {
+      return null;
+    }
+    AppPageConfig? config = _routers[name];
+    if (config == null) {
+      return null;
+    }
+    PageBuilder? pagerBuilder = config.builder;
+
+    AppRouteSettings appRouteSettings = AppRouteSettings(originPath: name, arguments: settings.arguments);
+    return CupertinoPageRoute(builder: (context) => pagerBuilder(appRouteSettings));
+  }
+
+  void initRouter({required List<AppPageConfig> routers}) {
+    for (var router in routers) {
+      define(router.name, pageBuilder: router.builder);
+    }
+  }
+
+  /// 注册路由
+  void define(String routePath, {PageBuilder? pageBuilder}) {
+    AppPageConfig config = AppPageConfig(name: routePath, builder: pageBuilder!);
+    _routers[routePath] = config;
+  }
 }
 
 /// 自定义页面跳转动画

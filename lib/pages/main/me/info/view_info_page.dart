@@ -41,7 +41,7 @@ class _ViewInfoPageState extends State<ViewInfoPage> {
             actions: [
               IconButton(
                 icon: const Icon(Icons.edit_sharp),
-                onPressed: () => AppRouteDelegate.of(context).push(MeRouter.editInfo),
+                onPressed: () => AppRouter.of(context).push(MeRouter.editInfo),
               ),
             ],
           ),

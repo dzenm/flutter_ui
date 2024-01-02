@@ -20,7 +20,7 @@ class _MallPageState extends State<MallPage> {
         title: S.of(context).mall,
         actions: [
           IconButton(
-            onPressed: () => AppRouteDelegate.of(context).push(MallRouter.addOrder),
+            onPressed: () => AppRouter.of(context).push(MallRouter.addOrder),
             icon: const Icon(Icons.add_circle_outline_outlined),
           ),
         ],

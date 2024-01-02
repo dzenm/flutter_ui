@@ -51,7 +51,7 @@ class HttpManager {
 
       // 更新数据
       context.read<UserModel>().user = user;
-      AppRouteDelegate.of(context).push(Routers.main, clearStack: true);
+      AppRouter.of(context).push(Routers.main, clearStack: true);
     });
   }
 
@@ -67,7 +67,7 @@ class HttpManager {
 
       // 更新数据
       context.read<UserModel>().user = user;
-      AppRouteDelegate.of(context).push(Routers.main, clearStack: true);
+      AppRouter.of(context).push(Routers.main, clearStack: true);
     });
   }
 

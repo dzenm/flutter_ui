@@ -51,7 +51,7 @@ class _ListPageState extends State<ListPage> {
     return TapLayout(
       onTap: () {
         String params = '?title=$title&url=${article.link}';
-        AppRouteDelegate.of(context).push(Routers.webView + params);
+        AppRouter.of(context).push(Routers.webView + params);
       },
       child: ListTile(
         title: Text(title),

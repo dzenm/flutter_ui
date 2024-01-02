@@ -54,7 +54,7 @@ class _TabToolPageState extends State<TabToolPage> {
         return TapLayout(
           onTap: () {
             String params = '?title=${tool.name}&url=${tool.link}';
-            AppRouteDelegate.of(context).push(Routers.webView + params);
+            AppRouter.of(context).push(Routers.webView + params);
           },
           margin: const EdgeInsets.only(bottom: 12),
           padding: const EdgeInsets.all(16),

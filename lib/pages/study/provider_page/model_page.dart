@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base/base.dart';
+import '../../../base/router/app_router.dart';
 import '../study_model.dart';
 import 'update_page.dart';
 
@@ -33,7 +34,7 @@ class ModelPage extends StatelessWidget {
                 MaterialButton(
                   textColor: Colors.white,
                   color: Colors.blue,
-                  onPressed: () => RouteManager.push(context, const UpdatePage(id: 1)),
+                  onPressed: () => AppRouter.of(context).pushPage(const UpdatePage(id: 1)),
                   child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                     Text('修改数据'),
                   ]),

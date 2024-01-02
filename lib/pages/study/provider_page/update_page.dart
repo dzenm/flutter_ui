@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base/base.dart';
+import '../../../base/router/app_router.dart';
 import '../study_model.dart';
 
 ///
@@ -93,7 +94,7 @@ class _UpdatePageState extends State<UpdatePage> {
                   color: Colors.blue,
                   onPressed: () {
                     context.read<StudyModel>().updateUser(User.fromJson(_user!.toJson()));
-                    RouteManager.pop(context);
+                    AppRouter.of(context).pop(context);
                   },
                   child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                     Text('保存'),

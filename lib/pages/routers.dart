@@ -24,53 +24,53 @@ class Routers {
   static const String webView = '/webView';
   static const String preview = '/preview';
 
-  static List<AppRoutePage> get routers => [
-        AppRoutePage(
+  static List<AppPageConfig> get routers => [
+        AppPageConfig(
           name: root,
           builder: (settings) {
             return const AppPage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: notFound,
           builder: (settings) {
             return const NotFoundPage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: login,
           builder: (settings) {
             return LoginPage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: register,
           builder: (settings) {
             return const RegisterPage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: main,
           builder: (settings) {
             return const MainPage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: example,
           builder: (settings) {
             return const ExamplePage();
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: webView,
           builder: (settings) {
-            dynamic args = settings.params;
+            dynamic args = settings.queries;
             String title = args['title'] ?? '';
             String url = args['url'] ?? '';
             return WebViewPage(title: title, url: url);
           },
         ),
-        AppRoutePage(
+        AppPageConfig(
           name: preview,
           builder: (settings) {
             // dynamic args = settings.params;
@@ -78,7 +78,6 @@ class Routers {
             // String url = args['url'] ?? '';
             return const PreviewPicturePage([]);
           },
-
         ),
         ...MeRouter.routers,
         ...StudyRouter.routers,

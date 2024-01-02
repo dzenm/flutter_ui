@@ -49,7 +49,7 @@ class _TabTutorialPageState extends State<TabTutorialPage> {
             return TapLayout(
               onTap: () {
                 String params = '?title=${tool.name}&url=${tool.lisenseLink}';
-                AppRouteDelegate.of(context).push(Routers.webView + params);
+                AppRouter.of(context).push(Routers.webView + params);
               },
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               background: theme.primaryLight,

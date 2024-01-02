@@ -91,7 +91,7 @@ class CommonDialog {
 
   /// iOS风格底部列表选择对话框
   /// CommonDialog.showListBottomSheet(context, data, (int index) {
-  ///   RouteManager.pop(context);
+  ///   AppRouterOldDelegate.pop(context);
   /// })
   static Future<void> showListBottomSheet(
       BuildContext context,
