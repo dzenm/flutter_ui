@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../log/log.dart';
-import 'app_route_delegate.dart';
+import 'app_router_delegate.dart';
 import 'app_route_settings.dart';
 import 'app_router.dart';
 
@@ -13,7 +13,7 @@ import 'app_router.dart';
 /// 如果需要打印日志要先初始化
 ///  AppRouterOldDelegate.init(logPrint: Log.i);
 class AppRouterOldDelegate implements AppRouter {
-  /// 页面跳转时使用该方法获取 [AppRouteDelegate]
+  /// 页面跳转时使用该方法获取 [AppRouterDelegate]
   static AppRouterOldDelegate of(BuildContext context) {
     return AppRouterOldDelegate._internal(context);
   }

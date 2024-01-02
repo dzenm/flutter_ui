@@ -501,7 +501,7 @@ class HttpManager {
     await _httpClient.request(apiServices.logout(), success: (data) {
       SpUtil.clearUser();
       ProviderManager.clear();
-      AppRouteDelegate.of(Application().context).push(Routers.login, clearStack: true);
+      AppRouterDelegate.of(Application().context).push(Routers.login, clearStack: true);
     });
   }
 

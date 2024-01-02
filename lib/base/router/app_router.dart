@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'app_route_delegate.dart';
-import 'app_route_old_delegate.dart';
+import 'app_router_delegate.dart';
+import 'app_router_old_delegate.dart';
 import 'app_route_settings.dart';
 
 ///
@@ -13,7 +13,7 @@ abstract class AppRouter {
 
   static AppRouter of(BuildContext context) {
     if (isNewRouter) {
-      return AppRouteDelegate.of(context);
+      return AppRouterDelegate.of(context);
     }
     return AppRouterOldDelegate.of(context);
   }

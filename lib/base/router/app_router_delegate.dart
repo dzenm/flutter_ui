@@ -6,14 +6,14 @@ import '../log/log.dart';
 import 'app_route_info_parser.dart';
 import 'app_route_settings.dart';
 import 'app_router.dart';
-import 'custom_page_route.dart';
+import 'custom_page_router.dart';
 import 'path_tree.dart';
 
 ///
 /// Created by a0010 on 2023/6/13 16:29
 /// 路由管理，基于[ChangeNotifier]管理数据，页面进出栈，需要主动刷新，否则页面调整不起作用，
 /// 也可以使用已经封装好的方法 [pop]、[maybePop]、[popUntil]、[push]、[pushReplace]、[pushAndRemoveUntil]
-class AppRouteDelegate extends RouterDelegate<AppRouteInformation> with ChangeNotifier, PopNavigatorRouterDelegateMixin<AppRouteInformation> implements AppRouter {
+class AppRouterDelegate extends RouterDelegate<AppRouteInformation> with ChangeNotifier, PopNavigatorRouterDelegateMixin<AppRouteInformation> implements AppRouter {
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
   /// 路由注册器
@@ -22,7 +22,7 @@ class AppRouteDelegate extends RouterDelegate<AppRouteInformation> with ChangeNo
   /// 页面管理栈
   final List<Page<dynamic>> _pages = [];
 
-  AppRouteDelegate({required List<AppPageConfig> routers, String? initialRoute}) {
+  AppRouterDelegate({required List<AppPageConfig> routers, String? initialRoute}) {
     // 注册路由信息
     for (var route in routers) {
       _register.addRoute(route);
@@ -32,11 +32,11 @@ class AppRouteDelegate extends RouterDelegate<AppRouteInformation> with ChangeNo
     }
   }
 
-  /// 页面跳转时使用该方法获取 [AppRouteDelegate]
-  static AppRouteDelegate of(BuildContext context) {
+  /// 页面跳转时使用该方法获取 [AppRouterDelegate]
+  static AppRouterDelegate of(BuildContext context) {
     final delegate = Router.of(context).routerDelegate;
-    assert(delegate is AppRouteDelegate);
-    return delegate as AppRouteDelegate;
+    assert(delegate is AppRouterDelegate);
+    return delegate as AppRouterDelegate;
   }
 
   @override
@@ -251,7 +251,7 @@ class AppRouteDelegate extends RouterDelegate<AppRouteInformation> with ChangeNo
     return result ?? true;
   }
 
-  void _log(String msg) => Log.d(msg, tag: 'AppRouteDelegate');
+  void _log(String msg) => Log.d(msg, tag: 'AppRouterDelegate');
 }
 
 /// 注册路由信息

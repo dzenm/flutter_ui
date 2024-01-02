@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../log/log.dart';
-import 'app_route_delegate.dart';
+import 'app_router_delegate.dart';
 import 'app_route_settings.dart';
 
 ///
@@ -32,7 +32,7 @@ class AppRouteInfoParser extends RouteInformationParser<AppRouteInformation> {
     return SynchronousFuture(AppRouteInformation(name: path, settings: settings));
   }
 
-  /// 存储路由信息：传入的 [configuration] 从 [AppRouteDelegate.currentConfiguration] 获得
+  /// 存储路由信息：传入的 [configuration] 从 [AppRouterDelegate.currentConfiguration] 获得
   @override
   RouteInformation? restoreRouteInformation(AppRouteInformation configuration) {
     if (configuration.name == null) return null;
