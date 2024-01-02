@@ -8,9 +8,10 @@ import 'app_route_delegate.dart';
 import 'app_route_settings.dart';
 import 'app_router.dart';
 
+///
 /// 路由管理工具类
 /// 如果需要打印日志要先初始化
-///   AppRouterOldDelegate.init(logPrint: Log.i);
+///  AppRouterOldDelegate.init(logPrint: Log.i);
 class AppRouterOldDelegate implements AppRouter {
   /// 页面跳转时使用该方法获取 [AppRouteDelegate]
   static AppRouterOldDelegate of(BuildContext context) {
@@ -147,7 +148,7 @@ class AppRouterOldDelegate implements AppRouter {
     );
   }
 
-  void _log(String msg) => Log.d(msg, tag: 'AppRouteDelegate');
+  void _log(String msg) => Log.d(msg, tag: 'AppRouterOldDelegate');
 }
 
 /// 注册路由信息
@@ -177,6 +178,7 @@ class AppRouterOldRegister {
     return CupertinoPageRoute(builder: (context) => pagerBuilder(appRouteSettings));
   }
 
+  /// 初始化路由
   void initRouter({required List<AppPageConfig> routers}) {
     for (var router in routers) {
       define(router.name, pageBuilder: router.builder);
