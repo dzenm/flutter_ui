@@ -6,18 +6,18 @@ import '../log/log.dart';
 import 'app_route_info_parser.dart';
 import 'app_route_settings.dart';
 import 'app_router.dart';
-import 'custom_page_router.dart';
+import 'custom_page.dart';
 import 'path_tree.dart';
 
 ///
 /// Created by a0010 on 2023/6/13 16:29
 /// 路由管理，基于[ChangeNotifier]管理数据，页面进出栈，需要主动刷新，否则页面调整不起作用，
 /// 也可以使用已经封装好的方法 [pop]、[maybePop]、[popUntil]、[push]、[pushReplace]、[pushAndRemoveUntil]
-class AppRouterDelegate extends RouterDelegate<AppRouteInformation> with ChangeNotifier, PopNavigatorRouterDelegateMixin<AppRouteInformation> implements AppRouter {
+class AppRouterDelegate extends RouterDelegate<RouteSettings> with ChangeNotifier, PopNavigatorRouterDelegateMixin<RouteSettings> implements AppRouter {
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
   /// 路由注册器
-  static final AppRouterRegister _register = AppRouterRegister();
+  final AppRouterRegister _register = AppRouterRegister();
 
   /// 页面管理栈
   final List<Page<dynamic>> _pages = [];
@@ -43,16 +43,17 @@ class AppRouterDelegate extends RouterDelegate<AppRouteInformation> with ChangeN
   GlobalKey<NavigatorState> get navigatorKey => _navigatorKey;
 
   /// 全局context
-  BuildContext get context => navigatorKey.currentContext!;
+  BuildContext get context => _navigatorKey.currentContext!;
 
   /// 获取该值用于报告给引擎，在Web应用中
   @override
-  AppRouteInformation? get currentConfiguration {
+  RouteSettings? get currentConfiguration {
     if (_pages.isEmpty) {
       return null;
     }
-    AppRouteSettings settings = AppRouteSettings.fromJson(_pages.last.arguments as Map<String, dynamic>);
-    return AppRouteInformation(name: settings.name, settings: settings);
+    Page<dynamic> page = _pages.last;
+    AppRouteSettings settings = AppRouteSettings.fromJson(page.arguments as Map<String, dynamic>);
+    return settings;
   }
 
   @override
@@ -69,18 +70,21 @@ class AppRouterDelegate extends RouterDelegate<AppRouteInformation> with ChangeN
 
   /// 初始化路由会调用该方法，无需实现，否则会和 [AppPage] 产生冲突
   @override
-  Future<void> setInitialRoutePath(AppRouteInformation configuration) {
+  Future<void> setInitialRoutePath(RouteSettings configuration) {
     _log('setInitialRoutePath：configuration=$configuration');
     return SynchronousFuture(null);
   }
 
-  /// 新增路由信息：浏览器中输入url/在代码中初始化路由
+  /// 新增路由信息：浏览器中输入url/在代码中初始化路由，首次进入时会通过这个方法来配置路由站
   /// 配合 [AppRouteInfoParser] 使用，与自定义管理路由栈没有关系
   @override
-  Future<void> setNewRoutePath(AppRouteInformation configuration) async {
+  Future<void> setNewRoutePath(RouteSettings configuration) async {
+    if (configuration.name == '/') {
+      _pages.clear();
+    }
     _log('setNewRoutePath：configuration=$configuration');
     // 打开一个新的页面，由于进入了一个新的页面，同时需要更新ChangeNotifier
-    await _pushPage(configuration.settings!);
+    await _pushPage(configuration as AppRouteSettings);
     return SynchronousFuture(null);
   }
 

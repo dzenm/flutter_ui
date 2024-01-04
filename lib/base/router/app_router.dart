@@ -9,7 +9,7 @@ import 'app_route_settings.dart';
 /// Created by a0010 on 2023/12/29 16:23
 ///
 abstract class AppRouter {
-  static bool isNewRouter = false;
+  static bool isNewRouter = true;
 
   static AppRouter of(BuildContext context) {
     if (isNewRouter) {
