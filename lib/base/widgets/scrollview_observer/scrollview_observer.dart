@@ -3,7 +3,6 @@ library scrollview_observer;
 export 'chat/chat_observer_scroll_physics.dart';
 export 'chat/chat_scroll_observer.dart';
 export 'chat/chat_scroll_observer_model.dart';
-export '../chat_view.dart';
 export 'listview/list_observer_controller.dart';
 export 'listview/list_observer_notification_result.dart';
 export 'listview/list_observer_view.dart';
