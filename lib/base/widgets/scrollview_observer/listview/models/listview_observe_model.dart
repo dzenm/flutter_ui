@@ -1,12 +1,7 @@
-/*
- * @Author: LinXunFeng linxunfeng@yeah.net
- * @Repo: https://github.com/LinXunFeng/flutter_scrollview_observer
- * @Date: 2022-08-08 00:20:03
- */
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
-import '../../common/models/observe_model.dart';
+import '../../observer/models/observe_model.dart';
 import 'listview_observe_displaying_child_model.dart';
 
 class ListViewObserveModel extends ObserveModel {
@@ -35,8 +30,7 @@ class ListViewObserveModel extends ObserveModel {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is ListViewObserveModel) {
-      return firstChild == other.firstChild &&
-          listEquals(displayingChildModelList, other.displayingChildModelList);
+      return firstChild == other.firstChild && listEquals(displayingChildModelList, other.displayingChildModelList);
     } else {
       return false;
     }

@@ -1,22 +1,16 @@
-/*
- * @Author: LinXunFeng linxunfeng@yeah.net
- * @Repo: https://github.com/LinXunFeng/flutter_scrollview_observer
- * @Date: 2022-07-03 15:46:45
- */
 import 'package:flutter/rendering.dart';
 
-import '../../common/models/observe_displaying_child_model.dart';
+import '../../observer/models/observe_displaying_child_model.dart';
 
-class ListViewObserveDisplayingChildModel extends ObserveDisplayingChildModel
-    with ObserveDisplayingChildModelMixin {
+class ListViewObserveDisplayingChildModel extends ObserveDisplayingChildModel with ObserveDisplayingChildModelMixin {
   ListViewObserveDisplayingChildModel({
     required this.sliverList,
     required super.viewport,
     required super.index,
     required super.renderObject,
   }) : super(
-          sliver: sliverList,
-        );
+    sliver: sliverList,
+  );
 
   /// The target sliverList.
   /// It would be [RenderSliverList] or [RenderSliverFixedExtentList].

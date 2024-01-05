@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-import '../common/models/observer_handle_contexts_result_model.dart';
-import '../common/observer_controller.dart';
-import '../common/observer_widget.dart';
-import 'list_observer_notification_result.dart';
-import 'models/listview_observe_displaying_child_model.dart';
-import 'models/listview_observe_model.dart';
+import '../observer/observer_controller.dart';
+import '../scrollview_observer.dart';
 
 class ListObserverController extends ObserverController
     with
@@ -17,7 +13,7 @@ class ListObserverController extends ObserverController
     super.controller,
   });
 
-  /// Dispatch a [ScrollViewOnceObserveNotification]
+  /// Dispatch a [ListViewOnceObserveNotification]
   Future<ListViewOnceObserveNotificationResult> dispatchOnceObserve({
     BuildContext? sliverContext,
     bool isForce = false,
@@ -25,7 +21,7 @@ class ListObserverController extends ObserverController
   }) {
     return innerDispatchOnceObserve(
       sliverContext: sliverContext,
-      notification: ScrollViewOnceObserveNotification(
+      notification: ListViewOnceObserveNotification(
         isForce: isForce,
         isDependObserveCallback: isDependObserveCallback,
       ),
@@ -83,7 +79,7 @@ class ListObserverController extends ObserverController
   ///
   /// The [alignment] specifies the desired position for the leading edge of the
   /// child widget. It must be a value in the range [0.0, 1.0].
-  animateTo({
+  Future animateTo({
     required int index,
     required Duration duration,
     required Curve curve,
@@ -92,8 +88,8 @@ class ListObserverController extends ObserverController
     bool isFixedHeight = false,
     double alignment = 0,
     ObserverLocateIndexOffsetCallback? offset,
-  }) async {
-    await innerAnimateTo(
+  }) {
+    return innerAnimateTo(
       index: index,
       duration: duration,
       curve: curve,
@@ -117,15 +113,15 @@ class ListObserverController extends ObserverController
   ///
   /// The [alignment] specifies the desired position for the leading edge of the
   /// child widget. It must be a value in the range [0.0, 1.0].
-  jumpTo({
+  Future jumpTo({
     required int index,
     BuildContext? sliverContext,
     bool isFixedHeight = false,
     double alignment = 0,
     EdgeInsets padding = EdgeInsets.zero,
     ObserverLocateIndexOffsetCallback? offset,
-  }) async {
-    await innerJumpTo(
+  }) {
+    return innerJumpTo(
       index: index,
       sliverContext: sliverContext,
       isFixedHeight: isFixedHeight,

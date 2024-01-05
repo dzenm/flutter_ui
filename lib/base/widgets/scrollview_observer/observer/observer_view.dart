@@ -4,15 +4,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+import '../observe_notification.dart';
 import 'models/observe_model.dart';
-import 'models/observer_handle_contexts_result_model.dart';
 import 'observer_controller.dart';
+import 'observer_notification_result.dart';
 
-class ObserverWidget<C extends ObserverController, M extends ObserveModel,
-    N extends ScrollViewOnceObserveNotification> extends StatefulWidget {
+class ObserverView<C extends ObserverController, M extends ObserveModel, N extends ScrollViewOnceObserveNotification> extends StatefulWidget {
   final Widget child;
 
-  /// An object that can be used to dispatch a [ScrollViewOnceObserveNotification]
+  /// An object that can be used to dispatch a [ListViewOnceObserveNotification]
+  /// or [GridViewOnceObserveNotification].
   final C? sliverController;
 
   /// The callback of getting all sliver's buildContext.
@@ -58,8 +59,8 @@ class ObserverWidget<C extends ObserverController, M extends ObserveModel,
   /// fit your needs.
   final M? Function(BuildContext)? customHandleObserve;
 
-  const ObserverWidget({
-    super.key,
+  const ObserverView({
+    Key? key,
     required this.child,
     this.sliverController,
     this.sliverContexts,
@@ -69,22 +70,17 @@ class ObserverWidget<C extends ObserverController, M extends ObserveModel,
     this.dynamicLeadingOffset,
     this.toNextOverPercent = 1,
     this.autoTriggerObserveTypes,
-    this.triggerOnObserveType =
-        ObserverTriggerOnObserveType.displayingItemsChange,
+    this.triggerOnObserveType = ObserverTriggerOnObserveType.displayingItemsChange,
     this.customHandleObserve,
     this.customTargetRenderSliverType,
-  })  : assert(toNextOverPercent > 0 && toNextOverPercent <= 1);
+  })  : assert(toNextOverPercent > 0 && toNextOverPercent <= 1),
+        super(key: key);
 
   @override
-  State<ObserverWidget> createState() =>
-      ObserverWidgetState<C, M, N, ObserverWidget<C, M, N>>();
+  State<ObserverView> createState() => ObserverViewState<C, M, N, ObserverView<C, M, N>>();
 }
 
-class ObserverWidgetState<
-    C extends ObserverController,
-    M extends ObserveModel,
-    N extends ScrollViewOnceObserveNotification,
-    T extends ObserverWidget<C, M, N>> extends State<T> {
+class ObserverViewState<C extends ObserverController, M extends ObserveModel, N extends ScrollViewOnceObserveNotification, T extends ObserverView<C, M, N>> extends State<T> {
   /// Target sliver [BuildContext]
   List<BuildContext> targetSliverContexts = [];
 
@@ -93,25 +89,19 @@ class ObserverWidgetState<
 
   /// Default values for the widget's autoTriggerObserveTypes property.
   List<ObserverAutoTriggerObserveType> get innerAutoTriggerObserveTypes =>
-      widget.autoTriggerObserveTypes ??
-      [
-        ObserverAutoTriggerObserveType.scrollStart,
-        ObserverAutoTriggerObserveType.scrollUpdate,
-        ObserverAutoTriggerObserveType.scrollEnd
-      ];
+      widget.autoTriggerObserveTypes ?? [ObserverAutoTriggerObserveType.scrollStart, ObserverAutoTriggerObserveType.scrollUpdate, ObserverAutoTriggerObserveType.scrollEnd];
 
   /// Mapping [ObserverAutoTriggerObserveType] to [ScrollNotification].
-  List<Type> get innerAutoTriggerObserveScrollNotifications =>
-      innerAutoTriggerObserveTypes.map((type) {
-        switch (type) {
-          case ObserverAutoTriggerObserveType.scrollStart:
-            return ScrollStartNotification;
-          case ObserverAutoTriggerObserveType.scrollUpdate:
-            return ScrollUpdateNotification;
-          case ObserverAutoTriggerObserveType.scrollEnd:
-            return ScrollEndNotification;
-        }
-      }).toList();
+  List<Type> get innerAutoTriggerObserveScrollNotifications => innerAutoTriggerObserveTypes.map((type) {
+    switch (type) {
+      case ObserverAutoTriggerObserveType.scrollStart:
+        return ScrollStartNotification;
+      case ObserverAutoTriggerObserveType.scrollUpdate:
+        return ScrollUpdateNotification;
+      case ObserverAutoTriggerObserveType.scrollEnd:
+        return ScrollEndNotification;
+    }
+  }).toList();
 
   @override
   void initState() {
@@ -138,8 +128,7 @@ class ObserverWidgetState<
       },
       child: NotificationListener<ScrollNotification>(
         onNotification: (notification) {
-          if (innerAutoTriggerObserveScrollNotifications
-              .contains(notification.runtimeType)) {
+          if (innerAutoTriggerObserveScrollNotifications.contains(notification.runtimeType)) {
             if (kIsWeb || Platform.isWindows || Platform.isMacOS) {
               // Getting bad observation result because scrolling in Flutter Web
               // with mouse wheel is not smooth.
@@ -148,8 +137,7 @@ class ObserverWidgetState<
               //
               // issue
               // https://github.com/LinXunFeng/flutter_scrollview_observer/issues/31
-              WidgetsBinding.instance
-                  .addPostFrameCallback((_) => handleContexts());
+              WidgetsBinding.instance.addPostFrameCallback((_) => handleContexts());
             } else {
               handleContexts();
             }
@@ -184,11 +172,11 @@ class ObserverWidgetState<
 
   /// Fetch target sliver [BuildContext]s
   List<BuildContext> fetchTargetSliverContexts() {
-    List<BuildContext> ctxs = targetSliverContexts;
-    if (ctxs.isEmpty) {
+    List<BuildContext> sliverContexts = targetSliverContexts;
+    if (sliverContexts.isEmpty) {
       final sliverListContexts = widget.sliverContexts;
       if (sliverListContexts != null) {
-        ctxs = sliverListContexts();
+        sliverContexts = sliverListContexts();
       } else {
         List<BuildContext> contexts = [];
         void visitor(Element element) {
@@ -206,14 +194,14 @@ class ObserverWidgetState<
         } catch (e) {
           debugPrint(
             'This widget has been unmounted, so the State no longer has a context (and should be considered defunct). \n'
-            'Consider canceling any active work during "dispose" or using the "mounted" getter to determine if the State is still active.',
+                'Consider canceling any active work during "dispose" or using the "mounted" getter to determine if the State is still active.',
           );
         }
 
-        ctxs = contexts;
+        sliverContexts = contexts;
       }
     }
-    return ctxs;
+    return sliverContexts;
   }
 
   /// Fetch offset from [leadingOffset] or [dynamicLeadingOffset].
@@ -239,30 +227,29 @@ class ObserverWidgetState<
     bool isFromObserveNotification = false,
     bool isDependObserveCallback = true,
   }) {
-    final onObserve = widget.onObserve;
-    final onObserveAll = widget.onObserveAll;
+    final isForbidObserveCallback =
+        widget.sliverController?.isForbidObserveCallback ?? false;
+    final onObserve = isForbidObserveCallback ? null : widget.onObserve;
+    final onObserveAll = isForbidObserveCallback ? null : widget.onObserveAll;
     if (isDependObserveCallback) {
       if (onObserve == null && onObserveAll == null) return null;
     }
 
-    final isHandlingScroll =
-        widget.sliverController?.innerIsHandlingScroll ?? false;
+    final isHandlingScroll = widget.sliverController?.innerIsHandlingScroll ?? false;
     if (isHandlingScroll) return null;
 
-    List<BuildContext> ctxs = fetchTargetSliverContexts();
+    List<BuildContext> contexts = fetchTargetSliverContexts();
 
     Map<BuildContext, M> resultMap = {};
     Map<BuildContext, M> changeResultMap = {};
     M? changeResultModel;
-    for (var i = 0; i < ctxs.length; i++) {
-      final ctx = ctxs[i];
+    for (var i = 0; i < contexts.length; i++) {
+      final ctx = contexts[i];
       final targetObserveModel = handleObserve(ctx);
       if (targetObserveModel == null) continue;
       resultMap[ctx] = targetObserveModel;
 
-      if (isForceObserve ||
-          widget.triggerOnObserveType ==
-              ObserverTriggerOnObserveType.directly) {
+      if (isForceObserve || widget.triggerOnObserveType == ObserverTriggerOnObserveType.directly) {
         changeResultMap[ctx] = targetObserveModel;
       } else {
         final lastResultModel = lastResultMap[ctx];
@@ -281,15 +268,11 @@ class ObserverWidgetState<
 
     lastResultMap = resultMap;
 
-    if (isDependObserveCallback &&
-        onObserve != null &&
-        changeResultModel != null) {
+    if (isDependObserveCallback && onObserve != null && changeResultModel != null) {
       onObserve(changeResultModel);
     }
 
-    if (isDependObserveCallback &&
-        onObserveAll != null &&
-        changeResultMap.isNotEmpty) {
+    if (isDependObserveCallback && onObserveAll != null && changeResultMap.isNotEmpty) {
       onObserveAll(changeResultMap);
     }
 
@@ -307,21 +290,6 @@ class ObserverWidgetState<
   }
 }
 
-class ScrollViewOnceObserveNotification extends Notification {
-  /// Whether to return the observation result directly without comparing.
-  final bool isForce;
-
-  /// Whether to depend on the observe callback.
-  ///
-  /// If true, the observe callback will be called when the observation result
-  /// come out.
-  final bool isDependObserveCallback;
-  ScrollViewOnceObserveNotification({
-    this.isForce = false,
-    this.isDependObserveCallback = true,
-  });
-}
-
 /// Define type that auto trigger observe.
 enum ObserverAutoTriggerObserveType {
   scrollStart,
@@ -333,19 +301,4 @@ enum ObserverAutoTriggerObserveType {
 enum ObserverTriggerOnObserveType {
   directly,
   displayingItemsChange,
-}
-
-/// Define type of the observed render sliver.
-enum ObserverRenderSliverType {
-  /// listView
-  list,
-
-  /// gridView
-  grid,
-}
-
-/// Observation result types in ObserverWidget.
-enum ObserverWidgetObserveResultType {
-  success,
-  interrupted,
 }

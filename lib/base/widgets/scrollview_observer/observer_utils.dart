@@ -1,10 +1,12 @@
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-import '../common/models/observe_model.dart';
-import '../listview/models/listview_observe_model.dart';
+import 'listview/models/listview_observe_displaying_child_model.dart';
+import 'listview/models/listview_observe_model.dart';
+import 'observer/models/observe_model.dart';
 
 class ObserverUtils {
   ObserverUtils._();
@@ -196,6 +198,10 @@ class ObserverUtils {
 
   /// Safely call findRenderObject method.
   static RenderObject? findRenderObject(BuildContext? context) {
+    bool isMounted = context?.mounted ?? false;
+    if (!isMounted) {
+      return null;
+    }
     try {
       // It throws an exception when getting renderObject of inactive element.
       return context?.findRenderObject();
@@ -205,5 +211,162 @@ class ObserverUtils {
           'BuildContext.');
       return null;
     }
+  }
+
+  /// Walks the children of this context.
+  static BuildContext? findChildContext({
+    required BuildContext context,
+    required bool Function(Element) isTargetType,
+  }) {
+    BuildContext? childContext;
+    void visitor(Element element) {
+      if (isTargetType(element)) {
+        /// Find the target child BuildContext
+        childContext = element;
+        return;
+      }
+      element.visitChildren(visitor);
+    }
+
+    try {
+      // https://github.com/fluttercandies/flutter_scrollview_observer/issues/35
+      context.visitChildElements(visitor);
+    } catch (e) {
+      debugPrint(
+        'This widget has been unmounted, so the State no longer has a context (and should be considered defunct). \n'
+        'Consider canceling any active work during "dispose" or using the "mounted" getter to determine if the State is still active.',
+      );
+    }
+    return childContext;
+  }
+
+  /// Convert the given point from the local coordinate system for this context
+  /// to the global coordinate system in logical pixels.
+  ///
+  /// If `ancestor` is non-null, this function converts the given point to the
+  /// coordinate system of `ancestor` (which must be an ancestor of this render
+  /// object of context) instead of to the global coordinate system.
+  ///
+  /// This method is implemented in terms of [getTransformTo]. If the transform
+  /// matrix puts the given `point` on the line at infinity (for instance, when
+  /// the transform matrix is the zero matrix), this method returns (NaN, NaN).
+  static Offset? localToGlobal({
+    required BuildContext context,
+    required Offset point,
+    BuildContext? ancestor,
+  }) {
+    final renderObject = findRenderObject(context);
+    if (renderObject == null) return null;
+    return MatrixUtils.transformPoint(
+      renderObject.getTransformTo(findRenderObject(ancestor)),
+      point,
+    );
+  }
+
+  /// Handles observation logic of a sliver similar to [SliverList].
+  static ListViewObserveModel? handleListObserve({
+    required BuildContext context,
+    double Function()? fetchLeadingOffset,
+    double? Function(BuildContext)? customOverlap,
+    double toNextOverPercent = 1,
+  }) {
+    var obj = ObserverUtils.findRenderObject(context);
+    if (obj is! RenderSliverMultiBoxAdaptor) return null;
+    final viewport = ObserverUtils.findViewport(obj);
+    if (viewport == null) return null;
+    if (kDebugMode) {
+      if (viewport.debugNeedsPaint) return null;
+    }
+    // The geometry.visible is not absolutely reliable.
+    if (!(obj.geometry?.visible ?? false) || obj.constraints.remainingPaintExtent < 1e-10) {
+      return ListViewObserveModel(
+        sliverList: obj,
+        viewport: viewport,
+        visible: false,
+        firstChild: null,
+        displayingChildModelList: [],
+      );
+    }
+    final scrollDirection = obj.constraints.axis;
+    var firstChild = obj.firstChild;
+    if (firstChild == null) return null;
+
+    final offset = fetchLeadingOffset?.call() ?? 0;
+    final overlap = customOverlap?.call(context) ?? obj.constraints.overlap;
+    final rawScrollViewOffset = obj.constraints.scrollOffset + overlap;
+    var scrollViewOffset = rawScrollViewOffset + offset;
+    var parentData = firstChild.parentData as SliverMultiBoxAdaptorParentData;
+    var index = parentData.index ?? 0;
+
+    // Find out the first child which is displaying
+    var targetFirstChild = firstChild;
+
+    while (!ObserverUtils.isBelowOffsetWidgetInSliver(
+      scrollViewOffset: scrollViewOffset,
+      scrollDirection: scrollDirection,
+      targetChild: targetFirstChild,
+      toNextOverPercent: toNextOverPercent,
+    )) {
+      index = index + 1;
+      var nextChild = obj.childAfter(targetFirstChild);
+      if (nextChild == null) break;
+
+      if (nextChild is! RenderIndexedSemantics) {
+        // It is separator
+        nextChild = obj.childAfter(nextChild);
+      }
+      if (nextChild == null) break;
+      targetFirstChild = nextChild;
+    }
+    if (targetFirstChild is! RenderIndexedSemantics) return null;
+
+    List<ListViewObserveDisplayingChildModel> displayingChildModelList = [
+      ListViewObserveDisplayingChildModel(
+        sliverList: obj,
+        viewport: viewport,
+        index: targetFirstChild.index,
+        renderObject: targetFirstChild,
+      ),
+    ];
+
+    // Find the remaining children that are being displayed
+    final showingChildrenMaxOffset = rawScrollViewOffset + obj.constraints.remainingPaintExtent - overlap;
+    var displayingChild = obj.childAfter(targetFirstChild);
+    while (ObserverUtils.isDisplayingChildInSliver(
+      targetChild: displayingChild,
+      showingChildrenMaxOffset: showingChildrenMaxOffset,
+      scrollViewOffset: scrollViewOffset,
+      scrollDirection: scrollDirection,
+      toNextOverPercent: toNextOverPercent,
+    )) {
+      if (displayingChild == null) {
+        break;
+      }
+      if (displayingChild is! RenderIndexedSemantics) {
+        // It is separator
+        displayingChild = obj.childAfter(displayingChild);
+        continue;
+      }
+      displayingChildModelList.add(ListViewObserveDisplayingChildModel(
+        sliverList: obj,
+        viewport: viewport,
+        index: displayingChild.index,
+        renderObject: displayingChild,
+      ));
+      displayingChild = obj.childAfter(displayingChild);
+    }
+
+    return ListViewObserveModel(
+      sliverList: obj,
+      viewport: viewport,
+      visible: true,
+      firstChild: ListViewObserveDisplayingChildModel(
+        sliverList: obj,
+        viewport: viewport,
+        index: targetFirstChild.index,
+        renderObject: targetFirstChild,
+      ),
+      displayingChildModelList: displayingChildModelList,
+    );
   }
 }

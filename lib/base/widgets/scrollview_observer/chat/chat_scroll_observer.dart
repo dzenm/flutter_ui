@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-import '../common/observer_controller.dart';
 import '../listview/list_observer_controller.dart';
 import '../listview/models/listview_observe_displaying_child_model.dart';
-import '../utils/observer_utils.dart';
+import '../observer/observer_controller.dart';
+import '../observer_utils.dart';
 import 'chat_scroll_observer_model.dart';
 
 class ChatScrollObserver {
@@ -57,16 +57,14 @@ class ChatScrollObserver {
   ///
   /// This callback will be called when handling in [ClampingScrollPhysics]'s
   /// [adjustPositionForNewDimensions].
-  @Deprecated(
-      'It will be removed in version 2, please use [onHandlePositionCallback] instead')
+  @Deprecated('It will be removed in version 2, please use [onHandlePositionCallback] instead')
   void Function(ChatScrollObserverHandlePositionType)? onHandlePositionCallback;
 
   /// The result callback for processing chat location.
   ///
   /// This callback will be called when handling in [ClampingScrollPhysics]'s
   /// [adjustPositionForNewDimensions].
-  void Function(ChatScrollObserverHandlePositionResultModel)?
-      onHandlePositionResultCallback;
+  void Function(ChatScrollObserverHandlePositionResultModel)? onHandlePositionResultCallback;
 
   /// The mode of processing.
   ChatScrollObserverHandleMode innerMode = ChatScrollObserverHandleMode.normal;
@@ -109,14 +107,14 @@ class ChatScrollObserver {
       sliverContext: sliverContext,
     );
     if (firstItemModel == null) return;
-    int innerRefItemIndex;
-    int innerRefItemIndexAfterUpdate;
-    double innerRefItemLayoutOffset;
+    int _innerRefItemIndex;
+    int _innerRefItemIndexAfterUpdate;
+    double _innerRefItemLayoutOffset;
     switch (mode) {
       case ChatScrollObserverHandleMode.normal:
-        innerRefItemIndex = firstItemModel.index;
-        innerRefItemIndexAfterUpdate = innerRefItemIndex + changeCount;
-        innerRefItemLayoutOffset = firstItemModel.layoutOffset;
+        _innerRefItemIndex = firstItemModel.index;
+        _innerRefItemIndexAfterUpdate = _innerRefItemIndex + changeCount;
+        _innerRefItemLayoutOffset = firstItemModel.layoutOffset;
         break;
       case ChatScrollObserverHandleMode.generative:
         int index = firstItemModel.index + changeCount;
@@ -125,9 +123,9 @@ class ChatScrollObserver {
           index: index,
         );
         if (model == null) return;
-        innerRefItemIndex = index;
-        innerRefItemIndexAfterUpdate = index;
-        innerRefItemLayoutOffset = model.layoutOffset;
+        _innerRefItemIndex = index;
+        _innerRefItemIndexAfterUpdate = index;
+        _innerRefItemLayoutOffset = model.layoutOffset;
         break;
       case ChatScrollObserverHandleMode.specified:
         int index = firstItemModel.index + refItemRelativeIndex;
@@ -136,17 +134,37 @@ class ChatScrollObserver {
           index: index,
         );
         if (model == null) return;
-        innerRefItemIndex = index;
-        innerRefItemIndexAfterUpdate =
-            firstItemModel.index + refItemRelativeIndexAfterUpdate;
-        innerRefItemLayoutOffset = model.layoutOffset;
+        _innerRefItemIndex = index;
+        _innerRefItemIndexAfterUpdate = firstItemModel.index + refItemRelativeIndexAfterUpdate;
+        _innerRefItemLayoutOffset = model.layoutOffset;
         break;
     }
     // Record value.
     innerIsNeedFixedPosition = true;
-    innerRefItemIndex = innerRefItemIndex;
-    innerRefItemIndexAfterUpdate = innerRefItemIndexAfterUpdate;
-    innerRefItemLayoutOffset = innerRefItemLayoutOffset;
+    innerRefItemIndex = _innerRefItemIndex;
+    innerRefItemIndexAfterUpdate = _innerRefItemIndexAfterUpdate;
+    innerRefItemLayoutOffset = _innerRefItemLayoutOffset;
+
+    // When the heights of items are similar, the viewport will not call
+    // [performLayout], In this case, the [adjustPositionForNewDimensions] of
+    // [ScrollPhysics] will not be called, which makes the function of keeping
+    // position invalid.
+    //
+    // So here let it record a layout-time correction to the scroll offset, and
+    // call [markNeedsLayout] to prompt the viewport to be re-layout to solve
+    // the above problem.
+    //
+    // Related issue
+    // https://github.com/fluttercandies/flutter_scrollview_observer/issues/64
+    final ctx = observerController.fetchSliverContext();
+    if (ctx == null) return;
+    final obj = ObserverUtils.findRenderObject(ctx);
+    if (obj == null) return;
+    final viewport = ObserverUtils.findViewport(obj);
+    if (viewport == null) return;
+    if (!viewport.offset.hasPixels) return;
+    viewport.offset.correctBy(0);
+    viewport.markNeedsLayout();
   }
 
   observeSwitchShrinkWrap() {

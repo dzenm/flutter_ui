@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
-import '../common/observer_controller.dart';
+
+import '../observer/observer_controller.dart';
 import 'chat_scroll_observer.dart';
 import 'chat_scroll_observer_model.dart';
 
-class ChatObserverClampingScrollPhysics extends ClampingScrollPhysics
-    with ChatObserverScrollPhysicsMixin {
+@Deprecated('It will be removed in version 2, please use [ChatObserverClampingScrollPhysics] instead')
+class ChatObserverClampinScrollPhysics extends ChatObserverClampingScrollPhysics {
+  ChatObserverClampinScrollPhysics({
+    required super.observer,
+  });
+}
+
+class ChatObserverClampingScrollPhysics extends ClampingScrollPhysics with ChatObserverScrollPhysicsMixin {
   ChatObserverClampingScrollPhysics({
     super.parent,
     required ChatScrollObserver observer,
@@ -21,8 +28,7 @@ class ChatObserverClampingScrollPhysics extends ClampingScrollPhysics
   }
 }
 
-class ChatObserverBouncingScrollPhysics extends BouncingScrollPhysics
-    with ChatObserverScrollPhysicsMixin {
+class ChatObserverBouncingScrollPhysics extends BouncingScrollPhysics with ChatObserverScrollPhysicsMixin {
   ChatObserverBouncingScrollPhysics({
     super.parent,
     required ChatScrollObserver observer,
@@ -59,9 +65,7 @@ mixin ChatObserverScrollPhysicsMixin on ScrollPhysics {
       velocity: velocity,
     );
 
-    if (newPosition.extentBefore <= observer.fixedPositionOffset ||
-        !isNeedFixedPosition ||
-        observer.isRemove) {
+    if (newPosition.extentBefore <= observer.fixedPositionOffset || !isNeedFixedPosition || observer.isRemove) {
       _handlePositionCallback(ChatScrollObserverHandlePositionResultModel(
         type: ChatScrollObserverHandlePositionType.none,
         mode: observer.innerMode,
@@ -91,10 +95,12 @@ mixin ChatObserverScrollPhysicsMixin on ScrollPhysics {
   @override
   bool shouldAcceptUserOffset(ScrollMetrics position) => true;
 
-  /// Calling observer's [onHandlePositionResultCallback].
+  /// Calling observer's [onHandlePositionCallback].
   _handlePositionCallback(ChatScrollObserverHandlePositionResultModel result) {
     ambiguate(WidgetsBinding.instance)?.addPostFrameCallback((timeStamp) {
       observer.onHandlePositionResultCallback?.call(result);
+      // ignore: deprecated_member_use_from_same_package
+      observer.onHandlePositionCallback?.call(result.type);
     });
   }
 }

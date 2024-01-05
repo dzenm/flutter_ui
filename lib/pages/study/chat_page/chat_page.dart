@@ -1,8 +1,9 @@
 import 'dart:math';
 
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 
-import '../../../base/base.dart';
+import '../../../base/widgets/widget.dart';
 import 'chat_item_widget.dart';
 import 'chat_model.dart';
 import 'chat_unread_tip_view.dart';
@@ -148,8 +149,12 @@ class _ChatPageState extends State<ChatPage> {
           ),
           IconButton(
             onPressed: () {
+              _chatObserver.standby(changeCount: 1);
               editViewController.text = '';
-              _addMessage(genInt(min: 1, max: 3));
+              setState(() {
+                needIncrementUnreadMsgCount = true;
+                chatModels.insert(0, createChatModel());
+              });
             },
             icon: const Icon(Icons.send_sharp),
           ),
@@ -177,13 +182,34 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  Widget _buildListView() {
+  Widget _buildChatListView() {
+    return EasyRefresh.builder(
+      header: !isShowClassicHeaderAndFooter ? const MaterialHeader() : const ClassicHeader(),
+      footer: !isShowClassicHeaderAndFooter
+          ? const MaterialFooter()
+          : const ClassicFooter(
+              position: IndicatorPosition.above,
+              infiniteOffset: null,
+            ),
+      onRefresh: () async {
+        await Future.delayed(const Duration(seconds: 2));
+      },
+      onLoad: () async {
+        await Future.delayed(const Duration(seconds: 2));
+      },
+      childBuilder: (context, physics) {
+        return _buildListView(physics: physics);
+      },
+    );
+  }
+
+  Widget _buildListView({ScrollPhysics? physics}) {
     return ChatView(
+      physics: physics,
       itemCount: chatModels.length,
       scrollerController: _scrollerController,
       controller: _controller,
       observer: _chatObserver,
-      isMaterialRefresh: !isShowClassicHeaderAndFooter,
       itemBuilder: (context, index) {
         return ChatItemWidget(
           chatModel: chatModels[index],

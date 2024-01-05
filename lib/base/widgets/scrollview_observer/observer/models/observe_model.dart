@@ -32,3 +32,38 @@ abstract class ObserveModel {
     required this.innerDisplayingChildModelList,
   });
 }
+
+class ObserveScrollChildModel {
+  /// The size of child widget.
+  double size;
+
+  /// The layout offset of child widget.
+  double layoutOffset;
+
+  ObserveScrollChildModel({
+    required this.size,
+    required this.layoutOffset,
+  });
+}
+
+/// [ObserveFindChildModel] is used to pass data internally.
+class ObserveFindChildModel {
+  ObserveFindChildModel({
+    required this.sliver,
+    required this.viewport,
+    required this.index,
+    required this.renderObject,
+  });
+
+  /// The target sliverList.
+  RenderSliver sliver;
+
+  /// The viewport of sliver.
+  RenderViewportBase viewport;
+
+  /// The index of child widget.
+  int index;
+
+  /// The renderObject [RenderIndexedSemantics] of child widget.
+  RenderIndexedSemantics renderObject;
+}
