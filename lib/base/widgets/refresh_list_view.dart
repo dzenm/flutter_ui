@@ -7,9 +7,9 @@ typedef RefreshFunction = Future<void> Function(bool refresh);
 /// 带下拉刷新的[ListView]
 /// RefreshListView(
 ///   controller: _controller,
-///   itemCount: articleList.length,
+///   itemCount: _list.length,
 ///   builder: (BuildContext context, int index) {
-///     return _buildArticleItem(articleList[index], index);
+///    return buildItem(_list[index], index);
 ///   },
 ///   refresh: _onRefresh,
 ///   showFooter: true,
