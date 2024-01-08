@@ -193,7 +193,7 @@ class LinearStateView extends StatelessWidget {
 }
 
 /// 状态控制器，初始化 [LoadState] 使用 [initialState] ，需要不想通过 [StateController] 的其他方法
-/// 改变状态直接初始化请将 [isInit] 设置为true，如果不需要展示底部加载更多，请将 [isShowFooterState] 设置为false
+/// 改变状态直接初始化请将 [isInit] 设置为true
 class StateController {
   bool _isMore = false;
   bool _isInit = false;
@@ -232,7 +232,7 @@ class StateController {
   }
 
   void loadSliding() {
-    if (_isMore) return;
+    if (!_isInit || !_isMore) return;
     _state = LoadState.sliding;
   }
 

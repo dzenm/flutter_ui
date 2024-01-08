@@ -104,9 +104,11 @@ class _RefreshListViewState extends State<RefreshListView> {
       // 手指按下屏幕未离开并且在滑动
       onPointerMove: (event) {
         // 未初始化/正在加载中时，不处理
-        if (!isInit || _isLoading) return;
+        if (!isInit || _isLoading || !_isTouch) return;
         // 手指移动过程中，如果已经到最底部了，就提示松开手指进行加载，如果未滑动到最底部就提示继续滑动
         if (_isFooter) {
+          _stateController!.loadMore();
+        } else {
           _stateController!.loadSliding();
         }
         setState(() {});
