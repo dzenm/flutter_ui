@@ -1,7 +1,7 @@
 ///
 /// Created by a0010 on 2023/9/25 14:56
 ///
-library res;
+library resource;
 
 export 'app_theme.dart';
 export 'assets.dart';

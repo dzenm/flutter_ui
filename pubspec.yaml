@@ -40,7 +40,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: 1.0.6                        # 图片 https://pub.flutter-io.cn/packages/cupertino_icons
   sqlite3: 2.3.0                                # sql https://pub.dev/packages/sqlite3
-  sqflite_common_ffi: 2.3.1                     # sql https://pub.dev/packages/sqflite_common_ffi
+  sqflite_common_ffi: 2.3.2                     # sql https://pub.dev/packages/sqflite_common_ffi
   path_provider: 2.1.1                          # 路径选择 https://pub.dev/packages/path_provider
   shared_preferences: 2.2.2                     # 本地化存储 https://pub.dev/packages/shared_preferences
   bot_toast: 4.1.3                              # Toast https://pub.flutter-io.cn/packages/bot_toast
@@ -64,7 +64,7 @@ dependencies:
   desktop_multi_window: 0.2.0                   # 桌面端多窗口管理 https://pub.flutter-io.cn/packages/desktop_multi_window
 
   ########################################## UI ##########################################
-  webview_flutter: 4.4.2                        # WebView https://pub.dev/packages/webview_flutter
+  webview_flutter: 4.4.3                        # WebView https://pub.dev/packages/webview_flutter
   azlistview: 2.0.0                             # az列表 https://pub.flutter-io.cn/packages/azlistview
   flutter_slidable: 3.0.1                       # 可滑动的列表展示 https://pub.flutter-io.cn/packages/flutter_slidable
   #  flutter_echarts: 2.0.0                        # EChart 图表（缩放手势冲突） https://pub.flutter-io.cn/packages/flutter_echarts
@@ -81,9 +81,9 @@ dependencies:
 
   ########################################## 音视频 ######################################
   transparent_image: 2.0.1                      # 图片选择器 https://pub.flutter-io.cn/packages/transparent_image
-  image_picker: 1.0.5                           # 图片选择器 https://pub.flutter-io.cn/packages/image_picker
+  image_picker: 1.0.6                           # 图片选择器 https://pub.flutter-io.cn/packages/image_picker
   photo_view: 0.14.0                            # 图片预览控件 https://pub.flutter-io.cn/packages/photo_view
-  video_player: 2.8.1                           # 视频播放 https://pub.flutter-io.cn/packages/video_player
+  video_player: 2.8.2                           # 视频播放 https://pub.flutter-io.cn/packages/video_player
   fijkplayer: 0.11.0                            # 视频播放 https://pub.flutter-io.cn/packages/fijkplayer
   flutter_vlc_player: 7.4.1                     # 视频播放 https://pub.flutter-io.cn/packages/fijkplayer
 
@@ -104,7 +104,7 @@ dependencies:
   url_launcher: 6.2.2                          # 网页打开工具 https://pub.flutter-io.cn/packages/url_launcher
   flustars: 2.0.1                               # Flutter 常用工具类库（本地化 屏幕适配） https://pub.flutter-io.cn/packages/flustars
   flutter_html: 3.0.0-beta.2                    # Flutter 加载html https://pub.flutter-io.cn/packages/flutter_html
-  fluent_ui: 4.8.3
+  fluent_ui: 4.8.4
 dev_dependencies:
   flutter_test:
     sdk: flutter

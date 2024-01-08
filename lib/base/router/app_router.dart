@@ -1,14 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import 'app_route_settings.dart';
 import 'app_router_delegate.dart';
 import 'app_router_old_delegate.dart';
-import 'app_route_settings.dart';
 
 ///
 /// Created by a0010 on 2023/12/29 16:23
 ///
 abstract class AppRouter {
+
   static bool isNewRouter = true;
 
   static AppRouter of(BuildContext context) {
@@ -67,6 +68,8 @@ abstract class AppRouter {
   }) async {
     return SynchronousFuture(null);
   }
+
+  void log(String msg);
 }
 
 typedef PageBuilder = Widget Function(AppRouteSettings settings);

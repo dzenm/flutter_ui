@@ -11,7 +11,7 @@ export 'log/handle_error.dart';
 export 'log/log.dart';
 export 'naughty/http_interceptor.dart';
 export 'naughty/naughty.dart';
-export 'res/res.dart';
+export 'resource/resource.dart';
 export 'router/router.dart';
 export 'utils/util.dart';
 export 'widgets/widget.dart';

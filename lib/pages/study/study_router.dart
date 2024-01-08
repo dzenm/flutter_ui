@@ -15,7 +15,7 @@ import 'load_image_page/load_image_page.dart';
 import 'popup_page/popup_page.dart';
 import 'provider_page/provider_page.dart';
 import 'qr_page/qr_page.dart';
-import 'router/router_page.dart';
+import 'router_page/router_page.dart';
 import 'slider_page/slide_page.dart';
 import 'state_page/state_page.dart';
 import 'study_page.dart';

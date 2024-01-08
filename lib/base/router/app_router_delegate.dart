@@ -2,7 +2,6 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../log/log.dart';
 import 'app_route_info_parser.dart';
 import 'app_route_settings.dart';
 import 'app_router.dart';
@@ -22,7 +21,13 @@ class AppRouterDelegate extends RouterDelegate<RouteSettings> with ChangeNotifie
   /// 页面管理栈
   final List<Page<dynamic>> _pages = [];
 
-  AppRouterDelegate({required List<AppPageConfig> routers, String? initialRoute}) {
+  final Function? logPrint;
+
+  AppRouterDelegate({
+    required List<AppPageConfig> routers,
+    String? initialRoute,
+    this.logPrint,
+  }) {
     // 注册路由信息
     for (var route in routers) {
       _register.addRoute(route);
@@ -71,7 +76,7 @@ class AppRouterDelegate extends RouterDelegate<RouteSettings> with ChangeNotifie
   /// 初始化路由会调用该方法，无需实现，否则会和 [AppPage] 产生冲突
   @override
   Future<void> setInitialRoutePath(RouteSettings configuration) {
-    _log('setInitialRoutePath：configuration=$configuration');
+    log('setInitialRoutePath：configuration=$configuration');
     return SynchronousFuture(null);
   }
 
@@ -82,7 +87,7 @@ class AppRouterDelegate extends RouterDelegate<RouteSettings> with ChangeNotifie
     if (configuration.name == '/') {
       _pages.clear();
     }
-    _log('setNewRoutePath：configuration=$configuration');
+    log('setNewRoutePath：configuration=$configuration');
     // 打开一个新的页面，由于进入了一个新的页面，同时需要更新ChangeNotifier
     await _pushPage(configuration as AppRouteSettings);
     return SynchronousFuture(null);
@@ -172,7 +177,7 @@ class AppRouterDelegate extends RouterDelegate<RouteSettings> with ChangeNotifie
   /// 进入下一个页面
   Future<T?> _pushPage<T>(AppRouteSettings settings, {PageTransitionsBuilder? pageTransitions}) async {
     Page<dynamic> page = _register.buildPage(settings, pageTransitions: pageTransitions);
-    _log('进入页面：page=${page.name}');
+    log('进入页面：page=${page.name}');
     _pages.add(page);
     _markNeedsUpdate();
     return await (page as CustomPage).completerResult.future;
@@ -224,7 +229,7 @@ class AppRouterDelegate extends RouterDelegate<RouteSettings> with ChangeNotifie
   /// 关闭页面
   Page _removePage() {
     Page<dynamic> page = _pages.removeLast();
-    _log('关闭页面：page=${page.name}');
+    log('关闭页面：page=${page.name}');
     return page;
   }
 
@@ -255,7 +260,8 @@ class AppRouterDelegate extends RouterDelegate<RouteSettings> with ChangeNotifie
     return result ?? true;
   }
 
-  void _log(String msg) => Log.d(msg, tag: 'AppRouterDelegate');
+  @override
+  void log(String msg) => logPrint == null ? null : logPrint!(msg, tag: 'AppRouterOldDelegate');
 }
 
 /// 注册路由信息

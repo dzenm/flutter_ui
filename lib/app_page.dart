@@ -128,7 +128,7 @@ class AppPage extends StatelessWidget {
     }
 
     AppRouterOldRegister().initRouter(routers: Routers.routers);
-
+    AppRouterOldDelegate().init();
     GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
     // 初始化需要用到context的地方，在创建MaterialApp之后
     Future.delayed(Duration.zero, () {
@@ -278,7 +278,7 @@ class AppPage extends StatelessWidget {
       ],
       // 初始路由
       routerDelegate: delegate,
-      routeInformationParser: const AppRouteInfoParser(),
+      routeInformationParser: const AppRouteInfoParser(logPrint: Log.d),
       builder: (context, child) {
         return MediaQuery(
           //设置文字大小不随系统设置改变

@@ -3,10 +3,9 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../log/log.dart';
-import 'app_router_delegate.dart';
 import 'app_route_settings.dart';
 import 'app_router.dart';
+import 'app_router_delegate.dart';
 
 ///
 /// 路由管理工具类
@@ -15,35 +14,44 @@ import 'app_router.dart';
 class AppRouterOldDelegate implements AppRouter {
   /// 页面跳转时使用该方法获取 [AppRouterDelegate]
   static AppRouterOldDelegate of(BuildContext context) {
-    return AppRouterOldDelegate._internal(context);
+    AppRouterOldDelegate delegate = AppRouterOldDelegate._internal();
+    delegate._context = context;
+    return delegate;
   }
 
-  BuildContext context;
+  late BuildContext _context;
+  Function? logPrint;
 
-  AppRouterOldDelegate._internal(this.context);
+  factory AppRouterOldDelegate() => AppRouterOldDelegate._internal();
+
+  AppRouterOldDelegate._internal();
+
+  void init({Function? logPrint}) {
+    this.logPrint = logPrint;
+  }
 
   @override
   bool canPop() {
-    return Navigator.of(context).canPop();
+    return Navigator.of(_context).canPop();
   }
 
   /// 返回上一个页面，例：A->B->C->D, 现在在D页面调用pop回到C页面
   @override
   void pop<T extends Object?>([T? result]) {
-    FocusScope.of(context).unfocus();
-    Navigator.of(context).pop(result);
+    FocusScope.of(_context).unfocus();
+    Navigator.of(_context).pop(result);
   }
 
   @override
   Future<bool> maybePop<T extends Object?>([T? result]) {
-    return Navigator.of(context).maybePop(result);
+    return Navigator.of(_context).maybePop(result);
   }
 
   /// 返回指定页面，例：A->B->C->D, 现在在D页面调用popUntil, 设置router.settings.name == 'A'，回到A页面
   @override
   Future<dynamic> popUntil(String predicate) async {
-    FocusScope.of(context).unfocus();
-    Navigator.of(context).popUntil(ModalRoute.withName(predicate));
+    FocusScope.of(_context).unfocus();
+    Navigator.of(_context).popUntil(ModalRoute.withName(predicate));
   }
 
   @override
@@ -54,8 +62,8 @@ class AppRouterOldDelegate implements AppRouter {
       pathSegments: pathSegments,
       body: body,
     );
-    _log('进入页面：page=${settings.name}');
-    return Navigator.of(context).pushNamedAndRemoveUntil<T>(path, (route) => route.settings.name == predicate, arguments: settings);
+    log('进入页面：page=${settings.name}');
+    return Navigator.of(_context).pushNamedAndRemoveUntil<T>(path, (route) => route.settings.name == predicate, arguments: settings);
   }
 
   @override
@@ -66,8 +74,8 @@ class AppRouterOldDelegate implements AppRouter {
       pathSegments: pathSegments,
       body: body,
     );
-    _log('进入页面：page=${settings.name}');
-    return Navigator.of(context).pushReplacementNamed<T, TO>(path, arguments: settings);
+    log('进入页面：page=${settings.name}');
+    return Navigator.of(_context).pushReplacementNamed<T, TO>(path, arguments: settings);
   }
 
   @override
@@ -84,8 +92,8 @@ class AppRouterOldDelegate implements AppRouter {
       pathSegments: pathSegments,
       body: body,
     );
-    _log('进入页面：page=${settings.name}');
-    return Navigator.of(context).pushNamed<T>(path, arguments: settings);
+    log('进入页面：page=${settings.name}');
+    return Navigator.of(_context).pushNamed<T>(path, arguments: settings);
   }
 
   /// 打开一个新的页面
@@ -98,15 +106,15 @@ class AppRouterOldDelegate implements AppRouter {
     if (clearStack) {
       // 打开指定页面(同时指定到当前页面会被销毁)，例：A->B->C->D，由D页面进入A页面，B、C、D页面被销毁，打开A页面
       // (Route route) => false 返回为false表示删除路由栈中的所有路由，返回true为不删除路由栈中的所有路由
-      return Navigator.pushAndRemoveUntil<T>(context, route, (route) => route.settings.name == newPage.toStringShort());
+      return Navigator.pushAndRemoveUntil<T>(_context, route, (route) => route.settings.name == newPage.toStringShort());
     }
     // 打开下一个页面，例：A->B，由A页面进入B页面
-    return Navigator.push<T>(context, route);
+    return Navigator.push<T>(_context, route);
   }
 
   /// 创建默认的页面跳转动画
   PageRoute<T> _buildDefaultRoute<T>(Widget page, bool isMaterial, Object? args) {
-    _log("打开新页面: RouterSettingsName=${page.toStringShort()}${args == null ? '' : ', args=${jsonEncode(args)}'}");
+    log("打开新页面: RouterSettingsName=${page.toStringShort()}${args == null ? '' : ', args=${jsonEncode(args)}'}");
     // return FadeRoute(builder: (context) => page);
     if (isMaterial) {
       return createMaterialRoute<T>(page, args: args);
@@ -130,7 +138,7 @@ class AppRouterOldDelegate implements AppRouter {
     });
     String paramStr = bufferStr.toString();
     String result = paramStr.substring(0, paramStr.length - 1);
-    _log("传递的参数: $result");
+    log("传递的参数: $result");
     return "$registerPath?$result";
   }
 
@@ -148,7 +156,8 @@ class AppRouterOldDelegate implements AppRouter {
     );
   }
 
-  void _log(String msg) => Log.d(msg, tag: 'AppRouterOldDelegate');
+  @override
+  void log(String msg) => logPrint == null ? null : logPrint!(msg, tag: 'AppRouterOldDelegate');
 }
 
 /// 注册路由信息
