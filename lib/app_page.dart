@@ -128,7 +128,7 @@ class AppPage extends StatelessWidget {
     }
 
     AppRouterOldRegister().initRouter(routers: Routers.routers);
-    AppRouterOldDelegate().init();
+    AppRouterOldDelegate().init(logPrint: Log.d);
     GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
     // 初始化需要用到context的地方，在创建MaterialApp之后
     Future.delayed(Duration.zero, () {
