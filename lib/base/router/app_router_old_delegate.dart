@@ -55,7 +55,13 @@ class AppRouterOldDelegate implements AppRouter {
   }
 
   @override
-  Future<T?> pushAndRemoveUntil<T>(String path, {required String predicate, body, List<String>? pathSegments, PageTransitionsBuilder? pageTransitions}) {
+  Future<T?> pushAndRemoveUntil<T>(
+    String path, {
+    required String predicate,
+    body,
+    List<String>? pathSegments,
+    PageTransitionsBuilder? pageTransitionsBuilder,
+  }) {
     // 打开指定页面(同时指定到当前页面会被销毁)，例：A->B->C->D，由D页面进入A页面，B、C、D页面被销毁，打开A页面
     AppRouteSettings settings = AppRouteSettings.parse(
       path,
@@ -63,11 +69,20 @@ class AppRouterOldDelegate implements AppRouter {
       body: body,
     );
     log('进入页面：page=${settings.name}');
-    return Navigator.of(_context).pushNamedAndRemoveUntil<T>(path, (route) => route.settings.name == predicate, arguments: settings);
+    return Navigator.of(_context).pushNamedAndRemoveUntil<T>(
+      path,
+      (route) => route.settings.name == predicate,
+      arguments: settings,
+    );
   }
 
   @override
-  Future<T?> pushReplace<T extends Object?, TO extends Object?>(String path, {body, List<String>? pathSegments, PageTransitionsBuilder? pageTransitions}) {
+  Future<T?> pushReplace<T extends Object?, TO extends Object?>(
+    String path, {
+    body,
+    List<String>? pathSegments,
+    PageTransitionsBuilder? pageTransitionsBuilder,
+  }) {
     // 打开下一个页面(同时当前页面会被销毁)，例：A->B，由A页面进入B页面，A页面被销毁
     AppRouteSettings settings = AppRouteSettings.parse(
       path,
@@ -83,7 +98,7 @@ class AppRouterOldDelegate implements AppRouter {
     String path, {
     List<String>? pathSegments,
     dynamic body,
-    PageTransitionsBuilder? pageTransitions,
+    PageTransitionsBuilder? pageTransitionsBuilder,
     bool clearStack = false,
   }) async {
     // 打开下一个页面，例：A->B，由A页面进入B页面
@@ -106,7 +121,11 @@ class AppRouterOldDelegate implements AppRouter {
     if (clearStack) {
       // 打开指定页面(同时指定到当前页面会被销毁)，例：A->B->C->D，由D页面进入A页面，B、C、D页面被销毁，打开A页面
       // (Route route) => false 返回为false表示删除路由栈中的所有路由，返回true为不删除路由栈中的所有路由
-      return Navigator.pushAndRemoveUntil<T>(_context, route, (route) => route.settings.name == newPage.toStringShort());
+      return Navigator.pushAndRemoveUntil<T>(
+        _context,
+        route,
+        (route) => route.settings.name == newPage.toStringShort(),
+      );
     }
     // 打开下一个页面，例：A->B，由A页面进入B页面
     return Navigator.push<T>(_context, route);

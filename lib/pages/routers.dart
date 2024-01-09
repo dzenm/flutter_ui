@@ -16,13 +16,13 @@ import 'study/study_router.dart';
 ///
 class Routers {
   static const String root = '/';
-  static const String notFound = '/notFound';
-  static const String login = '/login';
-  static const String register = '/register';
-  static const String main = '/main';
-  static const String example = '/example';
-  static const String webView = '/webView';
-  static const String preview = '/preview';
+  static const String notFound = '${root}notFound';
+  static const String login = '${root}login';
+  static const String register = '${root}register';
+  static const String main = '${root}main';
+  static const String example = '${root}example';
+  static const String webView = '${root}webView';
+  static const String preview = '${root}preview';
 
   static List<AppPageConfig> get routers => [
         AppPageConfig(
@@ -73,9 +73,9 @@ class Routers {
         AppPageConfig(
           name: preview,
           builder: (settings) {
-            // dynamic args = settings.params;
-            // String title = args['title'] ?? '';
-            // String url = args['url'] ?? '';
+            dynamic args = settings.queries;
+            String title = args['title'] ?? '';
+            String url = args['url'] ?? '';
             return const PreviewPicturePage([]);
           },
         ),

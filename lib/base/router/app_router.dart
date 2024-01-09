@@ -9,7 +9,6 @@ import 'app_router_old_delegate.dart';
 /// Created by a0010 on 2023/12/29 16:23
 ///
 abstract class AppRouter {
-
   static bool isNewRouter = true;
 
   static AppRouter of(BuildContext context) {
@@ -37,7 +36,7 @@ abstract class AppRouter {
     String path, {
     List<String>? pathSegments,
     dynamic body,
-    PageTransitionsBuilder? pageTransitions,
+    PageTransitionsBuilder? pageTransitionsBuilder,
     bool clearStack = false,
   }) async {
     return null;
@@ -47,9 +46,9 @@ abstract class AppRouter {
     String path, {
     dynamic body,
     List<String>? pathSegments,
-    PageTransitionsBuilder? pageTransitions,
+    PageTransitionsBuilder? pageTransitionsBuilder,
   }) async {
-    return await push<T>(path, body: body, pathSegments: pathSegments, pageTransitions: pageTransitions);
+    return await push<T>(path, body: body, pathSegments: pathSegments, pageTransitionsBuilder: pageTransitionsBuilder);
   }
 
   Future<T?> pushAndRemoveUntil<T>(
@@ -57,9 +56,9 @@ abstract class AppRouter {
     required String predicate,
     dynamic body,
     List<String>? pathSegments,
-    PageTransitionsBuilder? pageTransitions,
+    PageTransitionsBuilder? pageTransitionsBuilder,
   }) async {
-    return await push<T>(path, body: body, pathSegments: pathSegments, pageTransitions: pageTransitions);
+    return await push<T>(path, body: body, pathSegments: pathSegments, pageTransitionsBuilder: pageTransitionsBuilder);
   }
 
   Future<T?> pushPage<T>(
@@ -78,9 +77,11 @@ typedef PageBuilder = Widget Function(AppRouteSettings settings);
 class AppPageConfig {
   final String name;
   final PageBuilder builder;
+  final PageTransitionsBuilder? pageTransitionsBuilder;
 
   AppPageConfig({
     required this.name,
     required this.builder,
+    this.pageTransitionsBuilder,
   });
 }

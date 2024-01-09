@@ -12,7 +12,9 @@ import 'path_tree.dart';
 /// Created by a0010 on 2023/6/13 16:29
 /// 路由管理，基于[ChangeNotifier]管理数据，页面进出栈，需要主动刷新，否则页面调整不起作用，
 /// 也可以使用已经封装好的方法 [pop]、[maybePop]、[popUntil]、[push]、[pushReplace]、[pushAndRemoveUntil]
-class AppRouterDelegate extends RouterDelegate<RouteSettings> with ChangeNotifier, PopNavigatorRouterDelegateMixin<RouteSettings> implements AppRouter {
+class AppRouterDelegate extends RouterDelegate<RouteSettings>
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin<RouteSettings>
+    implements AppRouter {
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
   /// 路由注册器
@@ -57,7 +59,8 @@ class AppRouterDelegate extends RouterDelegate<RouteSettings> with ChangeNotifie
       return null;
     }
     Page<dynamic> page = _pages.last;
-    AppRouteSettings settings = AppRouteSettings.fromJson(page.arguments as Map<String, dynamic>);
+    Map<String, dynamic> arguments = page.arguments as Map<String, dynamic>;
+    AppRouteSettings settings = AppRouteSettings.fromJson(arguments);
     return settings;
   }
 
@@ -159,7 +162,7 @@ class AppRouterDelegate extends RouterDelegate<RouteSettings> with ChangeNotifie
     String path, {
     List<String>? pathSegments,
     dynamic body,
-    PageTransitionsBuilder? pageTransitions,
+    PageTransitionsBuilder? pageTransitionsBuilder,
     bool clearStack = false,
   }) async {
     if (clearStack) {
@@ -170,13 +173,22 @@ class AppRouterDelegate extends RouterDelegate<RouteSettings> with ChangeNotifie
       pathSegments: pathSegments,
       body: body,
     );
-    dynamic navigateResult = await _pushPage<T>(settings, pageTransitions: pageTransitions);
+    dynamic navigateResult = await _pushPage<T>(
+      settings,
+      pageTransitionsBuilder: pageTransitionsBuilder,
+    );
     return SynchronousFuture(navigateResult);
   }
 
   /// 进入下一个页面
-  Future<T?> _pushPage<T>(AppRouteSettings settings, {PageTransitionsBuilder? pageTransitions}) async {
-    Page<dynamic> page = _register.buildPage(settings, pageTransitions: pageTransitions);
+  Future<T?> _pushPage<T>(
+    AppRouteSettings settings, {
+    PageTransitionsBuilder? pageTransitionsBuilder,
+  }) async {
+    Page<dynamic> page = _register.buildPage(
+      settings,
+      pageTransitionsBuilder: pageTransitionsBuilder,
+    );
     log('进入页面：page=${page.name}');
     _pages.add(page);
     _markNeedsUpdate();
@@ -189,12 +201,17 @@ class AppRouterDelegate extends RouterDelegate<RouteSettings> with ChangeNotifie
     String path, {
     dynamic body,
     List<String>? pathSegments,
-    PageTransitionsBuilder? pageTransitions,
+    PageTransitionsBuilder? pageTransitionsBuilder,
   }) async {
     if (_pages.isNotEmpty) {
       _removePage();
     }
-    return await push<T>(path, body: body, pathSegments: pathSegments, pageTransitions: pageTransitions);
+    return await push<T>(
+      path,
+      body: body,
+      pathSegments: pathSegments,
+      pageTransitionsBuilder: pageTransitionsBuilder,
+    );
   }
 
   /// 进入下一个页面，并且移出[predicate]之上的页面，
@@ -204,10 +221,15 @@ class AppRouterDelegate extends RouterDelegate<RouteSettings> with ChangeNotifie
     required String predicate,
     dynamic body,
     List<String>? pathSegments,
-    PageTransitionsBuilder? pageTransitions,
+    PageTransitionsBuilder? pageTransitionsBuilder,
   }) async {
     _removeUntil(predicate);
-    return await push<T>(path, body: body, pathSegments: pathSegments, pageTransitions: pageTransitions);
+    return await push<T>(
+      path,
+      body: body,
+      pathSegments: pathSegments,
+      pageTransitionsBuilder: pageTransitionsBuilder,
+    );
   }
 
   @override
@@ -295,7 +317,10 @@ class AppRouterRegister {
   }
 
   /// 创建 [CustomPage]
-  Page<dynamic> buildPage(AppRouteSettings settings, {PageTransitionsBuilder? pageTransitions}) {
+  Page<dynamic> buildPage(
+    AppRouteSettings settings, {
+    PageTransitionsBuilder? pageTransitionsBuilder,
+  }) {
     // 注册的url
     String path = settings.originPath;
     // 查找注册的页面
@@ -304,10 +329,12 @@ class AppRouterRegister {
 
     return CustomPage<dynamic>(
       child: Builder(builder: (BuildContext context) => routePage!.builder(settings)),
-      buildCustomRoute: (BuildContext context, CustomPage<dynamic> page) => PageBasedCustomPageRoute(
-        page: page,
-        pageTransitionsBuilder: pageTransitions ?? defaultTransitionsBuilder(),
-      ),
+      buildCustomRoute: (BuildContext context, CustomPage<dynamic> page) {
+        return PageBasedCustomPageRoute(
+          page: page,
+          pageTransitionsBuilder: pageTransitionsBuilder ?? routePage?.pageTransitionsBuilder ?? defaultTransitionsBuilder(),
+        );
+      },
       key: Key(path) as LocalKey,
       name: path,
       arguments: settings.toJson(),
