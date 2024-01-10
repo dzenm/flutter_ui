@@ -91,6 +91,28 @@ class _DialogPageState extends State<DialogPage> {
           MaterialButton(
             textColor: Colors.white,
             color: theme.appbar,
+            onPressed: () => CommonDialog.showCustomDialog(
+              context,
+              child: Container(
+                padding: const EdgeInsets.all(32),
+                child: const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('购买类型：', style: TextStyle(fontSize: 16)),
+                    Text('应付金额：￥', style: TextStyle(fontSize: 16)),
+                    Text('支付方式：(￥)', style: TextStyle(fontSize: 16)),
+                  ],
+                ),
+              ),
+            ),
+            child: Row(children: [_text('自定义弹窗')]),
+          ),
+          const SizedBox(height: 8),
+          MaterialButton(
+            textColor: Colors.white,
+            color: theme.appbar,
             onPressed: () => CommonDialog.showPromptDialog(
               context,
               titleString: '昵称',

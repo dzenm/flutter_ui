@@ -81,8 +81,8 @@ class _PreviewPicturePageState extends State<PreviewPicturePage> {
       reverse: false,
       controller: PageController(
         initialPage: _currentIndex, //初始化第一次默认的位置
-        viewportFraction: 1, //占屏幕多少，1为占满整个屏幕
         keepPage: true, //是否保存当前Page的状态，如果保存，下次进入对应保存的page，如果为false。下次总是从initialPage开始。
+        viewportFraction: 1.0, //占屏幕多少，1.0为占满整个屏幕
       ),
       physics: const BouncingScrollPhysics(),
       // 是否具有回弹效果

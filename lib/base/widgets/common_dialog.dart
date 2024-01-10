@@ -59,13 +59,13 @@ class CommonDialog {
         ),
         child: isVertical
             ? Column(
-          mainAxisSize: MainAxisSize.min,
-          children: widgets,
-        )
+                mainAxisSize: MainAxisSize.min,
+                children: widgets,
+              )
             : Row(
-          mainAxisSize: MainAxisSize.min,
-          children: widgets,
-        ),
+                mainAxisSize: MainAxisSize.min,
+                children: widgets,
+              ),
       ),
     );
   }
@@ -73,10 +73,10 @@ class CommonDialog {
   /// iOS风格底部选择图片对话框
   /// CommonDialog.showSelectImageBottomSheet(context)
   static Future<void> showSelectImageBottomSheet(
-      BuildContext context, {
-        Function? onCameraTap,
-        Function? onGalleryTap,
-      }) async {
+    BuildContext context, {
+    Function? onCameraTap,
+    Function? onGalleryTap,
+  }) async {
     return await showListBottomSheet(context, [
       S.of(context).camera,
       S.of(context).gallery,
@@ -94,12 +94,12 @@ class CommonDialog {
   ///   AppRouterOldDelegate.pop(context);
   /// })
   static Future<void> showListBottomSheet(
-      BuildContext context,
-      List<String> items,
-      ItemClickCallback? onTap, {
-        double height = 45.0,
-        bool isMaterial = false,
-      }) async {
+    BuildContext context,
+    List<String> items,
+    ItemClickCallback? onTap, {
+    double height = 45.0,
+    bool isMaterial = false,
+  }) async {
     List<String> data = [];
     for (var item in items) {
       data.add(item);
@@ -116,10 +116,10 @@ class CommonDialog {
         borderRadius = items.length == 1 // item只有一个按钮
             ? const BorderRadius.all(Radius.circular(8))
             : index == 0 || index == data.length - 1 // item的第一个按钮和取消按钮
-            ? const BorderRadius.vertical(top: Radius.circular(8))
-            : index == items.length - 1 // item的最后一个按钮
-            ? const BorderRadius.vertical(bottom: Radius.circular(8))
-            : null;
+                ? const BorderRadius.vertical(top: Radius.circular(8))
+                : index == items.length - 1 // item的最后一个按钮
+                    ? const BorderRadius.vertical(bottom: Radius.circular(8))
+                    : null;
       }
       return Container(
         decoration: BoxDecoration(
@@ -144,16 +144,16 @@ class CommonDialog {
     int index = -1;
     Widget child = realHeight > MediaQuery.of(context).size.width / 2
         ? ListView.builder(
-      itemCount: data.length,
-      itemBuilder: (BuildContext context, int index) => buildChild(index),
-    )
+            itemCount: data.length,
+            itemBuilder: (BuildContext context, int index) => buildChild(index),
+          )
         : Column(
-      mainAxisSize: MainAxisSize.min,
-      children: data.map((e) {
-        index++;
-        return buildChild(index);
-      }).toList(),
-    );
+            mainAxisSize: MainAxisSize.min,
+            children: data.map((e) {
+              index++;
+              return buildChild(index);
+            }).toList(),
+          );
 
     showModalBottomSheet(
       context: context,
@@ -185,19 +185,19 @@ class CommonDialog {
   ///   onPositiveTap: () => CommonDialog.showToast('修改成功'),
   /// )
   static Future<T> showPromptDialog<T>(
-      BuildContext context, {
-        bool barrierDismissible = false,
-        String? titleString,
-        Widget? title,
-        Widget? content,
-        String? positiveText,
-        String? negativeText,
-        TextStyle? positiveStyle,
-        TextStyle? negativeStyle,
-        GestureTapCallback? onPositiveTap,
-        GestureTapCallback? onNegativeTap,
-        bool singleButton = false,
-      }) async {
+    BuildContext context, {
+    bool barrierDismissible = false,
+    String? titleString,
+    Widget? title,
+    Widget? content,
+    String? positiveText,
+    String? negativeText,
+    TextStyle? positiveStyle,
+    TextStyle? negativeStyle,
+    GestureTapCallback? onPositiveTap,
+    GestureTapCallback? onNegativeTap,
+    bool singleButton = false,
+  }) async {
     return await showDialog(
       context: context,
       builder: (context) {
@@ -205,15 +205,19 @@ class CommonDialog {
           isTouchOutsideDismiss: barrierDismissible,
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             SizedBox(height: content == null ? 36 : 20),
-            title ?? Text(titleString ?? '', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            title ??
+                Text(
+                  titleString ?? '',
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
             content == null
                 ? const SizedBox(width: 0, height: 36)
                 : Flexible(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-                child: content,
-              ),
-            ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                      child: content,
+                    ),
+                  ),
             CupertinoDialogButton(
               positiveText: positiveText,
               negativeText: negativeText,
@@ -231,17 +235,17 @@ class CommonDialog {
 
   /// 默认弹窗
   static Future<T?> showDefaultDialog<T>(
-      BuildContext context, {
-        Widget? mainWidget,
-        String? contentText,
-        bool oneBtn = false,
-        String? cancelTxt,
-        String? confirmTxt,
-        Function? confirmCallback,
-        Function? dismissCallback,
-        Color? cancelColor, //l 取消按钮字体颜色
-        bool dismissible = false,
-      }) {
+    BuildContext context, {
+    Widget? mainWidget,
+    String? contentText,
+    bool oneBtn = false,
+    String? cancelText,
+    String? confirmText,
+    Function? confirmCallback,
+    Function? dismissCallback,
+    Color? cancelColor, //l 取消按钮字体颜色
+    bool dismissible = false,
+  }) {
     return showDialog<T>(
       context: context,
       barrierDismissible: dismissible,
@@ -256,7 +260,7 @@ class CommonDialog {
             if (!oneBtn)
               CupertinoDialogAction(
                 child: Text(
-                  cancelTxt ?? S.of(context).cancel,
+                  cancelText ?? S.of(context).cancel,
                   style: TextStyle(fontSize: 15, color: cancelColor),
                 ),
                 onPressed: () {
@@ -265,7 +269,7 @@ class CommonDialog {
               ),
             CupertinoDialogAction(
               child: Text(
-                confirmTxt ?? S.of(context).confirm,
+                confirmText ?? S.of(context).confirm,
                 style: const TextStyle(fontSize: 15),
               ),
               onPressed: () {
@@ -279,28 +283,28 @@ class CommonDialog {
   }
 
   static Future<T> showCustomDialog<T>(
-      BuildContext context, {
-        bool barrierDismissible = false,
-        GestureTapCallback? dismissCallback,
-        Widget? child,
-        Color? barrierColor,
-        Color? color,
-        EdgeInsetsGeometry? padding,
-        BoxConstraints? constraints,
-        BorderRadius? borderRadius,
-      }) async {
+    BuildContext context, {
+    bool barrierDismissible = false,
+    Color? barrierColor,
+    GestureTapCallback? barrierOnTap,
+    Widget? child,
+    Color? color,
+    EdgeInsetsGeometry? margin,
+    BorderRadius? borderRadius,
+    BoxConstraints? constraints,
+  }) async {
     return await showDialog(
       context: context,
       barrierDismissible: barrierDismissible,
       barrierColor: barrierColor ?? Colors.black54,
       builder: (context) {
         return DialogWrapper(
-          dismissCallback: dismissCallback,
           isTouchOutsideDismiss: barrierDismissible,
+          barrierOnTap: barrierOnTap,
           color: color ?? Colors.white,
-          padding: padding,
-          constraints: constraints,
+          margin: margin,
           borderRadius: borderRadius,
+          constraints: constraints,
           child: child,
         );
       },
@@ -311,45 +315,49 @@ class CommonDialog {
 /// Dialog设置是否可以点击外部取消显示
 class DialogWrapper extends StatelessWidget {
   final bool isTouchOutsideDismiss; // 点击弹窗外部关闭弹窗，默认为true， true：可以关闭 false：不可以关闭
-  final GestureTapCallback? dismissCallback; // 弹窗关闭回调
+  final GestureTapCallback? barrierOnTap; // 弹窗关闭回调
   final Widget? child;
   final Color color;
-  final EdgeInsetsGeometry padding;
+  final EdgeInsetsGeometry margin;
   final BoxConstraints constraints;
   final BorderRadius borderRadius;
 
   const DialogWrapper({
     super.key,
     this.isTouchOutsideDismiss = false,
-    this.dismissCallback,
+    this.barrierOnTap,
     this.child,
     Color? color,
-    EdgeInsetsGeometry? padding,
+    EdgeInsetsGeometry? margin,
     BoxConstraints? constraints,
     BorderRadius? borderRadius,
   })  : color = color ?? Colors.white,
-        padding = padding ?? const EdgeInsets.symmetric(horizontal: 32),
-        constraints = constraints ?? const BoxConstraints(maxWidth: kMaxWidthInDialog, maxHeight: kMaxHeightInDialog),
+        margin = margin ?? const EdgeInsets.symmetric(horizontal: 32),
+        constraints = constraints ??
+            const BoxConstraints(
+              maxWidth: kMaxWidthInDialog,
+              maxHeight: kMaxHeightInDialog,
+            ),
         borderRadius = borderRadius ?? const BorderRadius.all(Radius.circular(16));
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: isTouchOutsideDismiss ? dismissCallback ?? () => Navigator.of(context).pop() : null,
+      onTap: isTouchOutsideDismiss ? barrierOnTap ?? () => Navigator.of(context).pop() : null,
       behavior: HitTestBehavior.opaque,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         resizeToAvoidBottomInset: false, // 防止软键盘弹出像素溢出
         body: Center(
           child: Container(
-            padding: padding,
+            margin: margin,
             constraints: constraints,
-            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              ClipRRect(
-                borderRadius: borderRadius,
-                child: Container(color: color, child: child),
-              )
-            ]),
+            decoration: BoxDecoration(
+              borderRadius: borderRadius,
+              color: color,
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: child,
           ),
         ),
       ),
