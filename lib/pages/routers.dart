@@ -2,7 +2,7 @@ import '../app_page.dart';
 import '../base/base.dart';
 import 'common/example_page.dart';
 import 'common/not_found_page.dart';
-import 'common/preview_picture_page.dart';
+import 'common/view_media_page.dart';
 import 'common/web_view_page.dart';
 import 'login/login_page.dart';
 import 'login/register_page.dart';
@@ -22,7 +22,7 @@ class Routers {
   static const String main = '${root}main';
   static const String example = '${root}example';
   static const String webView = '${root}webView';
-  static const String preview = '${root}preview';
+  static const String viewMedia = '${root}viewMedia';
 
   static List<AppPageConfig> get routers => [
         AppPageConfig(
@@ -71,12 +71,14 @@ class Routers {
           },
         ),
         AppPageConfig(
-          name: preview,
+          name: viewMedia,
           builder: (settings) {
             dynamic args = settings.queries;
             String title = args['title'] ?? '';
             String url = args['url'] ?? '';
-            return const PreviewPicturePage([]);
+            return const ViewMediaPage(
+              medias: [],
+            );
           },
         ),
         ...MeRouter.routers,

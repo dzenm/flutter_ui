@@ -4,7 +4,8 @@ import 'package:provider/provider.dart';
 import '../../../../base/base.dart';
 import '../../../../generated/l10n.dart';
 import '../../../../models/user_model.dart';
-import '../../../common/preview_picture_page.dart';
+import '../../../../base/widgets/view_media.dart';
+import '../../../common/view_media_page.dart';
 import '../../../study/study_model.dart';
 import '../me_router.dart';
 
@@ -41,15 +42,17 @@ class _InfoPageState extends State<InfoPage> {
       // 展示用户头像
       Selector<UserModel, String>(
         builder: (context, value, widget) {
+          List<String> urls = [
+            "https://www.wanandroid.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png",
+            Assets.a,
+            Assets.b,
+          ];
+          List<MediaEntity> images = urls.map((url) => MediaEntity(url: url)).toList();
           return TapLayout(
             height: 50,
             background: theme.white,
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            onTap: () => PreviewPicturePage.show(context, [
-              "https://www.wanandroid.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png",
-              Assets.a,
-              Assets.a,
-            ]),
+            onTap: () => ViewMediaPage.show(context, medias: images),
             child: SingleTextView(
               icon: Icons.account_circle,
               title: S.of(context).avatar,

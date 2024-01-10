@@ -8,7 +8,7 @@ import '../../../generated/l10n.dart';
 import '../../../http/http_manager.dart';
 import '../../../models/provider_manager.dart';
 import '../../../models/user_model.dart';
-import '../../common/preview_picture_page.dart';
+import '../../common/view_media_page.dart';
 import '../../mall/mall_router.dart';
 import '../../study/study_router.dart';
 import 'me_router.dart';
@@ -81,6 +81,10 @@ class _MePageState extends State<MePage> {
   }
 
   Widget _buildBody(AppTheme theme, double statusBarHeight) {
+    List<String> urls = [
+      Assets.a,
+    ];
+    List<MediaEntity> images = urls.map((url) => MediaEntity(url: url)).toList();
     return SingleChildScrollView(
       padding: EdgeInsets.only(left: 16, right: 16, top: statusBarHeight),
       // AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()): iOS上拉下拉弹簧效果，
@@ -103,7 +107,7 @@ class _MePageState extends State<MePage> {
           child: TapLayout(
             border: Border.all(width: 3.0, color: const Color(0xfffcfcfc)),
             borderRadius: const BorderRadius.all(Radius.circular(64)),
-            onTap: () => PreviewPicturePage.show(context, [Assets.a]),
+            onTap: () => ViewMediaPage.show(context, medias: images),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(64),
               child: Image.asset(Assets.a, fit: BoxFit.cover, width: 64, height: 64),

@@ -84,23 +84,3 @@ class CommonWidget {
     return spans;
   }
 }
-
-class FileImageExt extends FileImage {
-  const FileImageExt(super.file, {super.scale});
-
-  @override
-  bool operator ==(dynamic other) {
-    if (other.runtimeType != runtimeType) return false;
-    final FileImageExt typedOther = other;
-    int fileSize = file.existsSync() ? file.lengthSync() : 0; //l 文件不存在兼容
-    return file.path == typedOther.file.path && scale == typedOther.scale && fileSize == typedOther.fileSize();
-  }
-
-  /// 文件不存在兼容
-  int fileSize() {
-    return file.existsSync() ? file.lengthSync() : 0;
-  }
-
-  @override
-  int get hashCode => Object.hash(file.path, scale);
-}
