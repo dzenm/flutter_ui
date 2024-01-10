@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import 'build_config.dart';
-import 'log.dart';
+import '../config/log.dart';
 
 /// 处理字符串
 typedef HandleMsg = void Function(String message);

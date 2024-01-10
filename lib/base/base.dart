@@ -4,11 +4,11 @@
 library base;
 
 export 'channel/plugin_manager.dart';
+export 'config/build_config.dart';
+export 'config/handle_error.dart';
+export 'config/log.dart';
 export 'db/db.dart';
 export 'http/http.dart';
-export 'log/build_config.dart';
-export 'log/handle_error.dart';
-export 'log/log.dart';
 export 'naughty/http_interceptor.dart';
 export 'naughty/naughty.dart';
 export 'resource/resource.dart';

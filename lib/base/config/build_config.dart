@@ -46,7 +46,7 @@ class BuildConfig {
   static bool get isMobile => isAndroid || isIOS;
 
   /// 判断是否是Web端
-  static bool get isWeb => !(isDesktop || isMobile || isFuchsia);
+  static bool get isWeb => kIsWeb && !(isDesktop || isMobile || isFuchsia);
 
   /// 是否初始化 [packageInfo]
   static bool isInitialized = false;
