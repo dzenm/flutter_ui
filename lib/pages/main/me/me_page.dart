@@ -81,6 +81,7 @@ class _MePageState extends State<MePage> {
   }
 
   Widget _buildBody(AppTheme theme, double statusBarHeight) {
+    String heroTag = 'heroTag';
     List<String> urls = [
       Assets.a,
     ];
@@ -107,10 +108,13 @@ class _MePageState extends State<MePage> {
           child: TapLayout(
             border: Border.all(width: 3.0, color: const Color(0xfffcfcfc)),
             borderRadius: const BorderRadius.all(Radius.circular(64)),
-            onTap: () => ViewMediaPage.show(context, medias: images),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(64),
-              child: Image.asset(Assets.a, fit: BoxFit.cover, width: 64, height: 64),
+            onTap: () => ViewMediaPage.show(context, medias: images, tag: heroTag),
+            child: Hero(
+              tag: heroTag,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(64),
+                child: Image.asset(Assets.a, fit: BoxFit.cover, width: 64, height: 64),
+              ),
             ),
           ),
         ),

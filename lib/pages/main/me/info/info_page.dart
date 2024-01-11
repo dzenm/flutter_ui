@@ -42,6 +42,7 @@ class _InfoPageState extends State<InfoPage> {
       // 展示用户头像
       Selector<UserModel, String>(
         builder: (context, value, widget) {
+          String heroTag = 'heroTag';
           List<String> urls = [
             "https://www.wanandroid.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png",
             Assets.a,
@@ -52,14 +53,17 @@ class _InfoPageState extends State<InfoPage> {
             height: 50,
             background: theme.white,
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            onTap: () => ViewMediaPage.show(context, medias: images),
+            onTap: () => ViewMediaPage.show(context, medias: images, tag: heroTag),
             child: SingleTextView(
               icon: Icons.account_circle,
               title: S.of(context).avatar,
               textAlign: TextAlign.right,
-              suffix: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Image.asset(Assets.a, fit: BoxFit.cover, width: 24, height: 24),
+              suffix: Hero(
+                tag: heroTag,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.asset(Assets.a, fit: BoxFit.cover, width: 24, height: 24),
+                ),
               ),
               isShowForward: true,
             ),

@@ -20,17 +20,25 @@ class MediaEntity<T> {
 
 /// 图片预览页面
 class ViewMedia extends StatefulWidget {
+  final Object? tag;
   final List<MediaEntity> medias;
   final int initialItem;
   final ImageProvider<Object>? imageProvider;
   final DownloadCallback? onDownload;
+  final BoxDecoration? decoration;
+  final double initialScale;
+  final bool showTurnPage;
 
   const ViewMedia({
     super.key,
+    this.tag,
     required this.medias,
     this.initialItem = 0,
     this.imageProvider,
     this.onDownload,
+    this.decoration,
+    this.initialScale = 1.0,
+    this.showTurnPage = true,
   });
 
   @override
@@ -40,12 +48,19 @@ class ViewMedia extends StatefulWidget {
 class _ViewMediaState extends State<ViewMedia> {
   final List<MediaEntity> _medias = [];
   int _currentIndex = 0;
+  late PageController _controller;
 
   @override
   void initState() {
     super.initState();
     _medias.addAll(widget.medias);
     _currentIndex = widget.initialItem;
+
+    _controller = PageController(
+      initialPage: _currentIndex, //初始化第一次默认的位置
+      keepPage: true, //是否保存当前Page的状态，如果保存，下次进入对应保存的page，如果为false。下次总是从initialPage开始。
+      viewportFraction: 1.0, //占屏幕多少，1.0为占满整个屏幕
+    );
   }
 
   @override
@@ -57,6 +72,8 @@ class _ViewMediaState extends State<ViewMedia> {
           onLongPress: () => {},
           child: Stack(alignment: Alignment.center, children: [
             _buildPageView(),
+            _buildBeforePageView(),
+            _buildNextPageView(),
             _buildIndicatorView(),
             _buildDownloadPhotoView(),
           ]),
@@ -65,16 +82,18 @@ class _ViewMediaState extends State<ViewMedia> {
     );
   }
 
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   /// PageView布局
   Widget _buildPageView() {
     return PageView.builder(
       scrollDirection: Axis.horizontal,
       reverse: false,
-      controller: PageController(
-        initialPage: _currentIndex, //初始化第一次默认的位置
-        keepPage: true, //是否保存当前Page的状态，如果保存，下次进入对应保存的page，如果为false。下次总是从initialPage开始。
-        viewportFraction: 1.0, //占屏幕多少，1.0为占满整个屏幕
-      ),
+      controller: _controller,
       physics: const BouncingScrollPhysics(),
       // 是否具有回弹效果
       pageSnapping: true,
@@ -87,22 +106,34 @@ class _ViewMediaState extends State<ViewMedia> {
         String url = media.url;
         Widget thumbChild = ImageView(
           url: url,
+          tag: widget.tag,
           width: MediaQuery.of(context).size.width,
-          origin: true,
+          isOrigin: true,
         ); //缩略图先展示,无缩略图展示原图
 
-        return PhotoView(
+        Widget child = PhotoView(
+          backgroundDecoration: widget.decoration,
           imageProvider: widget.imageProvider ?? _defaultImageProvider(media.url),
           gaplessPlayback: true,
           wantKeepAlive: true,
-          initialScale: PhotoViewComputedScale.contained,
+          initialScale: PhotoViewComputedScale.contained * widget.initialScale,
           minScale: PhotoViewComputedScale.contained,
-          maxScale: PhotoViewComputedScale.contained * 5,
+          maxScale: PhotoViewComputedScale.contained,
           gestureDetectorBehavior: HitTestBehavior.translucent,
           scaleStateChangedCallback: (isZoom) {},
           loadingBuilder: (context, trunk) => thumbChild,
           errorBuilder: (context, object, trace) => thumbChild,
           onTapUp: (context, details, controllerValue) => Navigator.pop(context),
+        );
+        if (widget.tag == null) {
+          return child;
+        }
+        if (widget.initialItem != index) {
+          return child;
+        }
+        return Hero(
+          tag: widget.tag!,
+          child: child,
         );
       },
     );
@@ -163,6 +194,56 @@ class _ViewMediaState extends State<ViewMedia> {
         background: Colors.white38,
         borderRadius: const BorderRadius.all(Radius.circular(8)),
         child: const Icon(Icons.download_rounded, size: 24, color: Colors.white),
+      ),
+    );
+  }
+
+  /// 上一页图片按钮布局
+  Widget _buildBeforePageView() {
+    if (!widget.showTurnPage || _currentIndex == 0 || _medias.length == 1) {
+      return Container();
+    }
+    return Positioned(
+      left: 24,
+      child: TapLayout(
+        width: 56,
+        height: 56,
+        isCircle: true,
+        onTap: () {
+          --_currentIndex;
+          _controller.jumpToPage(_currentIndex);
+          setState(() {});
+        },
+        child: const Icon(
+          Icons.navigate_before_rounded,
+          size: 48,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+
+  /// 下一页图片按钮布局
+  Widget _buildNextPageView() {
+    if (!widget.showTurnPage || _currentIndex == _medias.length - 1 || _medias.length == 1) {
+      return Container();
+    }
+    return Positioned(
+      right: 24,
+      child: TapLayout(
+        width: 56,
+        height: 56,
+        isCircle: true,
+        onTap: () {
+          ++_currentIndex;
+          _controller.jumpToPage(_currentIndex);
+          setState(() {});
+        },
+        child: const Icon(
+          Icons.navigate_next_rounded,
+          size: 48,
+          color: Colors.white,
+        ),
       ),
     );
   }

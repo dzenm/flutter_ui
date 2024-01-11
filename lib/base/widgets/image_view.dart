@@ -11,80 +11,102 @@ import 'package:http/http.dart' as http;
 /// Created by a0010 on 2023/8/15 15:23
 ///
 class ImageView extends StatelessWidget {
+  final Object? tag;
   final String url;
   final double? width;
   final double? height;
   final BoxFit? fit;
   final Alignment alignment;
-  final bool origin;
+  final bool isOrigin;
   final Widget? placeholder;
   final Widget? errorPlaceholder;
 
   const ImageView({
     super.key,
+    this.tag,
     required this.url,
     this.width,
     this.height,
     this.fit,
     this.alignment = Alignment.center,
-    this.origin = false,
+    this.isOrigin = false,
     this.placeholder,
     this.errorPlaceholder,
   });
 
   @override
   Widget build(BuildContext context) {
+    Widget child;
+
     Widget defaultPlaceholder = placeholder ?? ImagePlaceholder(width: width ?? 50);
     String imageUrl = url;
     if (imageUrl.isEmpty) {
-      return defaultPlaceholder;
-    }
-
-    bool isNetworkImage = imageUrl.startsWith('https://') || imageUrl.startsWith('http://');
-    bool isPath = imageUrl.startsWith('/');
-    if (!isNetworkImage && !isPath) {
-      return Image.asset(
-        imageUrl,
-        width: width,
-        height: height,
-        fit: fit,
-        gaplessPlayback: true,
-      );
-    }
-    if (!isNetworkImage) {
-      File? file;
-      if (!origin) {
-        file = File(imageUrl);
-      }
-      if (file == null || !file.existsSync()) {
-        file = File(imageUrl);
-      }
-      if (file.existsSync()) {
-        return Image.file(
-          file,
+      // 图片为空，使用默认的占位图
+      child = defaultPlaceholder;
+    } else {
+      bool isNetworkImage = imageUrl.startsWith('https://') || imageUrl.startsWith('http://');
+      bool isPath = imageUrl.startsWith(Platform.pathSeparator);
+      if (isNetworkImage) {
+        // 网络图片文件
+        child = CachedNetworkImage(
+          imageUrl: imageUrl,
+          fit: fit,
           width: width,
           height: height,
+          alignment: alignment,
+          placeholder: (_, url) => defaultPlaceholder,
+          errorWidget: (_, url, error) => errorPlaceholder ?? _defaultErrorPlaceholder(width, height: height),
+          cacheManager: isNetworkImage ? ImageCacheManager() : null,
+          placeholderFadeInDuration: const Duration(milliseconds: 100),
+          matchTextDirection: true,
+        );
+      } else if (isPath) {
+        // 本地图片文件
+        File? file;
+        if (!isOrigin) {
+          file = File(imageUrl); //展示取出缩略图
+        }
+        // 展示原图/缩略图不存在
+        if (file == null || !file.existsSync()) {
+          file = File(imageUrl); //展示原图
+        }
+        if (file.existsSync()) {
+          // 文件存在
+          child = Image.file(
+            file,
+            fit: fit,
+            width: width,
+            height: height,
+            alignment: alignment,
+            gaplessPlayback: true,
+          );
+        } else {
+          // 文件不存在，先展示错误提醒的占位图，没有再展示默认图
+          child = errorPlaceholder ?? defaultPlaceholder;
+        }
+      } else {
+        // 资源图片文件
+        child = Image.asset(
+          imageUrl,
           fit: fit,
+          width: width,
+          height: height,
+          alignment: alignment,
           gaplessPlayback: true,
         );
       }
-      return errorPlaceholder ?? defaultPlaceholder; // 无本地资源则返回默认图
     }
-    return CachedNetworkImage(
-      imageUrl: imageUrl,
-      fit: fit,
-      width: width,
-      height: height,
-      alignment: alignment,
-      placeholder: (_, url) => defaultPlaceholder,
-      errorWidget: (_, url, error) => errorPlaceholder ?? _defaultErrorWidget(width, height: height),
-      cacheManager: isNetworkImage ? ImageCacheManager() : null,
-      placeholderFadeInDuration: const Duration(milliseconds: 100),
-      matchTextDirection: true,
+    if (tag == null) {
+      return child;
+    }
+    return Hero(
+      tag: tag!,
+      transitionOnUserGestures: true,
+      child: child,
     );
   }
 
-  Widget _defaultErrorWidget(double? width, {double? height}) {
+  Widget _defaultErrorPlaceholder(double? width, {double? height}) {
     double w = width ?? 50;
     double h = height ?? w;
     return ImagePlaceholder(
@@ -100,6 +122,7 @@ class ImageView extends StatelessWidget {
   }
 }
 
+/// 占位图
 class ImagePlaceholder extends StatelessWidget {
   final double width;
   final double? height;

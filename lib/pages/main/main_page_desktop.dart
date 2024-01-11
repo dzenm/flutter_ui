@@ -6,7 +6,6 @@ import 'package:window_manager/window_manager.dart';
 
 import '../../base/base.dart';
 import '../../generated/l10n.dart';
-import '../../base/widgets/view_media.dart';
 import 'home/home_page.dart';
 import 'main_model.dart';
 import 'me/me_page.dart';
@@ -97,6 +96,7 @@ class _MainPageDesktopState extends State<MainPageDesktop> with WindowListener, 
   }
 
   Widget _buildLeadingView(BuildContext context) {
+    String heroTag = 'heroTag';
     List<String> urls = [
       Assets.a,
     ];
@@ -104,10 +104,13 @@ class _MainPageDesktopState extends State<MainPageDesktop> with WindowListener, 
     return TapLayout(
       border: Border.all(width: 3.0, color: const Color(0xfffcfcfc)),
       borderRadius: const BorderRadius.all(Radius.circular(32)),
-      onTap: () => ViewMediaPage.show(context, medias: images),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(32),
-        child: Image.asset(Assets.a, fit: BoxFit.cover, width: 32, height: 32),
+      onTap: () => ViewMediaPage.show(context, medias: images, tag: heroTag),
+      child: Hero(
+        tag: heroTag,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(32),
+          child: Image.asset(Assets.a, fit: BoxFit.cover, width: 32, height: 32),
+        ),
       ),
     );
   }
