@@ -29,9 +29,9 @@ A new Flutter application.
 ├── application.dart                            // 初始化/全局配置信息，见base说明
 ├── app_page.dart                               // 最顶层页面，和页面相关的全局配置信息
 ├── base                                        // 封装的基本组件，以下内容不相互调用
+│   ├── config                                  // 封装的日志打印和错误信息收集工具(不依赖config以外文件，可直接复制文件夹)
 │   ├── db                                      // 封装的数据库工具(不依赖db以外文件，可直接复制文件夹)
 │   ├── http                                    // 封装的HTTP请求工具(不依赖http以外文件，可直接复制文件夹)
-│   ├── log                                     // 封装的日志打印和错误信息收集工具(不依赖log以外文件，可直接复制文件夹)
 │   ├── naughty                                 // 封装的Debug信息在手机可以查看的工具(依赖base下的db、widgets、utils)
 │   ├── resource                                // 封装的国际化工具(包含语言/主题)(依赖base下的utils)
 │   ├── router                                  // 封装的路由工具(不依赖router以外文件，可直接复制文件夹)
