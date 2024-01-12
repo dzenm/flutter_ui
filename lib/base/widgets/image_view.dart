@@ -45,7 +45,13 @@ class ImageView extends StatelessWidget {
       child = defaultPlaceholder;
     } else {
       bool isNetworkImage = imageUrl.startsWith('https://') || imageUrl.startsWith('http://');
+      // /Users/dzenm/
       bool isPath = imageUrl.startsWith(Platform.pathSeparator);
+      if (Platform.isWindows) {
+        // 适配Windows的路径问题
+        // C:\Users\dzenm
+        isPath = imageUrl.contains(Platform.pathSeparator);
+      }
       if (isNetworkImage) {
         // 网络图片文件
         child = CachedNetworkImage(
