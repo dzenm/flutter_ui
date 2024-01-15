@@ -41,7 +41,7 @@ dependencies:
   cupertino_icons: 1.0.6                        # 图片 https://pub.flutter-io.cn/packages/cupertino_icons
   sqlite3: 2.3.0                                # sql https://pub.dev/packages/sqlite3
   sqflite_common_ffi: 2.3.2                     # sql https://pub.dev/packages/sqflite_common_ffi
-  path_provider: 2.1.1                          # 路径选择 https://pub.dev/packages/path_provider
+  path_provider: 2.1.2                          # 路径选择 https://pub.dev/packages/path_provider
   shared_preferences: 2.2.2                     # 本地化存储 https://pub.dev/packages/shared_preferences
   bot_toast: 4.1.3                              # Toast https://pub.flutter-io.cn/packages/bot_toast
   retrofit: 4.0.3                               # HTTP请求 https://pub.flutter-io.cn/packages/retrofit
@@ -51,20 +51,20 @@ dependencies:
   device_info_plus: 9.1.1                       # 获取设备信息 https://pub.flutter-io.cn/packages/device_info_plus
   flutter_local_notifications: 16.3.0           # 通知栏通知提醒 https://pub.flutter-io.cn/packages/flutter_local_notifications
   cached_network_image: 3.3.1                   # 图片缓存 https://pub.flutter-io.cn/packages/cached_network_image
-  extended_text_field: 13.0.0                   # 输入框扩展 https://pub.flutter-io.cn/packages/extended_text_field
+  extended_text_field: 13.0.1                   # 输入框扩展 https://pub.flutter-io.cn/packages/extended_text_field
   back_button_interceptor: 7.0.0                # 返回按钮拦截 https://pub.flutter-io.cn/packages/back_button_interceptor
   provider: 6.1.1                               # 状态管理 https://pub.dev/packages/provider
   json_annotation: 4.8.1                        # Json序列化 https://pub.dev/packages/json_annotation
   easy_refresh: 3.3.4                           # 列表刷新 https://pub.flutter-io.cn/packages/easy_refresh
-  file_selector: 1.0.1                          # 文件选择 https://pub.flutter-io.cn/packages/file_selector
-  image: 4.1.3                                  # 图片压缩 https://pub.flutter-io.cn/packages/image
+  file_selector: 1.0.2                          # 文件选择 https://pub.flutter-io.cn/packages/file_selector
+  image: 4.1.4                                  # 图片压缩 https://pub.flutter-io.cn/packages/image
   desktop_drop: 0.4.4                           # 文件拖动处理 https://pub.flutter-io.cn/packages/desktop_drop
   tray_manager: 0.2.1                           # 系统托盘 https://pub.flutter-io.cn/packages/tray_manager
   window_manager: 0.3.7                         # 桌面端窗口管理 https://pub.flutter-io.cn/packages/window_manager
   desktop_multi_window: 0.2.0                   # 桌面端多窗口管理 https://pub.flutter-io.cn/packages/desktop_multi_window
 
   ########################################## UI ##########################################
-  webview_flutter: 4.4.3                        # WebView https://pub.dev/packages/webview_flutter
+  webview_flutter: 4.4.4                        # WebView https://pub.dev/packages/webview_flutter
   azlistview: 2.0.0                             # az列表 https://pub.flutter-io.cn/packages/azlistview
   flutter_slidable: 3.0.1                       # 可滑动的列表展示 https://pub.flutter-io.cn/packages/flutter_slidable
   #  flutter_echarts: 2.0.0                        # EChart 图表（缩放手势冲突） https://pub.flutter-io.cn/packages/flutter_echarts
@@ -81,7 +81,7 @@ dependencies:
 
   ########################################## 音视频 ######################################
   transparent_image: 2.0.1                      # 图片选择器 https://pub.flutter-io.cn/packages/transparent_image
-  image_picker: 1.0.6                           # 图片选择器 https://pub.flutter-io.cn/packages/image_picker
+  image_picker: 1.0.7                           # 图片选择器 https://pub.flutter-io.cn/packages/image_picker
   photo_view: 0.14.0                            # 图片预览控件 https://pub.flutter-io.cn/packages/photo_view
   video_player: 2.8.2                           # 视频播放 https://pub.flutter-io.cn/packages/video_player
   fijkplayer: 0.11.0                            # 视频播放 https://pub.flutter-io.cn/packages/fijkplayer
@@ -101,15 +101,15 @@ dependencies:
   lpinyin: 2.0.3                                # 汉字转拼音 https://pub.flutter-io.cn/packages/lpinyin
   flutter_screenutil: 5.9.0                     # 屏幕参数适配 https://pub.flutter-io.cn/packages/flutter_screenutil
   date_format: 2.0.7                            # 时间格式转换 https://pub.flutter-io.cn/packages/date_format
-  url_launcher: 6.2.2                          # 网页打开工具 https://pub.flutter-io.cn/packages/url_launcher
+  url_launcher: 6.2.3                          # 网页打开工具 https://pub.flutter-io.cn/packages/url_launcher
   flustars: 2.0.1                               # Flutter 常用工具类库（本地化 屏幕适配） https://pub.flutter-io.cn/packages/flustars
   flutter_html: 3.0.0-beta.2                    # Flutter 加载html https://pub.flutter-io.cn/packages/flutter_html
-  fluent_ui: 4.8.4
+  fluent_ui: 4.8.5
 dev_dependencies:
   flutter_test:
     sdk: flutter
   retrofit_generator: 8.0.6                     # retrofit自动生成工具 https://pub.flutter-io.cn/packages/retrofit_generator
-  build_runner: 2.4.7                           # 自动生成工具 https://pub.flutter-io.cn/packages/build_runner
+  build_runner: 2.4.8                           # 自动生成工具 https://pub.flutter-io.cn/packages/build_runner
   # 执行生成文件命令：flutter pub run build_runner build --delete-conflicting-outputs
   json_serializable: 6.7.1                      # json序列化 https://pub.flutter-io.cn/packages/json_serializable
 
