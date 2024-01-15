@@ -81,7 +81,7 @@ class _MePageState extends State<MePage> {
   }
 
   Widget _buildBody(AppTheme theme, double statusBarHeight) {
-    String heroTag = 'heroTag';
+    String heroTag = 'meTag';
     List<String> urls = [
       Assets.a,
     ];

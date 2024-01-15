@@ -76,6 +76,15 @@ class _StudyPageState extends State<StudyPage> {
     AppTheme theme = context.watch<LocalModel>().theme;
     return [
       const SizedBox(height: 16),
+      TapLayout(
+        height: 50.0,
+        isCircle: true,
+        background: Colors.blue,
+        onTap: () {
+        },
+        child: const Text('VIP', style: TextStyle(color: Colors.white)),
+      ),
+      const SizedBox(height: 8),
       // 聊天列表
       MaterialButton(
         textColor: Colors.white,

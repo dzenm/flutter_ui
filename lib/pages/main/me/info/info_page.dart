@@ -42,7 +42,7 @@ class _InfoPageState extends State<InfoPage> {
       // 展示用户头像
       Selector<UserModel, String>(
         builder: (context, value, widget) {
-          String heroTag = 'heroTag';
+          String heroTag = 'infoTag';
           List<String> urls = [
             "https://www.wanandroid.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png",
             Assets.a,

@@ -266,6 +266,25 @@ class _TapLayoutRipple extends StatelessWidget {
 
   /// 带有水波纹按钮的布局
   Widget _buildRippleView(BuildContext context) {
+    // 处理圆角和形状
+    BorderRadius? borderRadius = this.borderRadius;
+    BoxShape shape = BoxShape.rectangle;
+    // 处理宽高
+    double? w = width, h = height;
+    if (isCircle) {
+      if (width == null && height == null) {
+        throw Exception('width and height not both null');
+      }
+      if (width == null) {
+        w = h = height!;
+      } else if (height == null) {
+        w = h = width!;
+      }
+      borderRadius = BorderRadius.all(Radius.circular(w ?? 0));
+      shape = BoxShape.circle;
+    }
+    Color highlightColor = Platform.isAndroid || Platform.isIOS ? Colors.transparent : Theme.of(context).highlightColor;
+
     Widget child = this.child!;
     if (alignment != null) {
       child = Align(alignment: alignment!, child: child);
@@ -273,53 +292,46 @@ class _TapLayoutRipple extends StatelessWidget {
     if (padding != null) {
       child = Padding(padding: padding!, child: child);
     }
-    BoxShape shape = isCircle ? BoxShape.circle : BoxShape.rectangle;
-    Color highlightColor = Platform.isAndroid || Platform.isIOS ? Colors.transparent : Theme.of(context).highlightColor;
-    return DecoratedBox(
+
+    // 点击事件
+    child = InkResponse(
+      onTap: () => _onTap(),
+      onLongPress: onLongPress,
+      onDoubleTap: onDoubleTap,
+      onSecondaryTap: onSecondaryTap,
+      // 点击时的水波纹圆角
+      highlightShape: shape,
+      // 点击|触摸的时候,高亮显示的颜色
+      highlightColor: this.highlightColor ?? highlightColor,
+      // 点击时的水波纹扩散颜色
+      splashColor: foreground ?? Theme.of(context).splashColor,
+      containedInkWell: true,
+      child: child,
+    );
+
+    // 尺寸和修饰
+    child = Ink(
+      width: w,
+      height: h,
       decoration: BoxDecoration(
+        color: background,
         image: image,
         border: border,
-        borderRadius: borderRadius,
         boxShadow: boxShadow,
         gradient: gradient,
         shape: shape,
       ),
-      child: Material(
-        color: Colors.transparent,
-        // Widget展示的背景圆角，控件背景区域圆角以及水波纹扩散填充的圆角
-        borderRadius: borderRadius,
-        clipBehavior: Clip.hardEdge,
-        child: Ink(
-          width: width,
-          height: height,
-          decoration: BoxDecoration(
-            color: background,
-            image: image,
-            border: border,
-            borderRadius: borderRadius,
-            boxShadow: boxShadow,
-            gradient: gradient,
-            shape: shape,
-          ),
-          // Widget展示的背景色
-          child: InkResponse(
-            onTap: () => _onTap(),
-            onLongPress: onLongPress,
-            onDoubleTap: onDoubleTap,
-            onSecondaryTap: onSecondaryTap,
-            // 点击时的水波纹圆角
-            highlightShape: BoxShape.rectangle,
-            borderRadius: borderRadius,
-            // 点击|触摸的时候,高亮显示的颜色
-            highlightColor: this.highlightColor ?? highlightColor,
-            // 点击时的水波纹扩散颜色
-            splashColor: foreground ?? Theme.of(context).splashColor,
-            containedInkWell: true,
-            child: child,
-          ),
-        ),
-      ),
+      child: child,
     );
+
+    // 必须在Material包裹下才会生效
+    child = Material(
+      color: Colors.transparent,
+      borderRadius: borderRadius, // 设置圆角，包括水波纹、悬停、正常的圆角
+      clipBehavior: Clip.hardEdge,
+      child: child,
+    );
+    return child;
   }
 
   /// 点击事件

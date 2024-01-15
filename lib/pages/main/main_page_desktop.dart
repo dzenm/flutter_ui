@@ -104,7 +104,7 @@ class _MainPageDesktopState extends State<MainPageDesktop> with WindowListener, 
     return TapLayout(
       border: Border.all(width: 3.0, color: const Color(0xfffcfcfc)),
       borderRadius: const BorderRadius.all(Radius.circular(32)),
-      onTap: () => ViewMediaPage.show(context, medias: images, tag: heroTag),
+      onTap: () => ViewMediaPage.show(context, medias: images, tag: images),
       child: Hero(
         tag: heroTag,
         child: ClipRRect(
