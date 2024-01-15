@@ -6,10 +6,9 @@ import 'package:window_manager/window_manager.dart';
 
 import './mouse_state_builder.dart';
 import 'icons.dart';
-import 'window_caption.dart';
 
 const kTitleBarButtonWidth = 48.0;
-const kTitleBarButtonHeight = 36.0;
+const kTitleBarButtonHeight = 24.0;
 
 typedef WindowButtonIconBuilder = Widget Function(WindowButtonContext buttonContext);
 typedef WindowButtonBuilder = Widget Function(WindowButtonContext buttonContext, Widget icon);
@@ -67,7 +66,7 @@ class WindowButton extends StatelessWidget {
   final WindowButtonIconBuilder? iconBuilder;
   late final WindowButtonColors colors;
   final bool animate;
-  final EdgeInsets? padding;
+  final EdgeInsetsGeometry? padding;
   final VoidCallback? onPressed;
 
   WindowButton({
@@ -114,13 +113,13 @@ class WindowButton extends StatelessWidget {
         );
 
         var icon = (iconBuilder != null) ? iconBuilder!(buttonContext) : Container();
-        double borderSize = 1;
-        double defaultPadding = (kTitleBarHeight - borderSize) / 3 - (borderSize / 2);
         // Used when buttonContext.backgroundColor is null, allowing the AnimatedContainer to fade-out smoothly.
         var fadeOutColor = getBackgroundColor(MouseState()..isMouseOver = true).withOpacity(0);
-        var padding = this.padding ?? EdgeInsets.all(defaultPadding);
         var animationMs = mouseState.isMouseOver ? (animate ? 100 : 0) : (animate ? 200 : 0);
-        Widget iconWithPadding = Padding(padding: padding, child: icon);
+        Widget iconWithPadding = Padding(
+          padding: padding ?? const EdgeInsets.symmetric(horizontal: 16),
+          child: icon,
+        );
         iconWithPadding = AnimatedContainer(
           curve: Curves.easeOut,
           duration: Duration(milliseconds: animationMs),
@@ -140,40 +139,43 @@ class WindowButton extends StatelessWidget {
 class MinimizeWindowButton extends WindowButton {
   MinimizeWindowButton({
     super.key,
+    super.padding,
     WindowButtonColors? colors,
     VoidCallback? onPressed,
     bool? animate,
   }) : super(
-    animate: animate ?? false,
-    iconBuilder: (buttonContext) => MinimizeIcon(color: buttonContext.iconColor),
-    onPressed: onPressed ?? () => windowManager.minimize(),
-  );
+          animate: animate ?? false,
+          iconBuilder: (buttonContext) => MinimizeIcon(color: buttonContext.iconColor),
+          onPressed: onPressed ?? () => windowManager.minimize(),
+        );
 }
 
 class MaximizeWindowButton extends WindowButton {
   MaximizeWindowButton({
     super.key,
+    super.padding,
     WindowButtonColors? colors,
     VoidCallback? onPressed,
     bool? animate,
   }) : super(
-    animate: animate ?? false,
-    iconBuilder: (buttonContext) => MaximizeIcon(color: buttonContext.iconColor),
-    onPressed: onPressed ?? () async => await windowManager.isMaximized() ? windowManager.unmaximize() : windowManager.maximize(),
-  );
+          animate: animate ?? false,
+          iconBuilder: (buttonContext) => MaximizeIcon(color: buttonContext.iconColor),
+          onPressed: onPressed ?? () async => await windowManager.isMaximized() ? windowManager.unmaximize() : windowManager.maximize(),
+        );
 }
 
 class RestoreWindowButton extends WindowButton {
   RestoreWindowButton({
     super.key,
+    super.padding,
     WindowButtonColors? colors,
     VoidCallback? onPressed,
     bool? animate,
   }) : super(
-    animate: animate ?? false,
-    iconBuilder: (buttonContext) => RestoreIcon(color: buttonContext.iconColor),
-    onPressed: onPressed ?? () async => await windowManager.isMaximized() ? windowManager.unmaximize() : windowManager.maximize(),
-  );
+          animate: animate ?? false,
+          iconBuilder: (buttonContext) => RestoreIcon(color: buttonContext.iconColor),
+          onPressed: onPressed ?? () async => await windowManager.isMaximized() ? windowManager.unmaximize() : windowManager.maximize(),
+        );
 }
 
 final _defaultCloseButtonColors = WindowButtonColors(
@@ -188,13 +190,14 @@ final _defaultCloseButtonColors = WindowButtonColors(
 class CloseWindowButton extends WindowButton {
   CloseWindowButton({
     super.key,
+    super.padding,
     WindowButtonColors? colors,
     VoidCallback? onPressed,
     bool? animate,
   }) : super(
-    colors: colors ?? _defaultCloseButtonColors,
-    animate: animate ?? false,
-    iconBuilder: (buttonContext) => CloseIcon(color: buttonContext.iconColor),
-    onPressed: onPressed ?? () => windowManager.close(),
-  );
+          colors: colors ?? _defaultCloseButtonColors,
+          animate: animate ?? false,
+          iconBuilder: (buttonContext) => CloseIcon(color: buttonContext.iconColor),
+          onPressed: onPressed ?? () => windowManager.close(),
+        );
 }

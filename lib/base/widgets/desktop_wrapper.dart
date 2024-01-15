@@ -7,6 +7,10 @@ import 'package:window_manager/window_manager.dart';
 import 'desktop/window_button.dart';
 import 'desktop/window_caption.dart';
 
+/// 左上角的WindowsButton高度
+const kWindowsButtonHeight = 24.0;
+const kWindowsMoveBarHeight = 32.0;
+
 ///
 /// Created by a0010 on 2023/8/28 15:47
 /// 桌面包装器
@@ -21,7 +25,7 @@ class DesktopWrapper extends StatelessWidget {
   const DesktopWrapper({
     super.key,
     required this.child,
-    this.height = 30,
+    this.height = kWindowsMoveBarHeight,
     this.showMoveBar = true,
     this.isShowMinimize = true,
     this.isShowMaximize = true,
@@ -81,7 +85,7 @@ class DesktopWrapper extends StatelessWidget {
 
 /// 桌面窗口按钮
 class WindowButtons extends StatelessWidget {
-  final double height;
+  final double? height;
   final MainAxisAlignment mainAxisAlignment;
   final bool showMoveBar;
   final bool isShowMinimize;
@@ -90,7 +94,7 @@ class WindowButtons extends StatelessWidget {
 
   const WindowButtons({
     super.key,
-    this.height = 30,
+    this.height,
     this.mainAxisAlignment = MainAxisAlignment.end,
     this.showMoveBar = false,
     this.isShowMinimize = true,

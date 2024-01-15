@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 // Switched to CustomPaint icons by https://github.com/esDotDev
@@ -37,7 +38,7 @@ class _MaximizePainter extends _IconPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Paint p = _getPaint(color);
-    canvas.drawRect(Rect.fromLTRB(0, 8, size.width, size.height - 8), p);
+    canvas.drawRect(Rect.fromLTRB(0, 1, size.width, size.height - 1), p);
   }
 }
 
@@ -99,7 +100,7 @@ abstract class _IconPainter extends CustomPainter {
 }
 
 class _AlignedPaint extends StatelessWidget {
-  const _AlignedPaint(this.painter, {super.key});
+  const _AlignedPaint(this.painter);
 
   final CustomPainter painter;
 
