@@ -102,6 +102,7 @@ class TapLayout extends StatelessWidget {
         child: child,
       );
     }
+
     if (constraints != null) {
       child = ConstrainedBox(constraints: constraints!, child: child);
     }
@@ -293,7 +294,7 @@ class _TapLayoutRipple extends StatelessWidget {
       child = Padding(padding: padding!, child: child);
     }
 
-    // 点击事件
+    // 点击事件和前景色
     child = InkResponse(
       onTap: () => _onTap(),
       onLongPress: onLongPress,
@@ -309,7 +310,7 @@ class _TapLayoutRipple extends StatelessWidget {
       child: child,
     );
 
-    // 尺寸和修饰
+    // 尺寸和背景色
     child = Ink(
       width: w,
       height: h,
@@ -317,6 +318,7 @@ class _TapLayoutRipple extends StatelessWidget {
         color: background,
         image: image,
         border: border,
+        borderRadius: isCircle ? null : borderRadius,
         boxShadow: boxShadow,
         gradient: gradient,
         shape: shape,
@@ -331,6 +333,7 @@ class _TapLayoutRipple extends StatelessWidget {
       clipBehavior: Clip.hardEdge,
       child: child,
     );
+
     return child;
   }
 
