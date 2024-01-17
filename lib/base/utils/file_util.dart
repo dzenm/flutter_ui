@@ -6,11 +6,16 @@ import 'package:path_provider/path_provider.dart';
 
 import '../db/db.dart';
 
+/// 原图路径对应的缩略图路径区分
+const _thumb = '_thumb';
+
 ///
 /// Created by a0010 on 2022/9/1 11:56
 /// 文件工具类
 class FileUtil {
+  /// Windows APP的根目录文件夹
   static const windowsAppRootDir = 'FlutterUI';
+
   static const cacheName = 'cache';
   static const databasesName = 'databases';
 
@@ -37,6 +42,7 @@ class FileUtil {
   /// macOS/iOS: /Users/a0010/Library/Containers/<package_name>/Data/Documents
   /// Windows:   C:\Users\Administrator\Documents\FlutterUI
   /// Android:   /data/user/0/<package_name>
+  /// [dir] 在根目录下面创建的文件夹名称作为应用的根目录
   Future<Directory> getAppRootDirectory({String? dir}) async {
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String appRootDir = join(appDocDir.path);
@@ -78,6 +84,9 @@ class FileUtil {
   }
 
   /// 缓存文件夹路径 @see [init]、[_appDirs]
+  /// macOS/iOS: /Users/a0010/Library/Containers/<package_name>/Data/Documents/cache
+  /// Windows:   C:\Users\Administrator\Documents\FlutterUI\cache
+  /// Android:   /data/user/0/<package_name>/cache
   Directory get cacheDirectory => _appDirs[0];
 
   /// 图片文件路径
@@ -92,10 +101,7 @@ class FileUtil {
   /// 文件路径
   String getFilesPath(String user) => getCacheDirectory('Files', user: user).path;
 
-  /// 获取缓存文件的子目录
-  /// macOS/iOS: /Users/a0010/Library/Containers/<package_name>/Data/Documents/cache
-  /// Windows:   C:\Users\Administrator\Documents\FlutterUI\cache
-  /// Android:   /data/user/0/<package_name>/cache
+  /// 获取缓存文件的子目录 @see [cacheDirectory]
   Directory getCacheDirectory(String dir, {String? user}) {
     String cache = cacheDirectory.path;
     cache = join(cache, user, dir);
@@ -293,12 +299,13 @@ class FileUtil {
 
 /// 处理文件的路径信息
 class PathInfo {
+  String path; // 文件路径
+  String parent; // 文件所在的文件夹
   String? name; // 文件的名称，带后缀
   String? fileName; // 文件的名称，不带后缀
-  String parent; // 文件所在的文件夹
   String? mimeTypeSuffix; // 文件后缀类型
 
-  PathInfo({this.name, this.fileName, required this.parent, this.mimeTypeSuffix});
+  PathInfo({required this.path, required this.parent, this.name, this.fileName, this.mimeTypeSuffix});
 
   /// path=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x.png
   /// name=336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x.png
@@ -321,17 +328,22 @@ class PathInfo {
       mimeTypeSuffix = path.substring(index + 1);
     }
     return PathInfo(
+      path: path,
+      parent: parent,
       name: name,
       fileName: fileName,
-      parent: parent,
       mimeTypeSuffix: mimeTypeSuffix,
     );
   }
 
+  /// file=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x.png
+  /// suffix=thumb_
   /// addFileNamePrefix=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/thumb_336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x.png
   String addFileNamePrefix(String prefix) => join(parent, '$prefix$fileName.${mimeTypeSuffix ?? ''}');
 
-  /// removeFileNamePrefix=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x.png
+  /// file=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/thumb_336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x.png
+  /// suffix=thumb_
+  /// removeFileNamePrefix=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x_thumb.png
   String removeFileNamePrefix(String prefix) {
     if (fileName == null) return '';
     String name = fileName ?? '';
@@ -341,9 +353,13 @@ class PathInfo {
     return join(parent, '$name.${mimeTypeSuffix ?? ''}');
   }
 
+  /// file=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x.png
+  /// suffix=_thumb
   /// addFileNameSuffix=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x_thumb.png
   String addFileNameSuffix(String suffix) => join(parent, '$fileName$suffix.${mimeTypeSuffix ?? ''}');
 
+  /// file=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x_thumb.png
+  /// suffix=_thumb
   /// removeFileNameSuffix=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x.png
   String removeFileNameSuffix(String suffix) {
     if (fileName == null) return '';
@@ -353,6 +369,18 @@ class PathInfo {
     }
     return join(parent, '$name.${mimeTypeSuffix ?? ''}');
   }
+
+  /// 文件名称起始或者终止位置是否包含字符串
+  bool nameContains(String fix) {
+    if (fileName == null) return false;
+    return fileName!.startsWith(fix) || fileName!.endsWith(fix);
+  }
+
+  /// 获取缩略图文件路径
+  String get thumbPath => nameContains(_thumb) ? path : addFileNameSuffix(_thumb);
+
+  /// 获取原文件路径
+  String get originPath => nameContains(_thumb) ? removeFileNameSuffix(_thumb) : path;
 
   /// 复制到指定文件夹
   String copyPath(String parent) => join(parent, fileName);
@@ -376,7 +404,7 @@ enum MimeType {
   excel(7, 'icon_xls'),
   txt(8, 'icon_txt'),
   ppt(9, 'icon_ppt'),
-  apk(10, 'icon_unknown');
+  apk(10, 'icon_apk');
 
   final int value;
   final String icon;
