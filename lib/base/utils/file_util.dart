@@ -86,12 +86,12 @@ class FileUtil {
   /// Android:   /data/user/0/<package_name>/messages
   Directory get messagesDirectory => _appDirs[0];
 
-  /// @see [getMessagesDirectory] and [FileCategory]
+  /// @see [getUserDirectory] and [FileCategory]
   String getMessagesCategory(FileCategory category, {String? user}) {
     return getUserDirectory(category.dirName, user: user).path;
   }
 
-  /// 获取缓存文件的子目录 @see [cacheDirectory]
+  /// 获取缓存文件的子目录 @see [messagesDirectory]
   Directory getUserDirectory(String dir, {UserDirectory userDirectory = UserDirectory.messages, String? user}) {
     String parent = join(_userDir.path, userDirectory.name);
     parent = user == null ? join(parent, dir) : join(parent, user, dir);
