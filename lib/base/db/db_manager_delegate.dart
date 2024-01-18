@@ -235,7 +235,7 @@ class DBManagerDelegate {
   Future<String> get databasesPath async {
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String dbDir = join(appDocDir.path);
-    String dirName = 'databases';
+    String dirName = 'Databases';
     if (Platform.isMacOS || Platform.isIOS) {
       dbDir = join(appDocDir.path, _userId, dirName);
     }

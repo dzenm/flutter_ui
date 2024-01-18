@@ -16,9 +16,6 @@ class FileUtil {
   /// Windows APP的根目录文件夹
   static const windowsAppRootDir = 'FlutterUI';
 
-  static const cacheName = 'cache';
-  static const databasesName = 'databases';
-
   FileUtil._internal();
 
   static final FileUtil _instance = FileUtil._internal();
@@ -68,12 +65,8 @@ class FileUtil {
   /// 初始化登录用户目录
   void initLoginUserDirectory(String user) {
     // 初始化常用文件夹
-    List<String> parentName = [
-      cacheName,
-      databasesName,
-    ];
-    for (var dir in parentName) {
-      String dirName = join(_appRootDir.path, user, dir);
+    for (var dir in UserDirectory.values) {
+      String dirName = join(_appRootDir.path, user, dir.name);
       Directory result = Directory(dirName);
       if (!result.existsSync()) {
         result.createSync(recursive: true);
@@ -84,26 +77,26 @@ class FileUtil {
   }
 
   /// 缓存文件夹路径 @see [init]、[_appDirs]
-  /// macOS/iOS: /Users/a0010/Library/Containers/<package_name>/Data/Documents/cache
-  /// Windows:   C:\Users\Administrator\Documents\FlutterUI\cache
-  /// Android:   /data/user/0/<package_name>/cache
-  Directory get cacheDirectory => _appDirs[0];
+  /// macOS/iOS: /Users/a0010/Library/Containers/<package_name>/Data/Documents/messages
+  /// Windows:   C:\Users\Administrator\Documents\FlutterUI\messages
+  /// Android:   /data/user/0/<package_name>/messages
+  Directory get messagesDirectory => _appDirs[0];
 
   /// 图片文件路径
-  String getImagesPath(String user) => getCacheDirectory('Images', user: user).path;
+  String getImagesPath(String user) => getMessagesDirectory('Images', user: user).path;
 
   /// 视频文件路径
-  String getVideosPath(String user) => getCacheDirectory('Videos', user: user).path;
+  String getVideosPath(String user) => getMessagesDirectory('Videos', user: user).path;
 
   /// 音频文件路径
-  String getAudiosPath(String user) => getCacheDirectory('Audios', user: user).path;
+  String getAudiosPath(String user) => getMessagesDirectory('Audios', user: user).path;
 
   /// 文件路径
-  String getFilesPath(String user) => getCacheDirectory('Files', user: user).path;
+  String getFilesPath(String user) => getMessagesDirectory('Files', user: user).path;
 
   /// 获取缓存文件的子目录 @see [cacheDirectory]
-  Directory getCacheDirectory(String dir, {String? user}) {
-    String cache = cacheDirectory.path;
+  Directory getMessagesDirectory(String dir, {String? user}) {
+    String cache = messagesDirectory.path;
     cache = join(cache, user, dir);
     Directory result = Directory(cache);
     if (!result.existsSync()) {
@@ -390,6 +383,17 @@ class PathInfo {
 
   /// 是否是Gif图
   bool get isGif => mimeTypeSuffix?.toLowerCase() == 'gif';
+}
+
+/// 用户目录
+enum UserDirectory {
+  messages('Messages'),
+  databases('Databases'),
+  favourites('Favourites');
+
+  final String name;
+
+  const UserDirectory(this.name);
 }
 
 /// 文件类型
