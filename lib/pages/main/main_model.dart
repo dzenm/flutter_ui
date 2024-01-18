@@ -29,7 +29,7 @@ class MainModel with ChangeNotifier {
   /// 首页面切换的PageController
   PageController? _controller;
 
-  PageController get controller => _controller!;
+  PageController? get controller => _controller;
 
   /// 主页选中的Tab，默认为第一个
   MainTab _selectedTab = MainTab.home;

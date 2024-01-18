@@ -111,7 +111,8 @@ class Application {
     ]);
 
     log('初始化 FileUtil');
-    FileUtil().init(logPrint: Log.i);
+    await FileUtil().init(logPrint: Log.i);
+    FileUtil().initLoginUserDirectory(SpUtil.getUserId());
 
     log('初始化 PluginManager');
     PluginManager.init(logPrint: Log.d);

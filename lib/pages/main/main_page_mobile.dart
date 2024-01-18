@@ -17,7 +17,8 @@ class MainPageMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int length = context.watch<MainModel>().length;
-    PageController controller = context.watch<MainModel>().controller;
+    PageController? controller = context.watch<MainModel>().controller;
+    if (controller == null) return Container();
     return Scaffold(
       body: PageView(
         controller: controller,

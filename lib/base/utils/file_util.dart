@@ -25,6 +25,7 @@ class FileUtil {
   factory FileUtil() => instance;
 
   static late Directory _appRootDir;
+  static late Directory _userDir;
   static final List<Directory> _appDirs = [];
 
   Function? _logPrint;
@@ -63,10 +64,13 @@ class FileUtil {
   }
 
   /// 初始化登录用户目录
-  void initLoginUserDirectory(String user) {
+  void initLoginUserDirectory(String userId) {
+    String parent = join(_appRootDir.path, userId);
+    _userDir = Directory(parent);
+    _log('初始化用户目录：parent=$parent');
     // 初始化常用文件夹
     for (var dir in UserDirectory.values) {
-      String dirName = join(_appRootDir.path, user, dir.name);
+      String dirName = join(parent, dir.name);
       Directory result = Directory(dirName);
       if (!result.existsSync()) {
         result.createSync(recursive: true);
@@ -82,23 +86,16 @@ class FileUtil {
   /// Android:   /data/user/0/<package_name>/messages
   Directory get messagesDirectory => _appDirs[0];
 
-  /// 图片文件路径
-  String getImagesPath(String user) => getMessagesDirectory('Images', user: user).path;
-
-  /// 视频文件路径
-  String getVideosPath(String user) => getMessagesDirectory('Videos', user: user).path;
-
-  /// 音频文件路径
-  String getAudiosPath(String user) => getMessagesDirectory('Audios', user: user).path;
-
-  /// 文件路径
-  String getFilesPath(String user) => getMessagesDirectory('Files', user: user).path;
+  /// @see [getMessagesDirectory] and [FileCategory]
+  String getMessagesCategory(FileCategory category, {String? user}) {
+    return getUserDirectory(category.dirName, user: user).path;
+  }
 
   /// 获取缓存文件的子目录 @see [cacheDirectory]
-  Directory getMessagesDirectory(String dir, {String? user}) {
-    String cache = messagesDirectory.path;
-    cache = join(cache, user, dir);
-    Directory result = Directory(cache);
+  Directory getUserDirectory(String dir, {UserDirectory userDirectory = UserDirectory.messages, String? user}) {
+    String parent = join(_userDir.path, userDirectory.name);
+    parent = user == null ? join(parent, dir) : join(parent, user, dir);
+    Directory result = Directory(parent);
     if (!result.existsSync()) {
       result.createSync(recursive: true);
     }
@@ -212,6 +209,20 @@ class FileUtil {
     File file = File('${parent.path}${Platform.pathSeparator}$fileName');
     if (file.existsSync()) {
       await file.writeAsString('');
+    }
+  }
+
+  /// 删除文件（根据路径删除）
+  void deleteFile(String? path) {
+    try {
+      if ((path ?? '').isEmpty) return;
+      File file = File(path!);
+      if (file.existsSync()) {
+        file.deleteSync();
+      }
+      _log('删除文件成功：path=$path');
+    } catch (err) {
+      _log('删除文件失败：err=$err');
     }
   }
 
@@ -394,6 +405,19 @@ enum UserDirectory {
   final String name;
 
   const UserDirectory(this.name);
+}
+
+/// 文件类别
+enum FileCategory {
+  images('Images'),
+  videos('Videos'),
+  audios('Audios'),
+  files('Files'),
+  others('Others');
+
+  final String dirName;
+
+  const FileCategory(this.dirName);
 }
 
 /// 文件类型
