@@ -318,18 +318,34 @@ class PathInfo {
   /// mimeTypeSuffix=png
   factory PathInfo.parse(String path) {
     int separatorIndex = path.lastIndexOf(Platform.pathSeparator);
-    if (separatorIndex < 0) throw Exception('path=$path parse error, It is not contains directory');
-    int index = path.lastIndexOf('.');
-    String parent = path.substring(0, separatorIndex);
-    String name = path.substring(separatorIndex + 1);
-    String fileName;
+    if (separatorIndex < 0) {
+      separatorIndex = 0;
+    }
+    String parent = '';
+    String? name;
+    String? fileName;
     String? mimeTypeSuffix;
+    int index = path.lastIndexOf('.');
+    // 如果不存在文件名称包含.的情况
     if (index < 0) {
-      // 如果不存在.后缀的路径，直接裁剪到结尾
-      fileName = path.substring(separatorIndex + 1);
+      // 在路径的最后面加上/，判断是不是文件夹
+      Directory dir = Directory('$path/');
+      if (dir.existsSync()) {
+        // 是文件夹
+        parent = dir.path;
+      } else {
+        // 是文件
+        parent = path.substring(0, separatorIndex);
+        // 如果不存在.后缀的路径，直接裁剪到结尾
+        fileName = path.substring(separatorIndex + 1);
+      }
     } else {
+      parent = path.substring(0, separatorIndex);
+      name = path.substring(separatorIndex + 1);
       fileName = path.substring(separatorIndex + 1, index);
-      mimeTypeSuffix = path.substring(index + 1);
+      if (index + 1 < path.length) {
+        mimeTypeSuffix = path.substring(index + 1);
+      }
     }
     return PathInfo(
       path: path,
