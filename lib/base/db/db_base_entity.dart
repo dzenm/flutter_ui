@@ -1,6 +1,5 @@
 /// 数据的基类，数据和实体类的转换，数据库表的信息
 abstract class DBBaseEntity {
-  DBBaseEntity();
 
   /// 将实体类转化为map类型数据
   Map<String, dynamic> toJson();

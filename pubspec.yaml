@@ -49,7 +49,7 @@ dependencies:
   #  cookie_jar: 3.0.1                             # cookie持久化 https://pub.flutter-io.cn/packages/cookie_jar
   package_info_plus: 5.0.1                      # 获取版本信息 https://pub.dev/packages/package_info_plus
   device_info_plus: 9.1.1                       # 获取设备信息 https://pub.flutter-io.cn/packages/device_info_plus
-  flutter_local_notifications: 16.3.0           # 通知栏通知提醒 https://pub.flutter-io.cn/packages/flutter_local_notifications
+  flutter_local_notifications: 16.3.2           # 通知栏通知提醒 https://pub.flutter-io.cn/packages/flutter_local_notifications
   cached_network_image: 3.3.1                   # 图片缓存 https://pub.flutter-io.cn/packages/cached_network_image
   extended_text_field: 13.0.1                   # 输入框扩展 https://pub.flutter-io.cn/packages/extended_text_field
   back_button_interceptor: 7.0.0                # 返回按钮拦截 https://pub.flutter-io.cn/packages/back_button_interceptor
@@ -101,7 +101,7 @@ dependencies:
   lpinyin: 2.0.3                                # 汉字转拼音 https://pub.flutter-io.cn/packages/lpinyin
   flutter_screenutil: 5.9.0                     # 屏幕参数适配 https://pub.flutter-io.cn/packages/flutter_screenutil
   date_format: 2.0.7                            # 时间格式转换 https://pub.flutter-io.cn/packages/date_format
-  url_launcher: 6.2.3                          # 网页打开工具 https://pub.flutter-io.cn/packages/url_launcher
+  url_launcher: 6.2.4                          # 网页打开工具 https://pub.flutter-io.cn/packages/url_launcher
   flustars: 2.0.1                               # Flutter 常用工具类库（本地化 屏幕适配） https://pub.flutter-io.cn/packages/flustars
   flutter_html: 3.0.0-beta.2                    # Flutter 加载html https://pub.flutter-io.cn/packages/flutter_html
   fluent_ui: 4.8.5

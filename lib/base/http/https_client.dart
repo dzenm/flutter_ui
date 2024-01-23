@@ -304,8 +304,9 @@ class HttpsClient {
     int original, {
     CancelToken? cancelToken,
     Success? success,
-    ProgressCallback? onSendProgress,
+    Progress? progress,
     Failed? failed,
+    bool canCancel = true,
   }) async {
     int sceneType = 0;
     MultipartFile multipartFile = MultipartFile.fromFileSync(
@@ -324,13 +325,25 @@ class HttpsClient {
       final Response response = await dio.request(
         '${_baseUrls.first}fileUpload/upload/$fileType',
         data: data,
-        cancelToken: cancelToken,
+        cancelToken: canCancel ? cancelToken : null,
         options: Options(
           method: 'POST',
           // headers: {r'authorization': SpUtil.getToken()},
           contentType: 'multipart/form-data',
         ),
-        onSendProgress: onSendProgress,
+        onSendProgress: (int count, int total) {
+          // 未实现/禁止取消/通过token取消下载等情况不能再进行处理
+          if (progress == null || canCancel && (cancelToken?.isCancelled ?? true)) return;
+          if (total == -1) {
+            // 无法获取文件大小
+            _HttpException ex = _HttpException.fileNotExist;
+            error = HttpError(ex.code, ex.msg, ex.msg);
+          } else {
+            // 获取下载进度
+            double progressPercent = double.parse((count / total).toStringAsFixed(2));
+            progress(progressPercent, count, total);
+          }
+        },
       );
       log('上传结果: statusCode=${response.statusCode}, statusMessage=${response.statusMessage}, data=${response.data}');
       final value = DataEntity<dynamic>.fromJson(response.data!);
@@ -351,8 +364,8 @@ class HttpsClient {
     }
     // 下载结果
     if (error == null) return;
-    if (failed != null) failed(error);
-    log('上传错误: code=${error.code}, msg=${error.msg}, error=${error.error}');
+    if (failed != null) failed(error!);
+    log('上传错误: code=${error!.code}, msg=${error!.msg}, error=${error!.error}');
   }
 
   void log(dynamic text) => _logPrint == null ? null : _logPrint!(text, tag: 'HttpsClient');

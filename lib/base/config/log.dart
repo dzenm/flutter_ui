@@ -29,48 +29,48 @@ class Log {
   /// 默认打印日志的tag
   String _myTag = _tag;
 
-  static void init({bool isDebug = true, String tag = _tag, Level level = Level.verbose}) {
-    _instance._debug = isDebug;
-    _instance._myTag = tag;
-    _instance._level = level;
+  static void init({bool? isDebug, String? tag, Level? level}) {
+    _instance._debug = isDebug ?? true;
+    _instance._myTag = tag ?? _tag;
+    _instance._level = level ?? Level.verbose;
   }
 
-  static void v(dynamic message, {String tag = ''}) {
-    _printLog(tag, message, Level.verbose);
+  static void v(dynamic msg, {String tag = ''}) {
+    _printLog(tag, msg, Level.verbose);
   }
 
-  static void d(dynamic message, {String tag = ''}) {
-    _printLog(tag, message, Level.debug);
+  static void d(dynamic msg, {String? tag}) {
+    _printLog(tag, msg, Level.debug);
   }
 
-  static void i(dynamic message, {String tag = ''}) {
-    _printLog(tag, message, Level.info);
+  static void i(dynamic msg, {String? tag}) {
+    _printLog(tag, msg, Level.info);
   }
 
-  static void w(dynamic message, {String tag = ''}) {
-    _printLog(tag, message, Level.warm);
+  static void w(dynamic msg, {String? tag}) {
+    _printLog(tag, msg, Level.warm);
   }
 
-  static void e(dynamic message, {String tag = ''}) {
-    _printLog(tag, message, Level.error);
+  static void e(dynamic msg, {String? tag}) {
+    _printLog(tag, msg, Level.error);
   }
 
-  static void h(dynamic message, {String tag = ''}) {
+  static void h(dynamic msg, {String? tag}) {
     if (!BuildConfig.showHTTPLog) return;
-    _printLog(tag, message, Level.http);
+    _printLog(tag, msg, Level.http);
   }
 
-  static void b(dynamic message, {String tag = ''}) {
+  static void b(dynamic msg, {String? tag}) {
     if (!BuildConfig.showDBLog) return;
-    _printLog(tag, message, Level.db);
+    _printLog(tag, msg, Level.db);
   }
 
-  static void p(dynamic message, {String tag = ''}) {
-    if (!BuildConfig.showPageLog || message == null) return;
-    _printLog(tag, message, Level.page);
+  static void p(dynamic msg, {String? tag}) {
+    if (!BuildConfig.showPageLog || msg == null) return;
+    _printLog(tag, msg, Level.page);
   }
 
-  static void _printLog(String tag, dynamic message, Level level) {
+  static void _printLog(String? tag, dynamic msg, Level level) {
     if (kReleaseMode) {
       // release模式不打印
       return;
@@ -83,12 +83,12 @@ class Log {
       // 如果打印的日志级别在默认的级别之下不打印
       return;
     }
-    String result = _instance._handlerMessage(tag, level.tag, message);
+    String result = _instance._convertMessage(tag, level.tag, msg);
     _instance._printLongMsg(result, (msg) => _instance._println(level, msg));
   }
 
   /// 处理消息的内容
-  String _handlerMessage(String tag, String levelTag, dynamic message) {
+  String _convertMessage(String? tag, String levelTag, dynamic msg) {
     DateTime now = DateTime.now();
     String year = '${now.year}';
     String month = '${now.month}'.padLeft(2, '0');
@@ -98,52 +98,52 @@ class Log {
     String second = '${now.second}'.padLeft(2, '0');
     String millisecond = '${now.millisecond}'.padLeft(3, '0').substring(0, 3);
     String time = '$year-$month-$day $hour:$minute:$second $millisecond';
+    String packageName = BuildConfig.isInitialized ? BuildConfig.packageInfo.packageName : '';
 
     StringBuffer sb = StringBuffer();
-    String packageName = BuildConfig.isInitialized ? BuildConfig.packageInfo.packageName : '';
     sb.write(packageName);
     sb.write(' ');
     sb.write(time);
     sb.write(' ');
     sb.write(levelTag);
     sb.write('/');
-    sb.write((tag.isEmpty) ? _myTag : tag);
+    sb.write(((tag ?? '').isEmpty) ? _myTag : tag);
     sb.write('  ');
-    sb.write(message);
+    sb.write(msg);
     return sb.toString();
   }
 
   /// 打印长日志
-  void _printLongMsg(String message, void Function(String message) printLog) {
-    int len = message.length;
+  void _printLongMsg(String msg, void Function(String msg) printLog) {
+    int len = msg.length;
     if (len > _maxLength) {
       for (int i = 0; i < len;) {
         int start = i;
         i = i + _maxLength;
-        printLog(message.substring(start, min(i, len)));
+        printLog(msg.substring(start, min(i, len)));
       }
     } else {
-      printLog(message);
+      printLog(msg);
     }
   }
 
   /// 换行打印
-  void _println(Level level, String message, {bool isDefaultColor = true}) {
+  void _println(Level level, String msg, {bool isDefaultColor = true}) {
     // 处理文本展示的颜色
     String prefix = '', suffix = '';
     if (!isDefaultColor) {
-      List<String> colors = _handlerPrefixTextColor(level);
+      List<String> colors = _convertTextColor(level);
       prefix = colors[0];
       suffix = colors[1];
     }
-    String msg = prefix + message + suffix;
+    String log = '$prefix$msg$suffix';
     if (kDebugMode) {
-      print(msg);
+      print(log);
     }
   }
 
   /// 处理文本颜色
-  List<String> _handlerPrefixTextColor(Level level) {
+  List<String> _convertTextColor(Level level) {
     switch (level) {
       case Level.verbose:
         return ['\x1B[36m ', ' \x1B[0m'];
