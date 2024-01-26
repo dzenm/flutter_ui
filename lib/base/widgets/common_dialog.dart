@@ -198,38 +198,36 @@ class CommonDialog {
     GestureTapCallback? onNegativeTap,
     bool singleButton = false,
   }) async {
-    return await showDialog(
+    return await showAnimationDialog(
       context: context,
-      builder: (context) {
-        return DialogWrapper(
-          isTouchOutsideDismiss: barrierDismissible,
-          child: Column(mainAxisSize: MainAxisSize.min, children: [
-            SizedBox(height: content == null ? 36 : 20),
-            title ??
-                Text(
-                  titleString ?? '',
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-            content == null
-                ? const SizedBox(width: 0, height: 36)
-                : Flexible(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-                      child: content,
-                    ),
-                  ),
-            CupertinoDialogButton(
-              positiveText: positiveText,
-              negativeText: negativeText,
-              positiveStyle: positiveStyle,
-              negativeStyle: negativeStyle,
-              onPositiveTap: onPositiveTap,
-              onNegativeTap: onNegativeTap,
-              singleButton: singleButton,
-            )
-          ]),
-        );
-      },
+      child: DialogWrapper(
+        isTouchOutsideDismiss: barrierDismissible,
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          SizedBox(height: content == null ? 36 : 20),
+          title ??
+              Text(
+                titleString ?? '',
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+          content == null
+              ? const SizedBox(width: 0, height: 36)
+              : Flexible(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+              child: content,
+            ),
+          ),
+          CupertinoDialogButton(
+            positiveText: positiveText,
+            negativeText: negativeText,
+            positiveStyle: positiveStyle,
+            negativeStyle: negativeStyle,
+            onPositiveTap: onPositiveTap,
+            onNegativeTap: onNegativeTap,
+            singleButton: singleButton,
+          )
+        ]),
+      ),
     );
   }
 
@@ -245,40 +243,38 @@ class CommonDialog {
     Function? dismissCallback,
     Color? cancelColor, //l 取消按钮字体颜色
     bool dismissible = false,
-  }) {
-    return showDialog<T>(
+  }) async {
+    return await showAnimationDialog<T>(
       context: context,
       barrierDismissible: dismissible,
-      builder: (context) {
-        return CupertinoAlertDialog(
-          content: Container(
-            alignment: Alignment.center,
-            constraints: const BoxConstraints(minHeight: 50),
-            child: mainWidget ?? Text(contentText!, style: const TextStyle(fontSize: 16)),
-          ),
-          actions: [
-            if (!oneBtn)
-              CupertinoDialogAction(
-                child: Text(
-                  cancelText ?? S.of(context).cancel,
-                  style: TextStyle(fontSize: 15, color: cancelColor),
-                ),
-                onPressed: () {
-                  dismissCallback == null ? Navigator.of(context).pop() : dismissCallback();
-                },
-              ),
+      child: CupertinoAlertDialog(
+        content: Container(
+          alignment: Alignment.center,
+          constraints: const BoxConstraints(minHeight: 50),
+          child: mainWidget ?? Text(contentText!, style: const TextStyle(fontSize: 16)),
+        ),
+        actions: [
+          if (!oneBtn)
             CupertinoDialogAction(
               child: Text(
-                confirmText ?? S.of(context).confirm,
-                style: const TextStyle(fontSize: 15),
+                cancelText ?? S.of(context).cancel,
+                style: TextStyle(fontSize: 15, color: cancelColor),
               ),
               onPressed: () {
-                confirmCallback == null ? Navigator.of(context).pop() : confirmCallback();
+                dismissCallback == null ? Navigator.of(context).pop() : dismissCallback();
               },
             ),
-          ],
-        );
-      },
+          CupertinoDialogAction(
+            child: Text(
+              confirmText ?? S.of(context).confirm,
+              style: const TextStyle(fontSize: 15),
+            ),
+            onPressed: () {
+              confirmCallback == null ? Navigator.of(context).pop() : confirmCallback();
+            },
+          ),
+        ],
+      ),
     );
   }
 
@@ -293,21 +289,19 @@ class CommonDialog {
     BorderRadius? borderRadius,
     BoxConstraints? constraints,
   }) async {
-    return await showDialog(
+    return await showAnimationDialog(
       context: context,
       barrierDismissible: barrierDismissible,
       barrierColor: barrierColor ?? Colors.black54,
-      builder: (context) {
-        return DialogWrapper(
-          isTouchOutsideDismiss: barrierDismissible,
-          barrierOnTap: barrierOnTap,
-          color: color ?? Colors.white,
-          margin: margin,
-          borderRadius: borderRadius,
-          constraints: constraints,
-          child: child,
-        );
-      },
+      child: DialogWrapper(
+        isTouchOutsideDismiss: barrierDismissible,
+        barrierOnTap: barrierOnTap,
+        color: color ?? Colors.white,
+        margin: margin,
+        borderRadius: borderRadius,
+        constraints: constraints,
+        child: child,
+      ),
     );
   }
 
@@ -315,6 +309,7 @@ class CommonDialog {
     required BuildContext context,
     bool barrierDismissible = true,
     required Widget child,
+    Color? barrierColor,
     bool useRootNavigator = true,
     RouteSettings? routeSettings,
     TransitionType transitionType = TransitionType.fade,
@@ -331,7 +326,7 @@ class CommonDialog {
       },
       barrierDismissible: barrierDismissible,
       barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-      barrierColor: Colors.black54,
+      barrierColor: barrierColor ?? Colors.black54,
       transitionDuration: const Duration(milliseconds: 200),
       transitionBuilder: (context, animation, secondaryAnimation, child) {
         return _buildDialogTransitions(context, animation, secondaryAnimation, child, transitionType);
