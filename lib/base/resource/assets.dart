@@ -2,6 +2,8 @@
 /// Created by a0010 on 2022/3/22 09:38
 /// 获取Assets文件夹的数据
 class Assets {
+  Assets._();
+
   static const String filePath = 'assets/files/';
   static const String fontsPath = 'assets/fonts/';
   static const String iconsPath = 'assets/icons/';
