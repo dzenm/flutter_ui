@@ -329,6 +329,7 @@ class AppRouterRegister {
 
     return CustomPage<dynamic>(
       child: Builder(builder: (BuildContext context) => routePage!.builder(settings)),
+      transitionDuration: const Duration(milliseconds: 500),
       buildCustomRoute: (BuildContext context, CustomPage<dynamic> page) {
         return PageBasedCustomPageRoute(
           page: page,
