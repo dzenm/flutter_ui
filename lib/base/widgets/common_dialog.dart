@@ -310,6 +310,149 @@ class CommonDialog {
       },
     );
   }
+
+  static Future<T?> showAnimationDialog<T>({
+    required BuildContext context,
+    bool barrierDismissible = true,
+    required Widget child,
+    bool useRootNavigator = true,
+    RouteSettings? routeSettings,
+    TransitionType transitionType = TransitionType.fade,
+  }) async {
+    assert(debugCheckHasMaterialLocalizations(context));
+    return await showGeneralDialog<T>(
+      context: context,
+      pageBuilder: (BuildContext buildContext, Animation<double> animation, Animation<double> secondaryAnimation) {
+        return SafeArea(
+          child: Builder(builder: (BuildContext context) {
+            return child;
+          }),
+        );
+      },
+      barrierDismissible: barrierDismissible,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierColor: Colors.black54,
+      transitionDuration: const Duration(milliseconds: 200),
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return _buildDialogTransitions(context, animation, secondaryAnimation, child, transitionType);
+      },
+      useRootNavigator: useRootNavigator,
+      routeSettings: routeSettings,
+    );
+  }
+
+  static Widget _buildDialogTransitions(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+    TransitionType type,
+  ) {
+    switch (type) {
+      case TransitionType.left:
+        return SlideTransition(
+          position: Tween<Offset>(begin: const Offset(-1.0, 0.0), end: Offset.zero).animate(
+            CurvedAnimation(parent: animation, curve: Curves.fastOutSlowIn),
+          ),
+          child: child,
+        );
+      case TransitionType.top:
+        return SlideTransition(
+          position: Tween<Offset>(begin: const Offset(0.0, -1.0), end: Offset.zero).animate(
+            CurvedAnimation(parent: animation, curve: Curves.fastOutSlowIn),
+          ),
+          child: child,
+        );
+      case TransitionType.right:
+        return SlideTransition(
+          position: Tween<Offset>(begin: const Offset(1.0, 0.0), end: Offset.zero).animate(
+            CurvedAnimation(parent: animation, curve: Curves.fastOutSlowIn),
+          ),
+          child: child,
+        );
+      case TransitionType.bottom:
+        return SlideTransition(
+          position: Tween<Offset>(begin: const Offset(0.0, 1.0), end: Offset.zero).animate(
+            CurvedAnimation(parent: animation, curve: Curves.fastOutSlowIn),
+          ),
+          child: child,
+        );
+      case TransitionType.inLeftOutRight:
+        return SlideTransition(
+          position: Tween<Offset>(begin: const Offset(-1.0, 0.0), end: Offset.zero).animate(
+            CurvedAnimation(parent: animation, curve: Curves.fastOutSlowIn),
+          ),
+          child: SlideTransition(
+            position: Tween<Offset>(begin: Offset.zero, end: const Offset(1.0, 0.0)).animate(
+              CurvedAnimation(parent: secondaryAnimation, curve: Curves.fastOutSlowIn),
+            ),
+            child: child,
+          ),
+        );
+      case TransitionType.inTopOutBottom:
+        return SlideTransition(
+          position: Tween<Offset>(begin: const Offset(0.0, -1.0), end: Offset.zero).animate(
+            CurvedAnimation(parent: animation, curve: Curves.fastOutSlowIn),
+          ),
+          child: child,
+        );
+      case TransitionType.inRightOutLeft:
+        return SlideTransition(
+          position: Tween<Offset>(begin: const Offset(1.0, 0.0), end: Offset.zero).animate(
+            CurvedAnimation(parent: animation, curve: Curves.fastOutSlowIn),
+          ),
+          child: child,
+        );
+      case TransitionType.inBottomOutTop:
+        return SlideTransition(
+          position: Tween<Offset>(begin: const Offset(0.0, 1.0), end: Offset.zero).animate(
+            CurvedAnimation(parent: animation, curve: Curves.fastOutSlowIn),
+          ),
+          child: child,
+        );
+      case TransitionType.scale:
+        return ScaleTransition(
+          scale: Tween(begin: 0.0, end: 1.0).animate(
+            CurvedAnimation(parent: animation, curve: Curves.fastOutSlowIn),
+          ),
+          child: child,
+        );
+      case TransitionType.fade:
+        return FadeTransition(
+          // 从0开始到1
+          opacity: Tween(begin: 0.0, end: 1.0).animate(
+            CurvedAnimation(
+              // 传入设置的动画
+              parent: animation,
+              // 设置效果，快进漫出   这里有很多内置的效果
+              curve: Curves.fastOutSlowIn,
+            ),
+          ),
+          child: child,
+        );
+      case TransitionType.rotation:
+        return RotationTransition(
+          turns: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+            parent: animation,
+            curve: Curves.fastOutSlowIn,
+          )),
+          child: ScaleTransition(
+            scale: Tween(begin: 0.0, end: 1.0).animate(
+              CurvedAnimation(parent: animation, curve: Curves.fastOutSlowIn),
+            ),
+            child: child,
+          ),
+        );
+      case TransitionType.size:
+        return SizeTransition(
+          sizeFactor: Tween<double>(begin: 0.1, end: 1.0).animate(
+            CurvedAnimation(parent: animation, curve: Curves.linear),
+          ),
+          axisAlignment: 1.0,
+          child: child,
+        );
+    }
+  }
 }
 
 /// Dialog设置是否可以点击外部取消显示
@@ -494,4 +637,19 @@ class ListDialog extends Dialog {
       },
     );
   }
+}
+
+enum TransitionType {
+  left, //从左边进从左边出
+  top, //从上面进从上面出
+  right, //从右边进从右边出
+  bottom, //从下面进从下面出
+  inLeftOutRight, //从左边进从右边出
+  inTopOutBottom, //从上面进从下面出
+  inRightOutLeft, //从右边进从左边出
+  inBottomOutTop, //从下面进从上面出
+  scale, // 从小缩放到正常比例
+  fade, // 透明度变化
+  rotation, // 旋转
+  size,
 }

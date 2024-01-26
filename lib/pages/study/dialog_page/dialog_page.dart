@@ -57,45 +57,25 @@ class _DialogPageState extends State<DialogPage> {
       ),
       body: Container(
         padding: const EdgeInsets.all(16),
-        child: Column(children: [
-          MaterialButton(
-            textColor: Colors.white,
-            color: theme.appbar,
-            onPressed: () {
-              CancelFunc cancel = CommonDialog.loading();
-              Future.delayed(const Duration(seconds: 1), () => cancel());
-            },
-            child: Row(children: [_text('加载弹窗(1秒后关闭)')]),
-          ),
-          const SizedBox(height: 8),
-          MaterialButton(
-            textColor: Colors.white,
-            color: theme.appbar,
-            onPressed: () => CommonDialog.showPromptDialog(
-              context,
-              titleString: '立即开通',
-              content: const Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('购买类型：', style: TextStyle(fontSize: 16)),
-                  Text('应付金额：￥', style: TextStyle(fontSize: 16)),
-                  Text('支付方式：(￥)', style: TextStyle(fontSize: 16)),
-                ],
-              ),
+        child: SingleChildScrollView(
+          child: Column(children: [
+            MaterialButton(
+              textColor: Colors.white,
+              color: theme.appbar,
+              onPressed: () {
+                CancelFunc cancel = CommonDialog.loading();
+                Future.delayed(const Duration(seconds: 1), () => cancel());
+              },
+              child: Row(children: [_text('加载弹窗(1秒后关闭)')]),
             ),
-            child: Row(children: [_text('支付弹窗')]),
-          ),
-          const SizedBox(height: 8),
-          MaterialButton(
-            textColor: Colors.white,
-            color: theme.appbar,
-            onPressed: () => CommonDialog.showCustomDialog(
-              context,
-              child: Container(
-                padding: const EdgeInsets.all(32),
-                child: const Column(
+            const SizedBox(height: 8),
+            MaterialButton(
+              textColor: Colors.white,
+              color: theme.appbar,
+              onPressed: () => CommonDialog.showPromptDialog(
+                context,
+                titleString: '立即开通',
+                content: const Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,84 +86,442 @@ class _DialogPageState extends State<DialogPage> {
                   ],
                 ),
               ),
+              child: Row(children: [_text('支付弹窗')]),
             ),
-            child: Row(children: [_text('自定义弹窗')]),
-          ),
-          const SizedBox(height: 8),
-          MaterialButton(
-            textColor: Colors.white,
-            color: theme.appbar,
-            onPressed: () => CommonDialog.showPromptDialog(
-              context,
-              titleString: '昵称',
-              content: const Text('这是设置好的昵称'),
-              onPositiveTap: () => CommonDialog.showToast('修改成功'),
+            const SizedBox(height: 8),
+            MaterialButton(
+              textColor: Colors.white,
+              color: theme.appbar,
+              onPressed: () => CommonDialog.showCustomDialog(
+                context,
+                child: Container(
+                  padding: const EdgeInsets.all(32),
+                  child: const Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('购买类型：', style: TextStyle(fontSize: 16)),
+                      Text('应付金额：￥', style: TextStyle(fontSize: 16)),
+                      Text('支付方式：(￥)', style: TextStyle(fontSize: 16)),
+                    ],
+                  ),
+                ),
+              ),
+              child: Row(children: [_text('自定义弹窗')]),
             ),
-            child: Row(children: [_text('提示弹窗')]),
-          ),
-          const SizedBox(height: 8),
-          MaterialButton(
-            textColor: Colors.white,
-            color: theme.appbar,
-            onPressed: () => CommonDialog.showSelectImageBottomSheet(context),
-            child: Row(children: [_text('选择图片弹窗')]),
-          ),
-          const SizedBox(height: 8),
-          MaterialButton(
-            textColor: Colors.white,
-            color: theme.appbar,
-            onPressed: () => CommonDialog.showListBottomSheet(context, data, (int index) {
-              Navigator.pop(context);
-            }),
-            child: Row(children: [_text('iOS底部列表弹窗')]),
-          ),
-          const SizedBox(height: 8),
-          MaterialButton(
-            textColor: Colors.white,
-            color: theme.appbar,
-            onPressed: () => showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return ListDialog(
-                  list: list,
-                  onTap: (index) {},
-                );
-              },
+            const SizedBox(height: 8),
+            MaterialButton(
+              textColor: Colors.white,
+              color: theme.appbar,
+              onPressed: () => CommonDialog.showPromptDialog(
+                context,
+                titleString: '昵称',
+                content: const Text('这是设置好的昵称'),
+                onPositiveTap: () => CommonDialog.showToast('修改成功'),
+              ),
+              child: Row(children: [_text('提示弹窗')]),
             ),
-            child: Row(children: [_text('Material居中列表弹窗')]),
-          ),
-          const SizedBox(height: 8),
-          MaterialButton(
-            textColor: Colors.white,
-            color: theme.appbar,
-            onPressed: () => UpgradeDialog.upgrade(context),
-            child: Row(children: [_text('升级弹窗')]),
-          ),
-          const SizedBox(height: 8),
-          MaterialButton(
-            textColor: Colors.white,
-            color: theme.appbar,
-            onPressed: () => PickerView.showLocation(context, initialItem: ['湖北', '荆门市', '京山县'], onChanged: (results) {
-              CommonDialog.showToast('选中的结果: results=$results');
-            }),
-            child: Row(children: [_text('选择区域弹窗')]),
-          ),
-          const SizedBox(height: 8),
-          MaterialButton(
-            textColor: Colors.white,
-            color: theme.appbar,
-            onPressed: () => PickerView.showList(
-              context,
-              list: ['测试一', '测试二', '测试三', '测试四', '测试五'],
-              initialItem: _selectedValue,
-              onChanged: (value) {
-                _selectedValue = value;
-                CommonDialog.showToast('选中的回调: $_selectedValue');
-              },
+            const SizedBox(height: 8),
+            MaterialButton(
+              textColor: Colors.white,
+              color: theme.appbar,
+              onPressed: () => CommonDialog.showSelectImageBottomSheet(context),
+              child: Row(children: [_text('选择图片弹窗')]),
             ),
-            child: Row(children: [_text('PickerView控件')]),
-          ),
-        ]),
+            const SizedBox(height: 8),
+            MaterialButton(
+              textColor: Colors.white,
+              color: theme.appbar,
+              onPressed: () => CommonDialog.showListBottomSheet(context, data, (int index) {
+                Navigator.pop(context);
+              }),
+              child: Row(children: [_text('iOS底部列表弹窗')]),
+            ),
+            const SizedBox(height: 8),
+            MaterialButton(
+              textColor: Colors.white,
+              color: theme.appbar,
+              onPressed: () => showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return ListDialog(
+                    list: list,
+                    onTap: (index) {},
+                  );
+                },
+              ),
+              child: Row(children: [_text('Material居中列表弹窗')]),
+            ),
+            const SizedBox(height: 8),
+            MaterialButton(
+              textColor: Colors.white,
+              color: theme.appbar,
+              onPressed: () => UpgradeDialog.upgrade(context),
+              child: Row(children: [_text('升级弹窗')]),
+            ),
+            const SizedBox(height: 8),
+            MaterialButton(
+              textColor: Colors.white,
+              color: theme.appbar,
+              onPressed: () => PickerView.showLocation(context, initialItem: ['湖北', '荆门市', '京山县'], onChanged: (results) {
+                CommonDialog.showToast('选中的结果: results=$results');
+              }),
+              child: Row(children: [_text('选择区域弹窗')]),
+            ),
+            const SizedBox(height: 8),
+            MaterialButton(
+              textColor: Colors.white,
+              color: theme.appbar,
+              onPressed: () => PickerView.showList(
+                context,
+                list: ['测试一', '测试二', '测试三', '测试四', '测试五'],
+                initialItem: _selectedValue,
+                onChanged: (value) {
+                  _selectedValue = value;
+                  CommonDialog.showToast('选中的回调: $_selectedValue');
+                },
+              ),
+              child: Row(children: [_text('PickerView控件')]),
+            ),
+            const SizedBox(height: 8),
+            MaterialButton(
+              textColor: Colors.white,
+              color: theme.appbar,
+              onPressed: () => CommonDialog.showAnimationDialog(
+                context: context,
+                transitionType: TransitionType.left,
+                child: AlertDialog(
+                  title: const Text('Dialog Show'),
+                  content: const Text('this is a dialog'),
+                  actions: [
+                    InkWell(
+                      child: const Text('confirm'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    InkWell(
+                      child: const Text('cancel'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              child: Row(children: [_text('从左边进从左边出的动画')]),
+            ),
+            const SizedBox(height: 8),
+            MaterialButton(
+              textColor: Colors.white,
+              color: theme.appbar,
+              onPressed: () => CommonDialog.showAnimationDialog(
+                context: context,
+                transitionType: TransitionType.top,
+                child: AlertDialog(
+                  title: const Text('Dialog Show'),
+                  content: const Text('this is a dialog'),
+                  actions: [
+                    InkWell(
+                      child: const Text('confirm'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    InkWell(
+                      child: const Text('cancel'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              child: Row(children: [_text('从上面进从上面出的动画')]),
+            ),
+            const SizedBox(height: 8),
+            MaterialButton(
+              textColor: Colors.white,
+              color: theme.appbar,
+              onPressed: () => CommonDialog.showAnimationDialog(
+                context: context,
+                transitionType: TransitionType.right,
+                child: AlertDialog(
+                  title: const Text('Dialog Show'),
+                  content: const Text('this is a dialog'),
+                  actions: [
+                    InkWell(
+                      child: const Text('confirm'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    InkWell(
+                      child: const Text('cancel'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              child: Row(children: [_text('从右边进从右边出的动画')]),
+            ),
+            const SizedBox(height: 8),
+            MaterialButton(
+              textColor: Colors.white,
+              color: theme.appbar,
+              onPressed: () => CommonDialog.showAnimationDialog(
+                context: context,
+                transitionType: TransitionType.bottom,
+                child: AlertDialog(
+                  title: const Text('Dialog Show'),
+                  content: const Text('this is a dialog'),
+                  actions: [
+                    InkWell(
+                      child: const Text('confirm'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    InkWell(
+                      child: const Text('cancel'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              child: Row(children: [_text('从下面进从下面出的动画')]),
+            ),
+            const SizedBox(height: 8),
+            MaterialButton(
+              textColor: Colors.white,
+              color: theme.appbar,
+              onPressed: () => CommonDialog.showAnimationDialog(
+                context: context,
+                transitionType: TransitionType.inLeftOutRight,
+                child: AlertDialog(
+                  title: const Text('Dialog Show'),
+                  content: const Text('this is a dialog'),
+                  actions: [
+                    InkWell(
+                      child: const Text('confirm'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    InkWell(
+                      child: const Text('cancel'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              child: Row(children: [_text('从左边进从右边出的动画')]),
+            ),
+            const SizedBox(height: 8),
+            MaterialButton(
+              textColor: Colors.white,
+              color: theme.appbar,
+              onPressed: () => CommonDialog.showAnimationDialog(
+                context: context,
+                transitionType: TransitionType.inTopOutBottom,
+                child: AlertDialog(
+                  title: const Text('Dialog Show'),
+                  content: const Text('this is a dialog'),
+                  actions: [
+                    InkWell(
+                      child: const Text('confirm'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    InkWell(
+                      child: const Text('cancel'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              child: Row(children: [_text('从上面进从下面出的动画')]),
+            ),
+            const SizedBox(height: 8),
+            MaterialButton(
+              textColor: Colors.white,
+              color: theme.appbar,
+              onPressed: () => CommonDialog.showAnimationDialog(
+                context: context,
+                transitionType: TransitionType.inRightOutLeft,
+                child: AlertDialog(
+                  title: const Text('Dialog Show'),
+                  content: const Text('this is a dialog'),
+                  actions: [
+                    InkWell(
+                      child: const Text('confirm'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    InkWell(
+                      child: const Text('cancel'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              child: Row(children: [_text('从右边进从左边出的动画')]),
+            ),
+            const SizedBox(height: 8),
+            MaterialButton(
+              textColor: Colors.white,
+              color: theme.appbar,
+              onPressed: () => CommonDialog.showAnimationDialog(
+                context: context,
+                transitionType: TransitionType.inBottomOutTop,
+                child: AlertDialog(
+                  title: const Text('Dialog Show'),
+                  content: const Text('this is a dialog'),
+                  actions: [
+                    InkWell(
+                      child: const Text('confirm'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    InkWell(
+                      child: const Text('cancel'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              child: Row(children: [_text('从下面进从上面出的动画')]),
+            ),
+            const SizedBox(height: 8),
+            MaterialButton(
+              textColor: Colors.white,
+              color: theme.appbar,
+              onPressed: () => CommonDialog.showAnimationDialog(
+                context: context,
+                transitionType: TransitionType.scale,
+                child: AlertDialog(
+                  title: const Text('Dialog Show'),
+                  content: const Text('this is a dialog'),
+                  actions: [
+                    InkWell(
+                      child: const Text('confirm'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    InkWell(
+                      child: const Text('cancel'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              child: Row(children: [_text('从小缩放到正常比例动画')]),
+            ),
+            const SizedBox(height: 8),
+            MaterialButton(
+              textColor: Colors.white,
+              color: theme.appbar,
+              onPressed: () => CommonDialog.showAnimationDialog(
+                context: context,
+                transitionType: TransitionType.fade,
+                child: AlertDialog(
+                  title: const Text('Dialog Show'),
+                  content: const Text('this is a dialog'),
+                  actions: [
+                    InkWell(
+                      child: const Text('confirm'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    InkWell(
+                      child: const Text('cancel'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              child: Row(children: [_text('透明度变化动画')]),
+            ),
+            const SizedBox(height: 8),
+            MaterialButton(
+              textColor: Colors.white,
+              color: theme.appbar,
+              onPressed: () => CommonDialog.showAnimationDialog(
+                context: context,
+                transitionType: TransitionType.rotation,
+                child: AlertDialog(
+                  title: const Text('Dialog Show'),
+                  content: const Text('this is a dialog'),
+                  actions: [
+                    InkWell(
+                      child: const Text('confirm'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    InkWell(
+                      child: const Text('cancel'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              child: Row(children: [_text('旋转动画')]),
+            ),
+            const SizedBox(height: 8),
+            MaterialButton(
+              textColor: Colors.white,
+              color: theme.appbar,
+              onPressed: () => CommonDialog.showAnimationDialog(
+                context: context,
+                transitionType: TransitionType.size,
+                child: AlertDialog(
+                  title: const Text('Dialog Show'),
+                  content: const Text('this is a dialog'),
+                  actions: [
+                    InkWell(
+                      child: const Text('confirm'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    InkWell(
+                      child: const Text('cancel'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              child: Row(children: [_text('Size')]),
+            ),
+          ]),
+        ),
       ),
     );
   }
