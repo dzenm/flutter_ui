@@ -99,6 +99,7 @@ class AppRouterOldDelegate implements AppRouter {
     List<String>? pathSegments,
     dynamic body,
     PageTransitionsBuilder? pageTransitionsBuilder,
+    Duration? transitionDuration,
     bool clearStack = false,
   }) async {
     // 打开下一个页面，例：A->B，由A页面进入B页面

@@ -52,7 +52,7 @@ dependencies:
   flutter_local_notifications: 16.3.2           # 通知栏通知提醒 https://pub.flutter-io.cn/packages/flutter_local_notifications
   cached_network_image: 3.3.1                   # 图片缓存 https://pub.flutter-io.cn/packages/cached_network_image
   extended_text_field: 13.0.1                   # 输入框扩展 https://pub.flutter-io.cn/packages/extended_text_field
-  back_button_interceptor: 7.0.0                # 返回按钮拦截 https://pub.flutter-io.cn/packages/back_button_interceptor
+  back_button_interceptor: 7.0.1                # 返回按钮拦截 https://pub.flutter-io.cn/packages/back_button_interceptor
   provider: 6.1.1                               # 状态管理 https://pub.dev/packages/provider
   json_annotation: 4.8.1                        # Json序列化 https://pub.dev/packages/json_annotation
   easy_refresh: 3.3.4                           # 列表刷新 https://pub.flutter-io.cn/packages/easy_refresh

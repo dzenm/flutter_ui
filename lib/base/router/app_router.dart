@@ -37,6 +37,7 @@ abstract class AppRouter {
     List<String>? pathSegments,
     dynamic body,
     PageTransitionsBuilder? pageTransitionsBuilder,
+    Duration? transitionDuration,
     bool clearStack = false,
   }) async {
     return null;

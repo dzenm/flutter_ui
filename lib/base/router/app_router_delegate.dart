@@ -12,9 +12,7 @@ import 'path_tree.dart';
 /// Created by a0010 on 2023/6/13 16:29
 /// 路由管理，基于[ChangeNotifier]管理数据，页面进出栈，需要主动刷新，否则页面调整不起作用，
 /// 也可以使用已经封装好的方法 [pop]、[maybePop]、[popUntil]、[push]、[pushReplace]、[pushAndRemoveUntil]
-class AppRouterDelegate extends RouterDelegate<RouteSettings>
-    with ChangeNotifier, PopNavigatorRouterDelegateMixin<RouteSettings>
-    implements AppRouter {
+class AppRouterDelegate extends RouterDelegate<RouteSettings> with ChangeNotifier, PopNavigatorRouterDelegateMixin<RouteSettings> implements AppRouter {
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
   /// 路由注册器
@@ -163,6 +161,7 @@ class AppRouterDelegate extends RouterDelegate<RouteSettings>
     List<String>? pathSegments,
     dynamic body,
     PageTransitionsBuilder? pageTransitionsBuilder,
+    Duration? transitionDuration,
     bool clearStack = false,
   }) async {
     if (clearStack) {
@@ -173,21 +172,20 @@ class AppRouterDelegate extends RouterDelegate<RouteSettings>
       pathSegments: pathSegments,
       body: body,
     );
-    dynamic navigateResult = await _pushPage<T>(
-      settings,
-      pageTransitionsBuilder: pageTransitionsBuilder,
-    );
+    dynamic navigateResult = await _pushPage<T>(settings, pageTransitionsBuilder: pageTransitionsBuilder, transitionDuration: transitionDuration);
     return SynchronousFuture(navigateResult);
   }
 
   /// 进入下一个页面
   Future<T?> _pushPage<T>(
     AppRouteSettings settings, {
+    Duration? transitionDuration,
     PageTransitionsBuilder? pageTransitionsBuilder,
   }) async {
     Page<dynamic> page = _register.buildPage(
       settings,
       pageTransitionsBuilder: pageTransitionsBuilder,
+      transitionDuration: transitionDuration,
     );
     log('进入页面：page=${page.name}');
     _pages.add(page);
@@ -320,6 +318,7 @@ class AppRouterRegister {
   Page<dynamic> buildPage(
     AppRouteSettings settings, {
     PageTransitionsBuilder? pageTransitionsBuilder,
+    Duration? transitionDuration,
   }) {
     // 注册的url
     String path = settings.originPath;
@@ -329,7 +328,7 @@ class AppRouterRegister {
 
     return CustomPage<dynamic>(
       child: Builder(builder: (BuildContext context) => routePage!.builder(settings)),
-      transitionDuration: const Duration(milliseconds: 500),
+      transitionDuration: transitionDuration ?? const Duration(milliseconds: 300),
       buildCustomRoute: (BuildContext context, CustomPage<dynamic> page) {
         return PageBasedCustomPageRoute(
           page: page,
