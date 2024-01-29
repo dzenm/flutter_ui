@@ -142,7 +142,7 @@ abstract class ApiServices {
     @Path("id") int id, // 文章id，拼接在链接中。
   );
 
-  /// 6.4.2 TODO 取消收藏文章请求（我的收藏页面（该页面包含自己录入的内容）） [ https://www.wanandroid.com/lg/uncollect/2805/json ]
+  /// 6.4.2 取消收藏文章请求（我的收藏页面（该页面包含自己录入的内容）） [ https://www.wanandroid.com/lg/uncollect/2805/json ]
   @POST('lg/uncollect/{id}/json')
   Future<DataEntity> uncollectMyArticle(
     @Path("id") int id, // 文章id，拼接在链接中。
