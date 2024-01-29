@@ -212,11 +212,11 @@ class CommonDialog {
           content == null
               ? const SizedBox(width: 0, height: 36)
               : Flexible(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-              child: content,
-            ),
-          ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                    child: content,
+                  ),
+                ),
           CupertinoDialogButton(
             positiveText: positiveText,
             negativeText: negativeText,

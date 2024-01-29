@@ -204,11 +204,7 @@ class HttpsClient {
         if (data.errorCode == 0 || data.errorCode == 200) {
           if (success != null) success(data.data);
         } else {
-          if (999 > (data.errorCode ?? 0) && (data.errorCode ?? 0) > 300) {
-            error = parse(code: data.errorCode, msg: data.errorMsg);
-          } else {
-            error = parse(error: data.errorMsg);
-          }
+          error = parse(code: data.errorCode, msg: data.errorMsg);
         }
       }).catchError((err) {
         error = parse(error: err);

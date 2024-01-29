@@ -5,6 +5,22 @@ import 'app_route_settings.dart';
 import 'app_router_delegate.dart';
 import 'app_router_old_delegate.dart';
 
+/// 页面构造函数
+typedef PageBuilder = Widget Function(AppRouteSettings settings);
+
+/// 跳转页面的信息
+class AppPageConfig {
+  final String name;
+  final PageBuilder builder;
+  final PageTransitionsBuilder? pageTransitionsBuilder;
+
+  AppPageConfig({
+    required this.name,
+    required this.builder,
+    this.pageTransitionsBuilder,
+  });
+}
+
 ///
 /// Created by a0010 on 2023/12/29 16:23
 ///
@@ -70,19 +86,4 @@ abstract class AppRouter {
   }
 
   void log(String msg);
-}
-
-typedef PageBuilder = Widget Function(AppRouteSettings settings);
-
-/// 跳转页面的信息
-class AppPageConfig {
-  final String name;
-  final PageBuilder builder;
-  final PageTransitionsBuilder? pageTransitionsBuilder;
-
-  AppPageConfig({
-    required this.name,
-    required this.builder,
-    this.pageTransitionsBuilder,
-  });
 }
