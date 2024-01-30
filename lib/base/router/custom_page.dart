@@ -38,36 +38,33 @@ class SlideTransitionsBuilder extends PageTransitionsBuilder {
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
-    var position = CurvedAnimation(
-      parent: animation,
-      curve: Curves.linearToEaseOut,
-      reverseCurve: Curves.easeInToLinear,
-    ).drive(
-      Tween(begin: const Offset(1.0, 0.0), end: Offset.zero),
-    );
-    var secondaryPosition = CurvedAnimation(
-      parent: secondaryAnimation,
-      curve: Curves.linearToEaseOut,
-      reverseCurve: Curves.easeInToLinear,
-    ).drive(
-      Tween(begin: Offset.zero, end: const Offset(-1.0, 0.0)),
-    );
-    var shadowAnimation = CurvedAnimation(
-      parent: animation,
-      curve: Curves.linearToEaseOut,
-    ).drive(
-      _CupertinoEdgeShadowDecoration.kTween,
-    );
     final TextDirection textDirection = Directionality.of(context);
     return SlideTransition(
-      position: secondaryPosition,
+      position: CurvedAnimation(
+        parent: secondaryAnimation,
+        curve: Curves.linearToEaseOut,
+        reverseCurve: Curves.easeInToLinear,
+      ).drive(
+        Tween(begin: Offset.zero, end: const Offset(-1.0, 0.0)),
+      ),
       textDirection: textDirection,
       transformHitTests: false,
       child: SlideTransition(
-        position: position,
+        position: CurvedAnimation(
+          parent: animation,
+          curve: Curves.linearToEaseOut,
+          reverseCurve: Curves.easeInToLinear,
+        ).drive(
+          Tween(begin: const Offset(1.0, 0.0), end: Offset.zero),
+        ),
         textDirection: textDirection,
         child: DecoratedBoxTransition(
-          decoration: shadowAnimation,
+          decoration: CurvedAnimation(
+            parent: animation,
+            curve: Curves.linearToEaseOut,
+          ).drive(
+            _CupertinoEdgeShadowDecoration.kTween,
+          ),
           child: child,
         ),
       ),
