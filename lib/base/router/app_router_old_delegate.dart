@@ -55,45 +55,6 @@ class AppRouterOldDelegate implements AppRouter {
   }
 
   @override
-  Future<T?> pushAndRemoveUntil<T>(
-    String path, {
-    required String predicate,
-    body,
-    List<String>? pathSegments,
-    PageTransitionsBuilder? pageTransitionsBuilder,
-  }) {
-    // 打开指定页面(同时指定到当前页面会被销毁)，例：A->B->C->D，由D页面进入A页面，B、C、D页面被销毁，打开A页面
-    AppRouteSettings settings = AppRouteSettings.parse(
-      path,
-      pathSegments: pathSegments,
-      body: body,
-    );
-    log('进入页面：page=${settings.name}');
-    return Navigator.of(_context).pushNamedAndRemoveUntil<T>(
-      path,
-      (route) => route.settings.name == predicate,
-      arguments: settings,
-    );
-  }
-
-  @override
-  Future<T?> pushReplace<T extends Object?, TO extends Object?>(
-    String path, {
-    body,
-    List<String>? pathSegments,
-    PageTransitionsBuilder? pageTransitionsBuilder,
-  }) {
-    // 打开下一个页面(同时当前页面会被销毁)，例：A->B，由A页面进入B页面，A页面被销毁
-    AppRouteSettings settings = AppRouteSettings.parse(
-      path,
-      pathSegments: pathSegments,
-      body: body,
-    );
-    log('进入页面：page=${settings.name}');
-    return Navigator.of(_context).pushReplacementNamed<T, TO>(path, arguments: settings);
-  }
-
-  @override
   Future<T?> push<T>(
     String path, {
     List<String>? pathSegments,
@@ -110,6 +71,47 @@ class AppRouterOldDelegate implements AppRouter {
     );
     log('进入页面：page=${settings.name}');
     return Navigator.of(_context).pushNamed<T>(path, arguments: settings);
+  }
+
+  @override
+  Future<T?> pushReplace<T extends Object?, TO extends Object?>(
+    String path, {
+    body,
+    List<String>? pathSegments,
+    PageTransitionsBuilder? pageTransitionsBuilder,
+    Duration? transitionDuration,
+  }) {
+    // 打开下一个页面(同时当前页面会被销毁)，例：A->B，由A页面进入B页面，A页面被销毁
+    AppRouteSettings settings = AppRouteSettings.parse(
+      path,
+      pathSegments: pathSegments,
+      body: body,
+    );
+    log('进入页面：page=${settings.name}');
+    return Navigator.of(_context).pushReplacementNamed<T, TO>(path, arguments: settings);
+  }
+
+  @override
+  Future<T?> pushAndRemoveUntil<T>(
+    String path, {
+    required String predicate,
+    body,
+    List<String>? pathSegments,
+    PageTransitionsBuilder? pageTransitionsBuilder,
+    Duration? transitionDuration,
+  }) {
+    // 打开指定页面(同时指定到当前页面会被销毁)，例：A->B->C->D，由D页面进入A页面，B、C、D页面被销毁，打开A页面
+    AppRouteSettings settings = AppRouteSettings.parse(
+      path,
+      pathSegments: pathSegments,
+      body: body,
+    );
+    log('进入页面：page=${settings.name}');
+    return Navigator.of(_context).pushNamedAndRemoveUntil<T>(
+      path,
+      (route) => route.settings.name == predicate,
+      arguments: settings,
+    );
   }
 
   /// 打开一个新的页面
@@ -203,7 +205,7 @@ class AppRouterOldRegister {
     }
     PageBuilder? pagerBuilder = config.builder;
 
-    AppRouteSettings appRouteSettings = AppRouteSettings(originPath: name, arguments: settings.arguments);
+    AppRouteSettings appRouteSettings = AppRouteSettings(path: name, arguments: settings.arguments);
     return CupertinoPageRoute(builder: (context) => pagerBuilder(appRouteSettings));
   }
 
@@ -219,95 +221,4 @@ class AppRouterOldRegister {
     AppPageConfig config = AppPageConfig(name: routePath, builder: pageBuilder!);
     _routers[routePath] = config;
   }
-}
-
-/// 自定义页面跳转动画
-class CustomRoute extends PageRouteBuilder {
-  final Widget child;
-  final PageTransition transition;
-
-  CustomRoute({
-    required this.child,
-    this.transition = PageTransition.fade,
-  }) : super(
-          transitionDuration: const Duration(seconds: 1), // 设置过度时间
-          pageBuilder: (
-            // 上下文和动画
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-          ) {
-            return child;
-          },
-          transitionsBuilder: (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-            Widget child,
-          ) {
-            switch (transition) {
-              case PageTransition.fade:
-                // 渐变效果
-                return FadeTransition(
-                  // 从0开始到1
-                  opacity: Tween(begin: 0.0, end: 1.0).animate(
-                    CurvedAnimation(
-                      parent: animation, // 传入设置的动画
-                      curve: Curves.fastOutSlowIn, // 设置效果，快进漫出   这里有很多内置的效果
-                    ),
-                  ),
-                  child: child,
-                );
-              case PageTransition.scale:
-                // 缩放动画效果
-                return ScaleTransition(
-                  scale: Tween(begin: 0.0, end: 1.0).animate(
-                    CurvedAnimation(
-                      parent: animation,
-                      curve: Curves.fastOutSlowIn,
-                    ),
-                  ),
-                  child: child,
-                );
-              case PageTransition.rotation:
-                // 旋转加缩放动画效果
-                return RotationTransition(
-                  turns: Tween(begin: 0.0, end: 1.0).animate(
-                    CurvedAnimation(
-                      parent: animation,
-                      curve: Curves.fastOutSlowIn,
-                    ),
-                  ),
-                  child: ScaleTransition(
-                    scale: Tween(begin: 0.0, end: 1.0).animate(
-                      CurvedAnimation(
-                        parent: animation,
-                        curve: Curves.fastOutSlowIn,
-                      ),
-                    ),
-                    child: child,
-                  ),
-                );
-              case PageTransition.slide:
-                // 左右滑动动画效果
-                return SlideTransition(
-                  // 设置滑动的 X,Y 轴
-                  position: Tween<Offset>(begin: const Offset(-1.0, 0.0), end: const Offset(0.0, 0.0)).animate(
-                    CurvedAnimation(
-                      parent: animation,
-                      curve: Curves.fastOutSlowIn,
-                    ),
-                  ),
-                  child: child,
-                );
-            }
-          },
-        );
-}
-
-enum PageTransition {
-  fade,
-  slide,
-  rotation,
-  scale,
 }

@@ -75,6 +75,22 @@ class SlideTransitionsBuilder extends PageTransitionsBuilder {
   }
 }
 
+/// if run web, this transition will be default.
+class NoTransitionBuilder extends PageTransitionsBuilder {
+  const NoTransitionBuilder();
+
+  @override
+  Widget buildTransitions<T>(
+      PageRoute<T> route,
+      BuildContext context,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+      Widget child,
+      ) {
+    return child;
+  }
+}
+
 // A custom [Decoration] used to paint an extra shadow on the start edge of the
 // box it's decorating. It's like a [BoxDecoration] with only a gradient except
 // it paints on the start side of the box instead of behind the box.
@@ -341,6 +357,8 @@ class DefaultPageRoute2<T> extends PageRoute<T> {
   }
 }
 
+class PageBasedCustomPageRoute = DefaultPageRoute2 with CustomRouteTransitionMixin;
+
 mixin CustomRouteTransitionMixin<T> on PageRoute<T> {
   @override
   bool canTransitionTo(TransitionRoute<dynamic> nextRoute) {
@@ -348,8 +366,6 @@ mixin CustomRouteTransitionMixin<T> on PageRoute<T> {
     return (nextRoute is CustomRouteTransitionMixin && !nextRoute.fullscreenDialog) || (nextRoute is CupertinoRouteTransitionMixin && !nextRoute.fullscreenDialog);
   }
 }
-
-class PageBasedCustomPageRoute = DefaultPageRoute2 with CustomRouteTransitionMixin;
 
 class CupertinoModalPopupRoute2 = DefaultPageRoute2 with CupertinoModalPopupRouteMixin;
 
@@ -395,21 +411,5 @@ mixin CupertinoModalPopupRouteMixin<T> on PageRoute<T> {
         child: child,
       ),
     );
-  }
-}
-
-/// if run web, this transition will be default.
-class NoTransitionBuilder extends PageTransitionsBuilder {
-  const NoTransitionBuilder();
-
-  @override
-  Widget buildTransitions<T>(
-    PageRoute<T> route,
-    BuildContext context,
-    Animation<double> animation,
-    Animation<double> secondaryAnimation,
-    Widget child,
-  ) {
-    return child;
   }
 }

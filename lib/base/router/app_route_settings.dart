@@ -6,13 +6,13 @@ import 'package:flutter/material.dart';
 ///
 /// 跳转页面时携带的信息
 class AppRouteSettings extends RouteSettings {
-  final String originPath;
-  final Map<String, dynamic>? paths;
-  final Map<String, dynamic>? queries;
-  final Object? body;
+  final String path; // 路径，即传入的路径
+  final Map<String, dynamic>? paths; // 路径参数
+  final Map<String, dynamic>? queries; // 查询参数
+  final Object? body; // 隐式参数
 
   const AppRouteSettings({
-    required this.originPath,
+    required this.path,
     super.name,
     super.arguments,
     this.paths,
@@ -20,11 +20,11 @@ class AppRouteSettings extends RouteSettings {
     this.body,
   });
 
-  List<String> get pathSegments => Uri.parse(originPath).pathSegments;
+  List<String> get pathSegments => Uri.parse(path).pathSegments;
 
   /// 处理 [url] 和 [pathSegments]，转化成 [AppRouteSettings]
   /// [pathSegments] 用于替换 [url] 的占位符，[body] 不会展示在 [name] 里面
-  static AppRouteSettings parse(String url, {List<String>? pathSegments, dynamic body}) {
+  factory AppRouteSettings.parse(String url, {List<String>? pathSegments, dynamic body}) {
     Uri u = Uri.parse(url);
     // 处理路径中的参数
     StringBuffer sb = StringBuffer();
@@ -49,15 +49,15 @@ class AppRouteSettings extends RouteSettings {
     }
 
     // 原始的路径
-    String originPath = u.path;
+    String path = u.path;
     // 最终的路径（在路径中存在参数值的需要作调整）
-    String path = sb.toString();
+    String parsePath = sb.toString();
     //页面跳转携带的参数
     Map<String, String> queryParams = u.queryParameters;
     return AppRouteSettings(
-      originPath: originPath,
-      name: path,
-      arguments: path,
+      path: path,
+      name: parsePath,
+      arguments: parsePath,
       paths: paths,
       queries: queryParams,
       body: body,
@@ -67,7 +67,7 @@ class AppRouteSettings extends RouteSettings {
   /// 将 [json] 转为 [AppRouteSettings]
   factory AppRouteSettings.fromJson(Map<String, dynamic> json) {
     return AppRouteSettings(
-      originPath: json['originPath'],
+      path: json['path'],
       name: json['name'],
       arguments: json['arguments'],
       paths: json['paths'],
@@ -78,7 +78,7 @@ class AppRouteSettings extends RouteSettings {
 
   /// 将 [AppRouteSettings] 转化成 json
   Map<String, dynamic> toJson() => {
-        'originPath': originPath,
+        'path': path,
         'name': name,
         'arguments': arguments,
         'paths': paths,
@@ -89,7 +89,7 @@ class AppRouteSettings extends RouteSettings {
   @override
   String toString() {
     return '${objectRuntimeType(this, 'AppRouteSettings')}'
-        '(originPath="$originPath", '
+        '(path="$path", '
         'name="$name", '
         'arguments=$arguments, '
         'paths=$paths, '

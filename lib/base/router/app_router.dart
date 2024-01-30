@@ -10,14 +10,18 @@ typedef PageBuilder = Widget Function(AppRouteSettings settings);
 
 /// 跳转页面的信息
 class AppPageConfig {
-  final String name;
-  final PageBuilder builder;
-  final PageTransitionsBuilder? pageTransitionsBuilder;
+  final String name; // 路由名称
+  final PageBuilder builder; // 跳转的路由页面构造器
+  final PageTransitionsBuilder? pageTransitionsBuilder; // 跳转页面的转场动画构造器
+  final Duration? transitionDuration; // 跳转页面的转场动画时间
+  final bool clearStack; // 是否清空栈内数据
 
   AppPageConfig({
     required this.name,
     required this.builder,
     this.pageTransitionsBuilder,
+    this.transitionDuration,
+    this.clearStack = false,
   });
 }
 
@@ -64,8 +68,15 @@ abstract class AppRouter {
     dynamic body,
     List<String>? pathSegments,
     PageTransitionsBuilder? pageTransitionsBuilder,
+    Duration? transitionDuration,
   }) async {
-    return await push<T>(path, body: body, pathSegments: pathSegments, pageTransitionsBuilder: pageTransitionsBuilder);
+    return await push<T>(
+      path,
+      body: body,
+      pathSegments: pathSegments,
+      pageTransitionsBuilder: pageTransitionsBuilder,
+      transitionDuration: transitionDuration,
+    );
   }
 
   Future<T?> pushAndRemoveUntil<T>(
@@ -74,8 +85,15 @@ abstract class AppRouter {
     dynamic body,
     List<String>? pathSegments,
     PageTransitionsBuilder? pageTransitionsBuilder,
+    Duration? transitionDuration,
   }) async {
-    return await push<T>(path, body: body, pathSegments: pathSegments, pageTransitionsBuilder: pageTransitionsBuilder);
+    return await push<T>(
+      path,
+      body: body,
+      pathSegments: pathSegments,
+      pageTransitionsBuilder: pageTransitionsBuilder,
+      transitionDuration: transitionDuration,
+    );
   }
 
   Future<T?> pushPage<T>(

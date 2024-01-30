@@ -12,20 +12,21 @@ class AppRouteInfoParser extends RouteInformationParser<RouteSettings> {
 
   const AppRouteInfoParser({this.logPrint}) : super();
 
-  /// 解析路由信息：浏览器中输入url/在代码中初始化路由
+  /// 通过路由路径解析匹配 [RouteInformation] 返回对应的路由配置对象 [RouteSettings]
+  /// 即：浏览器中输入url/在代码中初始化路由
   @override
   Future<RouteSettings> parseRouteInformation(RouteInformation information) async {
     Uri uri = information.uri;
     String path = uri.path;
     final body = information.state;
 
-    log('解析路由信息：uri=${uri.toString()}, state=${information.state}');
+    log('打开的新路由信息：uri=${uri.toString()}, state=${information.state}');
     AppRouteSettings settings;
     if (body != null && body is Map<String, dynamic> && body['originPath'] != null && body['name'] != null) {
       settings = AppRouteSettings.fromJson(body);
     } else {
       settings = AppRouteSettings(
-        originPath: path,
+        path: path,
         name: path,
         body: body,
       );
@@ -34,11 +35,12 @@ class AppRouteInfoParser extends RouteInformationParser<RouteSettings> {
     return SynchronousFuture(settings);
   }
 
-  /// 恢复路由信息：传入的 [configuration] 从 [AppRouterDelegate.currentConfiguration] 获得
+  /// 通过不同的路由枚举 [RouteSettings] 返回不同的路由信息对象 [RouteInformation]
+  /// 即：传入的 [configuration] 从 [AppRouterDelegate.currentConfiguration] 获得
   @override
   RouteInformation? restoreRouteInformation(RouteSettings configuration) {
     if (configuration.name == null) return null;
-    log('恢复路由信息：name=${configuration.name}, settings=${configuration.arguments}');
+    log('恢复的旧路由信息：name=${configuration.name}, settings=${configuration.arguments}');
     return RouteInformation(uri: Uri.parse(configuration.name ?? ''), state: configuration.arguments);
   }
 

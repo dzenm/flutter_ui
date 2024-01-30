@@ -91,7 +91,7 @@ class AppRouterDelegate extends RouterDelegate<RouteSettings> with ChangeNotifie
     log('setNewRoutePath：configuration=$configuration');
     // 打开一个新的页面，由于进入了一个新的页面，同时需要更新ChangeNotifier
     await _pushPage(configuration as AppRouteSettings);
-    return SynchronousFuture(null);
+    return SynchronousFuture<void>(null);
   }
 
   @override
@@ -159,7 +159,7 @@ class AppRouterDelegate extends RouterDelegate<RouteSettings> with ChangeNotifie
   Future<T?> push<T>(
     String path, {
     List<String>? pathSegments,
-    dynamic body,
+    body,
     PageTransitionsBuilder? pageTransitionsBuilder,
     Duration? transitionDuration,
     bool clearStack = false,
@@ -172,7 +172,11 @@ class AppRouterDelegate extends RouterDelegate<RouteSettings> with ChangeNotifie
       pathSegments: pathSegments,
       body: body,
     );
-    dynamic navigateResult = await _pushPage<T>(settings, pageTransitionsBuilder: pageTransitionsBuilder, transitionDuration: transitionDuration);
+    dynamic navigateResult = await _pushPage<T>(
+      settings,
+      pageTransitionsBuilder: pageTransitionsBuilder,
+      transitionDuration: transitionDuration,
+    );
     return SynchronousFuture(navigateResult);
   }
 
@@ -200,6 +204,7 @@ class AppRouterDelegate extends RouterDelegate<RouteSettings> with ChangeNotifie
     dynamic body,
     List<String>? pathSegments,
     PageTransitionsBuilder? pageTransitionsBuilder,
+    Duration? transitionDuration,
   }) async {
     if (_pages.isNotEmpty) {
       _removePage();
@@ -209,6 +214,7 @@ class AppRouterDelegate extends RouterDelegate<RouteSettings> with ChangeNotifie
       body: body,
       pathSegments: pathSegments,
       pageTransitionsBuilder: pageTransitionsBuilder,
+      transitionDuration: transitionDuration,
     );
   }
 
@@ -220,6 +226,7 @@ class AppRouterDelegate extends RouterDelegate<RouteSettings> with ChangeNotifie
     dynamic body,
     List<String>? pathSegments,
     PageTransitionsBuilder? pageTransitionsBuilder,
+    Duration? transitionDuration,
   }) async {
     _removeUntil(predicate);
     return await push<T>(
@@ -227,6 +234,7 @@ class AppRouterDelegate extends RouterDelegate<RouteSettings> with ChangeNotifie
       body: body,
       pathSegments: pathSegments,
       pageTransitionsBuilder: pageTransitionsBuilder,
+      transitionDuration: transitionDuration,
     );
   }
 
@@ -321,14 +329,14 @@ class AppRouterRegister {
     Duration? transitionDuration,
   }) {
     // 注册的url
-    String path = settings.originPath;
+    String path = settings.path;
     // 查找注册的页面
     AppPageConfig? routePage = match(Uri.parse(path));
     routePage ??= match(Uri.parse('/notFound'));
 
     return CustomPage<dynamic>(
       child: Builder(builder: (BuildContext context) => routePage!.builder(settings)),
-      transitionDuration: transitionDuration ?? const Duration(milliseconds: 300),
+      transitionDuration: transitionDuration ?? routePage!.transitionDuration ?? const Duration(milliseconds: 300),
       buildCustomRoute: (BuildContext context, CustomPage<dynamic> page) {
         return PageBasedCustomPageRoute(
           page: page,

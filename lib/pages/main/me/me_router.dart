@@ -72,7 +72,7 @@ class MeRouter {
           builder: (settings) {
             Log.d('接受的数据：name=${settings.name}');
             Log.d('接受的数据：arguments=${settings.arguments}');
-            Log.d('接受的数据：originPath=${settings.originPath}');
+            Log.d('接受的数据：path=${settings.path}');
             Log.d('接受的数据：paths=${settings.paths}');
             Log.d('接受的数据：queries=${settings.queries}');
             return const EditInfoPage();
