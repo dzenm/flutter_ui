@@ -50,7 +50,7 @@ class TapLayout extends StatelessWidget {
     this.boxShadow,
     this.gradient,
     this.isCircle = false,
-    this.isRipple = true,
+    this.isRipple = false,
     this.delay = 100,
     required this.child,
   });
@@ -58,6 +58,7 @@ class TapLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget child = this.child!;
+    if (onTap == null) {}
     if (isRipple) {
       child = _TapLayoutRipple(
         onTap: onTap,
@@ -175,6 +176,30 @@ class _TapLayoutState extends State<_TapLayout> {
         : _isTouchDown
             ? widget.foreground ?? Theme.of(context).highlightColor
             : widget.background;
+    Widget child = Container(
+      padding: widget.padding,
+      alignment: widget.alignment,
+      height: widget.height,
+      width: widget.width,
+      clipBehavior: Clip.hardEdge,
+      decoration: BoxDecoration(
+        color: color,
+        image: widget.image,
+        border: widget.border,
+        borderRadius: widget.borderRadius,
+        boxShadow: widget.boxShadow,
+        gradient: widget.gradient,
+        shape: widget.isCircle ? BoxShape.circle : BoxShape.rectangle,
+      ),
+      child: widget.child,
+    );
+    if (widget.onTap == null) {
+      return child;
+    }
+    return _buildTapView(child);
+  }
+
+  Widget _buildTapView(Widget child) {
     return GestureDetector(
       onTap: () => _onTap(),
       onLongPress: widget.onLongPress,
@@ -183,23 +208,7 @@ class _TapLayoutState extends State<_TapLayout> {
       onTapUp: (d) => setState(() => _isTouchDown = false),
       onTapCancel: () => setState(() => _isTouchDown = false),
       onSecondaryTap: widget.onSecondaryTap,
-      child: Container(
-        padding: widget.padding,
-        alignment: widget.alignment,
-        height: widget.height,
-        width: widget.width,
-        clipBehavior: Clip.hardEdge,
-        decoration: BoxDecoration(
-          color: color,
-          image: widget.image,
-          border: widget.border,
-          borderRadius: widget.borderRadius,
-          boxShadow: widget.boxShadow,
-          gradient: widget.gradient,
-          shape: widget.isCircle ? BoxShape.circle : BoxShape.rectangle,
-        ),
-        child: widget.child,
-      ),
+      child: child,
     );
   }
 
@@ -274,7 +283,7 @@ class _TapLayoutRipple extends StatelessWidget {
     double? w = width, h = height;
     if (isCircle) {
       if (width == null && height == null) {
-        throw Exception('width and height not both null');
+        throw Exception('isCircle set true, width and height not both null');
       }
       if (width == null) {
         w = h = height!;
