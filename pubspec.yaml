@@ -48,7 +48,7 @@ dependencies:
   #  dio_cookie_manager: 2.0.0                     # cookie管理 https://pub.flutter-io.cn/packages/dio_cookie_manager
   #  cookie_jar: 3.0.1                             # cookie持久化 https://pub.flutter-io.cn/packages/cookie_jar
   package_info_plus: 5.0.1                      # 获取版本信息 https://pub.dev/packages/package_info_plus
-  device_info_plus: 9.1.1                       # 获取设备信息 https://pub.flutter-io.cn/packages/device_info_plus
+  device_info_plus: 9.1.2                       # 获取设备信息 https://pub.flutter-io.cn/packages/device_info_plus
   flutter_local_notifications: 16.3.2           # 通知栏通知提醒 https://pub.flutter-io.cn/packages/flutter_local_notifications
   cached_network_image: 3.3.1                   # 图片缓存 https://pub.flutter-io.cn/packages/cached_network_image
   extended_text_field: 13.0.1                   # 输入框扩展 https://pub.flutter-io.cn/packages/extended_text_field
@@ -60,7 +60,7 @@ dependencies:
   image: 4.1.4                                  # 图片压缩 https://pub.flutter-io.cn/packages/image
   desktop_drop: 0.4.4                           # 文件拖动处理 https://pub.flutter-io.cn/packages/desktop_drop
   tray_manager: 0.2.1                           # 系统托盘 https://pub.flutter-io.cn/packages/tray_manager
-  window_manager: 0.3.7                         # 桌面端窗口管理 https://pub.flutter-io.cn/packages/window_manager
+  window_manager: 0.3.8                         # 桌面端窗口管理 https://pub.flutter-io.cn/packages/window_manager
   desktop_multi_window: 0.2.0                   # 桌面端多窗口管理 https://pub.flutter-io.cn/packages/desktop_multi_window
 
   ########################################## UI ##########################################
