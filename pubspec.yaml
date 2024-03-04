@@ -39,12 +39,12 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: 1.0.6                        # 图片 https://pub.flutter-io.cn/packages/cupertino_icons
-  sqlite3: 2.3.0                                # sql https://pub.dev/packages/sqlite3
-  sqflite_common_ffi: 2.3.2                     # sql https://pub.dev/packages/sqflite_common_ffi
+  sqlite3: 2.4.0                                # sql https://pub.dev/packages/sqlite3
+  sqflite_common_ffi: 2.3.2+1                     # sql https://pub.dev/packages/sqflite_common_ffi
   path_provider: 2.1.2                          # 路径选择 https://pub.dev/packages/path_provider
   shared_preferences: 2.2.2                     # 本地化存储 https://pub.dev/packages/shared_preferences
   bot_toast: 4.1.3                              # Toast https://pub.flutter-io.cn/packages/bot_toast
-  retrofit: 4.0.3                               # HTTP请求 https://pub.flutter-io.cn/packages/retrofit
+  retrofit: 4.1.0                               # HTTP请求 https://pub.flutter-io.cn/packages/retrofit
   #  dio_cookie_manager: 2.0.0                     # cookie管理 https://pub.flutter-io.cn/packages/dio_cookie_manager
   #  cookie_jar: 3.0.1                             # cookie持久化 https://pub.flutter-io.cn/packages/cookie_jar
   package_info_plus: 5.0.1                      # 获取版本信息 https://pub.dev/packages/package_info_plus
@@ -52,12 +52,12 @@ dependencies:
   flutter_local_notifications: 16.3.2           # 通知栏通知提醒 https://pub.flutter-io.cn/packages/flutter_local_notifications
   cached_network_image: 3.3.1                   # 图片缓存 https://pub.flutter-io.cn/packages/cached_network_image
   extended_text_field: 13.0.1                   # 输入框扩展 https://pub.flutter-io.cn/packages/extended_text_field
-  back_button_interceptor: 7.0.1                # 返回按钮拦截 https://pub.flutter-io.cn/packages/back_button_interceptor
+  back_button_interceptor: 7.0.2                # 返回按钮拦截 https://pub.flutter-io.cn/packages/back_button_interceptor
   provider: 6.1.1                               # 状态管理 https://pub.dev/packages/provider
   json_annotation: 4.8.1                        # Json序列化 https://pub.dev/packages/json_annotation
   easy_refresh: 3.3.4                           # 列表刷新 https://pub.flutter-io.cn/packages/easy_refresh
-  file_selector: 1.0.2                          # 文件选择 https://pub.flutter-io.cn/packages/file_selector
-  image: 4.1.4                                  # 图片压缩 https://pub.flutter-io.cn/packages/image
+  file_selector: 1.0.3                          # 文件选择 https://pub.flutter-io.cn/packages/file_selector
+  image: 4.1.7                                  # 图片压缩 https://pub.flutter-io.cn/packages/image
   desktop_drop: 0.4.4                           # 文件拖动处理 https://pub.flutter-io.cn/packages/desktop_drop
   tray_manager: 0.2.1                           # 系统托盘 https://pub.flutter-io.cn/packages/tray_manager
   window_manager: 0.3.8                         # 桌面端窗口管理 https://pub.flutter-io.cn/packages/window_manager
@@ -104,11 +104,12 @@ dependencies:
   url_launcher: 6.2.4                          # 网页打开工具 https://pub.flutter-io.cn/packages/url_launcher
   flustars: 2.0.1                               # Flutter 常用工具类库（本地化 屏幕适配） https://pub.flutter-io.cn/packages/flustars
   flutter_html: 3.0.0-beta.2                    # Flutter 加载html https://pub.flutter-io.cn/packages/flutter_html
-  fluent_ui: 4.8.5
+  fluent_ui: 4.8.6
+  r_router: 1.2.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  retrofit_generator: 8.0.6                     # retrofit自动生成工具 https://pub.flutter-io.cn/packages/retrofit_generator
+  retrofit_generator: 8.1.0                     # retrofit自动生成工具 https://pub.flutter-io.cn/packages/retrofit_generator
   build_runner: 2.4.8                           # 自动生成工具 https://pub.flutter-io.cn/packages/build_runner
   # 执行生成文件命令：flutter pub run build_runner build --delete-conflicting-outputs
   json_serializable: 6.7.1                      # json序列化 https://pub.flutter-io.cn/packages/json_serializable

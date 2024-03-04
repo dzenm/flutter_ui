@@ -12,11 +12,8 @@ import 'path_tree.dart';
 /// Created by a0010 on 2023/6/13 16:29
 /// 路由管理，基于[ChangeNotifier]管理数据，页面进出栈，需要主动刷新，否则页面调整不起作用，
 /// 也可以使用已经封装好的方法 [pop]、[maybePop]、[popUntil]、[push]、[pushReplace]、[pushAndRemoveUntil]
-class AppRouterDelegate extends RouterDelegate<RouteSettings> with ChangeNotifier, PopNavigatorRouterDelegateMixin<RouteSettings> implements AppRouter {
+class AppRouterDelegate extends RouterDelegate<RouteSettings> with ChangeNotifier, PopNavigatorRouterDelegateMixin<RouteSettings>, AppRouterRegister implements AppRouter {
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
-
-  /// 路由注册器
-  final AppRouterRegister _register = AppRouterRegister();
 
   /// 页面管理栈
   final List<Page<dynamic>> _pages = [];
@@ -30,7 +27,7 @@ class AppRouterDelegate extends RouterDelegate<RouteSettings> with ChangeNotifie
   }) {
     // 注册路由信息
     for (var route in routers) {
-      _register.addRoute(route);
+      addRoute(route);
     }
     if (initialRoute != null) {
       push(initialRoute);
@@ -85,11 +82,19 @@ class AppRouterDelegate extends RouterDelegate<RouteSettings> with ChangeNotifie
   /// 配合 [AppRouteInfoParser] 使用，与自定义管理路由栈没有关系
   @override
   Future<void> setNewRoutePath(RouteSettings configuration) async {
-    if (configuration.name == '/') {
-      _pages.clear();
+    if (_pages.isNotEmpty) {
+      final lastRouter = _pages.last;
+      if (configuration.name == lastRouter.name) {
+        return SynchronousFuture(null);
+      }
+      if (configuration is CustomPage) {
+        final newParams = configuration.arguments as Map;
+        if (lastRouter.name == null && newParams['isDirectly']) {
+          return SynchronousFuture(null);
+        }
+      }
     }
-    log('setNewRoutePath：configuration=$configuration');
-    // 打开一个新的页面，由于进入了一个新的页面，同时需要更新ChangeNotifier
+    _pages.clear();
     await _pushPage(configuration as AppRouteSettings);
     return SynchronousFuture<void>(null);
   }
@@ -185,8 +190,9 @@ class AppRouterDelegate extends RouterDelegate<RouteSettings> with ChangeNotifie
     AppRouteSettings settings, {
     Duration? transitionDuration,
     PageTransitionsBuilder? pageTransitionsBuilder,
+    bool clearStack = false,
   }) async {
-    Page<dynamic> page = _register.buildPage(
+    Page<dynamic> page = buildPage(
       settings,
       pageTransitionsBuilder: pageTransitionsBuilder,
       transitionDuration: transitionDuration,
@@ -255,9 +261,10 @@ class AppRouterDelegate extends RouterDelegate<RouteSettings> with ChangeNotifie
   }
 
   /// 关闭页面
-  Page _removePage() {
+  Page _removePage({dynamic result}) {
     Page<dynamic> page = _pages.removeLast();
     log('关闭页面：page=${page.name}');
+    (page as CustomPage).completerResult.complete(result);
     return page;
   }
 
@@ -293,32 +300,40 @@ class AppRouterDelegate extends RouterDelegate<RouteSettings> with ChangeNotifie
 }
 
 /// 注册路由信息
-class AppRouterRegister {
+mixin AppRouterRegister {
   final List<AppPageConfig> _routes = [];
-  PathTree<AppPageConfig> _routeTree = PathTree<AppPageConfig>();
+  PathTree<AppPageConfig> _routerTree = PathTree<AppPageConfig>();
+
+  ///Register Routes
+  /// [routes] You want to register routes.
+  void add(Iterable<AppPageConfig> routes) {
+    _routes.addAll(routes);
+  }
 
   /// Register Route
   /// [route] You want to register route.
   void addRoute(AppPageConfig route, {bool isReplaceRouter = true}) {
     if (isReplaceRouter == true) {
       _build();
-      AppPageConfig? handler = _routeTree.match(getPathSegments(route.name), 'GET');
+      Uri uri = Uri.parse(route.path);
+      AppPageConfig? handler = _routerTree.match(uri.pathSegments, 'GET');
       _routes.remove(handler);
     }
     _routes.add(route);
   }
 
   void _build() {
-    _routeTree = PathTree<AppPageConfig>();
+    _routerTree = PathTree<AppPageConfig>();
     for (AppPageConfig route in _routes) {
-      _routeTree.addPathAsSegments(getPathSegments(route.name), route);
+      Uri uri = Uri.parse(route.path);
+      _routerTree.addPathAsSegments(uri.pathSegments, route);
     }
   }
 
   /// match Route handle
   /// [uri] requestUrl
   AppPageConfig? match(Uri uri) {
-    AppPageConfig? handler = _routeTree.match(uri.pathSegments, 'GET');
+    AppPageConfig? handler = _routerTree.match(uri.pathSegments, 'GET');
     return handler;
   }
 
@@ -327,12 +342,24 @@ class AppRouterRegister {
     AppRouteSettings settings, {
     PageTransitionsBuilder? pageTransitionsBuilder,
     Duration? transitionDuration,
+    bool clearStack = false,
   }) {
     // 注册的url
-    String path = settings.path;
+    String path = settings.name ?? '';
     // 查找注册的页面
     AppPageConfig? routePage = match(Uri.parse(path));
     routePage ??= match(Uri.parse('/notFound'));
+
+    final interceptor = routePage?.interceptors;
+    if (interceptor!.isNotEmpty) {
+      dynamic result;
+      for (final interceptor in interceptor) {
+        // result = await interceptor(settings);
+        // if (result == true) {
+        //   // return ;
+        // }
+      }
+    }
 
     return CustomPage<dynamic>(
       child: Builder(builder: (BuildContext context) => routePage!.builder(settings)),
@@ -349,6 +376,4 @@ class AppRouterRegister {
       restorationId: path,
     );
   }
-
-  List<String> getPathSegments(String url) => Uri.parse(url).pathSegments;
 }

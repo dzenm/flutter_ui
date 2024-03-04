@@ -188,8 +188,8 @@ class _DialogPageState extends State<DialogPage> {
             MaterialButton(
               textColor: Colors.white,
               color: theme.appbar,
-              onPressed: () => CommonDialog.showAnimationDialog(
-                context: context,
+              onPressed: () => CommonDialog.showCustomDialog(
+                context,
                 transitionType: TransitionType.left,
                 child: AlertDialog(
                   title: const Text('Dialog Show'),
@@ -216,8 +216,8 @@ class _DialogPageState extends State<DialogPage> {
             MaterialButton(
               textColor: Colors.white,
               color: theme.appbar,
-              onPressed: () => CommonDialog.showAnimationDialog(
-                context: context,
+              onPressed: () => CommonDialog.showCustomDialog(
+                context,
                 transitionType: TransitionType.top,
                 child: AlertDialog(
                   title: const Text('Dialog Show'),
@@ -244,8 +244,8 @@ class _DialogPageState extends State<DialogPage> {
             MaterialButton(
               textColor: Colors.white,
               color: theme.appbar,
-              onPressed: () => CommonDialog.showAnimationDialog(
-                context: context,
+              onPressed: () => CommonDialog.showCustomDialog(
+                context,
                 transitionType: TransitionType.right,
                 child: AlertDialog(
                   title: const Text('Dialog Show'),
@@ -272,8 +272,8 @@ class _DialogPageState extends State<DialogPage> {
             MaterialButton(
               textColor: Colors.white,
               color: theme.appbar,
-              onPressed: () => CommonDialog.showAnimationDialog(
-                context: context,
+              onPressed: () => CommonDialog.showCustomDialog(
+                context,
                 transitionType: TransitionType.bottom,
                 child: AlertDialog(
                   title: const Text('Dialog Show'),
@@ -300,8 +300,8 @@ class _DialogPageState extends State<DialogPage> {
             MaterialButton(
               textColor: Colors.white,
               color: theme.appbar,
-              onPressed: () => CommonDialog.showAnimationDialog(
-                context: context,
+              onPressed: () => CommonDialog.showCustomDialog(
+                context,
                 transitionType: TransitionType.inLeftOutRight,
                 child: AlertDialog(
                   title: const Text('Dialog Show'),
@@ -328,8 +328,8 @@ class _DialogPageState extends State<DialogPage> {
             MaterialButton(
               textColor: Colors.white,
               color: theme.appbar,
-              onPressed: () => CommonDialog.showAnimationDialog(
-                context: context,
+              onPressed: () => CommonDialog.showCustomDialog(
+                context,
                 transitionType: TransitionType.inTopOutBottom,
                 child: AlertDialog(
                   title: const Text('Dialog Show'),
@@ -356,8 +356,8 @@ class _DialogPageState extends State<DialogPage> {
             MaterialButton(
               textColor: Colors.white,
               color: theme.appbar,
-              onPressed: () => CommonDialog.showAnimationDialog(
-                context: context,
+              onPressed: () => CommonDialog.showCustomDialog(
+                context,
                 transitionType: TransitionType.inRightOutLeft,
                 child: AlertDialog(
                   title: const Text('Dialog Show'),
@@ -384,8 +384,8 @@ class _DialogPageState extends State<DialogPage> {
             MaterialButton(
               textColor: Colors.white,
               color: theme.appbar,
-              onPressed: () => CommonDialog.showAnimationDialog(
-                context: context,
+              onPressed: () => CommonDialog.showCustomDialog(
+                context,
                 transitionType: TransitionType.inBottomOutTop,
                 child: AlertDialog(
                   title: const Text('Dialog Show'),
@@ -412,8 +412,8 @@ class _DialogPageState extends State<DialogPage> {
             MaterialButton(
               textColor: Colors.white,
               color: theme.appbar,
-              onPressed: () => CommonDialog.showAnimationDialog(
-                context: context,
+              onPressed: () => CommonDialog.showCustomDialog(
+                context,
                 transitionType: TransitionType.scale,
                 child: AlertDialog(
                   title: const Text('Dialog Show'),
@@ -440,8 +440,8 @@ class _DialogPageState extends State<DialogPage> {
             MaterialButton(
               textColor: Colors.white,
               color: theme.appbar,
-              onPressed: () => CommonDialog.showAnimationDialog(
-                context: context,
+              onPressed: () => CommonDialog.showCustomDialog(
+                context,
                 transitionType: TransitionType.fade,
                 child: AlertDialog(
                   title: const Text('Dialog Show'),
@@ -468,8 +468,8 @@ class _DialogPageState extends State<DialogPage> {
             MaterialButton(
               textColor: Colors.white,
               color: theme.appbar,
-              onPressed: () => CommonDialog.showAnimationDialog(
-                context: context,
+              onPressed: () => CommonDialog.showCustomDialog(
+                context,
                 transitionType: TransitionType.rotation,
                 child: AlertDialog(
                   title: const Text('Dialog Show'),
@@ -496,8 +496,8 @@ class _DialogPageState extends State<DialogPage> {
             MaterialButton(
               textColor: Colors.white,
               color: theme.appbar,
-              onPressed: () => CommonDialog.showAnimationDialog(
-                context: context,
+              onPressed: () => CommonDialog.showCustomDialog(
+                context,
                 transitionType: TransitionType.size,
                 child: AlertDialog(
                   title: const Text('Dialog Show'),

@@ -97,7 +97,7 @@ class _InfoPageState extends State<InfoPage> {
             height: 50,
             background: theme.white,
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            onTap: () => AppRouter.of(context).push(MeRouter.editInfo),
+            onTap: () => AppRouter.of(context).push('${MeRouter.editInfo}?name=dzy', pathSegments: ['212'], body: {'name': 'test'}),
             child: SingleTextView(
               icon: Icons.person,
               title: S.of(context).username,

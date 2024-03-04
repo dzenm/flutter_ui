@@ -49,131 +49,68 @@ class StudyRouter {
   static const String multiWindow = '$study/multiWindow';
 
   static List<AppPageConfig> get routers => [
-        AppPageConfig(
-          name: study,
-          builder: (settings) {
-            return const StudyPage();
-          },
-        ),
-        AppPageConfig(
-          name: chat,
-          builder: (settings) {
-            return const ChatPage();
-          },
-        ),
-        AppPageConfig(
-          name: city,
-          builder: (settings) {
-            return const CitySelectedPage();
-          },
-        ),
-        AppPageConfig(
-          name: convert,
-          builder: (settings) {
-            return const ConvertPage();
-          },
-        ),
-        AppPageConfig(
-          name: dialog,
-          builder: (settings) {
-            return const DialogPage();
-          },
-        ),
-        AppPageConfig(
-          name: dragList,
-          builder: (settings) {
-            return const DragListPage();
-          },
-        ),
-        AppPageConfig(
-          name: floatNavigation,
-          builder: (settings) {
-            return const FloatNavigationPage();
-          },
-        ),
-        AppPageConfig(
-          name: http,
-          builder: (settings) {
-            return const HTTPListPage();
-          },
-        ),
-        AppPageConfig(
-          name: image,
-          builder: (settings) {
-            return const ImageEditorPage();
-          },
-        ),
-        AppPageConfig(
-          name: keyword,
-          builder: (settings) {
-            return const KeywordBoardPage();
-          },
-        ),
-        AppPageConfig(
-          name: list,
-          builder: (settings) {
-            return const ListPage();
-          },
-        ),
-        AppPageConfig(
-          name: loadImage,
-          builder: (settings) {
-            return const LoadImagePage();
-          },
-        ),
-        AppPageConfig(
-          name: popup,
-          builder: (settings) {
-            return const PopupPage();
-          },
-        ),
-        AppPageConfig(
-          name: provider,
-          builder: (settings) {
-            return const ProviderPage();
-          },
-        ),
-        AppPageConfig(
-          name: qr,
-          builder: (settings) {
-            return const QRPage();
-          },
-        ),
-        AppPageConfig(
-          name: router,
-          builder: (settings) {
-            return const RouterPage();
-          },
-        ),
-        AppPageConfig(
-          name: slide,
-          builder: (settings) {
-            return const SlidePage();
-          },
-        ),
-        AppPageConfig(
-          name: state,
-          builder: (settings) {
-            return const StatePage();
-          },
-        ),
-        AppPageConfig(
-          name: text,
-          builder: (settings) {
-            return const TextPage();
-          },
-        ),
-        AppPageConfig(
-          name: video,
-          builder: (settings) {
-            return const VideoPage();
-          },
-        ),
-        AppPageConfig(
-          name: multiWindow,
-          builder: (settings) {
-            return const MainWindowPage();
-          },
-        ),
+        AppPageConfig(study, builder: (settings) {
+          return const StudyPage();
+        }),
+        AppPageConfig(chat, builder: (settings) {
+          return const ChatPage();
+        }),
+        AppPageConfig(city, builder: (settings) {
+          return const CitySelectedPage();
+        }),
+        AppPageConfig(convert, builder: (settings) {
+          return const ConvertPage();
+        }),
+        AppPageConfig(dialog, builder: (settings) {
+          return const DialogPage();
+        }),
+        AppPageConfig(dragList, builder: (settings) {
+          return const DragListPage();
+        }),
+        AppPageConfig(floatNavigation, builder: (settings) {
+          return const FloatNavigationPage();
+        }),
+        AppPageConfig(http, builder: (settings) {
+          return const HTTPListPage();
+        }),
+        AppPageConfig(image, builder: (settings) {
+          return const ImageEditorPage();
+        }),
+        AppPageConfig(keyword, builder: (settings) {
+          return const KeywordBoardPage();
+        }),
+        AppPageConfig(list, builder: (settings) {
+          return const ListPage();
+        }),
+        AppPageConfig(loadImage, builder: (settings) {
+          return const LoadImagePage();
+        }),
+        AppPageConfig(popup, builder: (settings) {
+          return const PopupPage();
+        }),
+        AppPageConfig(provider, builder: (settings) {
+          return const ProviderPage();
+        }),
+        AppPageConfig(qr, builder: (settings) {
+          return const QRPage();
+        }),
+        AppPageConfig(router, builder: (settings) {
+          return const RouterPage();
+        }),
+        AppPageConfig(slide, builder: (settings) {
+          return const SlidePage();
+        }),
+        AppPageConfig(state, builder: (settings) {
+          return const StatePage();
+        }),
+        AppPageConfig(text, builder: (settings) {
+          return const TextPage();
+        }),
+        AppPageConfig(video, builder: (settings) {
+          return const VideoPage();
+        }),
+        AppPageConfig(multiWindow, builder: (settings) {
+          return const MainWindowPage();
+        }),
       ];
 }

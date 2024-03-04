@@ -22,11 +22,11 @@ class AppRouteInfoParser extends RouteInformationParser<RouteSettings> {
 
     log('打开的新路由信息：uri=${uri.toString()}, state=${information.state}');
     AppRouteSettings settings;
-    if (body != null && body is Map<String, dynamic> && body['originPath'] != null && body['name'] != null) {
+    if (body != null && body is Map<String, dynamic> && body['path'] != null && body['name'] != null) {
       settings = AppRouteSettings.fromJson(body);
     } else {
       settings = AppRouteSettings(
-        path: path,
+        path,
         name: path,
         body: body,
       );

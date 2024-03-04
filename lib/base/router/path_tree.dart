@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 /// Splits given path to composing segments
 Iterable<String> pathToSegments(final String path) {
   Iterable<String> segments = path.split(RegExp(r'/+'));
@@ -35,8 +37,18 @@ class SubTree<T> {
 
   bool get hasVarPaths =>
       regexes.isNotEmpty ||
-      varSubTree != null ||
-      globValue.isNotEmpty;
+          varSubTree != null ||
+          globValue.isNotEmpty;
+
+  @override
+  String toString() {
+    return '${objectRuntimeType(this, 'SubTree')}'
+        '(value="$value", '
+        'globValue=$globValue, '
+        'fixed=$fixed, '
+        'varSubTree=$varSubTree, '
+        'regexes=$regexes,)';
+  }
 }
 
 class PathTree<T> {
@@ -109,7 +121,9 @@ class PathTree<T> {
         }
 
         for (MapEntry<RegExp, SubTree<T>> regex in subTree.regexes) {
-          if (regex.key.allMatches(seg).isNotEmpty) {
+          if (regex.key
+              .allMatches(seg)
+              .isNotEmpty) {
             if (next != null) {
               // Multiple regex matches
               T? ret = _matchRegex(subTree, segments.skip(i), tag);
@@ -147,7 +161,9 @@ class PathTree<T> {
 
   T? _matchRegex(SubTree<T> root, Iterable<String> segments, String tag) {
     for (MapEntry<RegExp, SubTree<T>> regex in root.regexes) {
-      if (regex.key.allMatches(segments.first).isNotEmpty) {
+      if (regex.key
+          .allMatches(segments.first)
+          .isNotEmpty) {
         T? ret = _match(regex.value, segments.skip(1), tag);
         if (ret != null) return ret;
       }

@@ -9,29 +9,17 @@ class MallRouter {
   static const String addOrder = '$mall/addOrder';
 
   static List<AppPageConfig> get routers => [
-        AppPageConfig(
-          name: mall,
-          builder: (settings) {
-            return const MallPage();
-          },
-        ),
-        AppPageConfig(
-          name: orders,
-          builder: (settings) {
-            return const OrderPage();
-          },
-        ),
-        AppPageConfig(
-          name: addOrder,
-          builder: (settings) {
-            return const AddOrderPage();
-          },
-        ),
-        AppPageConfig(
-          name: orders,
-          builder: (settings) {
-            return const OrderPage();
-          },
-        ),
+        AppPageConfig(mall, builder: (settings) {
+          return const MallPage();
+        }),
+        AppPageConfig(orders, builder: (settings) {
+          return const OrderPage();
+        }),
+        AppPageConfig(addOrder, builder: (settings) {
+          return const AddOrderPage();
+        }),
+        AppPageConfig(orders, builder: (settings) {
+          return const OrderPage();
+        }),
       ];
 }

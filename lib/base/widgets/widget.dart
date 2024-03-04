@@ -40,6 +40,7 @@ export 'single_text_view.dart';
 export 'slide_verify_view.dart';
 export 'state_view.dart';
 export 'tap_layout.dart';
+export 'top_bar.dart';
 export 'upgrade_dialog.dart';
 export 'verify_code_view.dart';
 export 'view_media.dart';

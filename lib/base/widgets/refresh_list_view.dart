@@ -4,6 +4,13 @@ import 'state_view.dart';
 
 typedef RefreshFunction = Future<void> Function(bool refresh);
 
+class SelectedEntity<T> {
+  T data;
+  bool isSelected = false;
+
+  SelectedEntity({required this.data});
+}
+
 /// 带下拉刷新的[ListView]
 /// RefreshListView(
 ///   controller: _controller,

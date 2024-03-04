@@ -205,20 +205,19 @@ class AppRouterOldRegister {
     }
     PageBuilder? pagerBuilder = config.builder;
 
-    AppRouteSettings appRouteSettings = AppRouteSettings(path: name, arguments: settings.arguments);
+    AppRouteSettings appRouteSettings = AppRouteSettings(name, arguments: settings.arguments);
     return CupertinoPageRoute(builder: (context) => pagerBuilder(appRouteSettings));
   }
 
   /// 初始化路由
   void initRouter({required List<AppPageConfig> routers}) {
     for (var router in routers) {
-      define(router.name, pageBuilder: router.builder);
+      define(router.path, router.copyWith());
     }
   }
 
   /// 注册路由
-  void define(String routePath, {PageBuilder? pageBuilder}) {
-    AppPageConfig config = AppPageConfig(name: routePath, builder: pageBuilder!);
+  void define(String routePath, AppPageConfig config) {
     _routers[routePath] = config;
   }
 }

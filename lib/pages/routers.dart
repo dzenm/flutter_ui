@@ -25,62 +25,38 @@ class Routers {
   static const String viewMedia = '${root}viewMedia';
 
   static List<AppPageConfig> get routers => [
-        AppPageConfig(
-          name: root,
-          builder: (settings) {
-            return const AppPage();
-          },
-        ),
-        AppPageConfig(
-          name: notFound,
-          builder: (settings) {
-            return const NotFoundPage();
-          },
-        ),
-        AppPageConfig(
-          name: login,
-          builder: (settings) {
-            return LoginPage();
-          },
-        ),
-        AppPageConfig(
-          name: register,
-          builder: (settings) {
-            return const RegisterPage();
-          },
-        ),
-        AppPageConfig(
-          name: main,
-          builder: (settings) {
-            return const MainPage();
-          },
-        ),
-        AppPageConfig(
-          name: example,
-          builder: (settings) {
-            return const ExamplePage();
-          },
-        ),
-        AppPageConfig(
-          name: webView,
-          builder: (settings) {
-            dynamic args = settings.queries;
-            String title = args['title'] ?? '';
-            String url = args['url'] ?? '';
-            return WebViewPage(title: title, url: url);
-          },
-        ),
-        AppPageConfig(
-          name: viewMedia,
-          builder: (settings) {
-            dynamic args = settings.queries;
-            String title = args['title'] ?? '';
-            String url = args['url'] ?? '';
-            return const ViewMediaPage(
-              medias: [],
-            );
-          },
-        ),
+        AppPageConfig(root, builder: (settings) {
+          return const AppPage();
+        }),
+        AppPageConfig(notFound, builder: (settings) {
+          return const NotFoundPage();
+        }),
+        AppPageConfig(login, builder: (settings) {
+          return LoginPage();
+        }),
+        AppPageConfig(register, builder: (settings) {
+          return const RegisterPage();
+        }),
+        AppPageConfig(main, builder: (settings) {
+          return const MainPage();
+        }),
+        AppPageConfig(example, builder: (settings) {
+          return const ExamplePage();
+        }),
+        AppPageConfig(webView, builder: (settings) {
+          dynamic args = settings.queryParameters;
+          String title = args['title'] ?? '';
+          String url = args['url'] ?? '';
+          return WebViewPage(title: title, url: url);
+        }),
+        AppPageConfig(viewMedia, builder: (settings) {
+          dynamic args = settings.queryParameters;
+          String title = args['title'] ?? '';
+          String url = args['url'] ?? '';
+          return const ViewMediaPage(
+            medias: [],
+          );
+        }),
         ...MeRouter.routers,
         ...StudyRouter.routers,
         ...MallRouter.routers,
