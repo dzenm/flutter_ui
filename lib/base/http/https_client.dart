@@ -177,7 +177,7 @@ class HttpsClient {
   /// [isShowToast] 是否显示错误的toast提醒
   /// [isCustomResult] 是否自定义处理response body，@see [success]
   /// [loading] 自定义加载弹窗提示，@see [isShowDialog]
-  Future<void> request(
+  Future<DataEntity?> request(
     Future<DataEntity> future, {
     Success? success,
     Failed? failed,
@@ -188,41 +188,42 @@ class HttpsClient {
     void Function()? loading,
   }) async {
     Function? cancel;
+    HttpError? error;
+    DataEntity? result;
     if (isShowDialog) {
       // 优先使用局部的加载提示框
       Function? loadingFunc = loading ?? _loading;
       if (loadingFunc != null) cancel = loadingFunc();
     }
-    HttpError? error;
     try {
-      await future.then((DataEntity data) {
-        if (isCustomResult) {
-          if (success != null) success(data);
-          return;
-        }
+      var data = await future;
+      if (isCustomResult) {
+        if (success != null) success(data);
+        result = data;
+      } else {
         // 根据前后端协议
         if (data.errorCode == 0 || data.errorCode == 200) {
           if (success != null) success(data.data);
+          result = data;
         } else {
           error = parse(code: data.errorCode, msg: data.errorMsg);
         }
-      }).catchError((err) {
-        error = parse(error: err);
-      });
+      }
     } catch (err) {
       error = parse(error: err);
     }
     if (complete != null) complete();
     // 请求结束关闭提示框
-    if (isShowDialog && cancel != null) cancel();
+    if (cancel != null) cancel();
     // 没有异常，不处理，请求结束
-    if (error == null) return;
+    if (error == null) return result;
 
     // 如果有异常通过toast提醒
-    if (isShowToast && _toast != null) _toast!('请求错误：${error!.msg}');
+    if (isShowToast && _toast != null) _toast!('请求错误：${error.msg}');
     // 如果需要自定义处理异常，进行自定义异常处理
-    if (failed != null) failed(error!);
-    log('HTTP请求错误: code=${error!.code}, msg=${error!.msg}, error=${error!.error}');
+    if (failed != null) failed(error);
+    log('HTTP请求错误: code=${error.code}, msg=${error.msg}, error=${error.error}');
+    return null;
   }
 
   /// 下载文件
