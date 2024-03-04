@@ -70,7 +70,7 @@ class FileUtil {
     _log('初始化用户目录：parent=$parent');
     // 初始化常用文件夹
     for (var dir in UserDirectory.values) {
-      String dirName = join(parent, dir.name);
+      String dirName = join(parent, dir.dirName);
       Directory result = Directory(dirName);
       if (!result.existsSync()) {
         result.createSync(recursive: true);
@@ -93,7 +93,7 @@ class FileUtil {
 
   /// 获取缓存文件的子目录 @see [messagesDirectory]
   Directory getUserDirectory(String dir, {UserDirectory userDirectory = UserDirectory.messages, String? user}) {
-    String parent = join(_userDir.path, userDirectory.name);
+    String parent = join(_userDir.path, userDirectory.dirName);
     parent = user == null ? join(parent, dir) : join(parent, user, dir);
     Directory result = Directory(parent);
     if (!result.existsSync()) {
@@ -418,9 +418,9 @@ enum UserDirectory {
   databases('Databases'),
   favourites('Favourites');
 
-  final String name;
+  final String dirName;
 
-  const UserDirectory(this.name);
+  const UserDirectory(this.dirName);
 }
 
 /// 文件类别
@@ -438,22 +438,22 @@ enum FileCategory {
 
 /// 文件类型
 enum MimeType {
-  unknown(0, 'icon_unknown'),
-  image(1, 'icon_pic'),
-  video(2, 'icon_mp4'),
-  audio(3, 'icon_mp3'),
-  pdf(4, 'icon_pdf'),
-  word(5, 'icon_word'),
-  zip(6, 'icon_zip'),
-  excel(7, 'icon_xls'),
-  txt(8, 'icon_txt'),
-  ppt(9, 'icon_ppt'),
-  apk(10, 'icon_apk');
+  unknown(value: 0, icon: 'icon_unknown'),
+  image(value: 1, icon: 'icon_pic'),
+  video(value: 2, icon: 'icon_mp4'),
+  audio(value: 3, icon: 'icon_mp3'),
+  pdf(value: 4, icon: 'icon_pdf'),
+  word(value: 5, icon: 'icon_word'),
+  zip(value: 6, icon: 'icon_zip'),
+  excel(value: 7, icon: 'icon_xls'),
+  txt(value: 8, icon: 'icon_txt'),
+  ppt(value: 9, icon: 'icon_ppt'),
+  apk(value: 10, icon: 'icon_apk');
 
   final int value;
   final String icon;
 
-  const MimeType(this.value, this.icon);
+  const MimeType({required this.value, required this.icon});
 }
 
 /// 根据路径后缀判断文件类型
