@@ -177,7 +177,7 @@ class HttpsClient {
   /// [isShowToast] 是否显示错误的toast提醒
   /// [isCustomResult] 是否自定义处理response body，@see [success]
   /// [loading] 自定义加载弹窗提示，@see [isShowDialog]
-  Future<DataEntity?> request(
+  Future<dynamic> request(
     Future<DataEntity> future, {
     Success? success,
     Failed? failed,
@@ -189,22 +189,20 @@ class HttpsClient {
   }) async {
     Function? cancel;
     HttpError? error;
-    DataEntity? result;
+    dynamic result;
     if (isShowDialog) {
       // 优先使用局部的加载提示框
       Function? loadingFunc = loading ?? _loading;
       if (loadingFunc != null) cancel = loadingFunc();
     }
     try {
-      var data = await future;
+      DataEntity data = await future;
       if (isCustomResult) {
-        if (success != null) success(data);
         result = data;
       } else {
         // 根据前后端协议
         if (data.errorCode == 0 || data.errorCode == 200) {
-          if (success != null) success(data.data);
-          result = data;
+          result = data.data;
         } else {
           error = parse(code: data.errorCode, msg: data.errorMsg);
         }
@@ -212,18 +210,21 @@ class HttpsClient {
     } catch (err) {
       error = parse(error: err);
     }
-    if (complete != null) complete();
     // 请求结束关闭提示框
     if (cancel != null) cancel();
-    // 没有异常，不处理，请求结束
-    if (error == null) return result;
-
-    // 如果有异常通过toast提醒
-    if (isShowToast && _toast != null) _toast!('请求错误：${error.msg}');
-    // 如果需要自定义处理异常，进行自定义异常处理
-    if (failed != null) failed(error);
-    log('HTTP请求错误: code=${error.code}, msg=${error.msg}, error=${error.error}');
-    return null;
+    if (error == null) {
+      // 请求成功
+      if (success != null) success(result);
+    } else {
+      // 请求失败，需要自定义处理异常，处理异常
+      if (failed != null) failed(error);
+      // 如果有异常通过toast提醒
+      if (isShowToast && _toast != null) _toast!('请求错误：${error.msg}');
+      log('HTTP请求错误: code=${error.code}, msg=${error.msg}, error=${error.error}');
+    }
+    // 不管成功与否，都进入完成处理
+    if (complete != null) complete();
+    return result;
   }
 
   /// 下载文件
