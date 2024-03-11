@@ -60,7 +60,7 @@ class ObserverView<C extends ObserverController, M extends ObserveModel, N exten
   final M? Function(BuildContext)? customHandleObserve;
 
   const ObserverView({
-    Key? key,
+    super.key,
     required this.child,
     this.sliverController,
     this.sliverContexts,
@@ -73,8 +73,7 @@ class ObserverView<C extends ObserverController, M extends ObserveModel, N exten
     this.triggerOnObserveType = ObserverTriggerOnObserveType.displayingItemsChange,
     this.customHandleObserve,
     this.customTargetRenderSliverType,
-  })  : assert(toNextOverPercent > 0 && toNextOverPercent <= 1),
-        super(key: key);
+  })  : assert(toNextOverPercent > 0 && toNextOverPercent <= 1);
 
   @override
   State<ObserverView> createState() => ObserverViewState<C, M, N, ObserverView<C, M, N>>();
@@ -150,7 +149,7 @@ class ObserverViewState<C extends ObserverController, M extends ObserveModel, N 
   }
 
   /// Setup sliver controller
-  _setupSliverController({bool isInitState = false}) {
+  void _setupSliverController({bool isInitState = false}) {
     final sliverController = widget.sliverController;
     if (sliverController == null) return;
     sliverController.innerReset();

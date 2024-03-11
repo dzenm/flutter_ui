@@ -51,7 +51,7 @@ class ChatView extends StatelessWidget {
         );
         if (observer.isShrinkWrap) {
           resultWidget = SingleChildScrollView(
-            reverse: true,
+            reverse: reverse,
             physics: myPhysics,
             child: Container(
               alignment: Alignment.topCenter,

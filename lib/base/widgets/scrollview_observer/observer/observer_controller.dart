@@ -49,7 +49,7 @@ class ObserverController {
   Function()? innerReattachCallBack;
 
   /// Reset all data
-  innerReset() {
+  void innerReset() {
     indexOffsetMap = {};
     innerIsHandlingScroll = false;
   }
@@ -64,7 +64,7 @@ class ObserverController {
   }
 
   /// Get the latest target sliver [BuildContext] and reset some of the old data.
-  reattach() {
+  void reattach() {
     if (innerReattachCallBack == null) return;
     ambiguate(WidgetsBinding.instance)?.addPostFrameCallback((timeStamp) {
       innerReattachCallBack!();
@@ -83,15 +83,15 @@ mixin ObserverControllerForNotification<M extends ObserveModel, R extends Observ
   }) {
     Completer<S> completer = Completer();
     innerDispatchOnceObserveCompleter = completer;
-    BuildContext? _sliverContext = fetchSliverContext(
+    BuildContext? mySliverContext = fetchSliverContext(
       sliverContext: sliverContext,
     );
-    notification.dispatch(_sliverContext);
+    notification.dispatch(mySliverContext);
     return completer.future;
   }
 
   /// Complete the observation notification
-  innerHandleDispatchOnceObserveComplete({
+  void innerHandleDispatchOnceObserveComplete({
     required R? resultModel,
   }) {
     final completer = innerDispatchOnceObserveCompleter;
@@ -254,20 +254,14 @@ mixin ObserverControllerForScroll on ObserverControllerForInfo {
   ObserverIndexPositionModel Function()? initialIndexModelBlock;
 
   /// Clear the offset cache that jumping to a specified index location.
-  @Deprecated('It will be removed in version 2, please use [clearScrollIndexCache] instead')
-  clearIndexOffsetCache(BuildContext? sliverContext) {
-    clearScrollIndexCache(sliverContext: sliverContext);
-  }
-
-  /// Clear the offset cache that jumping to a specified index location.
-  clearScrollIndexCache({BuildContext? sliverContext}) {
+  void clearScrollIndexCache({BuildContext? sliverContext}) {
     final ctx = fetchSliverContext(sliverContext: sliverContext);
     if (ctx == null) return;
     indexOffsetMap[ctx]?.clear();
   }
 
   /// Init index position for scrollView.
-  innerInitialIndexPosition() {
+  void innerInitialIndexPosition() {
     final model = initialIndexModelBlock?.call() ?? initialIndexModel;
     if (model.sliverContext == null && model.index <= 0) return;
     innerJumpTo(
@@ -360,7 +354,7 @@ mixin ObserverControllerForScroll on ObserverControllerForInfo {
     return completer.future;
   }
 
-  _scrollToIndex({
+  void _scrollToIndex({
     required Completer completer,
     required int index,
     required bool isFixedHeight,
@@ -520,7 +514,7 @@ mixin ObserverControllerForScroll on ObserverControllerForInfo {
 
   /// Scrolling to the specified index location when the child widgets have a
   /// fixed height.
-  _handleScrollToIndexForFixedHeight({
+  void _handleScrollToIndexForFixedHeight({
     required Completer completer,
     required BuildContext ctx,
     required RenderSliverMultiBoxAdaptor obj,
@@ -602,7 +596,7 @@ mixin ObserverControllerForScroll on ObserverControllerForInfo {
 
   /// Scrolling to the specified index location by gradually scrolling around
   /// the target index location.
-  _handleScrollToIndex({
+  void _handleScrollToIndex({
     required Completer completer,
     required BuildContext ctx,
     required RenderSliverMultiBoxAdaptor obj,
@@ -978,7 +972,7 @@ mixin ObserverControllerForScroll on ObserverControllerForInfo {
   }
 
   /// Update the [indexOffsetMap] property.
-  _updateIndexOffsetMap({
+  void _updateIndexOffsetMap({
     required BuildContext ctx,
     required int index,
     required double childLayoutOffset,
@@ -996,7 +990,7 @@ mixin ObserverControllerForScroll on ObserverControllerForInfo {
   }
 
   /// Called when starting the scrolling task.
-  _handleScrollStart({
+  void _handleScrollStart({
     required BuildContext? context,
   }) {
     innerIsHandlingScroll = true;
@@ -1007,7 +1001,7 @@ mixin ObserverControllerForScroll on ObserverControllerForInfo {
   ///
   /// For example, the conditions are not met, or the item with the specified
   /// index cannot be found, etc.
-  _handleScrollInterruption({
+  void _handleScrollInterruption({
     required BuildContext? context,
     required Completer completer,
   }) {
@@ -1017,14 +1011,14 @@ mixin ObserverControllerForScroll on ObserverControllerForInfo {
   }
 
   /// Called when the item with the specified index has been found.
-  _handleScrollDecision({
+  void _handleScrollDecision({
     required BuildContext? context,
   }) {
     ObserverScrollDecisionNotification().dispatch(context);
   }
 
   /// Called after completing the scrolling task.
-  _handleScrollEnd({
+  void _handleScrollEnd({
     required BuildContext? context,
     required Completer completer,
   }) {

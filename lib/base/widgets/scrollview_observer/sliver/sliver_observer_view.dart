@@ -27,35 +27,23 @@ class SliverViewObserver extends ObserverView<SliverObserverController, ObserveM
   final SliverObserverController? controller;
 
   const SliverViewObserver({
-    Key? key,
-    required Widget child,
+    super.key,
+    required super.child,
     this.controller,
-    @Deprecated('It will be removed in version 2, please use [sliverContexts] instead') List<BuildContext> Function()? sliverListContexts,
-    List<BuildContext> Function()? sliverContexts,
-    Function(Map<BuildContext, ObserveModel>)? onObserveAll,
-    Function(ObserveModel)? onObserve,
+    super.sliverContexts,
+    super.onObserveAll,
+    super.onObserve,
     this.onObserveViewport,
-    double leadingOffset = 0,
-    double Function()? dynamicLeadingOffset,
+    super.leadingOffset,
+    super.dynamicLeadingOffset,
     this.customOverlap,
-    double toNextOverPercent = 1,
-    List<ObserverAutoTriggerObserveType>? autoTriggerObserveTypes,
-    ObserverTriggerOnObserveType triggerOnObserveType = ObserverTriggerOnObserveType.displayingItemsChange,
-    ObserveModel? Function(BuildContext context)? customHandleObserve,
+    super.toNextOverPercent,
+    super.autoTriggerObserveTypes,
+    super.triggerOnObserveType,
+    super.customHandleObserve,
     this.extendedHandleObserve,
   }) : super(
-          key: key,
-          child: child,
           sliverController: controller,
-          sliverContexts: sliverContexts ?? sliverListContexts,
-          onObserveAll: onObserveAll,
-          onObserve: onObserve,
-          leadingOffset: leadingOffset,
-          dynamicLeadingOffset: dynamicLeadingOffset,
-          toNextOverPercent: toNextOverPercent,
-          autoTriggerObserveTypes: autoTriggerObserveTypes,
-          triggerOnObserveType: triggerOnObserveType,
-          customHandleObserve: customHandleObserve,
         );
 
   @override
@@ -100,8 +88,8 @@ class MixViewObserverState extends ObserverViewState<SliverObserverController, O
     if (widget.customHandleObserve != null) {
       return widget.customHandleObserve?.call(ctx);
     }
-    final _obj = ObserverUtils.findRenderObject(ctx);
-    if (_obj is RenderSliverList || _obj is RenderSliverFixedExtentList) {
+    final renderObject = ObserverUtils.findRenderObject(ctx);
+    if (renderObject is RenderSliverList || renderObject is RenderSliverFixedExtentList) {
       return ObserverUtils.handleListObserve(
         context: ctx,
         fetchLeadingOffset: fetchLeadingOffset,
@@ -124,8 +112,8 @@ class MixViewObserverState extends ObserverViewState<SliverObserverController, O
     final isHandlingScroll = widget.sliverController?.innerIsHandlingScroll ?? false;
     if (isHandlingScroll) return null;
 
-    final ctxs = fetchTargetSliverContexts();
-    final objList = ctxs.map((e) => ObserverUtils.findRenderObject(e)).toList();
+    final myContexts = fetchTargetSliverContexts();
+    final objList = myContexts.map((e) => ObserverUtils.findRenderObject(e)).toList();
     if (objList.isEmpty) return null;
     final firstObj = objList.first;
     if (firstObj == null) return null;
@@ -163,7 +151,7 @@ class MixViewObserverState extends ObserverViewState<SliverObserverController, O
     }
 
     if (targetChild == null || !ObserverUtils.isValidListIndex(indexOfTargetChild)) return null;
-    final targetCtx = ctxs[indexOfTargetChild];
+    final targetCtx = myContexts[indexOfTargetChild];
     final firstChild = SliverViewportObserveDisplayingChildModel(
       sliverContext: targetCtx,
       sliver: targetChild,
@@ -185,7 +173,7 @@ class MixViewObserverState extends ObserverViewState<SliverObserverController, O
       indexOfTargetChild = objList.indexOf(targetChild);
       if (ObserverUtils.isValidListIndex(indexOfTargetChild)) {
         // The current targetChild is target.
-        final context = ctxs[indexOfTargetChild];
+        final context = myContexts[indexOfTargetChild];
         displayingChildModelList.add(SliverViewportObserveDisplayingChildModel(
           sliverContext: context,
           sliver: targetChild,

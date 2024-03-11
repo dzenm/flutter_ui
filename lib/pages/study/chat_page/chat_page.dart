@@ -210,6 +210,7 @@ class _ChatPageState extends State<ChatPage> {
       scrollerController: _scrollerController,
       controller: _controller,
       observer: _chatObserver,
+      reverse: true,
       itemBuilder: (context, index) {
         return ChatItemWidget(
           chatModel: chatModels[index],

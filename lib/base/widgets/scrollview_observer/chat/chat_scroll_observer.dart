@@ -57,13 +57,6 @@ class ChatScrollObserver {
   ///
   /// This callback will be called when handling in [ClampingScrollPhysics]'s
   /// [adjustPositionForNewDimensions].
-  @Deprecated('It will be removed in version 2, please use [onHandlePositionCallback] instead')
-  void Function(ChatScrollObserverHandlePositionType)? onHandlePositionCallback;
-
-  /// The result callback for processing chat location.
-  ///
-  /// This callback will be called when handling in [ClampingScrollPhysics]'s
-  /// [adjustPositionForNewDimensions].
   void Function(ChatScrollObserverHandlePositionResultModel)? onHandlePositionResultCallback;
 
   /// The mode of processing.
@@ -90,7 +83,7 @@ class ChatScrollObserver {
   /// index of the reference message (latest message) before insertion, and
   /// assign [refItemRelativeIndexAfterUpdate] to the index of the reference
   /// message after insertion, they refer to the index of the same message.
-  standby({
+  void standby({
     BuildContext? sliverContext,
     bool isRemove = false,
     int changeCount = 1,
@@ -107,14 +100,14 @@ class ChatScrollObserver {
       sliverContext: sliverContext,
     );
     if (firstItemModel == null) return;
-    int _innerRefItemIndex;
-    int _innerRefItemIndexAfterUpdate;
-    double _innerRefItemLayoutOffset;
+    int myInnerRefItemIndex;
+    int myInnerRefItemIndexAfterUpdate;
+    double myInnerRefItemLayoutOffset;
     switch (mode) {
       case ChatScrollObserverHandleMode.normal:
-        _innerRefItemIndex = firstItemModel.index;
-        _innerRefItemIndexAfterUpdate = _innerRefItemIndex + changeCount;
-        _innerRefItemLayoutOffset = firstItemModel.layoutOffset;
+        myInnerRefItemIndex = firstItemModel.index;
+        myInnerRefItemIndexAfterUpdate = myInnerRefItemIndex + changeCount;
+        myInnerRefItemLayoutOffset = firstItemModel.layoutOffset;
         break;
       case ChatScrollObserverHandleMode.generative:
         int index = firstItemModel.index + changeCount;
@@ -123,9 +116,9 @@ class ChatScrollObserver {
           index: index,
         );
         if (model == null) return;
-        _innerRefItemIndex = index;
-        _innerRefItemIndexAfterUpdate = index;
-        _innerRefItemLayoutOffset = model.layoutOffset;
+        myInnerRefItemIndex = index;
+        myInnerRefItemIndexAfterUpdate = index;
+        myInnerRefItemLayoutOffset = model.layoutOffset;
         break;
       case ChatScrollObserverHandleMode.specified:
         int index = firstItemModel.index + refItemRelativeIndex;
@@ -134,16 +127,16 @@ class ChatScrollObserver {
           index: index,
         );
         if (model == null) return;
-        _innerRefItemIndex = index;
-        _innerRefItemIndexAfterUpdate = firstItemModel.index + refItemRelativeIndexAfterUpdate;
-        _innerRefItemLayoutOffset = model.layoutOffset;
+        myInnerRefItemIndex = index;
+        myInnerRefItemIndexAfterUpdate = firstItemModel.index + refItemRelativeIndexAfterUpdate;
+        myInnerRefItemLayoutOffset = model.layoutOffset;
         break;
     }
     // Record value.
     innerIsNeedFixedPosition = true;
-    innerRefItemIndex = _innerRefItemIndex;
-    innerRefItemIndexAfterUpdate = _innerRefItemIndexAfterUpdate;
-    innerRefItemLayoutOffset = _innerRefItemLayoutOffset;
+    innerRefItemIndex = myInnerRefItemIndex;
+    innerRefItemIndexAfterUpdate = myInnerRefItemIndexAfterUpdate;
+    innerRefItemLayoutOffset = myInnerRefItemLayoutOffset;
 
     // When the heights of items are similar, the viewport will not call
     // [performLayout], In this case, the [adjustPositionForNewDimensions] of
@@ -167,7 +160,7 @@ class ChatScrollObserver {
     viewport.markNeedsLayout();
   }
 
-  observeSwitchShrinkWrap() {
+  void observeSwitchShrinkWrap() {
     ambiguate(WidgetsBinding.instance)?.addPostFrameCallback((_) {
       final ctx = observerController.fetchSliverContext();
       if (ctx == null) return;

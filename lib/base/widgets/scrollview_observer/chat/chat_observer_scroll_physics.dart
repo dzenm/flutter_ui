@@ -4,13 +4,6 @@ import '../observer/observer_controller.dart';
 import 'chat_scroll_observer.dart';
 import 'chat_scroll_observer_model.dart';
 
-@Deprecated('It will be removed in version 2, please use [ChatObserverClampingScrollPhysics] instead')
-class ChatObserverClampinScrollPhysics extends ChatObserverClampingScrollPhysics {
-  ChatObserverClampinScrollPhysics({
-    required super.observer,
-  });
-}
-
 class ChatObserverClampingScrollPhysics extends ClampingScrollPhysics with ChatObserverScrollPhysicsMixin {
   ChatObserverClampingScrollPhysics({
     super.parent,
@@ -96,11 +89,9 @@ mixin ChatObserverScrollPhysicsMixin on ScrollPhysics {
   bool shouldAcceptUserOffset(ScrollMetrics position) => true;
 
   /// Calling observer's [onHandlePositionCallback].
-  _handlePositionCallback(ChatScrollObserverHandlePositionResultModel result) {
+  void _handlePositionCallback(ChatScrollObserverHandlePositionResultModel result) {
     ambiguate(WidgetsBinding.instance)?.addPostFrameCallback((timeStamp) {
       observer.onHandlePositionResultCallback?.call(result);
-      // ignore: deprecated_member_use_from_same_package
-      observer.onHandlePositionCallback?.call(result.type);
     });
   }
 }

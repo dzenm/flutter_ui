@@ -50,9 +50,9 @@ class NestedScrollUtil {
     final remainingContextOverlap = remainingSliverRenderObj!.constraints.overlap;
     final sliverContextExtraOverlap = (remainingContextOverlap - offset.dy).clamp(0, double.infinity);
 
-    var _obj = ObserverUtils.findRenderObject(sliverContext);
-    if (_obj is! RenderSliverMultiBoxAdaptor) return null;
-    return sliverContextExtraOverlap + _obj.constraints.overlap;
+    var renderObject = ObserverUtils.findRenderObject(sliverContext);
+    if (renderObject is! RenderSliverMultiBoxAdaptor) return null;
+    return sliverContextExtraOverlap + renderObject.constraints.overlap;
   }
 
   double? calcPrecedingScrollExtent({
@@ -60,9 +60,9 @@ class NestedScrollUtil {
     required BuildContext sliverContext,
   }) {
     double precedingScrollExtent = 0;
-    var _obj = ObserverUtils.findRenderObject(sliverContext);
-    if (_obj is! RenderSliverMultiBoxAdaptor) return null;
-    precedingScrollExtent = _obj.constraints.precedingScrollExtent;
+    var renderObject = ObserverUtils.findRenderObject(sliverContext);
+    if (renderObject is! RenderSliverMultiBoxAdaptor) return null;
+    precedingScrollExtent = renderObject.constraints.precedingScrollExtent;
 
     // Get SliverFillRemaining
     final remainingSliverContext = fetchRemainingSliverContext(
@@ -76,7 +76,7 @@ class NestedScrollUtil {
   }
 
   /// Reset all data.
-  reset() {
+  void reset() {
     headerSliverContexts.clear();
     bodySliverContexts.clear();
     remainingSliverContext = null;
