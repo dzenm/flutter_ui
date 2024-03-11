@@ -115,7 +115,7 @@ class TapLayout extends StatelessWidget {
 }
 
 /// 普通点击布局
-class _TapLayout extends StatefulWidget {
+class _TapLayout extends StatelessWidget {
   final Widget? child;
   final GestureTapCallback? onTap;
   final GestureTapCallback? onDoubleTap;
@@ -135,7 +135,7 @@ class _TapLayout extends StatefulWidget {
   final bool isCircle; //是否为圆形
   final int delay;
 
-  const _TapLayout({
+  _TapLayout({
     required this.child,
     this.onTap,
     this.onDoubleTap,
@@ -156,58 +156,58 @@ class _TapLayout extends StatefulWidget {
     this.delay = 150,
   });
 
-  @override
-  State<StatefulWidget> createState() => _TapLayoutState();
-}
-
-class _TapLayoutState extends State<_TapLayout> {
-  bool _isTouchDown = false;
-  int _tapTime = 0;
+  final ValueNotifier<bool> _isTouchDown = ValueNotifier(false);
+  final ValueNotifier<int> _tapTime = ValueNotifier(0);
 
   @override
   Widget build(BuildContext context) {
-    return _buildView();
+    return _buildView(context);
   }
 
   /// 没有水波纹按钮的布局
-  Widget _buildView() {
-    Color? color = widget.onTap == null
-        ? widget.background
-        : _isTouchDown
-            ? widget.foreground ?? Theme.of(context).highlightColor
-            : widget.background;
-    Widget child = Container(
-      padding: widget.padding,
-      alignment: widget.alignment,
-      height: widget.height,
-      width: widget.width,
-      clipBehavior: Clip.hardEdge,
-      decoration: BoxDecoration(
-        color: color,
-        image: widget.image,
-        border: widget.border,
-        borderRadius: widget.borderRadius,
-        boxShadow: widget.boxShadow,
-        gradient: widget.gradient,
-        shape: widget.isCircle ? BoxShape.circle : BoxShape.rectangle,
-      ),
-      child: widget.child,
+  Widget _buildView(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+      builder: (context, isTouchDown, child) {
+        Color? color = onTap == null
+            ? background
+            : isTouchDown
+            ? foreground ?? Theme.of(context).highlightColor
+            : background;
+        Widget child = Container(
+          padding: padding,
+          alignment: alignment,
+          height: height,
+          width: width,
+          clipBehavior: Clip.hardEdge,
+          decoration: BoxDecoration(
+            color: color,
+            image: image,
+            border: border,
+            borderRadius: borderRadius,
+            boxShadow: boxShadow,
+            gradient: gradient,
+            shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
+          ),
+          child: this.child,
+        );
+        if (onTap == null) {
+          return child;
+        }
+        return _buildTapView(child);
+      },
+      valueListenable: _isTouchDown,
     );
-    if (widget.onTap == null) {
-      return child;
-    }
-    return _buildTapView(child);
   }
 
   Widget _buildTapView(Widget child) {
     return GestureDetector(
       onTap: () => _onTap(),
-      onLongPress: widget.onLongPress,
-      onDoubleTap: widget.onDoubleTap,
-      onTapDown: (d) => setState(() => _isTouchDown = true),
-      onTapUp: (d) => setState(() => _isTouchDown = false),
-      onTapCancel: () => setState(() => _isTouchDown = false),
-      onSecondaryTap: widget.onSecondaryTap,
+      onLongPress: onLongPress,
+      onDoubleTap: onDoubleTap,
+      onTapDown: (d) => _isTouchDown.value = true,
+      onTapUp: (d) => _isTouchDown.value = false,
+      onTapCancel: () => _isTouchDown.value = false,
+      onSecondaryTap: onSecondaryTap,
       child: child,
     );
   }
@@ -216,10 +216,10 @@ class _TapLayoutState extends State<_TapLayout> {
   void _onTap() {
     // 短时间内禁止重复点击
     int currentTime = DateTime.now().millisecondsSinceEpoch;
-    if (currentTime - _tapTime > 500) {
-      if (widget.onTap != null) widget.onTap!();
+    if (currentTime - _tapTime.value > 500) {
+      if (onTap != null) onTap!();
     }
-    _tapTime = currentTime;
+    _tapTime.value = currentTime;
   }
 }
 
@@ -244,6 +244,7 @@ class _TapLayoutRipple extends StatelessWidget {
   final Gradient? gradient;
   final bool isCircle; //是否为圆形
   final int delay;
+  final ValueNotifier<int> _tapTime = ValueNotifier(0);
 
   _TapLayoutRipple({
     required this.child,
@@ -266,8 +267,6 @@ class _TapLayoutRipple extends StatelessWidget {
     this.isCircle = false,
     this.delay = 150,
   });
-
-  int _tapTime = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -350,9 +349,9 @@ class _TapLayoutRipple extends StatelessWidget {
   void _onTap() {
     // 短时间内禁止重复点击
     int currentTime = DateTime.now().millisecondsSinceEpoch;
-    if (currentTime - _tapTime > delay) {
+    if (currentTime - _tapTime.value > delay) {
       if (onTap != null) onTap!();
     }
-    _tapTime = currentTime;
+    _tapTime.value = currentTime;
   }
 }
