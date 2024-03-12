@@ -151,10 +151,10 @@ class _TextPageState extends State<TextPage> {
                     isShowForward: true,
                   ),
                 ),
-                const TapLayout(
+                TapLayout(
                   height: 50.0,
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: SingleTextView(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: const SingleTextView(
                     icon: Icons.date_range_outlined,
                     title: '生日',
                     text: '1997/2/12',
@@ -162,10 +162,10 @@ class _TextPageState extends State<TextPage> {
                     isShowForward: true,
                   ),
                 ),
-                const TapLayout(
+                TapLayout(
                   height: 50.0,
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: SingleTextView(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: const SingleTextView(
                     icon: Icons.adb,
                     title: '关于',
                     textAlign: TextAlign.right,
@@ -203,15 +203,15 @@ class _TextPageState extends State<TextPage> {
                     ),
                   ),
                 ),
-                const TapLayout(
+                TapLayout(
                   height: 50.0,
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: SingleTextView(title: '通知切换', text: '查看通知内容'),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: const SingleTextView(title: '通知切换', text: '查看通知内容'),
                 ),
-                const TapLayout(
+                TapLayout(
                   height: 60.0,
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: SingleTextView(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: const SingleTextView(
                     title: '登陆记录',
                     summary: '查看最近所有的登录记录',
                     badgeCount: 0,

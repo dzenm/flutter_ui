@@ -106,8 +106,8 @@ class _MePageState extends State<MePage> {
         Positioned(
           right: 32,
           child: TapLayout(
-            border: Border.all(width: 3.0, color: const Color(0xfffcfcfc)),
-            width: 64,
+            border: Border.all(width: 8, color: Colors.white),
+            width: 72,
             isCircle: true,
             onTap: () => ViewMediaPage.show(context, medias: images, tag: heroTag),
             child: Hero(

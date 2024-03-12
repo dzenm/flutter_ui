@@ -29,7 +29,7 @@ class TapLayout extends StatelessWidget {
   final int delay;
   final Widget? child;
 
-  const TapLayout({
+  TapLayout({
     super.key,
     this.onTap,
     this.onDoubleTap,
@@ -57,160 +57,93 @@ class TapLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget child = this.child!;
-    if (onTap == null) {}
+    // 处理形状
+    BoxShape shape = BoxShape.rectangle;
+    // 处理宽高
+    double? w = width, h = height, effectiveWidth = width, effectiveHeight = height;
+    if (isCircle) {
+      if (width == null && height == null) {
+        throw Exception('isCircle set true, width and height not both null');
+      }
+      w = h = effectiveWidth = effectiveHeight = width ?? height ?? 0;
+      shape = BoxShape.circle;
+    }
+    // 存在边框，宽高减去边框的宽度
+    if (border != null) {
+      effectiveHeight = effectiveHeight! - 2 * border!.top.width;
+      effectiveWidth = effectiveWidth! - 2 * border!.bottom.width;
+    }
+
+    Widget current = child!;
+    if (alignment != null) {
+      current = Align(alignment: alignment!, child: current);
+    }
+    if (padding != null) {
+      current = Padding(padding: padding!, child: current);
+    }
+
     if (isRipple) {
-      child = _TapLayoutRipple(
-        onTap: onTap,
+      current = _TapLayoutRipple(
+        onTap: onTap == null ? null : _onTap,
         onDoubleTap: onDoubleTap,
         onLongPress: onLongPress,
         onSecondaryTap: onSecondaryTap,
-        width: width,
-        height: height,
-        padding: padding,
-        alignment: alignment,
+        width: effectiveWidth,
+        height: effectiveHeight,
         foreground: foreground,
         background: background,
         highlightColor: highlightColor,
         image: image,
-        border: border,
         borderRadius: borderRadius,
-        boxShadow: boxShadow,
         gradient: gradient,
-        isCircle: isCircle,
-        delay: delay,
-        child: child,
+        shape: shape,
+        child: current,
       );
     } else {
-      child = _TapLayout(
-        onTap: onTap,
+      current = _TapLayout(
+        onTap: onTap == null ? null : _onTap,
         onDoubleTap: onDoubleTap,
         onLongPress: onLongPress,
         onSecondaryTap: onSecondaryTap,
-        width: width,
-        height: height,
-        padding: padding,
-        alignment: alignment,
+        width: effectiveWidth,
+        height: effectiveHeight,
         foreground: foreground,
         background: background,
         image: image,
-        border: border,
         borderRadius: borderRadius,
-        boxShadow: boxShadow,
         gradient: gradient,
-        isCircle: isCircle,
-        delay: delay,
-        child: child,
+        shape: shape,
+        child: current,
       );
     }
 
+    // 限制大小
+    BoxConstraints? constraints = (w != null || h != null)
+        ? this.constraints?.tighten(width: w, height: h) ?? BoxConstraints.tightFor(width: w, height: h) // 自定义的宽高
+        : this.constraints;
     if (constraints != null) {
-      child = ConstrainedBox(constraints: constraints!, child: child);
+      current = ConstrainedBox(constraints: constraints, child: current);
     }
+
+    // 增加边框和阴影
+    if (border != null) {
+      current = DecoratedBox(
+        decoration: BoxDecoration(
+          border: border,
+          boxShadow: boxShadow,
+          shape: shape,
+        ),
+        child: current,
+      );
+    }
+
     if (margin != null) {
-      child = Padding(padding: margin!, child: child);
+      current = Padding(padding: margin!, child: current);
     }
-    return child;
+    return current;
   }
-}
 
-/// 普通点击布局
-class _TapLayout extends StatelessWidget {
-  final Widget? child;
-  final GestureTapCallback? onTap;
-  final GestureTapCallback? onDoubleTap;
-  final GestureLongPressCallback? onLongPress;
-  final GestureTapCallback? onSecondaryTap;
-  final double? width;
-  final double? height;
-  final EdgeInsetsGeometry? padding;
-  final AlignmentGeometry? alignment; // 设置Alignment.center会占用整行大小
-  final Color? foreground;
-  final Color? background;
-  final DecorationImage? image;
-  final BoxBorder? border;
-  final BorderRadius? borderRadius;
-  final List<BoxShadow>? boxShadow;
-  final Gradient? gradient;
-  final bool isCircle; //是否为圆形
-  final int delay;
-
-  _TapLayout({
-    required this.child,
-    this.onTap,
-    this.onDoubleTap,
-    this.onLongPress,
-    this.onSecondaryTap,
-    this.width,
-    this.height,
-    this.padding,
-    this.alignment = Alignment.center,
-    this.foreground,
-    this.background = Colors.transparent,
-    this.image,
-    this.border,
-    this.borderRadius,
-    this.boxShadow,
-    this.gradient,
-    this.isCircle = false,
-    this.delay = 150,
-  });
-
-  final ValueNotifier<bool> _isTouchDown = ValueNotifier(false);
   final ValueNotifier<int> _tapTime = ValueNotifier(0);
-
-  @override
-  Widget build(BuildContext context) {
-    return _buildView(context);
-  }
-
-  /// 没有水波纹按钮的布局
-  Widget _buildView(BuildContext context) {
-    return ValueListenableBuilder<bool>(
-      builder: (context, isTouchDown, child) {
-        Color? color = onTap == null
-            ? background
-            : isTouchDown
-            ? foreground ?? Theme.of(context).highlightColor
-            : background;
-        Widget child = Container(
-          padding: padding,
-          alignment: alignment,
-          height: height,
-          width: width,
-          clipBehavior: Clip.hardEdge,
-          decoration: BoxDecoration(
-            color: color,
-            image: image,
-            border: border,
-            borderRadius: borderRadius,
-            boxShadow: boxShadow,
-            gradient: gradient,
-            shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
-          ),
-          child: this.child,
-        );
-        if (onTap == null) {
-          return child;
-        }
-        return _buildTapView(child);
-      },
-      valueListenable: _isTouchDown,
-    );
-  }
-
-  Widget _buildTapView(Widget child) {
-    return GestureDetector(
-      onTap: () => _onTap(),
-      onLongPress: onLongPress,
-      onDoubleTap: onDoubleTap,
-      onTapDown: (d) => _isTouchDown.value = true,
-      onTapUp: (d) => _isTouchDown.value = false,
-      onTapCancel: () => _isTouchDown.value = false,
-      onSecondaryTap: onSecondaryTap,
-      child: child,
-    );
-  }
 
   /// 点击事件
   void _onTap() {
@@ -223,6 +156,90 @@ class _TapLayout extends StatelessWidget {
   }
 }
 
+/// 普通点击布局
+class _TapLayout extends StatelessWidget {
+  final Widget? child;
+  final GestureTapCallback? onTap;
+  final GestureTapCallback? onDoubleTap;
+  final GestureLongPressCallback? onLongPress;
+  final GestureTapCallback? onSecondaryTap;
+  final double? width;
+  final double? height;
+  final Color? foreground;
+  final Color? background;
+  final DecorationImage? image;
+  final BorderRadius? borderRadius;
+  final Gradient? gradient;
+  final BoxShape shape;
+
+  _TapLayout({
+    required this.child,
+    this.onTap,
+    this.onDoubleTap,
+    this.onLongPress,
+    this.onSecondaryTap,
+    this.width,
+    this.height,
+    this.foreground,
+    this.background = Colors.transparent,
+    this.image,
+    this.borderRadius,
+    this.gradient,
+    required this.shape,
+  });
+
+  final ValueNotifier<bool> _isTouchDown = ValueNotifier(false);
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildView(context);
+  }
+
+  /// 没有水波纹按钮的布局
+  Widget _buildView(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+      builder: (context, isTouchDown, widget) {
+        Color? color = onTap == null
+            ? background
+            : isTouchDown
+                ? foreground ?? Theme.of(context).highlightColor
+                : background;
+
+        Widget current = child!;
+
+        current = Container(
+          height: height,
+          width: width,
+          clipBehavior: Clip.hardEdge,
+          decoration: BoxDecoration(
+            color: color,
+            image: image,
+            borderRadius: borderRadius,
+            gradient: gradient,
+            shape: shape,
+          ),
+          child: current,
+        );
+
+        if (onTap != null || onLongPress != null || onDoubleTap != null || onSecondaryTap != null) {
+          current = GestureDetector(
+            onTap: onTap,
+            onLongPress: onLongPress,
+            onDoubleTap: onDoubleTap,
+            onTapDown: (d) => _isTouchDown.value = true,
+            onTapUp: (d) => _isTouchDown.value = false,
+            onTapCancel: () => _isTouchDown.value = false,
+            onSecondaryTap: onSecondaryTap,
+            child: current,
+          );
+        }
+        return current;
+      },
+      valueListenable: _isTouchDown,
+    );
+  }
+}
+
 /// 水波纹点击布局
 class _TapLayoutRipple extends StatelessWidget {
   final Widget? child;
@@ -232,21 +249,15 @@ class _TapLayoutRipple extends StatelessWidget {
   final GestureTapCallback? onSecondaryTap;
   final double? width;
   final double? height;
-  final EdgeInsetsGeometry? padding;
-  final AlignmentGeometry? alignment; // 设置Alignment.center会占用整行大小
   final Color? foreground;
   final Color? background;
   final Color? highlightColor;
   final DecorationImage? image;
-  final BoxBorder? border;
   final BorderRadius? borderRadius;
-  final List<BoxShadow>? boxShadow;
   final Gradient? gradient;
-  final bool isCircle; //是否为圆形
-  final int delay;
-  final ValueNotifier<int> _tapTime = ValueNotifier(0);
+  final BoxShape shape;
 
-  _TapLayoutRipple({
+  const _TapLayoutRipple({
     required this.child,
     this.onTap,
     this.onDoubleTap,
@@ -254,18 +265,13 @@ class _TapLayoutRipple extends StatelessWidget {
     this.onSecondaryTap,
     this.width,
     this.height,
-    this.padding,
-    this.alignment,
     this.foreground,
     this.background = Colors.transparent,
     this.highlightColor,
     this.image,
-    this.border,
     this.borderRadius,
-    this.boxShadow,
     this.gradient,
-    this.isCircle = false,
-    this.delay = 150,
+    required this.shape,
   });
 
   @override
@@ -275,36 +281,17 @@ class _TapLayoutRipple extends StatelessWidget {
 
   /// 带有水波纹按钮的布局
   Widget _buildRippleView(BuildContext context) {
-    // 处理圆角和形状
-    BorderRadius? borderRadius = this.borderRadius;
-    BoxShape shape = BoxShape.rectangle;
-    // 处理宽高
-    double? w = width, h = height;
-    if (isCircle) {
-      if (width == null && height == null) {
-        throw Exception('isCircle set true, width and height not both null');
-      }
-      if (width == null) {
-        w = h = height!;
-      } else if (height == null) {
-        w = h = width!;
-      }
-      borderRadius = BorderRadius.all(Radius.circular(w ?? 0));
-      shape = BoxShape.circle;
-    }
-    Color highlightColor = Platform.isAndroid || Platform.isIOS ? Colors.transparent : Theme.of(context).highlightColor;
+    Color highlightColor = Platform.isAndroid || Platform.isIOS
+        ? Colors.transparent // 鼠标高亮色
+        : Theme.of(context).highlightColor;
+    BorderRadius? effectiveBorderRadius = shape == BoxShape.circle
+        ? BorderRadius.all(Radius.circular(width!)) // 水波纹的圆角
+        : borderRadius;
 
-    Widget child = this.child!;
-    if (alignment != null) {
-      child = Align(alignment: alignment!, child: child);
-    }
-    if (padding != null) {
-      child = Padding(padding: padding!, child: child);
-    }
-
+    Widget current = child!;
     // 点击事件和前景色
-    child = InkResponse(
-      onTap: () => _onTap(),
+    current = InkResponse(
+      onTap: onTap,
       onLongPress: onLongPress,
       onDoubleTap: onDoubleTap,
       onSecondaryTap: onSecondaryTap,
@@ -314,44 +301,33 @@ class _TapLayoutRipple extends StatelessWidget {
       highlightColor: this.highlightColor ?? highlightColor,
       // 点击时的水波纹扩散颜色
       splashColor: foreground ?? Theme.of(context).splashColor,
+      borderRadius: effectiveBorderRadius,
       containedInkWell: true,
-      child: child,
+      child: current,
     );
 
     // 尺寸和背景色
-    child = Ink(
-      width: w,
-      height: h,
+    current = Ink(
+      width: width,
+      height: height,
       decoration: BoxDecoration(
         color: background,
         image: image,
-        border: border,
-        borderRadius: isCircle ? null : borderRadius,
-        boxShadow: boxShadow,
+        borderRadius: borderRadius,
         gradient: gradient,
         shape: shape,
       ),
-      child: child,
+      child: current,
     );
 
     // 必须在Material包裹下才会生效
-    child = Material(
+    current = Material(
       color: Colors.transparent,
       borderRadius: borderRadius, // 设置圆角，包括水波纹、悬停、正常的圆角
       clipBehavior: Clip.hardEdge,
-      child: child,
+      child: current,
     );
 
-    return child;
-  }
-
-  /// 点击事件
-  void _onTap() {
-    // 短时间内禁止重复点击
-    int currentTime = DateTime.now().millisecondsSinceEpoch;
-    if (currentTime - _tapTime.value > delay) {
-      if (onTap != null) onTap!();
-    }
-    _tapTime.value = currentTime;
+    return current;
   }
 }
