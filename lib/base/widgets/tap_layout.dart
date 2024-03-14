@@ -60,18 +60,13 @@ class TapLayout extends StatelessWidget {
     // 处理形状
     BoxShape shape = BoxShape.rectangle;
     // 处理宽高
-    double? w = width, h = height, effectiveWidth = width, effectiveHeight = height;
+    double? w = width, h = height;
     if (isCircle) {
       if (width == null && height == null) {
         throw Exception('isCircle set true, width and height not both null');
       }
-      w = h = effectiveWidth = effectiveHeight = width ?? height ?? 0;
+      w = h = width ?? height ?? 0;
       shape = BoxShape.circle;
-    }
-    // 存在边框，宽高减去边框的宽度
-    if (border != null) {
-      effectiveHeight = effectiveHeight! - 2 * border!.top.width;
-      effectiveWidth = effectiveWidth! - 2 * border!.bottom.width;
     }
 
     Widget current = child!;
@@ -88,8 +83,8 @@ class TapLayout extends StatelessWidget {
         onDoubleTap: onDoubleTap,
         onLongPress: onLongPress,
         onSecondaryTap: onSecondaryTap,
-        width: effectiveWidth,
-        height: effectiveHeight,
+        width: w,
+        height: h,
         foreground: foreground,
         background: background,
         highlightColor: highlightColor,
@@ -105,8 +100,8 @@ class TapLayout extends StatelessWidget {
         onDoubleTap: onDoubleTap,
         onLongPress: onLongPress,
         onSecondaryTap: onSecondaryTap,
-        width: effectiveWidth,
-        height: effectiveHeight,
+        width: w,
+        height: h,
         foreground: foreground,
         background: background,
         image: image,
@@ -127,14 +122,18 @@ class TapLayout extends StatelessWidget {
 
     // 增加边框和阴影
     if (border != null) {
-      current = DecoratedBox(
-        decoration: BoxDecoration(
-          border: border,
-          boxShadow: boxShadow,
-          shape: shape,
-        ),
-        child: current,
+      BoxDecoration decoration = BoxDecoration(
+        border: border,
+        borderRadius: borderRadius,
+        boxShadow: boxShadow,
+        shape: shape,
       );
+      if (isCircle) {
+        current = DecoratedBox(decoration: decoration, child: current);
+      } else {
+        // 不知道为什么，一定要用Container包裹才有效果
+        current = Container(decoration: decoration, child: current);
+      }
     }
 
     if (margin != null) {
