@@ -3,8 +3,9 @@ import 'study.dart';
 ///
 /// Created by a0010 on 2023/5/8 11:25
 ///
-class SortStudy {
+class CustomListSortStudy {
   static void main() {
+    Study.log('自定义List排序规则：');
     List<People> list = [];
     list.add(People(age: 23, index: 1));
     list.add(People(age: 23, index: 6));

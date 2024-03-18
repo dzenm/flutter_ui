@@ -6,6 +6,7 @@ import 'study.dart';
 ///
 class ConvertStudy {
   static void main() {
+    Study.log('字符串转换：');
     ConvertStudy().string2Num();
   }
 

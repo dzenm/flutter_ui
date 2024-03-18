@@ -5,6 +5,7 @@ import 'study.dart';
 ///
 class MathStudy {
   static void main() {
+    Study.log('算术学习：');
     MathStudy()._mergeSortTest();
   }
 
@@ -40,5 +41,7 @@ class MathStudy {
     for (int k = 0; k < len; k++, hi--) {
       arr[hi] = temp[hi];
     }
+    Study.log(arr, prefix: 'arr=');
   }
+
 }

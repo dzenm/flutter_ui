@@ -4,9 +4,10 @@ import 'study.dart';
 class FutureStudy {
   /// main 方法
   static void main() {
-    FutureStudy instance = FutureStudy();
+    Study.log('Future异步任务：');
+    FutureStudy study = FutureStudy();
     // instance.taskPriority();
-    instance.awaitTaskPriority();
+    study.awaitTaskPriority();
   }
 
   /// 任务的优先级
