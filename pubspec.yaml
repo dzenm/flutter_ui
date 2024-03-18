@@ -66,7 +66,7 @@ dependencies:
   ########################################## UI ##########################################
   webview_flutter: 4.4.4                        # WebView https://pub.dev/packages/webview_flutter
   azlistview: 2.0.0                             # az列表 https://pub.flutter-io.cn/packages/azlistview
-  flutter_slidable: 3.0.1                       # 可滑动的列表展示 https://pub.flutter-io.cn/packages/flutter_slidable
+  flutter_slidable: 3.1.0                       # 可滑动的列表展示 https://pub.flutter-io.cn/packages/flutter_slidable
   #  flutter_echarts: 2.0.0                        # EChart 图表（缩放手势冲突） https://pub.flutter-io.cn/packages/flutter_echarts
   #  badges: 1.2.0                                 # 小红点 https://pub.flutter-io.cn/packages/badges
   #  flutter_swiper: 1.1.6                         # 滑动 https://pub.dev/packages/flutter_swiper
