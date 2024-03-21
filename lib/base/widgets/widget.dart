@@ -18,6 +18,7 @@ export 'desktop_navigation_rail.dart';
 export 'desktop_wrapper.dart';
 export 'drag_layout.dart';
 export 'edit_layout.dart';
+export 'empty_view.dart';
 export 'extend_text/my_special_text.dart';
 export 'extend_text/my_special_text_span_builder.dart';
 export 'float_navigation_bar.dart';
