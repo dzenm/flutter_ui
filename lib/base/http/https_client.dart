@@ -257,7 +257,7 @@ class HttpsClient {
         cancelToken: canCancel ? cancelToken : null,
         onReceiveProgress: (int count, int total) {
           // 未实现/禁止取消/通过token取消下载等情况不能再进行处理
-          if (progress == null || canCancel && (cancelToken?.isCancelled ?? true)) return;
+          if (progress == null || (canCancel && (cancelToken?.isCancelled ?? false))) return;
           if (total == -1) {
             // 无法获取文件大小
             _HttpException ex = _HttpException.fileNotExist;
@@ -331,7 +331,7 @@ class HttpsClient {
         ),
         onSendProgress: (int count, int total) {
           // 未实现/禁止取消/通过token取消下载等情况不能再进行处理
-          if (progress == null || canCancel && (cancelToken?.isCancelled ?? true)) return;
+          if (progress == null || (canCancel && (cancelToken?.isCancelled ?? false))) return;
           if (total == -1) {
             // 无法获取文件大小
             _HttpException ex = _HttpException.fileNotExist;
