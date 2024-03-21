@@ -52,18 +52,19 @@ class CustomPopupSubmenu<T> extends StatelessWidget {
   static Future<T?> showList<T>(
     BuildContext context,
     GlobalKey targetKey,
-    List<String> items,
-    void Function(String item) onTap,
-  ) async {
-    GlobalKey popupKey = GlobalKey();
+    List<String> items, {
+    void Function(String item)? onTap,
+    double width = 100,
+  }) async {
+    // GlobalKey popupKey = GlobalKey();
     RenderBox targetView = targetKey.currentContext!.findRenderObject() as RenderBox;
-    RenderBox popupChildView = popupKey.currentContext!.findRenderObject() as RenderBox;
+    // RenderBox popupChildView = popupKey.currentContext!.findRenderObject() as RenderBox;
     RenderBox popupView = Overlay.of(context).context.findRenderObject() as RenderBox;
     Offset a = targetView.localToGlobal(Offset(targetView.size.width, targetView.size.height), ancestor: popupView);
     Offset b;
 
     double fromTopDis = targetView.localToGlobal(const Offset(0, 0)).dy;
-    double popHeight = popupChildView.size.height;
+    double popHeight = (12 + items.length + items.length * 35).toDouble();
     if (fromTopDis - popHeight > 32) {
       //menu不能覆盖到toolbar上方
       b = targetView.localToGlobal(targetView.size.topLeft(Offset(0, -popHeight)), ancestor: popupView);
@@ -82,8 +83,8 @@ class CustomPopupSubmenu<T> extends StatelessWidget {
       child: GestureDetector(
         onTap: () => Navigator.pop(context),
         child: Container(
-          key: popupKey,
-          width: 100,
+          // key: popupKey,
+          width: width,
           padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -91,6 +92,7 @@ class CustomPopupSubmenu<T> extends StatelessWidget {
             border: Border.all(color: const Color(0xffE6E6E6), width: 1),
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: items
                 .map(
@@ -101,7 +103,7 @@ class CustomPopupSubmenu<T> extends StatelessWidget {
                       foreground: Colors.transparent,
                       onTap: () {
                         Navigator.pop(context);
-                        onTap(item);
+                        if (onTap != null) onTap(item);
                       },
                       child: Text(item, style: const TextStyle(fontSize: 16)),
                     ),
