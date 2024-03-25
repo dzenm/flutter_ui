@@ -206,19 +206,16 @@ class _ViewMediaState extends State<ViewMedia> {
     return Positioned(
       left: 24,
       child: TapLayout(
-        width: 56,
-        height: 56,
+        width: 40,
+        height: 40,
         isCircle: true,
+        background: const Color(0xAA757575),
         onTap: () {
           --_currentIndex;
           _controller.jumpToPage(_currentIndex);
           setState(() {});
         },
-        child: const Icon(
-          Icons.navigate_before_rounded,
-          size: 48,
-          color: Colors.white,
-        ),
+        child: const Icon(Icons.navigate_before, size: 32, color: Colors.white),
       ),
     );
   }
@@ -231,19 +228,16 @@ class _ViewMediaState extends State<ViewMedia> {
     return Positioned(
       right: 24,
       child: TapLayout(
-        width: 56,
-        height: 56,
+        width: 40,
+        height: 40,
         isCircle: true,
+        background: const Color(0xAA757575),
         onTap: () {
           ++_currentIndex;
           _controller.jumpToPage(_currentIndex);
           setState(() {});
         },
-        child: const Icon(
-          Icons.navigate_next_rounded,
-          size: 48,
-          color: Colors.white,
-        ),
+        child: const Icon(Icons.navigate_next, size: 32, color: Colors.white),
       ),
     );
   }
