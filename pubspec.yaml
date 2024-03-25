@@ -58,6 +58,8 @@ dependencies:
   easy_refresh: 3.3.4                           # 列表刷新 https://pub.flutter-io.cn/packages/easy_refresh
   file_selector: 1.0.3                          # 文件选择 https://pub.flutter-io.cn/packages/file_selector
   image: 4.1.7                                  # 图片压缩 https://pub.flutter-io.cn/packages/image
+#  scrollview_observer: 1.19.1                   # 聊天列表 https://pub.flutter-io.cn/packages/scrollview_observer
+
   desktop_drop: 0.4.4                           # 文件拖动处理 https://pub.flutter-io.cn/packages/desktop_drop
   tray_manager: 0.2.1                           # 系统托盘 https://pub.flutter-io.cn/packages/tray_manager
   window_manager: 0.3.8                         # 桌面端窗口管理 https://pub.flutter-io.cn/packages/window_manager
