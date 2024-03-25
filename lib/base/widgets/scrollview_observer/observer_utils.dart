@@ -369,4 +369,17 @@ class ObserverUtils {
       displayingChildModelList: displayingChildModelList,
     );
   }
+
+  /// Safely obtain [RenderSliver.constraints].
+  static SliverConstraints? sliverConstraints(RenderSliver sliver) {
+    SliverConstraints? constraints;
+    try {
+      constraints = sliver.constraints;
+    } catch (e) {
+      debugPrint(
+        'A RenderObject does not have any constraints before it has been laid out.',
+      );
+    }
+    return constraints;
+  }
 }

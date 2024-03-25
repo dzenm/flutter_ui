@@ -34,6 +34,20 @@ class ListViewObserver extends ObserverView<ListObserverController, ListViewObse
 
   @override
   State<ListViewObserver> createState() => ListViewObserverState();
+
+  /// Determine whether the [obj] is a supported RenderSliver type.
+  static bool isSupportRenderSliverType(RenderObject? obj) {
+    if (obj == null) return false;
+    if (obj is RenderSliverList || obj is RenderSliverFixedExtentList) {
+      return true;
+    }
+    final objRuntimeTypeStr = obj.runtimeType.toString();
+    final types = [
+      // New type added in flutter 3.16.0.
+      'RenderSliverVariedExtentList',
+    ];
+    return types.contains(objRuntimeTypeStr);
+  }
 }
 
 class ListViewObserverState extends ObserverViewState<ListObserverController, ListViewObserveModel, ListViewOnceObserveNotification, ListViewObserver> {

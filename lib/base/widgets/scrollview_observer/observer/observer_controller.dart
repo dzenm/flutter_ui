@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+import '../listview/list_observer_view.dart';
 import '../observe_notification.dart';
 import '../observer_utils.dart';
 import '../sliver/sliver_observer_controller.dart';
@@ -222,6 +223,20 @@ mixin ObserverControllerForInfo on ObserverController {
       return 0;
     }
     return offset.maxScrollExtent;
+  }
+
+  /// Getting the extreme scroll extent of viewport.
+  /// The [maxScrollExtent] will be returned when growthDirection is forward.
+  /// The [minScrollExtent] will be returned when growthDirection is reverse.
+  double viewportExtremeScrollExtent({
+    required RenderViewportBase viewport,
+    required RenderSliverMultiBoxAdaptor obj,
+  }) {
+    final offset = viewport.offset;
+    if (offset is! ScrollPosition) {
+      return 0;
+    }
+    return obj.isForwardGrowthDirection ? offset.maxScrollExtent : offset.minScrollExtent;
   }
 }
 
@@ -540,7 +555,7 @@ mixin ObserverControllerForScroll on ObserverControllerForInfo {
       return;
     }
     ObserveScrollToIndexFixedHeightResultModel resultModel;
-    if (obj is RenderSliverList || obj is RenderSliverFixedExtentList || renderSliverType == ObserverRenderSliverType.list) {
+    if (ListViewObserver.isSupportRenderSliverType(obj) || renderSliverType == ObserverRenderSliverType.list) {
       // ListView
       resultModel = _calculateScrollToIndexForFixedHeightResultForList(
         obj: obj,
@@ -1103,4 +1118,24 @@ enum ObserverRenderSliverType {
 
   /// gridView
   grid,
+}
+
+extension ObserverDouble on double {
+  /// Rectify the value according to the current growthDirection of sliver.
+  ///
+  /// If the growthDirection is [GrowthDirection.forward], the value is
+  /// returned directly, otherwise the opposite value is returned.
+  double rectify(
+    RenderSliver obj,
+  ) {
+    return obj.isForwardGrowthDirection ? this : -this;
+  }
+}
+
+extension ObserverRenderSliverMultiBoxAdaptor on RenderSliver {
+  /// Determine whether the current growthDirection of sliver is
+  /// [GrowthDirection.forward].
+  bool get isForwardGrowthDirection {
+    return GrowthDirection.forward == constraints.growthDirection;
+  }
 }
