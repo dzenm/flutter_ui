@@ -16,6 +16,7 @@ export 'custom_popup_window.dart';
 export 'desktop_menu.dart';
 export 'desktop_navigation_rail.dart';
 export 'desktop_wrapper.dart';
+export 'divider_view.dart';
 export 'drag_layout.dart';
 export 'edit_layout.dart';
 export 'empty_view.dart';
