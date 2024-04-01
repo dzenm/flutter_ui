@@ -10,7 +10,7 @@ import 'tap_layout.dart';
 
 typedef ItemClickCallback = void Function(int index);
 
-const kMaxWidthInDialog = 520.0;
+const kMaxWidthInDialog = 640.0;
 const kMaxHeightInDialog = 600.0;
 
 class CommonDialog {
@@ -352,21 +352,24 @@ class DialogWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: isTouchOutsideDismiss ? barrierOnTap ?? () => Navigator.of(context).pop() : null,
+      onTap: isTouchOutsideDismiss ? barrierOnTap ?? () => Navigator.of(context).pop() : null, // 外部触摸事件，关闭弹窗
       behavior: HitTestBehavior.opaque,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         resizeToAvoidBottomInset: false, // 防止软键盘弹出像素溢出
-        body: Center(
-          child: Container(
-            margin: margin,
-            constraints: constraints,
-            decoration: BoxDecoration(
-              borderRadius: borderRadius,
-              color: color,
+        body: GestureDetector(
+          onTap: () {}, // 内部触摸事件，防止触发外部触摸事件（阻断外部触摸事件的执行，所以不做处理）
+          child: Center(
+            child: Container(
+              margin: margin,
+              constraints: constraints,
+              decoration: BoxDecoration(
+                borderRadius: borderRadius,
+                color: color,
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: child,
             ),
-            clipBehavior: Clip.antiAlias,
-            child: child,
           ),
         ),
       ),
