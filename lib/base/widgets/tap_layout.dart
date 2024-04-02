@@ -26,7 +26,8 @@ class TapLayout extends StatelessWidget {
   final Gradient? gradient;
   final bool isCircle; //是否为圆形
   final bool isRipple; // true为点击有波纹效果，false为点击有背景效果
-  final int delay;
+  final Duration onTapDuration; // 点击的间隔时间
+  final Duration delayedDuration; // 点击后延后的执行点击时间
   final Widget? child;
 
   TapLayout({
@@ -51,14 +52,17 @@ class TapLayout extends StatelessWidget {
     this.gradient,
     this.isCircle = false,
     this.isRipple = false,
-    this.delay = 100,
+    Duration? onTapDuration,
+    Duration? delayedDuration,
     required this.child,
-  });
+  })  : onTapDuration = onTapDuration ?? const Duration(milliseconds: 500),
+        delayedDuration = delayedDuration ?? const Duration(milliseconds: 50);
 
   @override
   Widget build(BuildContext context) {
     // 处理形状
     BoxShape shape = BoxShape.rectangle;
+    // 处理宽高
     // 处理宽高
     double? w = width, h = height;
     if (isCircle) {
@@ -142,16 +146,16 @@ class TapLayout extends StatelessWidget {
     return current;
   }
 
-  final ValueNotifier<int> _tapTime = ValueNotifier(0);
+  final ValueNotifier<DateTime> _tapTime = ValueNotifier(DateTime(1971));
 
   /// 点击事件
   void _onTap() {
     // 短时间内禁止重复点击
-    int currentTime = DateTime.now().millisecondsSinceEpoch;
-    if (currentTime - _tapTime.value > 500) {
-      if (onTap != null) onTap!();
+    DateTime now = DateTime.now();
+    if (_tapTime.value.add(onTapDuration).isBefore(now)) {
+      if (onTap != null) Future.delayed(delayedDuration, () => onTap!());
     }
-    _tapTime.value = currentTime;
+    _tapTime.value = now;
   }
 }
 
