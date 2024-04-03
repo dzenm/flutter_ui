@@ -108,6 +108,7 @@ class TapLayout extends StatelessWidget {
         height: h,
         foreground: foreground,
         background: background,
+        hoverColor: highlightColor,
         image: image,
         borderRadius: borderRadius,
         gradient: gradient,
@@ -170,6 +171,7 @@ class _TapLayout extends StatelessWidget {
   final double? height;
   final Color? foreground;
   final Color? background;
+  final Color? hoverColor;
   final DecorationImage? image;
   final BorderRadius? borderRadius;
   final Gradient? gradient;
@@ -185,6 +187,7 @@ class _TapLayout extends StatelessWidget {
     this.height,
     this.foreground,
     this.background = Colors.transparent,
+    this.hoverColor,
     this.image,
     this.borderRadius,
     this.gradient,
@@ -192,6 +195,7 @@ class _TapLayout extends StatelessWidget {
   });
 
   final ValueNotifier<bool> _isTouchDown = ValueNotifier(false);
+  final ValueNotifier<bool> _isMouseEnter = ValueNotifier(false);
 
   @override
   Widget build(BuildContext context) {
@@ -200,45 +204,63 @@ class _TapLayout extends StatelessWidget {
 
   /// 没有水波纹按钮的布局
   Widget _buildView(BuildContext context) {
+    bool isExistTap = onTap != null || onLongPress != null || onDoubleTap != null || onSecondaryTap != null;
     return ValueListenableBuilder<bool>(
-      builder: (context, isTouchDown, widget) {
-        Color? color = onTap == null
-            ? background
-            : isTouchDown
-                ? foreground ?? Theme.of(context).highlightColor
-                : background;
+      valueListenable: _isMouseEnter,
+      builder: (context, isMouseEnter, widget) {
+        return ValueListenableBuilder<bool>(
+          builder: (context, isTouchDown, widget) {
+            Color? color = background;
+            if (isExistTap) {
+              if (isMouseEnter) {
+                // 先处理鼠标进入区域事件
+                color = Platform.isAndroid || Platform.isIOS
+                    ? Colors.transparent // 鼠标高亮色
+                    : hoverColor ?? Theme.of(context).hoverColor; // 鼠标高亮色
+              }
+              if (isTouchDown) {
+                // 再处理触摸点击事件
+                color = foreground ?? Theme.of(context).highlightColor;
+              }
+            }
+            Widget current = child!;
 
-        Widget current = child!;
+            current = Container(
+              height: height,
+              width: width,
+              clipBehavior: Clip.hardEdge,
+              decoration: BoxDecoration(
+                color: color,
+                image: image,
+                borderRadius: borderRadius,
+                gradient: gradient,
+                shape: shape,
+              ),
+              child: current,
+            );
 
-        current = Container(
-          height: height,
-          width: width,
-          clipBehavior: Clip.hardEdge,
-          decoration: BoxDecoration(
-            color: color,
-            image: image,
-            borderRadius: borderRadius,
-            gradient: gradient,
-            shape: shape,
-          ),
-          child: current,
+            if (isExistTap) {
+              current = GestureDetector(
+                onTap: onTap,
+                onLongPress: onLongPress,
+                onDoubleTap: onDoubleTap,
+                onTapDown: (e) => _isTouchDown.value = true,
+                onTapUp: (e) => _isTouchDown.value = false,
+                onTapCancel: () => _isTouchDown.value = false,
+                onSecondaryTap: onSecondaryTap,
+                child: current,
+              );
+              current = MouseRegion(
+                onEnter: (e) => _isMouseEnter.value = true,
+                onExit: (e) => _isMouseEnter.value = false,
+                child: current,
+              );
+            }
+            return current;
+          },
+          valueListenable: _isTouchDown,
         );
-
-        if (onTap != null || onLongPress != null || onDoubleTap != null || onSecondaryTap != null) {
-          current = GestureDetector(
-            onTap: onTap,
-            onLongPress: onLongPress,
-            onDoubleTap: onDoubleTap,
-            onTapDown: (d) => _isTouchDown.value = true,
-            onTapUp: (d) => _isTouchDown.value = false,
-            onTapCancel: () => _isTouchDown.value = false,
-            onSecondaryTap: onSecondaryTap,
-            child: current,
-          );
-        }
-        return current;
       },
-      valueListenable: _isTouchDown,
     );
   }
 }
@@ -288,7 +310,7 @@ class _TapLayoutRipple extends StatelessWidget {
         ? Colors.transparent // 鼠标高亮色
         : Theme.of(context).highlightColor;
     BorderRadius? effectiveBorderRadius = shape == BoxShape.circle
-        ? BorderRadius.all(Radius.circular(width!)) // 水波纹的圆角
+        ? BorderRadius.all(Radius.circular(width ?? height ?? 0)) // 水波纹的圆角
         : borderRadius;
 
     Widget current = child!;
@@ -298,13 +320,12 @@ class _TapLayoutRipple extends StatelessWidget {
       onLongPress: onLongPress,
       onDoubleTap: onDoubleTap,
       onSecondaryTap: onSecondaryTap,
-      // 点击时的水波纹圆角
+      // 不设置不行
       highlightShape: shape,
       // 点击|触摸的时候,高亮显示的颜色
       highlightColor: this.highlightColor ?? highlightColor,
       // 点击时的水波纹扩散颜色
       splashColor: foreground ?? Theme.of(context).splashColor,
-      borderRadius: effectiveBorderRadius,
       containedInkWell: true,
       child: current,
     );
@@ -316,9 +337,7 @@ class _TapLayoutRipple extends StatelessWidget {
       decoration: BoxDecoration(
         color: background,
         image: image,
-        borderRadius: borderRadius,
         gradient: gradient,
-        shape: shape,
       ),
       child: current,
     );
@@ -326,7 +345,7 @@ class _TapLayoutRipple extends StatelessWidget {
     // 必须在Material包裹下才会生效
     current = Material(
       color: Colors.transparent,
-      borderRadius: borderRadius, // 设置圆角，包括水波纹、悬停、正常的圆角
+      borderRadius: effectiveBorderRadius, // 设置圆角，包括水波纹、悬停、正常的圆角
       clipBehavior: Clip.hardEdge,
       child: current,
     );
