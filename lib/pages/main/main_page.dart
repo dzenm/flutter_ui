@@ -3,10 +3,12 @@ import 'package:provider/provider.dart';
 
 import '../../base/base.dart';
 import '../../models/provider_manager.dart';
+import 'home/home_page.dart';
 import 'main_model.dart';
 import 'main_page_desktop.dart';
 import 'main_page_mobile.dart';
-import 'main_page_web.dart';
+import 'me/me_page.dart';
+import 'nav/nav_page.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56
@@ -20,6 +22,12 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   static const String _tag = 'MainPage';
+
+  final List<Widget> _tabs = [
+    const HomePage(),
+    NavPage(),
+    const MePage(),
+  ];
 
   /// 感知生命周期变化
   @override
@@ -121,12 +129,17 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
 
     _useContextBeforeBuild(context);
 
+    List<MainTab> tabs = MainTab.values;
     if (BuildConfig.isMobile) {
-      return const MainPageMobile();
+      return MainPageMobile(tabs: tabs, children: _tabs);
     } else if (BuildConfig.isWeb) {
-      return const MainPageWeb();
+      return MainPageDesktopWrapper(
+        child: MainPageDesktop(tabs: tabs, children: _tabs),
+      );
     } else if (BuildConfig.isDesktop) {
-      return const MainPageDesktop();
+      return MainPageDesktopWrapper(
+        child: MainPageDesktop(tabs: tabs, children: _tabs),
+      );
     }
     return const Center(
       child: Text('未知平台'),

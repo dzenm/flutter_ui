@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/application.dart';
 import 'package:flutter_ui/pages/common/view_media_page.dart';
 import 'package:provider/provider.dart';
 import 'package:tray_manager/tray_manager.dart';
@@ -6,28 +7,119 @@ import 'package:window_manager/window_manager.dart';
 
 import '../../base/base.dart';
 import '../../generated/l10n.dart';
-import 'home/home_page.dart';
 import 'main_model.dart';
-import 'me/me_page.dart';
-import 'nav/nav_page.dart';
 import 'system_tray.dart';
 
 ///
 /// Created by a0010 on 2023/6/29 15:49
 ///
-class MainPageDesktop extends StatefulWidget {
-  const MainPageDesktop({super.key});
+class MainPageDesktop extends StatelessWidget {
+  final List<MainTab> tabs;
+  final List<Widget> children;
+
+  const MainPageDesktop({super.key, required this.tabs, required this.children});
 
   @override
-  State<MainPageDesktop> createState() => _MainPageDesktopState();
+  Widget build(BuildContext context) {
+    MainTab selectedTab = context.watch<MainModel>().selectedTab;
+    return Material(
+      child: DesktopWrapper(
+        child: Container(
+          color: Colors.transparent,
+          child: Row(children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: DesktopNavigationRail(
+                width: 56.0,
+                onSelected: (int index) {
+                  context.read<MainModel>().selectedTab = index;
+                },
+                leading: _buildLeadingView(context),
+                children: tabs.map((tab) {
+                  return NavigationRailItemView(tab: tab);
+                }).toList(),
+              ),
+            ),
+            const VerticalDivider(thickness: 1, width: 1),
+            // 主要的展示内容，Expanded 占满剩下屏幕空间
+            Expanded(
+              child: KeepAliveWrapper(
+                child: children[selectedTab.index],
+              ),
+            )
+          ]),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLeadingView(BuildContext context) {
+    String heroTag = 'heroTag';
+    List<String> urls = [
+      Assets.a,
+    ];
+    List<MediaEntity> images = urls.map((url) => MediaEntity(url: url)).toList();
+    return TapLayout(
+      border: Border.all(width: 3.0, color: const Color(0xfffcfcfc)),
+      borderRadius: const BorderRadius.all(Radius.circular(32)),
+      onTap: () => ViewMediaPage.show(context, medias: images, tag: images),
+      child: Hero(
+        tag: heroTag,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(32),
+          child: Image.asset(Assets.a, fit: BoxFit.cover, width: 32, height: 32),
+        ),
+      ),
+    );
+  }
 }
 
-class _MainPageDesktopState extends State<MainPageDesktop> with WindowListener, TrayListener, SystemTray {
-  static const String _tag = 'MainPage';
+class NavigationRailItemView extends StatelessWidget {
+  final MainTab tab;
+
+  const NavigationRailItemView({super.key, required this.tab});
+
+  @override
+  Widget build(BuildContext context) {
+    MainTab selectedTab = context.watch<MainModel>().selectedTab;
+
+    List<IconData> icons = [
+      Icons.home,
+      Icons.airplay_rounded,
+      Icons.person,
+    ];
+    List<String> titles = [
+      S.of(context).home,
+      S.of(context).nav,
+      S.of(context).me,
+    ];
+    int index = tab.index;
+    AppTheme theme = context.watch<LocalModel>().theme;
+    IconData icon = icons[index]; // 图标
+    String title = titles[index]; // 标题
+    bool isSelected = selectedTab == tab; // 是否是选中的索引
+    Color color = isSelected ? theme.appbar : theme.hint;
+    return Icon(icon, color: color);
+  }
+}
+
+class MainPageDesktopWrapper extends StatefulWidget {
+  final Widget child;
+
+  const MainPageDesktopWrapper({super.key, required this.child});
+
+  @override
+  State<MainPageDesktopWrapper> createState() => _MainPageDesktopWrapperState();
+}
+
+class _MainPageDesktopWrapperState extends State<MainPageDesktopWrapper> with WindowListener, TrayListener, SystemTray {
+  static const String _tag = 'MainPageDesktop';
 
   @override
   void initState() {
     super.initState();
+    _log('initState');
+
     windowManager.addListener(this);
     trayManager.addListener(this);
 
@@ -40,6 +132,7 @@ class _MainPageDesktopState extends State<MainPageDesktop> with WindowListener, 
     windowManager.removeListener(this);
     trayManager.removeListener(this);
     super.dispose();
+    _log('dispose');
   }
 
   @override
@@ -68,81 +161,8 @@ class _MainPageDesktopState extends State<MainPageDesktop> with WindowListener, 
 
   @override
   Widget build(BuildContext context) {
-    int length = context.watch<MainModel>().length;
-    MainTab selectedTab = context.watch<MainModel>().selectedTab;
-    return Material(
-      child: DesktopWrapper(
-        child: Container(
-          color: Colors.transparent,
-          child: Row(children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: DesktopNavigationRail(
-                width: 56.0,
-                onSelected: (int index) {
-                  context.read<MainModel>().selectedTab = index;
-                },
-                leading: _buildLeadingView(context),
-                children: _buildDesktopNavigationRailItem(context, length, selectedTab),
-              ),
-            ),
-            const VerticalDivider(thickness: 1, width: 1),
-            // 主要的展示内容，Expanded 占满剩下屏幕空间
-            Expanded(child: _buildTabPage(length)[selectedTab.index])
-          ]),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLeadingView(BuildContext context) {
-    String heroTag = 'heroTag';
-    List<String> urls = [
-      Assets.a,
-    ];
-    List<MediaEntity> images = urls.map((url) => MediaEntity(url: url)).toList();
-    return TapLayout(
-      border: Border.all(width: 3.0, color: const Color(0xfffcfcfc)),
-      borderRadius: const BorderRadius.all(Radius.circular(32)),
-      onTap: () => ViewMediaPage.show(context, medias: images, tag: images),
-      child: Hero(
-        tag: heroTag,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(32),
-          child: Image.asset(Assets.a, fit: BoxFit.cover, width: 32, height: 32),
-        ),
-      ),
-    );
-  }
-
-  List<Widget> _buildTabPage(int length) {
-    List<Widget> list = [const HomePage(), NavPage(), const MePage()];
-    return List.generate(
-      length,
-      (index) => KeepAliveWrapper(child: index < list.length ? list[index] : Container()),
-    );
-  }
-
-  List<Widget> _buildDesktopNavigationRailItem(BuildContext context, int length, MainTab selectedTab) {
-    return MainTab.values.map((tab) {
-      List<IconData> icons = [
-        Icons.home,
-        Icons.airplay_rounded,
-        Icons.person,
-      ];
-      List<String> titles = [
-        S.of(context).home,
-        S.of(context).nav,
-        S.of(context).me,
-      ];
-      int index = tab.index;
-      AppTheme theme = context.watch<LocalModel>().theme;
-      IconData icon = icons[index]; // 图标
-      String title = titles[index]; // 标题
-      bool isSelected = selectedTab == tab; // 是否是选中的索引
-      Color color = isSelected ? theme.appbar : theme.hint;
-      return Icon(icon, color: color);
-    }).toList();
+    _log('build');
+    return widget.child;
   }
 
   @override
@@ -152,23 +172,24 @@ class _MainPageDesktopState extends State<MainPageDesktop> with WindowListener, 
 
   @override
   void onWindowClose() async {
+    _log('onWindowClose');
     // do something
     bool isPreventClose = await windowManager.isPreventClose();
     if (isPreventClose) {
       showDialog(
-        context: context,
+        context: context ?? Application().context,
         builder: (_) {
           return AlertDialog(
-            title: Text('Are you sure you want to close this window?'),
+            title: const Text('Are you sure you want to close this window?'),
             actions: [
               TextButton(
-                child: Text('No'),
+                child: const Text('No'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
               ),
               TextButton(
-                child: Text('Yes'),
+                child: const Text('Yes'),
                 onPressed: () async {
                   Navigator.of(context).pop();
                   await windowManager.destroy();
@@ -183,6 +204,7 @@ class _MainPageDesktopState extends State<MainPageDesktop> with WindowListener, 
 
   @override
   void onWindowFocus() {
+    _log('onWindowFocus');
     // Make sure to call once.
     setState(() {});
     // do something
@@ -190,46 +212,55 @@ class _MainPageDesktopState extends State<MainPageDesktop> with WindowListener, 
 
   @override
   void onWindowBlur() {
+    _log('onWindowBlur');
     // do something
   }
 
   @override
   void onWindowMaximize() {
+    _log('onWindowMaximize');
     // do something
   }
 
   @override
   void onWindowUnmaximize() {
+    _log('onWindowUnmaximize');
     // do something
   }
 
   @override
   void onWindowMinimize() {
+    _log('onWindowMinimize');
     // do something
   }
 
   @override
   void onWindowRestore() {
+    _log('onWindowRestore');
     // do something
   }
 
   @override
   void onWindowResize() {
+    _log('onWindowResize');
     // do something
   }
 
   @override
   void onWindowMove() {
+    _log('onWindowMove');
     // do something
   }
 
   @override
   void onWindowEnterFullScreen() {
+    _log('onWindowEnterFullScreen');
     // do something
   }
 
   @override
   void onWindowLeaveFullScreen() {
+    _log('onWindowLeaveFullScreen');
     // do something
   }
 

@@ -3,50 +3,43 @@ import 'package:provider/provider.dart';
 
 import '../../base/base.dart';
 import '../../generated/l10n.dart';
-import 'home/home_page.dart';
 import 'main_model.dart';
-import 'me/me_page.dart';
-import 'nav/nav_page.dart';
 
 ///
 /// Created by a0010 on 2023/6/29 15:53
 ///
 class MainPageMobile extends StatelessWidget {
-  const MainPageMobile({super.key});
+  final List<MainTab> tabs;
+  final List<Widget> children;
+
+  const MainPageMobile({super.key, required this.tabs, required this.children});
+
+  static const String _tag = 'MainPageMobile';
 
   @override
   Widget build(BuildContext context) {
-    int length = context.watch<MainModel>().length;
     PageController? controller = context.watch<MainModel>().controller;
     if (controller == null) return Container();
     return Scaffold(
       body: PageView(
         controller: controller,
         physics: const NeverScrollableScrollPhysics(),
-        children: _buildTabPage(length),
+        children: children.map((child) => KeepAliveWrapper(child: child)).toList(),
       ),
       bottomNavigationBar: BottomAppBar(
         height: 56,
         padding: const EdgeInsets.symmetric(vertical: 4),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: _buildBottomNavigationBar(length),
+          children: _buildBottomNavigationBar(),
         ),
       ),
     );
   }
 
-  List<Widget> _buildTabPage(int length) {
-    List<Widget> list = [const HomePage(), NavPage(), const MePage()];
-    return List.generate(
-      length,
-      (index) => KeepAliveWrapper(child: index < list.length ? list[index] : Container()),
-    );
-  }
-
   /// BottomNavigationBar widget
-  List<Widget> _buildBottomNavigationBar(int length) {
-    return MainTab.values.map(
+  List<Widget> _buildBottomNavigationBar() {
+    return tabs.map(
       (tab) {
         return Expanded(flex: 1, child: BottomNavigationBarItemView(tab: tab));
       },
