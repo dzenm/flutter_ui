@@ -211,10 +211,11 @@ class _TapLayout extends StatelessWidget {
         return ValueListenableBuilder<bool>(
           builder: (context, isTouchDown, widget) {
             Color? color = background;
+            Color? hover;
             if (isExistTap) {
               if (isMouseEnter) {
                 // 先处理鼠标进入区域事件
-                color = Platform.isAndroid || Platform.isIOS
+                hover = Platform.isAndroid || Platform.isIOS
                     ? Colors.transparent // 鼠标高亮色
                     : hoverColor ?? Theme.of(context).hoverColor; // 鼠标高亮色
               }
@@ -224,6 +225,13 @@ class _TapLayout extends StatelessWidget {
               }
             }
             Widget current = child!;
+
+            current = Container(
+              height: height,
+              width: width,
+              color: hover,
+              child: current,
+            );
 
             current = Container(
               height: height,
