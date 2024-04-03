@@ -1,26 +1,25 @@
-import 'package:flutter_ui/pages/study/chat_page/chat_page.dart';
-import 'package:flutter_ui/pages/study/window_page/main_window_page.dart';
-
 import '../../base/base.dart';
-import 'city_page/city_page.dart';
-import 'convert_page/convert_page.dart';
-import 'dialog_page/dialog_page.dart';
-import 'drag_list_page/drag_list_page.dart';
-import 'float_navigation_page/float_navigation_page.dart';
-import 'http_page/http_page.dart';
-import 'image_editor/image_editor_page.dart';
-import 'keyword_board/keyword_board_page.dart';
-import 'list_page/list_page.dart';
-import 'load_image_page/load_image_page.dart';
-import 'popup_page/popup_page.dart';
-import 'provider_page/provider_page.dart';
-import 'qr_page/qr_page.dart';
-import 'router_page/router_page.dart';
-import 'slider_page/slide_page.dart';
-import 'state_page/state_page.dart';
+import 'chat/chat_page.dart';
+import 'city/city_page.dart';
+import 'convert/convert_page.dart';
+import 'dialog/dialog_page.dart';
+import 'drag/drag_list_page.dart';
+import 'float_navigation/float_navigation_page.dart';
+import 'http/http_page.dart';
+import 'image/image_editor_page.dart';
+import 'keyword/keyword_board_page.dart';
+import 'list/list_page.dart';
+import 'load_image/load_image_page.dart';
+import 'popup/popup_page.dart';
+import 'provider/provider_page.dart';
+import 'qr/qr_page.dart';
+import 'router/router_page.dart';
+import 'slider/slide_page.dart';
+import 'state/state_page.dart';
 import 'study_page.dart';
-import 'text_page/text_page.dart';
-import 'video_page/video_page.dart';
+import 'text/text_page.dart';
+import 'video/video_page.dart';
+import 'window/main_window_page.dart';
 
 ///
 /// Created by a0010 on 2023/5/11 16:05

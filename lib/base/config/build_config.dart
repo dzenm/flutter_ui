@@ -10,7 +10,7 @@ class BuildConfig {
   static bool isDebug = kDebugMode;
 
   /// 是否进入测试APP
-  static bool isTestApp = true;
+  static bool isTestApp = false;
 
   /// 是否打印数据库日志
   static bool showDBLog = true;

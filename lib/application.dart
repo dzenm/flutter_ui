@@ -11,7 +11,7 @@ import 'base/base.dart';
 import 'config/configs.dart';
 import 'entities/entity.dart';
 import 'http/cookie_interceptor.dart';
-import 'pages/study/window_page/sub_window_page.dart';
+import 'pages/study/window/sub_window_page.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56
