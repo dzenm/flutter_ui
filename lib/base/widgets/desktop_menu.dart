@@ -3,21 +3,18 @@ import 'package:flutter/material.dart';
 ///
 /// Created by a0010 on 2023/9/27 14:49
 ///
-class DesktopMenu extends StatefulWidget {
+class DesktopMenu extends StatelessWidget {
   final Widget child;
   final Widget secondaryChild;
+  final double width;
 
   const DesktopMenu({
     super.key,
     required this.child,
     required this.secondaryChild,
+    this.width = 240,
   });
 
-  @override
-  State<DesktopMenu> createState() => _DesktopMenuState();
-}
-
-class _DesktopMenuState extends State<DesktopMenu> {
   @override
   Widget build(BuildContext context) {
     return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -29,14 +26,14 @@ class _DesktopMenuState extends State<DesktopMenu> {
 
   Widget _buildPrimaryMenu() {
     return SizedBox(
-      width: 240,
-      child: widget.child,
+      width: width,
+      child: child,
     );
   }
 
   Widget _buildSecondaryMenu() {
     return Container(
-      child: widget.secondaryChild,
+      child: secondaryChild,
     );
   }
 }

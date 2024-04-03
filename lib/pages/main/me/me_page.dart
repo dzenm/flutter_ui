@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/pages/main/me/me_content_page.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base/base.dart';
@@ -11,19 +12,71 @@ import '../../../models/user_model.dart';
 import '../../common/view_media_page.dart';
 import '../../mall/mall_router.dart';
 import '../../study/study_router.dart';
+import 'me_model.dart';
 import 'me_router.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56
 /// 我的页面
-class MePage extends StatefulWidget {
+class MePage extends StatelessWidget {
   const MePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    if (BuildConfig.isMobile) {
+      return MePageMobile(child: _MePage(
+        push: <String>(path) {
+          return AppRouter.of(context).push(path);
+        },
+      ));
+    } else if (BuildConfig.isDesktop) {
+      return MePageDesktop(child: _MePage(
+        push: <String>(path) {
+          context.read<MeModel>().selectedTab = path;
+          return null;
+        },
+      ));
+    }
+    return const Placeholder();
+  }
+}
+
+class MePageMobile extends StatelessWidget {
+  final Widget child;
+
+  const MePageMobile({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return child;
+  }
+}
+
+class MePageDesktop extends StatelessWidget {
+  final Widget child;
+
+  const MePageDesktop({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return DesktopMenu(
+      width: 320,
+      secondaryChild: const MeContentPage(),
+      child: child,
+    );
+  }
+}
+
+class _MePage extends StatefulWidget {
+  final Future<T?>? Function<T>(String path) push;
+
+  const _MePage({super.key, required this.push});
 
   @override
   State<StatefulWidget> createState() => _MePageState();
 }
 
-class _MePageState extends State<MePage> {
+class _MePageState extends State<_MePage> {
   static const String _tag = 'MePage';
 
   @override
@@ -41,7 +94,7 @@ class _MePageState extends State<MePage> {
   }
 
   @override
-  void didUpdateWidget(covariant MePage oldWidget) {
+  void didUpdateWidget(covariant _MePage oldWidget) {
     super.didUpdateWidget(oldWidget);
     log('didUpdateWidget');
   }
@@ -130,7 +183,7 @@ class _MePageState extends State<MePage> {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         onTap: () {
           String params = '?medicineName=金银花';
-          AppRouter.of(context).push(MeRouter.medicine + params);
+          push(MeRouter.medicine + params);
         },
         child: SingleTextView(
           title: S.of(context).chineseMedicine,
@@ -141,7 +194,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => AppRouter.of(context).push(MeRouter.collect),
+        onTap: () => push(MeRouter.collect),
         child: SingleTextView(
           icon: Icons.collections,
           title: S.of(context).collect,
@@ -151,7 +204,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => AppRouter.of(context).push(MeRouter.coin),
+        onTap: () => push(MeRouter.coin),
         child: SingleTextView(
           icon: Icons.money,
           title: S.of(context).coinRecord,
@@ -161,7 +214,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => AppRouter.of(context).push(MeRouter.rank),
+        onTap: () => push(MeRouter.rank),
         child: SingleTextView(
           icon: Icons.money,
           title: S.of(context).integralRankingList,
@@ -171,7 +224,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => AppRouter.of(context).push(MeRouter.article),
+        onTap: () => push(MeRouter.article),
         child: SingleTextView(
           icon: Icons.article,
           title: S.of(context).sharedArticle,
@@ -181,7 +234,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => AppRouter.of(context).push(StudyRouter.study).then((value) => log(value ?? 'null')),
+        onTap: () => push(StudyRouter.study)?.then((value) => log(value ?? 'null')),
         child: SingleTextView(
           icon: Icons.real_estate_agent_sharp,
           title: S.of(context).studyMainPage(''),
@@ -191,7 +244,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => AppRouter.of(context).push(MeRouter.info),
+        onTap: () => push(MeRouter.info),
         child: SingleTextView(
           icon: Icons.supervised_user_circle_sharp,
           title: S.of(context).profile,
@@ -201,7 +254,7 @@ class _MePageState extends State<MePage> {
       TapLayout(
         height: 50.0,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => AppRouter.of(context).push(MallRouter.mall),
+        onTap: () => push(MallRouter.mall),
         child: SingleTextView(
           icon: Icons.local_mall_rounded,
           title: S.of(context).mall,
@@ -212,7 +265,7 @@ class _MePageState extends State<MePage> {
         height: 50.0,
         borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(5), bottomRight: Radius.circular(5)),
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => AppRouter.of(context).push(MeRouter.setting),
+        onTap: () => push(MeRouter.setting),
         child: SingleTextView(
           icon: Icons.settings,
           title: S.of(context).setting,
@@ -220,6 +273,10 @@ class _MePageState extends State<MePage> {
         ),
       ),
     ];
+  }
+
+  Future<T?>? push<T>(String path) {
+    return widget.push(path);
   }
 
   void getData() async {

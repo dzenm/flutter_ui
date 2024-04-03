@@ -16,6 +16,16 @@ class MeModel with ChangeNotifier {
     notifyListeners();
   }
 
+  /// 桌面端选中的页面
+  String? _selectedTab;
+
+  String? get selectedTab => _selectedTab;
+
+  set selectedTab(String? tab) {
+    _selectedTab = tab;
+    notifyListeners();
+  }
+
   /// 清空数据
   void clear() {
     notifyListeners();
