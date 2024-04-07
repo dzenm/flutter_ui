@@ -204,12 +204,12 @@ class _TapLayout extends StatelessWidget {
 
   /// 没有水波纹按钮的布局
   Widget _buildView(BuildContext context) {
-    bool isExistTap = onTap != null || onLongPress != null || onDoubleTap != null || onSecondaryTap != null;
     return ValueListenableBuilder<bool>(
       valueListenable: _isMouseEnter,
       builder: (context, isMouseEnter, widget) {
         return ValueListenableBuilder<bool>(
           builder: (context, isTouchDown, widget) {
+            bool isExistTap = onTap != null || onLongPress != null || onDoubleTap != null || onSecondaryTap != null;
             Color? color = background;
             Color hover = Colors.transparent;
             if (isExistTap) {
