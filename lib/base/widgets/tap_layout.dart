@@ -204,11 +204,13 @@ class _TapLayout extends StatelessWidget {
 
   /// 没有水波纹按钮的布局
   Widget _buildView(BuildContext context) {
+    // 减少child的构建次数
+    Widget child = this.child!;
     return ValueListenableBuilder<bool>(
       valueListenable: _isMouseEnter,
-      builder: (context, isMouseEnter, widget) {
+      builder: (context, isMouseEnter, child) {
         return ValueListenableBuilder<bool>(
-          builder: (context, isTouchDown, widget) {
+          builder: (context, isTouchDown, child) {
             bool isExistTap = onTap != null || onLongPress != null || onDoubleTap != null || onSecondaryTap != null;
             Color? color = background;
             Color hover = Colors.transparent;
@@ -265,8 +267,10 @@ class _TapLayout extends StatelessWidget {
             return current;
           },
           valueListenable: _isTouchDown,
+          child: child,
         );
       },
+      child: child,
     );
   }
 }
