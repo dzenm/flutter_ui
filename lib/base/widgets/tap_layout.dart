@@ -228,12 +228,7 @@ class _TapLayout extends StatelessWidget {
 
             // 设置悬停时的颜色
             if (hover != Colors.transparent) {
-              current = Container(
-                height: height,
-                width: width,
-                color: hover,
-                child: current,
-              );
+              current = ColoredBox(color: hover, child: child);
             }
 
             current = Container(
