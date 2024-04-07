@@ -4,6 +4,9 @@
 library util;
 
 export 'date_util.dart';
+export 'desktop/hotkey_util.dart';
+export 'desktop/open_desktop_app_util.dart';
+export 'desktop/registry_util.dart';
 export 'device_util.dart';
 export 'file_util.dart';
 export 'notification_util.dart';
