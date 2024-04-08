@@ -64,9 +64,9 @@ dependencies:
   desktop_multi_window: 0.2.0                   # 桌面端多窗口管理 https://pub.flutter-io.cn/packages/desktop_multi_window
   desktop_drop: 0.4.4                           # 桌面端文件拖动处理 https://pub.flutter-io.cn/packages/desktop_drop
   tray_manager: 0.2.2                           # 桌面端系统托盘 https://pub.flutter-io.cn/packages/tray_manager
-  screen_capturer: 0.2.1                        # 桌面端截图 https://pub.flutter-io.cn/packages/screen_capturer
-  screen_text_extractor: 0.1.3                  # 桌面端剪贴板读取截图 https://pub.flutter-io.cn/packages/screen_text_extractor
-  pasteboard: 0.1.0                             # 桌面端复制剪贴 https://pub.flutter-io.cn/packages/pasteboard
+  screen_capturer: 0.2.1                        # 桌面端截取屏幕 https://pub.flutter-io.cn/packages/screen_capturer
+  pasteboard: 0.2.0                             # 桌面端剪贴板 https://pub.flutter-io.cn/packages/pasteboard
+  hotkey_manager: 0.2.2                         # 桌面端快捷键 https://pub.flutter-io.cn/packages/hotkey_manager
 
   ########################################## UI ##########################################
   webview_flutter: 4.4.4                        # WebView https://pub.dev/packages/webview_flutter

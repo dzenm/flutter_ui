@@ -131,6 +131,18 @@ main.dart ---> application.dart ---> app_page.dart ---> login_page.dart/main_pag
 void main() ---> Application().main() ---> Application()._initApp() ---> LoginPage()/MainPage()
 ```
 
+
+# 适配
+#### 一、Windows
+#### 二、MacOS
+#### 三、Linux
+ * `hotkey_manager` 依赖 `keybinder-3.0`，运行以下命令
+    > sudo apt-get install keybinder-3.0
+#### 四、Android
+#### 五、iOS
+#### 六、Web
+
+
 ## 联系我
 
 #### 微信：zreolop

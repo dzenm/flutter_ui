@@ -3,14 +3,13 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  clipboard_watcher
   desktop_drop
   desktop_multi_window
   file_selector_linux
+  hotkey_manager_linux
   pasteboard
   screen_capturer_linux
   screen_retriever
-  screen_text_extractor
   tray_manager
   url_launcher_linux
   window_manager
