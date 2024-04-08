@@ -80,8 +80,7 @@ class _StudyPageState extends State<StudyPage> {
         height: 50.0,
         isCircle: true,
         background: Colors.blue,
-        onTap: () {
-        },
+        onTap: () {},
         child: const Text('VIP', style: TextStyle(color: Colors.white)),
       ),
       const SizedBox(height: 8),
@@ -108,6 +107,14 @@ class _StudyPageState extends State<StudyPage> {
         color: theme.button,
         onPressed: () => AppRouter.of(context).push(StudyRouter.convert),
         child: _text('字符转化'),
+      ),
+      const SizedBox(height: 8),
+      // 桌面端
+      MaterialButton(
+        textColor: Colors.white,
+        color: theme.button,
+        onPressed: () => AppRouter.of(context).push(StudyRouter.desktop),
+        child: _text('桌面端处理'),
       ),
       const SizedBox(height: 8),
       // dialog

@@ -2,6 +2,8 @@ import '../../base/base.dart';
 import 'chat/chat_page.dart';
 import 'city/city_page.dart';
 import 'convert/convert_page.dart';
+import 'desktop/desktop_page.dart';
+import 'desktop/screen_capture_page.dart';
 import 'dialog/dialog_page.dart';
 import 'drag/drag_list_page.dart';
 import 'float_navigation/float_navigation_page.dart';
@@ -46,6 +48,8 @@ class StudyRouter {
   static const String text = '$study/text';
   static const String video = '$study/video';
   static const String multiWindow = '$study/multiWindow';
+  static const String desktop = '$study/desktop';
+  static const String screenCapture = '$study/screenCapture';
 
   static List<AppPageConfig> get routers => [
         AppPageConfig(study, builder: (settings) {
@@ -110,6 +114,12 @@ class StudyRouter {
         }),
         AppPageConfig(multiWindow, builder: (settings) {
           return const MainWindowPage();
+        }),
+        AppPageConfig(desktop, builder: (settings) {
+          return const DesktopPage();
+        }),
+        AppPageConfig(screenCapture, builder: (settings) {
+          return const ScreenCapturePage();
         }),
       ];
 }
