@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import 'app_page.dart';
 import 'base/base.dart';
+import 'base/utils/desktop/hotkey_util.dart';
 import 'config/configs.dart';
 import 'entities/entity.dart';
 import 'http/cookie_interceptor.dart';
@@ -116,6 +117,9 @@ class Application {
 
     log('初始化 PluginManager');
     PluginManager.init(logPrint: Log.d);
+
+    log('初始化 HotkeyUtil');
+    await HotkeyUtil().init(logPrint: Log.d);
 
     int end = DateTime.now().millisecondsSinceEpoch;
     duration = end - now;
