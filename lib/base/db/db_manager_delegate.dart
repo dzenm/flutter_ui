@@ -60,7 +60,7 @@ class DBManagerDelegate {
     if (kIsWeb) return;
     if (Platform.isWindows) {
       String location = Directory.current.path;
-      _windowsInit(join(location, 'sqlite3.dll'));
+      // _windowsInit(join(location, 'sqlite3.dll'));
     }
   }
 
