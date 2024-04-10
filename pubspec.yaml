@@ -52,7 +52,7 @@ dependencies:
   flutter_local_notifications: 17.0.0           # 通知栏通知提醒 https://pub.flutter-io.cn/packages/flutter_local_notifications
   cached_network_image: 3.3.1                   # 图片缓存 https://pub.flutter-io.cn/packages/cached_network_image
   extended_text_field: 13.0.1                   # 输入框扩展 https://pub.flutter-io.cn/packages/extended_text_field
-  back_button_interceptor: 7.0.2                # 返回按钮拦截 https://pub.flutter-io.cn/packages/back_button_interceptor
+  back_button_interceptor: 7.0.3                # 返回按钮拦截 https://pub.flutter-io.cn/packages/back_button_interceptor
   provider: 6.1.2                               # 状态管理 https://pub.dev/packages/provider
   json_annotation: 4.8.1                        # Json序列化 https://pub.dev/packages/json_annotation
   easy_refresh: 3.3.4                           # 列表刷新 https://pub.flutter-io.cn/packages/easy_refresh
@@ -64,7 +64,6 @@ dependencies:
   desktop_multi_window: 0.2.0                   # 桌面端多窗口管理 https://pub.flutter-io.cn/packages/desktop_multi_window
   desktop_drop: 0.4.4                           # 桌面端文件拖动处理 https://pub.flutter-io.cn/packages/desktop_drop
   tray_manager: 0.2.2                           # 桌面端系统托盘 https://pub.flutter-io.cn/packages/tray_manager
-  screen_capturer: 0.2.1                        # 桌面端截取屏幕 https://pub.flutter-io.cn/packages/screen_capturer
   pasteboard: 0.2.0                             # 桌面端剪贴板 https://pub.flutter-io.cn/packages/pasteboard
   hotkey_manager: 0.2.2                         # 桌面端快捷键 https://pub.flutter-io.cn/packages/hotkey_manager
 
@@ -88,7 +87,7 @@ dependencies:
   transparent_image: 2.0.1                      # 图片选择器 https://pub.flutter-io.cn/packages/transparent_image
   image_picker: 1.0.7                           # 图片选择器 https://pub.flutter-io.cn/packages/image_picker
   photo_view: 0.14.0                            # 图片预览控件 https://pub.flutter-io.cn/packages/photo_view
-  video_player: 2.8.3                           # 视频播放 https://pub.flutter-io.cn/packages/video_player
+  video_player: 2.8.5                           # 视频播放 https://pub.flutter-io.cn/packages/video_player
   fijkplayer: 0.11.0                            # 视频播放 https://pub.flutter-io.cn/packages/fijkplayer
   flutter_vlc_player: 7.4.1                     # 视频播放 https://pub.flutter-io.cn/packages/fijkplayer
 

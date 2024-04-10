@@ -8,7 +8,6 @@ list(APPEND FLUTTER_PLUGIN_LIST
   file_selector_linux
   hotkey_manager_linux
   pasteboard
-  screen_capturer_linux
   screen_retriever
   tray_manager
   url_launcher_linux

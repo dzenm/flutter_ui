@@ -8,7 +8,6 @@ list(APPEND FLUTTER_PLUGIN_LIST
   file_selector_windows
   hotkey_manager_windows
   pasteboard
-  screen_capturer_windows
   screen_retriever
   tray_manager
   url_launcher_windows
