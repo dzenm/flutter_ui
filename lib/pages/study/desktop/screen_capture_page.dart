@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 
+import 'package:extended_text_field/extended_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:pasteboard/pasteboard.dart';
 import 'package:provider/provider.dart';
-import 'package:screen_capturer/screen_capturer.dart';
 
 import '../../../base/base.dart';
 
@@ -71,33 +71,18 @@ class _ScreenCapturePageState extends State<ScreenCapturePage> {
             if (_list != null) SizedBox(height: 240, child: Image.memory(_list!)),
             if (_files.isNotEmpty) Text(_files.toString()),
             const SizedBox(height: 16),
-            TextField(controller: textController, maxLines: 10),
+            ExtendedTextField(
+              controller: textController,
+              maxLines: 10,
+              specialTextSpanBuilder: MySpecialTextSpanBuilder(showAtBackground: true, type: BuilderType.extendedTextField),
+            ),
           ]),
         ),
       ),
     );
   }
 
-  void _startCapture() async {
-    if (BuildConfig.isMacOS) {
-      await ScreenCapturer.instance.requestAccess(); // 申请权限
-      bool isAllowed = await ScreenCapturer.instance.isAccessAllowed(); // 检测是否拥有权限
-      if (!isAllowed) {
-        CommonDialog.showToast('未授予权限，无法截取');
-        return;
-      }
-    }
-
-    String imageName = '${DateTime.now().millisecondsSinceEpoch}.png'; // 设置图片名称
-    String imagePath = '${FileUtil().getUserDirectory('images').path}/$imageName'; // 设置图片保存的路径
-    CapturedData? capturedData = await ScreenCapturer.instance.capture(imagePath: imagePath);
-    if (capturedData != null) {
-      _path = capturedData.imagePath ?? '';
-      setState(() {});
-    } else {
-      CommonDialog.showToast('截图被取消了');
-    }
-  }
+  void _startCapture() async {}
 
   void _stopCapture() {}
 
