@@ -13,8 +13,8 @@ const _thumb = '_thumb';
 /// Created by a0010 on 2022/9/1 11:56
 /// 文件工具类
 class FileUtil {
-  /// Windows APP的根目录文件夹
-  static const windowsAppRootDir = 'FlutterUI';
+  /// APP的根目录文件夹
+  static const rootDir = 'FlutterUI';
 
   FileUtil._internal();
 
@@ -24,37 +24,40 @@ class FileUtil {
 
   factory FileUtil() => instance;
 
-  static late Directory _appRootDir;
-  static late Directory _userDir;
-  static final List<Directory> _appDirs = [];
+  late Directory _appRootDir;
+  late Directory _userDir;
+  final List<Directory> _appDirs = [];
 
   Function? _logPrint;
 
   /// 初始化文件夹
   Future<void> init({Function? logPrint}) async {
     _logPrint = logPrint;
-    _appRootDir = await getAppRootDirectory();
+    _appRootDir = await _getAppRootDirectory();
   }
 
   /// 获取App的根目录所在的路径
-  /// macOS/iOS: /Users/a0010/Library/Containers/<package_name>/Data/Documents
-  /// Windows:   C:\Users\Administrator\Documents\FlutterUI
-  /// Android:   /data/user/0/<package_name>
+  /// macOS/iOS: /Users/a0010/Library/Containers/<package_name>/Data/Documents，macOS在/Users/a0010/Documents/FlutterUI/userId>/Messages
+  /// Windows:   C:\Users\Administrator\Documents\FlutterUI\<userId>\Databases
+  /// Android:   /data/user/0/<package_name>/<userId>/Databases
   /// [dir] 在根目录下面创建的文件夹名称作为应用的根目录
-  Future<Directory> getAppRootDirectory({String? dir}) async {
+  Future<Directory> _getAppRootDirectory({String? dir}) async {
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String appRootDir = join(appDocDir.path);
-    if (Platform.isMacOS || Platform.isIOS) {
-      appRootDir = join(appDocDir.path);
+    if (Platform.isIOS) {
+      appRootDir = join(appDocDir.path, dir);
+    }
+    if (Platform.isMacOS) {
+      appRootDir = join(appDocDir.path, rootDir, dir);
     }
     if (Platform.isWindows || Platform.isLinux) {
-      appRootDir = join(appDocDir.path, windowsAppRootDir);
+      appRootDir = join(appDocDir.path, rootDir, dir);
+    }
+    if (Platform.isLinux) {
+      appRootDir = join(appDocDir.path, rootDir, dir);
     }
     if (Platform.isAndroid) {
-      appRootDir = join(appDocDir.parent.path);
-    }
-    if (dir != null) {
-      appRootDir = join(appRootDir, dir);
+      appRootDir = join(appDocDir.parent.path, dir);
     }
     Directory result = Directory(appRootDir);
     if (!result.existsSync()) {
@@ -62,6 +65,9 @@ class FileUtil {
     }
     return result;
   }
+
+  /// 获取APP的路径
+  Directory get appDir => _appRootDir.absolute;
 
   /// 初始化登录用户目录
   void initLoginUserDirectory(String userId) {
@@ -81,48 +87,24 @@ class FileUtil {
   }
 
   /// 缓存文件夹路径 @see [init]、[_appDirs]
-  /// macOS/iOS: /Users/a0010/Library/Containers/<package_name>/Data/Documents/messages
-  /// Windows:   C:\Users\Administrator\Documents\FlutterUI\messages
-  /// Android:   /data/user/0/<package_name>/messages
+  /// macOS/iOS: /Users/a0010/Library/Containers/<package_name>/Data/Documents/Messages，，macOS在/Users/a0010/Documents/FlutterUI/4824/Messages
+  /// Windows:   C:\Users\Administrator\Documents\FlutterUI\Messages
+  /// Android:   /data/user/0/<package_name>/Messages
   Directory get messagesDirectory => _appDirs[0];
 
   /// @see [getUserDirectory] and [FileCategory]
   String getMessagesCategory(FileCategory category, {String? user}) {
-    return getUserDirectory(category.dirName, user: user).path;
+    return getUserDirectory(UserDirectory.messages.dirName, user, category.dirName).path;
   }
 
   /// 获取缓存文件的子目录 @see [messagesDirectory]
-  Directory getUserDirectory(String dir, {UserDirectory userDirectory = UserDirectory.messages, String? user}) {
-    String parent = join(_userDir.path, userDirectory.dirName);
-    parent = user == null ? join(parent, dir) : join(parent, user, dir);
+  Directory getUserDirectory(String part1, [String? part2, String? part3, String? part4, String? part5, String? part6]) {
+    String parent = join(_userDir.path, part1, part2, part3, part4, part5, part6);
     Directory result = Directory(parent);
     if (!result.existsSync()) {
       result.createSync(recursive: true);
     }
     return result;
-  }
-
-  /// 返回本地文档下的APP的路径
-  /// macOS/iOS: /Users/a0010/Library/Containers/<package_name>/Data/Documents
-  /// Windows:   C:\Users\Administrator\Documents
-  /// Android:   /data/user/0/<package_name>/
-  Future<Directory> getParent({String? dir}) async {
-    // 获取文档目录的路径
-    // getTemporaryDirectory()	              Future<Directory>	          临时目录
-    // getApplicationSupportDirectory()	      Future<Directory>	          应用程序支持目录
-    // getLibraryDirectory()	                Future<Directory>	          应用程序持久文件目录
-    // getApplicationDocumentsDirectory()	    Future<Directory>	          文档目录
-    // getExternalStorageDirectory()	        Future<Directory>	          外部存储目录
-    // getExternalCacheDirectories()	        Future<List<Directory>?>	  外部存储缓存目录
-    // getExternalStorageDirectories()	      Future<List<Directory>?>	  外部存储目录（单独分区）
-    // getDownloadsDirectory()	              Future<Directory?>	        桌面程序下载目录
-    Directory? packageDir = await getApplicationDocumentsDirectory();
-    Directory parent = Directory('${packageDir.path}${dir == null ? '' : '${Platform.pathSeparator}$dir'}');
-    if (!parent.existsSync()) {
-      await parent.create();
-    }
-    _log('获取文件夹路径: ${parent.path}');
-    return parent;
   }
 
   /// 获取数据库文件夹所有数据库文件
@@ -150,9 +132,9 @@ class FileUtil {
   }
 
   /// 保存text到本地文件里面
-  Future<String?> save(String fileName, String text, {String? dir}) async {
+  Future<String?> save(String fileName, String text, {required String dir}) async {
     try {
-      Directory parent = await getParent(dir: dir);
+      Directory parent = getUserDirectory(dir);
       File file = File('${parent.path}${Platform.pathSeparator}$fileName');
       if (!file.existsSync()) {
         await file.create();
@@ -169,9 +151,8 @@ class FileUtil {
   }
 
   /// 读取文件的内容
-  Future<String> read(String fileName, {String? dir}) async {
-    Directory parent = await getParent(dir: dir);
-    File file = File('${parent.path}${Platform.pathSeparator}$fileName');
+  Future<String> read(String path) async {
+    File file = File(path);
     if (!file.existsSync()) {
       return '';
     }
@@ -204,9 +185,8 @@ class FileUtil {
   }
 
   /// 清空保存的内容
-  void clear(String fileName, {String? dir}) async {
-    Directory parent = await getParent(dir: dir);
-    File file = File('${parent.path}${Platform.pathSeparator}$fileName');
+  void clear(String path) async {
+    File file = File(path);
     if (file.existsSync()) {
       await file.writeAsString('');
     }
@@ -227,56 +207,18 @@ class FileUtil {
   }
 
   /// 删除文件夹的所有文件
-  Future delete({String? dir}) async {
-    Directory parent = await getParent(dir: dir);
+  Future delete(String path) async {
+    Directory parent = Directory(path);
     parent.listSync().forEach((element) async {
       await element.delete();
       _log('删除成功: ${element.path}');
     });
   }
 
-  static Future<void> delDir(FileSystemEntity file) async {
-    if (file is Directory && file.existsSync()) {
-      final List<FileSystemEntity> children = file.listSync(recursive: true, followLinks: true);
-      for (final FileSystemEntity child in children) {
-        await delDir(child);
-      }
-    }
-
-    try {
-      if (file.existsSync()) {
-        await file.delete(recursive: true);
-      }
-    } catch (err) {
-      FileUtil()._log(err.toString());
-    }
-  }
-
-  // 循环获取缓存大小
-  static Future getTotalSizeOfFilesInDir(final FileSystemEntity file) async {
-    if (file is File && file.existsSync()) {
-      // _log("临时缓存目录路径:${file.path}");
-
-      int length = await file.length();
-      return double.parse(length.toString());
-    }
-    if (file is Directory && file.existsSync()) {
-      List children = file.listSync();
-      double total = 0;
-      if (children.isNotEmpty) {
-        for (FileSystemEntity child in children) {
-          total += await getTotalSizeOfFilesInDir(child);
-        }
-      }
-      return total;
-    }
-    return 0;
-  }
-
   /// 格式化文件大小，例：
   /// len  = 2889728
   /// size = 2.88 MB
-  static String formatSize(int? len) {
+  String formatSize(int? len) {
     // 小于1024，直接按字节显示
     if (len == null) return '0 B';
     int multiple = 1000; // 字节的倍数
@@ -294,7 +236,7 @@ class FileUtil {
     return '${toStringAsFixed(res)} ${suffix[i]}';
   }
 
-  static String toStringAsFixed(dynamic value, {int position = 2}) {
+  String toStringAsFixed(dynamic value, {int position = 2}) {
     double num;
     if (value is double) {
       num = value;
@@ -310,16 +252,6 @@ class FileUtil {
       res = num.toString();
     }
     return res.substring(0, index + position + 1).toString();
-  }
-
-  /// 清理内存图片缓存:
-  static clearMemoryImageCache() {
-    PaintingBinding.instance.imageCache.clear();
-  }
-
-  // get ImageCache
-  static getMemoryImageCache() {
-    return PaintingBinding.instance.imageCache;
   }
 
   void _log(String text) => _logPrint == null ? null : _logPrint!(text, tag: 'FileUtil');
@@ -440,7 +372,8 @@ class PathInfo {
 enum UserDirectory {
   messages('Messages'),
   databases('Databases'),
-  favourites('Favourites');
+  favourites('Favourites'),
+  crash('Crash');
 
   final String dirName;
 
