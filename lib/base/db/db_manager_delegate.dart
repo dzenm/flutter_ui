@@ -229,14 +229,18 @@ class DBManagerDelegate {
   }
 
   /// 获取数据库所在的路径
-  /// macOS/iOS: /Users/a0010/Library/Containers/<package_name>/Data/Documents/Databases，macOS在/Users/a0010/Documents/FlutterUI/<userId>/Databases
-  /// Windows:   C:\Users\Administrator\Documents\FlutterUI\<userId>\Databases
-  /// Android:   /data/user/0/<package_name>/<userId>/Databases
+  /// Android：/data/user/0/<package_name>/app_flutter/<userId>/Databases
+  /// iOS：/Users/a0010/Library/Containers/<package_name>/Data/<userId>/Databases
+  /// macOS：/Users/a0010/Documents/FlutterUI/userId>/Databases
+  /// Windows：C:\Users\Administrator\Documents\FlutterUI\<userId>\Databases
   Future<String> get databasesPath async {
     String rootDir = 'FlutterUI';
     String dirName = 'Databases';
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String dbDir = join(appDocDir.path);
+    if (Platform.isAndroid) {
+      dbDir = join(appDocDir.path, _userId, dirName);
+    }
     if (Platform.isIOS) {
       dbDir = join(appDocDir.path, _userId, dirName);
     }
@@ -248,9 +252,6 @@ class DBManagerDelegate {
     }
     if (Platform.isLinux) {
       dbDir = join(appDocDir.path, rootDir, _userId, dirName);
-    }
-    if (Platform.isAndroid) {
-      dbDir = join(appDocDir.parent.path, _userId, dirName);
     }
     Directory result = Directory(dbDir);
     if (!result.existsSync()) {

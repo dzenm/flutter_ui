@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -37,27 +36,28 @@ class FileUtil {
   }
 
   /// 获取App的根目录所在的路径
-  /// macOS/iOS: /Users/a0010/Library/Containers/<package_name>/Data/Documents，macOS在/Users/a0010/Documents/FlutterUI/userId>/Messages
-  /// Windows:   C:\Users\Administrator\Documents\FlutterUI\<userId>\Databases
-  /// Android:   /data/user/0/<package_name>/<userId>/Databases
+  /// Android：/data/user/0/<package_name>/app_flutter/
+  /// iOS：/Users/a0010/Library/Containers/<package_name>/Data/
+  /// macOS：/Users/a0010/Documents/FlutterUI/
+  /// Windows：C:\Users\Administrator\Documents\FlutterUI\
   /// [dir] 在根目录下面创建的文件夹名称作为应用的根目录
   Future<Directory> _getAppRootDirectory({String? dir}) async {
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String appRootDir = join(appDocDir.path);
+    if (Platform.isAndroid) {
+      appRootDir = join(appDocDir.path, dir);
+    }
     if (Platform.isIOS) {
       appRootDir = join(appDocDir.path, dir);
     }
     if (Platform.isMacOS) {
       appRootDir = join(appDocDir.path, rootDir, dir);
     }
-    if (Platform.isWindows || Platform.isLinux) {
+    if (Platform.isWindows) {
       appRootDir = join(appDocDir.path, rootDir, dir);
     }
     if (Platform.isLinux) {
       appRootDir = join(appDocDir.path, rootDir, dir);
-    }
-    if (Platform.isAndroid) {
-      appRootDir = join(appDocDir.parent.path, dir);
     }
     Directory result = Directory(appRootDir);
     if (!result.existsSync()) {
@@ -70,6 +70,10 @@ class FileUtil {
   Directory get appDir => _appRootDir.absolute;
 
   /// 初始化登录用户目录
+  /// Android：/data/user/0/<package_name>/app_flutter/<userId>/
+  /// iOS：/Users/a0010/Library/Containers/<package_name>/Data/<userId>/
+  /// macOS：/Users/a0010/Documents/FlutterUI/userId>/
+  /// Windows：C:\Users\Administrator\Documents\FlutterUI\<userId>\
   void initLoginUserDirectory(String userId) {
     String parent = join(_appRootDir.path, userId);
     _userDir = Directory(parent);
@@ -87,9 +91,10 @@ class FileUtil {
   }
 
   /// 缓存文件夹路径 @see [init]、[_appDirs]
-  /// macOS/iOS: /Users/a0010/Library/Containers/<package_name>/Data/Documents/Messages，，macOS在/Users/a0010/Documents/FlutterUI/4824/Messages
-  /// Windows:   C:\Users\Administrator\Documents\FlutterUI\Messages
-  /// Android:   /data/user/0/<package_name>/Messages
+  /// Android：/data/user/0/<package_name>/app_flutter/<userId>/Messages/
+  /// iOS：/Users/a0010/Library/Containers/<package_name>/Data/Documents/Messages/
+  /// macOS：/Users/a0010/Documents/FlutterUI/4824/Messages/
+  /// Windows：C:\Users\Administrator\Documents\FlutterUI\Messages\
   Directory get messagesDirectory => _appDirs[0];
 
   /// @see [getUserDirectory] and [FileCategory]
