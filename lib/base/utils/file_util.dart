@@ -37,7 +37,7 @@ class FileUtil {
 
   /// 获取App的根目录所在的路径
   /// Android：/data/user/0/<package_name>/app_flutter/
-  /// iOS：/Users/a0010/Library/Containers/<package_name>/Data/
+  /// iOS：/Users/a0010/Library/Containers/<package_name>/Data/Documents/
   /// macOS：/Users/a0010/Documents/FlutterUI/
   /// Windows：C:\Users\Administrator\Documents\FlutterUI\
   /// [dir] 在根目录下面创建的文件夹名称作为应用的根目录
@@ -92,9 +92,9 @@ class FileUtil {
 
   /// 缓存文件夹路径 @see [init]、[_appDirs]
   /// Android：/data/user/0/<package_name>/app_flutter/<userId>/Messages/
-  /// iOS：/Users/a0010/Library/Containers/<package_name>/Data/Documents/Messages/
-  /// macOS：/Users/a0010/Documents/FlutterUI/4824/Messages/
-  /// Windows：C:\Users\Administrator\Documents\FlutterUI\Messages\
+  /// iOS：/Users/a0010/Library/Containers/<package_name>/Data/Documents/<userId>/Messages/
+  /// macOS：/Users/a0010/Documents/FlutterUI/<userId>/Messages/
+  /// Windows：C:\Users\Administrator\Documents\FlutterUI\<userId>\Messages\
   Directory get messagesDirectory => _appDirs[0];
 
   /// @see [getUserDirectory] and [FileCategory]
