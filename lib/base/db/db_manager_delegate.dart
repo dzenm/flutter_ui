@@ -229,18 +229,25 @@ class DBManagerDelegate {
   }
 
   /// 获取数据库所在的路径
-  /// macOS/iOS: /Users/a0010/Library/Containers/<package_name>/Data/Documents/<userId>/databases
-  /// Windows:   C:\Users\Administrator\Documents\FlutterUI\<userId>\databases
-  /// Android:   /data/user/0/<package_name>/<userId>/databases
+  /// macOS/iOS: /Users/a0010/Library/Containers/<package_name>/Data/Documents/Databases，macOS在/Users/a0010/Documents/FlutterUI/<userId>/Databases
+  /// Windows:   C:\Users\Administrator\Documents\FlutterUI\<userId>\Databases
+  /// Android:   /data/user/0/<package_name>/<userId>/Databases
   Future<String> get databasesPath async {
+    String rootDir = 'FlutterUI';
+    String dirName = 'Databases';
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String dbDir = join(appDocDir.path);
-    String dirName = 'Databases';
-    if (Platform.isMacOS || Platform.isIOS) {
+    if (Platform.isIOS) {
       dbDir = join(appDocDir.path, _userId, dirName);
     }
-    if (Platform.isWindows || Platform.isLinux) {
-      dbDir = join(appDocDir.path, 'FlutterUI', _userId, dirName);
+    if (Platform.isMacOS) {
+      dbDir = join(appDocDir.path, rootDir, _userId, dirName);
+    }
+    if (Platform.isWindows) {
+      dbDir = join(appDocDir.path, rootDir, _userId, dirName);
+    }
+    if (Platform.isLinux) {
+      dbDir = join(appDocDir.path, rootDir, _userId, dirName);
     }
     if (Platform.isAndroid) {
       dbDir = join(appDocDir.parent.path, _userId, dirName);
