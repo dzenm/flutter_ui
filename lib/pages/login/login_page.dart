@@ -157,7 +157,7 @@ class _EditLoginInfoViewState extends State<_EditLoginInfoView> {
 
   // 初始化输入框的内容，如果本地储存账号和密码，获取并填充到输入框
   void _initInputText() {
-    _usernameController.text = _username = SpUtil.getUsername();
+    _usernameController.text = _username = SPManager.getUsername();
     _usernameController.addListener(() {
       _username = _usernameController.text;
       _resetLoginButtonState();

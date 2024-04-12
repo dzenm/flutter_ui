@@ -50,12 +50,10 @@ class Routers {
           return WebViewPage(title: title, url: url);
         }),
         AppPageConfig(viewMedia, builder: (settings) {
-          dynamic args = settings.queryParameters;
-          String title = args['title'] ?? '';
-          String url = args['url'] ?? '';
-          return const ViewMediaPage(
-            medias: [],
-          );
+          // dynamic args = settings.queryParameters;
+          // String title = args['title'] ?? '';
+          // String url = args['url'] ?? '';
+          return const ViewMediaPage(medias: []);
         }),
         ...MeRouter.routers,
         ...StudyRouter.routers,

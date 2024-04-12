@@ -1,10 +1,10 @@
 import 'dart:io';
 
-// ignore_for_file: depend_on_referenced_packages
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
-import '../base/utils/util.dart';
+import '../base/base.dart';
+
 
 ///
 /// Created by a0010 on 2023/2/23 14:10
@@ -26,7 +26,7 @@ class CookieInterceptor extends Interceptor {
       _saveCookies(response);
     } else if (response.statusCode == 401) {
       _cookie = null;
-      SpUtil.setCookie(_cookie);
+      SPManager.setCookie(_cookie);
     }
     super.onResponse(response, handler);
   }
@@ -53,12 +53,12 @@ class CookieInterceptor extends Interceptor {
       // 将list类型的cookie转化成string类型
       _cookie = StrUtil.listToString(cookies, pattern: '&');
 
-      SpUtil.setCookie(_cookie);
+      SPManager.setCookie(_cookie);
     }
   }
 
   Future<void> _setCookies(RequestOptions options) async {
-    _cookie = _cookie ?? SpUtil.getCookie();
+    _cookie = _cookie ?? SPManager.getCookie();
 
     // 将string类型的cookie转化成list
     List<String> cookies = StrUtil.stringToList(_cookie, pattern: '&');

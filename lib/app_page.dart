@@ -121,7 +121,7 @@ class AppPage extends StatelessWidget {
   Widget _buildOldRouterApp(LocalModel locale) {
     // 获取第一个页面
     final Widget child;
-    if (SpUtil.getUserLoginState()) {
+    if (SPManager.getUserLoginState()) {
       child = const MainPage();
     } else {
       child = LoginPage();
@@ -203,7 +203,7 @@ class AppPage extends StatelessWidget {
         Widget toastWidget = botToastBuilder(context, child);
         Widget fontWidget = MediaQuery(
           //设置文字大小不随系统设置改变
-          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+          data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(1.0)),
           child: toastWidget,
         );
         return fontWidget;
@@ -286,7 +286,7 @@ class AppPage extends StatelessWidget {
       builder: (context, child) {
         return MediaQuery(
           //设置文字大小不随系统设置改变
-          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+          data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(1.0)),
           child: BotToastInit()(context, child),
         );
       },
@@ -297,7 +297,7 @@ class AppPage extends StatelessWidget {
   AppRouterDelegate _createRouteDelegate() {
     // 获取第一个页面
     final String router;
-    if (SpUtil.getUserLoginState()) {
+    if (SPManager.getUserLoginState()) {
       router = Routers.main;
     } else {
       router = Routers.login;

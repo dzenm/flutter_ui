@@ -52,6 +52,7 @@ class Study {
 class StudyExample {
   static void main() {
     StudyExample study = StudyExample();
+    study.run();
   }
 
   void run() {}

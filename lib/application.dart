@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 
 import 'app_page.dart';
 import 'base/base.dart';
-import 'base/utils/desktop/hotkey_util.dart';
 import 'config/configs.dart';
 import 'entities/entity.dart';
 import 'http/cookie_interceptor.dart';
@@ -57,6 +56,7 @@ class Application {
         DesktopWrapper.ensureInitialized();
       }, handleMsg: (message) async {
         String logFileName = 'crash_${DateTime.now()}.log';
+        log('异常信息文件：logFileName=$logFileName');
         await FileUtil().save(logFileName, message, dir: 'crash');
       });
     } else {
@@ -83,7 +83,7 @@ class Application {
     log('Application是否单例: ${Application.instance == Application()}');
 
     log('初始化 SharedPreferences');
-    bool res = await SpUtil().init(logPrint: Log.i);
+    bool res = await SPManager().init(logPrint: Log.i);
     log('初始化 SharedPreferences ${res ? '成功' : '失败'}');
 
     log('初始化 Android设置');
@@ -113,13 +113,18 @@ class Application {
 
     log('初始化 FileUtil');
     await FileUtil().init(logPrint: Log.i);
-    FileUtil().initLoginUserDirectory(SpUtil.getUserId());
 
     log('初始化 PluginManager');
     PluginManager.init(logPrint: Log.d);
 
     log('初始化 HotkeyUtil');
     await HotkeyUtil().init(logPrint: Log.d);
+    if (SPManager.getUserLoginState()) {
+      String userId = SPManager.getUserId();
+      // 设置用户数据库名称
+      DBManager().userId = userId;
+      FileUtil().initLoginUserDirectory(SPManager.getUserId());
+    }
 
     int end = DateTime.now().millisecondsSinceEpoch;
     duration = end - now;

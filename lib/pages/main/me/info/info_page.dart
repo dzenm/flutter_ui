@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../../../../base/base.dart';
 import '../../../../generated/l10n.dart';
 import '../../../../models/user_model.dart';
-import '../../../../base/widgets/view_media.dart';
 import '../../../common/view_media_page.dart';
 import '../../../study/study_model.dart';
 import '../me_router.dart';

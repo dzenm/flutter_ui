@@ -70,7 +70,7 @@ class MePageDesktop extends StatelessWidget {
 class _MePage extends StatefulWidget {
   final Future<T?>? Function<T>(String path) push;
 
-  const _MePage({super.key, required this.push});
+  const _MePage({required this.push});
 
   @override
   State<StatefulWidget> createState() => _MePageState();

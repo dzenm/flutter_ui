@@ -27,7 +27,7 @@ class _ApiServices implements ApiServices {
     final queryParameters = <String, dynamic>{r'page_size': pageSize};
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -54,7 +54,7 @@ class _ApiServices implements ApiServices {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -81,7 +81,7 @@ class _ApiServices implements ApiServices {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -108,7 +108,7 @@ class _ApiServices implements ApiServices {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -135,7 +135,7 @@ class _ApiServices implements ApiServices {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -162,7 +162,7 @@ class _ApiServices implements ApiServices {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -197,7 +197,7 @@ class _ApiServices implements ApiServices {
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -232,7 +232,7 @@ class _ApiServices implements ApiServices {
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -259,7 +259,7 @@ class _ApiServices implements ApiServices {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -286,7 +286,7 @@ class _ApiServices implements ApiServices {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -321,7 +321,7 @@ class _ApiServices implements ApiServices {
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -354,7 +354,7 @@ class _ApiServices implements ApiServices {
       r'password': password,
     };
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'POST',
@@ -389,7 +389,7 @@ class _ApiServices implements ApiServices {
       r'repassword': repassword,
     };
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'POST',
@@ -416,7 +416,7 @@ class _ApiServices implements ApiServices {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -449,7 +449,7 @@ class _ApiServices implements ApiServices {
       r'password': password,
     };
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'POST',
@@ -480,7 +480,7 @@ class _ApiServices implements ApiServices {
     final queryParameters = <String, dynamic>{r'page_size': pageSize};
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -507,7 +507,7 @@ class _ApiServices implements ApiServices {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'POST',
@@ -542,7 +542,7 @@ class _ApiServices implements ApiServices {
       r'link': link,
     };
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'POST',
@@ -578,7 +578,7 @@ class _ApiServices implements ApiServices {
       r'link': link,
     };
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'POST',
@@ -605,7 +605,7 @@ class _ApiServices implements ApiServices {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'POST',
@@ -635,7 +635,7 @@ class _ApiServices implements ApiServices {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'POST',
@@ -662,7 +662,7 @@ class _ApiServices implements ApiServices {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -695,7 +695,7 @@ class _ApiServices implements ApiServices {
       r'link': link,
     };
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'POST',
@@ -730,7 +730,7 @@ class _ApiServices implements ApiServices {
       r'link': link,
     };
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'POST',
@@ -757,7 +757,7 @@ class _ApiServices implements ApiServices {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'id': id};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'POST',
@@ -792,7 +792,7 @@ class _ApiServices implements ApiServices {
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'POST',
@@ -827,7 +827,7 @@ class _ApiServices implements ApiServices {
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'POST',
@@ -858,7 +858,7 @@ class _ApiServices implements ApiServices {
     final queryParameters = <String, dynamic>{r'page_size': pageSize};
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -885,7 +885,7 @@ class _ApiServices implements ApiServices {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -916,7 +916,7 @@ class _ApiServices implements ApiServices {
     final queryParameters = <String, dynamic>{r'page_size': pageSize};
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -947,7 +947,7 @@ class _ApiServices implements ApiServices {
     final queryParameters = <String, dynamic>{r'page_size': pageSize};
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -979,7 +979,7 @@ class _ApiServices implements ApiServices {
     final queryParameters = <String, dynamic>{r'page_size': pageSize};
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -1010,7 +1010,7 @@ class _ApiServices implements ApiServices {
     final queryParameters = <String, dynamic>{r'page_size': pageSize};
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -1037,7 +1037,7 @@ class _ApiServices implements ApiServices {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'POST',
@@ -1070,7 +1070,7 @@ class _ApiServices implements ApiServices {
       r'link': link,
     };
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'POST',
@@ -1097,7 +1097,7 @@ class _ApiServices implements ApiServices {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -1124,7 +1124,7 @@ class _ApiServices implements ApiServices {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -1151,7 +1151,7 @@ class _ApiServices implements ApiServices {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -1178,7 +1178,7 @@ class _ApiServices implements ApiServices {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -1209,7 +1209,7 @@ class _ApiServices implements ApiServices {
     final queryParameters = <String, dynamic>{r'page_size': pageSize};
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -1240,7 +1240,7 @@ class _ApiServices implements ApiServices {
     final queryParameters = <String, dynamic>{r'page_size': pageSize};
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -1267,7 +1267,7 @@ class _ApiServices implements ApiServices {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -1299,7 +1299,7 @@ class _ApiServices implements ApiServices {
     final queryParameters = <String, dynamic>{r'page_size': pageSize};
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -1335,7 +1335,7 @@ class _ApiServices implements ApiServices {
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -1366,7 +1366,7 @@ class _ApiServices implements ApiServices {
     final queryParameters = <String, dynamic>{r'page_size': pageSize};
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -1393,7 +1393,7 @@ class _ApiServices implements ApiServices {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -1420,7 +1420,7 @@ class _ApiServices implements ApiServices {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -1447,7 +1447,7 @@ class _ApiServices implements ApiServices {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'cid': cid};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',
@@ -1480,7 +1480,7 @@ class _ApiServices implements ApiServices {
       r'word': word,
     };
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DataEntity<dynamic>>(Options(
       method: 'GET',

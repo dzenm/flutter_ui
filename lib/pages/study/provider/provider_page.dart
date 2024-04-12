@@ -22,6 +22,8 @@ class _ProviderPageState extends State<ProviderPage> {
 
   User? _user;
 
+  bool _isTest = false;
+
   @override
   void initState() {
     super.initState();
@@ -30,6 +32,7 @@ class _ProviderPageState extends State<ProviderPage> {
       _user = context.read<StudyModel>().getUser(1);
       setState(() {});
     });
+    _isTest = true;
   }
 
   @override
@@ -64,30 +67,32 @@ class _ProviderPageState extends State<ProviderPage> {
   }
 
   List<Widget> _buildChildrenButtons() {
-    return [
-      const SizedBox(height: 16),
-      MaterialButton(
-        textColor: Colors.white,
-        color: Colors.blue,
-        onPressed: () {
-          AppRouter.of(context).pushPage(const ModelPage());
-        },
-        child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Text('Selector和Provider监听的变化'),
-        ]),
-      ),
-      const SizedBox(height: 16),
-      MaterialButton(
-        textColor: Colors.white,
-        color: Colors.blue,
-        onPressed: () {
-          AppRouter.of(context).pushPage(const LifecyclePage());
-        },
-        child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Text('Model的生命周期跟随页面'),
-        ]),
-      ),
-    ];
+    if (_isTest) {
+      return [
+        const SizedBox(height: 16),
+        MaterialButton(
+          textColor: Colors.white,
+          color: Colors.blue,
+          onPressed: () {
+            AppRouter.of(context).pushPage(const ModelPage());
+          },
+          child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Text('Selector和Provider监听的变化'),
+          ]),
+        ),
+        const SizedBox(height: 16),
+        MaterialButton(
+          textColor: Colors.white,
+          color: Colors.blue,
+          onPressed: () {
+            AppRouter.of(context).pushPage(const LifecyclePage());
+          },
+          child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Text('Model的生命周期跟随页面'),
+          ]),
+        ),
+      ];
+    }
     return [
       const SizedBox(height: 16),
       MaterialButton(

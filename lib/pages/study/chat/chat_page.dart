@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 
 import '../../../base/widgets/widget.dart';
@@ -179,27 +178,6 @@ class _ChatPageState extends State<ChatPage> {
         );
       },
       valueListenable: unreadMsgCount,
-    );
-  }
-
-  Widget _buildChatListView() {
-    return EasyRefresh.builder(
-      header: !isShowClassicHeaderAndFooter ? const MaterialHeader() : const ClassicHeader(),
-      footer: !isShowClassicHeaderAndFooter
-          ? const MaterialFooter()
-          : const ClassicFooter(
-              position: IndicatorPosition.above,
-              infiniteOffset: null,
-            ),
-      onRefresh: () async {
-        await Future.delayed(const Duration(seconds: 2));
-      },
-      onLoad: () async {
-        await Future.delayed(const Duration(seconds: 2));
-      },
-      childBuilder: (context, physics) {
-        return _buildListView(physics: physics);
-      },
     );
   }
 

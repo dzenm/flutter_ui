@@ -54,7 +54,7 @@ class _ConvertPageState extends State<ConvertPage> {
                   color: Colors.blue,
                   textColor: Colors.white,
                   child: const Text('存储字符数组到SP(model转string)'),
-                  onPressed: () => SpUtil.setUserInfo(jsonEncode(users)),
+                  onPressed: () => SPManager.setUserInfo(jsonEncode(users)),
                 ),
               ]),
               const SizedBox(height: 8),
@@ -68,7 +68,7 @@ class _ConvertPageState extends State<ConvertPage> {
                   textColor: Colors.white,
                   child: const Text('从SP取出字符数组(string转model)'),
                   onPressed: () {
-                    String json = SpUtil.getUserInfo();
+                    String json = SPManager.getUserInfo();
                     if (json.isNotEmpty) {
                       List<UserEntity> users = (jsonDecode(json) as List<dynamic>).map((e) => UserEntity.fromJson((e as Map<String, dynamic>))).toList();
                       setState(() {

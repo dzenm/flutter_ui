@@ -6,7 +6,6 @@ import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
 
 import '../../base/base.dart';
-import '../../generated/l10n.dart';
 import 'main_model.dart';
 import 'system_tray.dart';
 
@@ -88,15 +87,15 @@ class NavigationRailItemView extends StatelessWidget {
       Icons.airplay_rounded,
       Icons.person,
     ];
-    List<String> titles = [
-      S.of(context).home,
-      S.of(context).nav,
-      S.of(context).me,
-    ];
+    // List<String> titles = [
+    //   S.of(context).home,
+    //   S.of(context).nav,
+    //   S.of(context).me,
+    // ];
     int index = tab.index;
     AppTheme theme = context.watch<LocalModel>().theme;
     IconData icon = icons[index]; // 图标
-    String title = titles[index]; // 标题
+    // String title = titles[index]; // 标题
     bool isSelected = selectedTab == tab; // 是否是选中的索引
     Color color = isSelected ? theme.appbar : theme.hint;
     return Icon(icon, color: color);

@@ -18,6 +18,8 @@ class MainPageMobile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    _log('build');
+
     PageController? controller = context.watch<MainModel>().controller;
     if (controller == null) return Container();
     return Scaffold(
@@ -45,6 +47,8 @@ class MainPageMobile extends StatelessWidget {
       },
     ).toList();
   }
+
+  void _log(String msg) => BuildConfig.isDebug ? Log.p(msg, tag: _tag) : null;
 }
 
 /// 底部Item布局

@@ -41,9 +41,9 @@ class HttpManager {
 
       String userId = user.id.toString();
       // 先保存SP，数据库创建需要用到SP的userId
-      SpUtil.setUserLoginState(true);
-      SpUtil.setUsername(user.username);
-      SpUtil.setUserId(userId);
+      SPManager.setUserLoginState(true);
+      SPManager.setUsername(user.username);
+      SPManager.setUserId(userId);
       // 设置用户数据库名称
       DBManager().userId = userId;
       // 设置用户文件夹路径
@@ -61,9 +61,9 @@ class HttpManager {
       UserEntity user = UserEntity.fromJson(data);
 
       // 先保存SP，数据库创建需要用到SP的userId
-      SpUtil.setUserLoginState(true);
-      SpUtil.setUsername(user.username);
-      SpUtil.setUserId(user.id.toString());
+      SPManager.setUserLoginState(true);
+      SPManager.setUsername(user.username);
+      SPManager.setUserId(user.id.toString());
 
       // 更新数据
       context.read<UserModel>().user = user;
@@ -499,7 +499,7 @@ class HttpManager {
 
   Future<void> logout() async {
     await _httpClient.request(apiServices.logout(), success: (data) {
-      SpUtil.clearUser();
+      SPManager.clearUser();
       ProviderManager.clear();
       AppRouterDelegate.of(Application().context).push(Routers.login, clearStack: true);
     });

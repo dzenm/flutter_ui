@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base/base.dart';
-import '../../../base/router/app_router.dart';
 import '../study_model.dart';
 
 ///
