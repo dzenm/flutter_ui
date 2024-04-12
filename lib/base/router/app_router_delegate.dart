@@ -352,13 +352,13 @@ mixin AppRouterRegister {
 
     final interceptor = routePage?.interceptors;
     if (interceptor!.isNotEmpty) {
-      dynamic result;
-      for (final interceptor in interceptor) {
-        // result = await interceptor(settings);
-        // if (result == true) {
-        //   // return ;
-        // }
-      }
+      // dynamic result;
+      // for (final interceptor in interceptor) {
+      //   // result = await interceptor(settings);
+      //   // if (result == true) {
+      //   //   // return ;
+      //   // }
+      // }
     }
 
     return CustomPage<dynamic>(

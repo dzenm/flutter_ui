@@ -21,7 +21,7 @@ class AdapterSizeText extends StatefulWidget {
   final Locale? locale;
   final bool? softWrap;
   final TextOverflow? overflow;
-  final double? textScaleFactor;
+  final TextScaler? textScale;
   final int maxLines;
   final String? semanticsLabel;
   final TextWidthBasis? textWidthBasis;
@@ -38,7 +38,7 @@ class AdapterSizeText extends StatefulWidget {
     this.locale,
     this.softWrap,
     this.overflow,
-    this.textScaleFactor,
+    this.textScale,
     this.maxLines = 1,
     this.semanticsLabel,
     this.textWidthBasis,
@@ -99,7 +99,7 @@ class _AdapterSizeTextState extends State<AdapterSizeText> {
       locale: widget.locale,
       softWrap: widget.softWrap,
       overflow: widget.overflow,
-      textScaleFactor: widget.textScaleFactor,
+      textScaler: widget.textScale,
       maxLines: widget.maxLines,
       semanticsLabel: widget.semanticsLabel,
       textWidthBasis: widget.textWidthBasis,

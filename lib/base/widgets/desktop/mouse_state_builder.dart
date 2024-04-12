@@ -7,11 +7,6 @@ class MouseState {
   bool isMouseDown = false;
 
   MouseState();
-
-  @override
-  String toString() {
-    return "isMouseDown: ${this.isMouseDown} - isMouseOver: ${this.isMouseOver}";
-  }
 }
 
 T? _ambiguate<T>(T? value) => value;

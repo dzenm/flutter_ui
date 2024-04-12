@@ -66,12 +66,6 @@ class _EditLayoutState extends State<EditLayout> {
   /// 判断和控制焦点的获取
   final FocusNode _focusNode = FocusNode();
 
-  /// 是否获取焦点
-  bool _hasFocus = false;
-
-  /// 当前文本的长度
-  int _currentLength = 0;
-
   /// 文本编辑控制器
   late TextEditingController _controller;
 
@@ -84,9 +78,7 @@ class _EditLayoutState extends State<EditLayout> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) => _calculatorTextFieldHeight());
 
-    _focusNode.addListener(() => setState(() => _hasFocus = _focusNode.hasFocus));
     _controller = widget.controller ?? TextEditingController(text: widget.initialText ?? '');
-    _currentLength = _controller.text.length;
   }
 
   void _calculatorTextFieldHeight() {

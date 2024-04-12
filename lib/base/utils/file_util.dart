@@ -3,8 +3,6 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../db/db.dart';
-
 /// 原图路径对应的缩略图路径区分
 const _thumb = '_thumb';
 
@@ -110,19 +108,6 @@ class FileUtil {
       result.createSync(recursive: true);
     }
     return result;
-  }
-
-  /// 获取数据库文件夹所有数据库文件
-  Future<List<String>> getDBFiles() async {
-    String parent = await DBManager().databasesPath;
-    List<String> files = [];
-    Directory(parent).listSync().forEach((element) {
-      if (element.path.endsWith('.db')) {
-        files.add(element.path);
-      }
-    });
-    _log('数据库文件夹: path=$parent, fileSize=${files.length}');
-    return files;
   }
 
   /// 根据路径获取文件名

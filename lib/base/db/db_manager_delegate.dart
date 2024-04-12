@@ -1,13 +1,8 @@
-// ignore_for_file: depend_on_referenced_packages
-import 'dart:ffi';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:sqlite3/open.dart' as open;
-import 'package:sqlite3/sqlite3.dart' as sqlite3;
 
 import 'column_entity.dart';
 import 'db_base_entity.dart';
@@ -52,29 +47,6 @@ class DBManagerDelegate {
     if (tables != null) {
       _tables.addAll(tables);
     }
-    _setupDatabase();
-  }
-
-  /// 设置Windows数据库
-  void _setupDatabase() {
-    if (kIsWeb) return;
-    if (Platform.isWindows) {
-      // String location = Directory.current.path;
-      // _windowsInit(join(location, 'sqlite3.dll'));
-    }
-  }
-
-  /// Windows数据库初始化
-  void _windowsInit(String path) {
-    open.open.overrideFor(open.OperatingSystem.windows, () {
-      try {
-        return DynamicLibrary.open(path);
-      } catch (e) {
-        stderr.writeln('Failed to load sqlite3.dll at $path');
-        rethrow;
-      }
-    });
-    sqlite3.sqlite3.openInMemory().dispose();
   }
 
   /// 获取当前数据库对象, 未指定数据库名称时默认为用户名 [_userId]，切换数据库操作时要先关闭 [close] 再重新打开。

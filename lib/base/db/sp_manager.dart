@@ -3,14 +3,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 ///
 /// Created by a0010 on 2022/3/22 09:38
 /// SharedPreferences工具类
-class SpUtil {
-  SpUtil._internal();
+class SPManager {
+  SPManager._internal();
 
-  static final SpUtil _instance = SpUtil._internal();
+  static final SPManager _instance = SPManager._internal();
 
-  static SpUtil get instance => _instance;
+  static SPManager get instance => _instance;
 
-  factory SpUtil() => _instance;
+  factory SPManager() => _instance;
 
   SharedPreferences? _prefs;
 

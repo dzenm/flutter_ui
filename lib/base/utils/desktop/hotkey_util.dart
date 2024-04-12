@@ -1,6 +1,8 @@
 import 'package:flutter/services.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 
+import '../../base.dart';
+
 ///
 /// Created by a0010 on 2024/4/7 11:43
 /// 快捷键工具
@@ -21,6 +23,7 @@ class HotkeyUtil {
   }
 
   Future<void> register() async {
+    if (!BuildConfig.isDesktop) return;
     HotKey hotKey = HotKey(
       key: PhysicalKeyboardKey.keyQ,
       modifiers: [HotKeyModifier.alt],

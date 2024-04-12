@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+import '../db/db.dart';
 import 'setting_entity.dart';
-import '../utils/util.dart';
 import 'app_theme.dart';
 
 ///
@@ -19,7 +19,7 @@ class LocalModel with ChangeNotifier {
 
   /// 初始化设置
   void _initSetting() {
-    String settings = SpUtil.getSettings();
+    String settings = SPManager.getSettings();
     if (settings.isEmpty) {
       _setting = SettingEntity();
     } else {
@@ -35,7 +35,7 @@ class LocalModel with ChangeNotifier {
   /// 更新设置
   void updateSetting() {
     String settings = jsonEncode(_setting.toJson());
-    SpUtil.setSettings(settings);
+    SPManager.setSettings(settings);
     notifyListeners();
   }
 

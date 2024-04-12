@@ -1,12 +1,14 @@
 import 'dart:core';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as path;
 
 ///
 /// Created by a0010 on 2024/4/7 11:04
 ///
 class AssetsGenerate {
+
   /// [dir]资源所在文件夹
   /// [generateDir]传入生成的类所在文件夹
   void generateAssets(String dir, String generateDir) {
@@ -28,7 +30,7 @@ class AssetsGenerate {
         }
         autoGenerate(allFile, dirName, generateDir);
       } else {
-        print('该文件夹为空');
+        debugPrint('该文件夹为空');
       }
     } else {
       directory.createSync();

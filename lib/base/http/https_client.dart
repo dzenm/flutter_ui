@@ -1,10 +1,8 @@
 import 'dart:io';
 
-// ignore_for_file: depend_on_referenced_packages
 import 'package:dio/dio.dart';
-import 'package:dio/src/adapters/io_adapter.dart';
+import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
-import 'package:http_parser/http_parser.dart';
 
 import '../../http/api_services.dart';
 import 'data_entity.dart';
@@ -310,7 +308,6 @@ class HttpsClient {
     MultipartFile multipartFile = MultipartFile.fromFileSync(
       path,
       filename: path.split(Platform.pathSeparator).last,
-      contentType: MediaType.parse('multipart/form-data'),
     );
     FormData data = FormData()
       ..files.add(MapEntry('file', multipartFile))
@@ -373,7 +370,7 @@ class HttpsClient {
     if ((code ?? 0) > 0 || (msg ?? '').isNotEmpty) {
       return HttpError(code ?? 0, msg ?? '未知状态码错误', 'HTTP状态码错误');
     }
-    _HttpException exception = _HttpException.unknown;
+    _HttpException exception = _HttpException.error;
     if (error != null) {
       if (error is HttpException) {
         exception = _HttpException.http;
@@ -405,7 +402,7 @@ class HttpsClient {
             exception = _HttpException.connection;
             break;
           case DioExceptionType.unknown:
-            exception = _HttpException.runtime;
+            exception = _HttpException.unknown;
             break;
         }
       }
@@ -427,8 +424,7 @@ enum _HttpException {
   badResponse(10010, '响应错误'),
   cancel(1011, '请求被取消'),
   connection(1012, '连接失败'),
-  unknown(1109, '未知异常'),
-  runtime(1120, '运行时的异常');
+  unknown(1109, '未知异常');
 
   final int code;
   final String msg;

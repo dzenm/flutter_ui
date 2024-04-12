@@ -57,11 +57,11 @@ class ObserverController {
 
   /// Get the target sliver [BuildContext]
   BuildContext? fetchSliverContext({BuildContext? sliverContext}) {
-    BuildContext? _sliverContext = sliverContext;
-    if (_sliverContext == null && sliverContexts.isNotEmpty) {
-      _sliverContext = sliverContexts.first;
+    BuildContext? myContext = sliverContext;
+    if (myContext == null && sliverContexts.isNotEmpty) {
+      myContext = sliverContexts.first;
     }
-    return _sliverContext;
+    return myContext;
   }
 
   /// Get the latest target sliver [BuildContext] and reset some of the old data.
@@ -596,12 +596,12 @@ mixin ObserverControllerForScroll on ObserverControllerForInfo {
       offset: offset,
     );
     if (isAnimateTo) {
-      Duration _duration = isAnimateTo ? duration : const Duration(milliseconds: 1);
-      Curve _curve = isAnimateTo ? curve : Curves.linear;
+      Duration myDuration = isAnimateTo ? duration : const Duration(milliseconds: 1);
+      Curve myCurve = isAnimateTo ? curve : Curves.linear;
       await myController.animateTo(
         childLayoutOffset,
-        duration: _duration,
-        curve: _curve,
+        duration: myDuration,
+        curve: myCurve,
       );
     } else {
       myController.jumpTo(childLayoutOffset);
@@ -790,12 +790,12 @@ mixin ObserverControllerForScroll on ObserverControllerForInfo {
             offset: offset,
           );
           if (isAnimateTo) {
-            Duration _duration = isAnimateTo ? duration : const Duration(milliseconds: 1);
-            Curve _curve = isAnimateTo ? curve : Curves.linear;
+            Duration myDuration = isAnimateTo ? duration : const Duration(milliseconds: 1);
+            Curve myCurve = isAnimateTo ? curve : Curves.linear;
             await myController.animateTo(
               targetOffset,
-              duration: _duration,
-              curve: _curve,
+              duration: myDuration,
+              curve: myCurve,
             );
           } else {
             myController.jumpTo(targetOffset);

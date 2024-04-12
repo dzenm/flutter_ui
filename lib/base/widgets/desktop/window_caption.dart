@@ -30,10 +30,10 @@ class MoveWindow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (child == null) return _MoveWindow(onDoubleTap: this.onDoubleTap);
+    if (child == null) return _MoveWindow(onDoubleTap: onDoubleTap);
     return _MoveWindow(
-      onDoubleTap: this.onDoubleTap,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Expanded(child: this.child!)]),
+      onDoubleTap: onDoubleTap,
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Expanded(child: child!)]),
     );
   }
 }
