@@ -111,13 +111,13 @@ class Naughty {
     return path.split(Platform.pathSeparator).last;
   }
 
-  /// 格式化文件大小，例：
+  /// 格式化字节大小，例：
   /// len  = 2889728
   /// size = 2.88 MB
-  String formatSize(int? len) {
+  String formatByteSize(int? len) {
     // 小于1024，直接按字节显示
     if (len == null) return '0 B';
-    int multiple = 1000; // 字节的倍数
+    int multiple = 1024; // 字节的倍数
     if (len < multiple) return '$len B';
 
     List<String> suffix = ["B", "KB", "MB", "GB", "TB", "PB"];

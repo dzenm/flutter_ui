@@ -85,7 +85,7 @@ class HttpInterceptor extends Interceptor {
   /// 处理请求响应的信息
   void _handleResponse(Response? response, HTTPEntity entity) {
     if (response == null) return;
-    entity.size = Naughty().formatSize(_getStringLength(response.data.toString()));
+    entity.size = Naughty().formatByteSize(_getStringLength(response.data.toString()));
     entity.statusCode = response.statusCode ?? -1;
     entity.realUrl = response.realUri.toString();
     entity.isRedirect = response.isRedirect;

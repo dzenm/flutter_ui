@@ -118,7 +118,7 @@ class _DBPageState extends State<DBPage> {
     String name = Naughty().getFileName(path);
     File file = File(path);
     int len = file.lengthSync();
-    String size = Naughty().formatSize(len);
+    String size = Naughty().formatByteSize(len);
     String modifyTime = DateFormat("yyyy-MM-dd HH:mm:ss").format(file.lastModifiedSync());
     return [
       Text(

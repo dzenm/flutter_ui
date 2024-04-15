@@ -21,45 +21,6 @@ class StrUtil {
     return len;
   }
 
-  /// 格式化文件大小，例：
-  /// len  = 2889728
-  /// size = 2.88 MB
-  static String formatSize(int? len) {
-    // 小于1024，直接按字节显示
-    if (len == null) return '0 B';
-    int multiple = 1000; // 字节的倍数
-    if (len < multiple) return '$len B';
-
-    List<String> suffix = ["B", "KB", "MB", "GB", "TB", "PB"];
-    // 判断字节显示的范围，从KB开始
-    int scope = multiple, i = 1;
-    for (; i < suffix.length; i++) {
-      if (len < scope * multiple) break; //找到范围 scope < len < scope * multiple
-      scope *= multiple;
-    }
-
-    double res = len / scope; // 得到最终展示的小数
-    return '${toStringAsFixed(res)} ${suffix[i]}';
-  }
-
-  static String toStringAsFixed(dynamic value, {int position = 2}) {
-    double num;
-    if (value is double) {
-      num = value;
-    } else {
-      num = double.parse(value.toString());
-    }
-
-    int index = num.toString().lastIndexOf(".");
-    String res;
-    if ((num.toString().length - index - 1) < position) {
-      res = num.toStringAsFixed(position);
-    } else {
-      res = num.toString();
-    }
-    return res.substring(0, index + position + 1).toString();
-  }
-
   // 复制到粘贴板
   static void copy(String? data) {
     if (data != null && data != '') {
