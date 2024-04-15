@@ -10,13 +10,13 @@ import '../channel/plugin_manager.dart';
 class WillPopView extends StatelessWidget {
   final Widget child; //如果对返回键进行监听，必须放在最顶层
   final BackBehavior behavior; //返回键的行为
-  final WillPopCallback? onWillPop;
+  final PopInvokedCallback? onPopInvoked;
 
   const WillPopView({
     super.key,
     required this.child,
     this.behavior = BackBehavior.custom,
-    this.onWillPop,
+    this.onPopInvoked,
   });
 
   /// 点击返回时, 存在未保存的内容时弹出的提示框
@@ -69,18 +69,19 @@ class WillPopView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      child: WillPopScope(onWillPop: _onWillPop, child: child),
+      child: PopScope(onPopInvoked: _onPopInvoked, child: child),
     );
   }
 
   // 返回键事件，返回true，执行Navigator.pop(context)，返回false，则不执行
-  Future<bool> _onWillPop() async {
+  void _onPopInvoked(bool didPop) async {
     switch (behavior) {
       case BackBehavior.custom:
-        return onWillPop == null ? Future.value(true) : onWillPop!();
+        if (onPopInvoked != null) {
+          onPopInvoked!(didPop);
+        }
       case BackBehavior.background:
         await PluginManager.backToDesktop();
-        return false;
       case BackBehavior.doubleTap:
         DateTime now = DateTime.now();
         if (now.difference(_lastTap) > const Duration(seconds: 2)) {
@@ -91,7 +92,6 @@ class WillPopView extends StatelessWidget {
             onlyOne: true,
             textStyle: const TextStyle(fontSize: 14, color: Colors.white),
           );
-          return false;
         } else {
           // 退出app
           exit(0);

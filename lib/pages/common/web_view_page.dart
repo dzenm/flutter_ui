@@ -35,12 +35,10 @@ class _WebViewPageState extends State<WebViewPage> {
   Widget build(BuildContext context) {
     return WillPopView(
       behavior: BackBehavior.custom,
-      onWillPop: () async {
+      onPopInvoked: (didPop) async {
         if (_controller != null && (await _controller!.canGoBack())) {
           await _controller!.goBack();
-          return false;
         }
-        return true;
       },
       child: Scaffold(
         appBar: AppBar(title: Text(_title, style: const TextStyle(color: Colors.white))),
