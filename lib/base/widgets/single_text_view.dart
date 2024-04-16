@@ -185,7 +185,7 @@ class TitleView extends StatelessWidget {
   }
 
   Widget _buildTitleIcon() {
-    Widget? child = icon != null ? Icon(icon, color: iconColor, size: fontSize + 4) : image ?? Container();
+    Widget? child = icon != null ? Icon(icon, color: iconColor, size: fontSize + 4) : image ?? const SizedBox.shrink();
     return Offstage(
       offstage: icon == null && image == null,
       child: child,

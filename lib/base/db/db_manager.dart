@@ -10,16 +10,9 @@ typedef UpgradeDatabase = List<String> Function(int oldVersion, int newVersion);
 
 /// 数据库管理，包括打开，关闭，创建，升级，增删改查。
 /// 如果需要打印日志，在main注册
-///   DBManager().init(logPrint: Log.db);
-/// 如果需要重新设置数据库的名称
+///   DBManager().init(logPrint: Log.db, tables: []);
+/// 如果需要重新设置数据库的名称，如根据不同登录的用户设置，则在登录成功后设置
 ///   DBManager().userId = '123456';
-/// 在pubspec.yaml添加下列依赖
-/// dependencies:
-///  ...
-///  # sql
-///  sqflite: 2.2.7
-///  # 路径选择
-//   path_provider: 2.0.14
 class DBManager {
   static final DBManager _instance = DBManager._internal();
 

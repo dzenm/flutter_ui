@@ -161,7 +161,7 @@ class _BannerViewState extends State<BannerView> {
 
   @override
   Widget build(BuildContext context) {
-    if (realPageLength == 0) return Container();
+    if (realPageLength == 0) return const SizedBox.shrink();
     return SizedBox(
       width: widget.width,
       height: widget.height,
@@ -274,7 +274,7 @@ class _BannerViewState extends State<BannerView> {
   Widget _buildTitleView() {
     BannerData banner = widget.data[_getRealPageIndex()];
     String? title = banner.title;
-    if (title?.isEmpty ?? false) return Container();
+    if (title?.isEmpty ?? false) return const SizedBox.shrink();
 
     Widget child = Text(
       title!,

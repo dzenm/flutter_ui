@@ -184,7 +184,7 @@ class CoolKeyboard {
             },
             height: keyboardHeightNotifier.value);
       } else {
-        return Container();
+        return const SizedBox.shrink();
       }
     });
 

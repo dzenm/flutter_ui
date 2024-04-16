@@ -195,7 +195,7 @@ class _LinearPercentIndicatorState extends State<LinearPercentIndicator> with Si
           maskFilter: widget.maskFilter,
           clipLinearGradient: widget.clipLinearGradient,
         ),
-        child: (widget.center != null) ? Center(child: widget.center) : Container(),
+        child: (widget.center != null) ? Center(child: widget.center) : const SizedBox.shrink(),
       ),
     );
 

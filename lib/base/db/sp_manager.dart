@@ -17,7 +17,7 @@ class SPManager {
   /// 日志打印，如果不设置，将不打印日志，如果要设置在使用数据库之前调用 [init]
   Function? _logPrint;
 
-  Future init({Function? logPrint}) async {
+  Future<bool> init({Function? logPrint}) async {
     _prefs = await SharedPreferences.getInstance();
     _logPrint = logPrint;
     return _prefs != null;
@@ -159,7 +159,7 @@ class SPManager {
     _instance._prefs?.remove(key);
   }
 
-  void log(String text) => _logPrint == null ? null : _logPrint!(text, tag: 'SpUtil');
+  void log(String text) => _logPrint == null ? null : _logPrint!(text, tag: 'SPManager');
 }
 
 enum SPValue {

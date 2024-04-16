@@ -255,7 +255,7 @@ class GridPickerState extends State<PhotoGridPicker> {
     }
   }*/
 
-  final Widget _placeholder = Container();
+  final Widget _placeholder = const SizedBox.shrink();
 
   _getImgChild(int index) {
     try {
@@ -277,7 +277,7 @@ class GridPickerState extends State<PhotoGridPicker> {
 
       return Container(
           child: path.startsWith('http')
-              ? Container() //网络图片
+              ? const SizedBox.shrink() //网络图片
               : localFile != null
                   ? Image(
                       image: FileImageExt(File(path)), //本地图片

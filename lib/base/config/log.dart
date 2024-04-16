@@ -71,10 +71,6 @@ class Log {
   }
 
   static void _printLog(String? tag, dynamic msg, Level level) {
-    if (kReleaseMode) {
-      // release模式不打印
-      return;
-    }
     if (!_instance._debug) {
       // 如果不是自定义的debug模式也不打印
       return;
@@ -137,9 +133,7 @@ class Log {
       suffix = colors[1];
     }
     String log = '$prefix$msg$suffix';
-    if (kDebugMode) {
-      print(log);
-    }
+    debugPrint(log);
   }
 
   /// 处理文本颜色

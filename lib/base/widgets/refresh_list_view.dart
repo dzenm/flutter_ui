@@ -85,7 +85,7 @@ class _RefreshListViewState extends State<RefreshListView> {
     bool isInit = widget.itemCount != 0;
     // 列表数量
     int itemCount = widget.itemCount + (!widget.showFooter ? 0 : 1);
-    Widget child = Container();
+    Widget child = const SizedBox.shrink();
     if (isInit) {
       if (widget.refresh != null) {
         child = RefreshIndicator(

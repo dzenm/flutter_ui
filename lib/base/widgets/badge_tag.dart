@@ -17,7 +17,7 @@ class BadgeTag extends StatelessWidget {
   Widget build(BuildContext context) {
     // 当数量小于0，不展示
     if (count < 0) {
-      return Container();
+      return const SizedBox.shrink();
     }
     bool isOver100 = count > 99;
     bool isOver10 = count > 9;

@@ -40,20 +40,12 @@ class HttpError {
 /// HTTP请求
 /// 如果需要自定义处理，先初始化
 ///   HttpsClient().init(
-///     logPrint: Log.http,
+///     logPrint: Log.h,
 ///     loading: CommonDialog.loading,
 ///     toast: CommonDialog.showToast,
 ///     interceptors: [HttpInterceptor(), CookieInterceptor()],
+///     baseUrls: [Configs.baseUrl, Configs.apiUrl, Configs.localhostUrl],
 ///   );
-/// 在pubspec.yaml添加下列依赖
-/// dependencies:
-///  ...
-///  # HTTP请求
-///  retrofit: 4.0.1
-/// dev_dependencies:
-///  ...
-///  retrofit_generator: 6.0.0+3
-//   build_runner: 2.3.2
 class HttpsClient {
   static const int _connectTimeout = 20000;
   static const int _receiveTimeout = 20000;

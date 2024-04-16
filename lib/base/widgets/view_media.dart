@@ -162,7 +162,7 @@ class _ViewMediaState extends State<ViewMedia> {
   /// 图片位置指示器布局
   Widget _buildIndicatorView() {
     if (_medias.isEmpty) {
-      return Container();
+      return const SizedBox.shrink();
     }
     return Positioned(
       bottom: 40,
@@ -178,7 +178,7 @@ class _ViewMediaState extends State<ViewMedia> {
   /// 下载图片按钮布局
   Widget _buildDownloadPhotoView() {
     if (widget.onDownload == null) {
-      return Container();
+      return const SizedBox.shrink();
     }
     return Positioned(
       bottom: 40,
@@ -201,7 +201,7 @@ class _ViewMediaState extends State<ViewMedia> {
   /// 上一页图片按钮布局
   Widget _buildBeforePageView() {
     if (!widget.showTurnPage || _currentIndex == 0 || _medias.length == 1) {
-      return Container();
+      return const SizedBox.shrink();
     }
     return Positioned(
       left: 24,
@@ -223,7 +223,7 @@ class _ViewMediaState extends State<ViewMedia> {
   /// 下一页图片按钮布局
   Widget _buildNextPageView() {
     if (!widget.showTurnPage || _currentIndex == _medias.length - 1 || _medias.length == 1) {
-      return Container();
+      return const SizedBox.shrink();
     }
     return Positioned(
       right: 24,

@@ -96,11 +96,11 @@ class WindowButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (kIsWeb) {
-      return Container();
+      return const SizedBox.shrink();
     } else {
       // Don't show button on macOS
       if (Platform.isMacOS) {
-        return Container();
+        return const SizedBox.shrink();
       }
     }
     return MouseStateBuilder(
@@ -112,7 +112,7 @@ class WindowButton extends StatelessWidget {
           iconColor: getIconColor(mouseState),
         );
 
-        var icon = (iconBuilder != null) ? iconBuilder!(buttonContext) : Container();
+        var icon = (iconBuilder != null) ? iconBuilder!(buttonContext) : const SizedBox.shrink();
         // Used when buttonContext.backgroundColor is null, allowing the AnimatedContainer to fade-out smoothly.
         var fadeOutColor = getBackgroundColor(MouseState()..isMouseOver = true).withOpacity(0);
         var animationMs = mouseState.isMouseOver ? (animate ? 100 : 0) : (animate ? 200 : 0);

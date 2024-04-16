@@ -18,7 +18,7 @@ class _MoveWindow extends StatelessWidget {
           windowManager.startDragging();
         },
         onDoubleTap: onDoubleTap ?? () async => await windowManager.isMaximized() ? windowManager.unmaximize() : windowManager.maximize(),
-        child: child ?? Container());
+        child: child ?? const SizedBox.shrink());
   }
 }
 
@@ -46,9 +46,9 @@ class WindowTitleBarBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (kIsWeb) {
-      return Container();
+      return const SizedBox.shrink();
     }
     const titleBarHeight = kTitleBarHeight;
-    return SizedBox(height: titleBarHeight, child: child ?? Container());
+    return SizedBox(height: titleBarHeight, child: child ?? const SizedBox.shrink());
   }
 }
