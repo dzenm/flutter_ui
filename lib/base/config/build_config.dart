@@ -6,6 +6,8 @@ import 'package:package_info_plus/package_info_plus.dart';
 /// Created by a0010 on 2023/2/10 15:16
 /// 构建时的参数
 class BuildConfig {
+  BuildConfig._();
+
   /// 是否是debug模式
   static bool isDebug = kDebugMode;
 
