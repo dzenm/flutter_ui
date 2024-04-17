@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import '../../http/api_services.dart';
 import 'data_entity.dart';
 import 'log_interceptor.dart';
+import 'package:http_parser/http_parser.dart';
 
 /// 请求成功返回的结果
 typedef Success = void Function(dynamic data);
@@ -289,6 +290,7 @@ class HttpsClient {
   Future<void> upload(
     int fileType,
     String path,
+    String fileName,
     int original, {
     CancelToken? cancelToken,
     Success? success,
@@ -299,7 +301,8 @@ class HttpsClient {
     int sceneType = 0;
     MultipartFile multipartFile = MultipartFile.fromFileSync(
       path,
-      filename: path.split(Platform.pathSeparator).last,
+      filename: fileName,
+      contentType: MediaType.parse('multipart/form-data'),
     );
     FormData data = FormData()
       ..files.add(MapEntry('file', multipartFile))
