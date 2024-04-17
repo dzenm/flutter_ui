@@ -119,6 +119,9 @@ class _MainPageDesktopWrapperState extends State<MainPageDesktopWrapper> with Wi
     super.initState();
     _log('initState');
 
+    // 这里注意一个问题，在桌面端可能会存在多个StatefulWidget在一个页面，导致数据变化的时候，没有重建子StatefulWidget，而是直接调用旧的build方法，
+    // 所以会出现initState未执行的情况，这种问题的解决办法是在didUpdateWidget进行判断oldWidget与widget是否相同，将initState应该执行的内容再次执行即可
+
     windowManager.addListener(this);
     trayManager.addListener(this);
 
