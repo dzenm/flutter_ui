@@ -46,7 +46,7 @@ dependencies:
   #  db文件夹
   sqflite_common_ffi: 2.3.2+1                   # SQLite3数据库存储(全平台) https://pub.dev/packages/sqflite_common_ffi
   #  http文件夹
-  dio: 5.4.2+1                                  # HTTP请求 https://pub.flutter-io.cn/packages/dio
+  dio: 5.4.3+1                                  # HTTP请求 https://pub.flutter-io.cn/packages/dio
   #  naughty文件夹
   #  dio: 5.4.2+1                                  # HTTP请求 https://pub.flutter-io.cn/packages/dio
   intl: 0.18.1                                  # 国际化工具 https://pub.dev/packages/intl
@@ -54,7 +54,7 @@ dependencies:
   json_annotation: 4.8.1                        # Json序列化 https://pub.dev/packages/json_annotation
   #  utils文件夹
   path: 1.8.3                                   # 文件路径处理 https://pub.dev/packages/path
-  path_provider: 2.1.2                          # 获取本地文件路径(全平台) https://pub.dev/packages/path_provider
+  path_provider: 2.1.3                          # 获取本地文件路径(全平台) https://pub.dev/packages/path_provider
   ffi: 2.1.0                                    # 桌面端win和dart字符串相互转化工具 https://pub.flutter-io.cn/packages/ffi
   win32: 5.2.0                                  # 桌面端dart使用C编译的工具 https://pub.flutter-io.cn/packages/win32
   convert: 3.1.1                                # 字符串转化工具 https://pub.dev/packages/convert
