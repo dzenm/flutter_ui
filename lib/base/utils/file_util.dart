@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -356,6 +357,16 @@ class PathInfo {
 
   /// 是否是Gif图
   bool get isGif => mimeTypeSuffix?.toLowerCase() == 'gif';
+
+  @override
+  String toString() {
+    return '${objectRuntimeType(this, 'PathInfo')}'
+        '(path="$path", '
+        'parent=$parent, '
+        'name=$name, '
+        'fileName=$fileName, '
+        'mimeTypeSuffix=$mimeTypeSuffix,)';
+  }
 }
 
 /// 用户目录
