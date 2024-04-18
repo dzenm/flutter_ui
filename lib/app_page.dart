@@ -31,12 +31,13 @@ class AppPage extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    _log('build');
+
     // 初始化需要用到context的地方，在创建MaterialApp之前
     // 初始化其他需要context的组件
     _useContextBeforeBuild(context);
 
     Widget child;
-
     if (BuildConfig.isTestApp) {
       // 简易模式测试页面
       child = _buildEasyApp();
@@ -44,7 +45,6 @@ class AppPage extends StatelessWidget {
       child = _buildMaterialApp();
     }
 
-    // Provider
     return GlobalBox(
       child: _buildProviderApp(
         child: child,
@@ -53,27 +53,13 @@ class AppPage extends StatelessWidget {
   }
 
   /// 初始化需要用到context的地方，在创建MaterialApp之前
-  void _useContextBeforeBuild(BuildContext context) {}
-
-  /// Provider 共享状态管理
-  Widget _buildProviderApp({Widget? child}) {
-    return MultiProvider(providers: [
-      ChangeNotifierProvider(create: (context) => LocalModel()),
-      ChangeNotifierProvider(create: (context) => MainModel()),
-      ChangeNotifierProvider(create: (context) => HomeModel()),
-      ChangeNotifierProvider(create: (context) => NavModel()),
-      ChangeNotifierProvider(create: (context) => MeModel()),
-      ChangeNotifierProvider(create: (context) => UserModel()),
-      ChangeNotifierProvider(create: (context) => BannerModel()),
-      ChangeNotifierProvider(create: (context) => ArticleModel()),
-      ChangeNotifierProvider(create: (context) => WebsiteModel()),
-      ChangeNotifierProvider(create: (context) => StudyModel()),
-      ChangeNotifierProvider(create: (context) => OrderModel()),
-    ], child: child);
+  void _useContextBeforeBuild(BuildContext context) {
+    _log('useContextBeforeBuild');
   }
 
   /// 进入学习页面
   Widget _buildEasyApp() {
+    _log('buildEasyApp');
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -99,6 +85,24 @@ class AppPage extends StatelessWidget {
     );
   }
 
+  /// Provider 共享状态管理
+  Widget _buildProviderApp({Widget? child}) {
+    _log('buildProviderApp');
+    return MultiProvider(providers: [
+      ChangeNotifierProvider(create: (context) => LocalModel()),
+      ChangeNotifierProvider(create: (context) => MainModel()),
+      ChangeNotifierProvider(create: (context) => HomeModel()),
+      ChangeNotifierProvider(create: (context) => NavModel()),
+      ChangeNotifierProvider(create: (context) => MeModel()),
+      ChangeNotifierProvider(create: (context) => UserModel()),
+      ChangeNotifierProvider(create: (context) => BannerModel()),
+      ChangeNotifierProvider(create: (context) => ArticleModel()),
+      ChangeNotifierProvider(create: (context) => WebsiteModel()),
+      ChangeNotifierProvider(create: (context) => StudyModel()),
+      ChangeNotifierProvider(create: (context) => OrderModel()),
+    ], child: child);
+  }
+
   /// 全局适配屏幕
   // Widget _buildScreenApp(Widget child) => ScreenUtilInit(
   //       designSize: const Size(414, 896),
@@ -109,6 +113,7 @@ class AppPage extends StatelessWidget {
 
   /// 全局设置（主题、语言、屏幕适配、路由设置）
   Widget _buildMaterialApp() {
+    _log('buildMaterialApp');
     return Consumer<LocalModel>(builder: (context, locale, widget) {
       if (AppRouter.isNewRouter) {
         return _buildNewRouterApp(locale);
@@ -119,6 +124,7 @@ class AppPage extends StatelessWidget {
 
   /// 使用 [Router] 1.0
   Widget _buildOldRouterApp(LocalModel locale) {
+    _log('buildOldRouterApp');
     // 获取第一个页面
     final Widget child;
     if (SPManager.getUserLoginState()) {
@@ -215,6 +221,7 @@ class AppPage extends StatelessWidget {
 
   /// 使用 [Router] 2.0
   Widget _buildNewRouterApp(LocalModel locale) {
+    _log('buildNewRouterApp');
     AppTheme theme = locale.theme;
     AppRouterDelegate delegate = _createRouteDelegate();
     // 初始化需要用到context的地方，在创建MaterialApp之后
@@ -309,7 +316,10 @@ class AppPage extends StatelessWidget {
   /// 在[Navigator]1.0使用时，是在[MaterialApp.navigatorKey]设置。
   /// 在[Navigator]2.0使用时，是在[AppRouterDelegate.build]设置。
   void _useContextAfterBuild(BuildContext context) {
+    _log('useContextAfterBuild');
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     CommonDialog.init(context); // 初始化需要context，在这里注册
   }
+
+  void _log(String msg) => BuildConfig.showPageLog ? Log.i(msg, tag: 'AppPage') : null;
 }
