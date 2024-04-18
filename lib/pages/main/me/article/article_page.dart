@@ -38,7 +38,7 @@ class _ArticlePageState extends ListPageState<ArticleEntity, ArticlePage> {
     await HttpManager().getPrivateArticles(
       page: pageIndex,
       isShowDialog: false,
-      success: (data) {
+      success: (data) async {
         CoinEntity coin = CoinEntity.fromJson(data['coinInfo']);
         PageEntity page = PageEntity.fromJson(data['shareArticles']);
         List<dynamic> datas = (page.datas ?? []);
@@ -47,7 +47,7 @@ class _ArticlePageState extends ListPageState<ArticleEntity, ArticlePage> {
         context.read<UserModel>().coin = coin;
         updateState(list, page.pageCount);
       },
-      failed: (error) => updateFailedState(),
+      failed: (error) async => updateFailedState(),
     );
   }
 }

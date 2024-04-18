@@ -81,7 +81,7 @@ class _TabProjectPageState extends TabListPageState<TabProjectPage> {
     await HttpManager().getProjects(
       page: page,
       success: (pageCount) => updateState(pageCount),
-      failed: (e) => updateFailedState(),
+      failed: (error) async => updateFailedState(),
     );
   }
 }

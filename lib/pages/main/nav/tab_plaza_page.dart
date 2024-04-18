@@ -81,7 +81,7 @@ class _TabPlazaPageState extends TabListPageState<TabPlazaPage> {
     await HttpManager().getPlazas(
       page: page,
       success: (pageCount) => updateState(pageCount),
-      failed: (e) => updateFailedState(),
+      failed: (error) async => updateFailedState(),
     );
   }
 }

@@ -36,7 +36,7 @@ class HttpManager {
 
   /// 登录并进入到主页
   Future<void> login(String username, String password) async {
-    await _httpClient.request(apiServices.login(username, password), success: (data) {
+    await _httpClient.request(apiServices.login(username, password), success: (data) async {
       UserEntity user = UserEntity.fromJson(data);
 
       String userId = user.id.toString();
@@ -57,7 +57,7 @@ class HttpManager {
 
   /// 注册并进入到主页
   Future<void> register(String username, String password, String rPassword) async {
-    await _httpClient.request(apiServices.register(username, password, rPassword), success: (data) {
+    await _httpClient.request(apiServices.register(username, password, rPassword), success: (data) async {
       UserEntity user = UserEntity.fromJson(data);
 
       // 先保存SP，数据库创建需要用到SP的userId
@@ -97,7 +97,7 @@ class HttpManager {
       List<dynamic> datas = page.datas ?? [];
       List<ArticleEntity> list = datas.map((e) => ArticleEntity.fromJson(e)).toList();
       if (success != null) success(list, page.pageCount);
-    }, failed: (error) {
+    }, failed: (error) async {
       if (failed != null) {
         failed(error);
       }
@@ -114,7 +114,7 @@ class HttpManager {
       List<dynamic> datas = ((data ?? []) as List<dynamic>);
       List<ArticleEntity> list = datas.map((e) => ArticleEntity.fromJson(e)).toList();
       if (success != null) success(list);
-    }, failed: (error) {
+    }, failed: (error) async {
       if (failed != null) {
         failed(error);
       }
@@ -131,7 +131,7 @@ class HttpManager {
       List<dynamic> datas = ((data ?? []) as List<dynamic>);
       List<WebsiteEntity> list = datas.map((e) => WebsiteEntity.fromJson(e)).toList();
       if (success != null) success(list);
-    }, failed: (error) {
+    }, failed: (error) async {
       if (failed != null) {
         failed(error);
       }
@@ -148,7 +148,7 @@ class HttpManager {
       List<dynamic> datas = ((data ?? []) as List<dynamic>);
       List<HotkeyEntity> list = datas.map((e) => HotkeyEntity.fromJson(e)).toList();
       if (success != null) success(list);
-    }, failed: (error) {
+    }, failed: (error) async {
       if (failed != null) {
         failed(error);
       }
@@ -165,7 +165,7 @@ class HttpManager {
       List<dynamic> datas = ((data ?? []) as List<dynamic>);
       List<TreeEntity> list = datas.map((e) => TreeEntity.fromJson(e)).toList();
       if (success != null) success(list);
-    }, failed: (error) {
+    }, failed: (error) async {
       if (failed != null) {
         failed(error);
       }
@@ -188,7 +188,7 @@ class HttpManager {
         List<TreeEntity> list = datas.map((e) => TreeEntity.fromJson(e)).toList();
         if (success != null) success(list);
       },
-      failed: (error) {
+      failed: (error) async {
         if (failed != null) {
           failed(error);
         }
@@ -206,7 +206,7 @@ class HttpManager {
       List<dynamic> datas = ((data ?? []) as List<dynamic>);
       List<NaviEntity> list = datas.map((e) => NaviEntity.fromJson(e)).toList();
       if (success != null) success(list);
-    }, failed: (error) {
+    }, failed: (error) async {
       if (failed != null) {
         failed(error);
       }
@@ -223,7 +223,7 @@ class HttpManager {
       List<dynamic> datas = ((data ?? []) as List<dynamic>);
       List<TreeEntity> list = datas.map((e) => TreeEntity.fromJson(e)).toList();
       if (success != null) success(list);
-    }, failed: (error) {
+    }, failed: (error) async {
       if (failed != null) {
         failed(error);
       }
@@ -241,7 +241,7 @@ class HttpManager {
     var future = collect ? apiServices.collectArticle(id) : apiServices.uncollectArticle(id);
     await _httpClient.request(future, isShowDialog: isShowDialog, success: (data) async {
       if (success != null) success();
-    }, failed: (e) {
+    }, failed: (error) async {
       if (failed != null) failed();
     });
   }
@@ -263,7 +263,7 @@ class HttpManager {
         List<CollectEntity> list = datas.map((e) => CollectEntity.fromJson(e)).toList();
         if (success != null) success(list, page.pageCount);
       },
-      failed: (error) {
+      failed: (error) async {
         if (failed != null) {
           failed(error);
         }
@@ -288,7 +288,7 @@ class HttpManager {
         List<CoinEntity> list = datas.map((e) => CoinEntity.fromJson(e)).toList();
         if (success != null) success(list, page.pageCount);
       },
-      failed: (error) {
+      failed: (error) async {
         if (failed != null) {
           failed(error);
         }
@@ -313,7 +313,7 @@ class HttpManager {
         List<CoinRecordEntity> list = datas.map((e) => CoinRecordEntity.fromJson(e)).toList();
         if (success != null) success(list, page.pageCount);
       },
-      failed: (error) {
+      failed: (error) async {
         if (failed != null) {
           failed(error);
         }
@@ -338,7 +338,7 @@ class HttpManager {
         context.read<NavModel>().updatePlazaArticles(list);
         if (success != null) success(page.pageCount);
       },
-      failed: (error) {
+      failed: (error) async {
         if (failed != null) {
           failed(error);
         }
@@ -360,7 +360,7 @@ class HttpManager {
         context.read<NavModel>().updateChapters(list);
         if (success != null) success();
       },
-      failed: (error) {
+      failed: (error) async {
         if (failed != null) {
           failed(error);
         }
@@ -385,7 +385,7 @@ class HttpManager {
         context.read<NavModel>().updateQAArticles(list);
         if (success != null) success(page.pageCount);
       },
-      failed: (error) {
+      failed: (error) async {
         if (failed != null) {
           failed(error);
         }
@@ -410,7 +410,7 @@ class HttpManager {
         context.read<NavModel>().updateProjectArticles(list);
         if (success != null) success(page.pageCount);
       },
-      failed: (error) {
+      failed: (error) async {
         if (failed != null) {
           failed(error);
         }
@@ -432,7 +432,7 @@ class HttpManager {
         context.read<NavModel>().updateBlogChapters(list);
         if (success != null) success();
       },
-      failed: (error) {
+      failed: (error) async {
         if (failed != null) {
           failed(error);
         }
@@ -454,7 +454,7 @@ class HttpManager {
         context.read<NavModel>().updateTools(list);
         if (success != null) success();
       },
-      failed: (error) {
+      failed: (error) async {
         if (failed != null) {
           failed(error);
         }
@@ -475,7 +475,7 @@ class HttpManager {
       success: (data) async {
         if (success != null) success(data);
       },
-      failed: (error) {
+      failed: (error) async {
         if (failed != null) {
           failed(error);
         }
@@ -490,7 +490,7 @@ class HttpManager {
   }) async {
     await _httpClient.request(apiServices.userinfo(), isShowDialog: false, success: (data) async {
       if (success != null) success(data);
-    }, failed: (error) {
+    }, failed: (error) async {
       if (failed != null) {
         failed(error);
       }
@@ -498,7 +498,7 @@ class HttpManager {
   }
 
   Future<void> logout() async {
-    await _httpClient.request(apiServices.logout(), success: (data) {
+    await _httpClient.request(apiServices.logout(), success: (data) async {
       SPManager.clearUser();
       ProviderManager.clear();
       AppRouterDelegate.of(Application().context).push(Routers.login, clearStack: true);

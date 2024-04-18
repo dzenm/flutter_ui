@@ -286,7 +286,7 @@ class _MePageState extends State<_MePage> {
   }
 
   Future<void> _getUserinfo() async {
-    await HttpManager().getUserinfo(success: (data) {
+    await HttpManager().getUserinfo(success: (data) async {
       // 用户数据
       UserEntity user = UserEntity.fromJson(data['userInfo']);
       int count = data['collectArticleInfo']['count'];

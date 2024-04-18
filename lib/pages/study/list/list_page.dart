@@ -86,7 +86,7 @@ class _ListPageState extends State<ListPage> {
         }
         setState(() {});
       },
-      failed: (error) => setState(() => _controller.loadFailed()),
+      failed: (error) async => setState(() => _controller.loadFailed()),
     );
   }
 }

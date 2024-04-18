@@ -54,7 +54,7 @@ class _MedicinePageState extends State<MedicinePage> {
 
   Future<void> _getZhongyao() async {
     await Future.delayed(const Duration(milliseconds: 300));
-    await HttpsClient().request(api(index: 1).getZhongYao(_key, widget.medicineName), success: (data) {
+    await HttpsClient().request(api(index: 1).getZhongYao(_key, widget.medicineName), success: (data) async {
       _list = (data['newslist'] as List<dynamic>).map((e) => MedicineEntity.fromJson(e)).toList();
       setState(() {});
     });

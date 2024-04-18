@@ -1,15 +1,14 @@
 import 'dart:io';
 import 'dart:math';
 
-// ignore_for_file: depend_on_referenced_packages
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../channel/plugin_manager.dart';
-import '../http/http.dart';
 import '../config/build_config.dart';
 import '../config/log.dart';
+import '../http/http.dart';
 import '../resource/resource.dart';
 import 'common_dialog.dart';
 import 'linear_percent_indicator.dart';
@@ -114,7 +113,7 @@ class _UpgradeDialogState extends State<UpgradeDialog> {
       widget.appVersion.url!,
       file.path,
       cancelToken: _cancel,
-      success: (data) {
+      success: (data) async {
         PluginManager.installAPK(filePath);
         _running = false;
         setState(() {});
@@ -127,8 +126,8 @@ class _UpgradeDialogState extends State<UpgradeDialog> {
         _percent = percent;
         setState(() {});
       },
-      failed: (e) {
-        Log.d('文件下载错误：error=${e.msg}');
+      failed: (error) async {
+        Log.d('文件下载错误：error=${error.msg}');
         _running = false;
         setState(() {});
       },

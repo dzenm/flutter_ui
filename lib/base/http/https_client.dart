@@ -3,23 +3,26 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
+import 'package:http_parser/http_parser.dart';
 
 import '../../http/api_services.dart';
 import 'data_entity.dart';
 import 'log_interceptor.dart';
-import 'package:http_parser/http_parser.dart';
 
-/// 请求成功返回的结果
-typedef Success = void Function(dynamic data);
+/// 请求成功返回的结果，使用Future<void> 作为返回值，是为了在有些情况保证执行 [Success]
+/// 之后能够拿到通过 [HttpsClient.request] 请求返回的 Future<dynamic>
+typedef Success = Future<void> Function(dynamic data);
 
 /// 下载/上传文件的进度
 typedef Progress = void Function(double percent, int count, int total);
 
-/// 请求完成的标志
-typedef Complete = void Function();
+/// 请求完成的标志，使用Future<void> 作为返回值，是为了在有些情况保证执行 [Complete]
+/// 之后能够拿到通过 [HttpsClient.request] 请求返回的 Future<dynamic>
+typedef Complete = Future<void> Function();
 
-/// 请求失败返回的结果
-typedef Failed = void Function(HttpError error);
+/// 请求失败返回的结果，使用Future<void> 作为返回值，是为了在有些情况保证执行 [Failed]
+/// 之后能够拿到通过 [HttpsClient.request] 请求返回的 Future<dynamic>
+typedef Failed = Future<void> Function(HttpError error);
 
 /// 默认[HttpsClient._baseUrls]对应的[ApiServices]，用于获取请求
 ApiServices apiServices = api();
@@ -45,7 +48,6 @@ class HttpError {
 ///     loading: CommonDialog.loading,
 ///     toast: CommonDialog.showToast,
 ///     interceptors: [HttpInterceptor(), CookieInterceptor()],
-///     baseUrls: [Configs.baseUrl, Configs.apiUrl, Configs.localhostUrl],
 ///   );
 class HttpsClient {
   static const int _connectTimeout = 20000;
@@ -205,16 +207,16 @@ class HttpsClient {
     if (cancel != null) cancel();
     if (error == null) {
       // 请求成功
-      if (success != null) success(result);
+      if (success != null) await success(result);
     } else {
       // 请求失败，需要自定义处理异常，处理异常
-      if (failed != null) failed(error);
+      if (failed != null) await failed(error);
       // 如果有异常通过toast提醒
       if (isShowToast && _toast != null) _toast!('请求错误：${error.msg}');
       log('HTTP请求错误: code=${error.code}, msg=${error.msg}, error=${error.error}');
     }
     // 不管成功与否，都进入完成处理
-    if (complete != null) complete();
+    if (complete != null) await complete();
     return result;
   }
 
@@ -263,7 +265,7 @@ class HttpsClient {
       if (response.statusCode == 200 || response.statusCode == 206) {
         // 下载成功的返回结果
         if (success != null) {
-          success(savePath);
+          await success(savePath);
         }
       } else {
         // 下载请求失败的错误信息
@@ -275,7 +277,7 @@ class HttpsClient {
     }
     // 下载结果
     if (error == null) return;
-    if (failed != null) failed(error!);
+    if (failed != null) await failed(error!);
     log('下载错误: code=${error!.code}, msg=${error!.msg}, error=${error!.error}');
   }
 
@@ -336,25 +338,23 @@ class HttpsClient {
         },
       );
       log('上传结果: statusCode=${response.statusCode}, statusMessage=${response.statusMessage}, data=${response.data}');
-      final value = DataEntity<dynamic>.fromJson(response.data!);
       if (response.statusCode == 200) {
+        final value = DataEntity<dynamic>.fromJson(response.data!);
         // 下载成功的返回结果
         if (success != null) {
-          success(value.data);
+          await success(value.data);
         }
       } else {
         // 下载请求失败的错误信息
         error = HttpError(response.statusCode ?? 1000, response.statusMessage ?? '', error.toString());
       }
-      Future.value(value.data);
     } on DioException catch (e) {
       // 下载失败的错误信息
       error = HttpError(1000, e.message ?? '', error.toString());
-      Future.value(false);
     }
     // 下载结果
     if (error == null) return;
-    if (failed != null) failed(error!);
+    if (failed != null) await failed(error!);
     log('上传错误: code=${error!.code}, msg=${error!.msg}, error=${error!.error}');
   }
 

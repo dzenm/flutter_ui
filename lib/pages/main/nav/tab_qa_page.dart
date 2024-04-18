@@ -81,7 +81,7 @@ class _TabQAPageState extends TabListPageState<TabQAPage> {
     await HttpManager().getQuestions(
       page: page,
       success: (pageCount) => updateState(pageCount),
-      failed: (e) => updateFailedState(),
+      failed: (error) async => updateFailedState(),
     );
   }
 }

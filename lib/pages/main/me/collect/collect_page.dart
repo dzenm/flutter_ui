@@ -39,7 +39,7 @@ class _CollectPageState extends ListPageState<CollectEntity, CollectPage> {
       page: pageIndex,
       isShowDialog: false,
       success: (list, pageCount) => updateState(list, pageCount),
-      failed: (error) => updateFailedState(),
+      failed: (error) async => updateFailedState(),
     );
   }
 }

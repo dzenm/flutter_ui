@@ -36,7 +36,7 @@ class _RankPageState extends ListPageState<CoinEntity, RankPage> {
       page: pageIndex,
       isShowDialog: false,
       success: (list, pageCount) => updateState(list, pageCount),
-      failed: (error) => updateFailedState(),
+      failed: (error) async => updateFailedState(),
     );
   }
 }

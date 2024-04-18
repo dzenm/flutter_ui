@@ -36,7 +36,7 @@ class _CoinPageState extends ListPageState<CoinRecordEntity, CoinPage> {
       page: pageIndex,
       isShowDialog: false,
       success: (list, pageCount) => updateState(list, pageCount),
-      failed: (error) => updateFailedState(),
+      failed: (error) async => updateFailedState(),
     );
   }
 }
