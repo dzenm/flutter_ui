@@ -18,7 +18,7 @@ A new Flutter application.
 
     * #### 实体类
 
-      实体类生成文件使用IDEA插件 `FlutterJsonBeanFactory` 生成，创建实体类格式
+      实体类生成.g文件使用IDEA插件 `FlutterJsonBeanFactory` ，创建实体类格式
         ```
         import 'package:json_annotation/json_annotation.dart';
         import '../base/db/db.dart';
@@ -49,7 +49,45 @@ A new Flutter application.
     > // profile模式
     >
     > flutter run --profile
-    
+
+# 一、Windows
+
+## 打包：
+
+* ### 打包zip压缩文件
+
+  #### 1. 通过命令行 `flutter build windows` 生成文件（ 生成的打包文件位于 `build/windows/x64/runner/Release/` ）
+
+  #### 2. 将 `documents/windows_dll/` 文件夹里的所有文件复制到上一步生成的 `Release` 文件夹中 （如果还使用了其它第三方依赖需要添加dll文件，都复制到 `Release` 文件夹）
+
+  #### 3. 压缩 `Release` 文件夹生成zip
+
+* ### 打包exe安装包：
+
+  #### 1. 通过命令行 `flutter build windows` 生成文件
+
+  #### 2. 参考 [flutter开发windows桌面软件，使用Inno Setup打包成安装程序，支持中文](https://blog.csdn.net/weixin_44786530/article/details/135643352) 填写好信息即可打包生成exe可安装文件
+
+# 二、MacOS
+
+# 三、Linux
+
+* #### `hotkey_manager` 依赖 `keybinder-3.0`，运行以下命令
+
+  > sudo apt-get install keybinder-3.0
+
+# 四、Android
+
+## 打包：
+
+* #### 通过命令行打包
+
+  > flutter build apk --target-platform android-arm,android-arm64,android-x64 --split-per-abi --no-sound-null-safety
+
+# 五、iOS
+
+# 六、Web
+
 # 项目结构
 
   ```
@@ -118,44 +156,6 @@ A new Flutter application.
   * ### 2. 从main进入application，类似于Android原生的Application，主要用于初始化第三方依赖配置
   * ### 3. 从application进入app_page，是页面相关的初始化，比如model、国际化、主题、路由等
   * ### 4. 然后是进入pages文件夹的页面
-
-# 一、Windows
-## 打包：
-
-  * ### 打包zip压缩文件
-    
-    #### 1. 通过命令行 `flutter build windows` 生成文件（ 生成的打包文件位于 `build/windows/x64/runner/Release/` ）
-
-    #### 2. 将 `documents/windows_dll/` 文件夹里的所有文件复制到上一步生成的 `Release` 文件夹中 （如果还使用了其它第三方依赖需要添加dll文件，都复制到 `Release` 文件夹） 
-
-    #### 3. 压缩 `Release` 文件夹生成zip
-
-  * ### 打包exe安装包：
-
-    #### 1. 通过命令行 `flutter build windows` 生成文件
-
-    #### 2. 参考 [flutter开发windows桌面软件，使用Inno Setup打包成安装程序，支持中文](https://blog.csdn.net/weixin_44786530/article/details/135643352) 填写好信息即可打包生成exe可安装文件
-
-# 二、MacOS
-
-# 三、Linux
-
-  * #### `hotkey_manager` 依赖 `keybinder-3.0`，运行以下命令
-
-    > sudo apt-get install keybinder-3.0
-
-# 四、Android
-
-## 打包：
-
-  * #### 通过命令行打包
-
-    > flutter build apk --target-platform android-arm,android-arm64,android-x64 --split-per-abi --no-sound-null-safety
-
-# 五、iOS
-
-# 六、Web
-
 
 ## 联系我
 
