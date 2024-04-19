@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../base/widgets/widget.dart';
 import 'chat_item_widget.dart';
@@ -122,42 +123,45 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget _buildEditView() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.white, width: 0.5),
-        borderRadius: BorderRadius.circular(4),
-        // color: Colors.white,
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-                isCollapsed: true,
+    return Shortcuts(
+      shortcuts: {
+        LogicalKeySet(LogicalKeyboardKey.enter): SendMsgIntent(),
+      },
+      child: Actions(
+        actions: {
+          SendMsgIntent: CallbackAction<SendMsgIntent>(onInvoke: (intent) => _sendMessage()),
+        },
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.white, width: 0.5),
+            borderRadius: BorderRadius.circular(4),
+            // color: Colors.white,
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    isCollapsed: true,
+                  ),
+                  style: const TextStyle(color: Colors.white),
+                  maxLines: 4,
+                  minLines: 1,
+                  showCursor: true,
+                  readOnly: editViewReadOnly,
+                  controller: editViewController,
+                ),
               ),
-              style: const TextStyle(color: Colors.white),
-              maxLines: 4,
-              minLines: 1,
-              showCursor: true,
-              readOnly: editViewReadOnly,
-              controller: editViewController,
-            ),
+              IconButton(
+                onPressed: () => _sendMessage(),
+                icon: const Icon(Icons.send_sharp),
+              ),
+            ],
           ),
-          IconButton(
-            onPressed: () {
-              _chatObserver.standby(changeCount: 1);
-              editViewController.text = '';
-              setState(() {
-                needIncrementUnreadMsgCount = true;
-                chatModels.insert(0, createChatModel());
-              });
-            },
-            icon: const Icon(Icons.send_sharp),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -227,6 +231,15 @@ class _ChatPageState extends State<ChatPage> {
     return Iterable<int>.generate(num).map((e) => createChatModel()).toList();
   }
 
+  void _sendMessage() {
+    _chatObserver.standby(changeCount: 1);
+    editViewController.text = '';
+    setState(() {
+      needIncrementUnreadMsgCount = true;
+      chatModels.insert(0, createChatModel());
+    });
+  }
+
   _addMessage(int count) {
     _chatObserver.standby(changeCount: count);
     setState(() {
@@ -283,3 +296,6 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 }
+
+/// 发送消息快捷键创建 Intent
+class SendMsgIntent extends Intent {}
