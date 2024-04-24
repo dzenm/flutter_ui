@@ -25,9 +25,6 @@ class Routers {
   static const String viewMedia = '${root}viewMedia';
 
   static List<AppPageConfig> get routers => [
-        AppPageConfig(root, builder: (settings) {
-          return const AppPage();
-        }),
         AppPageConfig(notFound, builder: (settings) {
           return const NotFoundPage();
         }),

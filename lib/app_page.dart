@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
-import 'application.dart';
 import 'base/base.dart';
 import 'generated/l10n.dart';
 import 'models/article_model.dart';
@@ -22,11 +21,15 @@ import 'pages/my/my_page.dart';
 import 'pages/routers.dart';
 import 'pages/study/study_model.dart';
 
+typedef HandleContext = void Function(BuildContext context);
+
 ///
 /// Created by a0010 on 2022/7/28 10:56
 /// 顶级页面，跟页面相关的全局属性配置/初始化必要的全局信息
 class AppPage extends StatelessWidget {
-  const AppPage({super.key});
+  final HandleContext handle;
+
+  const AppPage({super.key, required this.handle});
 
   // This widget is the root of your application.
   @override
@@ -139,7 +142,7 @@ class AppPage extends StatelessWidget {
     // 初始化需要用到context的地方，在创建MaterialApp之后
     Future.delayed(Duration.zero, () {
       BuildContext context = navigatorKey.currentState!.context;
-      Application().context = context;
+      handle(context);
       _useContextAfterBuild(context);
     });
     // Page必须放在MaterialApp中运行
@@ -227,7 +230,7 @@ class AppPage extends StatelessWidget {
     // 初始化需要用到context的地方，在创建MaterialApp之后
     Future.delayed(Duration.zero, () {
       BuildContext context = delegate.context;
-      Application().context = context;
+      handle(context);
       _useContextAfterBuild(context);
     });
     // Page必须放在MaterialApp中运行

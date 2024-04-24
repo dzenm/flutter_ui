@@ -29,11 +29,6 @@ class Application {
   /// 全局context
   BuildContext get context => _context!;
 
-  /// 在[MaterialApp]设置
-  set context(BuildContext context) {
-    _context = context;
-  }
-
   /// App入口
   void main(List<String> args) async {
     bool isMainWindow = args.firstOrNull != 'multi_window';
@@ -51,7 +46,7 @@ class Application {
         usePathUrlStrategy();
         Provider.debugCheckInvalidValueType = null;
         //启动第一个页面(必须使用AppPage作为最顶层页面，包含一些页面初始化相关的信息)
-        runMockApp(const AppPage());
+        runMockApp(AppPage(handle: (ctx) => _context = ctx));
         // 初始化桌面端窗口
         DesktopWrapper.ensureInitialized();
       }, handleMsg: (message) async {
