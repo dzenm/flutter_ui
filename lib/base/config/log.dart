@@ -127,31 +127,47 @@ class Log {
   void _println(Level level, String msg, {bool isDefaultColor = true}) {
     // 处理文本展示的颜色
     String prefix = '', suffix = '';
-    if (!isDefaultColor) {
+    if (isDefaultColor) {
       List<String> colors = _convertTextColor(level);
       prefix = colors[0];
       suffix = colors[1];
     }
-    String log = '$prefix$msg$suffix';
+    String log = "$prefix$msg$suffix";
     debugPrint(log);
   }
 
   /// 处理文本颜色
   List<String> _convertTextColor(Level level) {
+    int ansiColor;
     switch (level) {
       case Level.verbose:
-        return ['\x1B[36m ', ' \x1B[0m'];
+        ansiColor = 37;
+        break;
       case Level.debug:
-        return ['\x1B[35m ', ' \x1B[0m'];
+        ansiColor = 32;
+        break;
       case Level.info:
-        return ['\x1B[34m ', ' \x1B[0m'];
+        ansiColor = 36;
+        break;
       case Level.warm:
-        return ['\x1B[33m ', ' \x1B[0m'];
+        ansiColor = 33;
+        break;
       case Level.error:
-        return ['\x1B[31m ', ' \x1B[0m'];
-      default:
-        return ['', ''];
+        ansiColor = 31;
+        break;
+      case Level.http:
+        ansiColor = 35;
+        break;
+      case Level.db:
+        ansiColor = 35;
+        break;
+      case Level.page:
+        ansiColor = 34;
+        break;
     }
+    String prefix = '\x1b[';
+    String suffix = 'm';
+    return ['$prefix$ansiColor$suffix ', ' \x1b[0m'];
   }
 }
 
