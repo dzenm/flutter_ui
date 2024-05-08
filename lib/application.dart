@@ -34,7 +34,11 @@ class Application {
     bool isMainWindow = args.firstOrNull != 'multi_window';
     if (isMainWindow) {
       MockBinding.ensureInitialized();
+      // 初始化
       await _initMainApp();
+      // 初始化登录过后的信息
+      _initLoginState();
+
       // 运行flutter时全局异常捕获
       HandleError().catchFlutterError(() {
         log('╔══════════════════════════════════════════════════════════════════════════════════════════════════╗');
@@ -49,11 +53,13 @@ class Application {
         runMockApp(AppPage(handle: (ctx) => _context = ctx));
         // 初始化桌面端窗口
         DesktopWrapper.ensureInitialized();
-      }, handleMsg: (message) async {
-        String logFileName = 'crash_${DateTime.now()}.log';
-        log('异常信息文件：logFileName=$logFileName');
-        await FileUtil().save(logFileName, message, dir: 'crash');
-      });
+      }, config: MessageConfig(
+        handleMsg: (message) async {
+          String logFileName = 'crash_${DateTime.now()}.log';
+          log('异常信息文件：logFileName=$logFileName');
+          await FileUtil().save(logFileName, message, dir: 'crash');
+        },
+      ));
     } else {
       log('APP初始运行时参数：args=${args.toString()}');
       final windowId = int.parse(args[1]);
@@ -70,24 +76,24 @@ class Application {
   /// 初始化信息
   Future<void> _initMainApp() async {
     await BuildConfig.init();
-    log('═══════════════════════════════════════════ 开始初始化 ══════════════════════════════════════════════');
+    log('╔══════════════════════════════════════════ 开始初始化 ═════════════════════════════════════════════╗');
 
     int now = DateTime.now().millisecondsSinceEpoch;
     int duration = 0;
-    log('启动: now=$now, duration=$duration');
-    log('Application是否单例: ${Application.instance == Application()}');
+    log('  启动: now=$now, duration=$duration');
+    log('  Application是否单例: ${Application.instance == Application()}');
 
-    log('初始化 SharedPreferences');
-    bool res = await SPManager().init(logPrint: Log.i);
-    log('初始化 SharedPreferences ${res ? '成功' : '失败'}');
+    log('  初始化 SharedPreferences');
+    bool res = await SPManager().init(logPrint: Log.d);
+    log('  初始化 SharedPreferences ${res ? '成功' : '失败'}');
 
-    log('初始化 Android设置');
+    log('  初始化 Android设置');
     _initAndroidSettings();
 
-    log('初始化 iOS设置');
+    log('  初始化 iOS设置');
     _initIOSSettings();
 
-    log('初始化 HttpsClient');
+    log('  初始化 HttpsClient');
     HttpsClient().init(
       logPrint: Log.h,
       loading: CommonDialog.loading,
@@ -96,7 +102,7 @@ class Application {
       baseUrls: [Configs.baseUrl, Configs.apiUrl, Configs.localhostUrl],
     );
 
-    log('初始化 DBManager');
+    log('  初始化 DBManager');
     DBManager().init(logPrint: Log.b, tables: [
       OrderEntity(),
       ProductEntity(),
@@ -106,25 +112,29 @@ class Application {
       WebsiteEntity(),
     ]);
 
-    log('初始化 FileUtil');
+    log('  初始化 FileUtil');
     await FileUtil().init(logPrint: Log.i);
 
-    log('初始化 PluginManager');
+    log('  初始化 PluginManager');
     PluginManager.init(logPrint: Log.d);
 
-    log('初始化 HotkeyUtil');
+    log('  初始化 HotkeyUtil');
     await HotkeyUtil().init(logPrint: Log.d);
-    if (SPManager.getUserLoginState()) {
-      String userId = SPManager.getUserId();
-      // 设置用户数据库名称
-      DBManager().userId = userId;
-      FileUtil().initLoginUserDirectory(SPManager.getUserId());
-    }
 
     int end = DateTime.now().millisecondsSinceEpoch;
     duration = end - now;
-    log('结束: now=$end, duration=$duration');
-    log('═══════════════════════════════════════════ 结束初始化 ══════════════════════════════════════════════');
+    log('  结束: now=$end, duration=$duration');
+    log('╚══════════════════════════════════════════ 结束初始化 ═════════════════════════════════════════════╝');
+  }
+
+  /// 设置登录过后的初始化信息
+  void _initLoginState() {
+    if (!SPManager.getUserLoginState()) return;
+
+    String userId = SPManager.getUserId();
+    // 设置用户数据库名称
+    DBManager().userId = userId;
+    FileUtil().initLoginUserDirectory(SPManager.getUserId());
   }
 
   /// 初始化Android设置
