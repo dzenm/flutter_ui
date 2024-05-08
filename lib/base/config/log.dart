@@ -1,7 +1,3 @@
-import 'dart:math';
-
-import 'package:flutter/foundation.dart';
-
 import 'build_config.dart';
 
 ///
@@ -10,180 +6,275 @@ import 'build_config.dart';
 ///
 class Log {
   Log._internal();
+  static final Log _ins = Log._internal();
+  factory Log() => _ins;
 
-  static final Log _instance = Log._internal();
+  static const String _myTag = 'Log';
 
-  static Log get instance => _instance;
-
-  factory Log() => _instance;
-
-  static const String _tag = 'Log';
-  static const int _maxLength = 800;
-
-  /// 打印日志的级别
-  Level _level = Level.verbose;
-
-  /// 是否是debug模式
-  bool _debug = true;
-
-  /// 默认打印日志的tag
-  String _myTag = _tag;
-
-  static void init({bool? isDebug, String? tag, Level? level}) {
-    _instance._debug = isDebug ?? true;
-    _instance._myTag = tag ?? _tag;
-    _instance._level = level ?? Level.verbose;
+  static void init({LogConfig? config}) {
+    _ins._config = config;
   }
 
-  static void v(dynamic msg, {String tag = ''}) {
-    _printLog(tag, msg, Level.verbose);
-  }
+  LogConfig? _config; // 日志输出的配置信息
+  final _Logger _log = _Logger();
+  static void v(dynamic msg, {String? tag}) => _ins._log.verbose(msg, tag: tag);
+  static void d(dynamic msg, {String? tag}) => _ins._log.debug(msg, tag: tag);
+  static void i(dynamic msg, {String? tag}) => _ins._log.info(msg, tag: tag);
+  static void w(dynamic msg, {String? tag}) => _ins._log.warning(msg, tag: tag);
+  static void e(dynamic msg, {String? tag}) => _ins._log.error(msg, tag: tag);
+  static void h(dynamic msg, {String? tag}) => _ins._log.http(msg, tag: tag);
+  static void b(dynamic msg, {String? tag}) => _ins._log.db(msg, tag: tag);
+  static void p(dynamic msg, {String? tag}) => _ins._log.page(msg, tag: tag);
+}
 
-  static void d(dynamic msg, {String? tag}) {
-    _printLog(tag, msg, Level.debug);
-  }
+/// Log with class name
+mixin Logging {
+  void logVerbose(String msg) => Log.v('$runtimeType \t$msg');
+  void   logDebug(String msg) => Log.d('$runtimeType \t$msg');
+  void    logInfo(String msg) => Log.i('$runtimeType \t$msg');
+  void logWarning(String msg) => Log.w('$runtimeType \t$msg');
+  void   logError(String msg) => Log.e('$runtimeType \t$msg');
+  void    logHttp(String msg) => Log.h('$runtimeType \t$msg');
+  void      logDB(String msg) => Log.b('$runtimeType \t$msg');
+  void    logPage(String msg) => Log.p('$runtimeType \t$msg');
+}
 
-  static void i(dynamic msg, {String? tag}) {
-    _printLog(tag, msg, Level.info);
-  }
+/// 日志输出的内容格式
+abstract class LogPrinter {
+  /// 输出日志
+  void output(String msg, {String head = '', String tail = ''});
+}
 
-  static void w(dynamic msg, {String? tag}) {
-    _printLog(tag, msg, Level.warm);
-  }
+/// 默认日志输出方式
+class _LogPrinter extends LogPrinter {
+  int chunkLength = 1000; // split output when it's too long
+  int limitLength = -1; // max output length, -1 means unlimited
 
-  static void e(dynamic msg, {String? tag}) {
-    _printLog(tag, msg, Level.error);
-  }
+  String carriageReturn = '↩️';
 
-  static void h(dynamic msg, {String? tag}) {
-    if (!BuildConfig.showHTTPLog) return;
-    _printLog(tag, msg, Level.http);
-  }
-
-  static void b(dynamic msg, {String? tag}) {
-    if (!BuildConfig.showDBLog) return;
-    _printLog(tag, msg, Level.db);
-  }
-
-  static void p(dynamic msg, {String? tag}) {
-    if (!BuildConfig.showPageLog || msg == null) return;
-    _printLog(tag, msg, Level.page);
-  }
-
-  static void _printLog(String? tag, dynamic msg, Level level) {
-    if (!_instance._debug) {
-      // 如果不是自定义的debug模式也不打印
-      return;
+  @override
+  void output(String body, {String head = '', String tail = ''}) {
+    int size = body.length;
+    if (0 < limitLength && limitLength < size) {
+      body = '${body.substring(0, limitLength - 3)}...';
+      size = limitLength;
     }
-    if (_instance._level.value > level.value) {
-      // 如果打印的日志级别在默认的级别之下不打印
-      return;
+    int start = 0, end = chunkLength;
+    for (; end <= size; start = end, end += chunkLength) {
+      _print(head + body.substring(start, end) + tail + carriageReturn);
     }
-    String result = _instance._convertMessage(tag, level.tag, msg);
-    _instance._printLongMsg(result, (msg) => _instance._println(level, msg));
+    if (start >= size) {
+      // all chunks printed
+      assert(start == size, 'should not happen');
+    } else if (start == 0) {
+      // body too short
+      _print(head + body + tail);
+    } else {
+      // print last chunk
+      _print(head + body.substring(start) + tail);
+    }
   }
 
-  /// 处理消息的内容
-  String _convertMessage(String? tag, String levelTag, dynamic msg) {
+  /// override for redirecting outputs
+  void _print(Object? object) => print(object);
+}
+
+/// 输出日志接口
+abstract class Logger {
+  List<LogPrinter> get printers;
+  void verbose(dynamic msg, {String? tag});
+  void   debug(dynamic msg, {String? tag});
+  void    info(dynamic msg, {String? tag});
+  void warning(dynamic msg, {String? tag});
+  void   error(dynamic msg, {String? tag});
+  void    http(dynamic msg, {String? tag});
+  void      db(dynamic msg, {String? tag});
+  void    page(dynamic msg, {String? tag});
+}
+
+/// 组装和输出不同级别[Level]的日志
+mixin _LoggerMixin implements Logger {
+  /// 当前时间字符串：格式为 'yyyy/mm/dd HH:MM:SSS'
+  String get now {
     DateTime now = DateTime.now();
-    String year = '${now.year}';
-    String month = '${now.month}'.padLeft(2, '0');
-    String day = '${now.day}'.padLeft(2, '0');
-    String hour = '${now.hour}'.padLeft(2, '0');
-    String minute = '${now.minute}'.padLeft(2, '0');
-    String second = '${now.second}'.padLeft(2, '0');
-    String millisecond = '${now.millisecond}'.padLeft(3, '0').substring(0, 3);
-    String time = '$year-$month-$day $hour:$minute:$second $millisecond';
-    String packageName = BuildConfig.isInitialized ? BuildConfig.packageInfo.packageName : '';
-
-    StringBuffer sb = StringBuffer();
-    sb.write(packageName);
-    sb.write(' ');
-    sb.write(time);
-    sb.write(' ');
-    sb.write(levelTag);
-    sb.write('/');
-    sb.write(((tag ?? '').isEmpty) ? _myTag : tag);
-    sb.write('  ');
-    sb.write(msg);
-    return sb.toString();
+    String m = '${now.month}'.padLeft(2, '0');
+    String d = '${now.day}'.padLeft(2, '0');
+    String h = '${now.hour}'.padLeft(2, '0');
+    String min = '${now.minute}'.padLeft(2, '0');
+    String sec = '${now.second}'.padLeft(2, '0');
+    String mill = '${now.millisecond}'.padLeft(3, '0').substring(0, 3);
+    return '${now.year}/$m/$d $h:$min:$sec $mill';
   }
 
-  /// 打印长日志
-  void _printLongMsg(String msg, void Function(String msg) printLog) {
-    int len = msg.length;
-    if (len > _maxLength) {
-      for (int i = 0; i < len;) {
-        int start = i;
-        i = i + _maxLength;
-        printLog(msg.substring(start, min(i, len)));
+  /// 日志输出的配置信息
+  LogConfig get _config => Log._ins._config ?? LogConfig();
+
+  void output(Level level, String? tag, dynamic msg) {
+    // 判断是否达到需要打印的级别
+    if (_config.level & level.flag <= 0) return;
+
+    String packageName = BuildConfig.isInitialized ? BuildConfig.packageInfo.packageName : '';
+    StringBuffer sb = StringBuffer();
+    sb
+      ..write(packageName)
+      ..write(' [$now] ')
+      ..write(level.tag);
+    String myTag = tag ?? Log._myTag;
+    if (_config.aligned) {
+      int len = 16;
+      if (len < myTag.length) {
+        myTag = '${myTag.substring(0, 12)}...';
+      }
+      myTag = myTag.padRight(len);
+    }
+    sb.write('/$myTag  ');
+    if (_config.showCaller) {
+      LogCaller? caller = LogCaller.parse(StackTrace.current);
+      if (caller != null) {
+        sb.write('$caller $msg');
+      } else {
+        sb.write(msg);
       }
     } else {
-      printLog(msg);
+      sb.write(msg);
+    }
+
+    String body = sb.toString();
+    if (_config.colorful) {
+      // 字符变色的前缀
+      String head = '\x1b[${level.color}m ';
+      // 字符变色的后缀
+      String tail = ' \x1b[0m';
+      for (var printer in printers) {
+        printer.output(body, head: head, tail: tail);
+      }
+    } else {
+      for (var printer in printers) {
+        printer.output(body);
+      }
     }
   }
 
-  /// 换行打印
-  void _println(Level level, String msg, {bool isDefaultColor = true}) {
-    // 处理文本展示的颜色
-    String prefix = '', suffix = '';
-    if (isDefaultColor) {
-      List<String> colors = _convertTextColor(level);
-      prefix = colors[0];
-      suffix = colors[1];
+  @override
+  void verbose(msg, {tag}) => output(Level.verbose, tag, msg);
+  @override
+  void   debug(msg, {tag}) => output(Level.debug, tag, msg);
+  @override
+  void    info(msg, {tag}) => output(Level.info, tag, msg);
+  @override
+  void warning(msg, {tag}) => output(Level.warning, tag, msg);
+  @override
+  void   error(msg, {tag}) => output(Level.error, tag, msg);
+  @override
+  void    http(msg, {tag}) => output(Level.http, tag, msg);
+  @override
+  void      db(msg, {tag}) => output(Level.db, tag, msg);
+  @override
+  void    page(msg, {tag}) => output(Level.page, tag, msg);
+}
+
+/// 输出日志
+class _Logger with _LoggerMixin {
+  final LogPrinter _printer = _LogPrinter();
+
+  @override
+  List<LogPrinter> get printers => [_printer];
+}
+
+/// 输出调用所在的行数
+class LogCaller {
+  LogCaller(this.name, this.path, this.line);
+
+  final String name;
+  final String path;
+  final int line;
+
+  @override
+  String toString() => '$path:$line';
+
+  /// locate the real caller: '#3      ...'
+  static String? locate(StackTrace current) {
+    List<String> array = current.toString().split('\n');
+    for (String line in array) {
+      if (line.contains('base/config/log.dart:')) {
+        // skip for Log
+        continue;
+      }
+      // assert(line.startsWith('#3      '), 'unknown stack trace: $current');
+      if (line.startsWith('#')) {
+        return line;
+      }
     }
-    String log = "$prefix$msg$suffix";
-    debugPrint(log);
+    // unknown format
+    return null;
   }
 
-  /// 处理文本颜色
-  List<String> _convertTextColor(Level level) {
-    int ansiColor;
-    switch (level) {
-      case Level.verbose:
-        ansiColor = 37;
-        break;
-      case Level.debug:
-        ansiColor = 32;
-        break;
-      case Level.info:
-        ansiColor = 36;
-        break;
-      case Level.warm:
-        ansiColor = 33;
-        break;
-      case Level.error:
-        ansiColor = 31;
-        break;
-      case Level.http:
-        ansiColor = 35;
-        break;
-      case Level.db:
-        ansiColor = 35;
-        break;
-      case Level.page:
-        ansiColor = 34;
-        break;
+  /// parse caller info from trace
+  static LogCaller? parse(StackTrace current) {
+    String? text = locate(current);
+    if (text == null) {
+      // unknown format
+      return null;
     }
-    String prefix = '\x1b[';
-    String suffix = 'm';
-    return ['$prefix$ansiColor$suffix ', ' \x1b[0m'];
+    // skip '#0      '
+    int pos = text.indexOf(' ');
+    text = text.substring(pos + 1).trimLeft();
+    // split 'name' & '(path:line:column)'
+    pos = text.lastIndexOf(' ');
+    String name = text.substring(0, pos);
+    String tail = text.substring(pos + 1);
+    String path = 'unknown.file';
+    String line = '-1';
+    int pos1 = tail.indexOf(':');
+    if (pos1 > 0) {
+      pos = tail.indexOf(':', pos1 + 1);
+      if (pos > 0) {
+        path = tail.substring(1, pos);
+        pos1 = pos + 1;
+        pos = tail.indexOf(':', pos1);
+        if (pos > 0) {
+          line = tail.substring(pos1, pos);
+        } else if (pos1 < tail.length) {
+          line = tail.substring(pos1, tail.length - 1);
+        }
+      }
+    }
+    return LogCaller(name, path, int.parse(line));
   }
 }
 
-/// 打印日志的级别
+/// 日志的配置信息
+class LogConfig {
+  int level;                 // 可以打印日志的级别，[level] 值只能为 [Level.kDebug]、[Level.kDevelop]、[Level.kRelease]
+  bool colorful = true;      // 输出的日志展示颜色
+  bool aligned = true;       // 输出的日志对齐
+  bool showCaller = false;   // 输出的日志展示调用的行数
+  LogConfig({
+    int? level,
+    this.colorful = true,
+    this.aligned = true,
+    this.showCaller = false
+  }) : level = level ?? Level.kDebug;
+}
+
+/// 输出日志的级别
 enum Level {
-  verbose(2, 'V'),
-  debug(3, 'D'),
-  info(4, 'I'),
-  warm(5, 'W'),
-  error(6, 'E'),
-  http(7, 'H'),
-  db(8, 'B'),
-  page(9, 'P');
+  verbose(1 << 0, 'V', '37'), // 1 << 0 = 1
+  debug  (1 << 1, 'D', '94'), // 1 << 1 = 2
+  info   (1 << 2, 'I', '36'), // 1 << 2 = 4
+  warning(1 << 3, 'W', '93'), // 1 << 3 = 8
+  error  (1 << 4, 'E', '31'), // 1 << 4 = 16
+  http   (1 << 5, 'H', '35'), // 1 << 5 = 32
+  db     (1 << 6, 'B', '96'), // 1 << 6 = 64
+  page   (1 << 7, 'P', '32'); // 1 << 7 = 128
 
-  final int value;
+  final int flag;
   final String tag;
+  final String color;
 
-  const Level(this.value, this.tag);
+  const Level(this.flag, this.tag, this.color);
+
+  static int kDebug =   debug.flag | info.flag | warning.flag | error.flag | http.flag | db.flag | page.flag; // 2+4+8+16+32+64+128=254
+  static int kDevelop =              info.flag | warning.flag | error.flag | http.flag | db.flag | page.flag; //   4+8+16+32+64+128=252
+  static int kRelease =              warning.flag | error.flag;                                               //     8+16          =24
 }
