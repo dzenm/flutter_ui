@@ -254,15 +254,15 @@ class PathInfo {
   String parent; // 文件所在的文件夹
   String? name; // 文件的名称，带后缀
   String? fileName; // 文件的名称，不带后缀
-  String? mimeTypeSuffix; // 文件后缀类型
+  String? suffix; // 文件后缀类型
 
-  PathInfo({required this.path, required this.parent, this.name, this.fileName, this.mimeTypeSuffix});
+  PathInfo._({required this.path, required this.parent, this.name, this.fileName, this.suffix});
 
   /// path=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x.png
   /// name=336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x.png
   /// fileName=336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x
   /// parent=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images
-  /// mimeTypeSuffix=png
+  /// suffix=png
   factory PathInfo.parse(String path) {
     int separatorIndex = path.lastIndexOf(Platform.pathSeparator);
     if (separatorIndex < 0) {
@@ -271,12 +271,12 @@ class PathInfo {
     String parent = '';
     String? name;
     String? fileName;
-    String? mimeTypeSuffix;
+    String? suffix;
     int index = path.lastIndexOf('.');
     // 如果不存在文件名称包含.的情况
     if (index < 0) {
       // 在路径的最后面加上/，判断是不是文件夹
-      Directory dir = Directory('$path/');
+      Directory dir = Directory('$path${Platform.pathSeparator}');
       if (dir.existsSync()) {
         // 是文件夹
         parent = dir.path;
@@ -291,22 +291,22 @@ class PathInfo {
       name = path.substring(separatorIndex + 1);
       fileName = path.substring(separatorIndex + 1, index);
       if (index + 1 < path.length) {
-        mimeTypeSuffix = path.substring(index + 1);
+        suffix = path.substring(index + 1);
       }
     }
-    return PathInfo(
+    return PathInfo._(
       path: path,
       parent: parent,
       name: name,
       fileName: fileName,
-      mimeTypeSuffix: mimeTypeSuffix,
+      suffix: suffix,
     );
   }
 
   /// file=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x.png
   /// suffix=thumb_
   /// addFileNamePrefix=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/thumb_336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x.png
-  String addFileNamePrefix(String prefix) => join(parent, '$prefix$fileName.${mimeTypeSuffix ?? ''}');
+  String addFileNamePrefix(String prefix) => join(parent, '$prefix$fileName.${suffix ?? ''}');
 
   /// file=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/thumb_336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x.png
   /// suffix=thumb_
@@ -317,13 +317,13 @@ class PathInfo {
     if (fileName!.startsWith(prefix)) {
       name = fileName!.substring(prefix.length);
     }
-    return join(parent, '$name.${mimeTypeSuffix ?? ''}');
+    return join(parent, '$name.${suffix ?? ''}');
   }
 
   /// file=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x.png
   /// suffix=_thumb
   /// addFileNameSuffix=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x_thumb.png
-  String addFileNameSuffix(String suffix) => join(parent, '$fileName$suffix.${mimeTypeSuffix ?? ''}');
+  String addFileNameSuffix(String suffix) => join(parent, '$fileName$suffix.${suffix ?? ''}');
 
   /// file=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x_thumb.png
   /// suffix=_thumb
@@ -334,7 +334,7 @@ class PathInfo {
     if (fileName!.endsWith(suffix)) {
       name = fileName!.substring(0, fileName!.lastIndexOf(suffix));
     }
-    return join(parent, '$name.${mimeTypeSuffix ?? ''}');
+    return join(parent, '$name.${suffix ?? ''}');
   }
 
   /// 文件名称起始或者终止位置是否包含字符串
@@ -353,10 +353,10 @@ class PathInfo {
   String copyPath(String parent) => join(parent, fileName);
 
   /// 获取文件类型
-  MimeType get mimeType => mimeTypes[mimeTypeSuffix] ?? MimeType.unknown;
+  MimeType get mimeType => mimeTypes[suffix] ?? MimeType.unknown;
 
   /// 是否是Gif图
-  bool get isGif => mimeTypeSuffix?.toLowerCase() == 'gif';
+  bool get isGif => suffix?.toLowerCase() == 'gif';
 
   @override
   String toString() {
@@ -365,7 +365,7 @@ class PathInfo {
         'parent=$parent, '
         'name=$name, '
         'fileName=$fileName, '
-        'mimeTypeSuffix=$mimeTypeSuffix,)';
+        'suffix=$suffix,)';
   }
 }
 

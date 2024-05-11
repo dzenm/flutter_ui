@@ -95,7 +95,7 @@ class Application {
 
     log('  初始化 HttpsClient');
     HttpsClient().init(
-      logPrint: Log.h,
+      logPrint: BuildConfig.showHTTPLog ? Log.h : null,
       loading: CommonDialog.loading,
       toast: CommonDialog.showToast,
       interceptors: [HttpInterceptor(), CookieInterceptor()],
@@ -103,7 +103,7 @@ class Application {
     );
 
     log('  初始化 DBManager');
-    DBManager().init(logPrint: Log.b, tables: [
+    DBManager().init(logPrint: BuildConfig.showDBLog ? Log.b : null, tables: [
       OrderEntity(),
       ProductEntity(),
       UserEntity(),
