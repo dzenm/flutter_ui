@@ -11,7 +11,6 @@ import 'package:http/http.dart' as http;
 /// Created by a0010 on 2023/8/15 15:23
 ///
 class ImageView extends StatelessWidget {
-  final Object? tag;
   final String url;
   final double? width;
   final double? height;
@@ -23,7 +22,6 @@ class ImageView extends StatelessWidget {
 
   const ImageView({
     super.key,
-    this.tag,
     required this.url,
     this.width,
     this.height,
@@ -102,14 +100,7 @@ class ImageView extends StatelessWidget {
         );
       }
     }
-    if (tag == null) {
-      return child;
-    }
-    return Hero(
-      tag: tag!,
-      transitionOnUserGestures: true,
-      child: child,
-    );
+    return child;
   }
 
   Widget _defaultErrorPlaceholder(double? width, {double? height}) {

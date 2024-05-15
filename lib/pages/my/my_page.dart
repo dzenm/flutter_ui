@@ -84,6 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            const Expanded(child: HomePage())
           ],
         ),
       ),
@@ -92,6 +93,119 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  List<Widget> _getListData() {
+    List<Map<String, dynamic>> list = [
+      {
+        'title': 'image 1',
+        'imageUrl': 'https://www.itying.com/images/flutter/1.png',
+        'description': 'this is image 1',
+      },
+      {
+        'title': 'image 2',
+        'imageUrl': 'https://www.itying.com/images/flutter/2.png',
+        'description': 'this is image 2',
+      },
+      {
+        'title': 'image 3',
+        'imageUrl': 'https://www.itying.com/images/flutter/3.png',
+        'description': 'this is image 3',
+      },
+      {
+        'title': 'image 4',
+        'imageUrl': 'https://www.itying.com/images/flutter/4.png',
+        'description': 'this is image 4',
+      },
+      {
+        'title': 'image 5',
+        'imageUrl': 'https://www.itying.com/images/flutter/5.png',
+        'description': 'this is image 5',
+      },
+      {
+        'title': 'image 6',
+        'imageUrl': 'https://www.itying.com/images/flutter/6.png',
+        'description': 'this is image 6',
+      }
+    ];
+    var tempList = list.map((arguments) {
+      return GestureDetector(
+        onTap: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return HeroPage(arguments: arguments);
+          }));
+        },
+        child: Container(
+            decoration: BoxDecoration(border: Border.all(color: const Color.fromRGBO(233, 233, 233, 0.9), width: 1)),
+            child: Column(
+              children: <Widget>[
+                Hero(tag: arguments['imageUrl'], child: Image.network(arguments['imageUrl'])),
+                const SizedBox(height: 12),
+                Text(
+                  arguments['title'],
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 20),
+                )
+              ],
+            )),
+      );
+    });
+    // ('xxx','xxx')
+    return tempList.toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.count(
+      crossAxisSpacing: 10.0,
+      //水平子 Widget 之间间距
+      mainAxisSpacing: 10.0,
+      //垂直子 Widget 之间间距
+      padding: const EdgeInsets.all(10),
+      crossAxisCount: 2,
+      //一行的 Widget 数量
+      // childAspectRatio:0.7,  //宽度和高度的比例
+      children: _getListData(),
+    );
+  }
+}
+
+class HeroPage extends StatefulWidget {
+  final Map arguments;
+
+  const HeroPage({super.key, required this.arguments});
+
+  @override
+  State<HeroPage> createState() => _HeroPageState();
+}
+
+class _HeroPageState extends State<HeroPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("详情页面"),
+      ),
+      body: ListView(
+        children: [
+          Hero(tag: widget.arguments["imageUrl"], child: Image.network(widget.arguments["imageUrl"])),
+          const SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.all(5),
+            child: Text(widget.arguments["description"], style: const TextStyle(fontSize: 22)),
+          )
+        ],
+      ),
     );
   }
 }

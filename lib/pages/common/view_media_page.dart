@@ -55,11 +55,17 @@ class ViewMediaPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TransitionBuilder? builder;
+    if (tag != null) {
+      builder = (BuildContext context, Widget? child) {
+        return Hero(tag: tag!, child: child!);
+      };
+    }
     return ViewMedia(
-      tag: tag,
       medias: medias,
       initialItem: initialItem,
       imageProvider: imageProvider,
+      builder: builder,
       onDownload: onDownload,
       decoration: decoration,
       showTurnPage: showTurnPage,
@@ -82,46 +88,50 @@ class CustomerPageRoute<T> extends PageRouteBuilder<T> {
             return widget;
           },
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            if (style == AnimatorStyle.fade) {
-              //逐渐消失的动画效果
-              return FadeTransition(
-                opacity: Tween(begin: 0.0, end: 1.0) //设置透明度
-                    .chain(CurveTween(curve: Curves.ease))
-                    .animate(animation),
-                child: child,
-              );
-            } else if (style == AnimatorStyle.scale) {
-              //缩放的动画效果
-              return ScaleTransition(
-                scale: Tween(begin: 0.7, end: 1.0) //设置缩放比例
-                    .chain(CurveTween(curve: Curves.ease))
-                    .animate(animation),
-                child: child,
-              );
-            } else if (style == AnimatorStyle.translate) {
-              //左右滑动动画效果
-              return SlideTransition(
-                position: Tween(begin: const Offset(1.0, 0.0), end: const Offset(0.0, 0.0)) //设置滑动起点和终点
-                    .chain(CurveTween(curve: Curves.easeInCubic))
-                    .animate(animation),
-                child: child,
-              );
-            } else {
-              //旋转+缩放动画效果
-              return RotationTransition(
-                turns: Tween(begin: 0.0, end: 1.0) //设置不透明度
-                    .chain(CurveTween(curve: Curves.ease))
-                    .animate(animation),
-                child: ScaleTransition(
-                  scale: Tween(begin: 0.0, end: 1.0) //设置不透明度
-                      .chain(CurveTween(curve: Curves.ease))
-                      .animate(animation),
-                  child: child,
-                ),
-              );
-            }
+            return _buildTransition(style, context, animation, secondaryAnimation, child);
           },
         );
+
+  static Widget _buildTransition(style, context, animation, secondaryAnimation, child) {
+    if (style == AnimatorStyle.fade) {
+      //逐渐消失的动画效果
+      return FadeTransition(
+        opacity: Tween(begin: 0.0, end: 1.0) //设置透明度
+            .chain(CurveTween(curve: Curves.ease))
+            .animate(animation),
+        child: child,
+      );
+    } else if (style == AnimatorStyle.scale) {
+      //缩放的动画效果
+      return ScaleTransition(
+        scale: Tween(begin: 0.7, end: 1.0) //设置缩放比例
+            .chain(CurveTween(curve: Curves.ease))
+            .animate(animation),
+        child: child,
+      );
+    } else if (style == AnimatorStyle.translate) {
+      //左右滑动动画效果
+      return SlideTransition(
+        position: Tween(begin: const Offset(1.0, 0.0), end: const Offset(0.0, 0.0)) //设置滑动起点和终点
+            .chain(CurveTween(curve: Curves.easeInCubic))
+            .animate(animation),
+        child: child,
+      );
+    } else {
+      //旋转+缩放动画效果
+      return RotationTransition(
+        turns: Tween(begin: 0.0, end: 1.0) //设置不透明度
+            .chain(CurveTween(curve: Curves.ease))
+            .animate(animation),
+        child: ScaleTransition(
+          scale: Tween(begin: 0.0, end: 1.0) //设置不透明度
+              .chain(CurveTween(curve: Curves.ease))
+              .animate(animation),
+          child: child,
+        ),
+      );
+    }
+  }
 }
 
 /// 页面跳转的动画样式

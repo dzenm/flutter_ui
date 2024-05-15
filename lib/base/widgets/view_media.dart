@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 
@@ -16,14 +17,22 @@ class MediaEntity<T> {
   T? data;
 
   MediaEntity({required this.url, this.uid, this.data});
+
+  @override
+  String toString() {
+    return '${objectRuntimeType(this, 'MediaEntity')}'
+        '(url="$url", '
+        'uid=$uid, '
+        'data=${data.toString()},)';
+  }
 }
 
 /// 图片预览页面
 class ViewMedia extends StatefulWidget {
-  final Object? tag;
   final List<MediaEntity> medias;
   final int initialItem;
   final ImageProvider<Object>? imageProvider;
+  final TransitionBuilder? builder;
   final DownloadCallback? onDownload;
   final BoxDecoration? decoration;
   final double initialScale;
@@ -31,10 +40,10 @@ class ViewMedia extends StatefulWidget {
 
   const ViewMedia({
     super.key,
-    this.tag,
     required this.medias,
     this.initialItem = 0,
     this.imageProvider,
+    this.builder,
     this.onDownload,
     this.decoration,
     this.initialScale = 1.0,
@@ -66,17 +75,19 @@ class _ViewMediaState extends State<ViewMedia> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: PhotoViewGestureDetectorScope(
-        axis: Axis.horizontal,
-        child: TapLayout(
-          onLongPress: () => {},
-          child: Stack(alignment: Alignment.center, children: [
-            _buildPageView(),
-            _buildBeforePageView(),
-            _buildNextPageView(),
-            _buildIndicatorView(),
-            _buildDownloadPhotoView(),
-          ]),
+      child: Material(
+        child: PhotoViewGestureDetectorScope(
+          axis: Axis.horizontal,
+          child: TapLayout(
+            onLongPress: () => {},
+            child: Stack(alignment: Alignment.center, children: [
+              _buildPageView(),
+              _buildBeforePageView(),
+              _buildNextPageView(),
+              _buildIndicatorView(),
+              _buildDownloadPhotoView(),
+            ]),
+          ),
         ),
       ),
     );
@@ -104,36 +115,27 @@ class _ViewMediaState extends State<ViewMedia> {
         MediaEntity media = _medias[index];
 
         String url = media.url;
-        Widget thumbChild = ImageView(
+        Widget child = ImageView(
           url: url,
-          tag: widget.tag,
           width: MediaQuery.of(context).size.width,
           isOrigin: true,
-        ); //缩略图先展示,无缩略图展示原图
-
-        Widget child = PhotoView(
+        );
+        if (widget.builder != null) {
+          child = widget.builder!(context, child);
+        }
+        return PhotoView(
           backgroundDecoration: widget.decoration,
           imageProvider: widget.imageProvider ?? _defaultImageProvider(media.url),
           gaplessPlayback: true,
           wantKeepAlive: true,
           initialScale: PhotoViewComputedScale.contained * widget.initialScale,
           minScale: PhotoViewComputedScale.contained,
-          maxScale: PhotoViewComputedScale.contained,
+          maxScale: PhotoViewComputedScale.contained * 4,
           gestureDetectorBehavior: HitTestBehavior.translucent,
           scaleStateChangedCallback: (isZoom) {},
-          loadingBuilder: (context, trunk) => thumbChild,
-          errorBuilder: (context, object, trace) => thumbChild,
+          loadingBuilder: (context, trunk) => child,
+          errorBuilder: (context, object, trace) => child,
           onTapUp: (context, details, controllerValue) => Navigator.pop(context),
-        );
-        if (widget.tag == null) {
-          return child;
-        }
-        if (widget.initialItem != index) {
-          return child;
-        }
-        return Hero(
-          tag: widget.tag!,
-          child: child,
         );
       },
     );
@@ -161,7 +163,7 @@ class _ViewMediaState extends State<ViewMedia> {
 
   /// 图片位置指示器布局
   Widget _buildIndicatorView() {
-    if (_medias.isEmpty) {
+    if (_medias.isEmpty || _medias.length == 1) {
       return const SizedBox.shrink();
     }
     return Positioned(
@@ -200,7 +202,8 @@ class _ViewMediaState extends State<ViewMedia> {
 
   /// 上一页图片按钮布局
   Widget _buildBeforePageView() {
-    if (!widget.showTurnPage || _currentIndex == 0 || _medias.length == 1) {
+    // 不展示翻页按钮，当前下标到了第一页
+    if (!widget.showTurnPage || _currentIndex == 0) {
       return const SizedBox.shrink();
     }
     return Positioned(
@@ -211,8 +214,7 @@ class _ViewMediaState extends State<ViewMedia> {
         isCircle: true,
         background: const Color(0xAA757575),
         onTap: () {
-          --_currentIndex;
-          _controller.jumpToPage(_currentIndex);
+          _controller.jumpToPage(--_currentIndex);
           setState(() {});
         },
         child: const Icon(Icons.navigate_before, size: 32, color: Colors.white),
@@ -222,7 +224,8 @@ class _ViewMediaState extends State<ViewMedia> {
 
   /// 下一页图片按钮布局
   Widget _buildNextPageView() {
-    if (!widget.showTurnPage || _currentIndex == _medias.length - 1 || _medias.length == 1) {
+    // 不展示翻页按钮，当前下标到了最后一页
+    if (!widget.showTurnPage || _currentIndex == _medias.length - 1) {
       return const SizedBox.shrink();
     }
     return Positioned(
@@ -233,8 +236,7 @@ class _ViewMediaState extends State<ViewMedia> {
         isCircle: true,
         background: const Color(0xAA757575),
         onTap: () {
-          ++_currentIndex;
-          _controller.jumpToPage(_currentIndex);
+          _controller.jumpToPage(++_currentIndex);
           setState(() {});
         },
         child: const Icon(Icons.navigate_next, size: 32, color: Colors.white),
