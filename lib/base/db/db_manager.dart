@@ -13,10 +13,8 @@ typedef UpgradeDatabase = List<String> Function(int oldVersion, int newVersion);
 ///   DBManager().init(logPrint: Log.db, tables: []);
 /// 如果需要重新设置数据库的名称，如根据不同登录的用户设置，则在登录成功后设置
 ///   DBManager().userId = '123456';
-class DBManager {
+final class DBManager {
   static final DBManager _instance = DBManager._internal();
-
-  static DBManager get instance => _instance;
 
   factory DBManager() => _instance;
 
@@ -25,8 +23,6 @@ class DBManager {
   }
 
   late DBManagerDelegate _delegate;
-
-  static const tempSuffix = '_TEMP';
 
   set userId(String userId) => _delegate.userId = userId;
 
@@ -144,28 +140,6 @@ class DBManager {
       limit: limit,
       offset: offset,
     );
-  }
-
-  /// 处理数据
-  void _handleSingleData<T extends DBBaseEntity>(dynamic data, void Function(T) result) {
-    if (data is List<T>) {
-      for (var table in data) {
-        result(table);
-      }
-    } else if (data is T) {
-      result(data);
-    } else {
-      log('插入的数据不是正确的实体类型');
-    }
-  }
-
-  /// 获取运行时的表类型
-  T? _getRuntimeTypeTable<T extends DBBaseEntity>() {
-    for (var tab in tables) {
-      if (tab is! T) continue;
-      return tab;
-    }
-    return null;
   }
 
   void log(String text) => _delegate.log(text);

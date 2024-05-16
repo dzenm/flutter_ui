@@ -388,29 +388,6 @@ class DBManagerDelegate {
     return list;
   }
 
-  /// 获取运行时的表类型
-  T? _getRuntimeTypeTable<T extends DBBaseEntity>() {
-    for (var tab in tables) {
-      if (tab is! T) continue;
-      return tab;
-    }
-    return null;
-  }
-
-  void _handleMap(
-    Map<String, dynamic>? whereMap,
-    List<String> whereArgs,
-    StringBuffer where,
-    StringBuffer params,
-  ) {
-    whereMap?.forEach((key, value) {
-      if (where.isNotEmpty) where.write(',');
-      where.write('$key = ?');
-      whereArgs.add(value);
-      params.write('$key=$value');
-    });
-  }
-
   /// 将查询语句和对应的值合并为完整的sql
   String _mergeSql(String? where, List<Object?>? args) {
     if ((where ?? '').isEmpty) return '';
