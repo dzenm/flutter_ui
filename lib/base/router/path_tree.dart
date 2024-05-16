@@ -47,7 +47,7 @@ class SubTree<T> {
         'globValue=$globValue, '
         'fixed=$fixed, '
         'varSubTree=$varSubTree, '
-        'regexes=$regexes,)';
+        'regexes=$regexes)';
   }
 }
 

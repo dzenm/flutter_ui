@@ -365,7 +365,7 @@ class PathInfo {
         'parent=$parent, '
         'name=$name, '
         'fileName=$fileName, '
-        'suffix=$suffix,)';
+        'suffix=$suffix)';
   }
 }
 

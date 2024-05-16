@@ -23,7 +23,7 @@ class MediaEntity<T> {
     return '${objectRuntimeType(this, 'MediaEntity')}'
         '(url="$url", '
         'uid=$uid, '
-        'data=${data.toString()},)';
+        'data=${data.toString()})';
   }
 }
 

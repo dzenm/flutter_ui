@@ -121,6 +121,6 @@ class AppRouteSettings extends RouteSettings {
         'pathSegments=$pathSegments, '
         'queryParameters=$queryParameters, '
         'body=$body, '
-        'isDirectly=$isDirectly,)';
+        'isDirectly=$isDirectly)';
   }
 }
