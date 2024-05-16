@@ -4,12 +4,12 @@ import 'build_config.dart';
 /// Created by a0010 on 2022/3/22 09:38
 /// 日志打印
 ///
-class Log {
+final class Log {
   Log._internal();
   static final Log _ins = Log._internal();
   factory Log() => _ins;
 
-  static const String _myTag = 'Log';
+  static const String _tag = 'Log';
 
   static void init({LogConfig? config}) {
     _ins._config = config;
@@ -29,14 +29,15 @@ class Log {
 
 /// Log with class name
 mixin Logging {
-  void logVerbose(String msg) => Log.v('$runtimeType \t$msg');
-  void   logDebug(String msg) => Log.d('$runtimeType \t$msg');
-  void    logInfo(String msg) => Log.i('$runtimeType \t$msg');
-  void logWarning(String msg) => Log.w('$runtimeType \t$msg');
-  void   logError(String msg) => Log.e('$runtimeType \t$msg');
-  void    logHttp(String msg) => Log.h('$runtimeType \t$msg');
-  void      logDB(String msg) => Log.b('$runtimeType \t$msg');
-  void    logPage(String msg) => Log.p('$runtimeType \t$msg');
+  void logVerbose(String msg) => Log.v(msg, tag: _tag);
+  void   logDebug(String msg) => Log.d(msg, tag: _tag);
+  void    logInfo(String msg) => Log.i(msg, tag: _tag);
+  void logWarning(String msg) => Log.w(msg, tag: _tag);
+  void   logError(String msg) => Log.e(msg, tag: _tag);
+  void    logHttp(String msg) => Log.h(msg, tag: _tag);
+  void      logDB(String msg) => Log.b(msg, tag: _tag);
+  void    logPage(String msg) => Log.p(msg, tag: _tag);
+  String get _tag => '$runtimeType';
 }
 
 /// 日志输出的内容格式
@@ -109,7 +110,7 @@ mixin _LoggerMixin implements Logger {
   /// 日志输出的配置信息
   LogConfig get _config => Log._ins._config ?? LogConfig();
 
-  void output(Level level, String? tag, dynamic msg) {
+  void log(Level level, dynamic msg, String? tag) {
     // 判断是否达到需要打印的级别
     if (_config.level & level.flag <= 0) return;
 
@@ -119,11 +120,11 @@ mixin _LoggerMixin implements Logger {
       ..write(packageName)
       ..write(' [$now] ')
       ..write(level.tag);
-    String myTag = tag ?? Log._myTag;
+    String myTag = tag ?? Log._tag;
     if (_config.aligned) {
-      int len = 16;
+      int len = _config.alignedTagMaxLength;
       if (len < myTag.length) {
-        myTag = '${myTag.substring(0, 12)}...';
+        myTag = '${myTag.substring(0, len - 3)}...';
       }
       myTag = myTag.padRight(len);
     }
@@ -156,21 +157,21 @@ mixin _LoggerMixin implements Logger {
   }
 
   @override
-  void verbose(msg, {tag}) => output(Level.verbose, tag, msg);
+  void verbose(msg, {tag}) => log(Level.verbose, msg, tag);
   @override
-  void   debug(msg, {tag}) => output(Level.debug, tag, msg);
+  void   debug(msg, {tag}) => log(Level.debug, msg, tag);
   @override
-  void    info(msg, {tag}) => output(Level.info, tag, msg);
+  void    info(msg, {tag}) => log(Level.info, msg, tag);
   @override
-  void warning(msg, {tag}) => output(Level.warning, tag, msg);
+  void warning(msg, {tag}) => log(Level.warning, msg, tag);
   @override
-  void   error(msg, {tag}) => output(Level.error, tag, msg);
+  void   error(msg, {tag}) => log(Level.error, msg, tag);
   @override
-  void    http(msg, {tag}) => output(Level.http, tag, msg);
+  void    http(msg, {tag}) => log(Level.http, msg, tag);
   @override
-  void      db(msg, {tag}) => output(Level.db, tag, msg);
+  void      db(msg, {tag}) => log(Level.db, msg, tag);
   @override
-  void    page(msg, {tag}) => output(Level.page, tag, msg);
+  void    page(msg, {tag}) => log(Level.page, msg, tag);
 }
 
 /// 输出日志
@@ -245,14 +246,16 @@ class LogCaller {
 
 /// 日志的配置信息
 class LogConfig {
-  int level;                 // 可以打印日志的级别，[level] 值只能为 [Level.kDebug]、[Level.kDevelop]、[Level.kRelease]
-  bool colorful = true;      // 输出的日志展示颜色
-  bool aligned = true;       // 输出的日志对齐
-  bool showCaller = false;   // 输出的日志展示调用的行数
+  int level;                // 可以打印日志的级别，[level] 值只能为 [Level.kDebug]、[Level.kDevelop]、[Level.kRelease]
+  bool colorful;            // 输出的日志展示颜色
+  bool aligned;             // 输出的日志对齐
+  int alignedTagMaxLength;  // 输出的日志Tag最大长度
+  bool showCaller;          // 输出的日志展示调用的行数
   LogConfig({
     int? level,
     this.colorful = true,
     this.aligned = true,
+    this.alignedTagMaxLength = 16,
     this.showCaller = false
   }) : level = level ?? Level.kDebug;
 }
@@ -276,5 +279,5 @@ enum Level {
 
   static int kDebug =   debug.flag | info.flag | warning.flag | error.flag | http.flag | db.flag | page.flag; // 2+4+8+16+32+64+128=254
   static int kDevelop =              info.flag | warning.flag | error.flag | http.flag | db.flag | page.flag; //   4+8+16+32+64+128=252
-  static int kRelease =              warning.flag | error.flag;                                               //     8+16          =24
+  static int kRelease =                          warning.flag | error.flag;                                   //     8+16          =24
 }
