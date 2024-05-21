@@ -2,9 +2,11 @@ import 'dart:io';
 import 'dart:isolate';
 
 import 'package:flutter/material.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../../base/base.dart';
+import '../../../base/widgets/video_layout.dart';
 import '../study_model.dart';
 
 /// 浮动的导航栏和PopupWindow
@@ -27,6 +29,8 @@ class _FloatNavigationPageState extends State<FloatNavigationPage> {
   final List<String> _title = ['搜索', '视频', '音乐', '评论', '我的'];
 
   SocketThread? socketThread;
+
+
   @override
   void initState() {
     super.initState();
@@ -53,14 +57,14 @@ class _FloatNavigationPageState extends State<FloatNavigationPage> {
       ),
       body: Container(
         padding: const EdgeInsets.all(16),
-        child: ContentWidget(onTap: () {
-          socketThread?.sendMessage('点击发送消息');
-        }),
+        child: const VideoLayout(),
+        // child: ContentWidget(onTap: () {
+        //   socketThread?.sendMessage('点击发送消息');
+        // }),
       ),
       bottomNavigationBar: FloatNavigationBar(_nav, title: _title),
     );
   }
-
 }
 
 class ContentWidget extends StatelessWidget {
@@ -118,7 +122,6 @@ class UserNameWidget extends StatelessWidget {
 }
 
 class SocketThread {
-
   static ReceivePort? _mainReceivePort;
   static ReceivePort? _bReceivePort;
 

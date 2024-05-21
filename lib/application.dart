@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:provider/provider.dart';
+import 'package:video_player_media_kit/video_player_media_kit.dart';
 
 import 'app_page.dart';
 import 'base/base.dart';
@@ -120,6 +121,12 @@ class Application {
 
     log('  初始化 HotkeyUtil');
     await HotkeyUtil().init(logPrint: Log.d);
+
+    VideoPlayerMediaKit.ensureInitialized(
+      macOS: true,
+      windows: true,
+      linux: true,
+    );
 
     int end = DateTime.now().millisecondsSinceEpoch;
     duration = end - now;
