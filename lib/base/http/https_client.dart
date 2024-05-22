@@ -100,7 +100,12 @@ class HttpsClient {
       _interceptors.addAll(interceptors);
     }
     // 日志打印
-    _interceptors.add(LoggerInterceptor(formatJson: true, logPrint: logPrint));
+    _interceptors.add(LoggerInterceptor(
+      config: LogInterceptorConfig(
+        isFormatJson: true,
+        logPrint: logPrint,
+      ),
+    ));
     // 通过悬浮窗查看Http请求数据
     // _interceptors.add(HttpInterceptor());
     // cookie持久化
