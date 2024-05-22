@@ -14,8 +14,6 @@ class CookieInterceptor extends Interceptor {
 
   static final CookieInterceptor _instance = CookieInterceptor._privateConstructor();
 
-  static get instance => _instance;
-
   factory CookieInterceptor() => _instance;
 
   String? _cookie;
