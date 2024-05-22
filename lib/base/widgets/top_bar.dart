@@ -51,8 +51,8 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
     final ScaffoldState? scaffold = Scaffold.maybeOf(context);
 
     final FlexibleSpaceBarSettings? settings = context.dependOnInheritedWidgetOfExactType<FlexibleSpaceBarSettings>();
-    final Set<MaterialState> states = <MaterialState>{
-      if (settings?.isScrolledUnder ?? false) MaterialState.scrolledUnder,
+    final Set<WidgetState> states = <WidgetState>{
+      if (settings?.isScrolledUnder ?? false) WidgetState.scrolledUnder,
     };
 
     final bool hasEndDrawer = scaffold?.hasEndDrawer ?? false;
@@ -69,7 +69,7 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
 
     final double elevation = this.elevation;
 
-    final double effectiveElevation = states.contains(MaterialState.scrolledUnder) ? appBarTheme.scrolledUnderElevation ?? defaults.scrolledUnderElevation ?? elevation : elevation;
+    final double effectiveElevation = states.contains(WidgetState.scrolledUnder) ? appBarTheme.scrolledUnderElevation ?? defaults.scrolledUnderElevation ?? elevation : elevation;
 
     IconThemeData overallIconTheme = appBarTheme.iconTheme ?? defaults.iconTheme!.copyWith(color: foregroundColor);
 
@@ -221,8 +221,8 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  Color _resolveColor(Set<MaterialState> states, Color? widgetColor, Color? themeColor, Color defaultColor) {
-    return MaterialStateProperty.resolveAs<Color?>(widgetColor, states) ?? MaterialStateProperty.resolveAs<Color?>(themeColor, states) ?? MaterialStateProperty.resolveAs<Color>(defaultColor, states);
+  Color _resolveColor(Set<WidgetState> states, Color? widgetColor, Color? themeColor, Color defaultColor) {
+    return WidgetStateProperty.resolveAs<Color?>(widgetColor, states) ?? WidgetStateProperty.resolveAs<Color?>(themeColor, states) ?? WidgetStateProperty.resolveAs<Color>(defaultColor, states);
   }
 
   SystemUiOverlayStyle _systemOverlayStyleForBrightness(Brightness brightness, [Color? backgroundColor]) {

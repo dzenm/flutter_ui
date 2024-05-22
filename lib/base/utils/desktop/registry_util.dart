@@ -29,7 +29,7 @@ class RegistryUtil {
     final lpKey = key.toNativeUtf16();
     final lpValue = value.toNativeUtf16();
     try {
-      if (RegSetKeyValue(hKeyValue, lpKeyPath, lpKey, REG_SZ, lpValue, lpValue.length * 2) != ERROR_SUCCESS) {
+      if (RegSetKeyValue(hKeyValue, lpKeyPath, lpKey, REG_VALUE_TYPE.REG_SZ, lpValue, lpValue.length * 2) != WIN32_ERROR.ERROR_SUCCESS) {
         throw Exception("Can't set registry key");
       }
       return phKey.value;
@@ -66,11 +66,11 @@ class RegistryUtil {
     try {
       final status = RegDeleteKey(hKey, subKeyForPath);
       switch (status) {
-        case ERROR_SUCCESS:
+        case WIN32_ERROR.ERROR_SUCCESS:
           return true;
-        case ERROR_MORE_DATA:
+        case WIN32_ERROR.ERROR_MORE_DATA:
           throw Exception('An item required more than $maxItemLength bytes.');
-        case ERROR_NO_MORE_ITEMS:
+        case WIN32_ERROR.ERROR_NO_MORE_ITEMS:
           return false;
         default:
           throw Exception('unknown error');
@@ -103,8 +103,8 @@ class RegistryUtil {
     final phKey = calloc<HANDLE>();
     final lpKeyPath = key.toNativeUtf16();
     try {
-      final res = RegOpenKeyEx(hive, lpKeyPath, 0, KEY_READ, phKey);
-      if (res != ERROR_SUCCESS) {
+      final res = RegOpenKeyEx(hive, lpKeyPath, 0, REG_SAM_FLAGS.KEY_READ, phKey);
+      if (res != WIN32_ERROR.ERROR_SUCCESS) {
         throw Exception("Can't open registry key");
       }
       return phKey.value;
@@ -123,20 +123,20 @@ class RegistryUtil {
     try {
       final status = RegEnumValue(hKey, index, lpValueName, lpcchValueName, nullptr, lpType, lpData, lpcbData);
       switch (status) {
-        case ERROR_SUCCESS:
+        case WIN32_ERROR.ERROR_SUCCESS:
           {
             // if (lpType.value != REG_SZ) throw Exception('Non-string content.');
-            if (lpType.value == REG_DWORD) {
+            if (lpType.value == REG_VALUE_TYPE.REG_DWORD) {
               return RegistryKeyValuePair(lpValueName.toDartString(), lpData.cast<Uint32>().value.toString());
             }
-            if (lpType.value == REG_SZ) {
+            if (lpType.value == REG_VALUE_TYPE.REG_SZ) {
               return RegistryKeyValuePair(lpValueName.toDartString(), lpData.cast<Utf16>().toDartString());
             }
             break;
           }
-        case ERROR_MORE_DATA:
+        case WIN32_ERROR.ERROR_MORE_DATA:
           throw Exception('An item required more than $maxItemLength bytes.');
-        case ERROR_NO_MORE_ITEMS:
+        case WIN32_ERROR.ERROR_NO_MORE_ITEMS:
           return null;
         default:
           throw Exception('unknown error');
@@ -157,11 +157,11 @@ class RegistryUtil {
     try {
       final status = RegEnumKeyEx(hKey, index, lpValueName, lpcchValueName, nullptr, nullptr, nullptr, nullptr);
       switch (status) {
-        case ERROR_SUCCESS:
+        case WIN32_ERROR.ERROR_SUCCESS:
           return lpValueName.toDartString();
-        case ERROR_MORE_DATA:
+        case WIN32_ERROR.ERROR_MORE_DATA:
           throw Exception('An item required more than $maxItemLength bytes.');
-        case ERROR_NO_MORE_ITEMS:
+        case WIN32_ERROR.ERROR_NO_MORE_ITEMS:
           return null;
         default:
           throw Exception('unknown error');

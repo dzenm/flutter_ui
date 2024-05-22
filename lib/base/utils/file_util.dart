@@ -323,7 +323,7 @@ class PathInfo {
   /// file=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x.png
   /// suffix=_thumb
   /// addFileNameSuffix=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x_thumb.png
-  String addFileNameSuffix(String suffix) => join(parent, '$fileName$suffix.${suffix ?? ''}');
+  String addFileNameSuffix(String suffix) => join(parent, '$fileName$suffix.$suffix');
 
   /// file=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x_thumb.png
   /// suffix=_thumb
@@ -334,7 +334,7 @@ class PathInfo {
     if (fileName!.endsWith(suffix)) {
       name = fileName!.substring(0, fileName!.lastIndexOf(suffix));
     }
-    return join(parent, '$name.${suffix ?? ''}');
+    return join(parent, '$name.$suffix');
   }
 
   /// 文件名称起始或者终止位置是否包含字符串

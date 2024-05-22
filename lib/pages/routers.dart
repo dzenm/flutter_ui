@@ -1,4 +1,3 @@
-import '../app_page.dart';
 import '../base/base.dart';
 import 'common/example_page.dart';
 import 'common/not_found_page.dart';

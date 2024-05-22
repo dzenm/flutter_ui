@@ -18,7 +18,7 @@ class ScreenCapturePage extends StatefulWidget {
 }
 
 class _ScreenCapturePageState extends State<ScreenCapturePage> {
-  String _path = '';
+  final String _path = '';
   String? _content;
   Uint8List? _list;
   List<String> _files = [];
