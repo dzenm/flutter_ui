@@ -17,9 +17,9 @@ import 'tab_tutorial_page.dart';
 class NavPage extends StatelessWidget {
   static const String _tag = 'MePage';
 
-  NavPage({super.key});
+  const NavPage({super.key});
 
-  final List<Widget> _tabItems = [
+  List<Widget> get _tabItems => [
     const TabPlazaPage(),
     const TabTutorialPage(),
     const TabQAPage(),

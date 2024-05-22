@@ -25,7 +25,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
 
   final List<Widget> _tabs = [
     const HomePage(),
-    NavPage(),
+    const NavPage(),
     const MePage(),
   ];
 

@@ -174,12 +174,11 @@ class _MainPageDesktopWrapperState extends State<MainPageDesktopWrapper> with Wi
 
   @override
   void onWindowClose() async {
-    _log('onWindowClose');
     // do something
     bool isPreventClose = await windowManager.isPreventClose();
     if (isPreventClose) {
       showDialog(
-        context: context ?? Application().context,
+        context: context,
         builder: (_) {
           return AlertDialog(
             title: const Text('Are you sure you want to close this window?'),
@@ -206,7 +205,7 @@ class _MainPageDesktopWrapperState extends State<MainPageDesktopWrapper> with Wi
 
   @override
   void onWindowFocus() {
-    _log('onWindowFocus');
+    // 窗口获取焦点后调用
     // Make sure to call once.
     setState(() {});
     // do something
@@ -214,55 +213,66 @@ class _MainPageDesktopWrapperState extends State<MainPageDesktopWrapper> with Wi
 
   @override
   void onWindowBlur() {
-    _log('onWindowBlur');
+    // 窗口失去焦点后调用
     // do something
   }
 
   @override
   void onWindowMaximize() {
-    _log('onWindowMaximize');
+    //
     // do something
   }
 
   @override
   void onWindowUnmaximize() {
-    _log('onWindowUnmaximize');
     // do something
   }
 
   @override
   void onWindowMinimize() {
-    _log('onWindowMinimize');
+    // 最小化窗口时调用
     // do something
   }
 
   @override
   void onWindowRestore() {
-    _log('onWindowRestore');
+    // 最大化恢复窗口时调用
     // do something
   }
 
   @override
   void onWindowResize() {
-    _log('onWindowResize');
+    // 窗口尺寸准备发生变化时调用（调整窗口大小/最大化）
+    // do something
+  }
+
+  @override
+  void onWindowResized() {
+    // 窗口尺寸正在发生变化时调用（调整窗口大小/最大化）
     // do something
   }
 
   @override
   void onWindowMove() {
-    _log('onWindowMove');
+    // 窗口准备移动时调用
+    // do something
+  }
+
+  @override
+  void onWindowMoved() {
+    // 窗口正在移动时调用
     // do something
   }
 
   @override
   void onWindowEnterFullScreen() {
-    _log('onWindowEnterFullScreen');
+    // 进入全屏时调用（最大化屏幕）
     // do something
   }
 
   @override
   void onWindowLeaveFullScreen() {
-    _log('onWindowLeaveFullScreen');
+    // 离开全屏时调用（最大化恢复）
     // do something
   }
 
