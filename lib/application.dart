@@ -122,6 +122,7 @@ class Application {
     log('  初始化 HotkeyUtil');
     await HotkeyUtil().init(logPrint: Log.d);
 
+    log('  初始化 VideoPlayerMediaKit');
     VideoPlayerMediaKit.ensureInitialized(
       macOS: true,
       windows: true,

@@ -45,6 +45,7 @@ export 'tap_layout.dart';
 export 'top_bar.dart';
 export 'upgrade_dialog.dart';
 export 'verify_code_view.dart';
+export 'video_layout.dart';
 export 'view_media.dart';
 export 'will_pop_view.dart';
 export 'wrap_button.dart';

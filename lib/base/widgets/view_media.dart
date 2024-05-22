@@ -10,19 +10,24 @@ import '../base.dart';
 /// 下载回调
 typedef DownloadCallback = void Function(MediaEntity media);
 
+/// Item图片创建器
+typedef ItemBuilderDelegate = Widget Function(String url);
+
 /// 图片展示对应的实体类
 class MediaEntity<T> {
   String url;
   String? uid;
+  bool isVideo;
   T? data;
 
-  MediaEntity({required this.url, this.uid, this.data});
+  MediaEntity({required this.url, this.uid, this.isVideo = false, this.data});
 
   @override
   String toString() {
     return '${objectRuntimeType(this, 'MediaEntity')}'
         '(url="$url", '
         'uid=$uid, '
+        'isVideo=$isVideo, '
         'data=${data.toString()})';
   }
 }
@@ -33,6 +38,7 @@ class ViewMedia extends StatefulWidget {
   final int initialItem;
   final ImageProvider<Object>? imageProvider;
   final TransitionBuilder? builder;
+  final ItemBuilderDelegate? delegate;
   final DownloadCallback? onDownload;
   final BoxDecoration? decoration;
   final double initialScale;
@@ -44,6 +50,7 @@ class ViewMedia extends StatefulWidget {
     this.initialItem = 0,
     this.imageProvider,
     this.builder,
+    this.delegate,
     this.onDownload,
     this.decoration,
     this.initialScale = 1.0,
@@ -114,12 +121,8 @@ class _ViewMediaState extends State<ViewMedia> {
       itemBuilder: (BuildContext context, int index) {
         MediaEntity media = _medias[index];
 
-        String url = media.url;
-        Widget child = ImageView(
-          url: url,
-          width: MediaQuery.of(context).size.width,
-          isOrigin: true,
-        );
+        Widget child = _buildContent(media);
+
         if (widget.builder != null) {
           child = widget.builder!(context, child);
         }
@@ -139,6 +142,22 @@ class _ViewMediaState extends State<ViewMedia> {
         );
       },
     );
+  }
+
+  Widget _buildContent(MediaEntity media) {
+    String url = media.url;
+    if (media.isVideo) {
+      return VideoLayout(url: url);
+    }
+    if (widget.delegate == null) {
+      return ImageView(
+        url: url,
+        width: MediaQuery.of(context).size.width,
+        isOrigin: true,
+      );
+    } else {
+      return widget.delegate!(url);
+    }
   }
 
   /// 默认加载图片提供者

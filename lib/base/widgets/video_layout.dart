@@ -6,10 +6,10 @@ const _kTestUrl = 'https://user-images.githubusercontent.com/28951144/229373695-
 
 ///
 /// Created by a0010 on 2024/5/21 10:53
-///
+/// 视频播放组件
 class VideoLayout extends StatefulWidget {
-
   final String url;
+
   const VideoLayout({super.key, String? url}) : url = url ?? _kTestUrl;
 
   @override
@@ -42,7 +42,14 @@ class _VideoLayoutState extends State<VideoLayout> {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.width * 9.0 / 16.0,
         // Use [Video] widget to display video output.
-        child: Video(controller: controller),
+        child: Video(
+          controller: controller,
+          wakelock: true,
+          fill: Colors.white,
+          filterQuality: FilterQuality.high,
+          pauseUponEnteringBackgroundMode: true,
+          resumeUponEnteringForegroundMode: true,
+        ),
       ),
     );
   }
