@@ -153,8 +153,13 @@ class LoggerInterceptor extends Interceptor {
       // 打印json
       if (isJson) {
         String jsonString = msg;
-        if (config.isFormatJson) {
-          jsonString = JsonEncoder.withIndent(interval).convert(json.decode(msg));
+        // 此处在上传文件时，无法解析json，会报错
+        try {
+          if (config.isFormatJson) {
+            jsonString = JsonEncoder.withIndent(interval).convert(json.decode(msg));
+          }
+        } catch (e) {
+          jsonString = msg;
         }
         jsonString.split('\n').forEach((val) => _print('$interval$val'));
       } else {
