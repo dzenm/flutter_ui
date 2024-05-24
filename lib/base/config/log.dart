@@ -151,7 +151,7 @@ mixin _LoggerMixin implements Logger {
           while ((len += 10) < result.length) {}
           result = result.padRight(len);
         }
-        sb.write('$result  ');
+        sb.write('  $result   ');
       }
     }
     // 输出tag

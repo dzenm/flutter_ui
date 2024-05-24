@@ -26,7 +26,7 @@ typedef HandleContext = void Function(BuildContext context);
 ///
 /// Created by a0010 on 2022/7/28 10:56
 /// 顶级页面，跟页面相关的全局属性配置/初始化必要的全局信息
-class AppPage extends StatelessWidget {
+class AppPage extends StatelessWidget with Logging {
   final HandleContext handle;
 
   const AppPage({super.key, required this.handle});
@@ -34,7 +34,7 @@ class AppPage extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    _log('build');
+    logPage('build');
 
     // 初始化需要用到context的地方，在创建MaterialApp之前
     // 初始化其他需要context的组件
@@ -57,12 +57,12 @@ class AppPage extends StatelessWidget {
 
   /// 初始化需要用到context的地方，在创建MaterialApp之前
   void _useContextBeforeBuild(BuildContext context) {
-    _log('useContextBeforeBuild');
+    logPage('useContextBeforeBuild');
   }
 
   /// 进入学习页面
   Widget _buildEasyApp() {
-    _log('buildEasyApp');
+    logPage('buildEasyApp');
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -90,7 +90,7 @@ class AppPage extends StatelessWidget {
 
   /// Provider 共享状态管理
   Widget _buildProviderApp({Widget? child}) {
-    _log('buildProviderApp');
+    logPage('buildProviderApp');
     return MultiProvider(providers: [
       ChangeNotifierProvider(create: (context) => LocalModel()),
       ChangeNotifierProvider(create: (context) => MainModel()),
@@ -116,7 +116,7 @@ class AppPage extends StatelessWidget {
 
   /// 全局设置（主题、语言、屏幕适配、路由设置）
   Widget _buildMaterialApp() {
-    _log('buildMaterialApp');
+    logPage('buildMaterialApp');
     return Consumer<LocalModel>(builder: (context, locale, widget) {
       if (AppRouter.isNewRouter) {
         return _buildNewRouterApp(locale);
@@ -127,7 +127,7 @@ class AppPage extends StatelessWidget {
 
   /// 使用 [Router] 1.0
   Widget _buildOldRouterApp(LocalModel locale) {
-    _log('buildOldRouterApp');
+    logPage('buildOldRouterApp');
     // 获取第一个页面
     final Widget child;
     if (SPManager.getUserLoginState()) {
@@ -224,7 +224,7 @@ class AppPage extends StatelessWidget {
 
   /// 使用 [Router] 2.0
   Widget _buildNewRouterApp(LocalModel locale) {
-    _log('buildNewRouterApp');
+    logPage('buildNewRouterApp');
     AppTheme theme = locale.theme;
     AppRouterDelegate delegate = _createRouteDelegate();
     // 初始化需要用到context的地方，在创建MaterialApp之后
@@ -319,10 +319,8 @@ class AppPage extends StatelessWidget {
   /// 在[Navigator]1.0使用时，是在[MaterialApp.navigatorKey]设置。
   /// 在[Navigator]2.0使用时，是在[AppRouterDelegate.build]设置。
   void _useContextAfterBuild(BuildContext context) {
-    _log('useContextAfterBuild');
+    logPage('useContextAfterBuild');
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     CommonDialog.init(context); // 初始化需要context，在这里注册
   }
-
-  void _log(String msg) => BuildConfig.showPageLog ? Log.i(msg, tag: 'AppPage') : null;
 }

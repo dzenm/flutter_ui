@@ -17,7 +17,7 @@ import 'pages/study/window/sub_window_page.dart';
 ///
 /// Created by a0010 on 2022/7/28 10:56
 /// App入口，主要做一些工具相关的初始化功能，或者是全局的状态保存，初始化完成之后进入[AppPage]
-class Application {
+class Application with Logging {
   /// 私有构造方法
   Application._internal();
 
@@ -42,11 +42,11 @@ class Application {
 
       // 运行flutter时全局异常捕获
       HandleError().catchFlutterError(() {
-        log('╔══════════════════════════════════════════════════════════════════════════════════════════════════╗');
-        log('║                                                                                                  ║');
-        log('║                                        Start Flutter APP                                         ║');
-        log('║                                                                                                  ║');
-        log('╚══════════════════════════════════════════════════════════════════════════════════════════════════╝');
+        logInfo('╔══════════════════════════════════════════════════════════════════════════════════════════════════╗');
+        logInfo('║                                                                                                  ║');
+        logInfo('║                                        Start Flutter APP                                         ║');
+        logInfo('║                                                                                                  ║');
+        logInfo('╚══════════════════════════════════════════════════════════════════════════════════════════════════╝');
         // 让 Flutter 使用 path 策略
         usePathUrlStrategy();
         Provider.debugCheckInvalidValueType = null;
@@ -57,12 +57,12 @@ class Application {
       }, config: MessageConfig(
         handleMsg: (message) async {
           String logFileName = 'crash_${DateTime.now()}.log';
-          log('异常信息文件：logFileName=$logFileName');
+          logInfo('异常信息文件：logFileName=$logFileName');
           await FileUtil().save(logFileName, message, dir: 'crash');
         },
       ));
     } else {
-      log('APP初始运行时参数：args=${args.toString()}');
+      logInfo('APP初始运行时参数：args=${args.toString()}');
       final windowId = int.parse(args[1]);
       final argument = args[2].isEmpty ? const {} : jsonDecode(args[2]) as Map<String, dynamic>;
       runMockApp(
@@ -77,24 +77,29 @@ class Application {
   /// 初始化信息
   Future<void> _initMainApp() async {
     await BuildConfig.init();
-    log('╔══════════════════════════════════════════ 开始初始化 ═════════════════════════════════════════════╗');
+    Log.init(
+      manager: LogManager(
+        config: LogConfig(packageName: BuildConfig.packageInfo.packageName),
+      ),
+    );
+    logInfo('╔══════════════════════════════════════════ 开始初始化 ═════════════════════════════════════════════╗');
 
     int now = DateTime.now().millisecondsSinceEpoch;
     int duration = 0;
-    log('  启动: now=$now, duration=$duration');
-    log('  Application是否单例: ${Application.instance == Application()}');
+    logInfo('  启动: now=$now, duration=$duration');
+    logInfo('  Application是否单例: ${Application.instance == Application()}');
 
-    log('  初始化 SharedPreferences');
+    logInfo('  初始化 SharedPreferences');
     bool res = await SPManager().init(logPrint: Log.d);
-    log('  初始化 SharedPreferences ${res ? '成功' : '失败'}');
+    logInfo('  初始化 SharedPreferences ${res ? '成功' : '失败'}');
 
-    log('  初始化 Android设置');
+    logInfo('  初始化 Android设置');
     _initAndroidSettings();
 
-    log('  初始化 iOS设置');
+    logInfo('  初始化 iOS设置');
     _initIOSSettings();
 
-    log('  初始化 HttpsClient');
+    logInfo('  初始化 HttpsClient');
     HttpsClient().init(
       logPrint: BuildConfig.showHTTPLog ? Log.h : null,
       loading: CommonDialog.loading,
@@ -103,7 +108,7 @@ class Application {
       baseUrls: [Configs.baseUrl, Configs.apiUrl, Configs.localhostUrl],
     );
 
-    log('  初始化 DBManager');
+    logInfo('  初始化 DBManager');
     DBManager().init(logPrint: BuildConfig.showDBLog ? Log.b : null, tables: [
       OrderEntity(),
       ProductEntity(),
@@ -113,16 +118,16 @@ class Application {
       WebsiteEntity(),
     ]);
 
-    log('  初始化 FileUtil');
+    logInfo('  初始化 FileUtil');
     await FileUtil().init(logPrint: Log.i);
 
-    log('  初始化 PluginManager');
+    logInfo('  初始化 PluginManager');
     PluginManager.init(logPrint: Log.d);
 
-    log('  初始化 HotkeyUtil');
+    logInfo('  初始化 HotkeyUtil');
     await HotkeyUtil().init(logPrint: Log.d);
 
-    log('  初始化 VideoPlayerMediaKit');
+    logInfo('  初始化 VideoPlayerMediaKit');
     VideoPlayerMediaKit.ensureInitialized(
       macOS: true,
       windows: true,
@@ -131,8 +136,8 @@ class Application {
 
     int end = DateTime.now().millisecondsSinceEpoch;
     duration = end - now;
-    log('  结束: now=$end, duration=$duration');
-    log('╚══════════════════════════════════════════ 结束初始化 ═════════════════════════════════════════════╝');
+    logInfo('  结束: now=$end, duration=$duration');
+    logInfo('╚══════════════════════════════════════════ 结束初始化 ═════════════════════════════════════════════╝');
   }
 
   /// 设置登录过后的初始化信息
@@ -162,7 +167,4 @@ class Application {
   void _initIOSSettings() {
     if (!BuildConfig.isIOS) return;
   }
-
-  /// 打印日志
-  void log(String msg) => Log.i(msg, tag: 'Application');
 }
