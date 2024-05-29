@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 
 /// 网络请求[dio.Interceptor], 网络请求信息输出到控制台.
 /// // log interceptor
@@ -112,7 +110,8 @@ class LoggerInterceptor extends Interceptor {
     if (!config.showCurlRequest) return;
     // add a breakpoint here so all errors can break
     String result = _cURLRepresentation(requestOptions);
-    log(result);
+    _logPrint('''
+    $result''');
   }
 
   /// 将请求信息转化为curl字符串

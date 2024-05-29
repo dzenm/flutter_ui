@@ -7,7 +7,7 @@ typedef LoggerBuilder = Logger Function(LogManager manager);
 /// ║                                                                                   .                                              ║
 /// ║                                          .          [_ConsolePrinter] ←───┐                                                      ║
 /// ║                                                                           │                                                      ║
-/// ║                                    [_Logger] ←───┐                        └───┬─── [Logger.printers] ←─── [LogPrinter.output]    ║
+/// ║                [_Logger] ←─── [_LoggerMixin] ←───┐                        └───┬─── [Logger.printers] ←─── [LogPrinter.output]    ║
 /// ║                                                  │                            ├─── [Logger.verbose]                              ║
 /// ║             [LogManager] ←───┐                   │                            ├─── [Logger.debug]                                ║
 /// ║                              │                   │                            ├─── [Logger.info]                                 ║
@@ -47,11 +47,11 @@ final class Log {
   factory Log() => _ins;
 
   static void init({LogManager? manager}) {
-    if (manager != null) _ins._manager = manager;
+    if (manager != null) _manager = manager;
   }
 
-  LogManager _manager = const LogManager(); // 日志输出管理配置
-  static Logger get _log => _ins._manager.logger;    // 日志输出工具
+  static LogManager _manager = const LogManager(); // 日志输出管理配置
+  static Logger get _log => _manager.logger;    // 日志输出工具
   static void v(dynamic msg, {String? tag}) => _log.verbose(msg, tag: tag);
   static void d(dynamic msg, {String? tag}) => _log.debug(msg, tag: tag);
   static void i(dynamic msg, {String? tag}) => _log.info(msg, tag: tag);
@@ -72,7 +72,7 @@ mixin Logging {
   void    logHttp(dynamic msg) => Log.h(msg, tag: _tag);
   void      logDB(dynamic msg) => Log.d(msg, tag: _tag);
   void    logPage(dynamic msg) => Log.p(msg, tag: _tag);
-  String get _tag => '$runtimeType';
+  String get _tag => '$runtimeType'.replaceAll('_', '').replaceAll('State', '');
 }
 
 /// 日志处理的方式
@@ -85,12 +85,13 @@ abstract class LogPrinter {
 class _ConsolePrinter extends LogPrinter {
   @override
   void output(LogManager manager, String body, {String head = '', String tail = ''}) {
-    LogConfig config = Log._ins._manager.config;
+    LogConfig config = Log._manager.config;
     int limitLength = config.limitLength;
     int chunkLength = config.chunkLength;
     String carriageReturn = config.carriageReturn;
 
-    int size = body.length;
+    int index = body.indexOf('\n');
+    int size = index == -1 ? body.length : index;
     if (0 < limitLength && limitLength < size) {
       body = '${body.substring(0, limitLength - 3)}...';
       size = limitLength;
