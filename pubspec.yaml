@@ -78,7 +78,7 @@ dependencies:
   azlistview: 2.0.0                             # az列表 https://pub.flutter-io.cn/packages/azlistview
   flutter_slidable: 3.1.0                       # 可左右滑动的列表展示 https://pub.flutter-io.cn/packages/flutter_slidable
   #  scrollview_observer: 1.19.1                   # 聊天列表 https://pub.flutter-io.cn/packages/scrollview_observer
-  image: 4.1.7                                  # 图片读取和存储 https://pub.flutter-io.cn/packages/image
+  image: 4.2.0                                  # 图片读取和存储 https://pub.flutter-io.cn/packages/image
   transparent_image: 2.0.1                      # 展示透明的图像 https://pub.flutter-io.cn/packages/transparent_image
   flutter_screenutil: 5.9.1                     # 屏幕适配 https://pub.flutter-io.cn/packages/flutter_screenutil
   fluent_ui: 4.8.7                              # UI工具 https://pub.dev/packages/fluent_ui
@@ -113,7 +113,7 @@ dependencies:
   lpinyin: 2.0.3                                # 汉字转拼音 https://pub.flutter-io.cn/packages/lpinyin
 
   ########################################## 移动端插件 ##########################################
-  webview_flutter: 4.7.0                        # WebView(移动端) https://pub.dev/packages/webview_flutter
+  webview_flutter: 4.8.0                        # WebView(移动端) https://pub.dev/packages/webview_flutter
   flutter_html: 3.0.0-beta.2                    # Flutter加载html(移动端) https://pub.flutter-io.cn/packages/flutter_html
   media_kit: 1.1.10+1                           # 音频全平台核心依赖 https://pub.flutter-io.cn/packages/media_kit
   media_kit_video: 1.2.4                        # 音频渲染组件 https://pub.flutter-io.cn/packages/media_kit_video
