@@ -10,10 +10,7 @@ const _thumb = '_thumb';
 ///
 /// Created by a0010 on 2022/9/1 11:56
 /// 文件工具类
-class FileUtil {
-  /// APP的根目录文件夹
-  static const rootDir = 'FlutterUI';
-
+class FileUtil extends _Directory with _DirectoryMixin {
   FileUtil._internal();
 
   static final FileUtil _instance = FileUtil._internal();
@@ -22,134 +19,18 @@ class FileUtil {
 
   factory FileUtil() => instance;
 
-  late Directory _appRootDir;
-  late Directory _userDir;
-  final List<Directory> _appDirs = [];
-
-  Function? _logPrint;
-
-  /// 初始化文件夹
-  Future<void> init({Function? logPrint}) async {
-    _logPrint = logPrint;
-    _appRootDir = await _getAppRootDirectory();
-  }
-
-  /// 获取App的根目录所在的路径
-  /// Android：/data/user/0/<package_name>/app_flutter/
-  /// iOS：/Users/a0010/Library/Containers/<package_name>/Data/Documents/
-  /// macOS：/Users/a0010/Documents/FlutterUI/
-  /// Windows：C:\Users\Administrator\Documents\FlutterUI\
-  /// [dir] 在根目录下面创建的文件夹名称作为应用的根目录
-  Future<Directory> _getAppRootDirectory({String? dir}) async {
-    Directory appDocDir = await getApplicationDocumentsDirectory();
-    String appRootDir = join(appDocDir.path);
-    if (Platform.isAndroid) {
-      appRootDir = join(appDocDir.path, dir);
-    }
-    if (Platform.isIOS) {
-      appRootDir = join(appDocDir.path, dir);
-    }
-    if (Platform.isMacOS) {
-      appRootDir = join(appDocDir.path, rootDir, dir);
-    }
-    if (Platform.isWindows) {
-      appRootDir = join(appDocDir.path, rootDir, dir);
-    }
-    if (Platform.isLinux) {
-      appRootDir = join(appDocDir.path, rootDir, dir);
-    }
-    Directory result = Directory(appRootDir);
-    if (!result.existsSync()) {
-      result.createSync(recursive: true);
-    }
-    return result;
-  }
-
-  /// 获取APP的路径
-  Directory get appDir => _appRootDir.absolute;
-
-  /// 初始化登录用户目录
-  /// Android：/data/user/0/<package_name>/app_flutter/<userId>/
-  /// iOS：/Users/a0010/Library/Containers/<package_name>/Data/<userId>/
-  /// macOS：/Users/a0010/Documents/FlutterUI/userId>/
-  /// Windows：C:\Users\Administrator\Documents\FlutterUI\<userId>\
-  void initLoginUserDirectory(String userId) {
-    String parent = join(_appRootDir.path, userId);
-    _userDir = Directory(parent);
-    _log('初始化用户目录：parent=$parent');
-    // 初始化常用文件夹
-    for (var dir in UserDirectory.values) {
-      String dirName = join(parent, dir.dirName);
-      Directory result = Directory(dirName);
-      if (!result.existsSync()) {
-        result.createSync(recursive: true);
-      }
-      _appDirs.add(result);
-      _log('初始化用户存储目录：path=${result.path}');
-    }
-  }
-
-  /// 缓存文件夹路径 @see [init]、[_appDirs]
-  /// Android：/data/user/0/<package_name>/app_flutter/<userId>/Messages/
-  /// iOS：/Users/a0010/Library/Containers/<package_name>/Data/Documents/<userId>/Messages/
-  /// macOS：/Users/a0010/Documents/FlutterUI/<userId>/Messages/
-  /// Windows：C:\Users\Administrator\Documents\FlutterUI\<userId>\Messages\
-  Directory get messagesDirectory => _appDirs[0];
-
-  /// @see [getUserDirectory] and [FileCategory]
-  String getMessagesCategory(FileCategory category, {String? user}) {
-    return getUserDirectory(UserDirectory.messages.dirName, user, category.dirName).path;
-  }
-
-  /// 获取缓存文件的子目录 @see [messagesDirectory]
-  Directory getUserDirectory(String part1, [String? part2, String? part3, String? part4, String? part5, String? part6]) {
-    String parent = join(_userDir.path, part1, part2, part3, part4, part5, part6);
-    Directory result = Directory(parent);
-    if (!result.existsSync()) {
-      result.createSync(recursive: true);
-    }
-    return result;
-  }
-
-  /// 根据路径获取文件名
-  String getFileName(dynamic file) {
-    String path = '';
-    if (file is File) {
-      path = file.path;
-    } else {
-      path = file.toString();
-    }
-    return path.split(Platform.pathSeparator).last;
-  }
-
-  /// 保存text到本地文件里面
-  Future<String?> save(String fileName, String text, {required String dir}) async {
+  /// 删除文件（根据路径删除）
+  void deleteFile(String? path) {
     try {
-      Directory parent = getUserDirectory(dir);
-      File file = File('${parent.path}${Platform.pathSeparator}$fileName');
-      if (!file.existsSync()) {
-        await file.create();
+      if ((path ?? '').isEmpty) return;
+      File file = File(path!);
+      if (file.existsSync()) {
+        file.deleteSync();
       }
-      IOSink slink = file.openWrite(mode: FileMode.append);
-      slink.write(text);
-      await slink.close();
-      _log('保存文件成功: ${file.path}');
-      return Future.value(file.path);
-    } catch (e) {
-      _log('保存文件错误: $e');
-      return Future.value(null);
+      _log('删除文件成功：path=$path');
+    } catch (err) {
+      _log('删除文件失败：err=$err');
     }
-  }
-
-  /// 读取文件的内容
-  Future<String> read(String path) async {
-    File file = File(path);
-    if (!file.existsSync()) {
-      return '';
-    }
-    // 从文件中读取变量作为字符串，一次全部读完存在内存里面
-    String contents = await file.readAsString();
-    return contents;
   }
 
   /// 拷贝文件
@@ -175,35 +56,34 @@ class FileUtil {
     });
   }
 
-  /// 清空保存的内容
-  void clear(String path) async {
-    File file = File(path);
-    if (file.existsSync()) {
-      await file.writeAsString('');
-    }
-  }
-
-  /// 删除文件（根据路径删除）
-  void deleteFile(String? path) {
+  /// 保存text到本地文件里面
+  Future<String?> save(String fileName, String text, {required String dir}) async {
     try {
-      if ((path ?? '').isEmpty) return;
-      File file = File(path!);
-      if (file.existsSync()) {
-        file.deleteSync();
+      Directory parent = getUserDirectory(dir);
+      File file = File('${parent.path}${Platform.pathSeparator}$fileName');
+      if (!file.existsSync()) {
+        await file.create();
       }
-      _log('删除文件成功：path=$path');
-    } catch (err) {
-      _log('删除文件失败：err=$err');
+      IOSink slink = file.openWrite(mode: FileMode.append);
+      slink.write(text);
+      await slink.close();
+      _log('保存文件成功: ${file.path}');
+      return Future.value(file.path);
+    } catch (e) {
+      _log('保存文件错误: $e');
+      return Future.value(null);
     }
   }
 
-  /// 删除文件夹的所有文件
-  Future delete(String path) async {
-    Directory parent = Directory(path);
-    parent.listSync().forEach((element) async {
-      await element.delete();
-      _log('删除成功: ${element.path}');
-    });
+  /// 根据路径获取文件名
+  String getFileName(dynamic file) {
+    String path = '';
+    if (file is File) {
+      path = file.path;
+    } else {
+      path = file.toString();
+    }
+    return path.split(Platform.pathSeparator).last;
   }
 
   /// 格式化字节大小，例：
@@ -244,8 +124,6 @@ class FileUtil {
     }
     return res.substring(0, index + position + 1).toString();
   }
-
-  void _log(String text) => _logPrint == null ? null : _logPrint!(text, tag: 'FileUtil');
 }
 
 /// 处理文件的路径信息
@@ -369,12 +247,113 @@ class PathInfo {
   }
 }
 
+/// APP文件夹
+class _Directory {}
+
+/// APP文件夹的具体实现
+mixin _DirectoryMixin on _Directory {
+  static const rootDir = 'FlutterUI'; // APP的根目录文件夹
+  static late Directory _appRootDir;
+  static late Directory _userDir;
+  static final List<Directory> _appDirs = [];
+
+  Function? _logPrint;
+
+  /// 初始化文件夹
+  Future<void> init({Function? logPrint}) async {
+    _logPrint = logPrint;
+    _appRootDir = await _getAppRootDirectory();
+  }
+
+  /// 获取App的根目录所在的路径
+  /// Android：/data/user/0/<package_name>/app_flutter/
+  /// iOS：/Users/a0010/Library/Containers/<package_name>/Data/
+  /// macOS：/Users/a0010/Documents/FlutterUI/
+  /// Windows：C:\Users\Administrator\Documents\FlutterUI\
+  /// [dir] 在根目录下面创建的文件夹名称作为应用的根目录
+  Future<Directory> _getAppRootDirectory({String? dir}) async {
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String appRootDir = join(appDocDir.path);
+    if (Platform.isAndroid) {
+      appRootDir = join(appDocDir.path);
+    } else if (Platform.isIOS) {
+      appRootDir = join(appDocDir.path);
+    } else if (Platform.isMacOS) {
+      appRootDir = join(appDocDir.path, rootDir);
+    } else if (Platform.isWindows) {
+      appRootDir = join(appDocDir.path, rootDir);
+    } else if (Platform.isLinux) {
+      appRootDir = join(appDocDir.path, rootDir);
+    }
+    String parent = join(appRootDir, dir);
+    Directory result = Directory(parent);
+    if (!result.existsSync()) {
+      result.createSync(recursive: true);
+    }
+    return result;
+  }
+
+  /// 获取APP的路径
+  Directory get appDir => _appRootDir.absolute;
+
+  /// 初始化登录用户目录
+  /// Android：/data/user/0/<package_name>/app_flutter/<userId>/
+  /// iOS：/Users/a0010/Library/Containers/<package_name>/Data/<userId>/
+  /// macOS：/Users/a0010/Documents/FlutterUI/userId>/
+  /// Windows：C:\Users\Administrator\Documents\FlutterUI\<userId>\
+  void initLoginUserDirectory(String userId) {
+    String parent = join(_appRootDir.path, userId);
+    _userDir = Directory(parent);
+    _log('初始化用户目录：parent=$parent');
+    // 初始化常用文件夹
+    for (var dir in UserDirectory.values) {
+      String dirName = join(parent, dir.dirName);
+      Directory result = Directory(dirName);
+      if (!result.existsSync()) {
+        result.createSync(recursive: true);
+      }
+      _appDirs.add(result);
+      _log('初始化用户存储目录：path=${result.path}');
+    }
+  }
+
+  /// 缓存文件夹路径 @see [init]、[_appDirs]
+  /// Android：/data/user/0/<package_name>/app_flutter/<userId>/Messages/
+  /// iOS：/Users/a0010/Library/Containers/<package_name>/Data/Documents/<userId>/Messages/
+  /// macOS：/Users/a0010/Documents/FlutterUI/<userId>/Messages/
+  /// Windows：C:\Users\Administrator\Documents\FlutterUI\<userId>\Messages\
+  Directory get messagesDirectory => _appDirs[0];
+
+  /// @see [getUserDirectory]
+  String getMessagesCategory(FileCategory category, {String? user}) {
+    return getUserDirectory(UserDirectory.messages.dirName, user, category.dirName).path;
+  }
+
+  /// @see [getUserDirectory]
+  String getFavouritesCategory(FileCategory category, {String? user}) {
+    return getUserDirectory(UserDirectory.favourites.dirName, user, category.dirName).path;
+  }
+
+  /// 获取缓存文件的子目录 @see [messagesDirectory]
+  Directory getUserDirectory(String part1, [String? part2, String? part3, String? part4, String? part5, String? part6]) {
+    String parent = join(_userDir.path, part1, part2, part3, part4, part5, part6);
+    Directory result = Directory(parent);
+    if (!result.existsSync()) {
+      result.createSync(recursive: true);
+    }
+    return result;
+  }
+
+  void _log(String text) => _logPrint == null ? null : _logPrint!(text, tag: 'FileUtil');
+}
+
 /// 用户目录
 enum UserDirectory {
   messages('Messages'),
   databases('Databases'),
   favourites('Favourites'),
-  crash('Crash');
+  crash('Crash'),
+  temp('Temp');
 
   final String dirName;
 

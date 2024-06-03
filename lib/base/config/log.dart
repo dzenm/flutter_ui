@@ -3,30 +3,30 @@ typedef LoggerBuilder = Logger Function(LogManager manager);
 
 ///
 /// Created by a0010 on 2022/3/22 09:38
-/// ╔═══════════════════════════════════════════════════════ [Log] 框架图 ═══════════════════════════════════════════════════════════╗
-/// ║                                                                                   .                                              ║
-/// ║                                          .          [_ConsolePrinter] ←───┐                                                      ║
-/// ║                                                                           │                                                      ║
-/// ║                [_Logger] ←─── [_LoggerMixin] ←───┐                        └───┬─── [Logger.printers] ←─── [LogPrinter.output]    ║
-/// ║                                                  │                            ├─── [Logger.verbose]                              ║
-/// ║             [LogManager] ←───┐                   │                            ├─── [Logger.debug]                                ║
-/// ║                              │                   │                            ├─── [Logger.info]                                 ║
-/// ║              ┌─── [init] ←───┴─── [_manager] ←───┼─── [LogManager.logger] ←───┼─── [Logger.warning]                              ║
-/// ║              │                                   │                            ├─── [Logger.error]                                ║
-/// ║              │                                   │                            ├─── [Logger.http]                                 ║
-/// ║              │                                   │                            ├─── [Logger.db]                                   ║
-/// ║              │                                   │                            └─── [Logger.page]                                 ║
-/// ║              │                                   │                                                                               ║
-/// ║              ├─── [v] ←───┐                      │                                                                               ║
-/// ║              ├─── [d] ←───┤                      │                                                                               ║
-/// ║              ├─── [i] ←───┤                      │                                                                               ║
-/// ║    [Log] ←───┼─── [w] ←───┼──────────────────────┘                                                                               ║
-/// ║              ├─── [e] ←───┤                                                                                                      ║
-/// ║              ├─── [h] ←───┤                                                                                                      ║
-/// ║              ├─── [d] ←───┤                                                                                                      ║
-/// ║              └─── [p] ←───┘                                                                                                      ║
-/// ║                                                                                                                                  ║
-/// ╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+/// ╔═══════════════════════════════════════════════════════ [Log] 框架图 ═══════════════════════════════════════════════════════════════╗
+/// ║                                                                                   .                                                  ║
+/// ║                                          .              [_ConsolePrinter] ←───┐                                                      ║
+/// ║                                                                               │                                                      ║
+/// ║                    [_Logger] ←─── [_LoggerMixin] ←───┐                        └───┬─── [Logger.printers] ←─── [LogPrinter.output]    ║
+/// ║                                                      │                            ├─── [Logger.verbose]                              ║
+/// ║                 [LogManager] ←───┐                   │                            ├─── [Logger.debug]                                ║
+/// ║                                  │                   │                            ├─── [Logger.info]                                 ║
+/// ║              ┌─── [Log.init] ←───┴─── [_manager] ←───┼─── [LogManager.logger] ←───┼─── [Logger.warning]                              ║
+/// ║              │                                       │                            ├─── [Logger.error]                                ║
+/// ║              │                                       │                            ├─── [Logger.http]                                 ║
+/// ║              │                                       │                            ├─── [Logger.db]                                   ║
+/// ║              │                                       │                            └─── [Logger.page]                                 ║
+/// ║              │                                       │                                                                               ║
+/// ║              ├─── [v] ←───┐                          │                                                                               ║
+/// ║              ├─── [d] ←───┤                          │                                                                               ║
+/// ║              ├─── [i] ←───┤                          │                                                                               ║
+/// ║    [Log] ←───┼─── [w] ←───┼──────────────────────────┘                                                                               ║
+/// ║              ├─── [e] ←───┤                                                                                                          ║
+/// ║              ├─── [h] ←───┤                                                                                                          ║
+/// ║              ├─── [d] ←───┤                                                                                                          ║
+/// ║              └─── [p] ←───┘                                                                                                          ║
+/// ║                                                                                                                                      ║
+/// ╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
 /// 日志输出
 /// 直接输出
 ///  Log.d('this is log');
@@ -43,35 +43,35 @@ typedef LoggerBuilder = Logger Function(LogManager manager);
 ///
 final class Log {
   Log._internal();
-  static final Log _ins = Log._internal();
-  factory Log() => _ins;
+  static final Log _instance = Log._internal();
+  factory Log() => _instance;
 
-  static void init({LogManager? manager}) {
+  Log.init({LogManager? manager}) {
     if (manager != null) _manager = manager;
   }
 
   static LogManager _manager = const LogManager(); // 日志输出管理配置
   static Logger get _log => _manager.logger;    // 日志输出工具
+  static void h(dynamic msg, {String? tag}) => _log.http(msg, tag: tag);
+  static void b(dynamic msg, {String? tag}) => _log.db(msg, tag: tag);
+  static void p(dynamic msg, {String? tag}) => _log.page(msg, tag: tag);
   static void v(dynamic msg, {String? tag}) => _log.verbose(msg, tag: tag);
   static void d(dynamic msg, {String? tag}) => _log.debug(msg, tag: tag);
   static void i(dynamic msg, {String? tag}) => _log.info(msg, tag: tag);
   static void w(dynamic msg, {String? tag}) => _log.warning(msg, tag: tag);
   static void e(dynamic msg, {String? tag}) => _log.error(msg, tag: tag);
-  static void h(dynamic msg, {String? tag}) => _log.http(msg, tag: tag);
-  static void b(dynamic msg, {String? tag}) => _log.db(msg, tag: tag);
-  static void p(dynamic msg, {String? tag}) => _log.page(msg, tag: tag);
 }
 
 /// Log with class name
 mixin Logging {
+  void    logHttp(dynamic msg) => Log.h(msg, tag: _tag);
+  void      logDB(dynamic msg) => Log.d(msg, tag: _tag);
+  void    logPage(dynamic msg) => Log.p(msg, tag: _tag);
   void logVerbose(dynamic msg) => Log.v(msg, tag: _tag);
   void   logDebug(dynamic msg) => Log.d(msg, tag: _tag);
   void    logInfo(dynamic msg) => Log.i(msg, tag: _tag);
   void logWarning(dynamic msg) => Log.w(msg, tag: _tag);
   void   logError(dynamic msg) => Log.e(msg, tag: _tag);
-  void    logHttp(dynamic msg) => Log.h(msg, tag: _tag);
-  void      logDB(dynamic msg) => Log.d(msg, tag: _tag);
-  void    logPage(dynamic msg) => Log.p(msg, tag: _tag);
   String get _tag => '$runtimeType'.replaceAll('_', '').replaceAll('State', '');
 }
 
@@ -180,14 +180,14 @@ mixin _LoggerMixin implements Logger {
       printer.output(manager, body, head: head, tail: tail);
     }
   }
+  @override void    http(msg, {tag}) => log(msg, tag, Level.http);
+  @override void      db(msg, {tag}) => log(msg, tag, Level.db);
+  @override void    page(msg, {tag}) => log(msg, tag, Level.page);
   @override void verbose(msg, {tag}) => log(msg, tag, Level.verbose);
   @override void   debug(msg, {tag}) => log(msg, tag, Level.debug);
   @override void    info(msg, {tag}) => log(msg, tag, Level.info);
   @override void warning(msg, {tag}) => log(msg, tag, Level.warning);
   @override void   error(msg, {tag}) => log(msg, tag, Level.error);
-  @override void    http(msg, {tag}) => log(msg, tag, Level.http);
-  @override void      db(msg, {tag}) => log(msg, tag, Level.db);
-  @override void    page(msg, {tag}) => log(msg, tag, Level.page);
 }
 
 /// 输出日志工具
@@ -237,7 +237,7 @@ class LogConfig {
   const LogConfig({
     this.isColorful = true,
     this.isAligned = true,
-    this.showCaller = true,
+    this.showCaller = false,
     this.alignedTagMaxLength = 16,
     this.packageName = '',
     this.datePattern,
@@ -323,18 +323,19 @@ class LogCaller {
 /// 输出日志的级别
 enum Level {
   verbose(1 << 0, 'V', '37'), // 1 << 0 = 1
-  debug  (1 << 1, 'D', '94'), // 1 << 1 = 2
-  info   (1 << 2, 'I', '36'), // 1 << 2 = 4
-  warning(1 << 3, 'W', '93'), // 1 << 3 = 8
-  error  (1 << 4, 'E', '31'), // 1 << 4 = 16
-  http   (1 << 5, 'H', '35'), // 1 << 5 = 32
-  db     (1 << 6, 'B', '96'), // 1 << 6 = 64
-  page   (1 << 7, 'P', '32'); // 1 << 7 = 128
+  http   (1 << 5, 'H', '35'), // 1 << 1 = 2
+  db     (1 << 6, 'B', '96'), // 1 << 2 = 4
+  page   (1 << 7, 'P', '32'), // 1 << 3 = 8
+  debug  (1 << 1, 'D', '94'), // 1 << 4 = 16
+  info   (1 << 2, 'I', '36'), // 1 << 5 = 32
+  warning(1 << 3, 'W', '93'), // 1 << 6 = 64
+  error  (1 << 4, 'E', '31'); // 1 << 7 = 128
+
   final int flag;
   final String tag;
   final String color;
   const Level(this.flag, this.tag, this.color);
-  static int kDebug =   debug.flag | info.flag | warning.flag | error.flag | http.flag | db.flag | page.flag; // 2+4+8+16+32+64+128=254
-  static int kDevelop =              info.flag | warning.flag | error.flag | http.flag | db.flag | page.flag; //   4+8+16+32+64+128=252
-  static int kRelease =                          warning.flag | error.flag;                                   //     8+16          =24
+  static int kDebug =   http.flag | db.flag | page.flag | debug.flag | info.flag | warning.flag | error.flag; // 2+4+8+16+32+64+128=254
+  static int kDevelop =                                                info.flag | warning.flag | error.flag; //          32+64+128=220
+  static int kRelease =                                                            warning.flag | error.flag; //             64+128=192
 }

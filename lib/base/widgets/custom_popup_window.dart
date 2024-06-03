@@ -54,6 +54,7 @@ class CustomPopupWindow extends StatefulWidget {
     context, {
     required GlobalKey targetKey,
     required Widget child,
+    RouteTransitionsBuilder? builder,
     Widget? arrow,
     PopupDirection? direction,
     Offset? offset,
@@ -65,6 +66,7 @@ class CustomPopupWindow extends StatefulWidget {
     return await Navigator.push(
       context,
       _CustomPopupRoute(
+        builder: builder,
         child: CustomPopupWindow(
           targetKey: targetKey,
           arrow: arrow,
@@ -516,9 +518,10 @@ class _PopupWindowState extends State<CustomPopupWindow> {
 /// 自定义的Popup跳转时的路由
 class _CustomPopupRoute<T> extends PopupRoute<T> {
   final Duration _duration = const Duration(milliseconds: 100);
-  Widget child;
+  final Widget child;
+  final RouteTransitionsBuilder? builder;
 
-  _CustomPopupRoute({required this.child});
+  _CustomPopupRoute({required this.child, this.builder});
 
   @override
   Color? get barrierColor => null;
@@ -531,7 +534,7 @@ class _CustomPopupRoute<T> extends PopupRoute<T> {
 
   @override
   Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
-    return child;
+    return builder == null ? child : builder!(context, animation, secondaryAnimation, child);
   }
 
   @override
