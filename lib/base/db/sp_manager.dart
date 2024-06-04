@@ -4,13 +4,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Created by a0010 on 2022/3/22 09:38
 /// SharedPreferences工具类
 class SPManager {
-  SPManager._internal();
-
   static final SPManager _instance = SPManager._internal();
-
   static SPManager get instance => _instance;
-
   factory SPManager() => _instance;
+  SPManager._internal();
 
   SharedPreferences? _prefs;
 

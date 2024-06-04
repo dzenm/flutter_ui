@@ -15,13 +15,11 @@ typedef UpgradeDatabase = List<String> Function(int oldVersion, int newVersion);
 ///   DBManager().userId = '123456';
 final class DBManager {
   static final DBManager _instance = DBManager._internal();
-
+  static DBManager get instance => _instance;
   factory DBManager() => _instance;
-
   DBManager._internal() {
     _delegate = DBManagerDelegate();
   }
-
   late DBManagerDelegate _delegate;
 
   set userId(String userId) => _delegate.userId = userId;

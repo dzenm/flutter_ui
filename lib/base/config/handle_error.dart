@@ -21,6 +21,11 @@ typedef HandleMsg = void Function(String message);
 ///   }),
 /// )
 class HandleError {
+  static final HandleError _instance = HandleError._internal();
+  static HandleError get instance => _instance;
+  factory HandleError() => _instance;
+  HandleError._internal();
+
   /// 捕获flutter运行时的错误
   Future catchFlutterError(
     Function runApp, {

@@ -49,17 +49,14 @@ class HttpError {
 ///     toast: CommonDialog.showToast,
 ///     interceptors: [HttpInterceptor(), CookieInterceptor()],
 ///   );
-class HttpsClient {
+final class HttpsClient {
   static const int _connectTimeout = 20000;
   static const int _receiveTimeout = 20000;
 
-  HttpsClient._internal();
-
   static final HttpsClient _instance = HttpsClient._internal();
-
   static HttpsClient get instance => _instance;
-
   factory HttpsClient() => _instance;
+  HttpsClient._internal();
 
   final Map<String, ApiServices> _apiServices = {};
 

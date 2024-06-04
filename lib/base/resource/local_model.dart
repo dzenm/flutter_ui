@@ -13,7 +13,7 @@ class LocalModel with ChangeNotifier {
   /// 初始化主题设置
   LocalModel() {
     _initSetting();
-    _themeMode = _getMode(_setting.theme ?? 'blue');
+    _mode = _getMode(_setting.theme ?? 'blue');
     _locale = Locale(_setting.locale ?? 'zh');
   }
 
@@ -28,10 +28,8 @@ class LocalModel with ChangeNotifier {
   }
 
   late SettingEntity _setting;
-
   /// 获取设置
   SettingEntity get setting => _setting;
-
   /// 更新设置
   void updateSetting() {
     String settings = jsonEncode(_setting.toJson());
@@ -40,36 +38,15 @@ class LocalModel with ChangeNotifier {
   }
 
   /// 当前设置的主题模式
-  late AppThemeMode _themeMode;
-
+  late AppThemeMode _mode;
   /// 获取当前设置的主题模式
-  AppThemeMode get themeMode => _themeMode;
-
+  AppThemeMode get themeMode => _mode;
   /// 设置新的主题模式
   void setThemeMode(AppThemeMode themeMode) {
-    _themeMode = themeMode;
+    _mode = themeMode;
     _setting.theme = themeMode.name;
     updateSetting();
   }
-
-  /// 获取设置的主题包
-  AppTheme get theme => getTheme(_themeMode);
-
-  /// 当前设置的语言
-  late Locale _locale;
-
-  /// 获取当前设置的语言
-  Locale get locale => _locale;
-
-  /// 设置新的语言
-  void setLocale(Locale locale) {
-    _locale = locale;
-    _setting.locale = locale.languageCode;
-    updateSetting();
-  }
-
-  final Map<AppThemeMode, AppTheme> _appThemes = AppTheme.appTheme;
-
   AppThemeMode _getMode(String name) {
     AppThemeMode mode = AppThemeMode.light;
     for (var value in AppThemeMode.values) {
@@ -78,7 +55,20 @@ class LocalModel with ChangeNotifier {
     return mode;
   }
 
-  AppTheme getTheme(AppThemeMode mode) => _appThemes[mode]!;
+  /// 当前设置的语言
+  late Locale _locale;
+  /// 获取当前设置的语言
+  Locale get locale => _locale;
+  /// 设置新的语言
+  void setLocale(Locale locale) {
+    _locale = locale;
+    _setting.locale = locale.languageCode;
+    updateSetting();
+  }
 
-  List<AppThemeMode> get themes => _appThemes.keys.toList();
+  final Map<AppThemeMode, AppTheme> _themes = AppTheme.appTheme;
+  /// 获取设置的主题包
+  AppTheme get theme => getTheme(_mode);
+  AppTheme getTheme(AppThemeMode mode) => _themes[mode]!;
+  List<AppThemeMode> get themes => _themes.keys.toList();
 }

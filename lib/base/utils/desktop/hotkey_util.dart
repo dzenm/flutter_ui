@@ -1,19 +1,17 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
-
-import '../../base.dart';
 
 ///
 /// Created by a0010 on 2024/4/7 11:43
 /// 快捷键工具
 class HotkeyUtil {
-  HotkeyUtil._internal();
-
   static final HotkeyUtil _instance = HotkeyUtil._internal();
-
   static HotkeyUtil get instance => _instance;
-
   factory HotkeyUtil() => instance;
+  HotkeyUtil._internal();
 
   Function? _logPrint;
 
@@ -23,7 +21,7 @@ class HotkeyUtil {
   }
 
   Future<void> register() async {
-    if (!BuildConfig.isDesktop) return;
+    if (Platform.isAndroid || Platform.isIOS || kIsWeb) return;
     HotKey hotKey = HotKey(
       key: PhysicalKeyboardKey.keyQ,
       modifiers: [HotKeyModifier.alt],
