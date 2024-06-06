@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'tap_layout.dart';
@@ -15,67 +17,88 @@ class CustomPopupWindow extends StatefulWidget {
   /// 自定义Popup布局
   final Widget child;
 
-  /// 自定义Popup箭头指向布局，如果为空不展示
-  final Widget? arrow;
+  /// 弹窗的背景色
+  final Color? color;
+
+  /// 自定义Popup方向指示器布局，如果为空不展示
+  final Widget? directChild;
 
   /// Popup在target的方向，默认在正下方
-  final PopupDirection? direction;
+  final PopupDirection direction;
 
-  /// Popup相对于Target的偏移量(正值x向右偏移，正值y向下偏移，负值x向左偏移，负值y向上偏移)，会影响Popup和箭头
-  final Offset? offset;
+  /// Popup相对于Target的偏移量(x为横向方向偏移，x为竖向方向偏移)，会影响Popup和方向指示器
+  final Offset offset;
 
-  /// 箭头相对于Target的偏移量(正值x向右偏移，正值y向下偏移，负值x向左偏移，负值y向上偏移)，只影响箭头
-  final Offset? arrowOffset;
+  /// 方向指示器相对于Popup的偏移量(x为横向方向偏移，x为竖向方向偏移)，只影响方向指示器
+  final Offset directOffset;
 
-  /// 如果超过范围是否使Popup在[direction]所在的方向等大
-  final bool? isCollapsed;
+  /// Popup是否可以溢出屏幕外显示
+  final bool isOverflow;
 
-  /// 如果超过范围是否使箭头的位置固定居中
-  final bool? isPin;
+  /// 超过范围是否使Popup在[direction]所在的方向等大
+  final bool isCollapsed;
+
+  /// 方向指示器是否相对于Target固定在中间，如果为true，那么 [directOffset] 的设置将失效
+  final bool isPin;
 
   /// z轴的高度
   final double elevation;
+
+  /// Popup的圆角
+  final BorderRadiusGeometry? borderRadius;
 
   const CustomPopupWindow({
     super.key,
     required this.targetKey,
     required this.child,
-    this.arrow,
-    this.direction,
-    this.offset,
-    this.arrowOffset,
-    this.isCollapsed,
-    this.isPin,
+    this.color,
+    this.directChild,
+    PopupDirection? direction,
+    Offset? offset,
+    Offset? directOffset,
+    bool? isOverflow,
+    bool? isCollapsed,
+    bool? isPin,
     this.elevation = 0,
-  });
+    this.borderRadius,
+  })  : direction = direction ?? PopupDirection.bottom,
+        offset = offset ?? const Offset(0, 0),
+        directOffset = directOffset ?? const Offset(16, 16),
+        isOverflow = isOverflow ?? false,
+        isCollapsed = isCollapsed ?? false,
+        isPin = isPin ?? false;
 
   /// 创建一个自定义的PopupWindow
   static Future<T?> show<T>(
-    context, {
-    required GlobalKey targetKey,
-    required Widget child,
-    RouteTransitionsBuilder? builder,
-    Widget? arrow,
-    PopupDirection? direction,
-    Offset? offset,
-    Offset? arrowOffset,
-    bool? isCollapsed,
-    bool? isPin,
-    double elevation = 0,
-  }) async {
+      context, {
+        required GlobalKey targetKey,
+        required Widget child,
+        RouteTransitionsBuilder? builder,
+        Color? color,
+        Widget? directChild,
+        PopupDirection? direction,
+        Offset? offset,
+        Offset? directOffset,
+        bool? isCollapsed,
+        bool? isPin,
+        double elevation = 0,
+        BorderRadiusGeometry? borderRadius,
+      }) async {
     return await Navigator.push(
       context,
       _CustomPopupRoute(
         builder: builder,
         child: CustomPopupWindow(
           targetKey: targetKey,
-          arrow: arrow,
+          color: color ?? Colors.white,
+          directChild: directChild,
           direction: direction,
           offset: offset,
-          arrowOffset: arrowOffset,
+          directOffset: directOffset,
           isCollapsed: isCollapsed,
           isPin: isPin,
           elevation: elevation,
+          borderRadius: borderRadius,
           child: child,
         ),
       ),
@@ -107,31 +130,32 @@ class CustomPopupWindow extends StatefulWidget {
   /// )
   /// 创建一个列表的PopupWindow
   static Future<T?> showList<T>(
-    context, {
-    required GlobalKey targetKey,
-    PopupDirection? direction,
-    Offset? offset,
-    Offset? arrowOffset,
-    bool? isCollapsed,
-    bool? isPin,
-    required List<String> titles,
-    EdgeInsetsGeometry? padding,
-    double radius = 8,
-    Color color = const Color(0xff4c4c4c),
-    Color? textColor,
-    ItemTapCallback? onItemTap,
-    double elevation = 0,
-  }) async {
+      context, {
+        required GlobalKey targetKey,
+        PopupDirection? direction,
+        Offset? offset,
+        Offset? directOffset,
+        bool? isCollapsed,
+        bool? isPin,
+        required List<String> titles,
+        EdgeInsetsGeometry? padding,
+        double radius = 8,
+        Color color = const Color(0xff4c4c4c),
+        Color? textColor,
+        ItemTapCallback? onItemTap,
+        double elevation = 0,
+      }) async {
     return await show(
       context,
       targetKey: targetKey,
       direction: direction ?? PopupDirection.bottom,
       offset: offset,
-      arrow: buildArrowView(direction ?? PopupDirection.bottom, color),
-      arrowOffset: arrowOffset,
+      directOffset: directOffset,
+      directChild: buildDirectView(direction ?? PopupDirection.bottom, color),
       isCollapsed: isCollapsed,
       isPin: isPin,
       elevation: elevation,
+      borderRadius: BorderRadius.circular(radius),
       child: _buildContentView(
         color: color,
         radius: radius,
@@ -191,8 +215,8 @@ class CustomPopupWindow extends StatefulWidget {
     );
   }
 
-  /// Popup箭头布局
-  static Widget buildArrowView(PopupDirection direction, Color color) {
+  /// Popup方向指示器布局
+  static Widget buildDirectView(PopupDirection direction, Color color) {
     bool isTop = [PopupDirection.topLeft, PopupDirection.top, PopupDirection.topRight].contains(direction);
     bool isBottom = [PopupDirection.bottomLeft, PopupDirection.bottom, PopupDirection.bottomRight].contains(direction);
     bool isLeft = [PopupDirection.leftTop, PopupDirection.left, PopupDirection.leftBottom].contains(direction);
@@ -200,10 +224,10 @@ class CustomPopupWindow extends StatefulWidget {
     PopupDirection myDirection = isTop
         ? PopupDirection.top
         : isBottom
-            ? PopupDirection.bottom
-            : isLeft
-                ? PopupDirection.left
-                : PopupDirection.right;
+        ? PopupDirection.bottom
+        : isLeft
+        ? PopupDirection.left
+        : PopupDirection.right;
     return SizedBox(
       width: isVertical ? 12 : 6,
       height: isVertical ? 6 : 12,
@@ -221,248 +245,12 @@ class CustomPopupWindow extends StatefulWidget {
 }
 
 /// PopupWindow的布局
-class _PopupWindowState extends State<CustomPopupWindow> {
-  final GlobalKey _popupKey = GlobalKey();
-  final GlobalKey _arrowKey = GlobalKey();
-
-  /// Popup初始位置，不能展示在屏幕内，所以设置为负数
-  double _left = -2500, _top = -2500;
-
-  /// Popup箭头方向的位置
-  double _arrowLeft = -2500, _arrowTop = -2500;
-
-  /// Popup的大小, 初始化必须为空
-  double? _width, _height;
-
-  /// 箭头的偏移量
-  Offset _arrowOffset = const Offset(16, 0);
-  bool _isCollapsed = false, _isPin = false;
-
+class _PopupWindowState extends State<CustomPopupWindow> with _CalculatePopupPositionMixin {
   @override
   void initState() {
     super.initState();
-
-    _isCollapsed = (widget.isCollapsed ?? _isCollapsed);
-    _isPin = _isCollapsed && (widget.isPin ?? _isPin);
-    _arrowOffset = widget.arrowOffset ?? _arrowOffset;
+    initPopup();
     WidgetsBinding.instance.addPostFrameCallback((_) => _calculatorPopupPosition());
-  }
-
-  void _calculatorPopupPosition() {
-    RenderBox? targetView = widget.targetKey.currentContext?.findRenderObject() as RenderBox?;
-    RenderBox? popupView = _popupKey.currentContext?.findRenderObject() as RenderBox?;
-    RenderBox? arrowView = _arrowKey.currentContext?.findRenderObject() as RenderBox?;
-    if (targetView == null || popupView == null) return;
-
-    // TargetWidget的大小
-    Size targetSize = targetView.size;
-    // TargetWidget的坐标位置，相对于target位置的左上角
-    Offset target = targetView.localToGlobal(Offset.zero);
-
-    // PopupWindow的大小
-    Size popupSize = popupView.size;
-    _width = popupSize.width;
-    _height = popupSize.height;
-
-    // 箭头的大小
-    Size arrowSize = arrowView?.size ?? const Size(0, 0);
-
-    switch (widget.direction ?? PopupDirection.bottom) {
-      // 在target的左边
-      case PopupDirection.leftBottom:
-        _fixBottomInHorizontal(target, targetSize, popupSize, arrowSize);
-        _fixHorizontal(target, -popupSize.width, -arrowSize.width);
-        break;
-      case PopupDirection.left:
-        _fixCenterInHorizontal(target, targetSize, popupSize, arrowSize);
-        _fixHorizontal(target, -popupSize.width, -arrowSize.width);
-        break;
-      case PopupDirection.leftTop:
-        _fixTopInHorizontal(target, targetSize, popupSize, arrowSize);
-        _fixHorizontal(target, -popupSize.width, -arrowSize.width);
-        break;
-
-      // 在target的右边
-      case PopupDirection.rightTop:
-        _fixTopInHorizontal(target, targetSize, popupSize, arrowSize);
-        _fixHorizontal(target, targetSize.width, arrowSize.width);
-        break;
-      case PopupDirection.right:
-        _fixCenterInHorizontal(target, targetSize, popupSize, arrowSize);
-        _fixHorizontal(target, targetSize.width, arrowSize.width);
-        break;
-      case PopupDirection.rightBottom:
-        _fixBottomInHorizontal(target, targetSize, popupSize, arrowSize);
-        _fixHorizontal(target, targetSize.width, arrowSize.width);
-        break;
-
-      // 在target的上边
-      case PopupDirection.topLeft:
-        _fixLeftInVertical(target, targetSize, popupSize, arrowSize);
-        _fixVertical(target, -popupSize.height, -arrowSize.height);
-        break;
-      case PopupDirection.top:
-        _fixCenterInVertical(target, targetSize, popupSize, arrowSize);
-        _fixVertical(target, -popupSize.height, -arrowSize.height);
-        break;
-      case PopupDirection.topRight:
-        _fixRightInVertical(target, targetSize, popupSize, arrowSize);
-        _fixVertical(target, -popupSize.height, -arrowSize.height);
-        break;
-
-      // 在target的下边
-      case PopupDirection.bottomRight:
-        _fixRightInVertical(target, targetSize, popupSize, arrowSize);
-        _fixVertical(target, targetSize.height, arrowSize.height);
-        break;
-      case PopupDirection.bottom:
-        _fixCenterInVertical(target, targetSize, popupSize, arrowSize);
-        _fixVertical(target, targetSize.height, arrowSize.height);
-        break;
-      case PopupDirection.bottomLeft:
-        _fixLeftInVertical(target, targetSize, popupSize, arrowSize);
-        _fixVertical(target, targetSize.height, arrowSize.height);
-        break;
-      default:
-    }
-
-    // 最后调整Popup展示的位置（保证在屏幕内，如果在屏幕外则进行调整）
-    _fixPopupPosition(popupSize);
-    setState(() {});
-  }
-
-  /// 调整水平方向的位置，正值为右边，负值为左边
-  void _fixHorizontal(Offset target, double width, double arrowWidth) {
-    Offset offset = widget.offset ?? const Offset(0, 0);
-    double dx = target.dx + offset.dx;
-    double offsetX = _arrowOffset.dy;
-    // 正值为往下偏移，负值为往上偏移
-    double internal = width > 0 ? offsetX : -offsetX;
-    // width大于0时，加上的width是target的宽度，以及设定的箭头的偏移量，小于0时，加上的arrowWidth是箭头自身的宽度，以及设定的箭头的偏移量
-    _arrowLeft = dx + (width > 0 ? width : arrowWidth) + internal;
-    _left = dx + width + arrowWidth;
-  }
-
-  /// 调整位置在水平方向上边的时候
-  void _fixTopInHorizontal(Offset target, Size targetSize, Size popupSize, Size arrowSize) {
-    if (_isCollapsed) {
-      // 使Target高度跟Popup高度一致时，需要调整Popup的高度
-      _height = targetSize.height;
-    }
-    if (popupSize.height >= targetSize.height || _isPin) {
-      // 使Target高度跟Popup高度一致/如果Popup高度比Target高度大，箭头位于Target中间
-      _arrowTop = target.dy + targetSize.height / 2 - arrowSize.height / 2;
-    } else {
-      // 如果Popup高度比Target高度小，箭头根据设置的偏移量(从上往下)决定位置
-      _arrowTop = target.dy + _arrowOffset.dx;
-    }
-    _top = target.dy;
-  }
-
-  /// 调整位置在水平方向中间的时候
-  void _fixCenterInHorizontal(Offset target, Size targetSize, Size popupSize, Size arrowSize) {
-    if (_isCollapsed) {
-      _top = target.dy;
-      _height = targetSize.height;
-    } else {
-      _top = target.dy + targetSize.height / 2 - popupSize.height / 2;
-    }
-    _arrowTop = target.dy + targetSize.height / 2 - arrowSize.height / 2;
-  }
-
-  /// 调整位置在水平方向下边的时候
-  void _fixBottomInHorizontal(Offset target, Size targetSize, Size popupSize, Size arrowSize) {
-    if (_isCollapsed) {
-      // 使Target高度跟Popup高度一致时，需要调整Popup的高度
-      _top = target.dy;
-      _height = targetSize.height;
-    } else {
-      _top = target.dy + targetSize.height - popupSize.height;
-    }
-    if (popupSize.height >= targetSize.height || _isPin) {
-      // 使Target高度跟Popup高度一致/如果Popup高度比Target高度大，箭头还是位于Target中间
-      _arrowTop = target.dy + targetSize.height / 2 - arrowSize.height / 2;
-    } else {
-      // 如果Popup高度比Target高度小，箭头根据设置的偏移量(从下往上)决定位置
-      _arrowTop = target.dy + targetSize.height - arrowSize.height - _arrowOffset.dx;
-    }
-  }
-
-  /// 调整竖直方向的位置，正值为下边，负值为上边
-  void _fixVertical(Offset target, double height, double arrowHeight) {
-    Offset offset = widget.offset ?? const Offset(0, 0);
-    // offset是包含箭头和Popup主体的偏移
-    double dy = target.dy + offset.dy;
-    // 0.5是为了消除箭头和Popup主体之间的间距
-    double offsetY = _arrowOffset.dy + 0.5;
-    // 正值为往下偏移，负值为往上偏移
-    double internal = height > 0 ? offsetY : -offsetY;
-    // height大于0时，加上的height是target的高度，以及设定的箭头的偏移量，小于0时，加上的arrowHeight是箭头自身的高度，以及设定的箭头的偏移量
-    _arrowTop = dy + (height > 0 ? height : arrowHeight) + internal;
-    _top = dy + height + arrowHeight;
-  }
-
-  /// 调整位置在竖直方向左边的时候
-  void _fixLeftInVertical(Offset target, Size targetSize, Size popupSize, Size arrowSize) {
-    if (_isCollapsed) {
-      // 使Target宽度跟Popup宽度一致时，需要调整Popup的宽度
-      _width = targetSize.width;
-    }
-    if (popupSize.width > targetSize.width || _isPin) {
-      // 使Target宽度跟Popup宽度一致/如果Popup宽度比Target宽度大，箭头还是位于Target中间
-      _arrowLeft = target.dx + targetSize.width / 2 - arrowSize.width / 2;
-    } else {
-      // 如果Popup宽度比Target宽度小，箭头根据设置的偏移量(从左往右)决定位置
-      _arrowLeft = target.dx + _arrowOffset.dx;
-    }
-    _left = target.dx;
-  }
-
-  /// 调整位置在竖直方向中间的时候
-  void _fixCenterInVertical(Offset target, Size targetSize, Size popupSize, Size arrowSize) {
-    if (_isCollapsed) {
-      _left = target.dx;
-      _width = targetSize.width;
-    } else {
-      _left = target.dx + targetSize.width / 2 - popupSize.width / 2;
-    }
-    _arrowLeft = target.dx + targetSize.width / 2 - arrowSize.width / 2;
-  }
-
-  /// 调整位置在竖直方向右边的时候
-  void _fixRightInVertical(Offset target, Size targetSize, Size popupSize, Size arrowSize) {
-    if (_isCollapsed) {
-      // 使Target宽度跟Popup宽度一致时，需要调整Popup的宽度
-      _left = target.dx;
-      _width = targetSize.width;
-    } else {
-      _left = target.dx + targetSize.width - popupSize.width;
-    }
-    if (popupSize.width > targetSize.width || _isPin) {
-      // 使Target宽度跟Popup宽度一致/如果Popup宽度比Target宽度大，箭头还是位于Target中间
-      _arrowLeft = target.dx + targetSize.width / 2 - arrowSize.width / 2;
-    } else {
-      // 如果Popup高度比Target高度小，箭头根据设置的偏移量(从右往左)决定位置
-      _arrowLeft = target.dx + targetSize.width - arrowSize.width - _arrowOffset.dx;
-    }
-  }
-
-  /// 调整Popup的位置，使Popup不会溢出屏幕
-  void _fixPopupPosition(Size popupSize) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-    if (_left < 0) {
-      _left = 0;
-    }
-    if (_left + popupSize.width >= width) {
-      _left = width - popupSize.width;
-    }
-    if (_top < 0) {
-      _top = 0;
-    }
-    if (_top + popupSize.height >= height) {
-      _top = height - popupSize.height;
-    }
   }
 
   @override
@@ -477,14 +265,14 @@ class _PopupWindowState extends State<CustomPopupWindow> {
             color: Colors.transparent,
           ),
           Positioned(
-            left: _left,
-            top: _top,
+            left: _offset.dx,
+            top: _offset.dy,
             child: GestureDetector(child: _buildCustomView()),
           ),
           Positioned(
-            left: _arrowLeft,
-            top: _arrowTop,
-            child: _buildArrowView(),
+            left: _directOffset.dx,
+            top: _directOffset.dy,
+            child: _buildDirectView(),
           ),
         ]),
         onTap: () => Navigator.pop(context),
@@ -495,23 +283,235 @@ class _PopupWindowState extends State<CustomPopupWindow> {
   /// 自定义的Popup Widget布局
   Widget _buildCustomView() {
     return Material(
+      color: widget.color,
       type: widget.elevation == 0 ? MaterialType.transparency : MaterialType.card,
+      borderRadius: widget.borderRadius,
       elevation: widget.elevation,
       child: SizedBox(
         key: _popupKey,
-        width: _width,
-        height: _height,
+        width: _size?.width,
+        height: _size?.height,
         child: widget.child,
       ),
     );
   }
 
-  /// Popup Widget指向的箭头布局
-  Widget _buildArrowView() {
+  /// Popup Widget指向的方向指示器布局
+  Widget _buildDirectView() {
     return Container(
-      key: _arrowKey,
-      child: widget.arrow,
+      key: _directKey,
+      child: widget.directChild,
     );
+  }
+}
+
+/// 计算Popup位置
+mixin _CalculatePopupPositionMixin on State<CustomPopupWindow> {
+  final GlobalKey _popupKey = GlobalKey();
+  final GlobalKey _directKey = GlobalKey();
+
+  /// Popup初始位置，不能展示在屏幕内，所以设置为负数
+  Offset _offset = const Offset(-10000, -10000);
+
+  /// Popup方向指示器的位置
+  Offset _directOffset = const Offset(-10000, -10000);
+
+  /// Popup的大小, 初始化必须为空
+  Size? _size;
+
+  bool _isCollapsed = false, _isPinDirect = false;
+
+  void initPopup() {
+    _isCollapsed = widget.isCollapsed;
+    _isPinDirect = widget.isPin;
+  }
+
+  /// 计算Popup的位置
+  void _calculatorPopupPosition() {
+    RenderBox? targetView = widget.targetKey.currentContext?.findRenderObject() as RenderBox?;
+    RenderBox? popupView = _popupKey.currentContext?.findRenderObject() as RenderBox?;
+    RenderBox? directView = _directKey.currentContext?.findRenderObject() as RenderBox?;
+    if (targetView == null || popupView == null) return;
+
+    // TargetWidget的大小
+    Size targetSize = targetView.size;
+    // TargetWidget的坐标位置，相对于target位置的左上角
+    Offset target = targetView.localToGlobal(Offset.zero);
+
+    // PopupWindow的大小
+    _size = popupView.size;
+
+    // 方向指示器的大小
+    Size directSize = directView?.size ?? const Size(0, 0);
+
+    // 先调整大小，再调整方向
+    _size = _adjustPopupSize(isVertical, targetSize, _size!);
+    // 调整所在方向的位置
+    _fixPosition(targetSize, _size!, directSize, target);
+    // 最后调整Popup展示的位置（保证在屏幕内，如果在屏幕外则进行调整）
+    _fixPopupPosition(_size!);
+    setState(() {});
+  }
+
+  /// 调整Popup在 [direction] 方向的大小
+  Size _adjustPopupSize(bool isVertical, Size targetSize, Size popupSize) {
+    if (!_isCollapsed) return popupSize;
+    if (isVertical) {
+      double width = min(targetSize.width, popupSize.width);
+      return Size(width, popupSize.height);
+    }
+    double height = min(targetSize.height, popupSize.height);
+    return Size(popupSize.width, height);
+  }
+
+  /// 是否在竖直方向
+  bool get isVertical => [
+    PopupDirection.topLeft,
+    PopupDirection.top,
+    PopupDirection.topRight,
+    PopupDirection.bottomLeft,
+    PopupDirection.bottom,
+    PopupDirection.bottomRight,
+  ].contains(widget.direction);
+
+  /// 调整位置
+  void _fixPosition(Size targetSize, Size popupSize, Size directSize, Offset target) {
+    double dx = target.dx + widget.offset.dx;
+    double dy = target.dy + widget.offset.dy;
+    double internal = 0.2; // 为了消除Popup和direct的间隙，调整direct向Popup移动的间距
+
+    Offset offset = widget.directOffset;
+    double x = 0, y = 0, dirX = offset.dx, dirY = offset.dy; // 默认的位置
+
+    double directLeft = -(directSize.width + internal);
+    double directRight = targetSize.width + internal;
+    double directTop = -(directSize.height + internal);
+    double directBottom = targetSize.height + internal;
+
+    double directHorizontalCenter = targetSize.height / 2 - directSize.height / 2;
+    double directVerticalCenter = targetSize.width / 2 - directSize.width / 2;
+    double directHorizontalTop;
+    if (_isPinDirect) {
+      directHorizontalTop = directHorizontalCenter;
+    } else {
+      directHorizontalTop = targetSize.height - dirY - directSize.height;
+    }
+    double directVerticalRight;
+    if (_isPinDirect) {
+      directVerticalRight = directVerticalCenter;
+    } else {
+      directVerticalRight = targetSize.width - dirX - directSize.width;
+    }
+
+    double popupLeft = -(popupSize.width + directSize.width);
+    double popupRight = targetSize.width + directSize.width;
+    double popupTop = -(directSize.height + popupSize.height);
+    double popupBottom = targetSize.height + directSize.height;
+
+    double popupHorizontalCenter = targetSize.width / 2 - popupSize.width / 2;
+    double popupVerticalCenter = targetSize.height / 2 - popupSize.height / 2;
+    double popupHorizontalTop = targetSize.height - popupSize.height;
+    double popupVerticalRight = targetSize.width - popupSize.width;
+
+    switch (widget.direction) {
+    // 在target的左边
+      case PopupDirection.leftBottom:
+        dirX = directLeft;
+        if (_isPinDirect) dirY = directHorizontalCenter;
+        x = popupLeft;
+        break;
+      case PopupDirection.left:
+        dirX = directLeft;
+        dirY = directHorizontalCenter;
+        x = popupLeft;
+        y = popupVerticalCenter;
+        break;
+      case PopupDirection.leftTop:
+        dirX = directLeft;
+        dirY = directHorizontalTop;
+        x = popupLeft;
+        y = popupHorizontalTop;
+        break;
+
+    // 在target的右边
+      case PopupDirection.rightTop:
+        dirX = directRight;
+        dirY = directHorizontalTop;
+        x = popupRight;
+        y = popupHorizontalTop;
+        break;
+      case PopupDirection.right:
+        dirX = directRight;
+        dirY = directHorizontalCenter;
+        x = popupRight;
+        y = popupVerticalCenter;
+        break;
+      case PopupDirection.rightBottom:
+        dirX = directRight;
+        if (_isPinDirect) dirY = directHorizontalCenter;
+        x = popupRight;
+        break;
+
+    // 在target的上边
+      case PopupDirection.topLeft:
+        if (_isPinDirect) dirX = directVerticalCenter;
+        dirY = directTop;
+        y = popupTop;
+        break;
+      case PopupDirection.top:
+        dirX = directVerticalCenter;
+        dirY = directTop;
+        x = popupHorizontalCenter;
+        y = popupTop;
+        break;
+      case PopupDirection.topRight:
+        dirX = directVerticalRight;
+        dirY = directTop;
+        x = popupVerticalRight;
+        y = popupTop;
+        break;
+
+    // 在target的下边
+      case PopupDirection.bottomRight:
+        dirX = directVerticalRight;
+        dirY = directBottom;
+        x = popupVerticalRight;
+        y = popupBottom;
+        break;
+      case PopupDirection.bottom:
+        dirX = directVerticalCenter;
+        dirY = directBottom;
+        x = popupHorizontalCenter;
+        y = popupBottom;
+        break;
+      case PopupDirection.bottomLeft:
+        if (_isPinDirect) dirX = directVerticalCenter;
+        dirY = directBottom;
+        y = popupBottom;
+        break;
+    }
+
+    _offset = Offset(dx + x, dy + y);
+    _directOffset = Offset(dx + dirX, dy + dirY);
+  }
+
+  /// 调整Popup的位置，使Popup不会溢出屏幕
+  void _fixPopupPosition(Size popupSize) {
+    if (!widget.isOverflow) return;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    double dx = _offset.dx, dy = _offset.dy;
+    if (_offset.dx < 0) {
+      dx = 0;
+    } else if (_offset.dx + popupSize.width >= width) {
+      dx = width - popupSize.width;
+    }
+    if (_offset.dy < 0) {
+      dy = 0;
+    } else if (_offset.dy + popupSize.height >= height) {
+      dy = height - popupSize.height;
+    }
+    _offset = Offset(dx, dy);
   }
 }
 
@@ -543,15 +543,13 @@ class _CustomPopupRoute<T> extends PopupRoute<T> {
 
 /// 绘制三角形
 class _TrianglePainter extends CustomPainter {
-  Color color; //填充颜色
+  final Color color; //填充颜色
+  final PopupDirection direction;
+
   final Paint _paint = Paint(); //画笔
   final Path _path = Path(); //绘制路径
-  PopupDirection direction;
 
-  _TrianglePainter({
-    this.color = Colors.grey,
-    this.direction = PopupDirection.bottom,
-  }) {
+  _TrianglePainter({required this.color, required this.direction}) {
     _paint
       ..strokeWidth = 0.0 //线宽
       ..color = color
@@ -560,31 +558,32 @@ class _TrianglePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    // 绘制的范围
     double width = size.width;
     double height = size.height;
-    final baseX = size.width * 0.5;
-    final baseY = size.height * 0.5;
+
+    // 绘制三角形的基点，即宽/高的中点
+    final baseX = width * 0.5;
+    final baseY = height * 0.5;
+    // 绘制不同方向的三角形（找到矩形内的三个点绘制正三角形），方向指示器和Popup方向是相反的方向
     if (direction == PopupDirection.left) {
       _path.moveTo(0, 0);
       _path.lineTo(0, height);
       _path.lineTo(baseY, baseY);
-      canvas.drawPath(_path, _paint);
     } else if (direction == PopupDirection.top) {
       _path.moveTo(0, 0);
       _path.lineTo(width, 0);
       _path.lineTo(baseX, baseX);
-      canvas.drawPath(_path, _paint);
     } else if (direction == PopupDirection.right) {
       _path.moveTo(width, 0);
       _path.lineTo(width, height);
       _path.lineTo(width - baseY, baseY);
-      canvas.drawPath(_path, _paint);
     } else if (direction == PopupDirection.bottom) {
       _path.moveTo(0, height);
       _path.lineTo(width, height);
       _path.lineTo(baseX, height - baseX);
-      canvas.drawPath(_path, _paint);
     }
+    canvas.drawPath(_path, _paint);
   }
 
   @override

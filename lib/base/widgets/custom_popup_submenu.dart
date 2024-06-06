@@ -39,10 +39,12 @@ class CustomPopupSubmenu<T> extends StatelessWidget {
       theme: Theme.of(context),
       barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
       builder: (route) {
-        return CustomPopupSubmenu<T>(
-          semanticLabel: semanticLabel ?? MaterialLocalizations.of(context).popupMenuLabel,
-          constraints: constraints,
-          child: child,
+        return _buildContentView(
+          child: CustomPopupSubmenu<T>(
+            semanticLabel: semanticLabel ?? MaterialLocalizations.of(context).popupMenuLabel,
+            constraints: constraints,
+            child: child,
+          ),
         );
       },
     );
@@ -99,7 +101,7 @@ class CustomPopupSubmenu<T> extends StatelessWidget {
                   (item) => Column(children: [
                     TapLayout(
                       height: 35,
-                      alignment: Alignment.center,
+                      alignment: Alignment.centerLeft,
                       foreground: Colors.transparent,
                       onTap: () {
                         Navigator.pop(context);
@@ -120,6 +122,32 @@ class CustomPopupSubmenu<T> extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  static Widget _buildContentView({required Widget child}) {
+    return Container(
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+        border: Border.all(color: const Color(0xFFE0E0E0), width: 0.5),
+        boxShadow: const [
+          BoxShadow(
+            offset: Offset(0, 1),
+            blurRadius: 10.0,
+            spreadRadius: 0.0,
+            color: Color(0x0D000000),
+          ),
+          BoxShadow(
+            offset: Offset(0, 1),
+            blurRadius: 4.0,
+            spreadRadius: 0.0,
+            color: Color(0x14000000),
+          ),
+        ],
+      ),
+      child: child,
     );
   }
 
