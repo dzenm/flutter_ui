@@ -4,9 +4,8 @@ import 'dart:convert';
 import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_web_plugins/url_strategy.dart';
-import 'package:provider/provider.dart';
 import 'package:video_player_media_kit/video_player_media_kit.dart';
+import 'package:windows_single_instance/windows_single_instance.dart';
 
 import 'app_page.dart';
 import 'base/base.dart';
@@ -35,33 +34,30 @@ class Application with Logging {
   void main(List<String> args) async {
     bool isMainWindow = args.firstOrNull != 'multi_window';
     if (isMainWindow) {
-      MockBinding.ensureInitialized();
       // 初始化
-      await _initMainApp();
+      await _initApp(args);
       // 初始化登录过后的信息
       _initLoginState();
 
       // 运行flutter时全局异常捕获
-      HandleError().catchFlutterError(() {
-        logInfo('╔══════════════════════════════════════════════════════════════════════════════════════════════════╗');
-        logInfo('║                                                                                                  ║');
-        logInfo('║                                        Start Flutter APP                                         ║');
-        logInfo('║                                                                                                  ║');
-        logInfo('╚══════════════════════════════════════════════════════════════════════════════════════════════════╝');
-        // 让 Flutter 使用 path 策略
-        usePathUrlStrategy();
-        Provider.debugCheckInvalidValueType = null;
-        //启动第一个页面(必须使用AppPage作为最顶层页面，包含一些页面初始化相关的信息)
-        runMockApp(AppPage(handle: (ctx) => _context = ctx));
-        // 初始化桌面端窗口
-        DesktopWrapper.ensureInitialized();
-      }, config: MessageConfig(
-        handleMsg: (message) async {
-          String logFileName = 'crash_${DateTime.now()}.log';
-          logInfo('异常信息文件：logFileName=$logFileName');
-          await FileUtil().save(logFileName, message, dir: 'crash');
+      HandleError().catchFlutterError(
+        () {
+          logInfo('╔══════════════════════════════════════════════════════════════════════════════════════════════════╗');
+          logInfo('║                                                                                                  ║');
+          logInfo('║                                        Start Flutter APP                                         ║');
+          logInfo('║                                                                                                  ║');
+          logInfo('╚══════════════════════════════════════════════════════════════════════════════════════════════════╝');
+          //启动第一个页面(必须使用AppPage作为最顶层页面，包含一些页面初始化相关的信息)
+          runMockApp(AppPage(handle: (ctx) => _context = ctx));
         },
-      ));
+        config: MessageConfig(
+          handleMsg: (message) async {
+            String logFileName = 'crash_${DateTime.now()}.log';
+            logInfo('异常信息文件：logFileName=$logFileName');
+            await FileUtil().save(logFileName, message, dir: 'crash');
+          },
+        ),
+      );
     } else {
       logInfo('APP初始运行时参数：args=${args.toString()}');
       final windowId = int.parse(args[1]);
@@ -76,7 +72,8 @@ class Application with Logging {
   }
 
   /// 初始化信息
-  Future<void> _initMainApp() async {
+  Future<void> _initApp(List<String> args) async {
+    MockBinding.ensureInitialized();
     await BuildConfig.init();
     Log.init(
       manager: LogManager(
@@ -90,15 +87,18 @@ class Application with Logging {
     logInfo('  启动: now=$now, duration=$duration');
     logInfo('  Application是否单例: ${Application.instance == Application()}');
 
+    _initAndroid();
+    _initIOS();
+    _initWindows(args);
+    _initMacOS();
+    _initLinux();
+    _initWeb();
+    // 初始化桌面端窗口
+    await DesktopWrapper.ensureInitialized();
+
     logInfo('  初始化 SharedPreferences');
     bool res = await SPManager().init(logPrint: Log.d);
     logInfo('  初始化 SharedPreferences ${res ? '成功' : '失败'}');
-
-    logInfo('  初始化 Android设置');
-    _initAndroidSettings();
-
-    logInfo('  初始化 iOS设置');
-    _initIOSSettings();
 
     logInfo('  初始化 HttpsClient');
     HttpsClient().init(
@@ -152,8 +152,9 @@ class Application with Logging {
   }
 
   /// 初始化Android设置
-  void _initAndroidSettings() {
+  Future<void> _initAndroid() async {
     if (!BuildConfig.isAndroid) return;
+    logInfo('  初始化 Android设置');
     // 设置Android头部的导航栏透明
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -165,7 +166,39 @@ class Application with Logging {
   }
 
   /// 初始化iOS设置
-  void _initIOSSettings() {
+  Future<void> _initIOS() async {
     if (!BuildConfig.isIOS) return;
+    logInfo('  初始化 iOS设置');
+  }
+
+  /// 初始化Windows设置
+  Future<void> _initWindows(List<String> args) async {
+    if (!BuildConfig.isWindows) return;
+    logInfo('  初始化 Windows设置');
+    await WindowsSingleInstance.ensureSingleInstance(
+      args,
+      "windows_custom_identifier",
+      onSecondWindow: (args) {
+        logInfo('WindowsSingleInstance：args=$args');
+      },
+    );
+  }
+
+  /// 初始化MacOS设置
+  Future<void> _initMacOS() async {
+    if (!BuildConfig.isMacOS) return;
+    logInfo('  初始化 MacOS设置');
+  }
+
+  /// 初始化Linux设置
+  Future<void> _initLinux() async {
+    if (!BuildConfig.isLinux) return;
+    logInfo('  初始化 Linux设置');
+  }
+
+  /// 初始化Web设置
+  Future<void> _initWeb() async {
+    if (!BuildConfig.isWeb) return;
+    logInfo('  初始化 Web设置');
   }
 }
