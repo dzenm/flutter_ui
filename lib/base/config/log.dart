@@ -8,23 +8,23 @@ typedef LoggerBuilder = Logger Function(LogManager manager);
 /// ║                                          .              [_ConsolePrinter] ←───┐                                                      ║
 /// ║                                                                               │                                                      ║
 /// ║                    [_Logger] ←─── [_LoggerMixin] ←───┐                        └───┬─── [Logger.printers] ←─── [LogPrinter.output]    ║
-/// ║                                                      │                            ├─── [Logger.verbose]                              ║
-/// ║                 [LogManager] ←───┐                   │                            ├─── [Logger.debug]                                ║
-/// ║                                  │                   │                            ├─── [Logger.info]                                 ║
-/// ║              ┌─── [Log.init] ←───┴─── [_manager] ←───┼─── [LogManager.logger] ←───┼─── [Logger.warning]                              ║
-/// ║              │                                       │                            ├─── [Logger.error]                                ║
-/// ║              │                                       │                            ├─── [Logger.http]                                 ║
-/// ║              │                                       │                            ├─── [Logger.db]                                   ║
-/// ║              │                                       │                            └─── [Logger.page]                                 ║
+/// ║                                                      │                            ├─── [Logger.http]                                 ║
+/// ║                 [LogManager] ←───┐                   │                            ├─── [Logger.db]                                   ║
+/// ║                                  │                   │                            ├─── [Logger.page]                                 ║
+/// ║              ┌─── [Log.init] ←───┴─── [_manager] ←───┼─── [LogManager.logger] ←───┼─── [Logger.verbose]                              ║
+/// ║              │                                       │                            ├─── [Logger.debug]                                ║
+/// ║              │                                       │                            ├─── [Logger.info]                                 ║
+/// ║              │                                       │                            ├─── [Logger.warming]                              ║
+/// ║              │                                       │                            └─── [Logger.error]                                ║
 /// ║              │                                       │                                                                               ║
-/// ║              ├─── [v] ←───┐                          │                                                                               ║
-/// ║              ├─── [d] ←───┤                          │                                                                               ║
-/// ║              ├─── [i] ←───┤                          │                                                                               ║
-/// ║    [Log] ←───┼─── [w] ←───┼──────────────────────────┘                                                                               ║
-/// ║              ├─── [e] ←───┤                                                                                                          ║
-/// ║              ├─── [h] ←───┤                                                                                                          ║
+/// ║              ├─── [h] ←───┐                          │                                                                               ║
+/// ║              ├─── [b] ←───┤                          │                                                                               ║
+/// ║              ├─── [p] ←───┤                          │                                                                               ║
+/// ║    [Log] ←───┼─── [v] ←───┼──────────────────────────┘                                                                               ║
 /// ║              ├─── [d] ←───┤                                                                                                          ║
-/// ║              └─── [p] ←───┘                                                                                                          ║
+/// ║              ├─── [i] ←───┤                                                                                                          ║
+/// ║              ├─── [w] ←───┤                                                                                                          ║
+/// ║              └─── [e] ←───┘                                                                                                          ║
 /// ║                                                                                                                                      ║
 /// ╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
 /// 日志输出
@@ -58,7 +58,7 @@ final class Log {
   static void v(dynamic msg, {String? tag}) => _log.verbose(msg, tag: tag);
   static void d(dynamic msg, {String? tag}) => _log.debug(msg, tag: tag);
   static void i(dynamic msg, {String? tag}) => _log.info(msg, tag: tag);
-  static void w(dynamic msg, {String? tag}) => _log.warning(msg, tag: tag);
+  static void w(dynamic msg, {String? tag}) => _log.warming(msg, tag: tag);
   static void e(dynamic msg, {String? tag}) => _log.error(msg, tag: tag);
 }
 
@@ -123,7 +123,7 @@ abstract class Logger {
   void verbose(dynamic msg, {String? tag});
   void   debug(dynamic msg, {String? tag});
   void    info(dynamic msg, {String? tag});
-  void warning(dynamic msg, {String? tag});
+  void warming(dynamic msg, {String? tag});
   void   error(dynamic msg, {String? tag});
   void    http(dynamic msg, {String? tag});
   void      db(dynamic msg, {String? tag});
@@ -186,7 +186,7 @@ mixin _LoggerMixin implements Logger {
   @override void verbose(msg, {tag}) => log(msg, tag, Level.verbose);
   @override void   debug(msg, {tag}) => log(msg, tag, Level.debug);
   @override void    info(msg, {tag}) => log(msg, tag, Level.info);
-  @override void warning(msg, {tag}) => log(msg, tag, Level.warning);
+  @override void warming(msg, {tag}) => log(msg, tag, Level.warming);
   @override void   error(msg, {tag}) => log(msg, tag, Level.error);
 }
 
@@ -328,14 +328,14 @@ enum Level {
   page   (1 << 7, 'P', '32'), // 1 << 3 = 8
   debug  (1 << 1, 'D', '94'), // 1 << 4 = 16
   info   (1 << 2, 'I', '36'), // 1 << 5 = 32
-  warning(1 << 3, 'W', '93'), // 1 << 6 = 64
+  warming(1 << 3, 'W', '93'), // 1 << 6 = 64
   error  (1 << 4, 'E', '31'); // 1 << 7 = 128
 
   final int flag;
   final String tag;
   final String color;
   const Level(this.flag, this.tag, this.color);
-  static int kDebug =   http.flag | db.flag | page.flag | debug.flag | info.flag | warning.flag | error.flag; // 2+4+8+16+32+64+128=254
-  static int kDevelop =                                                info.flag | warning.flag | error.flag; //          32+64+128=220
-  static int kRelease =                                                            warning.flag | error.flag; //             64+128=192
+  static int kDebug =   http.flag | db.flag | page.flag | debug.flag | info.flag | warming.flag | error.flag; // 2+4+8+16+32+64+128=254
+  static int kDevelop =                                                info.flag | warming.flag | error.flag; //          32+64+128=220
+  static int kRelease =                                                            warming.flag | error.flag; //             64+128=192
 }
