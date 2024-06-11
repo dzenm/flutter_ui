@@ -112,6 +112,7 @@ class _OrderPageState extends State<AddOrderPage> {
           style: TextStyle(color: theme.white),
         ),
       ),
+      Expanded(child: _buildProducts()),
     ]);
   }
 

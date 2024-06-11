@@ -11,7 +11,7 @@ class Sql {
   static const String selectTable = "SELECT * FROM sqlite_master WHERE TYPE='table'";
 
   /// 更新数据库的语句
-  static const List<UpgradeDatabase> upgrades = [
+  static const List<UpgradeDatabase?> upgrades = [
     _onUpgrade_1_2,
     _onUpgrade_2_3,
     _onUpgrade_3_4,

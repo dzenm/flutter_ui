@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/application.dart';
 import 'package:flutter_ui/pages/common/view_media_page.dart';
 import 'package:provider/provider.dart';
 import 'package:tray_manager/tray_manager.dart';
@@ -176,6 +175,7 @@ class _MainPageDesktopWrapperState extends State<MainPageDesktopWrapper> with Wi
   void onWindowClose() async {
     // do something
     bool isPreventClose = await windowManager.isPreventClose();
+    if (!mounted) return;
     if (isPreventClose) {
       showDialog(
         context: context,

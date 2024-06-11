@@ -132,8 +132,10 @@ class SocketThread {
       _log("aReceivePort收到消息: message=$message");
       if (message[0] == 0) {
         bSendPort = message[1];
-      } else {
-
+      }
+      if (bSendPort != null) {
+        _log("bSendPort 发送消息");
+        bSendPort.send([1, "这条信息是 bSendPort 在Main Isolate中 发送的"]);
       }
     });
     Isolate.spawn(doWork, _mainReceivePort!.sendPort);

@@ -193,16 +193,13 @@ class FileImageExt extends FileImage {
   const FileImageExt(super.file, {super.scale});
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (other.runtimeType != runtimeType) return false;
-    final FileImageExt typedOther = other;
-    int fileSize = file.existsSync() ? file.lengthSync() : 0; //l 文件不存在兼容
-    return file.path == typedOther.file.path && scale == typedOther.scale && fileSize == typedOther.fileSize();
-  }
-
-  /// 文件不存在兼容
-  int fileSize() {
-    return file.existsSync() ? file.lengthSync() : 0;
+    return other is FileImageExt &&
+        file.path == other.file.path &&
+        scale == other.scale //l 文件不存在兼容
+        &&
+        (file.existsSync() ? file.lengthSync() : 0) == (other.file.existsSync() ? other.file.lengthSync() : 0);
   }
 
   @override

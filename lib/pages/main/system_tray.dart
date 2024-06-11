@@ -69,6 +69,14 @@ mixin class SystemTray {
     _timer = null;
   }
 
+  void startFlash() {
+    if (_showIcon) {
+      _closeIconFlash();
+    } else {
+      _openIconFlash();
+    }
+  }
+
   /// 开启系统托盘闪烁效果
   void _openIconFlash() {
     _timer = Timer.periodic(const Duration(milliseconds: 300), (timer) async {

@@ -240,7 +240,7 @@ class _ChatPageState extends State<ChatPage> {
     });
   }
 
-  _addMessage(int count) {
+  addMessage(int count) {
     _chatObserver.standby(changeCount: count);
     setState(() {
       needIncrementUnreadMsgCount = true;

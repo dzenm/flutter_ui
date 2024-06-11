@@ -47,6 +47,7 @@ dependencies:
   sqflite_common_ffi: 2.3.3                     # SQLite3数据库存储(全平台) https://pub.dev/packages/sqflite_common_ffi
   #  http文件夹
   dio: 5.4.3+1                                  # HTTP请求 https://pub.flutter-io.cn/packages/dio
+  http_parser: 4.0.2                            # HTTP请求 https://pub.flutter-io.cn/packages/http_parser
   #  naughty文件夹
   #  dio: 5.4.2+1                                  # HTTP请求 https://pub.flutter-io.cn/packages/dio
   intl: 0.19.0                                  # 国际化工具 https://pub.dev/packages/intl
@@ -96,7 +97,7 @@ dependencies:
   ########################################## 多平台插件 ########################################
   file_selector: 1.0.3                          # 文件选择 https://pub.flutter-io.cn/packages/file_selector
   image_picker: 1.1.2                           # 图片选择器 https://pub.flutter-io.cn/packages/image_picker
-  video_player: 2.8.6                           # 视频播放 https://pub.flutter-io.cn/packages/video_player
+  video_player: 2.8.7                           # 视频播放 https://pub.flutter-io.cn/packages/video_player
   fijkplayer: 0.11.0                            # 视频播放 https://pub.flutter-io.cn/packages/fijkplayer
   flutter_vlc_player: 7.4.1                     # 视频播放 https://pub.flutter-io.cn/packages/fijkplayer
   scan: 1.6.0                                   # 扫描二维码 https://pub.flutter-io.cn/packages/scan
@@ -123,7 +124,6 @@ dependencies:
 
   ########################################## 工具 ########################################
   lpinyin: 2.0.3                                # 汉字转拼音 https://pub.flutter-io.cn/packages/lpinyin
-
 dev_dependencies:
   flutter_test:
     sdk: flutter

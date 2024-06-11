@@ -93,16 +93,30 @@ class DBManagerDelegate {
 
     // 方式一，使用sql进行更新。
     Batch batch = db.batch();
-    for (UpgradeDatabase upgradeDatabase in Sql.upgrades) {
-      List<String> list = upgradeDatabase(oldVersion, newVersion);
-      if (list.isEmpty) continue;
-      for (var sql in list) {
-        batch.execute(sql);
+    for (UpgradeDatabase? upgradeDatabase in Sql.upgrades) {
+      if (upgradeDatabase == null) {
+        _defaultUpgrade();
+      } else {
+        List<String> list = upgradeDatabase(oldVersion, newVersion);
+        if (list.isEmpty) continue;
+        for (var sql in list) {
+          batch.execute(sql);
+        }
       }
     }
     // 方式二，通过创建临时表更新
     await batch.commit();
     log('升级数据库完成');
+  }
+
+  void _defaultUpgrade() async {
+    for (var table in tables) {
+      String tableName = table.tableName;
+      await _generateTempTables(tableName);
+      await _dropTableString(tableName);
+      List<String> columns = table.toJson().keys.toList();
+      await _restoreData(tableName, columns);
+    }
   }
 
   /// 生成临时表，将原表数据进行迁移

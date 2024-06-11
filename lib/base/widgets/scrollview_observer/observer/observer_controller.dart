@@ -460,6 +460,7 @@ mixin ObserverControllerForScroll on ObserverControllerForInfo {
     var targetScrollChildModel = indexOffsetMap[ctx]?[index];
     // There is a cache offset, scroll to the offset directly.
     if (targetScrollChildModel != null) {
+      if (!ctx.mounted) return;
       _handleScrollDecision(context: ctx);
       var targetOffset = _calculateTargetLayoutOffset(
         obj: obj,
@@ -478,6 +479,7 @@ mixin ObserverControllerForScroll on ObserverControllerForInfo {
       } else {
         myController.jumpTo(targetOffset);
       }
+      if (!ctx.mounted) return;
       _handleScrollEnd(context: ctx, completer: completer);
       return;
     }
@@ -485,6 +487,7 @@ mixin ObserverControllerForScroll on ObserverControllerForInfo {
     // Because it is fixed height, the offset can be directly calculated for
     // locating.
     if (isFixedHeight) {
+      if (!ctx.mounted) return;
       _handleScrollToIndexForFixedHeight(
         completer: completer,
         ctx: ctx,
@@ -506,12 +509,14 @@ mixin ObserverControllerForScroll on ObserverControllerForInfo {
     final firstChild = findCurrentFirstChild(obj);
     final lastChild = findCurrentLastChild(obj);
     if (firstChild == null || lastChild == null) {
+      if (!ctx.mounted) return;
       _handleScrollInterruption(context: ctx, completer: completer);
       return;
     }
     firstChildIndex = firstChild.index;
     lastChildIndex = lastChild.index;
 
+    if (!ctx.mounted) return;
     _handleScrollToIndex(
       completer: completer,
       ctx: ctx,
@@ -606,6 +611,7 @@ mixin ObserverControllerForScroll on ObserverControllerForInfo {
     } else {
       myController.jumpTo(childLayoutOffset);
     }
+    if (!ctx.mounted) return;
     _handleScrollEnd(context: ctx, completer: completer);
   }
 
@@ -769,6 +775,7 @@ mixin ObserverControllerForScroll on ObserverControllerForInfo {
         final isHorizontal = obj.constraints.axis == Axis.horizontal;
         final childPaintBounds = targetChild.paintBounds;
         final childSize = isHorizontal ? childPaintBounds.width : childPaintBounds.height;
+        if (!ctx.mounted) return;
         _updateIndexOffsetMap(
           ctx: ctx,
           index: currentChildIndex,
@@ -801,6 +808,7 @@ mixin ObserverControllerForScroll on ObserverControllerForInfo {
             myController.jumpTo(targetOffset);
           }
 
+          if (!ctx.mounted) return;
           _handleScrollEnd(context: ctx, completer: completer);
         }
         break;

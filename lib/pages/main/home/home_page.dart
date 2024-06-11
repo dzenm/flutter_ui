@@ -360,7 +360,7 @@ class ArticleItemView extends StatelessWidget {
               builder: (context, value, child) {
                 if (value == 0) return Container();
                 return Row(children: [
-                  Icon(CustomIcons.thumbs_up, color: theme.signText, size: 16),
+                  Icon(CustomIcons.thumbsUp, color: theme.signText, size: 16),
                   const SizedBox(width: 4),
                   Text(
                     '$value',
@@ -410,7 +410,7 @@ class CollectArticleView extends StatelessWidget {
     AppTheme theme = context.watch<LocalModel>().theme;
     return Selector<ArticleModel, bool>(
       builder: (context, value, child) {
-        IconData icon = value ? CustomIcons.heart : CustomIcons.heart_empty;
+        IconData icon = value ? CustomIcons.heart : CustomIcons.heartEmpty;
         Color? color = value ? theme.collect : theme.notCollect;
         return TapLayout(
           height: 48,
