@@ -43,7 +43,7 @@ class SubTree<T> {
   @override
   String toString() {
     return '${objectRuntimeType(this, 'SubTree')}'
-        '(value="$value", '
+        '(value=$value, '
         'globValue=$globValue, '
         'fixed=$fixed, '
         'varSubTree=$varSubTree, '

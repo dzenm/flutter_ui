@@ -114,7 +114,7 @@ class AppRouteSettings extends RouteSettings {
   @override
   String toString() {
     return '${objectRuntimeType(this, 'AppRouteSettings')}'
-        '(at="$at", '
+        '(at=$at, '
         'path="$path", '
         'name="$name", '
         'arguments=$arguments, '
