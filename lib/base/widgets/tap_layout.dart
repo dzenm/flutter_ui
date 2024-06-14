@@ -205,72 +205,70 @@ class _TapLayout extends StatelessWidget {
   /// 没有水波纹按钮的布局
   Widget _buildView(BuildContext context) {
     // 减少child的构建次数
-    Widget child = this.child!;
-    return ValueListenableBuilder<bool>(
-      valueListenable: _isMouseEnter,
-      builder: (context, isMouseEnter, child) {
-        return ValueListenableBuilder<bool>(
-          builder: (context, isTouchDown, child) {
-            bool isExistTap = onTap != null || onLongPress != null || onDoubleTap != null || onSecondaryTap != null;
-            Color? color = background;
-            Color hover = Colors.transparent;
-            if (isExistTap) {
-              if (isMouseEnter) {
-                // 先处理鼠标进入区域事件
-                hover = Platform.isAndroid || Platform.isIOS
-                    ? Colors.transparent // 鼠标高亮色
-                    : hoverColor ?? Theme.of(context).hoverColor; // 鼠标高亮色
-              }
-              if (isTouchDown) {
-                // 再处理触摸点击事件
-                color = foreground ?? Theme.of(context).highlightColor;
-              }
-            }
-            Widget current = child!;
-
-            // 设置悬停时的颜色
-            if (hover != Colors.transparent) {
-              current = ColoredBox(color: hover, child: child);
-            }
-
-            current = Container(
-              height: height,
-              width: width,
-              clipBehavior: Clip.hardEdge,
-              decoration: BoxDecoration(
-                color: color,
-                image: image,
-                borderRadius: borderRadius,
-                gradient: gradient,
-                shape: shape,
-              ),
-              child: current,
-            );
-
-            if (isExistTap) {
-              current = GestureDetector(
-                onTap: onTap,
-                onLongPress: onLongPress,
-                onDoubleTap: onDoubleTap,
-                onTapDown: (e) => _isTouchDown.value = true,
-                onTapUp: (e) => _isTouchDown.value = false,
-                onTapCancel: () => _isTouchDown.value = false,
-                onSecondaryTap: onSecondaryTap,
-                child: current,
-              );
-              current = MouseRegion(
-                onEnter: (e) => _isMouseEnter.value = true,
-                onExit: (e) => _isMouseEnter.value = false,
-                child: current,
-              );
-            }
-            return current;
-          },
-          valueListenable: _isTouchDown,
+    bool isExistTap = onTap != null || onLongPress != null || onDoubleTap != null || onSecondaryTap != null;
+    Widget? current = child;
+    if (!isExistTap) {
+      // 设置悬停时的颜色
+      current = ValueListenableBuilder<bool>(
+        valueListenable: _isMouseEnter,
+        child: current,
+        builder: (context, isMouseEnter, child) {
+          Color hover = Colors.transparent;
+          if (isMouseEnter) {
+            // 先处理鼠标进入区域事件
+            hover = Platform.isAndroid || Platform.isIOS
+                ? Colors.transparent // 鼠标高亮色
+                : hoverColor ?? Theme.of(context).hoverColor; // 鼠标高亮色
+          }
+          if (hover == Colors.transparent) {
+            return child!;
+          }
+          return ColoredBox(color: hover, child: child);
+        },
+      );
+    }
+    // 设置点击时的颜色
+    current = ValueListenableBuilder<bool>(
+      valueListenable: _isTouchDown,
+      child: current,
+      builder: (context, isTouchDown, child) {
+        Color? color = background;
+        if (isExistTap && isTouchDown) {
+          // 再处理触摸点击事件
+          color = foreground ?? Theme.of(context).highlightColor;
+        }
+        return Container(
+          height: height,
+          width: width,
+          clipBehavior: Clip.hardEdge,
+          decoration: BoxDecoration(
+            color: color,
+            image: image,
+            borderRadius: borderRadius,
+            gradient: gradient,
+            shape: shape,
+          ),
           child: child,
         );
       },
-      child: child,
+    );
+    if (!isExistTap) {
+      return current;
+    }
+    // 设置鼠标事件和手势事件
+    return MouseRegion(
+      onEnter: (e) => _isMouseEnter.value = true,
+      onExit: (e) => _isMouseEnter.value = false,
+      child: GestureDetector(
+        onTap: onTap,
+        onLongPress: onLongPress,
+        onDoubleTap: onDoubleTap,
+        onTapDown: (e) => _isTouchDown.value = true,
+        onTapUp: (e) => _isTouchDown.value = false,
+        onTapCancel: () => _isTouchDown.value = false,
+        onSecondaryTap: onSecondaryTap,
+        child: current,
+      ),
     );
   }
 }
