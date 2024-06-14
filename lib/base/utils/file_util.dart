@@ -128,13 +128,35 @@ class FileUtil extends _Directory with _DirectoryMixin {
 
 /// 处理文件的路径信息
 class PathInfo {
-  String path; // 文件路径
-  String parent; // 文件所在的文件夹
-  String? name; // 文件的名称，带后缀
-  String? fileName; // 文件的名称，不带后缀
-  String? suffix; // 文件后缀类型
+  String get path => _path; // 文件路径
+  String _path = '';
 
-  PathInfo._({required this.path, required this.parent, this.name, this.fileName, this.suffix});
+  String get parent => _parent; // 文件所在的文件夹
+  String _parent = '';
+
+  String? get name => _name; // 文件的名称，带后缀
+  String get __name => _name ?? '';
+  String? _name;
+
+  String? get fileName => _fileName; // 文件的名称，不带后缀
+  String get __fileName => _fileName ?? '';
+  String? _fileName;
+
+  String? get extension => _extension; // 文件后缀类型
+  String get __extension => _extension ?? '';
+  String? _extension;
+
+  PathInfo._({
+    required String path,
+    required String parent,
+    String? name,
+    String? fileName,
+    String? extension,
+  })  : _path = path,
+        _parent = parent,
+        _name = name,
+        _fileName = fileName,
+        _extension = extension;
 
   /// path=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x.png
   /// name=336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x.png
@@ -149,7 +171,7 @@ class PathInfo {
     String parent = '';
     String? name;
     String? fileName;
-    String? suffix;
+    String? extension;
     int index = path.lastIndexOf('.');
     // 如果不存在文件名称包含.的情况
     if (index < 0) {
@@ -169,7 +191,7 @@ class PathInfo {
       name = path.substring(separatorIndex + 1);
       fileName = path.substring(separatorIndex + 1, index);
       if (index + 1 < path.length) {
-        suffix = path.substring(index + 1);
+        extension = path.substring(index + 1);
       }
     }
     return PathInfo._(
@@ -177,73 +199,92 @@ class PathInfo {
       parent: parent,
       name: name,
       fileName: fileName,
-      suffix: suffix,
+      extension: extension,
     );
   }
 
   /// file=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x.png
   /// suffix=thumb_
   /// addFileNamePrefix=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/thumb_336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x.png
-  String addFileNamePrefix(String prefix) => join(parent, '$prefix$fileName.${suffix ?? ''}');
+  String addFileNamePrefix(String prefix) {
+    assert(() {
+      if (isDirectory) {
+        throw FlutterError('PathInfo parse\'s path is directory, Can\'t addFileNamePrefix in name(name=$name)');
+      }
+      return true;
+    }());
+    return join(_parent, '$prefix$__fileName.$__extension');
+  }
 
   /// file=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/thumb_336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x.png
   /// suffix=thumb_
   /// removeFileNamePrefix=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x_thumb.png
   String removeFileNamePrefix(String prefix) {
-    if (fileName == null) return '';
-    String name = fileName ?? '';
-    if (fileName!.startsWith(prefix)) {
-      name = fileName!.substring(prefix.length);
+    if (__fileName.isEmpty) return _path;
+    String fileName = __fileName;
+    if (fileName.startsWith(prefix)) {
+      fileName = fileName.substring(prefix.length);
     }
-    return join(parent, '$name.${suffix ?? ''}');
+    return join(_parent, '$fileName.$__extension');
   }
 
   /// file=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x.png
   /// suffix=_thumb
   /// addFileNameSuffix=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x_thumb.png
-  String addFileNameSuffix(String suffix) => join(parent, '$fileName$suffix.$suffix');
+  String addFileNameSuffix(String suffix) {
+    assert(() {
+      if (isDirectory) {
+        throw FlutterError('PathInfo parse\'s path is directory, Can\'t addFileNameSuffix in name(name=$name)');
+      }
+      return true;
+    } ());
+    return join(_parent, '$__fileName$suffix.$__extension');
+  }
 
   /// file=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x_thumb.png
   /// suffix=_thumb
   /// removeFileNameSuffix=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x.png
   String removeFileNameSuffix(String suffix) {
-    if (fileName == null) return '';
-    String name = fileName ?? '';
-    if (fileName!.endsWith(suffix)) {
-      name = fileName!.substring(0, fileName!.lastIndexOf(suffix));
+    if (__fileName.isEmpty) return _path;
+    String fileName = __fileName;
+    if (fileName.endsWith(suffix)) {
+      fileName = fileName.substring(0, fileName.lastIndexOf(suffix));
     }
-    return join(parent, '$name.$suffix');
+    return join(_parent, '$name.$__extension');
   }
 
   /// 文件名称起始或者终止位置是否包含字符串
   bool nameContains(String fix) {
-    if (fileName == null) return false;
-    return fileName!.startsWith(fix) || fileName!.endsWith(fix);
+    if (__fileName.isEmpty) return false;
+    return __fileName.startsWith(fix) || __fileName.endsWith(fix);
   }
 
   /// 获取缩略图文件路径
-  String get thumbPath => nameContains(_thumb) ? path : addFileNameSuffix(_thumb);
+  String get thumbPath => nameContains(_thumb) ? _path : addFileNameSuffix(_thumb);
 
   /// 获取原文件路径
-  String get originPath => nameContains(_thumb) ? removeFileNameSuffix(_thumb) : path;
+  String get originPath => nameContains(_thumb) ? removeFileNameSuffix(_thumb) : _path;
 
   /// 复制到指定文件夹
-  String copyPath(String parent) => join(parent, fileName);
+  String copyPath(String parent) => join(parent, __fileName);
 
   /// 获取文件类型
-  MimeType get mimeType => mimeTypes[suffix] ?? MimeType.unknown;
+  MimeType get mimeType => mimeTypes[__fileName] ?? MimeType.unknown;
 
   /// 是否是Gif图
-  bool get isGif => suffix?.toLowerCase() == 'gif';
+  bool get isGif => __extension.toLowerCase() == 'gif';
+
+  /// 是否是文件夹
+  bool get isDirectory => __name.isEmpty;
 
   @override
   String toString() {
     return '${objectRuntimeType(this, 'PathInfo')}'
-        '(path="$path", '
+        '(path=$path, '
         'parent=$parent, '
         'name=$name, '
         'fileName=$fileName, '
-        'suffix=$suffix)';
+        'extension=$extension)';
   }
 }
 
