@@ -1,4 +1,4 @@
-import '../../base/fsm/base.dart';
+import '../../base/fsm/fsm.dart';
 import 'connection.dart';
 import 'state.dart';
 

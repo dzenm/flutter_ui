@@ -43,7 +43,7 @@ class _DesktopPageState extends State<DesktopPage> {
             MaterialButton(
               textColor: Colors.white,
               color: theme.button,
-              onPressed: () => connection.isClosed = true,
+              onPressed: () => connection.isClosed = false,
               child: _text('关闭'),
             ),
             MaterialButton(

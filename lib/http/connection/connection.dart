@@ -1,4 +1,4 @@
-import '../../base/fsm/ticker.dart';
+import '../../base/fsm/fsm.dart';
 import 'state.dart';
 
 class Connection implements Ticker {

@@ -1,6 +1,5 @@
 import 'package:flutter_ui/base/base.dart';
 
-import '../../base/fsm/base.dart';
 import '../../base/fsm/machine.dart';
 import 'connection.dart';
 import 'transition.dart';
@@ -39,7 +38,7 @@ import 'transition.dart';
 ///  Connection State Machine
 ///  ~~~~~~~~~~~~~~~~~~~~~~~~
 class ConnectionStateMachine
-    extends BaseMachine<ConnectionStateMachine, ConnectionStateTransition, ConnectionState>
+    extends AutoMachine<ConnectionStateMachine, ConnectionStateTransition, ConnectionState>
     implements MachineContext {
   ConnectionStateMachine(Connection connection) : _connectionRef = WeakReference(connection) {
     // init states
