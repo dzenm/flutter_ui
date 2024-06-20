@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/http/connection/connection.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base/base.dart';
+import '../../../http/connection/state.dart';
 import '../study_router.dart';
 
 ///
@@ -15,8 +17,20 @@ class DesktopPage extends StatefulWidget {
 }
 
 class _DesktopPageState extends State<DesktopPage> {
+  late Connection connection;
+  late ConnectionStateMachine machine;
+
+  @override
+  void initState() {
+    super.initState();
+    connection = Connection();
+    machine = ConnectionStateMachine(connection);
+    machine.start();
+  }
+
   @override
   Widget build(BuildContext context) {
+    AppTheme theme = context.watch<LocalModel>().theme;
     return Scaffold(
       appBar: AppBar(
         title: const Text('桌面端', style: TextStyle(color: Colors.white)),
@@ -26,6 +40,19 @@ class _DesktopPageState extends State<DesktopPage> {
         child: SingleChildScrollView(
           child: Column(children: [
             _buildChildren(),
+            MaterialButton(
+              textColor: Colors.white,
+              color: theme.button,
+              onPressed: () => connection.isClosed = true,
+              child: _text('关闭'),
+            ),
+            MaterialButton(
+              textColor: Colors.white,
+              color: theme.button,
+              onPressed: () => connection.isAlive = true,
+              child: _text('活跃'),
+            ),
+
           ]),
         ),
       ),

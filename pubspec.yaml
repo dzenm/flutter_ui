@@ -124,6 +124,7 @@ dependencies:
 
   ########################################## 工具 ########################################
   lpinyin: 2.0.3                                # 汉字转拼音 https://pub.flutter-io.cn/packages/lpinyin
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
