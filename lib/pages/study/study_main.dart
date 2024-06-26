@@ -14,6 +14,7 @@ class StudyMain {
     await _pathProviderTest();
   }
 
+
   static Future<void> _pathProviderTest() async {
     // macOS：/Users/a0010/Library/Containers/com.dzenm.flutterUi/Data/Library/Caches
     // Android：/data/user/0/com.dzenm.flutter_ui/cache

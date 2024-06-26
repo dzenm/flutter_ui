@@ -1,3 +1,4 @@
+import '../../base/base.dart';
 import '../../base/fsm/fsm.dart';
 import 'connection.dart';
 import 'state.dart';
@@ -22,6 +23,7 @@ class ConnectionStateTransitionBuilder {
   getDefaultPreparingTransition() => ConnectionStateTransition(
     ConnectionStateOrder.preparing, (ctx, now) {
       Connection? conn = ctx.connection;
+      Log.d('状态转换：preparing, connection=${conn == null}');
       // connection started? change state to 'preparing'
       return !(conn == null || conn.isClosed);
     },
@@ -31,6 +33,7 @@ class ConnectionStateTransitionBuilder {
   getPreparingReadyTransition() => ConnectionStateTransition(
     ConnectionStateOrder.ready, (ctx, now) {
       Connection? conn = ctx.connection;
+      Log.d('状态转换：ready, connection=${conn == null}');
       // connected or bound, change state to 'ready'
       return conn != null && conn.isAlive;
     },
@@ -40,6 +43,7 @@ class ConnectionStateTransitionBuilder {
   getPreparingDefaultTransition() => ConnectionStateTransition(
     ConnectionStateOrder.init, (ctx, now) {
       Connection? conn = ctx.connection;
+      Log.d('状态转换：init, connection=${conn == null}');
       // connection stopped, change state to 'not_connect'
       return conn == null || conn.isClosed;
     },

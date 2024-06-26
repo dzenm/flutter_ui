@@ -38,6 +38,7 @@ export 'picker/location.dart';
 export 'picker/picker_view.dart';
 export 'refresh_list_view.dart';
 export 'scrollview_observer/scrollview_observer.dart';
+export 'shimmer.dart';
 export 'single_edit_view.dart';
 export 'single_text_view.dart';
 export 'slide_verify_view.dart';
