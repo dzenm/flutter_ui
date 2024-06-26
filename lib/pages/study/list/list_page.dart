@@ -17,6 +17,7 @@ class _ListPageState extends State<ListPage> {
   final StateController _controller = StateController();
   final List<ArticleEntity> _articles = [];
   int _pageIndex = 0; // 加载的页数
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -32,31 +33,39 @@ class _ListPageState extends State<ListPage> {
       ),
       body: Column(children: [
         Expanded(
-          child: RefreshListView(
-            controller: _controller,
-            itemCount: _articles.length,
-            builder: (BuildContext context, int index) {
-              return _buildArticleItem(_articles[index], index);
-            },
-            refresh: _onRefresh,
-            showFooter: true,
+          child: Shimmer(
+            child: RefreshListView(
+              controller: _controller,
+              itemCount: _articles.length,
+              physics: _isLoading ? const NeverScrollableScrollPhysics() : null,
+              builder: (BuildContext context, int index) {
+                return _buildArticleItem(_articles[index], index);
+              },
+              refresh: _onRefresh,
+              showFooter: true,
+            ),
           ),
-        )
+        ),
       ]),
     );
   }
 
   Widget _buildArticleItem(ArticleEntity article, int index) {
     String title = article.title ?? '';
-    return TapLayout(
-      onTap: () {
-        String params = '?title=$title&url=${article.link}';
-        AppRouter.of(context).push(Routers.webView + params);
-      },
-      child: ListTile(
-        title: Text(title),
-      ),
-    );
+    return ShimmerLoading(
+        isLoading: _isLoading,
+        child: TapLayout(
+          onTap: () {
+            String params = '?title=$title&url=${article.link}';
+            AppRouter.of(context).push(Routers.webView + params);
+          },
+          child: ListTile(
+            title: ShimmerText(
+              isLoading: _isLoading,
+              child: Text(title),
+            ),
+          ),
+        ));
   }
 
   // 下拉刷新方法,为list重新赋值
@@ -88,5 +97,6 @@ class _ListPageState extends State<ListPage> {
       },
       failed: (error) async => setState(() => _controller.loadFailed()),
     );
+    Future.delayed(const Duration(seconds: 5), () => setState(() => _isLoading = !_isLoading));
   }
 }
