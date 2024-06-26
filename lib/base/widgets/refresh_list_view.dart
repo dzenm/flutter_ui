@@ -26,6 +26,7 @@ class RefreshListView extends StatefulWidget {
   final int itemCount; // item数量
   final IndexedWidgetBuilder builder; // 子item样式
   final RefreshFunction? refresh; // refresh为true表示下拉刷新的回调, 为false表示上拉加载更多的回调
+  final ScrollPhysics? physics;
   final EdgeInsetsGeometry? padding;
   final bool showFooter;
   final bool slideListener;
@@ -36,6 +37,7 @@ class RefreshListView extends StatefulWidget {
     required this.builder,
     this.refresh,
     this.controller,
+    this.physics,
     this.padding,
     this.showFooter = false,
     this.slideListener = true,
@@ -138,6 +140,7 @@ class _RefreshListViewState extends State<RefreshListView> {
     return ListView.builder(
       itemBuilder: _buildItem,
       itemCount: itemCount,
+      physics: widget.physics,
       padding: widget.padding,
       controller: _controller,
     );
