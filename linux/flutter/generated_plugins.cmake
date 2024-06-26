@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  contextual_menu
   desktop_drop
   desktop_multi_window
   file_selector_linux
