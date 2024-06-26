@@ -115,9 +115,9 @@ class WindowButtons extends StatelessWidget {
   }
 }
 
-/// 桌面端全局大小设置
-class GlobalBox extends StatelessWidget {
-  const GlobalBox({
+/// 桌面端全局大小圆角装饰的盒子
+class AppBox extends StatelessWidget {
+  const AppBox({
     super.key,
     required this.child,
     this.borderRadius = 8,

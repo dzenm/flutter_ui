@@ -48,7 +48,7 @@ class AppPage extends StatelessWidget with Logging {
       child = _buildMaterialApp();
     }
 
-    return GlobalBox(
+    return AppBox(
       child: _buildProviderApp(
         child: child,
       ),

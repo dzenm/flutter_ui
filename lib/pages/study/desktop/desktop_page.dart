@@ -1,3 +1,4 @@
+import 'package:contextual_menu/contextual_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/http/connection/connection.dart';
 import 'package:provider/provider.dart';
@@ -52,10 +53,52 @@ class _DesktopPageState extends State<DesktopPage> {
               onPressed: () => connection.isAlive = true,
               child: _text('活跃'),
             ),
-
+            MaterialButton(
+              textColor: Colors.white,
+              color: theme.button,
+              onPressed: () => connection.isAlive = true,
+              child: _text('活跃'),
+            ),
+            MaterialButton(
+              textColor: Colors.white,
+              color: theme.button,
+              onPressed: () => _showContextMenu(),
+              child: _text('活跃'),
+            ),
           ]),
         ),
       ),
+    );
+  }
+
+  void _showContextMenu() {
+    Menu menu = Menu(
+      items: [
+        MenuItem(
+          label: 'Copy',
+          onClick: (_) {
+            CommonDialog.showToast('Clicked Copy');
+          },
+        ),
+        MenuItem(
+          label: 'Disabled item',
+          disabled: true,
+        ),
+        MenuItem.checkbox(
+          key: 'checkbox1',
+          label: 'Checkbox1',
+          checked: true,
+          onClick: (menuItem) {
+            CommonDialog.showToast('Clicked Checkbox1');
+            menuItem.checked = !(menuItem.checked == true);
+          },
+        ),
+        MenuItem.separator(),
+      ],
+    );
+    popUpContextualMenu(
+      menu,
+      placement: Placement.bottomLeft,
     );
   }
 
