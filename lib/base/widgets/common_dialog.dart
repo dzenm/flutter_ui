@@ -200,34 +200,32 @@ class CommonDialog {
   }) async {
     return await showCustomDialog(
       context,
-      child: DialogWrapper(
-        isTouchOutsideDismiss: barrierDismissible,
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          SizedBox(height: content == null ? 36 : 20),
-          title ??
-              Text(
-                titleString ?? '',
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-          content == null
-              ? const SizedBox(width: 0, height: 36)
-              : Flexible(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-                    child: content,
-                  ),
+      barrierDismissible: barrierDismissible,
+      child: Column(mainAxisSize: MainAxisSize.min, children: [
+        SizedBox(height: content == null ? 36 : 20),
+        title ??
+            Text(
+              titleString ?? '',
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+        content == null
+            ? const SizedBox(width: 0, height: 36)
+            : Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                  child: content,
                 ),
-          CupertinoDialogButton(
-            positiveText: positiveText,
-            negativeText: negativeText,
-            positiveStyle: positiveStyle,
-            negativeStyle: negativeStyle,
-            onPositiveTap: onPositiveTap,
-            onNegativeTap: onNegativeTap,
-            singleButton: singleButton,
-          )
-        ]),
-      ),
+              ),
+        CupertinoDialogButton(
+          positiveText: positiveText,
+          negativeText: negativeText,
+          positiveStyle: positiveStyle,
+          negativeStyle: negativeStyle,
+          onPositiveTap: onPositiveTap,
+          onNegativeTap: onNegativeTap,
+          singleButton: singleButton,
+        )
+      ]),
     );
   }
 
@@ -282,7 +280,8 @@ class CommonDialog {
     BuildContext context, {
     bool barrierDismissible = true,
     Color? barrierColor,
-    required Widget child,
+    Widget? child,
+    RoutePageBuilder? pageBuilder,
     bool useRootNavigator = true,
     RouteSettings? routeSettings,
     TransitionType transitionType = TransitionType.fade,
@@ -295,19 +294,20 @@ class CommonDialog {
     assert(debugCheckHasMaterialLocalizations(context));
     return await showGeneralDialog<T>(
       context: context,
-      pageBuilder: (BuildContext buildContext, Animation<double> animation, Animation<double> secondaryAnimation) {
-        return SafeArea(
-          child: DialogWrapper(
-            isTouchOutsideDismiss: barrierDismissible,
-            barrierOnTap: barrierOnTap,
-            color: color ?? Colors.white,
-            margin: margin,
-            borderRadius: borderRadius,
-            constraints: constraints,
-            child: child,
-          ),
-        );
-      },
+      pageBuilder: pageBuilder ??
+          (BuildContext buildContext, Animation<double> animation, Animation<double> secondaryAnimation) {
+            return SafeArea(
+              child: DialogWrapper(
+                isTouchOutsideDismiss: barrierDismissible,
+                barrierOnTap: barrierOnTap,
+                color: color ?? Colors.white,
+                margin: margin,
+                borderRadius: borderRadius,
+                constraints: constraints,
+                child: child,
+              ),
+            );
+          },
       barrierDismissible: barrierDismissible,
       barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
       barrierColor: barrierColor ?? Colors.black54,
@@ -584,12 +584,12 @@ Widget buildTransitions(
       );
     case TransitionType.fade:
       return FadeTransition(
-// 从0开始到1
+        // 从0开始到1
         opacity: Tween(begin: 0.0, end: 1.0).animate(
           CurvedAnimation(
-// 传入设置的动画
+            // 传入设置的动画
             parent: animation,
-// 设置效果，快进漫出   这里有很多内置的效果
+            // 设置效果，快进漫出   这里有很多内置的效果
             curve: Curves.fastOutSlowIn,
           ),
         ),
