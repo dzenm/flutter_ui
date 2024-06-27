@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../base/base.dart';
-import '../../../entities/article_entity.dart';
-import '../../../http/http_manager.dart';
-import '../../routers.dart';
+import '../../../../base/base.dart';
+import '../../../../entities/entity.dart';
+import '../../../../http/http_manager.dart';
+import '../../../routers.dart';
 
 /// 刷新和底部加载的列表
 class ListPage extends StatefulWidget {

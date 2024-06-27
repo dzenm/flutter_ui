@@ -43,6 +43,14 @@ class _LoadImagePageState extends State<LoadImagePage> {
               const ImageView(
                 url: 'https://www.wanandroid.com/blogimgs/62c1bd68-b5f3-4a3c-a649-7ca8c7dfabe6.png',
               ),
+              const SizedBox(height: 16),
+              TapLayout(
+                height: 50.0,
+                isCircle: true,
+                background: Colors.blue,
+                onTap: () {},
+                child: const Text('VIP', style: TextStyle(color: Colors.white)),
+              ),
             ],
           ),
         ),

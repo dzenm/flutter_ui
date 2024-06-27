@@ -2,7 +2,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../base/base.dart';
+import '../../../../base/base.dart';
 
 ///
 /// Created by a0010 on 2023/3/23 09:01
@@ -191,7 +191,7 @@ class _DialogPageState extends State<DialogPage> {
               onPressed: () => CommonDialog.showCustomDialog(
                 context,
                 transitionType: TransitionType.left,
-                child: AlertDialog(
+                pageBuilder: (c, a, s) => AlertDialog(
                   title: const Text('Dialog Show'),
                   content: const Text('this is a dialog'),
                   actions: [
@@ -219,7 +219,7 @@ class _DialogPageState extends State<DialogPage> {
               onPressed: () => CommonDialog.showCustomDialog(
                 context,
                 transitionType: TransitionType.top,
-                child: AlertDialog(
+                pageBuilder: (c, a, s) => AlertDialog(
                   title: const Text('Dialog Show'),
                   content: const Text('this is a dialog'),
                   actions: [
@@ -247,7 +247,7 @@ class _DialogPageState extends State<DialogPage> {
               onPressed: () => CommonDialog.showCustomDialog(
                 context,
                 transitionType: TransitionType.right,
-                child: AlertDialog(
+                pageBuilder: (c, a, s) => AlertDialog(
                   title: const Text('Dialog Show'),
                   content: const Text('this is a dialog'),
                   actions: [
@@ -275,7 +275,7 @@ class _DialogPageState extends State<DialogPage> {
               onPressed: () => CommonDialog.showCustomDialog(
                 context,
                 transitionType: TransitionType.bottom,
-                child: AlertDialog(
+                pageBuilder: (c, a, s) => AlertDialog(
                   title: const Text('Dialog Show'),
                   content: const Text('this is a dialog'),
                   actions: [
@@ -303,7 +303,7 @@ class _DialogPageState extends State<DialogPage> {
               onPressed: () => CommonDialog.showCustomDialog(
                 context,
                 transitionType: TransitionType.inLeftOutRight,
-                child: AlertDialog(
+                pageBuilder: (c, a, s) => AlertDialog(
                   title: const Text('Dialog Show'),
                   content: const Text('this is a dialog'),
                   actions: [
@@ -331,7 +331,7 @@ class _DialogPageState extends State<DialogPage> {
               onPressed: () => CommonDialog.showCustomDialog(
                 context,
                 transitionType: TransitionType.inTopOutBottom,
-                child: AlertDialog(
+                pageBuilder: (c, a, s) => AlertDialog(
                   title: const Text('Dialog Show'),
                   content: const Text('this is a dialog'),
                   actions: [
@@ -359,7 +359,7 @@ class _DialogPageState extends State<DialogPage> {
               onPressed: () => CommonDialog.showCustomDialog(
                 context,
                 transitionType: TransitionType.inRightOutLeft,
-                child: AlertDialog(
+                pageBuilder: (c, a, s) => AlertDialog(
                   title: const Text('Dialog Show'),
                   content: const Text('this is a dialog'),
                   actions: [
@@ -387,7 +387,7 @@ class _DialogPageState extends State<DialogPage> {
               onPressed: () => CommonDialog.showCustomDialog(
                 context,
                 transitionType: TransitionType.inBottomOutTop,
-                child: AlertDialog(
+                pageBuilder: (c, a, s) => AlertDialog(
                   title: const Text('Dialog Show'),
                   content: const Text('this is a dialog'),
                   actions: [
@@ -415,7 +415,7 @@ class _DialogPageState extends State<DialogPage> {
               onPressed: () => CommonDialog.showCustomDialog(
                 context,
                 transitionType: TransitionType.scale,
-                child: AlertDialog(
+                pageBuilder: (c, a, s) => AlertDialog(
                   title: const Text('Dialog Show'),
                   content: const Text('this is a dialog'),
                   actions: [
@@ -443,7 +443,7 @@ class _DialogPageState extends State<DialogPage> {
               onPressed: () => CommonDialog.showCustomDialog(
                 context,
                 transitionType: TransitionType.fade,
-                child: AlertDialog(
+                pageBuilder: (c, a, s) => AlertDialog(
                   title: const Text('Dialog Show'),
                   content: const Text('this is a dialog'),
                   actions: [
@@ -471,7 +471,7 @@ class _DialogPageState extends State<DialogPage> {
               onPressed: () => CommonDialog.showCustomDialog(
                 context,
                 transitionType: TransitionType.rotation,
-                child: AlertDialog(
+                pageBuilder: (c, a, s) => AlertDialog(
                   title: const Text('Dialog Show'),
                   content: const Text('this is a dialog'),
                   actions: [
@@ -499,7 +499,7 @@ class _DialogPageState extends State<DialogPage> {
               onPressed: () => CommonDialog.showCustomDialog(
                 context,
                 transitionType: TransitionType.size,
-                child: AlertDialog(
+                pageBuilder: (c, a, s) => AlertDialog(
                   title: const Text('Dialog Show'),
                   content: const Text('this is a dialog'),
                   actions: [

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../base/base.dart';
+import '../../../../base/base.dart';
+
 
 /// 自定义键盘
 class KeywordBoardPage extends StatefulWidget {
