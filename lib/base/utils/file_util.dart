@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:convert/convert.dart' as convert;
+import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -20,7 +22,7 @@ class FileUtil extends _Directory with _DirectoryMixin {
   factory FileUtil() => instance;
 
   /// 删除文件（根据路径删除）
-  void deleteFile(String? path) {
+  void delete(String? path) {
     try {
       if ((path ?? '').isEmpty) return;
       File file = File(path!);
@@ -107,6 +109,41 @@ class FileUtil extends _Directory with _DirectoryMixin {
     return '${toStringAsFixed(res)} ${suffix[i]}';
   }
 
+  /// 计算文件的MD5值
+  Future<String> getMD5(String path) async => _calculateFileMd5(path);
+
+  /// 计算文件的MD5值
+  Future<String> _calculateFileMd5(String path) async {
+    final file = File(path);
+    final bytes = await file.readAsBytes();
+    return md5.convert(bytes).toString();
+  }
+
+  String _getMd5(String path) {
+    int partSize = 1024 * 1024 * 3; //默认3m每块
+    File file = File(path);
+    int fileSize = file.lengthSync();
+    int totalPart = (fileSize * 1.0 / partSize).ceil();
+    int start; //开始读文件的位置
+    int length; //读取文件的长度
+    var output = convert.AccumulatorSink<Digest>();
+    var input = md5.startChunkedConversion(output);
+    int currentPart = 0;
+    while (currentPart < totalPart) {
+      start = currentPart * partSize;
+      length = (start + partSize > fileSize) ? (fileSize - start) : partSize;
+      RandomAccessFile raf = file.openSync(mode: FileMode.read);
+      raf.setPositionSync(start);
+      Uint8List data = raf.readSync(length);
+      input.add(data);
+      currentPart++;
+    }
+    input.close();
+    var digest = output.events.single.toString();
+    return digest;
+  }
+
+  /// 将浮点数 [value] 转为取 [position] 位的小数的字符串
   String toStringAsFixed(dynamic value, {int position = 2}) {
     double num;
     if (value is double) {
@@ -237,7 +274,7 @@ class PathInfo {
         throw FlutterError('PathInfo parse\'s path is directory, Can\'t addFileNameSuffix in name(name=$name)');
       }
       return true;
-    } ());
+    }());
     return join(_parent, '$__fileName$suffix.$__extension');
   }
 
@@ -250,7 +287,7 @@ class PathInfo {
     if (fileName.endsWith(suffix)) {
       fileName = fileName.substring(0, fileName.lastIndexOf(suffix));
     }
-    return join(_parent, '$name.$__extension');
+    return join(_parent, '$fileName.$__extension');
   }
 
   /// 文件名称起始或者终止位置是否包含字符串
@@ -269,7 +306,7 @@ class PathInfo {
   String copyPath(String parent) => join(parent, __fileName);
 
   /// 获取文件类型
-  MimeType get mimeType => mimeTypes[__fileName] ?? MimeType.unknown;
+  MimeType get mimeType => mimeTypes[__extension] ?? MimeType.unknown;
 
   /// 是否是Gif图
   bool get isGif => __extension.toLowerCase() == 'gif';

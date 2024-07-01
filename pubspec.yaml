@@ -126,6 +126,7 @@ dependencies:
   ########################################## 工具 ########################################
   lpinyin: 2.0.3                                # 汉字转拼音 https://pub.flutter-io.cn/packages/lpinyin
 #  record: 5.0.5                                 # 录音 https://pub.flutter-io.cn/packages/record
+  crypto: 3.0.3                                 # 加密解密工具 https://pub.flutter-io.cn/packages/crypto
 dev_dependencies:
   flutter_test:
     sdk: flutter

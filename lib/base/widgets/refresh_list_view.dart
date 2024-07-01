@@ -8,7 +8,7 @@ class SelectedEntity<T> {
   T data;
   bool isSelected = false;
 
-  SelectedEntity({required this.data});
+  SelectedEntity({required this.data, this.isSelected = false});
 }
 
 /// 带下拉刷新的[ListView]

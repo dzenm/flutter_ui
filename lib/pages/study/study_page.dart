@@ -1,12 +1,18 @@
+import 'dart:io';
+
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/pages/utils/pick_files_helper.dart';
 import 'package:provider/provider.dart';
 
 import '../../base/base.dart';
 import '../../generated/l10n.dart';
 import '../main/main_model.dart';
+import '../widgets/widgets.dart';
 import 'study_main.dart';
 import 'study_router.dart';
+import 'package:crypto/crypto.dart';
 
 ///
 /// Created by a0010 on 2022/11/3 16:03
@@ -18,7 +24,7 @@ class StudyPage extends StatefulWidget {
   State<StatefulWidget> createState() => _StudyPageState();
 }
 
-class _StudyPageState extends State<StudyPage> {
+class _StudyPageState extends State<StudyPage> with Logging {
   @override
   void initState() {
     super.initState();
@@ -162,7 +168,43 @@ class _StudyPageState extends State<StudyPage> {
         },
         child: _text('返回并传递数据'),
       ),
+      const SizedBox(height: 8),
+      MaterialButton(
+        textColor: Colors.white,
+        color: theme.button,
+        onPressed: () {
+          _pickFiles((files) async {
+            for (var file in files) {
+              String path = file.path;
+              String md5 = await calculateFileMd5(path);
+              logDebug('文件md5：$md5');
+            }
+          });
+        },
+        child: _text('选择文件并计算md5'),
+      ),
     ];
+  }
+
+  Future<String> calculateFileMd5(String filePath) async {
+    final file = File(filePath);
+    final bytes = await file.readAsBytes();
+    return md5.convert(bytes).toString();
+  }
+
+  void _pickFiles(void Function(List<XFile> files)? onTap) {
+    PickFilesHelper.pickFile(success: (files) {
+      CommonDialog.showCustomDialog(
+        context,
+        barrierDismissible: false,
+        child: EnsureSendFileWidget(
+          title: '',
+          logo: '',
+          files: files,
+          onTap: onTap,
+        ),
+      );
+    });
   }
 
   Widget _text(String text) {
