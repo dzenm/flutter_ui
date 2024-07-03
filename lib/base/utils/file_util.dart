@@ -333,7 +333,7 @@ mixin _DirectoryMixin on _Directory {
   static const rootDir = 'FlutterUI'; // APP的根目录文件夹
   static late Directory _appRootDir;
   static late Directory _userDir;
-  static final List<Directory> _appDirs = [];
+  static final Map<UserDirectory, Directory> _appDirs = {};
 
   Function? _logPrint;
 
@@ -348,7 +348,34 @@ mixin _DirectoryMixin on _Directory {
   /// iOS：/Users/a0010/Library/Containers/<package_name>/Data/
   /// macOS：/Users/a0010/Documents/FlutterUI/
   /// Windows：C:\Users\Administrator\Documents\FlutterUI\
-  /// [dir] 在根目录下面创建的文件夹名称作为应用的根目录
+  /// [dir] 在根目录下面创建的文件夹名称作为应用的根目
+  //
+  //   /// 初始化登录用户目录
+  //   /// Android：/data/user/0/<package_name>/app_flutter/<userId>/
+  //   /// iOS：/Users/a0010/Library/Containers/<package_name>/Data/<userId>/
+  //   /// macOS：/Users/a0010/Documents/FlutterUI/userId>/
+  //   /// Windows：C:\Users\Administrator\Documents\FlutterUI\<userId>\
+  //   void initLoginUserDirectory(String userId) {
+  //     String parent = join(_appRootDir.path, userId);
+  //     _userDir = Directory(parent);
+  //     _log('初始化用户目录：parent=$parent');
+  //     // 初始化常用文件夹
+  //     for (var dir in UserDirectory.values) {
+  //       String dirName = join(parent, dir.dirName);
+  //       Directory result = Directory(dirName);
+  //       if (!result.existsSync()) {
+  //         result.createSync(recursive: true);
+  //       }
+  //       _appDirs[dir] = result;
+  //       _log('初始化用户存储目录：path=${result.path}');
+  //     }
+  //   }
+  //
+  //   /// 缓存文件夹路径 @see [init]、[_appDirs]
+  //   /// Android：/data/user/0/<package_name>/app_flutter/<userId>/Messages/
+  //   /// iOS：/Users/a0010/Library/Containers/<package_name>/Data/Documents/<userId>/Messages/
+  //   /// macOS：/Users/a0010/Documents/FlutterUI/<userId>/Messages/
+  //   /// Windows：C:\Users\Administrator\Documents\FlutterUI录
   Future<Directory> _getAppRootDirectory({String? dir}) async {
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String appRootDir = join(appDocDir.path);
@@ -390,7 +417,7 @@ mixin _DirectoryMixin on _Directory {
       if (!result.existsSync()) {
         result.createSync(recursive: true);
       }
-      _appDirs.add(result);
+      _appDirs[dir] = result;
       _log('初始化用户存储目录：path=${result.path}');
     }
   }
@@ -400,7 +427,7 @@ mixin _DirectoryMixin on _Directory {
   /// iOS：/Users/a0010/Library/Containers/<package_name>/Data/Documents/<userId>/Messages/
   /// macOS：/Users/a0010/Documents/FlutterUI/<userId>/Messages/
   /// Windows：C:\Users\Administrator\Documents\FlutterUI\<userId>\Messages\
-  Directory get messagesDirectory => _appDirs[0];
+  Directory get messagesDirectory => _appDirs[UserDirectory.messages]!;
 
   /// @see [getUserDirectory]
   String getMessagesCategory(FileCategory category, {String? user}) {
@@ -422,6 +449,10 @@ mixin _DirectoryMixin on _Directory {
     return result;
   }
 
+  String getCopyFilePath(String fileName) {
+    return '';
+  }
+
   void _log(String text) => _logPrint == null ? null : _logPrint!(text, tag: 'FileUtil');
 }
 
@@ -430,6 +461,7 @@ enum UserDirectory {
   messages('Messages'),
   databases('Databases'),
   favourites('Favourites'),
+  files('Files'),
   crash('Crash'),
   temp('Temp');
 
