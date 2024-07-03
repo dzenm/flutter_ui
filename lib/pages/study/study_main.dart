@@ -14,7 +14,6 @@ class StudyMain {
     await _pathProviderTest();
   }
 
-
   static Future<void> _pathProviderTest() async {
     // Android：/data/user/0/com.dzenm.flutter_ui/cache
     // iOS：/var/mobile/Containers/Data/Application/3A0617A0-0774-401A-98E8-4713AF0CDCB6/Library/Caches
@@ -40,7 +39,21 @@ class StudyMain {
     Directory? cache = await getApplicationCacheDirectory();
     _log('获取文件路径：cache=${cache.path}');
 
-    if (!BuildConfig.isAndroid) {
+    if (BuildConfig.isAndroid) {
+      // Android：/storage/emulated/0/Android/data/com.dzenm.flutter_ui/files
+      Directory? externalStorage = await getExternalStorageDirectory();
+      _log('获取文件路径：externalStorage=${externalStorage?.path}');
+
+      // Android：/storage/emulated/0/Android/data/com.dzenm.flutter_ui
+      List<Directory>? externalCaches = await getExternalCacheDirectories();
+      _log('获取文件路径：externalCaches=${externalCaches?.firstOrNull?.parent}');
+
+      // Android：/storage/emulated/0/Android/data/com.dzenm.flutter_ui
+      List<Directory>? externalStorages = await getExternalStorageDirectories();
+      _log('获取文件路径：externalStorages=${externalStorages?.firstOrNull?.parent}');
+    }
+
+    if (BuildConfig.isIOS || BuildConfig.isMacOS) {
       // iOS：/var/mobile/Containers/Data/Application/3A0617A0-0774-401A-98E8-4713AF0CDCB6/Library
       // macOS：/Users/a0010/Library/Containers/com.dzenm.flutterUi/Data/Library
       Directory? library = await getLibraryDirectory();
