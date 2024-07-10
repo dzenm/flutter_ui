@@ -118,6 +118,7 @@ class AppPage extends StatelessWidget with Logging {
   Widget _buildMaterialApp() {
     logPage('buildMaterialApp');
     return Consumer<LocalModel>(builder: (context, locale, widget) {
+      /// TODO 由于此处监听了语言和主题的变更，所以切换语言/主题会导致主页重新被刷新
       if (AppRouter.isNewRouter) {
         return _buildNewRouterApp(locale);
       }
@@ -192,18 +193,27 @@ class AppPage extends StatelessWidget with Logging {
       ),
       // 设置语言，读取LocalModel的值，改变LocalModel的locale值会通过provider刷新页面
       locale: locale.locale,
+      // 国际化语言包
+      supportedLocales: const [ // 1
+        Locale("en"),
+        Locale("zh"),
+      ],
       // 国际化
-      localizationsDelegates: const [
+      localizationsDelegates: const [ // 2
         S.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      // 国际化语言包
-      supportedLocales: const [
-        Locale("en"),
-        Locale("zh"),
-      ],
+      localeResolutionCallback: (Locale? locale, Iterable<Locale> supportedLocales) { // 3 设备系统或者浏览器语言环境发生改变的时候的回调
+        // locale 参数是改变后的语言
+        // supportedLocales 是项目中所有支持的语言环境
+        Locale currentLocale = Locale.fromSubtags(languageCode: locale?.languageCode ?? "zh");
+        if (supportedLocales.contains(currentLocale)) {
+          return currentLocale;
+        }
+        return const Locale.fromSubtags(languageCode: "zh"); // 如果本地未找到支持的语言就默认显示中文
+      },
       // 初始路由
       initialRoute: Routers.root,
       onGenerateRoute: AppRouterOldRegister().generator,
