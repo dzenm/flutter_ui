@@ -24,11 +24,11 @@ class MediaEntity<T> {
 
   @override
   String toString() {
-    return '${objectRuntimeType(this, 'MediaEntity')}'
-        '(url=$url, '
-        'uid=$uid, '
-        'isVideo=$isVideo, '
-        'data=${data.toString()})';
+    return '${objectRuntimeType(this, 'MediaEntity')}='
+        '{url: $url, '
+        'uid: $uid, '
+        'isVideo: $isVideo, '
+        'data: ${data.toString()}}';
   }
 }
 
