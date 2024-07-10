@@ -326,7 +326,7 @@ class PathInfo {
 
   @override
   String toString() {
-    return '${objectRuntimeType(this, 'PathInfo')}='
+    return '$runtimeType='
         '{path: $path, '
         'parent: $parent, '
         'name: $name, '

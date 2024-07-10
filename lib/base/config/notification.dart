@@ -16,9 +16,10 @@ class Message {
 
   @override
   String toString() {
-    Type clazz = runtimeType;
-    return '<$clazz name="$name">\n\t<sender>$sender</sender>\n'
-        '\t<info>$extras</info>\n</$clazz>';
+    return '$runtimeType={'
+        'name=$name, '
+        'sender=$sender, '
+        'extras=$extras}';
   }
 
 }

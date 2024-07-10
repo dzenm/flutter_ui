@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 ///
@@ -113,7 +112,7 @@ class AppRouteSettings extends RouteSettings {
 
   @override
   String toString() {
-    return '${objectRuntimeType(this, 'AppRouteSettings')}='
+    return '$runtimeType='
         '{at: $at, '
         'path: $path, '
         'name: $name, '

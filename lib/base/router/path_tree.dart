@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 /// Splits given path to composing segments
 Iterable<String> pathToSegments(final String path) {
   Iterable<String> segments = path.split(RegExp(r'/+'));
@@ -35,15 +33,12 @@ class SubTree<T> {
   /// Subtree for regexp
   final regexes = <MapEntry<RegExp, SubTree<T>>>[];
 
-  bool get hasVarPaths =>
-      regexes.isNotEmpty ||
-          varSubTree != null ||
-          globValue.isNotEmpty;
+  bool get hasVarPaths => regexes.isNotEmpty || varSubTree != null || globValue.isNotEmpty;
 
   @override
   String toString() {
-    return '${objectRuntimeType(this, 'SubTree')}='
-        '{value: $value, '
+    return '$runtimeType={'
+        'value: $value, '
         'globValue: $globValue, '
         'fixed: $fixed, '
         'varSubTree: $varSubTree, '
@@ -54,21 +49,18 @@ class SubTree<T> {
 class PathTree<T> {
   final _tree = SubTree<T>();
 
-  void addPath(String path, T value,
-      {Iterable<String> tags = const ['*'], Map<String, String>? pathRegEx}) {
+  void addPath(String path, T value, {Iterable<String> tags = const ['*'], Map<String, String>? pathRegEx}) {
     final seg = pathToSegments(path);
     addPathAsSegments(seg, value, tags: tags, pathRegEx: pathRegEx);
   }
 
-  void addPathAsSegments(Iterable<String> segments, T value,
-      {Iterable<String> tags = const ['*'], Map<String, String>? pathRegEx}) {
+  void addPathAsSegments(Iterable<String> segments, T value, {Iterable<String> tags = const ['*'], Map<String, String>? pathRegEx}) {
     pathRegEx ??= {};
     SubTree<T> subtree = _tree;
     final int numSeg = segments.length;
     for (int i = 0; i < numSeg; i++) {
       String seg = segments.elementAt(i);
-      if (i == numSeg - 1 &&
-          (seg == '*' || (seg.startsWith(':') && seg.endsWith('*')))) {
+      if (i == numSeg - 1 && (seg == '*' || (seg.startsWith(':') && seg.endsWith('*')))) {
         for (String tag in tags) {
           subtree.globValue[tag] = value;
         }
@@ -102,8 +94,7 @@ class PathTree<T> {
     }
   }
 
-  T? match(Iterable<String> segments, String tag) =>
-      _match(_tree, segments, tag);
+  T? match(Iterable<String> segments, String tag) => _match(_tree, segments, tag);
 
   T? _match(SubTree<T> root, Iterable<String> segments, String tag) {
     final int numSeg = segments.length;
@@ -121,9 +112,7 @@ class PathTree<T> {
         }
 
         for (MapEntry<RegExp, SubTree<T>> regex in subTree.regexes) {
-          if (regex.key
-              .allMatches(seg)
-              .isNotEmpty) {
+          if (regex.key.allMatches(seg).isNotEmpty) {
             if (next != null) {
               // Multiple regex matches
               T? ret = _matchRegex(subTree, segments.skip(i), tag);
@@ -153,17 +142,12 @@ class PathTree<T> {
       subTree = next;
     }
 
-    return subTree.value[tag] ??
-        subTree.globValue[tag] ??
-        subTree.value['*'] ??
-        subTree.globValue['*'];
+    return subTree.value[tag] ?? subTree.globValue[tag] ?? subTree.value['*'] ?? subTree.globValue['*'];
   }
 
   T? _matchRegex(SubTree<T> root, Iterable<String> segments, String tag) {
     for (MapEntry<RegExp, SubTree<T>> regex in root.regexes) {
-      if (regex.key
-          .allMatches(segments.first)
-          .isNotEmpty) {
+      if (regex.key.allMatches(segments.first).isNotEmpty) {
         T? ret = _match(regex.value, segments.skip(1), tag);
         if (ret != null) return ret;
       }
