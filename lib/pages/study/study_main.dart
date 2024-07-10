@@ -59,18 +59,6 @@ class StudyMain {
       Directory? library = await getLibraryDirectory();
       _log('获取文件路径：library=${library.path}');
     }
-
-    PathInfo info = PathInfo.parse('/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x.png');
-    _log("文件路径：info=${info.toString()}");
-    Map<String, dynamic> json = {
-      "a": "b",
-      "c": "d",
-      "e": "f",
-    };
-    /// {path=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images/336ae1a1dff74c3292c06bdff09af061_WX20231130-160703@2x.png, parent=/Users/a0010/Documents/cache/5e6b6e5de3524abf9002540932652b38/Images,
-    /// {a: b, c: d, e: f}
-    _log("Map读取：json=$json");
-
   }
 
   static void _log(String msg) {
