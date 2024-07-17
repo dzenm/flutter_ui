@@ -1,4 +1,4 @@
-import '../../base/base.dart';
+import '../../base/a_router/arouter.dart';
 import 'components/chat/chat_page.dart';
 import 'components/city/city_page.dart';
 import 'components/components_page.dart';
@@ -29,112 +29,213 @@ import 'window/main_window_page.dart';
 /// Created by a0010 on 2023/5/11 16:05
 ///
 class StudyRouter {
-  static const String study = '/study';
-  static const String convert = '$study/convert';
-  static const String http = '$study/http';
-  static const String loadImage = '$study/loadImage';
-  static const String provider = '$study/provider';
-  static const String router = '$study/router';
-  static const String video = '$study/video';
-  static const String multiWindow = '$study/multiWindow';
-  static const String desktop = '$study/desktop';
-  static const String screenCapture = '$study/screenCapture';
+  static const String study = 'study';
+  static const String convert = 'convert';
+  static const String http = 'http';
+  static const String loadImage = 'loadImage';
+  static const String provider = 'provider';
+  static const String router = 'router';
+  static const String video = 'video';
+  static const String multiWindow = 'multiWindow';
+  static const String desktop = 'desktop';
+  static const String screenCapture = 'screenCapture';
 
-  static const String components = '$study/components';
-  static const String chat = '$components/chat';
-  static const String city = '$components/city';
-  static const String dialog = '$components/dialog';
-  static const String dragList = '$components/dragList';
-  static const String floatNavigation = '$components/floatNavigation';
-  static const String image = '$components/image';
-  static const String keyword = '$components/keyword';
-  static const String list = '$components/list';
-  static const String popup = '$components/popup';
-  static const String qr = '$components/qr';
-  static const String recording = '$components/recording';
-  static const String slide = '$components/slide';
-  static const String state = '$components/state';
-  static const String text = '$components/text';
+  static const String components = 'components';
+  static const String chat = 'chat';
+  static const String city = 'city';
+  static const String dialog = 'dialog';
+  static const String dragList = 'dragList';
+  static const String floatNavigation = 'floatNavigation';
+  static const String image = 'image';
+  static const String keyword = 'keyword';
+  static const String list = 'list';
+  static const String popup = 'popup';
+  static const String qr = 'qr';
+  static const String recording = 'recording';
+  static const String slide = 'slide';
+  static const String state = 'state';
+  static const String text = 'text';
 
-  static List<AppPageConfig> get routers => [
-        AppPageConfig(study, builder: (settings) {
-          return const StudyPage();
-        }),
-        AppPageConfig(convert, builder: (settings) {
-          return const ConvertPage();
-        }),
-        AppPageConfig(http, builder: (settings) {
-          return const HTTPListPage();
-        }),
-        AppPageConfig(loadImage, builder: (settings) {
-          return const LoadImagePage();
-        }),
-        AppPageConfig(provider, builder: (settings) {
-          return const ProviderPage();
-        }),
-        AppPageConfig(router, builder: (settings) {
-          return const RouterPage();
-        }),
-        AppPageConfig(video, builder: (settings) {
-          return const VideoPage();
-        }),
-        AppPageConfig(multiWindow, builder: (settings) {
-          return const MainWindowPage();
-        }),
-        AppPageConfig(desktop, builder: (settings) {
-          return const DesktopPage();
-        }),
-        AppPageConfig(screenCapture, builder: (settings) {
-          return const ScreenCapturePage();
-        }),
-        ...componentsRouter,
+  static List<RouteBase> get routers => [
+        ARoute(
+          name: study,
+          path: 'study',
+          builder: (context, state) {
+            return const StudyPage();
+          },
+          routes: [
+            ARoute(
+              name: convert,
+              path: 'convert',
+              builder: (context, state) {
+                return const ConvertPage();
+              },
+            ),
+            ARoute(
+                name: components,
+                path: 'components',
+                builder: (context, state) {
+                  return const ComponentsPage();
+                },
+                routes: componentsRouter),
+            ARoute(
+              name: http,
+              path: 'http',
+              builder: (context, state) {
+                return const HTTPListPage();
+              },
+            ),
+            ARoute(
+              name: loadImage,
+              path: 'loadImage',
+              builder: (context, state) {
+                return const LoadImagePage();
+              },
+            ),
+            ARoute(
+              name: provider,
+              path: 'provider',
+              builder: (context, state) {
+                return const ProviderPage();
+              },
+            ),
+            ARoute(
+              name: router,
+              path: 'router',
+              builder: (context, state) {
+                return const RouterPage();
+              },
+            ),
+            ARoute(
+              name: video,
+              path: 'video',
+              builder: (context, state) {
+                return const VideoPage();
+              },
+            ),
+            ARoute(
+              name: multiWindow,
+              path: 'multiWindow',
+              builder: (context, state) {
+                return const MainWindowPage();
+              },
+            ),
+            ARoute(
+              name: desktop,
+              path: 'desktop',
+              builder: (context, state) {
+                return const DesktopPage();
+              },
+            ),
+            ARoute(
+              name: screenCapture,
+              path: 'screenCapture',
+              builder: (context, state) {
+                return const ScreenCapturePage();
+              },
+            ),
+          ],
+        ),
       ];
 
-  static List<AppPageConfig> get componentsRouter => [
-        AppPageConfig(components, builder: (settings) {
-          return const ComponentsPage();
-        }),
-        AppPageConfig(chat, builder: (settings) {
-          return const ChatPage();
-        }),
-        AppPageConfig(city, builder: (settings) {
-          return const CitySelectedPage();
-        }),
-        AppPageConfig(dialog, builder: (settings) {
-          return const DialogPage();
-        }),
-        AppPageConfig(dragList, builder: (settings) {
-          return const DragListPage();
-        }),
-        AppPageConfig(floatNavigation, builder: (settings) {
-          return const FloatNavigationPage();
-        }),
-        AppPageConfig(image, builder: (settings) {
-          return const ImageEditorPage();
-        }),
-        AppPageConfig(keyword, builder: (settings) {
-          return const KeywordBoardPage();
-        }),
-        AppPageConfig(list, builder: (settings) {
-          return const ListPage();
-        }),
-        AppPageConfig(popup, builder: (settings) {
-          return const PopupPage();
-        }),
-        AppPageConfig(qr, builder: (settings) {
-          return const QRPage();
-        }),
-        AppPageConfig(recording, builder: (settings) {
-          return const RecordingPage();
-        }),
-        AppPageConfig(slide, builder: (settings) {
-          return const SlidePage();
-        }),
-        AppPageConfig(state, builder: (settings) {
-          return const StatePage();
-        }),
-        AppPageConfig(text, builder: (settings) {
-          return const TextPage();
-        }),
+  static List<ARoute> get componentsRouter => [
+        ARoute(
+          name: chat,
+          path: 'chat',
+          builder: (context, state) {
+            return const ChatPage();
+          },
+        ),
+        ARoute(
+          name: city,
+          path: 'city',
+          builder: (context, state) {
+            return const CitySelectedPage();
+          },
+        ),
+        ARoute(
+          name: dialog,
+          path: 'dialog',
+          builder: (context, state) {
+            return const DialogPage();
+          },
+        ),
+        ARoute(
+          name: dragList,
+          path: 'dragList',
+          builder: (context, state) {
+            return const DragListPage();
+          },
+        ),
+        ARoute(
+          name: floatNavigation,
+          path: 'floatNavigation',
+          builder: (context, state) {
+            return const FloatNavigationPage();
+          },
+        ),
+        ARoute(
+          name: image,
+          path: 'image',
+          builder: (context, state) {
+            return const ImageEditorPage();
+          },
+        ),
+        ARoute(
+          name: keyword,
+          path: 'keyword',
+          builder: (context, state) {
+            return const KeywordBoardPage();
+          },
+        ),
+        ARoute(
+          name: list,
+          path: 'list',
+          builder: (context, state) {
+            return const ListPage();
+          },
+        ),
+        ARoute(
+          name: popup,
+          path: 'popup',
+          builder: (context, state) {
+            return const PopupPage();
+          },
+        ),
+        ARoute(
+          name: qr,
+          path: 'qr',
+          builder: (context, state) {
+            return const QRPage();
+          },
+        ),
+        ARoute(
+          name: recording,
+          path: 'recording',
+          builder: (context, state) {
+            return const RecordingPage();
+          },
+        ),
+        ARoute(
+          name: slide,
+          path: 'slide',
+          builder: (context, state) {
+            return const SlidePage();
+          },
+        ),
+        ARoute(
+          name: state,
+          path: 'state',
+          builder: (context, state) {
+            return const StatePage();
+          },
+        ),
+        ARoute(
+          name: text,
+          path: 'text',
+          builder: (context, state) {
+            return const TextPage();
+          },
+        ),
       ];
 }

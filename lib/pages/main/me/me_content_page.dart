@@ -13,21 +13,22 @@ class MeContentPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String? path = context.watch<MeModel>().selectedTab;
-    PageBuilder? builder;
-    if (path != null) {
-      AppRouteSettings settings = AppRouteSettings.parse(path);
-      Log.d('路由信息：settings=${settings.toString()}');
-      for (var router in Routers.routers) {
-        if (router.path != settings.name) continue;
-        builder = router.builder;
-        break;
-      }
-    }
-
-    if (path == null || builder == null) {
-      return const EmptyView(text: '空页面');
-    }
-    return builder(AppRouteSettings.parse(path));
+    // String? path = context.watch<MeModel>().selectedTab;
+    // PageBuilder? builder;
+    // if (path != null) {
+    //   AppRouteSettings settings = AppRouteSettings.parse(path);
+    //   Log.d('路由信息：settings=${settings.toString()}');
+    //   for (var router in Routers.routers) {
+    //     if (router.path != settings.name) continue;
+    //     builder = router.builder;
+    //     break;
+    //   }
+    // }
+    //
+    // if (path == null || builder == null) {
+    //   return const EmptyView(text: '空页面');
+    // }
+    // return builder(AppRouteSettings.parse(path));
+    return const Placeholder();
   }
 }

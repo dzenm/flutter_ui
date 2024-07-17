@@ -34,7 +34,7 @@ class LifecyclePage extends StatelessWidget {
                     textColor: Colors.white,
                     color: Colors.blue,
                     onPressed: () {
-                      AppRouter.of(context).pushPage(const ChildPage());
+                      // AppRouter.of(context).pushPage(const ChildPage());
                     },
                     child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       Text('进入下一个页面更新值'),

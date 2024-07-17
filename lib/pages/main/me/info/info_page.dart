@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/base/a_router/misc/extensions.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../base/base.dart';
@@ -96,7 +97,7 @@ class _InfoPageState extends State<InfoPage> {
             height: 50,
             background: theme.white,
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            onTap: () => AppRouter.of(context).push('${MeRouter.editInfo}?name=dzy', pathSegments: ['212'], body: {'name': 'test'}),
+            onTap: () => context.pushNamed(MeRouter.editInfo, pathParameters: {'id': '4812'}, queryParameters: {'name': username}),
             child: SingleTextView(
               icon: Icons.person,
               title: S.of(context).username,

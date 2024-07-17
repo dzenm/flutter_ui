@@ -93,7 +93,7 @@ class _UpdatePageState extends State<UpdatePage> {
                   color: Colors.blue,
                   onPressed: () {
                     context.read<StudyModel>().updateUser(User.fromJson(_user!.toJson()));
-                    AppRouter.of(context).pop(context);
+                    // AppRouter.of(context).pop(context);
                   },
                   child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                     Text('保存'),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/base/a_router/misc/extensions.dart';
 import 'package:flutter_ui/pages/main/me/me_content_page.dart';
 import 'package:provider/provider.dart';
 
@@ -26,7 +27,7 @@ class MePage extends StatelessWidget {
     if (BuildConfig.isMobile) {
       return MePageMobile(child: _MePage(
         push: <String>(path) {
-          return AppRouter.of(context).push(path);
+          return context.pushNamed(path);
         },
       ));
     } else if (BuildConfig.isDesktop) {

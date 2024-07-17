@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/base/a_router/misc/extensions.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../base/base.dart';
@@ -41,7 +42,7 @@ class _ViewInfoPageState extends State<ViewInfoPage> {
             actions: [
               IconButton(
                 icon: const Icon(Icons.edit_sharp),
-                onPressed: () => AppRouter.of(context).push(MeRouter.editInfo),
+                onPressed: () => context.pushNamed(MeRouter.editInfo),
               ),
             ],
           ),

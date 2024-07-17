@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/base/a_router/misc/extensions.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base/base.dart';
@@ -53,8 +54,13 @@ class _TabToolPageState extends State<TabToolPage> {
         String desc = tool.desc ?? '';
         return TapLayout(
           onTap: () {
-            String params = '?title=${tool.name}&url=${tool.link}';
-            AppRouter.of(context).push(Routers.webView + params);
+            context.pushNamed(
+              Routers.webView,
+              queryParameters: {
+                'title': tool.name,
+                'url': tool.link ?? '',
+              },
+            );
           },
           margin: const EdgeInsets.only(bottom: 12),
           padding: const EdgeInsets.all(16),

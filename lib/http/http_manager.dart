@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/base/a_router/misc/extensions.dart';
 import 'package:provider/provider.dart';
 
 import '../application.dart';
@@ -51,7 +52,7 @@ class HttpManager {
 
       // 更新数据
       context.read<UserModel>().user = user;
-      AppRouter.of(context).push(Routers.main, clearStack: true);
+      context.goNamed(Routers.main);
     });
   }
 
@@ -67,7 +68,7 @@ class HttpManager {
 
       // 更新数据
       context.read<UserModel>().user = user;
-      AppRouter.of(context).push(Routers.main, clearStack: true);
+      context.goNamed(Routers.main);
     });
   }
 
@@ -501,7 +502,7 @@ class HttpManager {
     await _httpClient.request(apiServices.logout(), success: (data) async {
       SPManager.clearUser();
       ProviderManager.clear();
-      AppRouterDelegate.of(Application().context).push(Routers.login, clearStack: true);
+      context.goNamed(Routers.login);
     });
   }
 

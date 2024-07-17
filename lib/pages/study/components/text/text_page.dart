@@ -1,6 +1,7 @@
 import 'package:extended_text_field/extended_text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/base/a_router/misc/extensions.dart';
 
 import '../../../../base/base.dart';
 import '../../../../generated/l10n.dart';
@@ -134,7 +135,7 @@ class _TextPageState extends State<TextPage> {
                 TapLayout(
                   height: 50.0,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  onTap: () => AppRouter.of(context).push(MeRouter.setting),
+                  onTap: () => context.pushNamed(MeRouter.setting),
                   child: SingleTextView(
                     title: S.of(context).setting,
                     isShowForward: true,

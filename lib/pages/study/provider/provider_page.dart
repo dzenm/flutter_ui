@@ -74,7 +74,7 @@ class _ProviderPageState extends State<ProviderPage> {
           textColor: Colors.white,
           color: Colors.blue,
           onPressed: () {
-            AppRouter.of(context).pushPage(const ModelPage());
+            // AppRouter.of(context).pushPage(const ModelPage());
           },
           child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             Text('Selector和Provider监听的变化'),
@@ -85,7 +85,7 @@ class _ProviderPageState extends State<ProviderPage> {
           textColor: Colors.white,
           color: Colors.blue,
           onPressed: () {
-            AppRouter.of(context).pushPage(const LifecyclePage());
+            // AppRouter.of(context).pushPage(const LifecyclePage());
           },
           child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             Text('Model的生命周期跟随页面'),
@@ -99,7 +99,7 @@ class _ProviderPageState extends State<ProviderPage> {
         textColor: Colors.white,
         color: Colors.blue,
         onPressed: () {
-          AppRouter.of(context).pushPage(const ModelPage());
+          // AppRouter.of(context).pushPage(const ModelPage());
         },
         child: const Text('Selector和Provider监听的变化'),
       ),

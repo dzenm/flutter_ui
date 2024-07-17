@@ -33,7 +33,8 @@ class ModelPage extends StatelessWidget {
                 MaterialButton(
                   textColor: Colors.white,
                   color: Colors.blue,
-                  onPressed: () => AppRouter.of(context).pushPage(const UpdatePage(id: 1)),
+                  // onPressed: () => AppRouter.of(context).pushPage(const UpdatePage(id: 1)),
+                  onPressed: () => null,
                   child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                     Text('修改数据'),
                   ]),

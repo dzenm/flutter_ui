@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/base/a_router/misc/extensions.dart';
 import 'package:provider/provider.dart';
 
 import '../../base/base.dart';
@@ -296,7 +297,7 @@ class _EditLoginInfoViewState extends State<_EditLoginInfoView> {
 
   void _register() {
     FocusScope.of(context).unfocus();
-    AppRouter.of(context).push(Routers.register);
+    context.pushNamed(Routers.register);
   }
 
   void log(String msg) => Log.p(msg, tag: _tag);

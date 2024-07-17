@@ -12,7 +12,6 @@ export 'http/http.dart';
 export 'naughty/http_interceptor.dart';
 export 'naughty/naughty.dart';
 export 'resource/resource.dart';
-export 'router/router.dart';
 export 'utils/util.dart';
 export 'widgets/widget.dart';
 

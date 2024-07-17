@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/base/a_router/misc/extensions.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base/base.dart';
@@ -136,6 +137,6 @@ class _OrderPageState extends State<AddOrderPage> {
     order.products.add(product);
 
     context.read<OrderModel>().updateOrder(order);
-    AppRouter.of(context).pop();
+    context.pop();
   }
 }

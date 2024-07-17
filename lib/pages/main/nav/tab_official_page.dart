@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/base/a_router/misc/extensions.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base/base.dart';
@@ -48,8 +49,13 @@ class _TabOfficialPageState extends State<TabOfficialPage> {
             String name = tool.name ?? '';
             return TapLayout(
               onTap: () {
-                String params = '?title=${tool.name}&url=${tool.lisenseLink}';
-                AppRouter.of(context).push(Routers.webView + params);
+                context.pushNamed(
+                  Routers.webView,
+                  queryParameters: {
+                    'title': tool.name ?? '',
+                    'url': tool.lisenseLink ?? '',
+                  },
+                );
               },
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               background: theme.primaryLight,

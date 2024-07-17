@@ -1,25 +1,34 @@
-import '../../base/base.dart';
+import '../../base/a_router/route.dart';
 import 'mall_page.dart';
 import 'order/add_order_page.dart';
 import 'order/order_page.dart';
 
 class MallRouter {
-  static const String mall = '/mall';
-  static const String orders = '$mall/orders';
-  static const String addOrder = '$mall/addOrder';
+  static const String mall = 'mall';
+  static const String orders = 'orders';
+  static const String addOrder = 'addOrder';
 
-  static List<AppPageConfig> get routers => [
-        AppPageConfig(mall, builder: (settings) {
-          return const MallPage();
-        }),
-        AppPageConfig(orders, builder: (settings) {
-          return const OrderPage();
-        }),
-        AppPageConfig(addOrder, builder: (settings) {
-          return const AddOrderPage();
-        }),
-        AppPageConfig(orders, builder: (settings) {
-          return const OrderPage();
-        }),
+  static List<RouteBase> get routers => [
+        ARoute(
+          name: mall,
+          path: 'mall',
+          builder: (context, state) {
+            return const MallPage();
+          },
+        ),
+        ARoute(
+          name: orders,
+          path: 'orders',
+          builder: (context, state) {
+            return const OrderPage();
+          },
+        ),
+        ARoute(
+          name: addOrder,
+          path: 'addOrder',
+          builder: (context, state) {
+            return const AddOrderPage();
+          },
+        ),
       ];
 }

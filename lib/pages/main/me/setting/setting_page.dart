@@ -1,6 +1,7 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/base/a_router/misc/extensions.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../base/base.dart';
@@ -135,7 +136,7 @@ class _SettingPageState extends State<SettingPage> {
                 height: 50.0,
                 background: theme.white,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                onTap: () => AppRouter.of(context).push(MeRouter.about),
+                onTap: () => context.pushNamed(MeRouter.about),
                 child: SingleTextView(title: S.of(context).aboutMe, isShowForward: true),
               ),
               CommonWidget.divider(height: 8),

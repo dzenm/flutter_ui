@@ -51,10 +51,10 @@ class FirstPage extends StatelessWidget {
   void navigator(BuildContext context, bool last) {
     if (!last) {
       // 直接进入下一个页面，例：A->B, 现在在A页面调用push进入B页面
-      Navigator.push(
-        context,
-        AppRouterOldDelegate.of(context).createMaterialRoute(FirstPage(type: type, index: index + 1)),
-      );
+      // Navigator.push(
+      //   context,
+      //   AppRouterOldDelegate.of(context).createMaterialRoute(FirstPage(type: type, index: index + 1)),
+      // );
       return;
     }
     if (type == 0) {
@@ -65,16 +65,16 @@ class FirstPage extends StatelessWidget {
       Navigator.popUntil(context, (router) => router.settings.name == 'RouterPage');
     } else if (type == 2) {
       //
-      Navigator.pushReplacement(
-        context,
-        AppRouterOldDelegate.of(context).createMaterialRoute(FirstPage(type: type, index: index)),
-      );
+      // Navigator.pushReplacement(
+      //   context,
+      //   AppRouterOldDelegate.of(context).createMaterialRoute(FirstPage(type: type, index: index)),
+      // );
     } else if (type == 3) {
-      Navigator.pushAndRemoveUntil(
-        context,
-        AppRouterOldDelegate.of(context).createMaterialRoute(FirstPage(type: type, index: index)),
-        (router) => router.settings.name == 'RouterPage',
-      );
+      // Navigator.pushAndRemoveUntil(
+      //   context,
+      //   AppRouterOldDelegate.of(context).createMaterialRoute(FirstPage(type: type, index: index)),
+      //   (router) => router.settings.name == 'RouterPage',
+      // );
     }
   }
 

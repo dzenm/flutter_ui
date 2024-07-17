@@ -10,10 +10,8 @@ import 'models/article_model.dart';
 import 'models/banner_model.dart';
 import 'models/user_model.dart';
 import 'models/website_model.dart';
-import 'pages/login/login_page.dart';
 import 'pages/main/home/home_model.dart';
 import 'pages/main/main_model.dart';
-import 'pages/main/main_page.dart';
 import 'pages/main/me/me_model.dart';
 import 'pages/main/nav/nav_model.dart';
 import 'pages/mall/order/order_model.dart';
@@ -119,127 +117,19 @@ class AppPage extends StatelessWidget with Logging {
     logPage('buildMaterialApp');
     return Consumer<LocalModel>(builder: (context, locale, widget) {
       /// TODO 由于此处监听了语言和主题的变更，所以切换语言/主题会导致主页重新被刷新
-      if (AppRouter.isNewRouter) {
-        return _buildNewRouterApp(locale);
-      }
-      return _buildOldRouterApp(locale);
+      return _buildRouterApp(locale);
     });
-  }
-
-  /// 使用 [Router] 1.0
-  Widget _buildOldRouterApp(LocalModel locale) {
-    logPage('buildOldRouterApp');
-    // 获取第一个页面
-    final Widget child;
-    if (SPManager.getUserLoginState()) {
-      child = const MainPage();
-    } else {
-      child = LoginPage();
-    }
-
-    AppRouterOldRegister().initRouter(routers: Routers.routers);
-    AppRouterOldDelegate().init(logPrint: Log.d);
-    GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-    // 初始化需要用到context的地方，在创建MaterialApp之后
-    Future.delayed(Duration.zero, () {
-      BuildContext context = navigatorKey.currentState!.context;
-      handle(context);
-      _useContextAfterBuild(context);
-    });
-    // Page必须放在MaterialApp中运行
-    AppTheme theme = locale.theme;
-    return MaterialApp(
-      title: 'FlutterUI',
-      navigatorKey: navigatorKey,
-      debugShowCheckedModeBanner: false,
-      // 设置主题，读取LocalModel的值，改变LocalModel的theme值会通过provider刷新页面
-      theme: ThemeData(
-        primaryColor: theme.appbar,
-        appBarTheme: AppBarTheme(
-          backgroundColor: theme.appbar,
-          iconTheme: IconThemeData(
-            color: theme.white,
-          ),
-          systemOverlayStyle: SystemUiOverlayStyle.dark,
-        ),
-        floatingActionButtonTheme: FloatingActionButtonThemeData(
-          backgroundColor: theme.appbar,
-        ),
-        pageTransitionsTheme: const PageTransitionsTheme(builders: {
-          TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-          TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
-          TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
-          TargetPlatform.windows: FadeUpwardsPageTransitionsBuilder(),
-          TargetPlatform.linux: CupertinoPageTransitionsBuilder(),
-          TargetPlatform.fuchsia: FadeUpwardsPageTransitionsBuilder(),
-        }),
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a blue toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      // 设置语言，读取LocalModel的值，改变LocalModel的locale值会通过provider刷新页面
-      locale: locale.locale,
-      // 国际化语言包
-      supportedLocales: const [ // 1
-        Locale("en"),
-        Locale("zh"),
-      ],
-      // 国际化
-      localizationsDelegates: const [ // 2
-        S.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      localeResolutionCallback: (Locale? locale, Iterable<Locale> supportedLocales) { // 3 设备系统或者浏览器语言环境发生改变的时候的回调
-        // locale 参数是改变后的语言
-        // supportedLocales 是项目中所有支持的语言环境
-        Locale currentLocale = Locale.fromSubtags(languageCode: locale?.languageCode ?? "zh");
-        if (supportedLocales.contains(currentLocale)) {
-          return currentLocale;
-        }
-        return const Locale.fromSubtags(languageCode: "zh"); // 如果本地未找到支持的语言就默认显示中文
-      },
-      // 初始路由
-      initialRoute: Routers.root,
-      onGenerateRoute: AppRouterOldRegister().generator,
-      builder: (context, child) {
-        final botToastBuilder = BotToastInit();
-        Widget toastWidget = botToastBuilder(context, child);
-        Widget fontWidget = MediaQuery(
-          //设置文字大小不随系统设置改变
-          data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(1.0)),
-          child: toastWidget,
-        );
-        return fontWidget;
-      },
-      navigatorObservers: [BotToastNavigatorObserver()],
-      home: child,
-    );
   }
 
   /// 使用 [Router] 2.0
-  Widget _buildNewRouterApp(LocalModel locale) {
+  Widget _buildRouterApp(LocalModel locale) {
     logPage('buildNewRouterApp');
     AppTheme theme = locale.theme;
-    AppRouterDelegate delegate = _createRouteDelegate();
+    // AppRouterDelegate delegate = _createRouteDelegate();
     // 初始化需要用到context的地方，在创建MaterialApp之后
     Future.delayed(Duration.zero, () {
-      BuildContext context = delegate.context;
+      // BuildContext context = delegate.context;
+      BuildContext context = Routers.routes.configuration.navigatorKey.currentContext!;
       handle(context);
       _useContextAfterBuild(context);
     });
@@ -300,9 +190,8 @@ class AppPage extends StatelessWidget with Logging {
         Locale("en"),
         Locale("zh"),
       ],
-      // 初始路由
-      routerDelegate: delegate,
-      routeInformationParser: const AppRouteInfoParser(logPrint: Log.d),
+      // 路由配置
+      routerConfig: Routers.routes,
       builder: (context, child) {
         return MediaQuery(
           //设置文字大小不随系统设置改变
@@ -311,18 +200,6 @@ class AppPage extends StatelessWidget with Logging {
         );
       },
     );
-  }
-
-  /// 创建App RouteDelegate
-  AppRouterDelegate _createRouteDelegate() {
-    // 获取第一个页面
-    final String router;
-    if (SPManager.getUserLoginState()) {
-      router = Routers.main;
-    } else {
-      router = Routers.login;
-    }
-    return AppRouterDelegate(routers: Routers.routers, initialRoute: router);
   }
 
   /// 初始化需要用到context的地方，在创建MaterialApp之后，使用的是全局的context

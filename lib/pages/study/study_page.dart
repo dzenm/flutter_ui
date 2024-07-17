@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/base/a_router/misc/extensions.dart';
 import 'package:flutter_ui/pages/utils/pick_files_helper.dart';
 import 'package:provider/provider.dart';
 
@@ -86,7 +87,7 @@ class _StudyPageState extends State<StudyPage> with Logging {
       MaterialButton(
         textColor: Colors.white,
         color: theme.button,
-        onPressed: () => AppRouter.of(context).push(StudyRouter.components),
+        onPressed: () => context.pushNamed(StudyRouter.components),
         child: _text('组件'),
       ),
       const SizedBox(height: 8),
@@ -94,7 +95,7 @@ class _StudyPageState extends State<StudyPage> with Logging {
       MaterialButton(
         textColor: Colors.white,
         color: theme.button,
-        onPressed: () => AppRouter.of(context).push(StudyRouter.convert),
+        onPressed: () => context.pushNamed(StudyRouter.convert),
         child: _text('字符转化'),
       ),
       const SizedBox(height: 8),
@@ -102,7 +103,7 @@ class _StudyPageState extends State<StudyPage> with Logging {
       MaterialButton(
         textColor: Colors.white,
         color: theme.button,
-        onPressed: () => AppRouter.of(context).push(StudyRouter.desktop),
+        onPressed: () => context.pushNamed(StudyRouter.desktop),
         child: _text('桌面端处理'),
       ),
       const SizedBox(height: 8),
@@ -111,7 +112,7 @@ class _StudyPageState extends State<StudyPage> with Logging {
       MaterialButton(
         textColor: Colors.white,
         color: theme.button,
-        onPressed: () => AppRouter.of(context).push(StudyRouter.http),
+        onPressed: () => context.pushNamed(StudyRouter.http),
         child: _text('HTTP请求'),
       ),
       const SizedBox(height: 8),
@@ -119,7 +120,7 @@ class _StudyPageState extends State<StudyPage> with Logging {
       MaterialButton(
         textColor: Colors.white,
         color: theme.button,
-        onPressed: () => AppRouter.of(context).push(StudyRouter.loadImage),
+        onPressed: () => context.pushNamed(StudyRouter.loadImage),
         child: _text('加载图片'),
       ),
       const SizedBox(height: 8),
@@ -128,7 +129,7 @@ class _StudyPageState extends State<StudyPage> with Logging {
       MaterialButton(
         textColor: Colors.white,
         color: theme.button,
-        onPressed: () => AppRouter.of(context).push(StudyRouter.provider),
+        onPressed: () => context.pushNamed(StudyRouter.provider),
         child: _text('Provider'),
       ),
       const SizedBox(height: 8),
@@ -138,7 +139,7 @@ class _StudyPageState extends State<StudyPage> with Logging {
       MaterialButton(
         textColor: Colors.white,
         color: theme.button,
-        onPressed: () => AppRouter.of(context).push(StudyRouter.router),
+        onPressed: () => context.pushNamed(StudyRouter.router),
         child: _text('路由测试'),
       ),
       const SizedBox(height: 8),
@@ -147,7 +148,7 @@ class _StudyPageState extends State<StudyPage> with Logging {
       MaterialButton(
         textColor: Colors.white,
         color: theme.button,
-        onPressed: () => AppRouter.of(context).push(StudyRouter.video),
+        onPressed: () => context.pushNamed(StudyRouter.video),
         child: _text('视频播放'),
       ),
       // 多窗口测试
@@ -155,7 +156,7 @@ class _StudyPageState extends State<StudyPage> with Logging {
       MaterialButton(
         textColor: Colors.white,
         color: theme.button,
-        onPressed: () => AppRouter.of(context).push(StudyRouter.multiWindow),
+        onPressed: () => context.pushNamed(StudyRouter.multiWindow),
         child: _text('多窗口测试'),
       ),
       const SizedBox(height: 8),
@@ -164,7 +165,7 @@ class _StudyPageState extends State<StudyPage> with Logging {
         color: theme.button,
         onPressed: () {
           context.read<MainModel>().selectedTab = MainTab.nav;
-          AppRouter.of(context).pop('这是回调的数据');
+          context.pop('这是回调的数据');
         },
         child: _text('返回并传递数据'),
       ),

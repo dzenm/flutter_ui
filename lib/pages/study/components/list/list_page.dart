@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/base/a_router/misc/extensions.dart';
 
 import '../../../../base/base.dart';
 import '../../../../entities/entity.dart';
@@ -56,8 +57,13 @@ class _ListPageState extends State<ListPage> {
         isLoading: _isLoading,
         child: TapLayout(
           onTap: () {
-            String params = '?title=$title&url=${article.link}';
-            AppRouter.of(context).push(Routers.webView + params);
+            context.pushNamed(
+              Routers.webView,
+              queryParameters: {
+                'title': title,
+                'url': article.link ?? '',
+              },
+            );
           },
           child: ListTile(
             title: ShimmerText(

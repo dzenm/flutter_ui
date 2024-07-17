@@ -1,10 +1,5 @@
-// Copyright 2013 The Flutter Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
-// ignore_for_file: diagnostic_describe_all_properties
-
 import 'package:flutter/cupertino.dart';
+import '../misc/extensions.dart';
 
 /// Checks for CupertinoApp in the widget tree.
 bool isCupertinoApp(BuildContext context) =>
@@ -47,10 +42,10 @@ class CupertinoErrorScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(error?.toString() ?? 'page not found'),
-              // CupertinoButton(
-              //   onPressed: () => context.go('/'),
-              //   child: const Text('Home'),
-              // ),
+              CupertinoButton(
+                onPressed: () => context.go('/'),
+                child: const Text('Home'),
+              ),
             ],
           ),
         ),

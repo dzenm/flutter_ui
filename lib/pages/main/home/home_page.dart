@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/base/a_router/misc/extensions.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base/base.dart';
@@ -213,8 +214,13 @@ class Banner extends StatelessWidget {
           data: banners.map((banner) => BannerData(title: banner.title, data: banner.imagePath)).toList(),
           onTap: (index) {
             BannerEntity banner = banners[index];
-            String params = '?title=${banner.title}&url=${banner.url}';
-            AppRouter.of(context).push(Routers.webView + params);
+            context.pushNamed(
+              Routers.webView,
+              queryParameters: {
+                'title': banner.title ?? '',
+                'url': banner.url ?? '',
+              },
+            );
           },
         );
       },
@@ -277,8 +283,13 @@ class ArticleItemView extends StatelessWidget {
       onTap: () {
         ArticleEntity? article = context.read<ArticleModel>().getArticle(index);
         if (article == null) return;
-        String params = '?title=${article.title}&url=${article.link}';
-        AppRouter.of(context).push(Routers.webView + params);
+        context.pushNamed(
+          Routers.webView,
+          queryParameters: {
+            'title': article.title,
+            'url': article.link ?? '',
+          },
+        );
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -326,8 +337,13 @@ class ArticleItemView extends StatelessWidget {
                           String path = val.url ?? '';
                           int start = path.indexOf('/');
                           String url = Configs.baseUrl + path.substring(start);
-                          String params = '?title=${val.name}&url=$url';
-                          AppRouter.of(context).push(Routers.webView + params);
+                          context.pushNamed(
+                            Routers.webView,
+                            queryParameters: {
+                              'title': val.name ?? '',
+                              'url': url,
+                            },
+                          );
                         },
                       );
                     },

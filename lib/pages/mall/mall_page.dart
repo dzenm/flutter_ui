@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/base/a_router/misc/extensions.dart';
 
 import '../../base/base.dart';
 import '../../generated/l10n.dart';
@@ -20,7 +21,7 @@ class _MallPageState extends State<MallPage> {
         title: S.of(context).mall,
         actions: [
           IconButton(
-            onPressed: () => AppRouter.of(context).push(MallRouter.addOrder),
+            onPressed: () => context.pushNamed(MallRouter.addOrder),
             icon: const Icon(Icons.add_circle_outline_outlined),
           ),
         ],

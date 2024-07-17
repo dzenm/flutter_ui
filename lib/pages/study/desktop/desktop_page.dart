@@ -1,5 +1,6 @@
 import 'package:contextual_menu/contextual_menu.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/base/a_router/misc/extensions.dart';
 import 'package:flutter_ui/http/connection/connection.dart';
 import 'package:provider/provider.dart';
 
@@ -103,7 +104,7 @@ class _DesktopPageState extends State<DesktopPage> {
     return MaterialButton(
       textColor: Colors.white,
       color: theme.button,
-      onPressed: () => AppRouter.of(context).push(StudyRouter.screenCapture),
+      onPressed: () => context.pushNamed(StudyRouter.screenCapture),
       child: _text('桌面端处理'),
     );
   }

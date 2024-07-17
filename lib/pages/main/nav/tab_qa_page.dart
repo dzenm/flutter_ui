@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/base/a_router/misc/extensions.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base/base.dart';
@@ -40,8 +41,13 @@ class _TabQAPageState extends TabListPageState<TabQAPage> {
         String desc = project.desc ?? '';
         return TapLayout(
           onTap: () {
-            String params = '?title=${project.title}&url=${project.link}';
-            AppRouter.of(context).push(Routers.webView + params);
+            context.pushNamed(
+              Routers.webView,
+              queryParameters: {
+                'title': project.title,
+                'url': project.link ?? '',
+              },
+            );
           },
           margin: const EdgeInsets.only(bottom: 12),
           padding: const EdgeInsets.all(16),
