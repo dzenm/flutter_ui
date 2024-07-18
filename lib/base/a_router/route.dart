@@ -1259,7 +1259,7 @@ class StatefulNavigationShellState extends State<StatefulNavigationShell>
   /// initialLocation is true, this method will navigate to initial location of
   /// the branch (see [StatefulShellBranch.initialLocation]).
   void goBranch(int index, {bool initialLocation = false}) {
-    assert(index >= 0 && index < route.branches.length);
+    assert(index >= 0 && index < route.branches.length, 'Branch router: index=$index, length=${route.branches.length}');
     final RouteMatchList? matchList =
         initialLocation ? null : _matchListForBranch(index);
     if (matchList != null && matchList.isNotEmpty) {

@@ -1,4 +1,5 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:flutter/widgets.dart';
 
 import '../base/a_router/route.dart';
 import '../base/a_router/router.dart';
@@ -8,8 +9,11 @@ import 'common/view_media_page.dart';
 import 'common/web_view_page.dart';
 import 'login/login_page.dart';
 import 'login/register_page.dart';
+import 'main/home/home_page.dart';
 import 'main/main_page.dart';
+import 'main/me/me_page.dart';
 import 'main/me/me_router.dart';
+import 'main/nav/nav_page.dart';
 import 'mall/mall_router.dart';
 import 'study/study_router.dart';
 
@@ -17,11 +21,12 @@ import 'study/study_router.dart';
 /// Created by a0010 on 2023/5/6 13:32
 ///
 class Routers {
-  static const String split = '/';
-  static const String root = 'root';
   static const String login = 'login';
   static const String register = 'register';
   static const String main = 'main';
+  static const String home = 'home';
+  static const String nav = 'nav';
+  static const String me = 'me';
   static const String example = 'example';
   static const String webView = 'webView';
   static const String viewMedia = 'viewMedia';

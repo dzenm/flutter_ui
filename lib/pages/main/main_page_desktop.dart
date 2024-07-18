@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
 
+import '../../base/a_router/arouter.dart';
 import '../../base/base.dart';
 import 'main_model.dart';
 import 'system_tray.dart';

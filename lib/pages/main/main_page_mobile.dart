@@ -12,40 +12,70 @@ class MainPageMobile extends StatelessWidget {
   final List<MainTab> tabs;
   final List<Widget> children;
 
-  const MainPageMobile({super.key, required this.tabs, required this.children});
+  MainPageMobile({super.key, required this.tabs, required this.children});
 
   static const String _tag = 'MainPageMobile';
+
+  final PageController _controller = PageController();
 
   @override
   Widget build(BuildContext context) {
     _log('build');
 
-    PageController? controller = context.watch<MainModel>().controller;
-    if (controller == null) return Container();
     return Scaffold(
       body: PageView(
-        controller: controller,
+        controller: _controller,
         physics: const NeverScrollableScrollPhysics(),
-        children: children.map((child) => KeepAliveWrapper(child: child)).toList(),
+        children: _buildBody(),
       ),
       bottomNavigationBar: BottomAppBar(
         height: 56,
         padding: const EdgeInsets.symmetric(vertical: 4),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: _buildBottomNavigationBar(),
+          children: _buildBottomNavigationBar(context),
         ),
       ),
     );
   }
 
+  List<Widget> _buildBody() {
+    List<Widget> list = [];
+    for (var child in children) {
+      list.add(KeepAliveWrapper(
+        child: Selector<MainModel, MainTab>(
+          selector: (_, model) => model.selectedTab,
+          builder: (context, value, widget) {
+            _log('MainTab build');
+            return child;
+          },
+        ),
+      ));
+    }
+    return list;
+  }
+
   /// BottomNavigationBar widget
-  List<Widget> _buildBottomNavigationBar() {
-    return tabs.map(
-      (tab) {
-        return Expanded(flex: 1, child: BottomNavigationBarItemView(tab: tab));
-      },
-    ).toList();
+  List<Widget> _buildBottomNavigationBar(BuildContext context) {
+    List<Widget> list = [];
+    for (var tab in tabs) {
+      list.add(
+        Expanded(
+          flex: 1,
+          child: BottomNavigationBarItemView(tab: tab, onTap: () => _jumpToPage(context, tab)),
+        ),
+      );
+    }
+    return list;
+  }
+
+  /// 跳转页面
+  void _jumpToPage(BuildContext context, MainTab tab) {
+    bool isSelected = context.read<MainModel>().isSelected(tab);
+    if (!isSelected) {
+      context.read<MainModel>().selectedTab = tab;
+      _controller.jumpToPage(tab.index);
+    }
   }
 
   void _log(String msg) => BuildConfig.isDebug ? Log.p(msg, tag: _tag) : null;
@@ -54,8 +84,9 @@ class MainPageMobile extends StatelessWidget {
 /// 底部Item布局
 class BottomNavigationBarItemView extends StatelessWidget {
   final MainTab tab;
+  final void Function()? onTap;
 
-  const BottomNavigationBarItemView({super.key, required this.tab});
+  const BottomNavigationBarItemView({super.key, required this.tab, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +94,7 @@ class BottomNavigationBarItemView extends StatelessWidget {
     double width = 56, height = 56;
     return TapLayout(
       foreground: theme.transparent,
-      onTap: () => _jumpToPage(context),
+      onTap: () => onTap == null ? null : onTap!(),
       child: SizedBox(
         width: width,
         child: Stack(alignment: Alignment.center, children: [
@@ -84,20 +115,12 @@ class BottomNavigationBarItemView extends StatelessWidget {
     );
   }
 
-  /// 跳转页面
-  void _jumpToPage(BuildContext context) {
-    bool isSelected = context.read<MainModel>().isSelected(tab);
-    if (!isSelected) {
-      context.read<MainModel>().selectedTab = tab;
-    }
-  }
-
   Widget _buildBadge() {
     return Selector<MainModel, int>(
       builder: (context, value, widget) {
         return BadgeTag(count: value);
       },
-      selector: (context, model) => model.badge(tab.index),
+      selector: (context, model) => model.badge(tab),
     );
   }
 
