@@ -65,7 +65,7 @@ final class Log {
 /// Log with class name
 mixin Logging {
   void    logHttp(dynamic msg) => Log.h(msg, tag: _tag);
-  void      logDB(dynamic msg) => Log.d(msg, tag: _tag);
+  void      logDB(dynamic msg) => Log.b(msg, tag: _tag);
   void    logPage(dynamic msg) => Log.p(msg, tag: _tag);
   void logVerbose(dynamic msg) => Log.v(msg, tag: _tag);
   void   logDebug(dynamic msg) => Log.d(msg, tag: _tag);
