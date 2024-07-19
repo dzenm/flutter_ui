@@ -20,13 +20,8 @@ import 'pages/study/window/sub_window_page.dart';
 class Application with _InitApp {
   /// 私有构造方法
   Application._internal();
-
-  static final Application instance = Application._internal();
-
-  factory Application() => instance;
-
-  /// 全局context
-  BuildContext get context => _context!;
+  factory Application() => _instance;
+  static final Application _instance = Application._internal();
 
   /// App入口
   void main(List<String> args) async {
@@ -76,6 +71,8 @@ class Application with _InitApp {
 
 /// 初始化程序运行所需的信息
 abstract mixin class _InitApp {
+  /// 全局context
+  BuildContext get context => _context!;
   BuildContext? _context;
 
   /// 初始化信息
@@ -92,7 +89,7 @@ abstract mixin class _InitApp {
     int now = DateTime.now().millisecondsSinceEpoch;
     int duration = 0;
     log('  启动: now=$now, duration=$duration');
-    log('  Application是否单例: ${Application.instance == Application()}');
+    log('  Application是否单例: ${Application() == Application()}');
 
     _initAndroid();
     _initIOS();
