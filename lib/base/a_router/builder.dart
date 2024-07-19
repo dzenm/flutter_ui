@@ -311,14 +311,14 @@ class _CustomNavigatorState extends State<_CustomNavigator> {
 
       var log = widget.configuration.log;
       // can be null during testing
-      final Element? elem = context is Element ? context : null;
+      final Element? element = context is Element ? context : null;
 
-      if (elem != null && isMaterialApp(elem)) {
+      if (element != null && isMaterialApp(element)) {
         log('Using MaterialApp configuration');
         _pageBuilderForAppType = pageBuilderForMaterialApp;
         _errorBuilderForAppType =
             (BuildContext c, ARouterState s) => MaterialErrorScreen(s.error);
-      } else if (elem != null && isCupertinoApp(elem)) {
+      } else if (element != null && isCupertinoApp(element)) {
         log('Using CupertinoApp configuration');
         _pageBuilderForAppType = pageBuilderForCupertinoApp;
         _errorBuilderForAppType =
@@ -412,10 +412,10 @@ class _CustomNavigatorState extends State<_CustomNavigator> {
 
   @override
   Widget build(BuildContext context) {
-    widget.configuration.log('CustomNavigator: build(pages=$_pages)');
     if (_pages == null) {
       _updatePages(context);
     }
+    widget.configuration.log('CustomNavigator: build(pages=$_pages)');
     assert(_pages != null);
     return ARouterStateRegistryScope(
       registry: _registry,
