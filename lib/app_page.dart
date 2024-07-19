@@ -203,8 +203,6 @@ class AppPage extends StatelessWidget with Logging {
   }
 
   /// 初始化需要用到context的地方，在创建MaterialApp之后，使用的是全局的context
-  /// 在[Navigator]1.0使用时，是在[MaterialApp.navigatorKey]设置。
-  /// 在[Navigator]2.0使用时，是在[AppRouterDelegate.build]设置。
   void _useContextAfterBuild(BuildContext context) {
     logPage('useContextAfterBuild');
     SystemChannels.textInput.invokeMethod('TextInput.hide');
