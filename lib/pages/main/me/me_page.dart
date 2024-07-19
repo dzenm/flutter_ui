@@ -25,46 +25,24 @@ class MePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (BuildConfig.isMobile) {
-      return MePageMobile(child: _MePage(
+      return _MePage(
         push: <String>(path) {
           return context.pushNamed(path);
         },
-      ));
+      );
     } else if (BuildConfig.isDesktop) {
-      return MePageDesktop(child: _MePage(
-        push: <String>(path) {
-          context.read<MeModel>().selectedTab = path;
-          return null;
-        },
-      ));
+      return DesktopMenu(
+        width: 320,
+        secondaryChild: const MeContentPage(),
+        child: _MePage(
+          push: <String>(path) {
+            context.read<MeModel>().selectedTab = path;
+            return null;
+          },
+        ),
+      );
     }
     return const Placeholder();
-  }
-}
-
-class MePageMobile extends StatelessWidget {
-  final Widget child;
-
-  const MePageMobile({super.key, required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return child;
-  }
-}
-
-class MePageDesktop extends StatelessWidget {
-  final Widget child;
-
-  const MePageDesktop({super.key, required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return DesktopMenu(
-      width: 320,
-      secondaryChild: const MeContentPage(),
-      child: child,
-    );
   }
 }
 

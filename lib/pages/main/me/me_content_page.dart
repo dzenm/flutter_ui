@@ -3,6 +3,7 @@ import 'package:flutter_ui/base/base.dart';
 import 'package:flutter_ui/pages/main/me/me_model.dart';
 import 'package:provider/provider.dart';
 
+import '../../../base/a_router/route.dart';
 import '../../routers.dart';
 
 ///
@@ -13,7 +14,7 @@ class MeContentPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // String? path = context.watch<MeModel>().selectedTab;
+    String? path = context.watch<MeModel>().selectedTab;
     // PageBuilder? builder;
     // if (path != null) {
     //   AppRouteSettings settings = AppRouteSettings.parse(path);

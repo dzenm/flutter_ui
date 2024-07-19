@@ -1,5 +1,8 @@
+import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_ui/pages/main/me/me_page.dart';
+
 import '../../../base/a_router/route.dart';
-import '../../../base/base.dart';
+import '../../../base/config/build_config.dart';
 import 'article/article_page.dart';
 import 'coin/coin_page.dart';
 import 'collect/collect_page.dart';
@@ -29,7 +32,13 @@ class MeRouter {
   static const String setting = 'setting';
   static const String about = 'about';
 
+  static final GlobalKey<NavigatorState> _meKey = GlobalKey();
+
   static List<RouteBase> get routers => [
+    ...(BuildConfig.isMobile ? mobileRouters : desktopRouters)
+  ];
+
+  static List<RouteBase> get mobileRouters => [
         ARoute(
             name: article,
             path: 'article',
@@ -96,6 +105,88 @@ class MeRouter {
                 builder: (context, state) {
                   return const AboutPage();
                 }),
+          ],
+        ),
+      ];
+
+  static List<RouteBase> get desktopRouters => [
+        StatefulShellRoute.indexedStack(
+          builder: (context, state, navigation) {
+            return const MePage();
+          },
+          branches: [
+            StatefulShellBranch(navigatorKey: _meKey, routes: [
+              ARoute(
+                name: article,
+                path: 'article',
+                builder: (context, state) => const ArticlePage(),
+              ),
+            ]),
+            StatefulShellBranch(routes: [
+              ARoute(
+                name: coin,
+                path: 'coin',
+                builder: (context, state) => const CoinPage(),
+              ),
+            ]),
+            StatefulShellBranch(routes: [
+              ARoute(
+                name: collect,
+                path: 'collect',
+                builder: (context, state) => const CollectPage(),
+              ),
+            ]),
+            StatefulShellBranch(routes: [
+              ARoute(
+                name: medicine,
+                path: 'medicine',
+                builder: (context, state) {
+                  dynamic params = state.uri.queryParameters;
+                  String medicineName = params['medicineName'] ?? '';
+                  return MedicinePage(medicineName: medicineName);
+                },
+              ),
+            ]),
+            StatefulShellBranch(routes: [
+              ARoute(
+                name: rank,
+                path: 'rank',
+                builder: (context, state) => const RankPage(),
+              ),
+            ]),
+            StatefulShellBranch(routes: [
+              ARoute(
+                name: info,
+                path: 'info',
+                builder: (context, state) => const InfoPage(),
+                routes: [
+                  ARoute(
+                    name: editInfo,
+                    path: 'edit',
+                    builder: (context, state) => const EditInfoPage(),
+                  ),
+                  ARoute(
+                    name: viewInfo,
+                    path: 'view',
+                    builder: (context, state) => const ViewInfoPage(),
+                  ),
+                ],
+              ),
+            ]),
+            StatefulShellBranch(routes: [
+              ARoute(
+                name: setting,
+                path: 'setting',
+                builder: (context, state) => const SettingPage(),
+                routes: [
+                  ARoute(
+                    name: about,
+                    path: 'about',
+                    builder: (context, state) => const AboutPage(),
+                  ),
+                ],
+              ),
+            ]),
           ],
         ),
       ];
