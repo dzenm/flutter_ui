@@ -50,16 +50,16 @@ final class Log {
     if (manager != null) _manager = manager;
   }
 
-  static LogManager _manager = const LogManager(); // 日志输出管理配置
-  static Logger get _log => _manager.logger;    // 日志输出工具
-  static void h(dynamic msg, {String? tag}) => _log.http(msg, tag: tag);
-  static void b(dynamic msg, {String? tag}) => _log.db(msg, tag: tag);
-  static void p(dynamic msg, {String? tag}) => _log.page(msg, tag: tag);
-  static void v(dynamic msg, {String? tag}) => _log.verbose(msg, tag: tag);
-  static void d(dynamic msg, {String? tag}) => _log.debug(msg, tag: tag);
-  static void i(dynamic msg, {String? tag}) => _log.info(msg, tag: tag);
-  static void w(dynamic msg, {String? tag}) => _log.warming(msg, tag: tag);
-  static void e(dynamic msg, {String? tag}) => _log.error(msg, tag: tag);
+  LogManager _manager = const LogManager(); // 日志输出管理配置
+  Logger get _log => _manager.logger;    // 日志输出工具
+  static void h(dynamic msg, {String? tag}) => Log()._log.http(msg, tag: tag);
+  static void b(dynamic msg, {String? tag}) => Log()._log.db(msg, tag: tag);
+  static void p(dynamic msg, {String? tag}) => Log()._log.page(msg, tag: tag);
+  static void v(dynamic msg, {String? tag}) => Log()._log.verbose(msg, tag: tag);
+  static void d(dynamic msg, {String? tag}) => Log()._log.debug(msg, tag: tag);
+  static void i(dynamic msg, {String? tag}) => Log()._log.info(msg, tag: tag);
+  static void w(dynamic msg, {String? tag}) => Log()._log.warming(msg, tag: tag);
+  static void e(dynamic msg, {String? tag}) => Log()._log.error(msg, tag: tag);
 }
 
 /// Log with class name
@@ -85,7 +85,7 @@ abstract class LogPrinter {
 class _ConsolePrinter extends LogPrinter {
   @override
   void output(LogManager manager, String body, {String head = '', String tail = ''}) {
-    LogConfig config = Log._manager.config;
+    LogConfig config = Log()._manager.config;
     int limitLength = config.limitLength;
     int chunkLength = config.chunkLength;
     String carriageReturn = config.carriageReturn;
