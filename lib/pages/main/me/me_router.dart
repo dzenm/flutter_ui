@@ -63,35 +63,40 @@ class MeRouter {
               return const RankPage();
             }),
         ARoute(
-            name: info,
-            path: 'info',
-            builder: (context, state) {
-              return const InfoPage();
-            }),
+          name: info,
+          path: 'info',
+          builder: (context, state) {
+            return const InfoPage();
+          },
+          routes: [
+            ARoute(
+                name: editInfo,
+                path: 'edit',
+                builder: (context, state) {
+                  return const EditInfoPage();
+                }),
+            ARoute(
+                name: viewInfo,
+                path: 'view',
+                builder: (context, state) {
+                  return const ViewInfoPage();
+                }),
+          ],
+        ),
         ARoute(
-            name: editInfo,
-            path: 'editInfo/:id',
-            builder: (context, state) {
-              Log.d('接收的数据：settings=${state.toString()}');
-              return const EditInfoPage();
-            }),
-        ARoute(
-            name: viewInfo,
-            path: 'viewInfo',
-            builder: (context, state) {
-              return const ViewInfoPage();
-            }),
-        ARoute(
-            name: setting,
-            path: 'setting',
-            builder: (context, state) {
-              return const SettingPage();
-            }),
-        ARoute(
-            name: about,
-            path: 'about',
-            builder: (context, state) {
-              return const AboutPage();
-            }),
+          name: setting,
+          path: 'setting',
+          builder: (context, state) {
+            return const SettingPage();
+          },
+          routes: [
+            ARoute(
+                name: about,
+                path: 'about',
+                builder: (context, state) {
+                  return const AboutPage();
+                }),
+          ],
+        ),
       ];
 }

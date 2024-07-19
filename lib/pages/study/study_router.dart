@@ -72,12 +72,13 @@ class StudyRouter {
               },
             ),
             ARoute(
-                name: components,
-                path: 'components',
-                builder: (context, state) {
-                  return const ComponentsPage();
-                },
-                routes: componentsRouter),
+              name: components,
+              path: 'components',
+              builder: (context, state) {
+                return const ComponentsPage();
+              },
+              routes: componentsRouter,
+            ),
             ARoute(
               name: http,
               path: 'http',
