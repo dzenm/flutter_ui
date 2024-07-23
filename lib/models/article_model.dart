@@ -42,20 +42,16 @@ class ArticleModel with ChangeNotifier {
 
   /// 处理文章数据
   Future<void> _handleArticle(List<ArticleEntity> articles) async {
-    List<ArticleEntity> inserts = [];
-    Map<int, ArticleEntity> updates = {};
     for (var article in articles) {
       int index = _allArticle.indexWhere((e) => e.id == article.id);
       if (index == -1) {
-        inserts.add(article);
+        _allArticle.add(article);
         ArticleEntity().insert(article); // 保存为DB中的article数据
       } else {
-        updates[index] = article;
+        _allArticle[index] = article;
         ArticleEntity().update(article); // 更新DB中的article数据
       }
     }
-    _allArticle.addAll(inserts);
-    updates.forEach((index, article) => _allArticle[index] = article);
   }
 
   /// 删除文章数据

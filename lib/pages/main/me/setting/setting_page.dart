@@ -64,6 +64,7 @@ class _SettingPageState extends State<SettingPage> {
       appBar: CommonBar(
         title: S.of(context).setting,
       ),
+      backgroundColor: theme.background,
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Center(
@@ -73,6 +74,7 @@ class _SettingPageState extends State<SettingPage> {
               TapLayout(
                 height: 50.0,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
+                background: theme.white,
                 child: SingleTextView(
                   icon: Icons.notifications_on_sharp,
                   title: S.of(context).notification,
@@ -82,6 +84,7 @@ class _SettingPageState extends State<SettingPage> {
               TapLayout(
                 height: 50.0,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
+                background: theme.white,
                 onTap: () => _selectedTheme(),
                 child: SingleTextView(
                   icon: Icons.color_lens,
@@ -98,6 +101,7 @@ class _SettingPageState extends State<SettingPage> {
               TapLayout(
                 height: 50.0,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
+                background: theme.white,
                 onTap: _selectedLanguage,
                 child: SingleTextView(
                   icon: Icons.language,
