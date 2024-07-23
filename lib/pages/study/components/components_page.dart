@@ -16,8 +16,8 @@ class ComponentsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     AppTheme theme = context.watch<LocalModel>().theme;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Components'),
+      appBar: CommonBar(
+        title: 'Components',
         backgroundColor: theme.primary,
       ),
       body: Container(

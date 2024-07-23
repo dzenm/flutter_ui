@@ -16,8 +16,8 @@ class _VideoPageState extends State<VideoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('视频播放', style: TextStyle(color: Colors.white)),
+      appBar: const CommonBar(
+        title: '视频播放',
       ),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16),

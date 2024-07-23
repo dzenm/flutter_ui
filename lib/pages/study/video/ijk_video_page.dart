@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/base/base.dart';
 
 class VideoPlayerView extends StatefulWidget {
   final String url;
@@ -101,18 +102,18 @@ class _IjkVideoPageState extends State<IjkVideoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: Colors.transparent,
       appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(0),
-          child: AppBar(
+          preferredSize: Size.fromHeight(0),
+          child: CommonBar(
             leading: null,
             backgroundColor: Colors.transparent,
-            systemOverlayStyle: const SystemUiOverlayStyle(
+            systemOverlayStyle: SystemUiOverlayStyle(
               statusBarBrightness: Brightness.dark,
             ),
           )),
-      body: const VideoPlayerView(
+      body: VideoPlayerView(
         url: 'asset:///assets/video/butterfly.mp4',
         thumbUrl: 'assets/image/thumb_video_cover.png',
       ),

@@ -34,8 +34,8 @@ class _DesktopPageState extends State<DesktopPage> {
   Widget build(BuildContext context) {
     AppTheme theme = context.watch<LocalModel>().theme;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('桌面端', style: TextStyle(color: Colors.white)),
+      appBar: const CommonBar(
+        title: '桌面端',
       ),
       body: Container(
         padding: const EdgeInsets.all(16),

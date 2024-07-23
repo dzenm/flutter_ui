@@ -29,8 +29,8 @@ class _ScreenCapturePageState extends State<ScreenCapturePage> {
   Widget build(BuildContext context) {
     AppTheme theme = context.watch<LocalModel>().theme;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('屏幕截取', style: TextStyle(color: Colors.white)),
+      appBar: const CommonBar(
+        title: '屏幕截取',
       ),
       body: Container(
         padding: const EdgeInsets.all(16),

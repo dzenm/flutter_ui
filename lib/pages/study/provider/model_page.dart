@@ -20,8 +20,8 @@ class ModelPage extends StatelessWidget {
 
     AppTheme theme = context.read<LocalModel>().theme;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('观察Model数据的变化', style: TextStyle(color: Colors.white)),
+      appBar: const CommonBar(
+        title: '观察Model数据的变化',
         systemOverlayStyle: SystemUiOverlayStyle.light,
       ),
       body: Container(

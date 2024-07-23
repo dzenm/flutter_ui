@@ -26,8 +26,8 @@ class _QRPageState extends State<QRPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('二维码', style: TextStyle(color: Colors.white)),
+      appBar: const CommonBar(
+        title: '二维码',
       ),
       body: Stack(children: [
         ScanView(

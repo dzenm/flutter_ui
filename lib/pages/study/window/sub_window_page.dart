@@ -22,8 +22,8 @@ class SubWindowPage extends StatelessWidget {
     Log.d('测试SubWindow');
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
+        appBar: const CommonBar(
+          title: 'Plugin example app',
         ),
         body: Column(
           children: [

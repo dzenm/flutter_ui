@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/base/base.dart';
 
 /// 可拖动ListView
 class DragListPage extends StatefulWidget {
@@ -22,8 +23,8 @@ class _DragListPageState extends State<DragListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('拖拽列表', style: TextStyle(color: Colors.white)),
+      appBar: const CommonBar(
+        title: '拖拽列表',
       ),
       body: Container(
         padding: const EdgeInsets.all(16),

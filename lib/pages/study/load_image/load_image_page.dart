@@ -14,8 +14,8 @@ class _LoadImagePageState extends State<LoadImagePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('加载图片', style: TextStyle(color: Colors.white)),
+      appBar: const CommonBar(
+        title: '加载图片',
       ),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16),

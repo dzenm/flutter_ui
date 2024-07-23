@@ -31,8 +31,8 @@ class _UpdatePageState extends State<UpdatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('修改数据', style: TextStyle(color: Colors.white)),
+      appBar: const CommonBar(
+        title: '修改数据',
         systemOverlayStyle: SystemUiOverlayStyle.light,
       ),
       body: Container(

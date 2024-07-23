@@ -24,8 +24,8 @@ class _PopupPageState extends State<PopupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('PopupWindow测试', style: TextStyle(color: Colors.white)),
+      appBar: const CommonBar(
+        title: 'PopupWindow测试',
       ),
       body: Container(
         padding: const EdgeInsets.all(16),

@@ -40,8 +40,8 @@ class RouterPage extends StatelessWidget {
   Widget build(BuildContext context) {
     AppTheme theme = context.watch<LocalModel>().theme;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('路由跳转', style: TextStyle(color: theme.text)),
+      appBar: const CommonBar(
+        title: '路由跳转',
       ),
       body: Container(
         padding: const EdgeInsets.all(16),

@@ -39,8 +39,8 @@ class _ConvertPageState extends State<ConvertPage> {
     UserEntity user = UserEntity.fromJson(data);
     List<UserEntity> users = [user, user, user];
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('字符转化', style: TextStyle(color: Colors.white)),
+      appBar: const CommonBar(
+        title: '字符转化',
         elevation: 0.0,
       ),
       body: SingleChildScrollView(

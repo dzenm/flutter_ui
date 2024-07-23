@@ -22,8 +22,8 @@ class FirstPage extends StatelessWidget {
     List<String> list = RouterPage.list[type];
     bool last = index == list.length - 1;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(list[0], style: const TextStyle(color: Colors.white)),
+      appBar: CommonBar(
+        title: list[0],
       ),
       body: Container(
         padding: const EdgeInsets.all(16),

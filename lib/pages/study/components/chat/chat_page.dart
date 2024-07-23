@@ -70,8 +70,8 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 100, 100, 100),
-      appBar: AppBar(
-        title: const Text("Chat"),
+      appBar: CommonBar(
+        title: 'Chat',
         backgroundColor: const Color.fromARGB(255, 19, 19, 19),
         actions: [
           TextButton(

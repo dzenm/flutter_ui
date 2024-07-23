@@ -46,8 +46,8 @@ class _ProviderPageState extends State<ProviderPage> {
     log('build');
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('测试Provider', style: TextStyle(color: Colors.white)),
+      appBar: const CommonBar(
+        title: '测试Provider',
         systemOverlayStyle: SystemUiOverlayStyle.light,
       ),
       body: Container(

@@ -63,8 +63,8 @@ class _TextPageState extends State<TextPage> {
       child: WillPopView(
         onPopInvoked: (didPop) => WillPopView.promptBack(context, isChanged: text != newText),
         child: Scaffold(
-          appBar: AppBar(
-            title: const Text('文本和输入框', style: TextStyle(color: Colors.white)),
+          appBar: const CommonBar(
+            title: '文本和输入框',
           ),
           body: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),

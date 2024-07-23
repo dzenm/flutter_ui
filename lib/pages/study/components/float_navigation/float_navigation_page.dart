@@ -40,10 +40,9 @@ class _FloatNavigationPageState extends State<FloatNavigationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: const CommonBar(
         elevation: 0.0,
-        title: const Text('导航栏', style: TextStyle(color: Colors.white)),
-        centerTitle: true,
+        title: '导航栏',
       ),
       body: Container(
         padding: const EdgeInsets.all(16),

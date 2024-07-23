@@ -25,8 +25,8 @@ class _HTTPListPageState extends State<HTTPListPage> {
     List<ArticleEntity> list = context.watch<ArticleModel>().allArticles;
     String text = StrUtil.formatToJson(list);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('HTTP请求', style: TextStyle(color: Colors.white)),
+      appBar: const CommonBar(
+        title: 'HTTP请求',
       ),
       body: Container(
         padding: const EdgeInsets.all(16),

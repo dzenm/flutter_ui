@@ -36,7 +36,7 @@ class _CitySelectedPageState extends State<CitySelectedPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(title: const Text('城市选择', style: TextStyle(color: Colors.white))),
+      appBar: const CommonBar(title: '城市选择'),
       body: SafeArea(
         child: StateView(
           controller: _controller,

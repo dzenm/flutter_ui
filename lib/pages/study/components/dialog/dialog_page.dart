@@ -28,8 +28,8 @@ class _DialogPageState extends State<DialogPage> {
   Widget build(BuildContext context) {
     AppTheme theme = context.watch<LocalModel>().theme;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('弹窗', style: TextStyle(color: Colors.white)),
+      appBar: CommonBar(
+        title: '弹窗',
         actions: [
           /// 弹出式菜单
           PopupMenuButton(

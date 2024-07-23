@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/base/base.dart';
 
 import 'ijk_video_page.dart';
 
@@ -38,12 +39,12 @@ class _IjkListVideoPageState extends State<IjkListVideoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(0),
-        child: AppBar(
+      appBar: const PreferredSize(
+        preferredSize: Size.fromHeight(0),
+        child: CommonBar(
           leading: null,
           backgroundColor: Colors.transparent,
-          systemOverlayStyle: const SystemUiOverlayStyle(
+          systemOverlayStyle: SystemUiOverlayStyle(
             statusBarBrightness: Brightness.dark,
           ),
         ),

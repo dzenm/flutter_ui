@@ -29,8 +29,8 @@ class _ListPageState extends State<ListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('列表和刷新', style: TextStyle(color: Colors.white)),
+      appBar: const CommonBar(
+        title: '列表和刷新',
       ),
       body: Column(children: [
         Expanded(

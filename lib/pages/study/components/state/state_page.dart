@@ -28,8 +28,8 @@ class _StatePageState extends State<StatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('文本和输入框', style: TextStyle(color: Colors.white)),
+      appBar: CommonBar(
+        title: '文本和输入框',
         actions: [
           PopupMenuButton<Item>(
             elevation: 4.0,

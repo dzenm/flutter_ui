@@ -21,8 +21,8 @@ class _MainWindowPageState extends State<MainWindowPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
+        appBar: const CommonBar(
+          title: 'Plugin example app',
         ),
         body: Container(
           padding: const EdgeInsets.all(16),
