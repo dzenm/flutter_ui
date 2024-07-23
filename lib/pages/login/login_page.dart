@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/base/a_router/misc/extensions.dart';
 import 'package:provider/provider.dart';
 
+import '../../base/a_router/misc/extensions.dart';
 import '../../base/base.dart';
 import '../../generated/l10n.dart';
 import '../../http/http_manager.dart';
@@ -97,8 +97,6 @@ class LoginPage extends StatelessWidget {
 
 /// 登录组件主体部分(编辑登录信息)，不包含 [Scaffold]
 class _EditLoginInfoView extends StatefulWidget {
-  static bool _isAgree = false;
-
   const _EditLoginInfoView();
 
   @override
@@ -178,13 +176,20 @@ class _EditLoginInfoViewState extends State<_EditLoginInfoView> {
     log('build');
 
     AppTheme theme = context.watch<LocalModel>().theme;
+    String usernameText = S.of(context).username;
+    String passwordText = S.of(context).password;
+    String verifyText = S.of(context).verifyCode;
+    String loginText = S.of(context).login;
+    String registerText = S.of(context).register;
+    String text = '${_loginByPhone ? passwordText : verifyText}$loginText';
+
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
       // 用户名输入框
       TextField(
         controller: _usernameController,
         decoration: InputDecoration(
           icon: const Icon(Icons.person),
-          labelText: S.of(context).username,
+          labelText: usernameText,
           suffixIcon: IconButton(
             splashColor: theme.transparent,
             icon: const Icon(Icons.close),
@@ -202,7 +207,7 @@ class _EditLoginInfoViewState extends State<_EditLoginInfoView> {
           controller: _passwordController,
           decoration: InputDecoration(
             icon: const Icon(Icons.admin_panel_settings),
-            labelText: S.of(context).password,
+            labelText: passwordText,
             suffixIcon: IconButton(
               splashColor: theme.transparent,
               icon: Icon(_isShowPwd ? Icons.visibility : Icons.visibility_off, size: 20),
@@ -218,15 +223,14 @@ class _EditLoginInfoViewState extends State<_EditLoginInfoView> {
       // 验证码输入框
       if (_loginByPhone)
         TextField(
-          controller: _passwordController,
+          controller: _verifyCodeController,
           decoration: InputDecoration(
             icon: const Icon(Icons.verified_sharp),
-            labelText: S.of(context).verifyCode,
+            labelText: verifyText,
             suffix: const VerifyCodeView(),
           ),
           maxLines: 1,
-          keyboardType: TextInputType.text,
-          obscureText: !_isShowPwd,
+          keyboardType: TextInputType.number,
         ),
       const SizedBox(height: 40),
 
@@ -236,7 +240,7 @@ class _EditLoginInfoViewState extends State<_EditLoginInfoView> {
         borderRadius: const BorderRadius.all(Radius.circular(2)),
         background: _isDisableLoginButton ? theme.disableButton : theme.button,
         onTap: _isDisableLoginButton ? null : _login,
-        child: Text(S.of(context).login, style: TextStyle(color: theme.text)),
+        child: Text(loginText, style: TextStyle(color: theme.text)),
       ),
       const SizedBox(height: 16, width: 64),
       Row(children: [
@@ -247,10 +251,7 @@ class _EditLoginInfoViewState extends State<_EditLoginInfoView> {
           borderRadius: const BorderRadius.all(Radius.circular(4)),
           onTap: _switchLoginType,
           child: Row(mainAxisSize: MainAxisSize.min, children: [
-            Text(
-              '${_loginByPhone ? S.of(context).password : S.of(context).verifyCode}${S.of(context).login}',
-              style: TextStyle(color: theme.button),
-            ),
+            Text(text, style: TextStyle(color: theme.button)),
           ]),
         ),
         Expanded(child: Container()),
@@ -261,7 +262,7 @@ class _EditLoginInfoViewState extends State<_EditLoginInfoView> {
           borderRadius: const BorderRadius.all(Radius.circular(4)),
           onTap: _register,
           child: Row(mainAxisSize: MainAxisSize.min, children: [
-            Text(S.of(context).register, style: TextStyle(color: theme.button)),
+            Text(registerText, style: TextStyle(color: theme.button)),
           ]),
         ),
       ]),
@@ -277,12 +278,14 @@ class _EditLoginInfoViewState extends State<_EditLoginInfoView> {
   /// 切换登录的方式
   void _switchLoginType() {
     setState(() => _loginByPhone = !_loginByPhone);
+    _passwordController.clear();
+    _verifyCodeController.clear();
   }
 
   /// 登录按钮点击事件
   void _login() {
     FocusScope.of(context).unfocus();
-    if (!_EditLoginInfoView._isAgree) {
+    if (!_ProtocolInfoViewState._isAgree) {
       CommonDialog.showToast('请先同意隐私协议');
       return;
     }
@@ -312,12 +315,21 @@ class ProtocolInfoView extends StatefulWidget {
 }
 
 class _ProtocolInfoViewState extends State<ProtocolInfoView> {
-  bool _isAgree = _EditLoginInfoView._isAgree;
+  static bool _isAgree = false;
   final TapGestureRecognizer _registerRecognizer = TapGestureRecognizer();
   final TapGestureRecognizer _privateRecognizer = TapGestureRecognizer();
 
   @override
+  void dispose() {
+    _registerRecognizer.dispose();
+    _privateRecognizer.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    log('build: ProtocolInfoView(isAgree=$_isAgree)');
+
     AppTheme theme = context.watch<LocalModel>().theme;
     IconData icon = _isAgree ? Icons.check_box_sharp : Icons.check_box_outline_blank_sharp;
     Color color = _isAgree ? theme.checked : theme.unchecked;
@@ -329,7 +341,6 @@ class _ProtocolInfoViewState extends State<ProtocolInfoView> {
           padding: const EdgeInsets.all(4),
           onTap: () {
             setState(() => _isAgree = !_isAgree);
-            _EditLoginInfoView._isAgree = _isAgree;
           },
           child: Icon(icon, color: color, size: 24),
         ),
@@ -361,12 +372,7 @@ class _ProtocolInfoViewState extends State<ProtocolInfoView> {
     ]);
   }
 
-  @override
-  void dispose() {
-    _registerRecognizer.dispose();
-    _privateRecognizer.dispose();
-    super.dispose();
-  }
+  void log(String msg) => Log.p(msg, tag: 'LoginPage');
 }
 
 /// 验证码
@@ -380,12 +386,13 @@ class VerifyCodeView extends StatefulWidget {
 }
 
 class _VerifyCodeViewState extends State<VerifyCodeView> {
+  static const countDownSeconds = 59;
   Timer? _timer; // 计时器
   int _second = -1; // 计时的时间
 
   /// 倒计时
   void _countDownCode() {
-    _second = 59;
+    _second = countDownSeconds;
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       --_second;
@@ -405,22 +412,29 @@ class _VerifyCodeViewState extends State<VerifyCodeView> {
 
   @override
   Widget build(BuildContext context) {
-    bool reset = _second < 0;
-    String text = reset ? '获取验证码' : '$_second 秒';
+    log('build: VerifyCodeView(second=$_second)');
+
+    bool isReset = _second < 0;
+    String text = isReset ? '获取验证码' : '$_second 秒';
+
+    void Function()? onTap;
+    if (isReset) {
+      onTap = () {
+        _countDownCode();
+        if (widget.onTap != null) {
+          widget.onTap!();
+        }
+      };
+    }
     return Row(mainAxisSize: MainAxisSize.min, children: [
       TapLayout(
         background: Colors.transparent,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        onTap: reset
-            ? null
-            : () {
-                _countDownCode();
-                if (widget.onTap != null) {
-                  widget.onTap!();
-                }
-              },
+        onTap: onTap,
         child: Text(text),
       ),
     ]);
   }
+
+  void log(String msg) => Log.p(msg, tag: 'LoginPage');
 }

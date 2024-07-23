@@ -109,24 +109,6 @@ class __EditRegisterInfoViewState extends State<_EditRegisterInfoView> {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    log('didChangeDependencies');
-  }
-
-  @override
-  void didUpdateWidget(_EditRegisterInfoView oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    log('didUpdateWidget');
-  }
-
-  @override
-  void deactivate() {
-    super.deactivate();
-    log('deactivate');
-  }
-
-  @override
   void dispose() {
     super.dispose();
     log('dispose');

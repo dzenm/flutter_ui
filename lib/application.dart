@@ -20,11 +20,17 @@ import 'pages/study/window/sub_window_page.dart';
 class Application with _InitApp {
   /// 私有构造方法
   Application._internal();
+
   factory Application() => _instance;
   static final Application _instance = Application._internal();
 
+  /// 全局context
+  BuildContext get context => _context!;
+  BuildContext? _context;
+
   /// App入口
   void main(List<String> args) async {
+    MockBinding.ensureInitialized();
     bool isMainWindow = args.firstOrNull != 'multi_window';
     if (isMainWindow) {
       // 初始化
@@ -69,15 +75,10 @@ class Application with _InitApp {
   }
 }
 
-/// 初始化程序运行所需的信息
+/// 初始化程序运行所需的信息，
 abstract mixin class _InitApp {
-  /// 全局context
-  BuildContext get context => _context!;
-  BuildContext? _context;
-
   /// 初始化信息
   Future<void> _initApp(List<String> args) async {
-    MockBinding.ensureInitialized();
     await BuildConfig.init(); // 初始化设备和包相关的信息
     Log.init(
       manager: LogManager(
@@ -91,12 +92,12 @@ abstract mixin class _InitApp {
     log('  启动: now=$now, duration=$duration');
     log('  Application是否单例: ${Application() == Application()}');
 
-    _initAndroid();
-    _initIOS();
-    _initWindows(args);
-    _initMacOS();
-    _initLinux();
-    _initWeb();
+    await _initAndroid();
+    await _initIOS();
+    await _initWindows(args);
+    await _initMacOS();
+    await _initLinux();
+    await _initWeb();
 
     // 初始化桌面端窗口
     await DesktopWrapper.ensureInitialized();
