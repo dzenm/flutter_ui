@@ -107,7 +107,6 @@ class _StudyPageState extends State<StudyPage> with Logging {
         child: _text('桌面端处理'),
       ),
       const SizedBox(height: 8),
-      const SizedBox(height: 8),
       // HTTP请求
       MaterialButton(
         textColor: Colors.white,
@@ -124,7 +123,6 @@ class _StudyPageState extends State<StudyPage> with Logging {
         child: _text('加载图片'),
       ),
       const SizedBox(height: 8),
-
       // Provider
       MaterialButton(
         textColor: Colors.white,
@@ -132,8 +130,6 @@ class _StudyPageState extends State<StudyPage> with Logging {
         onPressed: () => context.pushNamed(StudyRouter.provider),
         child: _text('Provider'),
       ),
-      const SizedBox(height: 8),
-
       const SizedBox(height: 8),
       // 路由测试
       MaterialButton(
@@ -143,7 +139,6 @@ class _StudyPageState extends State<StudyPage> with Logging {
         child: _text('路由测试'),
       ),
       const SizedBox(height: 8),
-
       // 视频播放
       MaterialButton(
         textColor: Colors.white,
