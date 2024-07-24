@@ -196,7 +196,7 @@ class RouteConfiguration {
     _nameToPath.clear();
     _cacheNameToPath('', routingTable.routes);
 
-    log('\n');
+    log('');
     debugKnownRoutes().split('\n').forEach((message) {
       log(message);
     });
