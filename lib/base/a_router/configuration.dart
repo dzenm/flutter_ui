@@ -195,6 +195,8 @@ class RouteConfiguration {
     assert(_debugCheckStatefulShellBranchDefaultLocations(routingTable.routes));
     _nameToPath.clear();
     _cacheNameToPath('', routingTable.routes);
+
+    log('\n');
     debugKnownRoutes().split('\n').forEach((message) {
       log(message);
     });
@@ -520,7 +522,7 @@ class RouteConfiguration {
         _routingConfig.value.routes, '', const <_DecorationType>[], sb);
 
     if (_nameToPath.isNotEmpty) {
-      sb.writeln('known full paths for route names:');
+      sb.writeln('Known full paths for route names:');
       for (final MapEntry<String, String> e in _nameToPath.entries) {
         sb.writeln('  ${e.key} => ${e.value}');
       }
