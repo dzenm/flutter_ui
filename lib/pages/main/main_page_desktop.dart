@@ -30,7 +30,12 @@ class MainPageDesktop extends StatelessWidget {
               child: DesktopNavigationRail(
                 width: 56.0,
                 onSelected: (int index) {
-                  context.read<MainModel>().selectedTab = index;
+                  MainTab selectedTab = MainTab.home;
+                  for (var tab in MainTab.values) {
+                    if (index != tab.index) continue;
+                    selectedTab = tab;
+                  }
+                  context.read<MainModel>().setSelectedTab(selectedTab);
                 },
                 leading: _buildLeadingView(context),
                 children: tabs.map((tab) {

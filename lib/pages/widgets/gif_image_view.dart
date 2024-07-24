@@ -11,7 +11,7 @@ class GifCache {
   }
 
   bool evict(Object key) {
-    final List<ImageInfo>? pendingImage = caches.remove(key)!;
+    final List<ImageInfo>? pendingImage = caches.remove(key);
     if (pendingImage != null) {
       return true;
     }
@@ -167,7 +167,6 @@ class GifImageState extends State<GifImage> {
 
   @override
   Widget build(BuildContext context) {
-    ;
     return ValueListenableBuilder(
       valueListenable: _curIndex,
       builder: (context, index, w) {

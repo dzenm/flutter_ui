@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base/base.dart';
-import 'first_page.dart';
 
 ///
 /// Created by a0010 on 2023/2/3 16:43

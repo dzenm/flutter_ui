@@ -159,7 +159,7 @@ class _StudyPageState extends State<StudyPage> with Logging {
         textColor: Colors.white,
         color: theme.button,
         onPressed: () {
-          context.read<MainModel>().selectedTab = MainTab.nav;
+          context.read<MainModel>().setSelectedTab(MainTab.nav);
           context.pop('这是回调的数据');
         },
         child: _text('返回并传递数据'),

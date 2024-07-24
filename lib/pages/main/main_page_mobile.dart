@@ -71,7 +71,7 @@ class MainPageMobile extends StatelessWidget with Logging {
   void _jumpToPage(BuildContext context, MainTab tab) {
     bool isSelected = context.read<MainModel>().isSelected(tab);
     if (!isSelected) {
-      context.read<MainModel>().selectedTab = tab;
+      context.read<MainModel>().setSelectedTab(tab);
       _controller.jumpToPage(tab.index);
     }
   }

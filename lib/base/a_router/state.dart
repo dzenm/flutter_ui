@@ -175,7 +175,6 @@ class ARouterState {
 ///
 /// Should not be used directly, consider using [ARouterState.of] to access
 /// [ARouterState] from the context.
-@internal
 class ARouterStateRegistryScope
     extends InheritedNotifier<ARouterStateRegistry> {
   /// Creates a ARouterStateRegistryScope.
@@ -190,7 +189,6 @@ class ARouterStateRegistryScope
 ///
 /// Should not be used directly, consider using [ARouterState.of] to access
 /// [ARouterState] from the context.
-@internal
 class ARouterStateRegistry extends ChangeNotifier {
   /// creates a [ARouterStateRegistry].
   ARouterStateRegistry();
