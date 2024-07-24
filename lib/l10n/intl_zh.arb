@@ -3,6 +3,8 @@
 
   "login": "登录",
   "verifyCode": "验证码",
+  "send": "发送",
+  "second": "秒",
   "register": "注册",
   "logout": "注销",
   "avatar": "头像",
@@ -10,7 +12,7 @@
   "password": "密码",
   "rPassword": "重复密码",
   "id": "账号",
-  "phone": "手机号",
+  "phone": "手机号码",
   "email": "邮箱",
   "keyword": "键盘",
   "collect": "收藏",
@@ -53,7 +55,12 @@
   "project": "项目",
   "official": "公众号",
   "tool": "工具",
+  "save": "保存",
 
+  "readAndAgree": "阅读并同意",
+  "registerProtocol": "《软件注册协议》",
+  "privateProtocol": "《隐私协议》",
+  "unknownPlatform": "未知平台",
   "notFoundPage": "页面未找到",
   "checkUpgrade": "检查更新",
   "selectTheme": "选择主题",
@@ -68,9 +75,15 @@
   "loginRecord": "登陆记录",
   "coinRecord": "积分获取记录列表",
   "studyMainPage": "学习主页{name}",
-  "readAndAgree": "阅读并同意",
-  "registerProtocol": "《软件注册协议》",
-  "privateProtocol": "《隐私协议》",
+  "successfullyModified": "修改成功",
+  "alreadyTheLatestVersion": "已是最新版",
 
-  "mall": "商城"
+  "mall": "商城",
+  "contact": "联系人",
+  "recipientName": "收件人姓名",
+  "shippingAddress": "收获地址",
+  "recipientsDetailedAddress": "收件人详细地址",
+  "recipientContactInfo": "收件人联系方式",
+  "trackingNumber": "快递单号",
+  "order": "订单"
 }

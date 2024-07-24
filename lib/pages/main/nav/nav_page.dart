@@ -14,8 +14,7 @@ import 'tab_tutorial_page.dart';
 ///
 /// Created by a0010 on 2022/7/28 10:56
 /// 分类页面
-class NavPage extends StatelessWidget {
-  static const String _tag = 'MePage';
+class NavPage extends StatelessWidget with Logging {
 
   const NavPage({super.key});
 
@@ -30,7 +29,7 @@ class NavPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log('build');
+    logPage('build');
 
     AppTheme theme = context.watch<LocalModel>().theme;
     List<String> tabs = [
@@ -68,6 +67,4 @@ class NavPage extends StatelessWidget {
       ),
     );
   }
-
-  void log(String msg) => Log.p(msg, tag: _tag);
 }

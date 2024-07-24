@@ -8,19 +8,17 @@ import 'main_model.dart';
 ///
 /// Created by a0010 on 2023/6/29 15:53
 ///
-class MainPageMobile extends StatelessWidget {
+class MainPageMobile extends StatelessWidget with Logging {
   final List<MainTab> tabs;
   final List<Widget> children;
 
   MainPageMobile({super.key, required this.tabs, required this.children});
 
-  static const String _tag = 'MainPageMobile';
-
   final PageController _controller = PageController();
 
   @override
   Widget build(BuildContext context) {
-    _log('build');
+    logPage('build');
 
     return Scaffold(
       body: PageView(
@@ -46,7 +44,7 @@ class MainPageMobile extends StatelessWidget {
         child: Selector<MainModel, MainTab>(
           selector: (_, model) => model.selectedTab,
           builder: (context, value, widget) {
-            _log('MainTab build');
+            logPage('MainTab build');
             return child;
           },
         ),
@@ -77,8 +75,6 @@ class MainPageMobile extends StatelessWidget {
       _controller.jumpToPage(tab.index);
     }
   }
-
-  void _log(String msg) => BuildConfig.isDebug ? Log.p(msg, tag: _tag) : null;
 }
 
 /// 底部Item布局

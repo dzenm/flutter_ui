@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/pages/common/view_media_page.dart';
 import 'package:provider/provider.dart';
 import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
 
-import '../../base/a_router/arouter.dart';
 import '../../base/base.dart';
+import '../common/view_media_page.dart';
 import 'main_model.dart';
 import 'system_tray.dart';
 
@@ -111,13 +110,12 @@ class MainPageDesktopWrapper extends StatefulWidget {
   State<MainPageDesktopWrapper> createState() => _MainPageDesktopWrapperState();
 }
 
-class _MainPageDesktopWrapperState extends State<MainPageDesktopWrapper> with WindowListener, TrayListener, SystemTray {
-  static const String _tag = 'MainPageDesktop';
+class _MainPageDesktopWrapperState extends State<MainPageDesktopWrapper> with Logging, WindowListener, TrayListener, SystemTray {
 
   @override
   void initState() {
     super.initState();
-    _log('initState');
+    logPage('initState');
 
     // 这里注意一个问题，在桌面端可能会存在多个StatefulWidget在一个页面，导致数据变化的时候，没有重建子StatefulWidget，而是直接调用旧的build方法，
     // 所以会出现initState未执行的情况，这种问题的解决办法是在didUpdateWidget进行判断oldWidget与widget是否相同，将initState应该执行的内容再次执行即可
@@ -134,7 +132,7 @@ class _MainPageDesktopWrapperState extends State<MainPageDesktopWrapper> with Wi
     windowManager.removeListener(this);
     trayManager.removeListener(this);
     super.dispose();
-    _log('dispose');
+    logPage('dispose');
   }
 
   @override
@@ -163,13 +161,13 @@ class _MainPageDesktopWrapperState extends State<MainPageDesktopWrapper> with Wi
 
   @override
   Widget build(BuildContext context) {
-    _log('build');
+    logPage('build');
     return widget.child;
   }
 
   @override
   void onWindowEvent(String eventName) {
-    _log('onWindowEvent: eventName=$eventName');
+    logPage('onWindowEvent: eventName=$eventName');
   }
 
   @override
@@ -276,6 +274,4 @@ class _MainPageDesktopWrapperState extends State<MainPageDesktopWrapper> with Wi
     // 离开全屏时调用（最大化恢复）
     // do something
   }
-
-  void _log(String msg) => BuildConfig.isDebug ? Log.p(msg, tag: _tag) : null;
 }

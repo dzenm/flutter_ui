@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/a_router/misc/extensions.dart';
 import 'package:provider/provider.dart';
 
+import '../../../base/a_router/misc/extensions.dart';
 import '../../../base/base.dart';
 import '../../../config/configs.dart';
 import '../../../entities/tool_entity.dart';

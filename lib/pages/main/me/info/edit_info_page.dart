@@ -42,26 +42,27 @@ class _EditInfoPageState extends State<EditInfoPage> {
   Widget build(BuildContext context) {
     AppTheme theme = context.read<LocalModel>().theme;
     return WillPopView(
-        onPopInvoked: (didPop) => WillPopView.promptBack(context, isChanged: !_disableButton),
-        child: Scaffold(
-          body: Container(
-            color: theme.background,
-            child: Column(children: [
-              CommonBar(
-                title: S.of(context).editProfile,
-                centerTitle: true,
-                actions: [
-                  if (!_disableButton)
-                    IconButton(
-                      icon: const Icon(Icons.check),
-                      onPressed: () => _disableButton ? null : _submit(),
-                    ),
-                ],
-              ),
-              SingleEditView(title: S.of(context).username, controller: _controller, maxLength: 16),
-            ]),
-          ),
-        ));
+      onPopInvoked: (didPop) => WillPopView.promptBack(context, isChanged: !_disableButton),
+      child: Scaffold(
+        body: Container(
+          color: theme.background,
+          child: Column(children: [
+            CommonBar(
+              title: S.of(context).editProfile,
+              centerTitle: true,
+              actions: [
+                if (!_disableButton)
+                  IconButton(
+                    icon: const Icon(Icons.check),
+                    onPressed: () => _disableButton ? null : _submit(),
+                  ),
+              ],
+            ),
+            SingleEditView(title: S.of(context).username, controller: _controller, maxLength: 16),
+          ]),
+        ),
+      ),
+    );
   }
 
   void _submit() {

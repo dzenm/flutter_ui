@@ -80,6 +80,26 @@ class S {
     );
   }
 
+  /// `Send`
+  String get send {
+    return Intl.message(
+      'Send',
+      name: 'send',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `s`
+  String get second {
+    return Intl.message(
+      's',
+      name: 'second',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Register`
   String get register {
     return Intl.message(
@@ -580,6 +600,56 @@ class S {
     );
   }
 
+  /// `Save`
+  String get save {
+    return Intl.message(
+      'Save',
+      name: 'save',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Read And Agree`
+  String get readAndAgree {
+    return Intl.message(
+      'Read And Agree',
+      name: 'readAndAgree',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `<Register Protocol>`
+  String get registerProtocol {
+    return Intl.message(
+      '<Register Protocol>',
+      name: 'registerProtocol',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `<Private Protocol>`
+  String get privateProtocol {
+    return Intl.message(
+      '<Private Protocol>',
+      name: 'privateProtocol',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unknown Platform`
+  String get unknownPlatform {
+    return Intl.message(
+      'Unknown Platform',
+      name: 'unknownPlatform',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Page is not found`
   String get notFoundPage {
     return Intl.message(
@@ -710,31 +780,21 @@ class S {
     );
   }
 
-  /// `Read And Agree`
-  String get readAndAgree {
+  /// `Successfully Modified`
+  String get successfullyModified {
     return Intl.message(
-      'Read And Agree',
-      name: 'readAndAgree',
+      'Successfully Modified',
+      name: 'successfullyModified',
       desc: '',
       args: [],
     );
   }
 
-  /// `<Register Protocol>`
-  String get registerProtocol {
+  /// `Already The Latest Version`
+  String get alreadyTheLatestVersion {
     return Intl.message(
-      '<Register Protocol>',
-      name: 'registerProtocol',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `<Private Protocol>`
-  String get privateProtocol {
-    return Intl.message(
-      '<Private Protocol>',
-      name: 'privateProtocol',
+      'Already The Latest Version',
+      name: 'alreadyTheLatestVersion',
       desc: '',
       args: [],
     );
@@ -745,6 +805,76 @@ class S {
     return Intl.message(
       'Mall',
       name: 'mall',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Contact`
+  String get contact {
+    return Intl.message(
+      'Contact',
+      name: 'contact',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recipient Name`
+  String get recipientName {
+    return Intl.message(
+      'Recipient Name',
+      name: 'recipientName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Shipping Address`
+  String get shippingAddress {
+    return Intl.message(
+      'Shipping Address',
+      name: 'shippingAddress',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recipient's Detailed Address`
+  String get recipientsDetailedAddress {
+    return Intl.message(
+      'Recipient\'s Detailed Address',
+      name: 'recipientsDetailedAddress',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recipient Contact Info`
+  String get recipientContactInfo {
+    return Intl.message(
+      'Recipient Contact Info',
+      name: 'recipientContactInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tracking Number`
+  String get trackingNumber {
+    return Intl.message(
+      'Tracking Number',
+      name: 'trackingNumber',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Order`
+  String get order {
+    return Intl.message(
+      'Order',
+      name: 'order',
       desc: '',
       args: [],
     );

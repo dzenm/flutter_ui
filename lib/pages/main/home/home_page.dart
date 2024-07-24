@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/base/a_router/misc/extensions.dart';
 import 'package:provider/provider.dart';
 
+import '../../../base/a_router/misc/extensions.dart';
 import '../../../base/base.dart';
 import '../../../config/configs.dart';
 import '../../../entities/article_entity.dart';
@@ -24,8 +24,7 @@ class HomePage extends StatefulWidget {
   State<StatefulWidget> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  static const String _tag = 'HomePage';
+class _HomePageState extends State<HomePage> with Logging {
   final StateController _controller = StateController();
   int _pageIndex = 0; // 加载的页数
   bool _init = false;
@@ -33,7 +32,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    log('initState');
+    logPage('initState');
 
     _getData();
   }
@@ -41,30 +40,31 @@ class _HomePageState extends State<HomePage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    log('didChangeDependencies');
+    logPage('didChangeDependencies');
   }
 
   @override
   void didUpdateWidget(covariant HomePage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    log('didUpdateWidget');
+    logPage('didUpdateWidget');
   }
 
   @override
   void deactivate() {
     super.deactivate();
-    log('deactivate');
+    logPage('deactivate');
   }
 
   @override
   void dispose() {
     super.dispose();
-    log('dispose');
+    logPage('dispose');
   }
 
   @override
   Widget build(BuildContext context) {
-    log('build');
+    logPage('build');
+
     AppTheme theme = context.watch<LocalModel>().theme;
     return Scaffold(
       appBar: CommonBar(
@@ -104,18 +104,18 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _getData() async {
-    log('开始加载网络数据...');
+    logInfo('开始加载网络数据...');
     await Future.wait([
       _getBanner(),
       _getArticle(),
       _getTopArticle(),
       _getDataList(),
     ]).then((value) {
-      log('网络数据执行完成...');
+      logInfo('网络数据执行完成...');
     }).whenComplete(() {
       _init = true;
     });
-    log('结束加载网络数据...');
+    logInfo('结束加载网络数据...');
   }
 
   Future<void> _getBanner() async {
@@ -192,19 +192,15 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
-
-  void log(String msg) => Log.p(msg, tag: _tag);
 }
 
 /// 轮播图 widget
-class Banner extends StatelessWidget {
-  static const String _tag = 'Banner';
-
+class Banner extends StatelessWidget with Logging {
   const Banner({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Log.p('build', tag: _tag);
+    logPage('build');
 
     return Selector<BannerModel, List<BannerEntity>>(
       builder: (context, banners, widget) {
@@ -230,9 +226,7 @@ class Banner extends StatelessWidget {
 }
 
 /// 文章列表 widget
-class ArticleListView extends StatelessWidget {
-  static const String _tag = 'ArticleListView';
-
+class ArticleListView extends StatelessWidget with Logging {
   final StateController controller;
   final RefreshFunction refresh;
 
@@ -246,7 +240,7 @@ class ArticleListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Selector<ArticleModel, int>(
       builder: (context, len, child) {
-        Log.p('build', tag: _tag);
+        logPage('build');
         return RefreshListView(
           controller: controller,
           itemCount: len,
@@ -263,15 +257,14 @@ class ArticleListView extends StatelessWidget {
 }
 
 /// 文章列表 item widget
-class ArticleItemView extends StatelessWidget {
-  static const String _tag = 'ArticleItemView';
+class ArticleItemView extends StatelessWidget with Logging {
   final int index;
 
   const ArticleItemView(this.index, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    Log.p('build', tag: _tag);
+    logPage('build');
 
     AppTheme theme = context.watch<LocalModel>().theme;
 

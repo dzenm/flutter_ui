@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../base/base.dart';
+import '../../../generated/l10n.dart';
 
 /// 订单页面
 class OrderPage extends StatefulWidget {
@@ -14,7 +15,7 @@ class _OrderPageState extends State<OrderPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CommonBar(title: '订单',),
+      appBar: CommonBar(title: S.of(context).order,),
       body: Container(
       ),
     );

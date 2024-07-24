@@ -1,5 +1,4 @@
-import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_ui/pages/main/me/me_page.dart';
+import 'package:flutter/widgets.dart';
 
 import '../../../base/a_router/route.dart';
 import '../../../base/config/build_config.dart';
@@ -9,6 +8,7 @@ import 'collect/collect_page.dart';
 import 'info/edit_info_page.dart';
 import 'info/info_page.dart';
 import 'info/view_info_page.dart';
+import 'me_page.dart';
 import 'medicine/medicine_page.dart';
 import 'rank/rank_page.dart';
 import 'setting/about/about_page.dart';
@@ -34,9 +34,7 @@ class MeRouter {
 
   static final GlobalKey<NavigatorState> _meKey = GlobalKey();
 
-  static List<RouteBase> get routers => [
-    ...(BuildConfig.isMobile ? mobileRouters : desktopRouters)
-  ];
+  static List<RouteBase> get routers => [...(BuildConfig.isMobile ? mobileRouters : desktopRouters)];
 
   static List<RouteBase> get mobileRouters => [
         ARoute(

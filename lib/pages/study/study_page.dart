@@ -1,19 +1,19 @@
 import 'dart:io';
 
+import 'package:crypto/crypto.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/base/a_router/misc/extensions.dart';
-import 'package:flutter_ui/pages/utils/pick_files_helper.dart';
 import 'package:provider/provider.dart';
 
+import '../../../base/a_router/misc/extensions.dart';
 import '../../base/base.dart';
 import '../../generated/l10n.dart';
 import '../main/main_model.dart';
+import '../utils/pick_files_helper.dart';
 import '../widgets/widgets.dart';
 import 'study_main.dart';
 import 'study_router.dart';
-import 'package:crypto/crypto.dart';
 
 ///
 /// Created by a0010 on 2022/11/3 16:03

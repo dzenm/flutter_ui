@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/a_router/arouter.dart';
 import 'package:provider/provider.dart';
 
 import '../../base/base.dart';
+import '../../generated/l10n.dart';
 import '../../models/provider_manager.dart';
 import 'home/home_page.dart';
 import 'main_model.dart';
@@ -21,8 +21,7 @@ class MainPage extends StatefulWidget {
   State<StatefulWidget> createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
-  static const String _tag = 'MainPage';
+class _MainPageState extends State<MainPage> with Logging, WidgetsBindingObserver {
 
   final List<Widget> _tabs = [
     const HomePage(),
@@ -34,7 +33,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    log('didChangeAppLifecycleState: $state');
+    logPage('didChangeAppLifecycleState: $state');
 
     // 处理APP生命周期
     switch (state) {
@@ -52,7 +51,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    log('initState');
+    logPage('initState');
 
     WidgetsBinding.instance.addObserver(this);
 
@@ -64,13 +63,14 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
 
   /// 初始化数据
   Future<void> _initData() async {
-    log('initData');
+    logPage('initData');
     await _initProvider();
   }
 
   /// 初始化Provider数据，使用context并且异步加载，必须放在页面执行
   Future<void> _initProvider() async {
-    log('initProvider');
+    logInfo('initProvider');
+
     // 再初始化数据
     await Future.wait([
       // 表相关的Model
@@ -86,7 +86,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
       ProviderManager.study(context: context).init(),
     ]).whenComplete(() {
       // 数据初始化完成进行标记
-      log('model数据获取完成');
+      logInfo('model数据获取完成');
       context.read<MainModel>().initialComplete();
     });
   }
@@ -101,19 +101,19 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    log('didChangeDependencies');
+    logPage('didChangeDependencies');
   }
 
   @override
   void didUpdateWidget(MainPage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    log('didUpdateWidget');
+    logPage('didUpdateWidget');
   }
 
   @override
   void deactivate() {
     super.deactivate();
-    log('deactivate');
+    logPage('deactivate');
   }
 
   @override
@@ -121,12 +121,12 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
 
     super.dispose();
-    log('dispose');
+    logPage('dispose');
   }
 
   @override
   Widget build(BuildContext context) {
-    log('build');
+    logPage('build');
 
     _useContextBeforeBuild(context);
 
@@ -142,10 +142,8 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
         child: MainPageDesktop(tabs: tabs, children: _tabs),
       );
     }
-    return const Center(
-      child: Text('未知平台'),
+    return Center(
+      child: Text(S.of(context).unknownPlatform),
     );
   }
-
-  void log(String msg) => Log.p(msg, tag: _tag);
 }

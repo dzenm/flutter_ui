@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/a_router/misc/extensions.dart';
-import 'package:flutter_ui/pages/main/me/me_content_page.dart';
 import 'package:provider/provider.dart';
 
+import '../../../base/a_router/misc/extensions.dart';
 import '../../../base/base.dart';
 import '../../../entities/coin_entity.dart';
 import '../../../entities/user_entity.dart';
@@ -13,6 +12,7 @@ import '../../../models/user_model.dart';
 import '../../common/view_media_page.dart';
 import '../../mall/mall_router.dart';
 import '../../study/study_router.dart';
+import 'me_content_page.dart';
 import 'me_model.dart';
 import 'me_router.dart';
 
@@ -55,13 +55,11 @@ class _MePage extends StatefulWidget {
   State<StatefulWidget> createState() => _MePageState();
 }
 
-class _MePageState extends State<_MePage> {
-  static const String _tag = 'MePage';
-
+class _MePageState extends State<_MePage> with Logging {
   @override
   void initState() {
     super.initState();
-    log('initState');
+    logPage('initState');
 
     _getUserinfo();
   }
@@ -69,30 +67,30 @@ class _MePageState extends State<_MePage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    log('didChangeDependencies');
+    logPage('didChangeDependencies');
   }
 
   @override
   void didUpdateWidget(covariant _MePage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    log('didUpdateWidget');
+    logPage('didUpdateWidget');
   }
 
   @override
   void deactivate() {
     super.deactivate();
-    log('deactivate');
+    logPage('deactivate');
   }
 
   @override
   void dispose() {
     super.dispose();
-    log('dispose');
+    logPage('dispose');
   }
 
   @override
   Widget build(BuildContext context) {
-    log('build');
+    logPage('build');
 
     AppTheme theme = context.watch<LocalModel>().theme;
     double? statusBarHeight = MediaQuery.of(context).padding.top;
@@ -213,7 +211,7 @@ class _MePageState extends State<_MePage> {
       TapLayout(
         height: 50.0,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => push(StudyRouter.study)?.then((value) => log(value ?? 'null')),
+        onTap: () => push(StudyRouter.study)?.then((value) => logDebug('页面返回值：value=${value ?? 'null'}')),
         child: SingleTextView(
           icon: Icons.real_estate_agent_sharp,
           title: S.of(context).studyMainPage(''),
@@ -242,7 +240,10 @@ class _MePageState extends State<_MePage> {
       ),
       TapLayout(
         height: 50.0,
-        borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(5), bottomRight: Radius.circular(5)),
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(5),
+          bottomRight: Radius.circular(5),
+        ),
         padding: const EdgeInsets.symmetric(horizontal: 16),
         onTap: () => push(MeRouter.setting),
         child: SingleTextView(
@@ -277,6 +278,4 @@ class _MePageState extends State<_MePage> {
       context.read<UserModel>().coin = coin;
     });
   }
-
-  void log(String msg) => Log.p(msg, tag: _tag);
 }

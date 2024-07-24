@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/a_router/misc/extensions.dart';
 import 'package:provider/provider.dart';
 
+import '../../../base/a_router/misc/extensions.dart';
 import '../../../base/base.dart';
 import '../../../entities/article_entity.dart';
 import '../../../http/http_manager.dart';
@@ -20,7 +20,6 @@ class TabQAPage extends StatefulWidget {
 }
 
 class _TabQAPageState extends TabListPageState<TabQAPage> {
-
   @override
   Widget build(BuildContext context) {
     return Selector<NavModel, int>(
@@ -31,7 +30,7 @@ class _TabQAPageState extends TabListPageState<TabQAPage> {
     );
   }
 
-  @override 
+  @override
   Widget buildItem(int index) {
     AppTheme theme = context.watch<LocalModel>().theme;
     return Selector<NavModel, ArticleEntity>(
@@ -83,7 +82,7 @@ class _TabQAPageState extends TabListPageState<TabQAPage> {
   }
 
   @override
-  Future<void> getData(int page) async   {
+  Future<void> getData(int page) async {
     await HttpManager().getQuestions(
       page: page,
       success: (pageCount) => updateState(pageCount),

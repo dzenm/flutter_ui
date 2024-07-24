@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/a_router/misc/extensions.dart';
 import 'package:provider/provider.dart';
 
+import '../../../base/a_router/misc/extensions.dart';
 import '../../../base/base.dart';
 import '../../../entities/entity.dart';
+import '../../../generated/l10n.dart';
 import 'order_model.dart';
 
 /// 订单页面
@@ -50,11 +51,11 @@ class _OrderPageState extends State<AddOrderPage> {
     AppTheme theme = context.watch<LocalModel>().theme;
     return Column(children: [
       EditLayout(
-        title: const Text(
-          '联系人\u3000',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        title: Text(
+          '${S.of(context).contact}\u3000',
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
-        hintText: '收件人姓名',
+        hintText: S.of(context).recipientName,
         color: const Color(0xFFE0E0E0),
         enabledBorderColor: Colors.transparent,
         controller: _usernameController,
@@ -62,11 +63,11 @@ class _OrderPageState extends State<AddOrderPage> {
       ),
       const SizedBox(height: 8),
       EditLayout(
-        title: const Text(
-          '收货地址',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        title: Text(
+          S.of(context).shippingAddress,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
-        hintText: '收件人详细地址',
+        hintText: S.of(context).recipientsDetailedAddress,
         color: const Color(0xFFE0E0E0),
         enabledBorderColor: Colors.transparent,
         maxLines: 3,
@@ -76,11 +77,11 @@ class _OrderPageState extends State<AddOrderPage> {
       ),
       const SizedBox(height: 8),
       EditLayout(
-        title: const Text(
-          '手机号码',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        title: Text(
+          S.of(context).phone,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
-        hintText: '收件人联系方式',
+        hintText: S.of(context).recipientContactInfo,
         color: const Color(0xFFE0E0E0),
         enabledBorderColor: Colors.transparent,
         keyboardType: TextInputType.number,
@@ -89,11 +90,11 @@ class _OrderPageState extends State<AddOrderPage> {
       ),
       const SizedBox(height: 8),
       EditLayout(
-        title: const Text(
-          '快递单号',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        title: Text(
+          S.of(context).trackingNumber,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
-        hintText: '快递单号',
+        hintText: S.of(context).trackingNumber,
         color: const Color(0xFFE0E0E0),
         enabledBorderColor: Colors.transparent,
         keyboardType: TextInputType.text,
@@ -109,7 +110,7 @@ class _OrderPageState extends State<AddOrderPage> {
         padding: const EdgeInsets.symmetric(vertical: 12),
         onTap: _createOrder,
         child: Text(
-          '保存',
+          S.of(context).save,
           style: TextStyle(color: theme.white),
         ),
       ),

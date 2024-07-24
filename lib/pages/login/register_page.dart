@@ -84,8 +84,7 @@ class _EditRegisterInfoView extends StatefulWidget {
   State<StatefulWidget> createState() => __EditRegisterInfoViewState();
 }
 
-class __EditRegisterInfoViewState extends State<_EditRegisterInfoView> {
-  static const String _tag = 'RegisterPage';
+class __EditRegisterInfoViewState extends State<_EditRegisterInfoView> with Logging {
 
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -103,7 +102,7 @@ class __EditRegisterInfoViewState extends State<_EditRegisterInfoView> {
   @override
   void initState() {
     super.initState();
-    log('initState');
+    logPage('initState');
 
     _initInputText();
   }
@@ -111,7 +110,7 @@ class __EditRegisterInfoViewState extends State<_EditRegisterInfoView> {
   @override
   void dispose() {
     super.dispose();
-    log('dispose');
+    logPage('dispose');
 
     _usernameController.dispose();
     _passwordController.dispose();
@@ -136,7 +135,8 @@ class __EditRegisterInfoViewState extends State<_EditRegisterInfoView> {
 
   @override
   Widget build(BuildContext context) {
-    log('build');
+    logPage('build');
+
     AppTheme theme = context.watch<LocalModel>().theme;
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
       const SizedBox(height: 80),
@@ -221,6 +221,4 @@ class __EditRegisterInfoViewState extends State<_EditRegisterInfoView> {
     FocusScope.of(context).unfocus();
     HttpManager().register(_username, _password, _rPassword);
   }
-
-  void log(String msg) => Log.p(msg, tag: _tag);
 }

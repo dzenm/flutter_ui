@@ -1,9 +1,9 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/a_router/misc/extensions.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../base/a_router/misc/extensions.dart';
 import '../../../../base/base.dart';
 import '../../../../generated/l10n.dart';
 import '../../../../http/http_manager.dart';
@@ -17,44 +17,42 @@ class SettingPage extends StatefulWidget {
   State<StatefulWidget> createState() => _SettingPageState();
 }
 
-class _SettingPageState extends State<SettingPage> {
-  static const String _tag = 'SettingPage';
-
+class _SettingPageState extends State<SettingPage> with Logging {
   bool switchState = true;
 
   @override
   void initState() {
     super.initState();
-    log('initState');
+    logPage('initState');
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    log('didChangeDependencies');
+    logPage('didChangeDependencies');
   }
 
   @override
   void didUpdateWidget(covariant SettingPage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    log('didUpdateWidget');
+    logPage('didUpdateWidget');
   }
 
   @override
   void deactivate() {
     super.deactivate();
-    log('deactivate');
+    logPage('deactivate');
   }
 
   @override
   void dispose() {
     super.dispose();
-    log('dispose');
+    logPage('dispose');
   }
 
   @override
   Widget build(BuildContext context) {
-    log('build');
+    logPage('build');
 
     AppTheme theme = context.watch<LocalModel>().theme;
     Locale locale = context.watch<LocalModel>().locale;
@@ -78,7 +76,10 @@ class _SettingPageState extends State<SettingPage> {
                 child: SingleTextView(
                   icon: Icons.notifications_on_sharp,
                   title: S.of(context).notification,
-                  suffix: CupertinoSwitch(value: switchState, onChanged: (value) => setState(() => switchState = value)),
+                  suffix: CupertinoSwitch(
+                    value: switchState,
+                    onChanged: (value) => setState(() => switchState = value),
+                  ),
                 ),
               ),
               TapLayout(
@@ -116,7 +117,11 @@ class _SettingPageState extends State<SettingPage> {
                 height: 50.0,
                 background: theme.white,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: SingleTextView(title: S.of(context).loginRecord, badgeCount: 0, isShowForward: true),
+                child: SingleTextView(
+                  title: S.of(context).loginRecord,
+                  badgeCount: 0,
+                  isShowForward: true,
+                ),
               ),
               TapLayout(
                 height: 50.0,
@@ -125,7 +130,7 @@ class _SettingPageState extends State<SettingPage> {
                 onTap: () {
                   CancelFunc cancel = CommonDialog.loading();
                   Future.delayed(const Duration(seconds: 1), () {
-                    CommonDialog.showToast('已是最新版本');
+                    CommonDialog.showToast(S.of(context).alreadyTheLatestVersion);
                     cancel();
                   });
                 },
@@ -179,7 +184,7 @@ class _SettingPageState extends State<SettingPage> {
                 return InkWell(
                   onTap: () {
                     model.setThemeMode(mode);
-                    CommonDialog.showToast('修改成功');
+                    CommonDialog.showToast(S.of(context).successfullyModified);
                     Navigator.pop(context);
                   },
                   child: Container(
@@ -214,7 +219,7 @@ class _SettingPageState extends State<SettingPage> {
               child: Text(_convertLocale(locale)),
               onPressed: () {
                 context.read<LocalModel>().setLocale(locale);
-                CommonDialog.showToast('修改成功');
+                CommonDialog.showToast(S.of(context).successfullyModified);
                 Navigator.pop(context);
               },
             );
@@ -233,6 +238,4 @@ class _SettingPageState extends State<SettingPage> {
     }
     return S.of(context).followSystem;
   }
-
-  void log(String msg) => Log.p(msg, tag: _tag);
 }

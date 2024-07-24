@@ -103,8 +103,7 @@ class _EditLoginInfoView extends StatefulWidget {
   State<StatefulWidget> createState() => _EditLoginInfoViewState();
 }
 
-class _EditLoginInfoViewState extends State<_EditLoginInfoView> {
-  static const String _tag = 'LoginPage';
+class _EditLoginInfoViewState extends State<_EditLoginInfoView> with Logging {
 
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -121,33 +120,15 @@ class _EditLoginInfoViewState extends State<_EditLoginInfoView> {
   @override
   void initState() {
     super.initState();
-    log('initState');
+    logPage('initState');
 
     _initInputText();
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    log('didChangeDependencies');
-  }
-
-  @override
-  void didUpdateWidget(_EditLoginInfoView oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    log('didUpdateWidget');
-  }
-
-  @override
-  void deactivate() {
-    super.deactivate();
-    log('deactivate');
-  }
-
-  @override
   void dispose() {
     super.dispose();
-    log('dispose');
+    logPage('dispose');
 
     _usernameController.dispose();
     _passwordController.dispose();
@@ -173,7 +154,7 @@ class _EditLoginInfoViewState extends State<_EditLoginInfoView> {
 
   @override
   Widget build(BuildContext context) {
-    log('build');
+    logPage('build');
 
     AppTheme theme = context.watch<LocalModel>().theme;
     String usernameText = S.of(context).username;
@@ -302,8 +283,6 @@ class _EditLoginInfoViewState extends State<_EditLoginInfoView> {
     FocusScope.of(context).unfocus();
     context.pushNamed(Routers.register);
   }
-
-  void log(String msg) => Log.p(msg, tag: _tag);
 }
 
 /// 协议信息部分
@@ -314,7 +293,7 @@ class ProtocolInfoView extends StatefulWidget {
   State<StatefulWidget> createState() => _ProtocolInfoViewState();
 }
 
-class _ProtocolInfoViewState extends State<ProtocolInfoView> {
+class _ProtocolInfoViewState extends State<ProtocolInfoView> with Logging {
   static bool _isAgree = false;
   final TapGestureRecognizer _registerRecognizer = TapGestureRecognizer();
   final TapGestureRecognizer _privateRecognizer = TapGestureRecognizer();
@@ -328,7 +307,7 @@ class _ProtocolInfoViewState extends State<ProtocolInfoView> {
 
   @override
   Widget build(BuildContext context) {
-    log('build: ProtocolInfoView(isAgree=$_isAgree)');
+    logPage('build: isAgree=$_isAgree');
 
     AppTheme theme = context.watch<LocalModel>().theme;
     IconData icon = _isAgree ? Icons.check_box_sharp : Icons.check_box_outline_blank_sharp;
@@ -353,7 +332,6 @@ class _ProtocolInfoViewState extends State<ProtocolInfoView> {
                 style: TextStyle(color: theme.signText, fontSize: 12),
                 recognizer: _registerRecognizer
                   ..onTap = () {
-                    CommonDialog.showToast('隐私协议');
                   },
               ),
               TextSpan(
@@ -361,7 +339,6 @@ class _ProtocolInfoViewState extends State<ProtocolInfoView> {
                 style: TextStyle(color: theme.signText, fontSize: 12),
                 recognizer: _privateRecognizer
                   ..onTap = () {
-                    CommonDialog.showToast('隐私协议');
                   },
               ),
             ]),
@@ -371,8 +348,6 @@ class _ProtocolInfoViewState extends State<ProtocolInfoView> {
       ]),
     ]);
   }
-
-  void log(String msg) => Log.p(msg, tag: 'LoginPage');
 }
 
 /// 验证码
@@ -385,7 +360,7 @@ class VerifyCodeView extends StatefulWidget {
   State<StatefulWidget> createState() => _VerifyCodeViewState();
 }
 
-class _VerifyCodeViewState extends State<VerifyCodeView> {
+class _VerifyCodeViewState extends State<VerifyCodeView> with Logging {
   static const countDownSeconds = 59;
   Timer? _timer; // 计时器
   int _second = -1; // 计时的时间
@@ -412,10 +387,12 @@ class _VerifyCodeViewState extends State<VerifyCodeView> {
 
   @override
   Widget build(BuildContext context) {
-    log('build: VerifyCodeView(second=$_second)');
+    logPage('build: second=$_second');
 
     bool isReset = _second < 0;
-    String text = isReset ? '获取验证码' : '$_second 秒';
+    String sendVerifyText = '${S.of(context).send}${S.of(context).verifyCode}';
+    String currentSecond = '$_second ${S.of(context).second}';
+    String text = isReset ? sendVerifyText : currentSecond;
 
     void Function()? onTap;
     if (isReset) {
@@ -435,6 +412,4 @@ class _VerifyCodeViewState extends State<VerifyCodeView> {
       ),
     ]);
   }
-
-  void log(String msg) => Log.p(msg, tag: 'LoginPage');
 }

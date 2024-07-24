@@ -16,7 +16,7 @@ abstract class TabListPageState<T extends StatefulWidget> extends State<T> {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return const SizedBox.shrink();
   }
 
   Widget buildContent(int len) {

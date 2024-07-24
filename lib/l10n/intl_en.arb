@@ -3,6 +3,8 @@
 
   "login": "Login",
   "verifyCode": "Verify Code",
+  "send": "Send",
+  "second": "s",
   "register": "Register",
   "logout": "Logout",
   "avatar": "Avatar",
@@ -53,7 +55,12 @@
   "project": "Project",
   "official": "Official",
   "tool": "Tool",
+  "save": "Save",
 
+  "readAndAgree": "Read And Agree",
+  "registerProtocol": "<Register Protocol>",
+  "privateProtocol": "<Private Protocol>",
+  "unknownPlatform": "Unknown Platform",
   "notFoundPage": "Page is not found",
   "checkUpgrade": "Check Upgrade",
   "selectTheme": "Select Theme",
@@ -68,9 +75,15 @@
   "loginRecord": "Login Record",
   "coinRecord": "Coin Record",
   "studyMainPage": "Study MainPage{name}",
-  "readAndAgree": "Read And Agree",
-  "registerProtocol": "<Register Protocol>",
-  "privateProtocol": "<Private Protocol>",
+  "successfullyModified": "Successfully Modified",
+  "alreadyTheLatestVersion": "Already The Latest Version",
 
-  "mall": "Mall"
+  "mall": "Mall",
+  "contact": "Contact",
+  "recipientName": "Recipient Name",
+  "shippingAddress": "Shipping Address",
+  "recipientsDetailedAddress": "Recipient's Detailed Address",
+  "recipientContactInfo": "Recipient Contact Info",
+  "trackingNumber": "Tracking Number",
+  "order": "Order"
 }

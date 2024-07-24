@@ -26,6 +26,8 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("About"),
         "aboutMe": MessageLookupByLibrary.simpleMessage("About Our"),
+        "alreadyTheLatestVersion":
+            MessageLookupByLibrary.simpleMessage("Already The Latest Version"),
         "appName": MessageLookupByLibrary.simpleMessage("Flutter UI"),
         "avatar": MessageLookupByLibrary.simpleMessage("Avatar"),
         "camera": MessageLookupByLibrary.simpleMessage("Camera"),
@@ -38,6 +40,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "coinRecord": MessageLookupByLibrary.simpleMessage("Coin Record"),
         "collect": MessageLookupByLibrary.simpleMessage("Collect"),
         "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
+        "contact": MessageLookupByLibrary.simpleMessage("Contact"),
         "editProfile": MessageLookupByLibrary.simpleMessage("Edit Profile"),
         "email": MessageLookupByLibrary.simpleMessage("Email"),
         "english": MessageLookupByLibrary.simpleMessage("English"),
@@ -70,6 +73,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Page is not found"),
         "notification": MessageLookupByLibrary.simpleMessage("Notification"),
         "official": MessageLookupByLibrary.simpleMessage("Official"),
+        "order": MessageLookupByLibrary.simpleMessage("Order"),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
         "phone": MessageLookupByLibrary.simpleMessage("Phone"),
         "plaza": MessageLookupByLibrary.simpleMessage("Plaza"),
@@ -81,23 +85,39 @@ class MessageLookup extends MessageLookupByLibrary {
         "qr": MessageLookupByLibrary.simpleMessage("QR"),
         "rPassword": MessageLookupByLibrary.simpleMessage("Repeat Password"),
         "readAndAgree": MessageLookupByLibrary.simpleMessage("Read And Agree"),
+        "recipientContactInfo":
+            MessageLookupByLibrary.simpleMessage("Recipient Contact Info"),
+        "recipientName": MessageLookupByLibrary.simpleMessage("Recipient Name"),
+        "recipientsDetailedAddress": MessageLookupByLibrary.simpleMessage(
+            "Recipient\'s Detailed Address"),
         "register": MessageLookupByLibrary.simpleMessage("Register"),
         "registerProtocol":
             MessageLookupByLibrary.simpleMessage("<Register Protocol>"),
         "releaseFinger": MessageLookupByLibrary.simpleMessage("Release Finger"),
         "router": MessageLookupByLibrary.simpleMessage("Router"),
+        "save": MessageLookupByLibrary.simpleMessage("Save"),
+        "second": MessageLookupByLibrary.simpleMessage("s"),
         "selectLanguage":
             MessageLookupByLibrary.simpleMessage("Select Language"),
         "selectTheme": MessageLookupByLibrary.simpleMessage("Select Theme"),
+        "send": MessageLookupByLibrary.simpleMessage("Send"),
         "setting": MessageLookupByLibrary.simpleMessage("Setting"),
         "sharedArticle": MessageLookupByLibrary.simpleMessage("Shared Article"),
+        "shippingAddress":
+            MessageLookupByLibrary.simpleMessage("Shipping Address"),
         "state": MessageLookupByLibrary.simpleMessage("State"),
         "studyMainPage": m0,
+        "successfullyModified":
+            MessageLookupByLibrary.simpleMessage("Successfully Modified"),
         "test": MessageLookupByLibrary.simpleMessage("Test"),
         "theme": MessageLookupByLibrary.simpleMessage("Theme"),
         "tool": MessageLookupByLibrary.simpleMessage("Tool"),
+        "trackingNumber":
+            MessageLookupByLibrary.simpleMessage("Tracking Number"),
         "tutorial": MessageLookupByLibrary.simpleMessage("Tutorial"),
         "unknown": MessageLookupByLibrary.simpleMessage("Unknown"),
+        "unknownPlatform":
+            MessageLookupByLibrary.simpleMessage("Unknown Platform"),
         "username": MessageLookupByLibrary.simpleMessage("Username"),
         "verifyCode": MessageLookupByLibrary.simpleMessage("Verify Code")
       };
