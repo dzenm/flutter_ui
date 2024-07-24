@@ -3,18 +3,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 ///
 /// Created by a0010 on 2022/3/22 09:38
 /// SharedPreferences工具类
-class SPManager {
-  static final SPManager _instance = SPManager._internal();
-  static SPManager get instance => _instance;
-  factory SPManager() => _instance;
+class SPManager with _SharedPreferencesMixin {
   SPManager._internal();
+  static final SPManager _instance = SPManager._internal();
+  factory SPManager() => _instance;
 
-  SharedPreferences? _prefs;
-
-  /// 日志打印，如果不设置，将不打印日志，如果要设置在使用数据库之前调用 [init]
-  Function? _logPrint;
-
-  Future<bool> init({Function? logPrint}) async {
+  /// [prefix] 设置文件的前缀命名，默认为`flutter`
+  /// [logPrint] 如果不设置，将不打印日志
+  Future<bool> init({String? prefix, Function? logPrint}) async {
+    if (prefix != null) {
+      SharedPreferences.setPrefix(prefix);
+    }
     _prefs = await SharedPreferences.getInstance();
     _logPrint = logPrint;
     return _prefs != null;
@@ -24,136 +23,173 @@ class SPManager {
 
   /// 登录状态信息
   static bool getUserLoginState() {
-    return getBool(SPValue.userLoginState.value);
+    return _instance.getBool(SPValue.userLoginState.value);
   }
 
   /// 保存登录状态信息
   static void setUserLoginState(bool? isLogin) {
-    setBool(SPValue.userLoginState.value, isLogin);
+    _instance.setBool(SPValue.userLoginState.value, isLogin);
   }
 
   /// 获取用户信息
   static String getUser() {
-    return getString(SPValue.user.value);
+    return _instance.getString(SPValue.user.value);
   }
 
   /// 保存用户信息
   static void setUser(String? user) {
-    setString(SPValue.user.value, user);
+    _instance.setString(SPValue.user.value, user);
   }
 
   /// 获取登录用户ID
   static String getUserId() {
-    return getString(SPValue.userId.value);
+    return _instance.getString(SPValue.userId.value);
   }
 
   /// 保存登录用户ID
   static void setUserId(String? userId) {
-    setString(SPValue.userId.value, userId);
+    _instance.setString(SPValue.userId.value, userId);
   }
 
   /// 获取用户名
   static String getUsername() {
-    return getString(SPValue.userName.value);
+    return _instance.getString(SPValue.userName.value);
   }
 
   /// 保存用户名
   static void setUsername(String? username) {
-    setString(SPValue.userName.value, username);
+    _instance.setString(SPValue.userName.value, username);
   }
 
   /// 获取用户信息
   static String getUserInfo() {
-    return getString(SPValue.userInfo.value);
+    return _instance.getString(SPValue.userInfo.value);
   }
 
   /// 保存用户信息
   static void setUserInfo(String? user) {
-    setString(SPValue.userInfo.value, user);
+    _instance.setString(SPValue.userInfo.value, user);
   }
 
   /// 获取登录用户token
   static String getToken() {
-    return getString(SPValue.userToken.value);
+    return _instance.getString(SPValue.userToken.value);
   }
 
   /// 保存登录用户token
   static void setToken(String? token) {
-    setString(SPValue.userToken.value, token);
+    _instance.setString(SPValue.userToken.value, token);
   }
 
   /// 获取登录用户cookie
   static String getCookie() {
-    return getString(SPValue.userCookie.value);
+    return _instance.getString(SPValue.userCookie.value);
   }
 
   /// 保存登录用户cookie
   static void setCookie(String? cookie) {
-    setString(SPValue.userCookie.value, cookie);
+    _instance.setString(SPValue.userCookie.value, cookie);
   }
 
   /// 重置登录用户信息
   static void clearUser() {
-    remove(SPValue.userInfo.value);
-    remove(SPValue.userLoginState.value);
-    remove(SPValue.user.value);
-    remove(SPValue.userId.value);
-    remove(SPValue.userToken.value);
-    remove(SPValue.userCookie.value);
+    _instance.remove(SPValue.userInfo.value);
+    _instance.remove(SPValue.userLoginState.value);
+    _instance.remove(SPValue.user.value);
+    _instance.remove(SPValue.userId.value);
+    _instance.remove(SPValue.userToken.value);
+    _instance.remove(SPValue.userCookie.value);
   }
 
   /// 获取APP设置
   static String getSettings() {
-    String settings = getString(SPValue.settings.value);
+    String settings = _instance.getString(SPValue.settings.value);
     return settings;
   }
 
   /// 保存APP设置
   static void setSettings(String? settings) {
-    setString(SPValue.settings.value, settings);
+    _instance.setString(SPValue.settings.value, settings);
   }
 
   ///============================== SP基本数据类型的操作 ================================
+}
 
-  static String getString(String key) {
-    String value = _instance._prefs?.getString(key) ?? '';
-    _instance.log('获取string值：key=$key, value=$value');
+/// SharedPreference 的基本API
+abstract mixin class _SharedPreferencesMixin {
+  SharedPreferences? _prefs;
+  Function? _logPrint;
+
+  String getString(String key) {
+    String value = _prefs?.getString(key) ?? '';
+    log('获取`String`值：key=$key, value=$value');
     return value;
   }
 
-  static void setString(String key, String? value) {
-    _instance._prefs?.setString(key, value ?? '').then((res) {
-      _instance.log('设置string值：key=$key, value=$value');
+  void setString(String key, String? value) {
+    _prefs?.setString(key, value ?? '').then((result) {
+      log('设置`String`值：key=$key, value=$value, result=$result');
     });
   }
 
-  static int getInt(String key) {
-    int value = _instance._prefs?.getInt(key) ?? 0;
-    _instance.log('获取int值：key=$key, value=$value');
+  int getInt(String key) {
+    int value = _prefs?.getInt(key) ?? 0;
+    log('获取`Int`值   ：key=$key, value=$value');
     return value;
   }
 
-  static void setInt(String key, int? value) {
-    _instance._prefs?.setInt(key, value ?? 0).then((res) {
-      _instance.log('设置int值：key=$key, value=$value');
+  void setInt(String key, int? value) {
+    _prefs?.setInt(key, value ?? 0).then((result) {
+      log('设置`Int`值   ：key=$key, value=$value, result=$result');
     });
   }
 
-  static bool getBool(String key) {
-    bool value = _instance._prefs?.getBool(key) ?? false;
-    _instance.log('获取bool值  ：key=$key, value=$value');
+  double getDouble(String key) {
+    double value = _prefs?.getDouble(key) ?? 0.0;
+    log('获取`Double`值：key=$key, value=$value');
     return value;
   }
 
-  static void setBool(String key, bool? value) {
-    _instance._prefs?.setBool(key, value ?? false).then((res) {
-      _instance.log('设置bool值  ：key=$key, value=$value');
+  void setDouble(String key, double? value) {
+    _prefs?.setDouble(key, value ?? 0.0).then((result) {
+      log('设置`Double`值：key=$key, value=$value, result=$result');
     });
   }
 
-  static void remove(String key) {
-    _instance.log('remove $key=$key');
-    _instance._prefs?.remove(key);
+  bool getBool(String key) {
+    bool value = _prefs?.getBool(key) ?? false;
+    log('获取`Bool`值  ：key=$key, value=$value');
+    return value;
+  }
+
+  void setBool(String key, bool? value) {
+    _prefs?.setBool(key, value ?? false).then((result) {
+      log('设置`Bool`值  ：key=$key, value=$value, result=$result');
+    });
+  }
+
+  List<String> getStringList(String key) {
+    List<String> value = _prefs?.getStringList(key) ?? [];
+    log('获取`List`值  ：key=$key, value=$value');
+    return value;
+  }
+
+  void setStringList(String key, List<String>? value) {
+    _prefs?.setStringList(key, value ?? []).then((result) {
+      log('设置`List`值  ：key=$key, value=$value, result=$result');
+    });
+  }
+
+  void remove(String key) {
+    _prefs?.remove(key).then((result) {
+      log('移除值 $key=$key, result=$result');
+    });
+  }
+
+  void reload() {
+    _prefs?.reload().then((result) {
+      log('重新加载');
+    });
   }
 
   void log(String text) => _logPrint == null ? null : _logPrint!(text, tag: 'SPManager');
@@ -169,7 +205,7 @@ enum SPValue {
   userToken('u_token'), // 登录的token信息
   userCookie('u_cookie'), // 登录的cookie信息
   /// APP设置相关的信息
-  settings('settings'); // APP相关的设置
+  settings('u_settings'); // APP相关的设置
 
   final String value;
 
