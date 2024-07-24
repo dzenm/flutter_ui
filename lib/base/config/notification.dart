@@ -6,7 +6,7 @@ abstract class Observer {
   Future<void> onReceive(Message message);
 }
 
-///  Notification object with name, sender and extra info
+///  Message object with name, sender and extra info
 class Message {
   Message(this.name, {this.sender, this.extras});
 
@@ -51,7 +51,7 @@ class NotificationCenter {
   ///  Post a notification with extra info
   ///
   /// @param name   - notification name
-  /// @param sender - who post this notification
+  /// @param sender - who post this message
   /// @param info   - extra info
   Future<void> postNotification(String name, dynamic sender, [Map? info]) async {
     await center.postNotification(name, sender, info);
@@ -59,9 +59,9 @@ class NotificationCenter {
 
   ///  Post a notification
   ///
-  /// @param notification - notification object
-  Future<void> post(Message notification) async {
-    await center.post(notification);
+  /// @param message - message object
+  Future<void> post(Message message) async {
+    await center.post(message);
   }
 
 }
