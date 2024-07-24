@@ -59,9 +59,7 @@ class MeRouter {
             name: medicine,
             path: 'medicine',
             builder: (context, state) {
-              dynamic params = state.uri.queryParameters;
-              String medicineName = params['medicineName'] ?? '';
-              return MedicinePage(medicineName: medicineName);
+              return const MedicinePage(medicineName: '金银花');
             }),
         ARoute(
             name: rank,
@@ -139,9 +137,7 @@ class MeRouter {
                 name: medicine,
                 path: 'medicine',
                 builder: (context, state) {
-                  dynamic params = state.uri.queryParameters;
-                  String medicineName = params['medicineName'] ?? '';
-                  return MedicinePage(medicineName: medicineName);
+                  return const MedicinePage(medicineName: '金银花');
                 },
               ),
             ]),

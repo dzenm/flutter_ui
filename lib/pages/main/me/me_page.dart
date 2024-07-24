@@ -159,8 +159,7 @@ class _MePageState extends State<_MePage> with Logging {
         height: 50.0,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         onTap: () {
-          String params = '?medicineName=金银花';
-          push(MeRouter.medicine + params);
+          push(MeRouter.medicine);
         },
         child: SingleTextView(
           title: S.of(context).chineseMedicine,
