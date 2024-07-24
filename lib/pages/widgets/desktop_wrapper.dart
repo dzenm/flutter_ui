@@ -7,6 +7,7 @@ import 'package:window_manager/window_manager.dart';
 import 'desktop/window_button.dart';
 import 'desktop/window_caption.dart';
 
+
 /// 左上角的WindowsButton高度
 const kWindowsButtonHeight = 24.0;
 const kWindowsMoveBarHeight = 32.0;

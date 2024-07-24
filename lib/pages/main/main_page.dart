@@ -1,7 +1,7 @@
+import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../base/base.dart';
 import '../../generated/l10n.dart';
 import '../../models/provider_manager.dart';
 import 'home/home_page.dart';
@@ -22,7 +22,6 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> with Logging, WidgetsBindingObserver {
-
   final List<Widget> _tabs = [
     const HomePage(),
     const NavPage(),

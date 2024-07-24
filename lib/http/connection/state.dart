@@ -1,6 +1,6 @@
-import 'package:flutter_ui/base/base.dart';
+import 'package:fbl/fbl.dart';
+import 'package:fsm/fsm.dart';
 
-import '../../base/fsm/machine.dart';
 import 'connection.dart';
 import 'transition.dart';
 

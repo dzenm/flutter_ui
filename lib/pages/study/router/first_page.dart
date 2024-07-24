@@ -1,8 +1,7 @@
+import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
-
 import 'package:provider/provider.dart';
 
-import '../../../base/base.dart';
 import 'router_page.dart';
 
 ///
@@ -12,7 +11,8 @@ class FirstPage extends StatelessWidget {
   final int type;
   final int index;
 
-  const FirstPage({super.key,
+  const FirstPage({
+    super.key,
     required this.type,
     required this.index,
   });

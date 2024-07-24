@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../base/db/db.dart';
+import 'package:fbl/fbl.dart';
 
 part 'order_entity.g.dart';
 

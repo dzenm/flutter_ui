@@ -1,28 +1,26 @@
+import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/a_router/misc/extensions.dart';
 import 'package:provider/provider.dart';
 
 import '../application.dart';
-import '../base/base.dart';
 import '../entities/entity.dart';
 import '../models/provider_manager.dart';
 import '../models/user_model.dart';
 import '../pages/main/nav/nav_model.dart';
 import '../pages/routers.dart';
+import 'api_services.dart';
 
 ///
 /// Created by a0010 on 2022/10/25 13:11
 ///
 class HttpManager {
-  factory HttpManager() => instance;
+  factory HttpManager() => _instance;
+  static final HttpManager _instance = HttpManager._internal();
 
-  HttpManager._internal() {
-    _httpClient = HttpsClient.instance;
-  }
+  HttpManager._internal();
 
-  static final HttpManager instance = HttpManager._internal();
-
-  late HttpsClient _httpClient;
+  final HttpsClient _httpClient = HttpsClient();
+  final ApiServices apiServices = ApiServices.apiServices;
 
   /// 登录并进入到主页
   Future<void> login(String username, String password) async {

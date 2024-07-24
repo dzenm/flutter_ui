@@ -1,14 +1,12 @@
+import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../../base/base.dart';
 
 ///
 /// Created by a0010 on 2023/2/3 16:43
 ///
 /// 路由测试页面
 class RouterPage extends StatelessWidget {
-
   static final List<List<String>> list = [
     [
       '进入下一个页面(pop)',

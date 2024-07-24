@@ -1,6 +1,7 @@
 library widgets;
 
 export 'center_text.dart';
+export 'desktop_wrapper.dart';
 export 'divider_view.dart';
 export 'dots_indicator.dart';
 export 'ensure_send_file_widget.dart';
@@ -17,6 +18,7 @@ export 'tab_layout.dart';
 export 'top_bar.dart';
 export 'unread_tag.dart';
 export 'user_logo_view.dart';
+export 'video_layout.dart';
 export 'view_media_widget.dart';
 export 'vip_tag.dart';
 export 'voice_view.dart';

@@ -1,7 +1,6 @@
+import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/a_router/misc/extensions.dart';
 
-import '../../base/base.dart';
 import '../../generated/l10n.dart';
 import 'mall_router.dart';
 

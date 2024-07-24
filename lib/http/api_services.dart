@@ -1,13 +1,27 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/http.dart';
 
-import '../base/http/http.dart';
+import 'package:fbl/fbl.dart';
 
 part 'api_services.g.dart';
 
 @RestApi()
 abstract class ApiServices {
   factory ApiServices(Dio dio, {String? baseUrl}) = _ApiServices;
+
+  static final Map<String, ApiServices> _apiServices = {};
+  static final List<String> _baseUrls = [];
+
+  static void addServices(Dio dio, String baseUrl) {
+    _baseUrls.add(baseUrl);
+    _apiServices[baseUrl] ??= ApiServices(dio, baseUrl: baseUrl);
+  }
+
+  /// 默认[HttpsClient._baseUrls]对应的[ApiServices]，用于获取请求
+  static ApiServices apiServices = api();
+
+  /// 根据[HttpsClient._baseUrls]下标对应的[ApiServices]，用于获取请求
+  static ApiServices api({int index = 0}) => _apiServices[_baseUrls[index]]!;
 
   ///=============================== 一、首页相关 ==============================================
   /// 1.1 获取首页文章列表 [ https://www.wanandroid.com/article/list/0/json ]

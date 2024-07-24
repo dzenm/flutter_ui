@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../base/a_router/misc/extensions.dart';
-import '../../../base/base.dart';
+import 'package:fbl/fbl.dart';
 import '../../../entities/coin_entity.dart';
 import '../../../entities/user_entity.dart';
 import '../../../generated/l10n.dart';

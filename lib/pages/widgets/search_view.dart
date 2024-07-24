@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../base/base.dart';
+import 'package:fbl/fbl.dart';
 
 /// 搜索布局
 class SearchView extends StatelessWidget {

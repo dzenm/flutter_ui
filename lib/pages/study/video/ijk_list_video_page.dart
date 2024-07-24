@@ -1,6 +1,6 @@
+import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/base/base.dart';
 
 import 'ijk_video_page.dart';
 

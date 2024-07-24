@@ -1,6 +1,5 @@
+import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
-
-import '../../../base/base.dart';
 
 /// 加载图片
 class LoadImagePage extends StatefulWidget {

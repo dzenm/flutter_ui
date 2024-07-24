@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../base/base.dart';
+import 'package:fbl/fbl.dart';
 import '../../../generated/l10n.dart';
 
 /// 订单页面

@@ -1,9 +1,9 @@
 import 'dart:math';
 
+import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../../base/widgets/widget.dart';
 import 'chat_item_widget.dart';
 import 'chat_model.dart';
 import 'chat_unread_tip_view.dart';

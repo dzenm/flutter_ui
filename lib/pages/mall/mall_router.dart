@@ -1,4 +1,5 @@
-import '../../base/a_router/route.dart';
+import 'package:fbl/fbl.dart';
+
 import 'mall_page.dart';
 import 'order/add_order_page.dart';
 import 'order/order_page.dart';

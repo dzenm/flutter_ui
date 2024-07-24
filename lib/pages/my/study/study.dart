@@ -1,4 +1,4 @@
-import '../../../base/base.dart';
+import 'package:fbl/fbl.dart';
 import 'convert_study.dart';
 import 'euclidean_study.dart';
 import 'future_study.dart';

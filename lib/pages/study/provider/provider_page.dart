@@ -1,11 +1,9 @@
+import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import '../../../base/base.dart';
 import '../study_model.dart';
-import 'lifecycle_page.dart';
-import 'model_page.dart';
 
 ///
 /// Created by a0010 on 2023/3/2 15:11

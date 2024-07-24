@@ -1,7 +1,7 @@
+import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../base/base.dart';
 import 'consumer_model.dart';
 
 ///
@@ -13,7 +13,6 @@ class LifecyclePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     log('build');
     return ChangeNotifierProvider(
       create: (BuildContext context) => ConsumerModel(),
@@ -76,7 +75,6 @@ class ChildPage extends StatelessWidget {
                     ]),
                   );
                 }),
-
               ]),
             ),
           ]),

@@ -1,4 +1,5 @@
-import '../../base/a_router/arouter.dart';
+import 'package:fbl/fbl.dart';
+
 import 'components/chat/chat_page.dart';
 import 'components/city/city_page.dart';
 import 'components/components_page.dart';

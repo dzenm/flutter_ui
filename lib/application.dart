@@ -2,17 +2,19 @@ import 'dart:collection';
 import 'dart:convert';
 
 import 'package:desktop_multi_window/desktop_multi_window.dart';
+import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/http/api_services.dart';
 import 'package:video_player_media_kit/video_player_media_kit.dart';
 import 'package:windows_single_instance/windows_single_instance.dart';
 
 import 'app_page.dart';
-import 'base/base.dart';
 import 'config/configs.dart';
 import 'entities/entity.dart';
 import 'http/cookie_interceptor.dart';
 import 'pages/study/window/sub_window_page.dart';
+import 'pages/widgets/desktop_wrapper.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56
@@ -113,6 +115,7 @@ abstract mixin class _InitApp {
       toast: CommonDialog.showToast,
       interceptors: [HttpInterceptor(), CookieInterceptor()],
       baseUrls: [Configs.baseUrl, Configs.apiUrl, Configs.localhostUrl],
+      creator: (dio, baseUrl) => ApiServices.addServices(dio, baseUrl),
     );
 
     log('  初始化 DBManager');
@@ -132,7 +135,7 @@ abstract mixin class _InitApp {
     PluginManager.init(logPrint: Log.d);
 
     log('  初始化 HotkeyUtil');
-    await HotkeyUtil().init(logPrint: Log.d);
+    // await HotkeyUtil().init(logPrint: Log.d);
 
     log('  初始化 VideoPlayerMediaKit');
     VideoPlayerMediaKit.ensureInitialized(

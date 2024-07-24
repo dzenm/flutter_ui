@@ -1,6 +1,5 @@
+import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
-
-import '../../../base/base.dart';
 
 abstract class TabListPageState<T extends StatefulWidget> extends State<T> {
   final StateController _controller = StateController();

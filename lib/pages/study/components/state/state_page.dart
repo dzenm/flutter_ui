@@ -1,7 +1,5 @@
+import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../base/base.dart';
-
 
 /// 加载状态页面
 class StatePage extends StatefulWidget {

@@ -40,40 +40,14 @@ dependencies:
   cupertino_icons: 1.0.8                        # 图片 https://pub.flutter-io.cn/packages/cupertino_icons
 
   ########################################## BASE ########################################
-  #  config文件夹
-  package_info_plus: 8.0.0                      # 获取包名信息(全平台) https://pub.dev/packages/package_info_plus
-  device_info_plus: 10.1.0                      # 获取设备信息(全平台) https://pub.flutter-io.cn/packages/device_info_plus
-  #  db文件夹
-  sqflite_common_ffi: 2.3.3                     # SQLite3数据库存储(全平台) https://pub.dev/packages/sqflite_common_ffi
-  #  http文件夹
-  dio: 5.5.0+1                                  # HTTP请求 https://pub.flutter-io.cn/packages/dio
-  http_parser: 4.0.2                            # HTTP请求 https://pub.flutter-io.cn/packages/http_parser
-  #  naughty文件夹
-  #  dio: 5.4.2+1                                  # HTTP请求 https://pub.flutter-io.cn/packages/dio
-  intl: 0.19.0                                  # 国际化工具 https://pub.dev/packages/intl
-  #  resource文件夹
-  json_annotation: 4.9.0                        # Json序列化 https://pub.dev/packages/json_annotation
-  #  utils文件夹
-  path: 1.9.0                                   # 文件路径处理 https://pub.dev/packages/path
-  path_provider: 2.1.3                          # 获取本地文件路径(全平台) https://pub.dev/packages/path_provider
-  ffi: 2.1.2                                    # 桌面端win和dart字符串相互转化工具 https://pub.flutter-io.cn/packages/ffi
-  win32: 5.5.1                                  # 桌面端dart使用C编译的工具 https://pub.flutter-io.cn/packages/win32
-  convert: 3.1.1                                # 字符串转化工具 https://pub.dev/packages/convert
-  shared_preferences: 2.2.3                     # 本地Key-Value文件存储(全平台) https://pub.dev/packages/shared_preferences
-  flutter_local_notifications: 17.2.1+2         # 通知栏通知提醒 https://pub.flutter-io.cn/packages/flutter_local_notifications
-  #  widgets文件夹
-  extended_text_field: 15.0.0                   # 输入框扩展组件 https://pub.flutter-io.cn/packages/extended_text_field
-  back_button_interceptor: 7.0.3                # 返回按钮拦截 https://pub.flutter-io.cn/packages/back_button_interceptor
-  bot_toast: 4.1.3                              # Toast https://pub.flutter-io.cn/packages/bot_toast
-  cached_network_image: 3.3.1                   # 图片多级缓存 https://pub.flutter-io.cn/packages/cached_network_image
-  flutter_cache_manager: 3.3.3                  # 缓存管理工具 https://pub.flutter-io.cn/packages/flutter_cache_manager
-  http: 1.2.2                                   # 官方http请求 https://pub.flutter-io.cn/packages/http
-  photo_view: 0.15.0                            # 图片预览控件 https://pub.flutter-io.cn/packages/photo_view
-
+  fbl:
+    path: ./packages/fbl
+  fsm:
+    path: ./packages/fsm
   provider: 6.1.2                               # 状态管理 https://pub.dev/packages/provider
-  retrofit: 4.1.0                               # Restful方式使用HTTP请求 https://pub.flutter-io.cn/packages/retrofit
-  #  dio_cookie_manager: 2.0.0                     # HTTP请求的cookie管理 https://pub.flutter-io.cn/packages/dio_cookie_manager
-  #  cookie_jar: 3.0.1                             # HTTP请求的cookie持久化 https://pub.flutter-io.cn/packages/cookie_jar
+  bot_toast: 4.1.3                              # Toast https://pub.flutter-io.cn/packages/bot_toast
+  json_annotation: 4.9.0                        # Json序列化 https://pub.dev/packages/json_annotation
+  intl: 0.19.0                                  # 国际化工具 https://pub.dev/packages/intl
 
   ########################################## UI ########################################
   azlistview: 2.0.0                             # az列表 https://pub.flutter-io.cn/packages/azlistview

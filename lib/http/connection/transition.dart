@@ -1,5 +1,6 @@
-import '../../base/base.dart';
-import '../../base/fsm/fsm.dart';
+import 'package:fbl/fbl.dart';
+import 'package:fsm/fsm.dart';
+
 import 'connection.dart';
 import 'state.dart';
 

@@ -1,5 +1,5 @@
+import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/base/base.dart';
 
 class VlcVideoPage extends StatefulWidget {
   const VlcVideoPage({super.key});

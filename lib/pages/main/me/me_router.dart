@@ -1,7 +1,6 @@
+import 'package:fbl/fbl.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../../base/a_router/route.dart';
-import '../../../base/config/build_config.dart';
 import 'article/article_page.dart';
 import 'coin/coin_page.dart';
 import 'collect/collect_page.dart';

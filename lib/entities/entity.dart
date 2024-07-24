@@ -3,6 +3,8 @@
 ///
 library entity;
 
+export 'package:fbl/resource/setting_entity.dart';
+
 export 'article_entity.dart';
 export 'banner_entity.dart';
 export 'chapter_entity.dart';
@@ -12,9 +14,8 @@ export 'collect_entity.dart';
 export 'hotkey_entity.dart';
 export 'medicine_entity.dart';
 export 'navi_entity.dart';
-export '../base/resource/setting_entity.dart';
+export 'order_entity.dart';
 export 'tool_entity.dart';
 export 'tree_entity.dart';
 export 'user_entity.dart';
 export 'website_entity.dart';
-export 'order_entity.dart';

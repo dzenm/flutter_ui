@@ -1,10 +1,10 @@
 import 'dart:convert';
 
+import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import '../../base/base.dart';
 import '../../generated/l10n.dart';
 
 /// WebView内容改变时的回调
@@ -73,8 +73,7 @@ class FlutterWebView extends StatefulWidget {
   State<StatefulWidget> createState() => _FlutterWebViewState();
 }
 
-class _FlutterWebViewState extends State<FlutterWebView> {
-  static const String _tag = 'WebViewPage';
+class _FlutterWebViewState extends State<FlutterWebView> with Logging {
   WebViewController? _controller;
   double _progressValue = 0;
   bool _isLoading = true;
@@ -121,7 +120,7 @@ class _FlutterWebViewState extends State<FlutterWebView> {
           },
           onNavigationRequest: (NavigationRequest request) {
             if (request.url.startsWith('myapp://')) {
-              log('即将打开 ${request.url}');
+              logDebug('即将打开 ${request.url}');
               return NavigationDecision.prevent;
             }
             return NavigationDecision.navigate;
@@ -164,7 +163,4 @@ class _FlutterWebViewState extends State<FlutterWebView> {
       encoding: Encoding.getByName('utf-8'),
     ));
   }
-
-
-  void log(String msg) => Log.p(msg, tag: _tag);
 }

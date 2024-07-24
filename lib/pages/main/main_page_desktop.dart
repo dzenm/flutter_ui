@@ -1,10 +1,11 @@
+import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
 
-import '../../base/base.dart';
 import '../common/view_media_page.dart';
+import '../widgets/desktop_wrapper.dart';
 import 'main_model.dart';
 import 'system_tray.dart';
 
@@ -116,7 +117,6 @@ class MainPageDesktopWrapper extends StatefulWidget {
 }
 
 class _MainPageDesktopWrapperState extends State<MainPageDesktopWrapper> with Logging, WindowListener, TrayListener, SystemTray {
-
   @override
   void initState() {
     super.initState();

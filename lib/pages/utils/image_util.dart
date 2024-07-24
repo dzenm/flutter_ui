@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:scan/scan.dart';
 
-import '../../base/base.dart';
+import 'package:fbl/fbl.dart';
 
 class ImageUtil {
   static const String tinySuffix = '_tiny';

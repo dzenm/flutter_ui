@@ -1,8 +1,8 @@
+import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import '../../../base/base.dart';
 import '../../../generated/l10n.dart';
 import 'tab_official_page.dart';
 import 'tab_plaza_page.dart';
@@ -15,17 +15,16 @@ import 'tab_tutorial_page.dart';
 /// Created by a0010 on 2022/7/28 10:56
 /// 分类页面
 class NavPage extends StatelessWidget with Logging {
-
   const NavPage({super.key});
 
   List<Widget> get _tabItems => [
-    const TabPlazaPage(),
-    const TabTutorialPage(),
-    const TabQAPage(),
-    const TabProjectPage(),
-    const TabOfficialPage(),
-    const TabToolPage(),
-  ];
+        const TabPlazaPage(),
+        const TabTutorialPage(),
+        const TabQAPage(),
+        const TabProjectPage(),
+        const TabOfficialPage(),
+        const TabToolPage(),
+      ];
 
   @override
   Widget build(BuildContext context) {

@@ -1,10 +1,10 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
-import 'base/base.dart';
 import 'generated/l10n.dart';
 import 'models/article_model.dart';
 import 'models/banner_model.dart';
@@ -18,6 +18,7 @@ import 'pages/mall/order/order_model.dart';
 import 'pages/my/my_page.dart';
 import 'pages/routers.dart';
 import 'pages/study/study_model.dart';
+import 'pages/widgets/desktop_wrapper.dart';
 
 typedef HandleContext = void Function(BuildContext context);
 
@@ -206,6 +207,5 @@ class AppPage extends StatelessWidget with Logging {
   void _useContextAfterBuild(BuildContext context) {
     logPage('useContextAfterBuild');
     SystemChannels.textInput.invokeMethod('TextInput.hide');
-    CommonDialog.init(context); // 初始化需要context，在这里注册
   }
 }

@@ -1,6 +1,6 @@
+import 'package:fbl/fbl.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-import '../base/base.dart';
 import 'converts/bool_convert.dart';
 
 part 'user_entity.g.dart';

@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../base/db/db.dart';
+import 'package:fbl/fbl.dart';
 
 part 'banner_entity.g.dart';
 

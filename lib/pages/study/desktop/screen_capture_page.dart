@@ -1,11 +1,10 @@
 import 'dart:typed_data';
 
 import 'package:extended_text_field/extended_text_field.dart';
+import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 import 'package:pasteboard/pasteboard.dart';
 import 'package:provider/provider.dart';
-
-import '../../../base/base.dart';
 
 ///
 /// Created by a0010 on 2024/4/7 14:31

@@ -1,8 +1,6 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:fbl/fbl.dart';
 
-import '../base/a_router/route.dart';
-import '../base/a_router/router.dart';
-import '../base/base.dart';
 import 'common/example_page.dart';
 import 'common/view_media_page.dart';
 import 'common/web_view_page.dart';
@@ -31,7 +29,7 @@ class Routers {
     observers: [
       BotToastNavigatorObserver(),
     ],
-    log: Log.d,
+    debugLog: Log.d,
     initialLocation: SPManager.getUserLoginState() ? '/main' : '/login',
     routes: [
       ARoute(

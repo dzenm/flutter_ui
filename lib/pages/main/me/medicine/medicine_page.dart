@@ -1,10 +1,11 @@
+import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 
-import '../../../../base/base.dart';
 import '../../../../config/configs.dart';
 import '../../../../entities/medicine_entity.dart';
 import '../../../../generated/l10n.dart';
+import '../../../../http/api_services.dart';
 
 ///
 /// Created by a0010 on 2022/4/15 16:23
@@ -54,7 +55,7 @@ class _MedicinePageState extends State<MedicinePage> {
 
   Future<void> _getZhongyao() async {
     await Future.delayed(const Duration(milliseconds: 300));
-    await HttpsClient().request(api(index: 1).getZhongYao(_key, widget.medicineName), success: (data) async {
+    await HttpsClient().request(ApiServices.api(index: 1).getZhongYao(_key, widget.medicineName), success: (data) async {
       _list = (data['newslist'] as List<dynamic>).map((e) => MedicineEntity.fromJson(e)).toList();
       setState(() {});
     });

@@ -1,8 +1,7 @@
+import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../base/a_router/misc/extensions.dart';
-import '../../../../base/base.dart';
 import '../../../../generated/l10n.dart';
 import '../../../../models/user_model.dart';
 import '../../../common/view_media_page.dart';

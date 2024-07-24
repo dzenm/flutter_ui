@@ -1,7 +1,7 @@
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 
-import '../../base/base.dart';
+import 'package:fbl/fbl.dart';
 import '../utils/image_util.dart';
 import 'user_logo_view.dart';
 

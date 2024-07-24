@@ -1,13 +1,14 @@
+import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui/base/base.dart';
 
 class VideoPlayerView extends StatefulWidget {
   final String url;
   final String thumbUrl;
   final bool autoPlay;
 
-  const VideoPlayerView({super.key,
+  const VideoPlayerView({
+    super.key,
     required this.url,
     this.thumbUrl = '',
     this.autoPlay = false,
@@ -67,16 +68,16 @@ class _VideoPlayerViewState extends State<VideoPlayerView> {
     );
   }
 
-  // ImageProvider _imageProvider() {
-  //   String thumbUrl = widget.thumbUrl;
-  //   if (thumbUrl.startsWith('http://') || thumbUrl.startsWith('https://')) {
-  //     return NetworkImage(thumbUrl);
-  //   } else if (thumbUrl.startsWith('assets/')) {
-  //     return AssetImage(thumbUrl);
-  //   } else {
-  //     return FileImage(File(thumbUrl));
-  //   }
-  // }
+// ImageProvider _imageProvider() {
+//   String thumbUrl = widget.thumbUrl;
+//   if (thumbUrl.startsWith('http://') || thumbUrl.startsWith('https://')) {
+//     return NetworkImage(thumbUrl);
+//   } else if (thumbUrl.startsWith('assets/')) {
+//     return AssetImage(thumbUrl);
+//   } else {
+//     return FileImage(File(thumbUrl));
+//   }
+// }
 }
 
 class IjkVideoPage extends StatefulWidget {
@@ -84,7 +85,8 @@ class IjkVideoPage extends StatefulWidget {
   final bool autoPlay;
   final bool repeat;
 
-  const IjkVideoPage({super.key,
+  const IjkVideoPage({
+    super.key,
     required this.url,
     this.autoPlay = false,
     this.repeat = false,
