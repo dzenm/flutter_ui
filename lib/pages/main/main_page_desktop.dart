@@ -13,10 +13,9 @@ import 'system_tray.dart';
 /// Created by a0010 on 2023/6/29 15:49
 ///
 class MainPageDesktop extends StatelessWidget {
-  final List<MainTab> tabs;
-  final List<Widget> children;
+  final Map<MainTab, Widget> tabs;
 
-  const MainPageDesktop({super.key, required this.tabs, required this.children});
+  const MainPageDesktop({super.key, required this.tabs});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +38,7 @@ class MainPageDesktop extends StatelessWidget {
                   context.read<MainModel>().setSelectedTab(selectedTab);
                 },
                 leading: _buildLeadingView(context),
-                children: tabs.map((tab) {
+                children: tabs.keys.map((tab) {
                   return NavigationRailItemView(tab: tab);
                 }).toList(),
               ),
@@ -48,7 +47,7 @@ class MainPageDesktop extends StatelessWidget {
             // 主要的展示内容，Expanded 占满剩下屏幕空间
             Expanded(
               child: KeepAliveWrapper(
-                child: children[selectedTab.index],
+                child: tabs[selectedTab]!,
               ),
             )
           ]),
@@ -116,7 +115,8 @@ class MainPageDesktopWrapper extends StatefulWidget {
   State<MainPageDesktopWrapper> createState() => _MainPageDesktopWrapperState();
 }
 
-class _MainPageDesktopWrapperState extends State<MainPageDesktopWrapper> with Logging, WindowListener, TrayListener, SystemTray {
+class _MainPageDesktopWrapperState extends State<MainPageDesktopWrapper>
+    with Logging, WindowListener, TrayListener, SystemTray {
   @override
   void initState() {
     super.initState();

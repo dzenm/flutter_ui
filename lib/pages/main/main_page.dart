@@ -23,7 +23,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> with Logging, WidgetsBindingObserver {
-  final List<Widget> _tabs = [
+  final List<Widget> _pages = [
     const HomePage(),
     const NavPage(),
     const MePage(),
@@ -136,16 +136,19 @@ class _MainPageState extends State<MainPage> with Logging, WidgetsBindingObserve
 
     _useContextBeforeBuild(context);
 
-    List<MainTab> tabs = MainTab.values;
+    Map<MainTab, Widget> tabs = {};
+    for (var tab in MainTab.values) {
+      tabs[tab] = _pages[tab.index];
+    }
     if (BuildConfig.isMobile) {
-      return MainPageMobile(tabs: tabs, children: _tabs);
+      return MainPageMobile(tabs: tabs);
     } else if (BuildConfig.isWeb) {
       return MainPageDesktopWrapper(
-        child: MainPageDesktop(tabs: tabs, children: _tabs),
+        child: MainPageDesktop(tabs: tabs),
       );
     } else if (BuildConfig.isDesktop) {
       return MainPageDesktopWrapper(
-        child: MainPageDesktop(tabs: tabs, children: _tabs),
+        child: MainPageDesktop(tabs: tabs),
       );
     }
     return Center(

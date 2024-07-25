@@ -9,10 +9,9 @@ import 'main_model.dart';
 /// Created by a0010 on 2023/6/29 15:53
 ///
 class MainPageMobile extends StatelessWidget with Logging {
-  final List<MainTab> tabs;
-  final List<Widget> children;
+  final Map<MainTab, Widget> tabs;
 
-  MainPageMobile({super.key, required this.tabs, required this.children});
+  MainPageMobile({super.key, required this.tabs});
 
   final PageController _controller = PageController();
 
@@ -39,7 +38,7 @@ class MainPageMobile extends StatelessWidget with Logging {
 
   List<Widget> _buildBody() {
     List<Widget> list = [];
-    for (var child in children) {
+    for (var child in tabs.values) {
       list.add(KeepAliveWrapper(
         child: Selector<MainModel, MainTab>(
           selector: (_, model) => model.selectedTab,
@@ -56,7 +55,7 @@ class MainPageMobile extends StatelessWidget with Logging {
   /// BottomNavigationBar widget
   List<Widget> _buildBottomNavigationBar(BuildContext context) {
     List<Widget> list = [];
-    for (var tab in tabs) {
+    for (var tab in tabs.keys) {
       list.add(
         Expanded(
           flex: 1,

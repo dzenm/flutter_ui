@@ -193,7 +193,7 @@ class _HomePageState extends State<HomePage> with Logging {
   }
 }
 
-/// 轮播图 widget
+/// 轮播图
 class Banner extends StatelessWidget with Logging {
   const Banner({super.key});
 
@@ -202,6 +202,7 @@ class Banner extends StatelessWidget with Logging {
     logPage('build');
 
     return Selector<BannerModel, List<BannerEntity>>(
+      selector: (context, model) => model.banners,
       builder: (context, banners, widget) {
         return BannerView(
           repeat: true,
@@ -219,7 +220,6 @@ class Banner extends StatelessWidget with Logging {
           },
         );
       },
-      selector: (context, model) => model.banners,
     );
   }
 }
