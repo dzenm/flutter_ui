@@ -142,13 +142,13 @@ class ConnectionState extends BaseState<ConnectionStateMachine, ConnectionStateT
   int get hashCode => index;
 
   @override
-  Future<void> onEnter(State<ConnectionStateMachine, ConnectionStateTransition>? previous,
+  Future<void> onEnter(FiniteState<ConnectionStateMachine, ConnectionStateTransition>? previous,
       ConnectionStateMachine ctx, DateTime now) async {
     _enterTime = now;
   }
 
   @override
-  Future<void> onExit(State<ConnectionStateMachine, ConnectionStateTransition>? next,
+  Future<void> onExit(FiniteState<ConnectionStateMachine, ConnectionStateTransition>? next,
       ConnectionStateMachine ctx, DateTime now) async {
     _enterTime = null;
   }

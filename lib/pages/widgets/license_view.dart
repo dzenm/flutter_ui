@@ -1,7 +1,8 @@
+import 'package:fbl/widgets/widget.dart';
 import 'package:flutter/material.dart';
 
 import 'keyboard/custom_keyword_board.dart';
-import 'tap_layout.dart';
+
 
 class LicenseView extends StatefulWidget {
   final List<String> list;

@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 
 import '../db/db.dart';
 import '../widgets/widget.dart';
@@ -119,7 +118,12 @@ class _DBPageState extends State<DBPage> {
     File file = File(path);
     int len = file.lengthSync();
     String size = Naughty().formatByteSize(len);
-    String modifyTime = DateFormat("yyyy-MM-dd HH:mm:ss").format(file.lastModifiedSync());
+
+    String two(int val) => val < 10 ? '0$val' : '$val';
+    DateTime date = DateTime.now();
+    String time = '${date.year}-${two(date.month)}-${two(date.day)} ${two(date.hour)}:${two(date.minute)}:${two(date.second)}';
+
+    String modifyTime = time;
     return [
       Text(
         name,

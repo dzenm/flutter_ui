@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:convert/convert.dart' as convert;
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
@@ -119,29 +118,29 @@ class FileUtil extends _Directory with _DirectoryMixin {
     return md5.convert(bytes).toString();
   }
 
-  String _getMd5(String path) {
-    int partSize = 1024 * 1024 * 3; //默认3m每块
-    File file = File(path);
-    int fileSize = file.lengthSync();
-    int totalPart = (fileSize * 1.0 / partSize).ceil();
-    int start; //开始读文件的位置
-    int length; //读取文件的长度
-    var output = convert.AccumulatorSink<Digest>();
-    var input = md5.startChunkedConversion(output);
-    int currentPart = 0;
-    while (currentPart < totalPart) {
-      start = currentPart * partSize;
-      length = (start + partSize > fileSize) ? (fileSize - start) : partSize;
-      RandomAccessFile raf = file.openSync(mode: FileMode.read);
-      raf.setPositionSync(start);
-      Uint8List data = raf.readSync(length);
-      input.add(data);
-      currentPart++;
-    }
-    input.close();
-    var digest = output.events.single.toString();
-    return digest;
-  }
+  // String _getMd5(String path) {
+  //   int partSize = 1024 * 1024 * 3; //默认3m每块
+  //   File file = File(path);
+  //   int fileSize = file.lengthSync();
+  //   int totalPart = (fileSize * 1.0 / partSize).ceil();
+  //   int start; //开始读文件的位置
+  //   int length; //读取文件的长度
+  //   var output = convert.AccumulatorSink<Digest>();
+  //   var input = md5.startChunkedConversion(output);
+  //   int currentPart = 0;
+  //   while (currentPart < totalPart) {
+  //     start = currentPart * partSize;
+  //     length = (start + partSize > fileSize) ? (fileSize - start) : partSize;
+  //     RandomAccessFile raf = file.openSync(mode: FileMode.read);
+  //     raf.setPositionSync(start);
+  //     Uint8List data = raf.readSync(length);
+  //     input.add(data);
+  //     currentPart++;
+  //   }
+  //   input.close();
+  //   var digest = output.events.single.toString();
+  //   return digest;
+  // }
 
   /// 将浮点数 [value] 转为取 [position] 位的小数的字符串
   String toStringAsFixed(dynamic value, {int position = 2}) {

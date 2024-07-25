@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../generated/l10n.dart';
 import '../../../main/me/me_router.dart';
+import '../../../widgets/widgets.dart';
 
 /// 文本展示测试页面
 class TextPage extends StatefulWidget {

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:convert/convert.dart';
 import 'package:flutter/services.dart';
 
 ///
@@ -183,7 +182,7 @@ class StrUtil {
     // per 4.4, set bits for version and clockSeq high and reserved
     uid[6] = (uid[6] & 0x0f) | 0x40;
     uid[8] = (uid[8] & 0x3f) | 0x80;
-    return hex.encode(uid);
+    return bytes2String(uid, 0, uid.length);
   }
 
   /// Math.Random()-based RNG. All platforms, fast, not cryptographically strong. Optional Seed passable.
@@ -214,4 +213,40 @@ class StrUtil {
   static Uri parseUrl(String url) {
     return Uri.parse(url);
   }
+
+  static String bytes2String(List<int> bytes, int start, int end) {
+    // A Uint8List is more efficient than a StringBuffer given that we know that
+    // we're only emitting ASCII-compatible characters, and that we know the
+    // length ahead of time.
+    var buffer = Uint8List((end - start) * 2);
+    var bufferIndex = 0;
+
+    // A bitwise OR of all bytes in [bytes]. This allows us to check for
+    // out-of-range bytes without adding more branches than necessary to the
+    // core loop.
+    var byteOr = 0;
+    for (var i = start; i < end; i++) {
+      var byte = bytes[i];
+      byteOr |= byte;
+
+      // The bitwise arithmetic here is equivalent to `byte ~/ 16` and `byte % 16`
+      // for valid byte values, but is easier for dart2js to optimize given that
+      // it can't prove that [byte] will always be positive.
+      buffer[bufferIndex++] = _codeUnitForDigit((byte & 0xF0) >> 4);
+      buffer[bufferIndex++] = _codeUnitForDigit(byte & 0x0F);
+    }
+
+    if (byteOr >= 0 && byteOr <= 255) return String.fromCharCodes(buffer);
+
+    // If there was an invalid byte, find it and throw an exception.
+    for (var i = start; i < end; i++) {
+      var byte = bytes[i];
+      if (byte >= 0 && byte <= 0xff) continue;
+      throw FormatException("Invalid byte ${byte < 0 ? "-" : ""}0x${byte.abs().toRadixString(16)}.", bytes, i);
+    }
+
+    throw StateError('unreachable');
+  }
+
+  static int _codeUnitForDigit(int digit) => digit < 10 ? digit + 0x30 : digit + 0x61 - 10;
 }

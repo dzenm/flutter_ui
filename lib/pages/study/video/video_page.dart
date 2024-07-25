@@ -1,6 +1,8 @@
 import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 
+import '../../widgets/widgets.dart';
+
 class VideoPage extends StatefulWidget {
   const VideoPage({super.key});
 

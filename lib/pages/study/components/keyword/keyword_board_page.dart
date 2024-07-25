@@ -1,6 +1,8 @@
 import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 
+import '../../../widgets/widgets.dart';
+
 /// 自定义键盘
 class KeywordBoardPage extends StatefulWidget {
   const KeywordBoardPage({super.key});

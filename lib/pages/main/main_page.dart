@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../generated/l10n.dart';
 import '../../models/provider_manager.dart';
+import '../utils/notification_util.dart';
 import 'home/home_page.dart';
 import 'main_model.dart';
 import 'main_page_desktop.dart';
@@ -93,7 +94,13 @@ class _MainPageState extends State<MainPage> with Logging, WidgetsBindingObserve
   /// 在[build]之前使用使用[context]初始化数据
   void _useContextBeforeBuild(BuildContext context) {
     Naughty.instance
-      ..init(context)
+      ..init(context, notification: (title, body, onTap) {
+        NotificationUtil().showNotification(
+          title: title,
+          body: body,
+          onTap: (s) => onTap(),
+        );
+      })
       ..show();
   }
 

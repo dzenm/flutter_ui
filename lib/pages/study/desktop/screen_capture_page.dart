@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:pasteboard/pasteboard.dart';
 import 'package:provider/provider.dart';
 
+import '../../widgets/widgets.dart';
+
 ///
 /// Created by a0010 on 2024/4/7 14:31
 ///

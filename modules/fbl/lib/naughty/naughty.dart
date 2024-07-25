@@ -3,40 +3,44 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../utils/util.dart';
 import 'floating_button.dart';
 import 'http_entity.dart';
 import 'naught_page.dart';
+
+typedef NotificationCallback = void Function(
+  String? title,
+  String? body,
+  GestureTapCallback onTap,
+);
 
 /// 悬浮窗
 class Naughty {
   Naughty._internal();
 
-  static final Naughty _instance = Naughty._internal();
-
-  static Naughty get instance => _instance;
-
   factory Naughty() => _instance;
 
-  BuildContext? _context;
+  static Naughty get instance => _instance;
+  static final Naughty _instance = Naughty._internal();
 
   BuildContext get context => _context!;
+  BuildContext? _context;
 
   /// 悬浮窗创建的控制器
   OverlayEntry? _overlayEntry;
 
   List<HTTPEntity> httpRequests = [];
 
+  bool get showing => _showing;
   bool _showing = false;
 
-  bool get showing => _showing;
-
   bool get _isInit => _context != null && !kIsWeb;
+  NotificationCallback? _notification;
 
   /// 初始化, 设置子widget
-  void init(BuildContext context, {Widget? child}) {
+  void init(BuildContext context, {Widget? child, NotificationCallback? notification}) {
     if (_isInit) return;
     _context = context;
+    _notification = notification;
     // 创建悬浮窗
     _overlayEntry ??= OverlayEntry(builder: (BuildContext context) {
       // 自定义悬浮窗布局
@@ -80,11 +84,8 @@ class Naughty {
   /// 展示通知
   void showNotification({String? title, String? body}) {
     if (!_isInit) return;
-    NotificationUtil().showNotification(
-      title: title,
-      body: body,
-      onTap: (payload) async => push(context, const NaughtPage()),
-    );
+    if (_notification == null) return;
+    _notification!(title, body, () async => push(context, const NaughtPage()));
   }
 
   /// 打开一个新的页面

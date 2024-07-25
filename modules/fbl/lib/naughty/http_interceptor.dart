@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:intl/intl.dart';
 
 import 'http_entity.dart';
 import 'naughty.dart';
@@ -20,8 +19,14 @@ class HttpInterceptor extends Interceptor {
     entity.status = Status.running;
     // 请求的时间戳
     entity.duration = DateTime.now().millisecondsSinceEpoch.toString();
+
+    String two(int val) => val < 10 ? '0$val' : '$val';
+    String three(int val) => val < 10 ? '00$val' : val < 100 ? '0$val' : '$val';
+    DateTime date = DateTime.now();
+    String time = '${two(date.hour)}:${two(date.minute)}:${two(date.second)} ${three(date.millisecond)}';
+
     // 请求的起始时间
-    entity.time = DateFormat("HH:mm:ss SSS").format(DateTime.now());
+    entity.time = time;
     // 请求同一url的次数
     int? index = _countMap[options.path];
     _countMap[options.path] = (index ?? 0) + 1;

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import 'local_model.dart';
 import 'theme/black_theme.dart';
 import 'theme/blue_accent_theme.dart';
 import 'theme/blue_theme.dart';
@@ -22,11 +20,6 @@ import 'theme/teal_theme.dart';
 //// Created by a0010 on 2023/1/30 15:15
 ////
 class AppTheme extends _AppTheme {
-  /// 获取颜色
-  static AppTheme of(BuildContext context, {bool listen = true}) {
-    return Provider.of<LocalModel>(context, listen: listen).theme;
-  }
-
   static final Map<AppThemeMode, AppTheme> appTheme = {
     AppThemeMode.light: LightTheme(),
     AppThemeMode.dark: DarkTheme(),

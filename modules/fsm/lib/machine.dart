@@ -25,7 +25,7 @@ abstract interface class StateTransition<C extends MachineContext> {
 ///
 /// @param <C> - context
 /// @param <T> - transition
-abstract interface class State<C extends MachineContext, T extends StateTransition<C>> {
+abstract interface class FiniteState<C extends MachineContext, T extends StateTransition<C>> {
 
   ///  Called by machine.tick() to evaluate each transitions
   ///
@@ -41,14 +41,14 @@ abstract interface class State<C extends MachineContext, T extends StateTransiti
   /// @param previous - old state
   /// @param ctx      - context (machine)
   /// @param now      - current time
-  Future<void> onEnter(State<C, T>? previous, C ctx, DateTime now);
+  Future<void> onEnter(FiniteState<C, T>? previous, C ctx, DateTime now);
 
   ///  Called before old state exited
   ///
   /// @param next    - new state
   /// @param ctx     - context (machine)
   /// @param now     - current time
-  Future<void> onExit(State<C, T>? next, C ctx, DateTime now);
+  Future<void> onExit(FiniteState<C, T>? next, C ctx, DateTime now);
 
   ///  Called before current state paused
   ///
@@ -69,7 +69,7 @@ abstract interface class State<C extends MachineContext, T extends StateTransiti
 /// @param <S> - state
 /// @param <C> - context
 /// @param <T> - transition
-abstract interface class MachineDelegate<C extends MachineContext, T extends StateTransition<C>, S extends State<C, T>> {
+abstract interface class MachineDelegate<C extends MachineContext, T extends StateTransition<C>, S extends FiniteState<C, T>> {
 
   ///  Called before new state entered
   ///  (get current state from context)
@@ -103,12 +103,12 @@ abstract interface class MachineDelegate<C extends MachineContext, T extends Sta
 
 }
 
-///  Finite [State] machine
+///  Finite [FiniteState] machine
 ///
 /// @param <S> - state
 /// @param <C> - context
 /// @param <T> - transition
-abstract interface class Machine<C extends MachineContext, T extends StateTransition<C>, S extends State<C, T>>
+abstract interface class Machine<C extends MachineContext, T extends StateTransition<C>, S extends FiniteState<C, T>>
     implements Ticker {
 
   S? get currentState;
@@ -139,7 +139,7 @@ abstract class BaseTransition<C extends MachineContext>
 
 ///  State with transitions
 abstract class BaseState<C extends MachineContext, T extends StateTransition<C>>
-    implements State<C, T> {
+    implements FiniteState<C, T> {
 
   BaseState(this.index);
 
@@ -170,7 +170,7 @@ enum _Status {
   paused,
 }
 
-/// [Machine] handle [State]
+/// [Machine] handle [FiniteState]
 abstract class BaseMachine<C extends MachineContext, T extends BaseTransition<C>, S extends BaseState<C, T>>
     implements Machine<C, T, S> {
 
@@ -330,7 +330,7 @@ abstract class BaseMachine<C extends MachineContext, T extends BaseTransition<C>
 }
 
 
-/// [Machine] handle [State] with auto [Ticker]
+/// [Machine] handle [FiniteState] with auto [Ticker]
 abstract class AutoMachine<C extends MachineContext, T extends BaseTransition<C>, S extends BaseState<C, T>>
     extends BaseMachine<C, T, S> {
 
