@@ -39,15 +39,7 @@ class MainPageMobile extends StatelessWidget with Logging {
   List<Widget> _buildBody() {
     List<Widget> list = [];
     for (var child in tabs.values) {
-      list.add(KeepAliveWrapper(
-        child: Selector<MainModel, MainTab>(
-          selector: (_, model) => model.selectedTab,
-          builder: (context, value, widget) {
-            logPage('MainTab build');
-            return child;
-          },
-        ),
-      ));
+      list.add(KeepAliveWrapper(child: child));
     }
     return list;
   }

@@ -1,7 +1,7 @@
 import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 
-abstract class TabListPageState<T extends StatefulWidget> extends State<T> {
+abstract class TabListPageState<T extends StatefulWidget> extends State<T> with Logging {
   final StateController _controller = StateController();
 
   /// 加载的页数
@@ -10,6 +10,8 @@ abstract class TabListPageState<T extends StatefulWidget> extends State<T> {
   @override
   void initState() {
     super.initState();
+    logPage('initState');
+
     _getData(); // 第一次加载数据
   }
 
@@ -19,6 +21,7 @@ abstract class TabListPageState<T extends StatefulWidget> extends State<T> {
   }
 
   Widget buildContent(int len) {
+    logPage('buildContent');
     return RefreshListView(
       controller: _controller,
       itemCount: len,

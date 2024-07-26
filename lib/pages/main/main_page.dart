@@ -23,11 +23,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> with Logging, WidgetsBindingObserver {
-  final List<Widget> _pages = [
-    const HomePage(),
-    const NavPage(),
-    const MePage(),
-  ];
+  final Map<MainTab, Widget> _tabs = {};
 
   /// 感知生命周期变化
   @override
@@ -58,13 +54,25 @@ class _MainPageState extends State<MainPage> with Logging, WidgetsBindingObserve
     // 先初始化页面
     ProviderManager.main(context: context).init();
 
+    _initPage();
     _initData();
   }
 
-  /// 初始化数据
   Future<void> _initData() async {
     logPage('initData');
     await _initProvider();
+  }
+
+  void _initPage() {
+    final List<Widget> pages = [
+      const HomePage(),
+      const NavPage(),
+      const MePage(),
+    ];
+
+    for (var tab in MainTab.values) {
+      _tabs[tab] = pages[tab.index];
+    }
   }
 
   /// 初始化Provider数据，使用context并且异步加载，必须放在页面执行
@@ -136,19 +144,15 @@ class _MainPageState extends State<MainPage> with Logging, WidgetsBindingObserve
 
     _useContextBeforeBuild(context);
 
-    Map<MainTab, Widget> tabs = {};
-    for (var tab in MainTab.values) {
-      tabs[tab] = _pages[tab.index];
-    }
     if (BuildConfig.isMobile) {
-      return MainPageMobile(tabs: tabs);
+      return MainPageMobile(tabs: _tabs);
     } else if (BuildConfig.isWeb) {
       return MainPageDesktopWrapper(
-        child: MainPageDesktop(tabs: tabs),
+        child: MainPageDesktop(tabs: _tabs),
       );
     } else if (BuildConfig.isDesktop) {
       return MainPageDesktopWrapper(
-        child: MainPageDesktop(tabs: tabs),
+        child: MainPageDesktop(tabs: _tabs),
       );
     }
     return Center(

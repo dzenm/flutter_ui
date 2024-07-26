@@ -12,48 +12,59 @@ import 'system_tray.dart';
 ///
 /// Created by a0010 on 2023/6/29 15:49
 ///
-class MainPageDesktop extends StatelessWidget {
+class MainPageDesktop extends StatelessWidget with Logging {
   final Map<MainTab, Widget> tabs;
 
-  const MainPageDesktop({super.key, required this.tabs});
+  MainPageDesktop({super.key, required this.tabs});
+
+  final PageController _controller = PageController();
 
   @override
   Widget build(BuildContext context) {
-    MainTab selectedTab = context.watch<MainModel>().selectedTab;
+    logPage('build');
+
     return Material(
+      color: Colors.transparent,
       child: DesktopWrapper(
-        child: Container(
-          color: Colors.transparent,
-          child: Row(children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: DesktopNavigationRail(
-                width: 56.0,
-                onSelected: (int index) {
-                  MainTab selectedTab = MainTab.home;
-                  for (var tab in MainTab.values) {
-                    if (index != tab.index) continue;
-                    selectedTab = tab;
-                  }
-                  context.read<MainModel>().setSelectedTab(selectedTab);
-                },
-                leading: _buildLeadingView(context),
-                children: tabs.keys.map((tab) {
-                  return NavigationRailItemView(tab: tab);
-                }).toList(),
-              ),
+        child: Row(children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: DesktopNavigationRail(
+              width: 56.0,
+              onSelected: (int index) {
+                MainTab selectedTab = MainTab.home;
+                for (var tab in MainTab.values) {
+                  if (index != tab.index) continue;
+                  selectedTab = tab;
+                }
+                _jumpToPage(context, selectedTab);
+              },
+              leading: _buildLeadingView(context),
+              children: tabs.keys.map((tab) {
+                return NavigationRailItemView(tab: tab);
+              }).toList(),
             ),
-            const VerticalDivider(thickness: 1, width: 1),
-            // 主要的展示内容，Expanded 占满剩下屏幕空间
-            Expanded(
-              child: KeepAliveWrapper(
-                child: tabs[selectedTab]!,
-              ),
-            )
-          ]),
-        ),
+          ),
+          const VerticalDivider(thickness: 1, width: 1),
+          // 主要的展示内容，Expanded 占满剩下屏幕空间
+          Expanded(
+            child: PageView(
+              controller: _controller,
+              physics: const NeverScrollableScrollPhysics(),
+              children: _buildBody(),
+            ),
+          )
+        ]),
       ),
     );
+  }
+
+  List<Widget> _buildBody() {
+    List<Widget> list = [];
+    for (var child in tabs.values) {
+      list.add(KeepAliveWrapper(child: child));
+    }
+    return list;
   }
 
   Widget _buildLeadingView(BuildContext context) {
@@ -74,6 +85,15 @@ class MainPageDesktop extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// 跳转页面
+  void _jumpToPage(BuildContext context, MainTab tab) {
+    bool isSelected = context.read<MainModel>().isSelected(tab);
+    if (!isSelected) {
+      context.read<MainModel>().setSelectedTab(tab);
+      _controller.jumpToPage(tab.index);
+    }
   }
 }
 
@@ -115,8 +135,7 @@ class MainPageDesktopWrapper extends StatefulWidget {
   State<MainPageDesktopWrapper> createState() => _MainPageDesktopWrapperState();
 }
 
-class _MainPageDesktopWrapperState extends State<MainPageDesktopWrapper>
-    with Logging, WindowListener, TrayListener, SystemTray {
+class _MainPageDesktopWrapperState extends State<MainPageDesktopWrapper> with Logging, WindowListener, TrayListener, SystemTray {
   @override
   void initState() {
     super.initState();
