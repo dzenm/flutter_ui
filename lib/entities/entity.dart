@@ -3,8 +3,6 @@
 ///
 library entity;
 
-export 'package:fbl/resource/setting_entity.dart';
-
 export 'article_entity.dart';
 export 'banner_entity.dart';
 export 'chapter_entity.dart';

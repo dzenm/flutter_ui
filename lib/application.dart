@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:convert';
 
+import 'package:dbl/dbl.dart';
 import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,6 @@ import 'entities/entity.dart';
 import 'http/api_services.dart';
 import 'http/cookie_interceptor.dart';
 import 'pages/study/window/sub_window_page.dart';
-import 'pages/widgets/desktop_wrapper.dart';
 import 'pages/widgets/keyboard/mocks/mock_binding.dart';
 
 ///
@@ -131,9 +131,6 @@ abstract mixin class _InitApp {
 
     log('  初始化 FileUtil');
     await FileUtil().init(logPrint: Log.i);
-
-    log('  初始化 PluginManager');
-    PluginManager.init(logPrint: Log.d);
 
     log('  初始化 HotkeyUtil');
     // await HotkeyUtil().init(logPrint: Log.d);

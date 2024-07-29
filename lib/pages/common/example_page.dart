@@ -1,4 +1,4 @@
-import 'package:fbl/widgets/widget.dart';
+import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 
 

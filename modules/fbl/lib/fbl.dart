@@ -3,18 +3,15 @@
 ///
 library fbl;
 
-export 'a_router/arouter.dart';
-export 'channel/plugin_manager.dart';
-export 'config/build_config.dart';
-export 'config/handle_error.dart';
-export 'config/log.dart';
-export 'db/db.dart';
-export 'http/http.dart';
-export 'naughty/http_interceptor.dart';
-export 'naughty/naughty.dart';
-export 'resource/resource.dart';
-export 'utils/util.dart';
-export 'widgets/widget.dart';
+export 'src/a_router/arouter.dart';
+export 'src/config/config.dart';
+export 'src/db/db.dart';
+export 'src/http/http.dart';
+export 'src/naughty/http_interceptor.dart';
+export 'src/naughty/naughty.dart';
+export 'src/resource/resource.dart';
+export 'src/utils/util.dart';
+export 'src/widgets/widget.dart';
 
 /// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 常用特殊符号大全 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 /// https://zhuanlan.zhihu.com/p/637238481

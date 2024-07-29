@@ -1,4 +1,4 @@
 library fsm;
 
-export 'machine.dart';
-export 'runner.dart';
+export 'src/machine.dart';
+export 'src/runner.dart';

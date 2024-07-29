@@ -1,7 +1,6 @@
 library widgets;
 
 export 'center_text.dart';
-export 'desktop_wrapper.dart';
 export 'divider_view.dart';
 export 'dots_indicator.dart';
 export 'ensure_send_file_widget.dart';
