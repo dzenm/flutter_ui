@@ -31,7 +31,7 @@ class HTTPEntity {
   Map<String, dynamic>? responseExtra;
   dynamic responseBody;
 
-  Map<String, dynamic> request() {
+  Map<String, dynamic> get request {
     Map<String, dynamic> map = {
       "request time": time,
       "method": method,
@@ -56,7 +56,7 @@ class HTTPEntity {
     return map;
   }
 
-  Map<String, dynamic> response() {
+  Map<String, dynamic> get response {
     Map<String, dynamic> map = {
       "statusCode": statusCode,
       "url": realUrl,

@@ -63,8 +63,8 @@ class _HTTPItemPageState extends State<HTTPItemPage> with SingleTickerProviderSt
       body: TabBarView(
         controller: _tabController,
         children: [
-          SingleChildScrollView(child: _TabWidget(data: widget.entity.response())),
-          SingleChildScrollView(child: _TabWidget(data: widget.entity.request())),
+          SingleChildScrollView(child: _TabWidget(data: widget.entity.response)),
+          SingleChildScrollView(child: _TabWidget(data: widget.entity.request)),
         ],
       ),
     );
