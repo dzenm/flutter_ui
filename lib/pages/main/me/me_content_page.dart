@@ -1,3 +1,4 @@
+import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/pages/main/me/me_model.dart';
 import 'package:provider/provider.dart';
@@ -6,7 +7,8 @@ import 'package:provider/provider.dart';
 /// Created by a0010 on 2024/4/3 14:14
 ///
 class MeContentPage extends StatelessWidget {
-  const MeContentPage({super.key});
+  final StatefulNavigationShell? navigation;
+  const MeContentPage({super.key, this.navigation});
 
   @override
   Widget build(BuildContext context) {

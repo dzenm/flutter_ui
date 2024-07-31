@@ -7,6 +7,7 @@ import 'collect/collect_page.dart';
 import 'info/edit_info_page.dart';
 import 'info/info_page.dart';
 import 'info/view_info_page.dart';
+import 'me_content_page.dart';
 import 'me_page.dart';
 import 'medicine/medicine_page.dart';
 import 'rank/rank_page.dart';
@@ -107,7 +108,7 @@ class MeRouter {
   static List<RouteBase> get desktopRouters => [
         StatefulShellRoute.indexedStack(
           builder: (context, state, navigation) {
-            return const MePage();
+            return const MeContentPage();
           },
           branches: [
             StatefulShellBranch(navigatorKey: _meKey, routes: [

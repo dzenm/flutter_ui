@@ -214,6 +214,7 @@ class ARouter implements RouterConfig<RouteMatchList> {
       initialLocation: _effectiveInitialLocation(initialLocation),
       initialExtra: initialExtra,
       refreshListenable: refreshListenable,
+      configuration: configuration,
     );
 
     routerDelegate = ARouterDelegate(

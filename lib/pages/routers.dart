@@ -1,5 +1,6 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:fbl/fbl.dart';
+import 'package:flutter/widgets.dart';
 
 import 'common/example_page.dart';
 import 'common/view_media_page.dart';
@@ -47,6 +48,34 @@ class Routers {
         path: '/main',
         builder: (context, state) => const MainPage(),
         routes: [
+          // StatefulShellRoute.indexedStack(
+          //   builder: (context, state, shell) {
+          //     return const MainPage();
+          //   },
+          //   branches: [
+          //     StatefulShellBranch(navigatorKey: _mainKey, routes: [
+          //       ARoute(
+          //         name: home,
+          //         path: 'home',
+          //         builder: (context, state) => const HomePage(),
+          //       ),
+          //     ]),
+          //     StatefulShellBranch(navigatorKey: _mainKey, routes: [
+          //       ARoute(
+          //         name: nav,
+          //         path: 'nav',
+          //         builder: (context, state) => const NavPage(),
+          //       ),
+          //     ]),
+          //     StatefulShellBranch(navigatorKey: _mainKey, routes: [
+          //       ARoute(
+          //         name: me,
+          //         path: 'me',
+          //         builder: (context, state) => const MePage(),
+          //       ),
+          //     ]),
+          //   ],
+          // ),
           ARoute(
             name: example,
             path: 'example',

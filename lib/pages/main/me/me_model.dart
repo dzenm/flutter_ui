@@ -1,4 +1,6 @@
+import 'package:fbl/fbl.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_ui/application.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56
@@ -23,6 +25,9 @@ class MeModel with ChangeNotifier {
 
   set selectedTab(String? tab) {
     _selectedTab = tab;
+    if (tab != null) {
+      Application().context.push(tab!);
+    }
     notifyListeners();
   }
 

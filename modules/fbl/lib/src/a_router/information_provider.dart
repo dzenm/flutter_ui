@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
+import 'configuration.dart';
 import 'match.dart';
 
 /// The type of the navigation.
@@ -74,6 +75,7 @@ class ARouteInformationProvider extends RouteInformationProvider
   ARouteInformationProvider({
     required String initialLocation,
     required Object? initialExtra,
+    required this.configuration,
     Listenable? refreshListenable,
   })  : _refreshListenable = refreshListenable,
         _value = RouteInformation(
@@ -86,6 +88,8 @@ class ARouteInformationProvider extends RouteInformationProvider
   }
 
   final Listenable? _refreshListenable;
+
+  final RouteConfiguration configuration;
 
   static WidgetsBinding get _binding => WidgetsBinding.instance;
   static final RouteInformation _kEmptyRouteInformation =
