@@ -161,6 +161,8 @@ class _MainPageDesktopWrapperState extends State<MainPageDesktopWrapper> with Lo
 
   @override
   void onTrayIconMouseDown() {
+    logInfo('onTrayIconMouseDown');
+
     // 图标鼠标左键单击事件（显示程序）
     final windows = windowManager;
     windows.restore();
@@ -168,12 +170,16 @@ class _MainPageDesktopWrapperState extends State<MainPageDesktopWrapper> with Lo
 
   @override
   void onTrayIconRightMouseDown() {
+    logInfo('onTrayIconRightMouseDown');
+
     // 图标鼠标右键单击事件（显示菜单）
     SystemTray().trayManager.popUpContextMenu();
   }
 
   @override
   void onTrayMenuItemClick(MenuItem menuItem) {
+    logInfo('onTrayMenuItemClick');
+
     // 菜单选项点击事件
     switch (menuItem.key) {
       case 'exit':
