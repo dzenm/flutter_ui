@@ -21,10 +21,10 @@ typedef HandleMsg = void Function(String message);
 ///   }),
 /// )
 class HandleError {
-  static final HandleError _instance = HandleError._internal();
-  static HandleError get instance => _instance;
-  factory HandleError() => _instance;
   HandleError._internal();
+  static HandleError get instance => _instance;
+  static final HandleError _instance = HandleError._internal();
+  factory HandleError() => _instance;
 
   /// 捕获flutter运行时的错误
   Future catchFlutterError(
@@ -196,10 +196,10 @@ class HandleError {
 }
 
 class MessageConfig {
-  HandleMsg? handleMsg;  // 自定义处理错误信息
-  bool showPackageInfo;  // 是否显示包相关信息
-  bool showDeviceInfo;   // 是否显示设备相关信息
-  bool showStackInfo;    // 是否显示堆栈信息
+  HandleMsg? handleMsg; // 自定义处理错误信息
+  bool showPackageInfo; // 是否显示包相关信息
+  bool showDeviceInfo; // 是否显示设备相关信息
+  bool showStackInfo; // 是否显示堆栈信息
   bool showLogInConsole; // 是否在控制台打印错误信息
   MessageConfig({
     this.handleMsg,

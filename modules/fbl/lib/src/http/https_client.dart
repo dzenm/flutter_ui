@@ -49,12 +49,8 @@ final class HttpsClient {
   static const int _connectTimeout = 20000;
   static const int _receiveTimeout = 20000;
 
-  static final HttpsClient _instance = HttpsClient._internal();
-
-  static HttpsClient get instance => _instance;
-
   factory HttpsClient() => _instance;
-
+  static final HttpsClient _instance = HttpsClient._internal();
   HttpsClient._internal();
 
   /// 如果存在多个url的情况，在这里添加，默认使用 [apiServices] ，其他使用 [api] 请求接口

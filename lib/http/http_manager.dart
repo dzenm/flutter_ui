@@ -16,9 +16,7 @@ import 'api_services.dart';
 class HttpManager {
   factory HttpManager() => _instance;
   static final HttpManager _instance = HttpManager._internal();
-
   HttpManager._internal();
-
   final HttpsClient _httpClient = HttpsClient();
   final ApiServices apiServices = ApiServices.apiServices;
 
