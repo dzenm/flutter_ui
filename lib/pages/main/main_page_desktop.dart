@@ -24,7 +24,7 @@ class MainPageDesktop extends StatelessWidget with Logging {
     logPage('build');
 
     return Material(
-      color: Colors.transparent,
+      color: Colors.white,
       child: DesktopWrapper(
         child: Row(children: [
           Padding(
