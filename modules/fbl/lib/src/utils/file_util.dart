@@ -245,7 +245,14 @@ abstract mixin class _DirectoryMixin {
   }
 
   /// 获取缓存文件的子目录 @see [messagesDirectory]
-  Directory getUserDirectory(String part1, [String? part2, String? part3, String? part4, String? part5, String? part6]) {
+  Directory getUserDirectory(
+    String part1, [
+    String? part2,
+    String? part3,
+    String? part4,
+    String? part5,
+    String? part6,
+  ]) {
     String parent = join(_userDir.path, part1, part2, part3, part4, part5, part6);
     Directory result = Directory(parent);
     if (!result.existsSync()) {

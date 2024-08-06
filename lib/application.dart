@@ -20,7 +20,7 @@ import 'pages/widgets/keyboard/mocks/mock_binding.dart';
 ///
 /// Created by a0010 on 2022/7/28 10:56
 /// App入口，主要做一些工具相关的初始化功能，或者是全局的状态保存，初始化完成之后进入[AppPage]
-class Application with _InitApp {
+class Application with _InitAppMixin {
   /// 私有构造方法
   Application._internal();
 
@@ -79,7 +79,7 @@ class Application with _InitApp {
 }
 
 /// 初始化程序运行所需的信息，
-abstract mixin class _InitApp {
+abstract mixin class _InitAppMixin {
   /// 初始化信息
   Future<void> _initApp(List<String> args) async {
     await BuildConfig.init(); // 初始化设备和包相关的信息
