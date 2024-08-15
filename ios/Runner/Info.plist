@@ -26,6 +26,34 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>App需要您的同意才能访问媒体库，用于图片或视频的选取、上传、保存</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>App需要您的同意才能使用蓝牙，用于语音、视频通话</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>App需要您的同意才能使用蓝牙，用于语音、视频通话</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>App需要您的同意才能使用日历，用于记录日常</string>
+	<key>NSCameraUsageDescription</key>
+	<string>App需要您的同意才能相机，用于拍摄照片、视频、视频聊天，扫描二维码服务</string>
+	<key>NSContactsUsageDescription</key>
+	<string>App需要您的同意才能访问通讯录，用于同步联系人、通话记录，实现应用内拨打电话或快速加好友</string>
+	<key>NSLocationUsageDescription</key>
+	<string>需要您的同意, APP才能访问位置，用于商/好友圈定位、地图展示、位置分享、路线导航</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>App需要您的同意, APP才能在使用期间访问位置，用于商/好友圈定位、地图展示、位置分享、路线导航</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>App需要您的同意, APP才能始终访问位置，用于商/好友圈定位、地图展示、位置分享、路线导航</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>App需要您的同意, APP才能始终访问位置，用于商/好友圈定位、地图展示、位置分享、路线导航</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>App需要您的同意才能使用麦克风，用于语音录制、语音通话</string>
+	<key>NSMotionUsageDescription</key>
+	<string>App需要您的同意才能访问运动与健身，用于记录日常</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>App需要您的同意才能访问相册，用于图片或视频的选取、上传、保存</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>App需要您的同意才能使用语音识别，提升使用感受</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

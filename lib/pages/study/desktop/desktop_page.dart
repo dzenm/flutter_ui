@@ -1,7 +1,6 @@
 import 'package:contextual_menu/contextual_menu.dart';
 import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/http/connection/connection.dart';
 import 'package:provider/provider.dart';
 
 import '../../../http/connection/state.dart';
@@ -18,15 +17,15 @@ class DesktopPage extends StatefulWidget {
 }
 
 class _DesktopPageState extends State<DesktopPage> {
-  late Connection connection;
+  // late Connection connection;
   late ConnectionStateMachine machine;
 
   @override
   void initState() {
     super.initState();
-    connection = Connection();
-    machine = ConnectionStateMachine(connection);
-    machine.start();
+    // connection = Connection();
+    // machine = ConnectionStateMachine(connection);
+    // machine.start();
   }
 
   @override
@@ -41,19 +40,19 @@ class _DesktopPageState extends State<DesktopPage> {
         child: SingleChildScrollView(
           child: Column(children: [
             _buildChildren(),
-            MaterialButton(
-              textColor: Colors.white,
-              color: theme.button,
-              onPressed: () => connection.isClosed = false,
-              child: _text('关闭'),
-            ),
-            const SizedBox(height: 8),
-            MaterialButton(
-              textColor: Colors.white,
-              color: theme.button,
-              onPressed: () => connection.isAlive = true,
-              child: _text('活跃'),
-            ),
+            // MaterialButton(
+            //   textColor: Colors.white,
+            //   color: theme.button,
+            //   // onPressed: () => connection.isClosed = false,
+            //   child: _text('关闭'),
+            // ),
+            // const SizedBox(height: 8),
+            // MaterialButton(
+            //   textColor: Colors.white,
+            //   color: theme.button,
+            //   // onPressed: () => connection.isAlive = true,
+            //   child: _text('活跃'),
+            // ),
             const SizedBox(height: 8),
             MaterialButton(
               textColor: Colors.white,

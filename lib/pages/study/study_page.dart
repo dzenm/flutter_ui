@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../generated/l10n.dart';
+import '../common/permission_page.dart';
 import '../main/main_model.dart';
 import '../utils/pick_files_helper.dart';
 import '../widgets/widgets.dart';
@@ -167,7 +168,7 @@ class _StudyPageState extends State<StudyPage> with Logging {
       MaterialButton(
         textColor: Colors.white,
         color: theme.button,
-        onPressed: () {
+        onPressed: () async {
           _pickFiles((files) async {
             for (var file in files) {
               String path = file.path;
@@ -177,6 +178,26 @@ class _StudyPageState extends State<StudyPage> with Logging {
           });
         },
         child: _text('选择文件并计算md5'),
+      ),
+      const SizedBox(height: 8),
+      MaterialButton(
+        textColor: Colors.white,
+        color: theme.button,
+        onPressed: () async {
+          bool? result = await PermissionPage.request(context, permission: XPermission.location);
+          CommonDialog.showToast('返回结果：$result');
+        },
+        child: _text('请求位置权限'),
+      ),
+      const SizedBox(height: 8),
+      MaterialButton(
+        textColor: Colors.white,
+        color: theme.button,
+        onPressed: () async {
+          bool? result = await PermissionPage.request(context, permission: XPermission.microphone);
+          CommonDialog.showToast('返回结果：$result');
+        },
+        child: _text('请求麦克风权限'),
       ),
     ];
   }
