@@ -47,11 +47,11 @@ dependencies:
   dbl:
     path: ./modules/dbl
   provider: 6.1.2                               # 状态管理(flutter包) https://pub.dev/packages/provider
-  retrofit: 4.1.0                               # Restful方式使用HTTP请求(dart包) https://pub.flutter-io.cn/packages/retrofit
+  retrofit: 4.2.0                               # Restful方式使用HTTP请求(dart包) https://pub.flutter-io.cn/packages/retrofit
   #  dio_cookie_manager: 2.0.0                     # HTTP请求的cookie管理 https://pub.flutter-io.cn/packages/dio_cookie_manager
   #  cookie_jar: 3.0.1                             # HTTP请求的cookie持久化 https://pub.flutter-io.cn/packages/cookie_jar
   convert: 3.1.1                                # 字符串转化工具(dart包) https://pub.dev/packages/convert
-  flutter_local_notifications: 17.2.1+2         # 通知栏通知提醒(缺少Windows平台) https://pub.flutter-io.cn/packages/flutter_local_notifications
+  flutter_local_notifications: 17.2.2         # 通知栏通知提醒(缺少Windows平台) https://pub.flutter-io.cn/packages/flutter_local_notifications
 
   ########################################## UI ########################################
   back_button_interceptor: 7.0.3                # 返回按钮拦截 https://pub.flutter-io.cn/packages/back_button_interceptor
@@ -62,7 +62,7 @@ dependencies:
   image: 4.2.0                                  # 图片读取和存储 https://pub.flutter-io.cn/packages/image
   transparent_image: 2.0.1                      # 展示透明的图像 https://pub.flutter-io.cn/packages/transparent_image
   flutter_screenutil: 5.9.3                     # 屏幕适配 https://pub.flutter-io.cn/packages/flutter_screenutil
-  fluent_ui: 4.9.0                              # UI工具 https://pub.dev/packages/fluent_ui
+  fluent_ui: 4.9.1                              # UI工具 https://pub.dev/packages/fluent_ui
   #  flutter_echarts: 2.0.0                        # EChart 图表（缩放手势冲突） https://pub.flutter-io.cn/packages/flutter_echarts
   #  badges: 1.2.0                                 # 小红点 https://pub.flutter-io.cn/packages/badges
   #  flutter_swiper: 1.1.6                         # 滑动 https://pub.dev/packages/flutter_swiper
@@ -83,7 +83,7 @@ dependencies:
   scan: 1.6.0                                   # 扫描二维码(移动端) https://pub.flutter-io.cn/packages/scan
   webview_flutter: 4.8.0                        # WebView(移动端) https://pub.dev/packages/webview_flutter
   flutter_html: 3.0.0-beta.2                    # Flutter加载html(移动端) https://pub.flutter-io.cn/packages/flutter_html
-
+  permission_handler: 11.3.1
   ########################################## 工具 ########################################
   lpinyin: 2.0.3                                # 汉字转拼音(全平台) https://pub.flutter-io.cn/packages/lpinyin
   crypto: 3.0.3                                 # 加密解密工具(全平台) https://pub.flutter-io.cn/packages/crypto
@@ -92,7 +92,7 @@ dev_dependencies:
     sdk: flutter
   # 执行生成文件命令：dart run build_runner build --delete-conflicting-outputs
   build_runner: 2.4.11                          # 自动生成工具 https://pub.flutter-io.cn/packages/build_runner
-  retrofit_generator: 8.1.2                     # retrofit自动生成工具 https://pub.flutter-io.cn/packages/retrofit_generator
+  retrofit_generator: 8.2.0                     # retrofit自动生成工具 https://pub.flutter-io.cn/packages/retrofit_generator
   json_serializable: 6.8.0                      # json序列化自动生成工具 https://pub.flutter-io.cn/packages/json_serializable
 
   # The "flutter_lints" package below contains a set of recommended lints to
