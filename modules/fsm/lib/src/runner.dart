@@ -1,11 +1,11 @@
-abstract interface class _Processor {
+abstract interface class Processor {
   ///  Do the job
   ///
   /// @return false on nothing to do
   Future<bool> process();
 }
 
-abstract interface class _Handler {
+abstract interface class Handler {
   ///  Prepare for handling
   Future<void> setup();
 
@@ -16,12 +16,12 @@ abstract interface class _Handler {
   Future<void> finish();
 }
 
-abstract interface class _Runnable {
+abstract interface class Runnable {
   ///  Run in a thread
   Future<void> run();
 }
 
-abstract class Runner implements _Runnable, _Handler, _Processor {
+abstract class Runner implements Runnable, Handler, Processor {
 
   // Frames Per Second
   // ~~~~~~~~~~~~~~~~~
@@ -39,7 +39,7 @@ abstract class Runner implements _Runnable, _Handler, _Processor {
   static int intervalFast   = Duration.millisecondsPerSecond ~/ 60;  //  16 ms
 
   Runner(int millis) {
-    assert(millis > 0, 'interval error: $millis');
+    assert(millis > 0, 'Interval error: millis=$millis');
     interval = millis;
   }
 
