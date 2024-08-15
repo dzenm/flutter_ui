@@ -196,6 +196,7 @@ class CommonDialog {
     return await showCustomDialog(
       context,
       barrierDismissible: barrierDismissible,
+      margin: const EdgeInsets.symmetric(horizontal: 60),
       child: Column(mainAxisSize: MainAxisSize.min, children: [
         SizedBox(height: content == null ? 36 : 20),
         title ??
@@ -411,8 +412,8 @@ class CupertinoDialogButton extends StatelessWidget {
             child: Text(negativeText ?? '取消', style: negativeStyle),
           ),
         ),
-        if (singleButton) Container(height: 45.0, width: 0.5, color: const Color(0xffbababa)),
-        if (singleButton)
+        if (!singleButton) Container(height: 45.0, width: 0.5, color: const Color(0xffbababa)),
+        if (!singleButton)
           Expanded(
             child: TapLayout(
               height: 45.0,
