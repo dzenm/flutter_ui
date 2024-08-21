@@ -9,6 +9,12 @@ class PermissionPage extends StatefulWidget {
   final XPermission permission;
   final bool isShowPermanentlyDeniedInfo;
 
+  const PermissionPage({
+    super.key,
+    required this.permission,
+    this.isShowPermanentlyDeniedInfo = true,
+  });
+
   static Future<bool> request(
     BuildContext context, {
     required XPermission permission,
@@ -25,11 +31,55 @@ class PermissionPage extends StatefulWidget {
     return result ?? false;
   }
 
-  const PermissionPage({
-    super.key,
-    required this.permission,
-    this.isShowPermanentlyDeniedInfo = true,
-  });
+  static List<Permission> get databasePermissions => [
+        /// Android: External Storage
+        /// iOS: Access to folders like `Documents` or `Downloads`. Implicitly
+        /// granted.
+        // Permission.storage,
+      ];
+
+  static List<Permission> get photoReadingPermissions => _photoReadingPermissions;
+  static final List<Permission> _photoReadingPermissions = [
+    /// When running on Android T and above: Read image files from external storage
+    /// When running on Android < T: Nothing
+    /// iOS: Photos
+    /// iOS 14+ read & write access level
+    if (BuildConfig.isIOS) Permission.photos,
+  ];
+
+  static List<Permission> get photoAccessingPermissions => _photoAccessingPermissions;
+  static final List<Permission> _photoAccessingPermissions = [
+    /// When running on Android T and above: Read image files from external storage
+    /// When running on Android < T: Nothing
+    /// iOS: Photos
+    /// iOS 14+ read & write access level
+    if (BuildConfig.isIOS) Permission.photos,
+
+    /// Android: Nothing
+    /// iOS: Photos
+    /// iOS 14+ read & write access level
+    if (BuildConfig.isIOS) Permission.photosAddOnly,
+
+    /// Android: External Storage
+    /// iOS: Access to folders like `Documents` or `Downloads`. Implicitly
+    /// granted.
+    // if (DevicePlatform.isAndroid)
+    // Permission.storage,
+  ];
+
+  static List<Permission> get cameraPermissions => [
+        /// Android: Camera
+        /// iOS: Photos (Camera Roll and Camera)
+        Permission.camera,
+
+        // Permission.storage,
+      ];
+
+  static List<Permission> get microphonePermissions => [
+        /// Android: Microphone
+        /// iOS: Microphone
+        Permission.microphone,
+      ];
 
   @override
   State<PermissionPage> createState() => _PermissionPageState();
@@ -45,10 +95,9 @@ class _PermissionPageState extends State<PermissionPage> with Logging {
   }
 
   /// 请求权限
-  Future<void> _requestPermissions(XPermission myPermission) async {
+  void _requestPermissions(XPermission myPermission) async {
     Permission permission = myPermission.permission;
-    bool isGranted = await permission.isGranted;
-    if (isGranted && mounted) {
+    if ((await permission.isGranted) && mounted) {
       // 已授权直接返回
       Navigator.pop(context, true);
       return;
@@ -57,16 +106,17 @@ class _PermissionPageState extends State<PermissionPage> with Logging {
     // android端权限未授权，才弹出顶部说明弹窗
     if (BuildConfig.isAndroid) {
       // 未被永久拒绝时显示
-      var status = await permission.status;
-      bool isPermanentlyDenied = status.isPermanentlyDenied;
-      bool isDenied = status.isDenied;
-      setState(() => _showPermissionInfo = !isPermanentlyDenied);
+      // var status = await permission.status;
+      // bool isPermanentlyDenied = status.isPermanentlyDenied;
+      // bool isDenied = status.isDenied;
+      // setState(() => _showPermissionInfo = !isPermanentlyDenied);
+      setState(() => _showPermissionInfo = true);
     }
     // 请求权限
-    var result = await permission.request();
-    logDebug('权限${Permission.byValue(permission.value)}请求的结果：result=${result.name}');
+    PermissionStatus status = await permission.request();
+    logDebug('权限${Permission.byValue(permission.value)}请求的结果：result=${status.name}');
     // 请求权限的结果处理
-    if (result.isGranted) {
+    if (status.isGranted) {
       setState(() => _showPermissionInfo = false);
       // 已授予权限
       if (mounted) Navigator.pop(context, true);
@@ -90,11 +140,11 @@ class _PermissionPageState extends State<PermissionPage> with Logging {
     }
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: _buildPermissionView(),
+      body: _buildPermissionInfoView(),
     );
   }
 
-  Widget _buildPermissionView() {
+  Widget _buildPermissionInfoView() {
     XPermission permission = widget.permission;
     String title = '${permission.title}说明';
     String text = '用于${permission.text}';
@@ -197,11 +247,12 @@ class _TransparentRoute<T> extends PageRoute<T> {
 }
 
 enum XPermission {
-  camera(Permission.camera, '相机权限', '拍摄照片、视频、视频聊天。'),
+  camera(Permission.camera, '相机权限', '扫一扫，拍摄照片、视频、视频聊天。'),
   location(Permission.location, '位置权限', '商/好友圈定位、地图展示、位置分享、路线导航。'),
   photos(Permission.photos, '相册权限', '图片或视频的上传、保存。'),
   microphone(Permission.microphone, '麦克风权限', '语音录制、语音通话。'),
-  storage(Permission.storage, '存储权限', '查看文件、图片、视频'),
+  storage(Permission.storage, '存储权限', '查看、保存和发送文件、图片、视频'),
+  manageExternalStorage(Permission.manageExternalStorage, '所有文件权限', '在聊天中发送文件'),
   contacts(Permission.contacts, '联系人权限', '同步联系人、通话记录，实现应用内拨打电话或快速加好友'),
   notification(Permission.notification, '通知权限', '接收云鱼聊天、系统通知'),
   phone(Permission.phone, '拨打电话权限', '拨打电话');
