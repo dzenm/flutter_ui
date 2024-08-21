@@ -1,24 +1,21 @@
-
-
 import 'package:fsm/fsm.dart';
 
-import 'state.dart';
-
-class Connection implements Ticker {
+/// Connection State
+abstract interface class Connection implements Ticker {
   //  Flags
-  bool isClosed = true; // !isOpen()
-  bool isBound = true;
+  bool get isClosed; // !isOpen()
+  bool get isBound;
 
-  bool get isConnected => true;
+  bool get isConnected;
 
-  bool isAlive = false; // isOpen && (isConnected || isBound)
+  bool get isAlive; // isOpen && (isConnected || isBound)
 
   /// ready for reading
-  bool get isAvailable => true; // isAlive
+  bool get isAvailable; // isAlive
   /// ready for writing
-  bool get isVacant => true; // isAlive
+  bool get isVacant; // isAlive
 
-  ConnectionState? get state => null;
+  Future<void> start() async {}
 
   Future<void> close() async {}
 
@@ -32,9 +29,36 @@ abstract interface class TimedConnection {
 
   DateTime? get lastReceivedTime;
 
-  bool isSentRecently(DateTime now);
+  bool isSentRecently(DateTime now) {
+    if (lastSentTime == null) return false;
+    if (lastSentTime!.add(const Duration(minutes: 5)).isBefore(now)) {
+      return true;
+    }
+    return false;
+  }
 
-  bool isReceivedRecently(DateTime now);
+  bool isReceivedRecently(DateTime now) {
+    if (lastReceivedTime == null) return false;
+    if (lastReceivedTime!.add(const Duration(minutes: 5)).isBefore(now)) {
+      return true;
+    }
+    return false;
+  }
 
-  bool isNotReceivedLongTimeAgo(DateTime now);
+  bool isNotReceivedLongTimeAgo(DateTime now) {
+    if (!isSentRecently(now)) {
+      return false;
+    }
+    if (!isReceivedRecently(now)) {
+      return false;
+    }
+    if (lastReceivedTime!.isBefore(lastSentTime!)) {
+      return true;
+    }
+    return false;
+  }
+}
+
+mixin IMConnection implements Connection, TimedConnection {
+
 }
