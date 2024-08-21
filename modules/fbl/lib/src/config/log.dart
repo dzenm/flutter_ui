@@ -5,9 +5,9 @@ typedef LoggerBuilder = Logger Function(LogManager manager);
 /// Created by a0010 on 2022/3/22 09:38
 /// ╔═══════════════════════════════════════════════════════ [Log] 框架图 ═══════════════════════════════════════════════════════════════╗
 /// ║                                                                                   .                                                  ║
-/// ║                                          .              [_ConsolePrinter] ←───┐                                                      ║
+/// ║                                          .       [_DefaultConsolePrinter] ←───┐                                                      ║
 /// ║                                                                               │                                                      ║
-/// ║                    [_Logger] ←─── [_LoggerMixin] ←───┐                        └───┬─── [Logger.printers] ←─── [LogPrinter.output]    ║
+/// ║              [_DefaultLogger] ←─── [LoggerMixin] ←───┐                        └───┬─── [Logger.printers] ←─── [LogPrinter.output]    ║
 /// ║                                                      │                            ├─── [Logger.http]                                 ║
 /// ║                 [LogManager] ←───┐                   │                            ├─── [Logger.db]                                   ║
 /// ║                                  │                   │                            ├─── [Logger.page]                                 ║
@@ -35,10 +35,10 @@ typedef LoggerBuilder = Logger Function(LogManager manager);
 /// [Logging] 是可以通过混入在其它类里，然后直接调用日志输出的级别，默认tag为当前混入
 /// 的类的类名
 ///
-/// [Logger] 是组装日志信息的结构，[_Logger] 为默认的展示格式，如果对当前展示的格式
+/// [Logger] 是组装日志信息的结构，[_DefaultLogger] 为默认的展示格式，如果对当前展示的格式
 /// 不满意，可以进行继承实现，然后通过 [LogManager.builder] 进行构建
 ///
-/// [LogPrinter] 是日志最终处理的结果，[_ConsolePrinter] 是默认的处理方式，如果需
+/// [LogPrinter] 是日志最终处理的结果，[_DefaultConsolePrinter] 是默认的处理方式，如果需
 /// 要进行其它处理，可以继承实现，然后通过 [Logger.printers] 进行添加
 ///
 final class Log {
@@ -50,16 +50,16 @@ final class Log {
     if (manager != null) _manager = manager;
   }
 
-  LogManager _manager = const LogManager(); // 日志输出管理配置
-  Logger get _log => _manager.logger;    // 日志输出工具
-  static void h(dynamic msg, {String? tag}) => Log()._log.http(msg, tag: tag);
-  static void b(dynamic msg, {String? tag}) => Log()._log.db(msg, tag: tag);
-  static void p(dynamic msg, {String? tag}) => Log()._log.page(msg, tag: tag);
-  static void v(dynamic msg, {String? tag}) => Log()._log.verbose(msg, tag: tag);
-  static void d(dynamic msg, {String? tag}) => Log()._log.debug(msg, tag: tag);
-  static void i(dynamic msg, {String? tag}) => Log()._log.info(msg, tag: tag);
-  static void w(dynamic msg, {String? tag}) => Log()._log.warming(msg, tag: tag);
-  static void e(dynamic msg, {String? tag}) => Log()._log.error(msg, tag: tag);
+  static LogManager _manager = const LogManager(); // 日志输出管理配置
+  static Logger get _log => _manager.logger;       // 日志输出工具
+  static void h(dynamic msg, {String? tag}) => _log.http(msg, tag: tag);
+  static void b(dynamic msg, {String? tag}) => _log.db(msg, tag: tag);
+  static void p(dynamic msg, {String? tag}) => _log.page(msg, tag: tag);
+  static void v(dynamic msg, {String? tag}) => _log.verbose(msg, tag: tag);
+  static void d(dynamic msg, {String? tag}) => _log.debug(msg, tag: tag);
+  static void i(dynamic msg, {String? tag}) => _log.info(msg, tag: tag);
+  static void w(dynamic msg, {String? tag}) => _log.warming(msg, tag: tag);
+  static void e(dynamic msg, {String? tag}) => _log.error(msg, tag: tag);
 }
 
 /// Log with class name
@@ -82,10 +82,10 @@ abstract class LogPrinter {
 }
 
 /// 在控制台输出日志
-class _ConsolePrinter extends LogPrinter {
+class _DefaultConsolePrinter extends LogPrinter {
   @override
   void output(LogManager manager, String body, {String head = '', String tail = ''}) {
-    LogConfig config = Log()._manager.config;
+    LogConfig config = Log._manager.config;
     int limitLength = config.limitLength;
     int chunkLength = config.chunkLength;
     String carriageReturn = config.carriageReturn;
@@ -131,7 +131,7 @@ abstract class Logger {
 }
 
 /// 组装和输出不同级别[Level]的日志
-mixin _LoggerMixin implements Logger {
+mixin LoggerMixin implements Logger {
   void log(dynamic msg, String? tag, Level level) {
     // 判断是否达到需要输出的级别
     if ((manager.level ?? Level.kDebug) & level.flag <= 0) return;
@@ -180,24 +180,34 @@ mixin _LoggerMixin implements Logger {
       printer.output(manager, body, head: head, tail: tail);
     }
   }
-  @override void    http(msg, {tag}) => log(msg, tag, Level.http);
-  @override void      db(msg, {tag}) => log(msg, tag, Level.db);
-  @override void    page(msg, {tag}) => log(msg, tag, Level.page);
-  @override void verbose(msg, {tag}) => log(msg, tag, Level.verbose);
-  @override void   debug(msg, {tag}) => log(msg, tag, Level.debug);
-  @override void    info(msg, {tag}) => log(msg, tag, Level.info);
-  @override void warming(msg, {tag}) => log(msg, tag, Level.warming);
-  @override void   error(msg, {tag}) => log(msg, tag, Level.error);
+  @override
+  void    http(dynamic msg, {String? tag}) => log(msg, tag, Level.http);
+  @override
+  void      db(dynamic msg, {String? tag}) => log(msg, tag, Level.db);
+  @override
+  void    page(dynamic msg, {String? tag}) => log(msg, tag, Level.page);
+  @override
+  void verbose(dynamic msg, {String? tag}) => log(msg, tag, Level.verbose);
+  @override
+  void   debug(dynamic msg, {String? tag}) => log(msg, tag, Level.debug);
+  @override
+  void    info(dynamic msg, {String? tag}) => log(msg, tag, Level.info);
+  @override
+  void warming(dynamic msg, {String? tag}) => log(msg, tag, Level.warming);
+  @override
+  void   error(dynamic msg, {String? tag}) => log(msg, tag, Level.error);
 }
 
 /// 输出日志工具
-class _Logger with _LoggerMixin {
+class _DefaultLogger with LoggerMixin {
   final LogManager logManager;
-  _Logger({required this.logManager});
-  final LogPrinter _printer = _ConsolePrinter();
+  _DefaultLogger({required this.logManager});
+  final LogPrinter _printer = _DefaultConsolePrinter();
 
-  @override LogManager get manager => logManager;
-  @override List<LogPrinter> get printers => [_printer];
+  @override
+  LogManager get manager => logManager;
+  @override
+  List<LogPrinter> get printers => [_printer];
 }
 
 /// 日志管理
@@ -216,7 +226,9 @@ class LogManager {
     this.level,
   }) : config = config ?? const LogConfig();
   Logger get logger {
-    if (builder == null) return _Logger(logManager: this);
+    if (builder == null) {
+      return _DefaultLogger(logManager: this);
+    }
     return builder!(this);
   }
   static const String _tag = 'Log';
@@ -323,19 +335,20 @@ class LogCaller {
 /// 输出日志的级别
 enum Level {
   verbose(1 << 0, 'V', '37'), // 1 << 0 = 1
-  http   (1 << 5, 'H', '35'), // 1 << 1 = 2
-  db     (1 << 6, 'B', '96'), // 1 << 2 = 4
-  page   (1 << 7, 'P', '32'), // 1 << 3 = 8
-  debug  (1 << 1, 'D', '94'), // 1 << 4 = 16
-  info   (1 << 2, 'I', '36'), // 1 << 5 = 32
-  warming(1 << 3, 'W', '93'), // 1 << 6 = 64
-  error  (1 << 4, 'E', '31'); // 1 << 7 = 128
+  http   (1 << 1, 'H', '35'), // 1 << 1 = 2
+  db     (1 << 2, 'B', '96'), // 1 << 2 = 4
+  page   (1 << 3, 'P', '32'), // 1 << 3 = 8
+  debug  (1 << 4, 'D', '94'), // 1 << 4 = 16
+  info   (1 << 5, 'I', '36'), // 1 << 5 = 32
+  warming(1 << 6, 'W', '93'), // 1 << 6 = 64
+  error  (1 << 7, 'E', '31'); // 1 << 7 = 128
 
   final int flag;
   final String tag;
   final String color;
   const Level(this.flag, this.tag, this.color);
-  static int kDebug =   http.flag | db.flag | page.flag | debug.flag | info.flag | warming.flag | error.flag; // 2+4+8+16+32+64+128=254
-  static int kDevelop =                                                info.flag | warming.flag | error.flag; //          32+64+128=220
-  static int kRelease =                                                            warming.flag | error.flag; //             64+128=192
+  static int kBase    = verbose.flag | http.flag | db.flag | page.flag;             // 1+2+4+8=15
+  static int kDebug   = kBase | debug.flag | info.flag | warming.flag | error.flag; // 15+16+32+64+128=255
+  static int kDevelop =                      info.flag | warming.flag | error.flag; //       32+64+128=220
+  static int kRelease =                                  warming.flag | error.flag; //          64+128=192
 }
