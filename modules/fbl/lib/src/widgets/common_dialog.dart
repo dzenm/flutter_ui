@@ -62,6 +62,115 @@ class CommonDialog {
     );
   }
 
+  static void show(BuildContext context, String? title, dynamic body,
+      {VoidCallback? callback}) {
+    if (body is String) {
+      body = Text(body);
+    }
+    showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) => CupertinoAlertDialog(
+        title: title == null || title.isEmpty ? null : Text(title),
+        content: body,
+        actions: [
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            onPressed: () {
+              Navigator.pop(context);
+              if (callback != null) {
+                callback();
+              }
+            },
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static void confirm(BuildContext context, String? title, dynamic body,
+      {String? okTitle, VoidCallback? okAction,
+        String? cancelTitle, VoidCallback? cancelAction}) {
+    okTitle ??= 'OK';
+    cancelTitle ??= 'Cancel';
+    if (body is String) {
+      body = Text(body);
+    }
+    showCupertinoDialog(
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+        title: title == null || title.isEmpty ? null : Text(title),
+        content: body,
+        actions: [
+          CupertinoDialogAction(
+            onPressed: () {
+              Navigator.pop(context);
+              if (okAction != null) {
+                okAction();
+              }
+            },
+            child: Text(okTitle!),
+          ),
+          CupertinoDialogAction(
+            onPressed: () {
+              Navigator.pop(context);
+              if (cancelAction != null) {
+                cancelAction();
+              }
+            },
+            isDestructiveAction: true,
+            child: Text(cancelTitle!),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static void actionSheet(BuildContext context, String? title, String? message,
+      dynamic action1, VoidCallback callback1, [
+        dynamic action2, VoidCallback? callback2,
+        dynamic action3, VoidCallback? callback3,
+      ]) => showCupertinoModalPopup(context: context,
+    builder: (context) => CupertinoActionSheet(
+      title: title == null || title.isEmpty ? null : Text(title),
+      message: message == null || message.isEmpty ? null : Text(message),
+      actions: [
+        CupertinoActionSheetAction(
+          onPressed: () {
+            Navigator.pop(context);
+            callback1();
+          },
+          child: action1 is String ? Text(action1) : action1,
+        ),
+        if (action2 != null)
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.pop(context);
+              if (callback2 != null) {
+                callback2();
+              }
+            },
+            child: action2 is String ? Text(action2) : action2,
+          ),
+        if (action3 != null)
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.pop(context);
+              if (callback3 != null) {
+                callback3();
+              }
+            },
+            child: action3 is String? Text(action3) : action3,
+          ),
+        CupertinoActionSheetAction(
+          onPressed: () => Navigator.pop(context),
+          isDestructiveAction: true,
+          child: Text('Cancel'),
+        ),
+      ],
+    ),
+  );
+
   /// iOS风格底部选择图片对话框
   /// CommonDialog.showSelectImageBottomSheet(context)
   static Future<void> showSelectImageBottomSheet(
