@@ -80,13 +80,13 @@ dependencies:
   video_player: 2.9.1                           # 视频播放(移动端) https://pub.flutter-io.cn/packages/video_player
   fijkplayer: 0.11.0                            # 视频播放(移动端) https://pub.flutter-io.cn/packages/fijkplayer
   flutter_vlc_player: 7.4.2                     # 视频播放(移动端) https://pub.flutter-io.cn/packages/fijkplayer
-  scan: 1.6.0                                   # 扫描二维码(移动端) https://pub.flutter-io.cn/packages/scan
+  mobile_scanner: 5.2.1                         # 扫描二维码(移动端) https://pub.flutter-io.cn/packages/mobile_scanner
   webview_flutter: 4.8.0                        # WebView(移动端) https://pub.dev/packages/webview_flutter
   flutter_html: 3.0.0-beta.2                    # Flutter加载html(移动端) https://pub.flutter-io.cn/packages/flutter_html
   permission_handler: 11.3.1
   ########################################## 工具 ########################################
   lpinyin: 2.0.3                                # 汉字转拼音(全平台) https://pub.flutter-io.cn/packages/lpinyin
-  crypto: 3.0.3                                 # 加密解密工具(全平台) https://pub.flutter-io.cn/packages/crypto
+  crypto: 3.0.5                                 # 加密解密工具(全平台) https://pub.flutter-io.cn/packages/crypto
 dev_dependencies:
   flutter_test:
     sdk: flutter
