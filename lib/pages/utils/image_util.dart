@@ -5,7 +5,6 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
-import 'package:scan/scan.dart';
 
 import 'package:fbl/fbl.dart';
 
@@ -149,19 +148,6 @@ class ImageUtil {
       icon = MimeType.unknown.icon;
     }
     return '${Assets.iconsPath}$icon.png';
-  }
-
-  /// 识别图片二维码
-  static Future<String?> parseQrCode(String filePath, Function callback) async {
-    if (!File(filePath).existsSync()) {
-      return '图片未找到';
-    }
-    String? result = await Scan.parse(filePath);
-    if ((result ?? '').isEmpty) {
-      return '无法识别';
-    }
-    callback(result);
-    return null;
   }
 
   /// 解析二维码
