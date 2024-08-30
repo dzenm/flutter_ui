@@ -168,17 +168,10 @@ class Metronome extends Runner {
   Future<void> onError(dynamic error, dynamic stacktrace, Ticker ticker) async {}
 }
 
-class PrimeMetronome {
+class PrimeMetronome extends Metronome {
   factory PrimeMetronome() => _instance;
   static final PrimeMetronome _instance = PrimeMetronome._internal();
-  PrimeMetronome._internal() {
-    _metronome = Metronome(Runner.intervalSlow);
-    /*await */_metronome.start();
+  PrimeMetronome._internal() :super(Runner.intervalSlow) {
+    start();
   }
-
-  late final Metronome _metronome;
-
-  void addTicker(Ticker ticker) => _metronome.addTicker(ticker);
-
-  void removeTicker(Ticker ticker) => _metronome.removeTicker(ticker);
 }

@@ -324,6 +324,8 @@ abstract class BaseMachine<C extends MachineContext, T extends BaseTransition<C>
 }
 
 
+//// Example
+
 /// [Machine] handle [FiniteState] with auto [Ticker]
 abstract class AutoMachine<C extends MachineContext, T extends BaseTransition<C>, S extends BaseState<C, T>>
     extends BaseMachine<C, T, S> {
