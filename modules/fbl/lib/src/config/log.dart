@@ -51,26 +51,26 @@ final class Log {
 
   static LogManager _manager = const LogManager(); // 日志输出管理配置
   static Logger get _log => _manager.logger; // 日志输出工具
-  static void v(dynamic msg, {String? tag}) => _log.verbose(msg, tag: tag);
-  static void h(dynamic msg, {String? tag}) => _log.http(msg, tag: tag);
-  static void b(dynamic msg, {String? tag}) => _log.db(msg, tag: tag);
-  static void p(dynamic msg, {String? tag}) => _log.page(msg, tag: tag);
-  static void d(dynamic msg, {String? tag}) => _log.debug(msg, tag: tag);
-  static void i(dynamic msg, {String? tag}) => _log.info(msg, tag: tag);
-  static void w(dynamic msg, {String? tag}) => _log.warming(msg, tag: tag);
-  static void e(dynamic msg, {String? tag}) => _log.error(msg, tag: tag);
+  static void v(Object? msg, {String? tag}) => _log.verbose(msg, tag: tag);
+  static void h(Object? msg, {String? tag}) => _log.http(msg, tag: tag);
+  static void b(Object? msg, {String? tag}) => _log.db(msg, tag: tag);
+  static void p(Object? msg, {String? tag}) => _log.page(msg, tag: tag);
+  static void d(Object? msg, {String? tag}) => _log.debug(msg, tag: tag);
+  static void i(Object? msg, {String? tag}) => _log.info(msg, tag: tag);
+  static void w(Object? msg, {String? tag}) => _log.warming(msg, tag: tag);
+  static void e(Object? msg, {String? tag}) => _log.error(msg, tag: tag);
 }
 
 /// Log with class name
 mixin Logging {
-  void logVerbose(dynamic msg) => Log.v(msg, tag: _tag);
-  void logHttp(dynamic msg) => Log.h(msg, tag: _tag);
-  void logDB(dynamic msg) => Log.b(msg, tag: _tag);
-  void logPage(dynamic msg) => Log.p(msg, tag: _tag);
-  void logDebug(dynamic msg) => Log.d(msg, tag: _tag);
-  void logInfo(dynamic msg) => Log.i(msg, tag: _tag);
-  void logWarning(dynamic msg) => Log.w(msg, tag: _tag);
-  void logError(dynamic msg) => Log.e(msg, tag: _tag);
+  void logVerbose(Object? msg) => Log.v(msg, tag: _tag);
+  void logHttp(Object? msg) => Log.h(msg, tag: _tag);
+  void logDB(Object? msg) => Log.b(msg, tag: _tag);
+  void logPage(Object? msg) => Log.p(msg, tag: _tag);
+  void logDebug(Object? msg) => Log.d(msg, tag: _tag);
+  void logInfo(Object? msg) => Log.i(msg, tag: _tag);
+  void logWarning(Object? msg) => Log.w(msg, tag: _tag);
+  void logError(Object? msg) => Log.e(msg, tag: _tag);
   String get _tag => '$runtimeType'.replaceAll('_', '').replaceAll('State', '');
 }
 
@@ -109,7 +109,7 @@ class _DefaultConsolePrinter extends LogPrinter {
     }
     int start = 0, end = chunkLength;
     for (; end <= size; start = end, end += chunkLength) {
-      _print(title + head + body.substring(start, end) + tail + carriageReturn);
+      _print(title + head + body.substring(start, end) + carriageReturn + tail);
     }
     if (start >= size) {
       // all chunks printed
@@ -130,14 +130,14 @@ class _DefaultConsolePrinter extends LogPrinter {
 abstract class Logger {
   LogManager get manager;
   List<LogPrinter> get printers;
-  void verbose(dynamic msg, {String? tag});
-  void    http(dynamic msg, {String? tag});
-  void      db(dynamic msg, {String? tag});
-  void    page(dynamic msg, {String? tag});
-  void   debug(dynamic msg, {String? tag});
-  void    info(dynamic msg, {String? tag});
-  void warming(dynamic msg, {String? tag});
-  void   error(dynamic msg, {String? tag});
+  void verbose(Object? msg, {String? tag});
+  void    http(Object? msg, {String? tag});
+  void      db(Object? msg, {String? tag});
+  void    page(Object? msg, {String? tag});
+  void   debug(Object? msg, {String? tag});
+  void    info(Object? msg, {String? tag});
+  void warming(Object? msg, {String? tag});
+  void   error(Object? msg, {String? tag});
 }
 
 /// 组装和输出不同级别[Level]的日志
@@ -162,7 +162,7 @@ mixin LoggerMixin implements Logger {
 
   int get _level => manager.level.value;
 
-  int output(String body, {String? level, String? tag, String color = ''}) {
+  int output(Object? msg, {String? level, String? tag, String color = ''}) {
     LogConfig config = manager.config;
 
     // 给日志增加颜色
@@ -179,10 +179,9 @@ mixin LoggerMixin implements Logger {
       ..write(now);
     // 输出调用的位置
     if (config.showCaller) {
-      LogCaller? caller = LogCaller.parse(StackTrace.current);
-      if (caller != null) {
-        String result = caller.toString();
-        sb.write('  $result   ');
+      LogCaller? myCaller = LogCaller.parse(StackTrace.current);
+      if (myCaller != null) {
+        sb.write('   $myCaller   ');
       }
     }
     // 输出tag
@@ -201,6 +200,7 @@ mixin LoggerMixin implements Logger {
       sb.write('\x1B[1;37;$colorful${level ?? ''}$colorClear');
     }
     String title = sb.toString();
+    String body = msg.toString();
     for (var printer in printers) {
       printer.output(manager, title, body, head: head, tail: tail);
     }
@@ -208,28 +208,28 @@ mixin LoggerMixin implements Logger {
   }
 
   @override
-  void verbose(msg, {String? tag}) => (_level & LogManager._kVerboseFlag) > 0 &&
+  void verbose(Object? msg, {String? tag}) => (_level & LogManager._kVerboseFlag) > 0 &&
       output(msg, level: 'VERBOSE', tag: tag, color: colorWhiteLight) > 0;
   @override
-  void http(msg, {String? tag}) => (_level & LogManager._kVerboseFlag) > 0 &&
+  void http(Object? msg, {String? tag}) => (_level & LogManager._kVerboseFlag) > 0 &&
       output(msg, level: ' HTTP  ', tag: tag, color: colorMagentaLight) > 0;
   @override
-  void db(msg, {String? tag}) => (_level & LogManager._kVerboseFlag) > 0 &&
+  void db(Object? msg, {String? tag}) => (_level & LogManager._kVerboseFlag) > 0 &&
       output(msg, level: '  DB   ', tag: tag, color: colorCyanDark) > 0;
   @override
-  void page(msg, {String? tag}) => (_level & LogManager._kVerboseFlag) > 0 &&
+  void page(Object? msg, {String? tag}) => (_level & LogManager._kVerboseFlag) > 0 &&
       output(msg, level: ' PAGE  ', tag: tag, color: colorGreenLight) > 0;
   @override
-  void debug(msg, {String? tag}) => (_level & LogManager._kDebug) > 0 &&
+  void debug(Object? msg, {String? tag}) => (_level & LogManager._kDebug) > 0 &&
       output(msg, level: ' DEBUG ', tag: tag, color: colorBlueDark) > 0;
   @override
-  void info(msg, {String? tag}) => (_level & LogManager._kInfoFlag) > 0 &&
+  void info(Object? msg, {String? tag}) => (_level & LogManager._kInfoFlag) > 0 &&
       output(msg, level: ' INFO  ', tag: tag, color: colorCyanLight) > 0;
   @override
-  void warming(msg, {String? tag}) => (_level & LogManager._kWarningFlag) > 0 &&
+  void warming(Object? msg, {String? tag}) => (_level & LogManager._kWarningFlag) > 0 &&
       output(msg, level: 'WARMING', tag: tag, color: colorYellowDark) > 0;
   @override
-  void error(msg, {String? tag}) => (_level & LogManager._kErrorFlag) > 0 &&
+  void error(Object? msg, {String? tag}) => (_level & LogManager._kErrorFlag) > 0 &&
       output(msg, level: ' ERROR ', tag: tag, color: colorRedLight) > 0;
 }
 
@@ -333,10 +333,14 @@ class LogCaller {
   static String? locate(StackTrace current) {
     List<String> array = current.toString().split('\n');
     for (String line in array) {
-      // 当前文件所在的相对位置，跳过不输出
-      if (line.contains('base/config/log.dart:')) continue;
+      if (line.contains('fbl/src/config/log.dart:')) {
+        // skip for Log
+        continue;
+      }
       // assert(line.startsWith('#3      '), 'unknown stack trace: $current');
-      if (line.startsWith('#')) return line;
+      if (line.startsWith('#')) {
+        return line;
+      }
     }
     // unknown format
     return null;
