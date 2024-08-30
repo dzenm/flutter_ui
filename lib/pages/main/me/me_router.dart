@@ -8,7 +8,6 @@ import 'info/edit_info_page.dart';
 import 'info/info_page.dart';
 import 'info/view_info_page.dart';
 import 'me_content_page.dart';
-import 'me_page.dart';
 import 'medicine/medicine_page.dart';
 import 'rank/rank_page.dart';
 import 'setting/about/about_page.dart';

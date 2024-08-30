@@ -56,6 +56,7 @@ class _ScanQRWidgetState extends State<ScanQRWidget> {
         },
         fit: BoxFit.fitHeight,
       ),
+      ...widget.children,
       Positioned(
         top: 48,
         left: 20,
@@ -72,11 +73,10 @@ class _ScanQRWidgetState extends State<ScanQRWidget> {
         alignment: Alignment.bottomCenter,
         child: _buildFlashLightView(),
       ),
-      ...widget.children,
     ]);
   }
 
-  /// 闪光灯和t提示文本布局
+  /// 闪光灯和提示文本布局
   Widget _buildFlashLightView() {
     return Container(
       color: Colors.black,

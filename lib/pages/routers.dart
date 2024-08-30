@@ -1,6 +1,5 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:fbl/fbl.dart';
-import 'package:flutter/widgets.dart';
 
 import 'common/example_page.dart';
 import 'common/view_media_page.dart';
