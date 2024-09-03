@@ -3,19 +3,12 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@android:color/white" />
 
-    <!-- You can insert your own image assets here -->
-    <!-- <item>
-        <bitmap
-            android:gravity="center"
-            android:src="@mipmap/launch_image" />
-    </item> -->
-    <item android:id="@+id/splash_bg">
-        <bitmap android:src="@drawable/splash_background" />
-    </item>
     <item
         android:id="@+id/splash_bottom"
         android:bottom="124dp"
+        android:width="43dp"
+        android:height="43dp"
         android:gravity="bottom|center_horizontal">
-        <bitmap android:src="@drawable/splash_bottom" />
+        <bitmap android:src="@drawable/splash_bottom" android:tint="@color/ic_launcher_background"/>
     </item>
 </layer-list>
