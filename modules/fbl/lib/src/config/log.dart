@@ -313,7 +313,8 @@ class LogConfig {
     String h = _twoDigits(time.hour);
     String min = _twoDigits(time.minute);
     String sec = _twoDigits(time.second);
-    return '${time.year}-$m-$d $h:$min:$sec';
+    String mill = '${time.millisecond}'.padLeft(3, '0');
+    return '${time.year}-$m-$d $h:$min:$sec $mill';
   }
   String _twoDigits(int n) => n >= 10  ? '$n' : '0$n';
 }
