@@ -23,7 +23,6 @@ import 'pages/widgets/keyboard/mocks/mock_binding.dart';
 class Application with _InitAppMixin {
   /// 私有构造方法
   Application._internal();
-
   factory Application() => _instance;
   static final Application _instance = Application._internal();
 
