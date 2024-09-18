@@ -328,6 +328,21 @@ class DBManagerDelegate {
     return count;
   }
 
+  /// 删除数据
+  Future<int> rawDelete(
+    String sql,
+    List<Object?>? args, {
+    String? dbName,
+  }) async {
+    Database? db = await getDatabase(dbName: dbName);
+    if (db == null) return -1;
+
+    // 更新数据
+    int count = await db.rawDelete(sql, args);
+    log('根据${_mergeSql(sql, args)}条件共更新数据$count条');
+    return count;
+  }
+
   /// 更新数据
   Future<int> update(
     String tableName,
@@ -362,10 +377,9 @@ class DBManagerDelegate {
     Database? db = await getDatabase(dbName: dbName);
     if (db == null) return -1;
 
-    int count = 0;
     // 更新数据
-    count = await db.rawUpdate(sql, args);
-    log('根据${_mergeSql(sql, args)}条件共更新数据$count条');
+    int count = await db.rawUpdate(sql, args);
+    log('根据${_mergeSql(sql, args)}条件共删除数据$count条');
     return count;
   }
 

@@ -90,6 +90,15 @@ final class DBManager {
     return await _delegate.delete(tableName, dbName: dbName, where: where, whereArgs: whereArgs);
   }
 
+  /// 删除数据
+  Future<int> rawDelete(
+    String sql,
+    List<Object?>? args, {
+    String? dbName,
+  }) async {
+    return await _delegate.rawDelete(sql, args, dbName: dbName);
+  }
+
   /// 更新数据
   Future<int> update(
     String tableName,
