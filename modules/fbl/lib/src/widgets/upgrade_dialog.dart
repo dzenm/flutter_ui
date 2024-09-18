@@ -180,9 +180,9 @@ class _DownloadViewState extends State<_DownloadView> {
     _cancel = CancelToken();
     HttpsClient().download(
       widget.appVersion.url!,
-      file.path,
       cancelToken: _cancel,
       success: (data) async {
+        await file.writeAsBytes(data);
         _installAPK(filePath);
         _running = false;
         setState(() {});
