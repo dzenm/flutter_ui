@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 
@@ -80,8 +81,13 @@ class LoggerInterceptor extends Interceptor {
       _print(headers);
     }
     if (config.showResponseBody) {
-      _print('body:');
-      _print(response.toString(), isJson: true);
+      _print('body: ');
+      String data = response.data is Map
+          ? response.toString()
+          : response.data is Uint8List
+          ? 'Data is Byte, length=${(response.data as Uint8List).length} bytes'
+          : 'Unknown data type';
+      _print(data, isJson: true);
     }
     _printDecorateTail(needShow: existResponse);
   }

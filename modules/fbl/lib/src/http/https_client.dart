@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
-import 'package:http_parser/http_parser.dart';
 
 import 'data_entity.dart';
 import 'log_interceptor.dart';
@@ -51,6 +50,7 @@ final class HttpsClient {
 
   factory HttpsClient() => _instance;
   static final HttpsClient _instance = HttpsClient._internal();
+
   HttpsClient._internal();
 
   /// 如果存在多个url的情况，在这里添加，默认使用 [apiServices] ，其他使用 [api] 请求接口
@@ -218,15 +218,13 @@ final class HttpsClient {
 
   /// 下载文件
   /// [url] 下载文件的url
-  /// [savePath] 保存文件的路径
   /// [cancelToken] 取消下载请求的token
   /// [success] 下载成功返回的结果
   /// [progress] 下载的进度
   /// [failed] 下载失败返回的结果
   /// [canCancel] 是否可以取消下载
-  Future<void> download(
-    String url,
-    dynamic savePath, {
+  Future<Uint8List?> download(
+    String url, {
     CancelToken? cancelToken,
     Success? success,
     Progress? progress,
@@ -236,14 +234,8 @@ final class HttpsClient {
     HttpError? error;
     try {
       Dio dio = _createDio(baseUrl: _baseUrls.first);
-      Response<dynamic> response = await dio.download(
+      Response response = await dio.get<Uint8List>(
         url,
-        savePath,
-        options: Options(
-          responseType: ResponseType.bytes,
-          followRedirects: false,
-        ),
-        cancelToken: canCancel ? cancelToken : null,
         onReceiveProgress: (int count, int total) {
           // 未实现/禁止取消/通过token取消下载等情况不能再进行处理
           if (progress == null || (canCancel && (cancelToken?.isCancelled ?? false))) return;
@@ -257,12 +249,18 @@ final class HttpsClient {
             progress(progressPercent, count, total);
           }
         },
+        options: Options(
+          responseType: ResponseType.bytes,
+          followRedirects: false,
+        ),
       );
+      Uint8List? data = response.data;
       if (response.statusCode == 200 || response.statusCode == 206) {
         // 下载成功的返回结果
         if (success != null) {
-          await success(savePath);
+          await success(data);
         }
+        return data;
       } else {
         // 下载请求失败的错误信息
         error = HttpError(response.statusCode ?? 1000, response.statusMessage ?? '', error.toString());
@@ -272,46 +270,31 @@ final class HttpsClient {
       error = HttpError(1000, e.message ?? '', error.toString());
     }
     // 下载结果
-    if (error == null) return;
+    if (error == null) return null;
     if (failed != null) await failed(error!);
     log('下载错误: code=${error!.code}, msg=${error!.msg}, error=${error!.error}');
+    return null;
   }
 
   /// 上传文件
-  /// [fileType] 文件类型：0=图片，1=文件，2=视频，3=音频；
-  /// [original] 是否是原文件(默认0)：0=不是，1=是;
-  /// [sceneType] 使用场景类型(默认0)：0=聊天，1=朋友圈
   /// [cancelToken] 取消上传请求的token
   /// [success] 上传成功返回的结果
   /// [onSendProgress] 上传的进度
   /// [failed] 上传失败返回的结果
-  Future<void> upload(
-    int fileType,
-    String path,
-    String fileName,
-    int original, {
+  Future<String?> upload(
+    String url,
+    dynamic data, {
     CancelToken? cancelToken,
     Success? success,
     Progress? progress,
     Failed? failed,
     bool canCancel = true,
   }) async {
-    int sceneType = 0;
-    MultipartFile multipartFile = MultipartFile.fromFileSync(
-      path,
-      filename: fileName,
-      contentType: MediaType.parse('multipart/form-data'),
-    );
-    FormData data = FormData()
-      ..files.add(MapEntry('file', multipartFile))
-      ..fields.add(MapEntry('original', '$original'))
-      ..fields.add(MapEntry('sceneType', '$sceneType'));
-
     HttpError? error;
     try {
       Dio dio = _createDio(baseUrl: _baseUrls.first);
       final Response response = await dio.request(
-        '${_baseUrls.first}fileUpload/upload/$fileType',
+        url,
         data: data,
         cancelToken: canCancel ? cancelToken : null,
         options: Options(
@@ -340,6 +323,7 @@ final class HttpsClient {
         if (success != null) {
           await success(value.data);
         }
+        return value.data;
       } else {
         // 下载请求失败的错误信息
         error = HttpError(response.statusCode ?? 1000, response.statusMessage ?? '', error.toString());
@@ -349,9 +333,10 @@ final class HttpsClient {
       error = HttpError(1000, e.message ?? '', error.toString());
     }
     // 下载结果
-    if (error == null) return;
+    if (error == null) return null;
     if (failed != null) await failed(error!);
     log('上传错误: code=${error!.code}, msg=${error!.msg}, error=${error!.error}');
+    return null;
   }
 
   void log(dynamic text) => _logPrint == null ? null : _logPrint!(text, tag: 'HttpsClient');
