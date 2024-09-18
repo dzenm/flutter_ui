@@ -79,7 +79,7 @@ dependencies:
   video_player: 2.9.1                           # 视频播放(移动端) https://pub.flutter-io.cn/packages/video_player
   fijkplayer: 0.11.0                            # 视频播放(移动端) https://pub.flutter-io.cn/packages/fijkplayer
   flutter_vlc_player: 7.4.2                     # 视频播放(移动端) https://pub.flutter-io.cn/packages/fijkplayer
-  mobile_scanner: 5.2.1                         # 扫描二维码(移动端) https://pub.flutter-io.cn/packages/mobile_scanner
+  mobile_scanner: 5.2.3                         # 扫描二维码(移动端) https://pub.flutter-io.cn/packages/mobile_scanner
   webview_flutter: 4.8.0                        # WebView(移动端) https://pub.dev/packages/webview_flutter
   flutter_html: 3.0.0-beta.2                    # Flutter加载html(移动端) https://pub.flutter-io.cn/packages/flutter_html
   permission_handler: 11.3.1
