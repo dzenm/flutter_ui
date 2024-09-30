@@ -40,12 +40,13 @@ dependencies:
   cupertino_icons: 1.0.8                        # 图片 https://pub.flutter-io.cn/packages/cupertino_icons
 
   ########################################## BASE ########################################
+  dbl:
+    path: ./modules/dbl
   fbl:
     path: ./modules/fbl
   fsm:
     path: ./modules/fsm
-  dbl:
-    path: ./modules/dbl
+
   provider: 6.1.2                               # 状态管理(flutter包) https://pub.dev/packages/provider
   retrofit: 4.2.0                               # Restful方式使用HTTP请求(dart包) https://pub.flutter-io.cn/packages/retrofit
   #  dio_cookie_manager: 2.0.0                     # HTTP请求的cookie管理 https://pub.flutter-io.cn/packages/dio_cookie_manager

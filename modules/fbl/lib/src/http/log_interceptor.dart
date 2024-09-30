@@ -15,6 +15,10 @@ class LoggerInterceptor extends Interceptor {
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+    if (config.addVerification != null) {
+      String authorization = config.addVerification!();
+      options.headers['authorization'] = authorization;
+    }
     handler.next(options);
   }
 
@@ -248,6 +252,9 @@ class LogInterceptorConfig {
   ///```
   void Function(Object object, {String tag})? logPrint;
 
+  /// If http request need verify, you can add token to header
+  String Function()? addVerification;
+
   LogInterceptorConfig({
     this.showRequest = true,
     this.showRequestHeader = true,
@@ -261,5 +268,6 @@ class LogInterceptorConfig {
     this.interval = '  ',
     this.onCompleted,
     this.logPrint,
+    this.addVerification,
   });
 }

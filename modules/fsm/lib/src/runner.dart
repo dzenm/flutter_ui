@@ -49,6 +49,14 @@ abstract class Runner implements Runnable, Handler, Processor {
 
   bool get isRunning => _running;
 
+  Future<void> start() async {
+    if (_running) {
+      await stop();
+      await idle();
+    }
+    /*await */run();
+  }
+
   Future<void> stop() async => _running = false;
 
   @override
@@ -117,14 +125,6 @@ class Metronome extends Runner {
   void addTicker(Ticker ticker) => _allTickers.add(ticker);
 
   void removeTicker(Ticker ticker) => _allTickers.remove(ticker);
-
-  Future<void> start() async {
-    if (isRunning) {
-      await stop();
-      await idle();
-    }
-    /*await */run();
-  }
 
   @override
   Future<void> setup() async {

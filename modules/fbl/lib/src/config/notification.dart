@@ -3,23 +3,23 @@ import 'log.dart';
 ///  Notification observer
 abstract class Observer {
 
-  Future<void> onReceive(Message message);
+  Future<void> onReceiveNotification(Notification notification);
 }
 
-///  Message object with name, sender and extra info
-class Message {
-  Message(this.name, {this.sender, this.extras});
+///  Notification object with name, sender and extra info
+class Notification {
+  Notification(this.name, this.sender, this.userInfo);
 
   final String name;
   final dynamic sender;
-  final Map? extras;
+  final Map? userInfo;
 
   @override
   String toString() {
     return '$runtimeType={'
         'name=$name, '
         'sender=$sender, '
-        'extras=$extras}';
+        'userInfo=$userInfo}';
   }
 
 }
@@ -30,7 +30,7 @@ class NotificationCenter {
   static final NotificationCenter _instance = NotificationCenter._internal();
   NotificationCenter._internal();
 
-  var center = _BaseCenter();
+  BaseCenter center = BaseCenter();
 
   ///  Add observer with notification name
   ///
@@ -51,7 +51,7 @@ class NotificationCenter {
   ///  Post a notification with extra info
   ///
   /// @param name   - notification name
-  /// @param sender - who post this message
+  /// @param sender - who post this notification
   /// @param info   - extra info
   Future<void> postNotification(String name, dynamic sender, [Map? info]) async {
     await center.postNotification(name, sender, info);
@@ -59,14 +59,14 @@ class NotificationCenter {
 
   ///  Post a notification
   ///
-  /// @param message - message object
-  Future<void> post(Message message) async {
-    await center.post(message);
+  /// @param notification - notification object
+  Future<void> post(Notification notification) async {
+    await center.post(notification);
   }
 
 }
 
-class _BaseCenter with Logging {
+class BaseCenter with Logging {
 
   // name => WeakSet<Observer>
   final Map<String, Set<Observer>> _observers = {};
@@ -115,24 +115,24 @@ class _BaseCenter with Logging {
   /// @param name     - notification name
   /// @param sender   - notification sender
   /// @param info     - extra info
-  Future<void> postNotification(String name, dynamic sender, [Map? extras]) async {
-    return await post(Message(name, sender: sender, extras: extras));
+  Future<void> postNotification(String name, dynamic sender, [Map? info]) async {
+    return await post(Notification(name, sender, info));
   }
 
-  Future<void> post(Message message) async {
-    Set<Observer>? listeners = _observers[message.name]?.toSet();
+  Future<void> post(Notification notification) async {
+    Set<Observer>? listeners = _observers[notification.name]?.toSet();
     if (listeners == null) {
-      logDebug('No listeners for notification: ${message.name}');
+      logDebug('no listeners for notification: ${notification.name}');
       return;
     }
     List<Future> tasks = [];
     for (Observer item in listeners) {
       try {
-        tasks.add(item.onReceive(message).onError((error, st) =>
-            Log.e('Observer error: $error, $st, $message')
+        tasks.add(item.onReceiveNotification(notification).onError((error, st) =>
+            Log.e('observer error: $error, $st, $notification')
         ));
       } catch (ex, stackTrace) {
-        logError('Observer error: $ex, $stackTrace, $message');
+        logError('observer error: $ex, $stackTrace, $notification');
       }
     }
     // wait all tasks finished
