@@ -281,7 +281,7 @@ final class HttpsClient {
   /// [success] 上传成功返回的结果
   /// [onSendProgress] 上传的进度
   /// [failed] 上传失败返回的结果
-  Future<String?> upload(
+  Future<dynamic> upload(
     String url,
     dynamic data, {
     CancelToken? cancelToken,
