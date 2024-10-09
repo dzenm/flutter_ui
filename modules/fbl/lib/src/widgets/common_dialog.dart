@@ -26,16 +26,29 @@ class CommonDialog {
 
   /// 加载中对话框
   /// CommonDialog.loading()
-  static CancelFunc loading({String loadingTxt = 'loading', bool isVertical = true, bool light = false}) {
+  static CancelFunc loading({
+    String loadingTxt = 'loading',
+    bool isVertical = true,
+    bool light = false,
+  }) {
     List<Widget> widgets = [
       const SizedBox(
         width: 30,
         height: 30,
-        child: CircularProgressIndicator(strokeWidth: 2, backgroundColor: Colors.white),
+        child: CircularProgressIndicator(
+          strokeWidth: 2,
+          backgroundColor: Colors.white,
+        ),
       ),
       const SizedBox(width: 20, height: 20),
-      Text(loadingTxt, style: const TextStyle(color: Colors.white, fontSize: 16)),
+      Text(
+        loadingTxt,
+        style: const TextStyle(color: Colors.white, fontSize: 16),
+      ),
     ];
+    Widget child = isVertical
+        ? Column(mainAxisSize: MainAxisSize.min, children: widgets) //纵向布局
+        : Row(mainAxisSize: MainAxisSize.min, children: widgets); //横向布局
     return BotToast.showCustomLoading(
       align: Alignment.center,
       backgroundColor: light ? Colors.black26 : Colors.transparent,
@@ -43,34 +56,36 @@ class CommonDialog {
       clickClose: false,
       allowClick: false,
       crossPage: false,
-      toastBuilder: (_) => Container(
-        padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 40),
-        decoration: const BoxDecoration(
-          color: Colors.black54,
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-        ),
-        child: isVertical
-            ? Column(
-                mainAxisSize: MainAxisSize.min,
-                children: widgets,
-              )
-            : Row(
-                mainAxisSize: MainAxisSize.min,
-                children: widgets,
-              ),
-      ),
+      toastBuilder: (_) {
+        return Container(
+          padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 40),
+          decoration: const BoxDecoration(
+            color: Colors.black54,
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+          ),
+          child: child,
+        );
+      },
     );
   }
 
-  static void show(BuildContext context, String? title, dynamic body,
-      {VoidCallback? callback}) {
+  static Future<T?> show<T>(
+    BuildContext context,
+    String? title,
+    dynamic body, {
+    VoidCallback? callback,
+  }) async {
     if (body is String) {
       body = Text(body);
     }
-    showCupertinoModalPopup(
+    Widget? child;
+    if ((title ?? '').isNotEmpty) {
+      child = Text(title!);
+    }
+    return await showCupertinoModalPopup<T>(
       context: context,
       builder: (BuildContext context) => CupertinoAlertDialog(
-        title: title == null || title.isEmpty ? null : Text(title),
+        title: child,
         content: body,
         actions: [
           CupertinoDialogAction(
@@ -81,25 +96,35 @@ class CommonDialog {
                 callback();
               }
             },
-            child: Text('OK'),
+            child: const Text('OK'),
           ),
         ],
       ),
     );
   }
 
-  static void confirm(BuildContext context, String? title, dynamic body,
-      {String? okTitle, VoidCallback? okAction,
-        String? cancelTitle, VoidCallback? cancelAction}) {
+  static Future<T?> confirm<T>(
+    BuildContext context,
+    String? title,
+    dynamic body, {
+    String? okTitle,
+    VoidCallback? okAction,
+    String? cancelTitle,
+    VoidCallback? cancelAction,
+  }) async {
     okTitle ??= 'OK';
     cancelTitle ??= 'Cancel';
     if (body is String) {
       body = Text(body);
     }
-    showCupertinoDialog(
+    Widget? child;
+    if ((title ?? '').isNotEmpty) {
+      child = Text(title!);
+    }
+    return await showCupertinoDialog<T>(
       context: context,
       builder: (context) => CupertinoAlertDialog(
-        title: title == null || title.isEmpty ? null : Text(title),
+        title: child,
         content: body,
         actions: [
           CupertinoDialogAction(
@@ -126,61 +151,70 @@ class CommonDialog {
     );
   }
 
-  static void actionSheet(BuildContext context, String? title, String? message,
-      dynamic action1, VoidCallback callback1, [
-        dynamic action2, VoidCallback? callback2,
-        dynamic action3, VoidCallback? callback3,
-      ]) => showCupertinoModalPopup(context: context,
-    builder: (context) => CupertinoActionSheet(
-      title: title == null || title.isEmpty ? null : Text(title),
-      message: message == null || message.isEmpty ? null : Text(message),
-      actions: [
-        CupertinoActionSheetAction(
-          onPressed: () {
-            Navigator.pop(context);
-            callback1();
-          },
-          child: action1 is String ? Text(action1) : action1,
-        ),
-        if (action2 != null)
+  static Future<T?> actionSheet<T>(
+    BuildContext context,
+    String? title,
+    String? message,
+    dynamic action1,
+    VoidCallback callback1, [
+    dynamic action2,
+    VoidCallback? callback2,
+    dynamic action3,
+    VoidCallback? callback3,
+  ]) async {
+    return await showCupertinoModalPopup<T>(
+      context: context,
+      builder: (context) => CupertinoActionSheet(
+        title: title == null || title.isEmpty ? null : Text(title),
+        message: message == null || message.isEmpty ? null : Text(message),
+        actions: [
           CupertinoActionSheetAction(
             onPressed: () {
               Navigator.pop(context);
-              if (callback2 != null) {
-                callback2();
-              }
+              callback1();
             },
-            child: action2 is String ? Text(action2) : action2,
+            child: action1 is String ? Text(action1) : action1,
           ),
-        if (action3 != null)
+          if (action2 != null)
+            CupertinoActionSheetAction(
+              onPressed: () {
+                Navigator.pop(context);
+                if (callback2 != null) {
+                  callback2();
+                }
+              },
+              child: action2 is String ? Text(action2) : action2,
+            ),
+          if (action3 != null)
+            CupertinoActionSheetAction(
+              onPressed: () {
+                Navigator.pop(context);
+                if (callback3 != null) {
+                  callback3();
+                }
+              },
+              child: action3 is String ? Text(action3) : action3,
+            ),
           CupertinoActionSheetAction(
-            onPressed: () {
-              Navigator.pop(context);
-              if (callback3 != null) {
-                callback3();
-              }
-            },
-            child: action3 is String? Text(action3) : action3,
+            onPressed: () => Navigator.pop(context),
+            isDestructiveAction: true,
+            child: const Text('Cancel'),
           ),
-        CupertinoActionSheetAction(
-          onPressed: () => Navigator.pop(context),
-          isDestructiveAction: true,
-          child: Text('Cancel'),
-        ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
+  }
 
   /// iOS风格底部选择图片对话框
   /// CommonDialog.showSelectImageBottomSheet(context)
-  static Future<void> showSelectImageBottomSheet(
+  static Future<T?> showSelectImageBottomSheet<T>(
     BuildContext context, {
     String cameraText = 'camera',
     String galleryText = 'gallery',
     Function? onCameraTap,
     Function? onGalleryTap,
   }) async {
-    return await showListBottomSheet(context, [
+    return await showListBottomSheet<T>(context, [
       cameraText,
       galleryText,
     ], (item) async {
@@ -196,7 +230,7 @@ class CommonDialog {
   /// CommonDialog.showListBottomSheet(context, data, (int index) {
   ///   AppRouterOldDelegate.pop(context);
   /// })
-  static Future<void> showListBottomSheet(
+  static Future<T?> showListBottomSheet<T>(
     BuildContext context,
     List<String> items,
     ItemClickCallback? onTap, {
@@ -259,7 +293,7 @@ class CommonDialog {
             }).toList(),
           );
 
-    showModalBottomSheet(
+    return await showModalBottomSheet<T>(
       context: context,
       backgroundColor: Colors.transparent,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
@@ -288,7 +322,7 @@ class CommonDialog {
   ///   content: Text('这是设置好的昵称'),
   ///   onPositiveTap: () => CommonDialog.showToast('修改成功'),
   /// )
-  static Future<T> showPromptDialog<T>(
+  static Future<T?> showPromptDialog<T>(
     BuildContext context, {
     bool barrierDismissible = false,
     String? titleString,
@@ -302,7 +336,7 @@ class CommonDialog {
     GestureTapCallback? onNegativeTap,
     bool singleButton = false,
   }) async {
-    return await showCustomDialog(
+    return await showCustomDialog<T>(
       context,
       barrierDismissible: barrierDismissible,
       margin: const EdgeInsets.symmetric(horizontal: 60),

@@ -1,9 +1,11 @@
-import 'package:flutter/material.dart';
 import 'dart:ui' as ui show TextHeightBehavior;
+
+import 'package:flutter/material.dart';
 
 ///
 /// Created by a0010 on 2023/5/30 10:27
-/// 在设置的行数 [maxLines] ，展示所有文本，如果超过限制，将自动调低文本的大小并且自己设置的文本大小 [TextStyle.fontSize] 将会失效
+/// 在设置的行数 [maxLines] ，展示所有文本，如果超过限制，将自动调低文本
+/// 的大小并且自己设置的文本大小 [TextStyle.fontSize] 将会失效
 /// const AdapterSizeText(
 ///   '故常无欲，以观其妙，常有欲，以观其徼。',
 ///   style: TextStyle(color: Colors.red),
@@ -60,7 +62,8 @@ class _AdapterSizeTextState extends State<AdapterSizeText> {
     super.initState();
     _fontSize = widget.style?.fontSize ?? 15;
     _style = _createTextStyle(_fontSize);
-    WidgetsBinding.instance.addPostFrameCallback((_) => _calculatorTextFontSize(_fontSize));
+    WidgetsBinding.instance.addPostFrameCallback((_) => //
+        _calculatorTextFontSize(_fontSize));
   }
 
   /// 计算Text文本的大小
@@ -72,7 +75,7 @@ class _AdapterSizeTextState extends State<AdapterSizeText> {
     // 重新创建调整后的样式
     _style = _createTextStyle(fontSize);
     // 判断文本是否超过最大行
-    bool exceedMaxLines = _textExceedMaxLines(widget.data, _style, widget.maxLines, width);
+    bool exceedMaxLines = _isTextExceedMaxLines(widget.data, _style, widget.maxLines, width);
     if (exceedMaxLines) {
       // 如果超过最大行，减小字体大小
       return _calculatorTextFontSize(--_fontSize);
@@ -109,9 +112,18 @@ class _AdapterSizeTextState extends State<AdapterSizeText> {
   }
 
   /// 判断文本是否超过规定的行数
-  bool _textExceedMaxLines(String text, TextStyle textStyle, int maxLines, double maxWidth) {
+  bool _isTextExceedMaxLines(
+    String text,
+    TextStyle textStyle,
+    int maxLines,
+    double maxWidth,
+  ) {
     TextSpan textSpan = TextSpan(text: text, style: textStyle);
-    TextPainter textPainter = TextPainter(text: textSpan, maxLines: maxLines, textDirection: TextDirection.ltr);
+    TextPainter textPainter = TextPainter(
+      text: textSpan,
+      maxLines: maxLines,
+      textDirection: TextDirection.ltr,
+    );
     textPainter.layout(maxWidth: maxWidth);
     if (textPainter.didExceedMaxLines) {
       return true;

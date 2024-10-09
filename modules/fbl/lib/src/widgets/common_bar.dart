@@ -62,12 +62,19 @@ class CommonBar extends StatelessWidget implements PreferredSizeWidget {
           children: [
             TextSpan(
               text: subTitle ?? '',
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.normal,
+              ),
             ),
           ],
         ),
       ),
-      titleTextStyle: TextStyle(fontSize: 18.0, color: titleColor, fontWeight: FontWeight.bold),
+      titleTextStyle: TextStyle(
+        fontSize: 18.0,
+        color: titleColor,
+        fontWeight: FontWeight.bold,
+      ),
       centerTitle: centerTitle,
       elevation: elevation,
       toolbarHeight: toolbarHeight,
@@ -76,7 +83,12 @@ class CommonBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  Widget? _buildLeading(BuildContext context, Color? titleColor, {Widget? leading, Function? onBackTap}) {
+  Widget? _buildLeading(
+    BuildContext context,
+    Color? titleColor, {
+    Widget? leading,
+    Function? onBackTap,
+  }) {
     if (showLeading) return null;
     return TapLayout(
       width: 40,

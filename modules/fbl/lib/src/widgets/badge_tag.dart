@@ -22,23 +22,25 @@ class BadgeTag extends StatelessWidget {
     bool isOver100 = count > 99;
     bool isOver10 = count > 9;
     bool isOver1 = count > 0;
-    // 根据数量设置不同的大小
-    double height = isOver1 ? 16 : 8;
-    double width = isOver100
-        ? 24
-        : isOver10
-            ? 20
-            : isOver1
-                ? 16
-                : 8;
-    // 根据数量设置显示文本
-    String text = isOver100
-        ? '99+'
-        : isOver1
-            ? '$count'
-            : '';
-    BoxShape shape = isOver10 ? BoxShape.rectangle : BoxShape.circle;
-    BorderRadius? borderRadius = isOver10 ? BorderRadius.circular(8) : null;
+
+    double width = 8; // 宽度
+    double height = 8; // 高度
+    String text = ''; // 数量
+    BoxShape shape = BoxShape.circle;
+    BorderRadius? borderRadius;
+    if (isOver1) {
+      width = 16;
+      height = 16;
+      text = '$count';
+    } else if (isOver10) {
+      width = 20;
+      text = '$count';
+      shape = BoxShape.rectangle;
+      borderRadius = BorderRadius.circular(8);
+    } else if (isOver100) {
+      width = 24;
+      text = '99+';
+    }
     return Container(
       height: height,
       width: width,
@@ -48,7 +50,10 @@ class BadgeTag extends StatelessWidget {
         borderRadius: borderRadius,
         color: color,
       ),
-      child: Text(text, style: const TextStyle(color: Colors.white, fontSize: 8)),
+      child: Text(
+        text,
+        style: const TextStyle(color: Colors.white, fontSize: 8),
+      ),
     );
   }
 }

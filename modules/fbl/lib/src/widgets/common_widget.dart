@@ -27,15 +27,25 @@ class CommonWidget {
     return BackButton(color: brightnessTheme(isLight: isLight));
   }
 
-  static Color brightnessTheme({bool isLight = true}) => isLight ? Colors.white : Colors.black87;
+  static Color brightnessTheme({bool isLight = true}) => //
+      isLight ? Colors.white : Colors.black87;
 
   /// 标题
-  static Widget titleView(String title, {double left = 8, double top = 8, double right = 8, double bottom = 8}) {
+  static Widget titleView(
+    String title, {
+    double left = 8,
+    double top = 8,
+    double right = 8,
+    double bottom = 8,
+  }) {
     return Container(
       padding: EdgeInsets.only(left: left, top: top, right: right, bottom: bottom),
       child: Row(children: [
         Expanded(
-          child: Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          child: Text(
+            title,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
         ),
       ]),
     );
@@ -73,12 +83,22 @@ class CommonWidget {
       if (i != 0) {
         // 搜索关键字高亮忽略大小写
         preIndex = wordL.indexOf(keywordL, preIndex);
-        spans.add(TextSpan(text: keyword.substring(preIndex, preIndex + searchText.length), style: keywordStyle));
+        spans.add(
+          TextSpan(
+            text: keyword.substring(preIndex, preIndex + searchText.length),
+            style: keywordStyle,
+          ),
+        );
       }
       String val = arr[i];
       if (val.isNotEmpty) {
         preIndex = wordL.indexOf(val, preIndex);
-        spans.add(TextSpan(text: keyword.substring(preIndex, preIndex + val.length), style: normalStyle));
+        spans.add(
+          TextSpan(
+            text: keyword.substring(preIndex, preIndex + val.length),
+            style: normalStyle,
+          ),
+        );
       }
     }
     return spans;

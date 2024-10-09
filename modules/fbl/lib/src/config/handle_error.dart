@@ -21,11 +21,6 @@ typedef HandleMsg = void Function(String message);
 ///   }),
 /// )
 class HandleError {
-  HandleError._internal();
-  static HandleError get instance => _instance;
-  static final HandleError _instance = HandleError._internal();
-  factory HandleError() => _instance;
-
   /// 捕获flutter运行时的错误
   Future catchFlutterError(
     Function runApp, {
@@ -113,7 +108,7 @@ class HandleError {
     if (config.showPackageInfo) {
       log('╔═════════════════════════════════════════ Package Info ════════════════════════════════════════════');
     }
-    Map<String, dynamic> packageInfo = getPackageInfo();
+    Map<String, dynamic> packageInfo = BuildConfig.getPackageInfo();
     for (var key in packageInfo.keys) {
       handleSingleMessage('$key: ${packageInfo[key]}', needLog: config.showPackageInfo);
     }
@@ -122,7 +117,7 @@ class HandleError {
     if (config.showDeviceInfo) {
       log('║═════════════════════════════════════════ Device Info ═════════════════════════════════════════════');
     }
-    Map<String, dynamic> devicesInfo = getDeviceInfo();
+    Map<String, dynamic> devicesInfo = BuildConfig.getDeviceInfo();
     for (var key in devicesInfo.keys) {
       handleSingleMessage('$key: ${devicesInfo[key]}', needLog: config.showDeviceInfo);
     }
@@ -147,52 +142,6 @@ class HandleError {
     config.handleMsg!(sb.toString());
   }
 
-  /// 获取APP信息
-  Map<String, dynamic> getPackageInfo() {
-    if (!BuildConfig.isInitialized) return {};
-    PackageInfo packageInfo = BuildConfig.packageInfo;
-    return {
-      'appName': packageInfo.appName,
-      'packageName': packageInfo.packageName,
-      'version': packageInfo.version,
-      'buildNumber': packageInfo.buildNumber,
-      'buildSignature': packageInfo.buildSignature,
-    };
-  }
-
-  /// 获取设备信息
-  Map<String, dynamic> getDeviceInfo() {
-    if (!BuildConfig.isInitialized) return {};
-    Map<String, dynamic> map = {};
-    if (BuildConfig.isAndroid) {
-      AndroidDeviceInfo androidDeviceInfo = BuildConfig.androidDeviceInfo;
-      Map<String, dynamic> temp = {
-        'baseOS': androidDeviceInfo.version.baseOS,
-        'codename': androidDeviceInfo.version.codename,
-        'incremental': androidDeviceInfo.version.incremental,
-        'previewSdkInt': androidDeviceInfo.version.previewSdkInt,
-        'release': androidDeviceInfo.version.release,
-        'sdkInt': androidDeviceInfo.version.sdkInt,
-        'securityPatch': androidDeviceInfo.version.securityPatch,
-      };
-      map.addAll(temp);
-      map.addAll(androidDeviceInfo.data);
-      map.remove('version');
-    } else if (BuildConfig.isIOS) {
-      IosDeviceInfo iosDeviceInfo = BuildConfig.iosDeviceInfo;
-      Map<String, dynamic> temp = {
-        'sysname': iosDeviceInfo.utsname.sysname,
-        'nodename': iosDeviceInfo.utsname.nodename,
-        'release': iosDeviceInfo.utsname.release,
-        'version': iosDeviceInfo.utsname.version,
-        'machine': iosDeviceInfo.utsname.machine,
-      };
-      map.addAll(temp);
-      map.addAll(iosDeviceInfo.data);
-      map.remove('utsname');
-    }
-    return map;
-  }
 }
 
 class MessageConfig {

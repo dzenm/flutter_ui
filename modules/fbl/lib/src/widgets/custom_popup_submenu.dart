@@ -203,7 +203,11 @@ class _CustomPopupSubmenuRoute<T> extends PopupRoute<T> {
   }
 
   @override
-  Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+  Widget buildPage(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+  ) {
     const double length = 10.0;
     const double unit = 1.0 / (length + 1.5); // 1.0 for the width and 0.5 for the last item's fade.
     CurveTween opacity = CurveTween(curve: const Interval(0.0, 1.0 / 3.0));

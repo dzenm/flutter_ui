@@ -1,7 +1,8 @@
+import 'package:dbl/dbl.dart';
+import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:fbl/fbl.dart';
 import '../../../entities/coin_entity.dart';
 import '../../../entities/user_entity.dart';
 import '../../../generated/l10n.dart';

@@ -7,17 +7,17 @@ import 'tap_layout.dart';
 /// 单选框组件
 class CheckBox extends StatefulWidget {
   final String text;
-  final Color? color;
-  final Color? selectColor;
-  final Color? unselectColor;
+  final Color color;
+  final Color selectColor;
+  final Color unselectColor;
   final ValueChanged<bool>? onChanged;
 
   const CheckBox({
     super.key,
     required this.text,
-    this.color,
-    this.selectColor,
-    this.unselectColor,
+    this.color = Colors.grey,
+    this.selectColor = Colors.blue,
+    this.unselectColor = Colors.grey,
     this.onChanged,
   });
 
@@ -31,21 +31,21 @@ class _CheckBoxState extends State<CheckBox> {
 
   @override
   Widget build(BuildContext context) {
+    IconData icon = _isSelected
+        ? Icons.check_circle_rounded // 选中
+        : Icons.radio_button_unchecked_rounded; // 未选中
+    Color iconColor = _isSelected ? widget.selectColor : widget.unselectColor;
     return TapLayout(
       foreground: Colors.transparent,
       onTap: () {
         _isSelected = !_isSelected;
-        setState(() {});
         if (widget.onChanged != null) widget.onChanged!(_isSelected);
+        setState(() {});
       },
       child: Row(children: [
-        Icon(
-          _isSelected ? Icons.check_circle_rounded : Icons.radio_button_unchecked_rounded,
-          size: 16,
-          color: _isSelected ? widget.selectColor ?? Colors.blue : widget.unselectColor ?? Colors.grey,
-        ),
+        Icon(icon, size: 16, color: iconColor),
         const SizedBox(width: 10),
-        Text(widget.text, style: TextStyle(fontSize: 14, color: widget.color ?? Colors.grey))
+        Text(widget.text, style: TextStyle(fontSize: 14, color: widget.color)),
       ]),
     );
   }
@@ -70,9 +70,9 @@ class _CheckBoxState extends State<CheckBox> {
 class CheckGroup extends StatefulWidget {
   final List<String> list;
   final int initialValue;
-  final Color? color;
-  final Color? selectColor;
-  final Color? unselectColor;
+  final Color color;
+  final Color selectColor;
+  final Color unselectColor;
   final double childAspectRatio;
   final int crossAxisCount;
   final double crossAxisSpacing;
@@ -84,9 +84,9 @@ class CheckGroup extends StatefulWidget {
     super.key,
     required this.list,
     this.initialValue = 0,
-    this.color,
-    this.selectColor,
-    this.unselectColor,
+    this.color = Colors.grey,
+    this.selectColor = Colors.blue,
+    this.unselectColor = Colors.grey,
     this.childAspectRatio = 1,
     this.crossAxisCount = 1,
     this.crossAxisSpacing = 0.0,
@@ -156,9 +156,9 @@ class CheckItem extends StatelessWidget {
   final int index;
   final int selectedIndex;
   final String text;
-  final Color? color;
-  final Color? selectColor;
-  final Color? unselectColor;
+  final Color color;
+  final Color selectColor;
+  final Color unselectColor;
   final EdgeInsetsGeometry? padding;
   final ValueChanged<int>? onChanged;
 
@@ -167,9 +167,9 @@ class CheckItem extends StatelessWidget {
     required this.index,
     required this.selectedIndex,
     required this.text,
-    this.color,
-    this.selectColor,
-    this.unselectColor,
+    this.color = Colors.grey,
+    this.selectColor = Colors.blue,
+    this.unselectColor = Colors.grey,
     this.padding,
     this.onChanged,
   });
@@ -177,6 +177,10 @@ class CheckItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isSelected = selectedIndex == index;
+    IconData icon = isSelected
+        ? Icons.check_circle_rounded // 选中
+        : Icons.radio_button_unchecked_rounded; // 未选中
+    Color iconColor = isSelected ? selectColor : unselectColor;
     return TapLayout(
       foreground: Colors.transparent,
       onTap: () {
@@ -184,13 +188,9 @@ class CheckItem extends StatelessWidget {
       },
       padding: padding,
       child: Row(children: [
-        Icon(
-          isSelected ? Icons.check_circle_rounded : Icons.radio_button_unchecked_rounded,
-          size: 16,
-          color: isSelected ? selectColor ?? Colors.blue : unselectColor ?? Colors.grey,
-        ),
+        Icon(icon, size: 16, color: iconColor),
         const SizedBox(width: 10),
-        Text(text, style: TextStyle(fontSize: 14, color: color ?? Colors.grey))
+        Text(text, style: TextStyle(fontSize: 14, color: color)),
       ]),
     );
   }

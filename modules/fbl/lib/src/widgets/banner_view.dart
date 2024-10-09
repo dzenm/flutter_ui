@@ -84,7 +84,7 @@ class _BannerViewState extends State<BannerView> {
     super.didUpdateWidget(oldWidget);
 
     // 更改children状态，需要重新初始化。
-    if (isUpdate(oldWidget.data, widget.data)) {
+    if (_isUpdate(oldWidget.data, widget.data)) {
       _resetPage();
     }
     if (oldWidget.autoPlay != widget.autoPlay) {
@@ -97,7 +97,7 @@ class _BannerViewState extends State<BannerView> {
   }
 
   /// 是否需要更新，如果数据集发生变化，则返回true，否则false
-  bool isUpdate(List oldList, List newList) {
+  bool _isUpdate(List oldList, List newList) {
     if (oldList.length != newList.length) {
       return true;
     }
@@ -147,7 +147,11 @@ class _BannerViewState extends State<BannerView> {
         // 自动翻页
         ++_curPageIndex;
         _curPageIndex = _curPageIndex == _banners.length ? 0 : _curPageIndex;
-        _controller.animateToPage(_curPageIndex, duration: const Duration(milliseconds: 500), curve: Curves.linear);
+        _controller.animateToPage(
+          _curPageIndex,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.linear,
+        );
       });
     }
   }
@@ -161,7 +165,9 @@ class _BannerViewState extends State<BannerView> {
 
   @override
   Widget build(BuildContext context) {
-    if (realPageLength == 0) return const SizedBox.shrink();
+    if (realPageLength == 0) {
+      return const SizedBox.shrink();
+    }
     return SizedBox(
       width: widget.width,
       height: widget.height,

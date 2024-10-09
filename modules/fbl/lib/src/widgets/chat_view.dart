@@ -7,7 +7,27 @@ import 'scrollview_observer/listview/list_observer_view.dart';
 
 ///
 /// Created by a0010 on 2023/11/27 16:22
-///
+/// ChatView(
+///   physics: physics,
+///   itemCount: chatModels.length,
+///   scrollerController: _scrollerController,
+///   controller: _controller,
+///   observer: _chatObserver,
+///   reverse: true,
+///   itemBuilder: (context, index) {
+///     return ChatItemWidget(
+///       chatModel: chatModels[index],
+///       index: index,
+///       itemCount: chatModels.length,
+///       onRemove: () {
+///         _chatObserver.standby(isRemove: true);
+///         setState(() {
+///           chatModels.removeAt(index);
+///         });
+///       },
+///     );
+///   },
+/// )
 class ChatView extends StatelessWidget {
   final ScrollController scrollerController;
   final ListObserverController controller;

@@ -69,10 +69,58 @@ class BuildConfig {
     isInitialized = true;
     packageInfo = await PackageInfo.fromPlatform();
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    if (BuildConfig.isAndroid) {
+    if (isAndroid) {
       androidDeviceInfo = await deviceInfo.androidInfo;
-    } else if (BuildConfig.isIOS) {
+    } else if (isIOS) {
       iosDeviceInfo = await deviceInfo.iosInfo;
     }
+  }
+
+  /// 获取APP信息
+  static Map<String, dynamic> getPackageInfo() {
+    if (!isInitialized) return {};
+    PackageInfo info = packageInfo;
+    return {
+      'appName': info.appName,
+      'packageName': info.packageName,
+      'version': info.version,
+      'buildNumber': info.buildNumber,
+      'buildSignature': info.buildSignature,
+    };
+  }
+
+  /// 获取设备信息
+  static Map<String, dynamic> getDeviceInfo() {
+    if (!isInitialized) return {};
+
+    Map<String, dynamic> map = {};
+    if (isAndroid) {
+      AndroidDeviceInfo info = androidDeviceInfo;
+      Map<String, dynamic> temp = {
+        'baseOS': info.version.baseOS,
+        'codename': info.version.codename,
+        'incremental': info.version.incremental,
+        'previewSdkInt': info.version.previewSdkInt,
+        'release': info.version.release,
+        'sdkInt': info.version.sdkInt,
+        'securityPatch': info.version.securityPatch,
+      };
+      map.addAll(temp);
+      map.addAll(info.data);
+      map.remove('version');
+    } else if (isIOS) {
+      IosDeviceInfo info = iosDeviceInfo;
+      Map<String, dynamic> temp = {
+        'sysname': info.utsname.sysname,
+        'nodename': info.utsname.nodename,
+        'release': info.utsname.release,
+        'version': info.utsname.version,
+        'machine': info.utsname.machine,
+      };
+      map.addAll(temp);
+      map.addAll(info.data);
+      map.remove('utsname');
+    }
+    return map;
   }
 }

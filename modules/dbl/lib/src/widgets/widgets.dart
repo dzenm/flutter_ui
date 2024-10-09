@@ -4,6 +4,8 @@
 
 library widgets;
 
+export 'desktop_menu.dart';
+export 'desktop_navigation_rail.dart';
 export 'desktop_wrapper.dart';
 export 'icons.dart';
 export 'mouse_state_builder.dart';

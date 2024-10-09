@@ -70,20 +70,20 @@ class CustomPopupWindow extends StatefulWidget {
 
   /// 创建一个自定义的PopupWindow
   static Future<T?> show<T>(
-      context, {
-        required GlobalKey targetKey,
-        required Widget child,
-        RouteTransitionsBuilder? builder,
-        Color? color,
-        Widget? directChild,
-        PopupDirection? direction,
-        Offset? offset,
-        Offset? directOffset,
-        bool? isCollapsed,
-        bool? isPin,
-        double elevation = 0,
-        BorderRadiusGeometry? borderRadius,
-      }) async {
+    context, {
+    required GlobalKey targetKey,
+    required Widget child,
+    RouteTransitionsBuilder? builder,
+    Color? color,
+    Widget? directChild,
+    PopupDirection? direction,
+    Offset? offset,
+    Offset? directOffset,
+    bool? isCollapsed,
+    bool? isPin,
+    double elevation = 0,
+    BorderRadiusGeometry? borderRadius,
+  }) async {
     return await Navigator.push(
       context,
       _CustomPopupRoute(
@@ -130,21 +130,21 @@ class CustomPopupWindow extends StatefulWidget {
   /// )
   /// 创建一个列表的PopupWindow
   static Future<T?> showList<T>(
-      context, {
-        required GlobalKey targetKey,
-        PopupDirection? direction,
-        Offset? offset,
-        Offset? directOffset,
-        bool? isCollapsed,
-        bool? isPin,
-        required List<String> titles,
-        EdgeInsetsGeometry? padding,
-        double radius = 8,
-        Color color = const Color(0xff4c4c4c),
-        Color? textColor,
-        ItemTapCallback? onItemTap,
-        double elevation = 0,
-      }) async {
+    context, {
+    required GlobalKey targetKey,
+    PopupDirection? direction,
+    Offset? offset,
+    Offset? directOffset,
+    bool? isCollapsed,
+    bool? isPin,
+    required List<String> titles,
+    EdgeInsetsGeometry? padding,
+    double radius = 8,
+    Color color = const Color(0xff4c4c4c),
+    Color? textColor,
+    ItemTapCallback? onItemTap,
+    double elevation = 0,
+  }) async {
     return await show(
       context,
       targetKey: targetKey,
@@ -173,7 +173,11 @@ class CustomPopupWindow extends StatefulWidget {
   }
 
   /// Popup最外层布局
-  static Widget _buildContentView({required Widget child, Color? color, double? radius}) {
+  static Widget _buildContentView({
+    required Widget child,
+    Color? color,
+    double? radius,
+  }) {
     return Container(
       decoration: BoxDecoration(
         color: color,
@@ -200,7 +204,12 @@ class CustomPopupWindow extends StatefulWidget {
   }
 
   /// 创建一个Popup的列表
-  static Widget _buildListView(List<String> titles, {Color? color, EdgeInsetsGeometry? padding, required ItemTapCallback onTap}) {
+  static Widget _buildListView(
+    List<String> titles, {
+    Color? color,
+    EdgeInsetsGeometry? padding,
+    required ItemTapCallback onTap,
+  }) {
     List<Widget> widgets = [];
     for (int i = 0; i < titles.length; i++) {
       widgets.add(TapLayout(
@@ -224,10 +233,10 @@ class CustomPopupWindow extends StatefulWidget {
     PopupDirection myDirection = isTop
         ? PopupDirection.top
         : isBottom
-        ? PopupDirection.bottom
-        : isLeft
-        ? PopupDirection.left
-        : PopupDirection.right;
+            ? PopupDirection.bottom
+            : isLeft
+                ? PopupDirection.left
+                : PopupDirection.right;
     return SizedBox(
       width: isVertical ? 12 : 6,
       height: isVertical ? 6 : 12,
@@ -366,13 +375,13 @@ mixin _CalculatePopupPositionMixin on State<CustomPopupWindow> {
 
   /// 是否在竖直方向
   bool get isVertical => [
-    PopupDirection.topLeft,
-    PopupDirection.top,
-    PopupDirection.topRight,
-    PopupDirection.bottomLeft,
-    PopupDirection.bottom,
-    PopupDirection.bottomRight,
-  ].contains(widget.direction);
+        PopupDirection.topLeft,
+        PopupDirection.top,
+        PopupDirection.topRight,
+        PopupDirection.bottomLeft,
+        PopupDirection.bottom,
+        PopupDirection.bottomRight,
+      ].contains(widget.direction);
 
   /// 调整位置
   void _fixPosition(Size targetSize, Size popupSize, Size directSize, Offset target) {
@@ -414,7 +423,7 @@ mixin _CalculatePopupPositionMixin on State<CustomPopupWindow> {
     double popupVerticalRight = targetSize.width - popupSize.width;
 
     switch (widget.direction) {
-    // 在target的左边
+      // 在target的左边
       case PopupDirection.leftBottom:
         dirX = directLeft;
         if (_isPinDirect) dirY = directHorizontalCenter;
@@ -433,7 +442,7 @@ mixin _CalculatePopupPositionMixin on State<CustomPopupWindow> {
         y = popupHorizontalTop;
         break;
 
-    // 在target的右边
+      // 在target的右边
       case PopupDirection.rightTop:
         dirX = directRight;
         dirY = directHorizontalTop;
@@ -452,7 +461,7 @@ mixin _CalculatePopupPositionMixin on State<CustomPopupWindow> {
         x = popupRight;
         break;
 
-    // 在target的上边
+      // 在target的上边
       case PopupDirection.topLeft:
         if (_isPinDirect) dirX = directVerticalCenter;
         dirY = directTop;
@@ -471,7 +480,7 @@ mixin _CalculatePopupPositionMixin on State<CustomPopupWindow> {
         y = popupTop;
         break;
 
-    // 在target的下边
+      // 在target的下边
       case PopupDirection.bottomRight:
         dirX = directVerticalRight;
         dirY = directBottom;
@@ -533,8 +542,19 @@ class _CustomPopupRoute<T> extends PopupRoute<T> {
   String? get barrierLabel => null;
 
   @override
-  Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
-    return builder == null ? child : builder!(context, animation, secondaryAnimation, child);
+  Widget buildPage(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+  ) {
+    return builder == null
+        ? child
+        : builder!(
+            context,
+            animation,
+            secondaryAnimation,
+            child,
+          );
   }
 
   @override
