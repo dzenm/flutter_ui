@@ -42,12 +42,15 @@ class DBManagerDelegate {
 
   List<DBBaseEntity> get tables => _tables;
 
-  void init({Function? logPrint, List<DBBaseEntity>? tables}) {
+  void init({Function? logPrint, String? packageName, List<DBBaseEntity>? tables}) {
     _logPrint = logPrint;
+    _packageName = packageName ?? '';
     if (tables != null) {
       _tables.addAll(tables);
     }
   }
+
+  String _packageName = '';
 
   /// 获取当前数据库对象, 未指定数据库名称时默认为用户名 [_userId]，切换数据库操作时要先关闭 [close] 再重新打开。
   Future<Database?> getDatabase({String? dbName}) async {
@@ -220,7 +223,7 @@ class DBManagerDelegate {
   /// macOS：/Users/a0010/Documents/FlutterUI/userId>/Databases
   /// Windows：C:\Users\Administrator\Documents\FlutterUI\<userId>\Databases
   Future<String> get databasesPath async {
-    String rootDir = 'FlutterUI';
+    String rootDir = _packageName;
     String dirName = 'Databases';
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String dbDir = join(appDocDir.path);

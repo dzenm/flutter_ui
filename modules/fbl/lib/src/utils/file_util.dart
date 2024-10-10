@@ -161,24 +161,25 @@ class FileUtil with _DirectoryMixin {
 
 /// APP文件夹的具体实现
 abstract mixin class _DirectoryMixin {
-  static const rootDir = 'FlutterUI'; // APP的根目录文件夹
   static late Directory _appRootDir;
   static late Directory _userDir;
   static final Map<UserDirectory, Directory> _appDirs = {};
 
   Function? _logPrint;
+  String _rootDir = ''; // APP的根目录文件夹
 
   /// 初始化文件夹
-  Future<void> init({Function? logPrint}) async {
+  Future<void> init({Function? logPrint, String rootDir = 'File'}) async {
     _logPrint = logPrint;
+    _rootDir = rootDir;
     _appRootDir = await _getAppRootDirectory();
   }
 
   /// 缓存文件夹路径 @see [init]、[_appDirs]
   /// Android：/data/user/0/<package_name>/files/{dir}/
   /// iOS：/var/mobile/Containers/Data/Application/{Random ID}/Library/Application Support/{dir}/
-  /// macOS：/Users/a0010/Documents/FlutterUI/{dir}/
-  /// Windows：C:\Users\Administrator\Documents\FlutterUI\{dir}\
+  /// macOS：/Users/a0010/Documents/[_rootDir]/{dir}/
+  /// Windows：C:\Users\Administrator\Documents\[_rootDir]\{dir}\
   Future<Directory> _getAppRootDirectory({String? dir}) async {
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String appRootDir = join(appDocDir.path);
@@ -189,11 +190,11 @@ abstract mixin class _DirectoryMixin {
       appDocDir = await getApplicationSupportDirectory();
       appRootDir = join(appDocDir.path);
     } else if (Platform.isMacOS) {
-      appRootDir = join(appDocDir.path, rootDir);
+      appRootDir = join(appDocDir.path, _rootDir);
     } else if (Platform.isWindows) {
-      appRootDir = join(appDocDir.path, rootDir);
+      appRootDir = join(appDocDir.path, _rootDir);
     } else if (Platform.isLinux) {
-      appRootDir = join(appDocDir.path, rootDir);
+      appRootDir = join(appDocDir.path, _rootDir);
     }
     String parent = join(appRootDir, dir);
     Directory result = Directory(parent);
@@ -209,8 +210,8 @@ abstract mixin class _DirectoryMixin {
   /// 初始化登录用户目录
   /// Android：/data/user/0/<package_name>/files/{dir}/{userId}/
   /// iOS：/var/mobile/Containers/Data/Application/{Random ID}/Library/Application Support/{dir}/{userId}/
-  /// macOS：/Users/a0010/Documents/FlutterUI/{dir}/{userId}/
-  /// Windows：C:\Users\Administrator\Documents\FlutterUI\{dir}\{userId}\
+  /// macOS：/Users/a0010/Documents/[_rootDir]/{dir}/{userId}/
+  /// Windows：C:\Users\Administrator\Documents\[_rootDir]\{dir}\{userId}\
   void initLoginUserDirectory(String userId) {
     String parent = join(_appRootDir.path, userId);
     _userDir = Directory(parent);
@@ -230,8 +231,8 @@ abstract mixin class _DirectoryMixin {
   /// 缓存文件夹路径 @see [init]、[_appDirs]
   /// Android：/data/user/0/<package_name>/files/{dir}/{userId}/Messages/
   /// iOS：/var/mobile/Containers/Data/Application/{Random ID}/Library/Application Support/{dir}/{userId}/Messages/
-  /// macOS：/Users/a0010/Documents/FlutterUI/{dir}/{userId}/Messages/
-  /// Windows：C:\Users\Administrator\Documents\FlutterUI\{dir}\{userId}\Messages\
+  /// macOS：/Users/a0010/Documents/[_rootDir]/{dir}/{userId}/Messages/
+  /// Windows：C:\Users\Administrator\Documents\[_rootDir]\{dir}\{userId}\Messages\
   Directory get messagesDirectory => _appDirs[UserDirectory.messages]!;
 
   /// @see [getUserDirectory]

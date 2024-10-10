@@ -119,7 +119,7 @@ abstract mixin class _InitAppMixin {
     );
 
     log('  初始化 DBManager');
-    DBManager().init(logPrint: BuildConfig.showDBLog ? Log.b : null, tables: [
+    DBManager().init(logPrint: BuildConfig.showDBLog ? Log.b : null, packageName: 'FlutterUI', tables: [
       OrderEntity(),
       ProductEntity(),
       UserEntity(),
@@ -129,7 +129,7 @@ abstract mixin class _InitAppMixin {
     ]);
 
     log('  初始化 FileUtil');
-    await FileUtil().init(logPrint: Log.i);
+    await FileUtil().init(logPrint: Log.i, rootDir: 'FlutterUI');
 
     log('  初始化 HotkeyUtil');
     // await HotkeyUtil().init(logPrint: Log.d);

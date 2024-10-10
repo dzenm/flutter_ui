@@ -15,11 +15,15 @@ typedef UpgradeDatabase = List<String> Function(int oldVersion, int newVersion);
 ///   DBManager().userId = '123456';
 final class DBManager {
   static final DBManager _instance = DBManager._internal();
+
   static DBManager get instance => _instance;
+
   factory DBManager() => _instance;
+
   DBManager._internal() {
     _delegate = DBManagerDelegate();
   }
+
   late DBManagerDelegate _delegate;
 
   set userId(String userId) => _delegate.userId = userId;
@@ -27,8 +31,12 @@ final class DBManager {
   /// 注册数据表
   List<DBBaseEntity> get tables => _delegate.tables;
 
-  void init({Function? logPrint, List<DBBaseEntity>? tables}) {
-    _delegate.init(logPrint: logPrint, tables: tables);
+  void init({Function? logPrint, String packageName = 'Db', List<DBBaseEntity>? tables}) {
+    _delegate.init(
+      logPrint: logPrint,
+      packageName: packageName,
+      tables: tables,
+    );
   }
 
   ///============================== 基本的数据库操作 ================================
