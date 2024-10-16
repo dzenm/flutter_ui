@@ -203,7 +203,7 @@ class ImageUtil {
     try {
       await cmd.executeThread();
     } catch (e) {
-      FileUtil().copy(path, thumbPath);
+      LocalStorage().copy(path, thumbPath);
     }
     return thumbPath;
   }

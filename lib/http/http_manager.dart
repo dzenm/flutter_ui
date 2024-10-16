@@ -33,7 +33,7 @@ class HttpManager {
       // 设置用户数据库名称
       DBManager().userId = userId;
       // 设置用户文件夹路径
-      FileUtil().initLoginUserDirectory(userId);
+      LocalStorage().initLoginUserDirectory(userId);
 
       // 更新数据
       context.read<UserModel>().user = user;

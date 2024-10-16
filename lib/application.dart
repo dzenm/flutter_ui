@@ -55,7 +55,7 @@ class Application with _InitAppMixin {
           handleMsg: (message) async {
             String logFileName = 'crash_${DateTime.now()}.log';
             log('异常信息文件：logFileName=$logFileName');
-            await FileUtil().save(logFileName, message, dir: 'crash');
+            await LocalStorage().save(logFileName, message, dir: 'crash');
           },
         ),
       );
@@ -129,7 +129,7 @@ abstract mixin class _InitAppMixin {
     ]);
 
     log('  初始化 FileUtil');
-    await FileUtil().init(logPrint: Log.i, rootDir: 'FlutterUI');
+    await LocalStorage().init(logPrint: Log.i, rootDir: 'FlutterUI');
 
     log('  初始化 HotkeyUtil');
     // await HotkeyUtil().init(logPrint: Log.d);
@@ -154,7 +154,7 @@ abstract mixin class _InitAppMixin {
     String userId = SPManager.getUserId();
     // 设置用户数据库名称
     DBManager().userId = userId;
-    FileUtil().initLoginUserDirectory(SPManager.getUserId());
+    LocalStorage().initLoginUserDirectory(SPManager.getUserId());
   }
 
   /// 初始化Android设置

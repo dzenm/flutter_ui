@@ -5,17 +5,26 @@ import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
-/// 原图路径对应的缩略图路径区分
-const _thumb = '_thumb';
+/// 执行文件的进度
+/// [currentPath] 当前执行的文件路径
+/// [length] 当前执行的文件大小
+/// [count] 已执行文件的总文件个数
+/// [size] 已执行文件的总大小
+typedef ProgressCallback = void Function(String currentPath, int length, int count, int size);
+
+/// 执行文件已完成
+/// [count] 已执行文件的总文件个数
+/// [size] 已执行文件的总大小
+typedef CompleteCallback = void Function(int count, int size);
 
 ///
 /// Created by a0010 on 2022/9/1 11:56
 /// 文件工具类
-class FileUtil with _DirectoryMixin {
-  FileUtil._internal();
+class LocalStorage with _DirectoryMixin {
+  LocalStorage._internal();
 
-  factory FileUtil() => _instance;
-  static final FileUtil _instance = FileUtil._internal();
+  factory LocalStorage() => _instance;
+  static final LocalStorage _instance = LocalStorage._internal();
 
   /// 删除文件（根据路径删除）
   void delete(String? path) {
@@ -106,13 +115,16 @@ class FileUtil with _DirectoryMixin {
   }
 
   /// 计算文件的MD5值
-  Future<String> getMD5(String path) async => _calculateFileMd5(path);
+  Future<String> getMD5(String path) async => await _calculateFileMd5(path);
 
   /// 计算文件的MD5值
   Future<String> _calculateFileMd5(String path) async {
     final file = File(path);
-    final bytes = await file.readAsBytes();
-    return md5.convert(bytes).toString();
+    if (file.existsSync()) {
+      final bytes = await file.readAsBytes();
+      return md5.convert(bytes).toString();
+    }
+    return '';
   }
 
   // String _getMd5(String path) {
@@ -228,12 +240,21 @@ abstract mixin class _DirectoryMixin {
     }
   }
 
+  String get tempPath => _appDirs[UserDirectory.temp]!.path;
+
   /// 缓存文件夹路径 @see [init]、[_appDirs]
   /// Android：/data/user/0/<package_name>/files/{dir}/{userId}/Messages/
   /// iOS：/var/mobile/Containers/Data/Application/{Random ID}/Library/Application Support/{dir}/{userId}/Messages/
   /// macOS：/Users/a0010/Documents/[_rootDir]/{dir}/{userId}/Messages/
   /// Windows：C:\Users\Administrator\Documents\[_rootDir]\{dir}\{userId}\Messages\
   Directory get messagesDirectory => _appDirs[UserDirectory.messages]!;
+
+  /// 缓存文件夹路径 @see [init]、[_appDirs]
+  /// Android：/data/user/0/<package_name>/files/{dir}/{userId}/Files/
+  /// iOS：/var/mobile/Containers/Data/Application/{Random ID}/Library/Application Support/{dir}/{userId}/Files/
+  /// macOS：/Users/a0010/Documents/[_rootDir]/{dir}/{userId}/Files/
+  /// Windows：C:\Users\Administrator\Documents\[_rootDir]\{dir}\{userId}\Files\
+  Directory get filesDirectory => _appDirs[UserDirectory.files]!;
 
   /// @see [getUserDirectory]
   String getMessagesCategory(FileCategory category, {String? user}) {
@@ -266,7 +287,7 @@ abstract mixin class _DirectoryMixin {
     return '';
   }
 
-  void _log(String text) => _logPrint == null ? null : _logPrint!(text, tag: 'FileUtil');
+  void _log(String text) => _logPrint == null ? null : _logPrint!(text, tag: 'LocalStorage');
 }
 
 /// 对路径进行解析获取常用的字符信息
@@ -281,6 +302,9 @@ abstract mixin class _DirectoryMixin {
 ///   print(info.fileName) // 336a
 ///   print(info.extension) // png
 class PathInfo {
+  /// 原图路径对应的缩略图路径区分
+  static const _thumb = '_thumb';
+
   String get path => _path; // 文件路径
   String _path = '';
 
@@ -432,12 +456,78 @@ class PathInfo {
 
   @override
   String toString() {
-    return '$runtimeType='
+    return '${objectRuntimeType(this, 'PathInfo')}='
         '{path: $path, '
         'parent: $parent, '
         'name: $name, '
         'fileName: $fileName, '
         'extension: $extension}';
+  }
+}
+
+/// 文件扫描
+class FileScanner {
+  FileScanner(this._path);
+
+  final String _path;
+
+  int _count = 0;
+  int _size = 0;
+
+  bool _refreshing = false;
+
+  void scan({
+    ProgressCallback? onProgress,
+    CompleteCallback? onComplete,
+  }) async {
+    if (_refreshing) {
+      return;
+    }
+    _refreshing = true;
+
+    _count = 0;
+    _size = 0;
+    try {
+      await _scanDir(Directory(_path), onProgress: onProgress);
+    } catch (e, st) {
+      assert(false, 'Failed to scan directory: path=$_path, $e, $st');
+    }
+    _refreshing = false;
+    if (onComplete != null) {
+      onComplete(_count, _size);
+    }
+  }
+
+  Future<void> _scanDir(
+    Directory dir, {
+    ProgressCallback? onProgress,
+  }) async {
+    LocalStorage()._log('Scanning directory: $dir');
+    Stream<FileSystemEntity> files = dir.list();
+    await files.forEach((item) async {
+      // directories, files, and links
+      // does not include the special entries `'.'` and `'..'`.
+      if (item is Directory) {
+        await _scanDir(item);
+      } else if (item is File) {
+        try {
+          int length = await item.length();
+          if (length < 0) {
+            LocalStorage()._log('File check error: file=$item, length=$length');
+          } else {
+            _count += 1;
+            _size += length;
+            if (onProgress != null) {
+              onProgress(item.path, length, _count, _size);
+            }
+          }
+        } catch (e, st) {
+          assert(false, 'Failed to check file: file=$_path, $e, $st');
+        }
+      } else {
+        assert(false, 'Ignore link: $item');
+      }
+    });
   }
 }
 
@@ -515,7 +605,7 @@ Map<String, MimeType> mimeTypes = {
   'mp3': MimeType.audio,
   'm4a': MimeType.audio,
   'pdf': MimeType.pdf,
-  'docx': MimeType.pdf,
+  'docx': MimeType.word,
   'doc': MimeType.word,
   'zip': MimeType.zip,
   'rar': MimeType.zip,

@@ -32,8 +32,8 @@ class _FloatNavigationPageState extends State<FloatNavigationPage> {
   }
 
   void _getData() async {
-    Directory cacheDir = FileUtil().getUserDirectory('test');
-    Directory imageDir = FileUtil().getUserDirectory('image');
+    Directory cacheDir = LocalStorage().getUserDirectory('test');
+    Directory imageDir = LocalStorage().getUserDirectory('image');
     Log.d('获取当前APP根目录：cacheDir=${cacheDir.path}');
     Log.d('获取当前APP根目录：imageDir=${imageDir.path}');
   }
