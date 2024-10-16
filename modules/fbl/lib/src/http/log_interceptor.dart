@@ -15,9 +15,8 @@ class LoggerInterceptor extends Interceptor {
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
-    if (config.addVerification != null) {
-      String authorization = config.addVerification!();
-      options.headers['authorization'] = authorization;
+    if (config.addHeaders != null) {
+      options.headers.addAll(config.addHeaders!());
     }
     handler.next(options);
   }
@@ -89,8 +88,8 @@ class LoggerInterceptor extends Interceptor {
       String data = response.data is Map
           ? response.toString()
           : response.data is Uint8List
-          ? 'Data is Byte, length=${(response.data as Uint8List).length} bytes'
-          : 'Unknown data type';
+              ? 'Data is Byte, length=${(response.data as Uint8List).length} bytes'
+              : 'Unknown data type';
       _print(data, isJson: true);
     }
     _printDecorateTail(needShow: existResponse);
@@ -252,8 +251,8 @@ class LogInterceptorConfig {
   ///```
   void Function(Object object, {String tag})? logPrint;
 
-  /// If http request need verify, you can add token to header
-  String Function()? addVerification;
+  /// If http request need headers
+  Map<String, dynamic> Function()? addHeaders;
 
   LogInterceptorConfig({
     this.showRequest = true,
@@ -268,6 +267,6 @@ class LogInterceptorConfig {
     this.interval = '  ',
     this.onCompleted,
     this.logPrint,
-    this.addVerification,
+    this.addHeaders,
   });
 }

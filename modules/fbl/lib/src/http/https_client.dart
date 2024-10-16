@@ -25,6 +25,9 @@ typedef Failed = Future<void> Function(HttpError error);
 /// 创建ApiServices，@see [HttpsClient.init]
 typedef ApiCreator = void Function(Dio dio, String baseUrl);
 
+/// 请求响应后的拦截器, true表示进行拦截，false表示不拦截
+typedef ResponseInterceptor = bool Function(DataEntity data);
+
 /// HTTP请求错误信息的处理
 class HttpError {
   int code;
@@ -65,20 +68,26 @@ final class HttpsClient {
   /// 全局的错误的toast提醒加载框
   Function? _toast;
 
+  /// 请求响应拦截器
+  ResponseInterceptor? _interceptor;
+
   /// 请求拦截器
   final List<Interceptor> _interceptors = [];
 
   /// 初始化
   /// [logPrint] 日志信息处理，可以自定义处理日志
+  /// [addHeaders] 添加请求头
   /// [loading] 全局的加载提示框组件
   /// [toast] 全局的自定义toast提醒
   /// [interceptors] 自定义拦截器
   /// [creator] 创建ApiServices
   void init({
     void Function(Object object, {String tag})? logPrint,
+    Map<String, dynamic> Function()? addHeaders,
     void Function()? loading,
     Function? toast,
     List<Interceptor>? interceptors,
+    ResponseInterceptor? interceptor,
     List<String>? baseUrls,
     ApiCreator? creator,
   }) {
@@ -89,11 +98,13 @@ final class HttpsClient {
     if (interceptors != null) {
       _interceptors.addAll(interceptors);
     }
+    _interceptor = interceptor;
     // 日志打印
     _interceptors.add(LoggerInterceptor(
       config: LogInterceptorConfig(
         isFormatJson: true,
         logPrint: logPrint,
+        addHeaders: addHeaders,
       ),
     ));
     // 通过悬浮窗查看Http请求数据
@@ -175,6 +186,7 @@ final class HttpsClient {
     bool isShowToast = true,
     bool isCustomResult = false,
     void Function()? loading,
+    ResponseInterceptor? interceptor,
   }) async {
     Function? cancel;
     HttpError? error;
@@ -186,6 +198,12 @@ final class HttpsClient {
     }
     try {
       DataEntity data = await future;
+      // 判断是否拦截
+      ResponseInterceptor? responseInterceptor = interceptor ?? _interceptor;
+      if (responseInterceptor != null && responseInterceptor(data)) {
+        if (cancel != null) cancel();
+        return null;
+      }
       if (isCustomResult) {
         result = data;
       } else {

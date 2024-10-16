@@ -247,14 +247,14 @@ abstract mixin class _DirectoryMixin {
   /// iOS：/var/mobile/Containers/Data/Application/{Random ID}/Library/Application Support/{dir}/{userId}/Messages/
   /// macOS：/Users/a0010/Documents/[_rootDir]/{dir}/{userId}/Messages/
   /// Windows：C:\Users\Administrator\Documents\[_rootDir]\{dir}\{userId}\Messages\
-  Directory get messagesDirectory => _appDirs[UserDirectory.messages]!;
+  Directory get messagesDir => _appDirs[UserDirectory.messages]!;
 
   /// 缓存文件夹路径 @see [init]、[_appDirs]
   /// Android：/data/user/0/<package_name>/files/{dir}/{userId}/Files/
   /// iOS：/var/mobile/Containers/Data/Application/{Random ID}/Library/Application Support/{dir}/{userId}/Files/
   /// macOS：/Users/a0010/Documents/[_rootDir]/{dir}/{userId}/Files/
   /// Windows：C:\Users\Administrator\Documents\[_rootDir]\{dir}\{userId}\Files\
-  Directory get filesDirectory => _appDirs[UserDirectory.files]!;
+  Directory get filesDir => _appDirs[UserDirectory.files]!;
 
   /// @see [getUserDirectory]
   String getMessagesCategory(FileCategory category, {String? user}) {
@@ -266,7 +266,7 @@ abstract mixin class _DirectoryMixin {
     return getUserDirectory(UserDirectory.favourites.dirName, user, category.dirName).path;
   }
 
-  /// 获取缓存文件的子目录 @see [messagesDirectory]
+  /// 获取缓存文件的子目录 @see [messagesDir]
   Directory getUserDirectory(
     String part1, [
     String? part2,
