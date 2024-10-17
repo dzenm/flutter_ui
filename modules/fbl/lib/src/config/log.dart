@@ -42,15 +42,14 @@ typedef LoggerBuilder = Logger Function(LogManager manager);
 /// 要进行其它处理，可以继承实现，然后通过 [Logger.printers] 进行添加
 ///
 final class Log {
-  Log._internal();
-  static final Log _instance = Log._internal();
-  factory Log() => _instance;
   Log.init({LogManager? manager}) {
-    if (manager != null) _manager = manager;
+    if (manager != null) {
+      _manager = manager;
+    }
   }
-
   static LogManager _manager = const LogManager(); // 日志输出管理配置
   static Logger get _log => _manager.logger; // 日志输出工具
+
   static void v(Object? msg, {String? tag}) => _log.verbose(msg, tag: tag);
   static void h(Object? msg, {String? tag}) => _log.http(msg, tag: tag);
   static void b(Object? msg, {String? tag}) => _log.db(msg, tag: tag);
