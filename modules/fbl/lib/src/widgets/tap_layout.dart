@@ -314,10 +314,11 @@ class _TapLayoutRipple extends StatelessWidget {
 
   /// 带有水波纹按钮的布局
   Widget _buildRippleView(BuildContext context) {
+    bool isCircle = shape == BoxShape.circle;
     Color highlightColor = Platform.isAndroid || Platform.isIOS
         ? Colors.transparent // 鼠标高亮色
         : Theme.of(context).highlightColor;
-    BorderRadius? effectiveBorderRadius = shape == BoxShape.circle
+    BorderRadius? effectiveBorderRadius = isCircle
         ? BorderRadius.all(Radius.circular(width ?? height ?? 0)) // 水波纹的圆角
         : borderRadius;
 
@@ -353,8 +354,10 @@ class _TapLayoutRipple extends StatelessWidget {
     // 必须在Material包裹下才会生效
     current = Material(
       color: Colors.transparent,
-      borderRadius: effectiveBorderRadius, // 设置圆角，包括水波纹、悬停、正常的圆角
+      borderRadius: effectiveBorderRadius,
+      // 设置圆角，包括水波纹、悬停、正常的圆角
       clipBehavior: Clip.hardEdge,
+      type: isCircle ? MaterialType.circle : MaterialType.canvas,
       child: current,
     );
 

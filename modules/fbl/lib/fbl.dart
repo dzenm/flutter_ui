@@ -3,7 +3,7 @@
 ///
 library fbl;
 
-export 'src/a_router/arouter.dart';
+export 'src/router/arouter.dart';
 export 'src/config/config.dart';
 export 'src/db/db.dart';
 export 'src/http/http.dart';

@@ -1,14 +1,19 @@
 ///
 /// Created by a0010 on 2022/3/22 09:38
 /// 获取Assets文件夹的数据
-class Assets {
+final class Assets {
   Assets._();
 
+  static const String audioPath = 'assets/audios/';
   static const String filePath = 'assets/files/';
   static const String fontsPath = 'assets/fonts/';
   static const String iconsPath = 'assets/icons/';
   static const String imagePath = 'assets/images/';
   static const String videoPath = 'assets/videos/';
+
+  ///================================ 音频 ================================
+  static const String chatSound = '${audioPath}chat_sound_audio.wav';
+  static const String avCall = '${audioPath}av_call_audio.wav';
 
   ///================================ 文件 ================================
   static const String chinaJson = '${filePath}china.json';

@@ -7,11 +7,13 @@ import 'package:flutter/material.dart';
 class FloatingButton extends StatefulWidget {
   final ImageProvider imageProvider;
   final GestureTapCallback? onTap;
+  final double radius;
 
   const FloatingButton({
     super.key,
     required this.imageProvider,
     this.onTap,
+    this.radius = 50.0,
   });
 
   @override
@@ -21,14 +23,28 @@ class FloatingButton extends StatefulWidget {
 class _FloatingButtonState extends State<FloatingButton> with TickerProviderStateMixin {
   double _left = 0.0; //按钮在屏幕上的x坐标
   double _top = 100.0; //按钮在屏幕上的y坐标
-  final double _radius = 50.0;
+  Size _currentSize = Size.zero;
+  final GlobalKey _key = GlobalKey();
+
+  late double _radius;
 
   bool isLeft = true; //按钮是否在按钮左侧
   bool isEdge = true; //按钮是否处于边缘
   bool isMove = false; //按钮是否被移动
 
-  AnimationController? _controller;
-  Animation? _animation; // 松开后按钮返回屏幕边缘的动画
+  @override
+  void initState() {
+    super.initState();
+
+    _radius = widget.radius;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      RenderBox? textView = _key.currentContext?.findRenderObject() as RenderBox?;
+      if (textView == null) {
+        return;
+      }
+      _currentSize = textView.size;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,28 +52,37 @@ class _FloatingButtonState extends State<FloatingButton> with TickerProviderStat
       left: _left,
       top: _top,
       child: Listener(
-        //按下后设isPress为true，绘制选中阴影
         onPointerMove: (details) {
-          // setState(() => isMove = true);
+          setState(() => isMove = true);
         },
-        //按下后设isPress为false，不绘制阴影
         //放下后根据当前x坐标与1/2屏幕宽度比较，判断屏幕在屏幕左侧或右侧，设置返回边缘动画
         //动画结束后设置isLeft的值，根据值绘制左/右边缘按钮
         onPointerUp: (e) async {
           if (isMove) {
-            var pixelDetails = MediaQuery.of(context).size; //获取屏幕信息
+            var size = MediaQuery.of(context).size; //获取屏幕信息
 
-            bool isPositionInLeft = e.position.dx <= pixelDetails.width / 2;
-            _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 100)); //0.1s动画
-            _animation = Tween<double>(
+            bool isPositionInLeft = e.position.dx <= size.width / 2;
+            AnimationController controller = AnimationController(
+              vsync: this,
+              duration: const Duration(milliseconds: 200),
+            ); //0.1s动画
+            // 松开后按钮返回屏幕边缘的动画
+            Animation animation = Tween<double>(
               begin: e.position.dx,
-              end: isPositionInLeft ? 0.0 : pixelDetails.width - _radius,
-            ).animate(_controller!)
-              ..addListener(() {
-                setState(() => _left = _animation?.value); //更新x坐标
-              });
-            await _controller?.forward(); //等待动画结束
-            _controller?.dispose(); //释放动画资源
+              end: isPositionInLeft ? 0.0 : size.width - _currentSize.width,
+            ).animate(controller);
+            animation.addListener(() {
+              setState(() => _left = animation.value); //更新x坐标
+            });
+            await controller.forward(); //等待动画结束
+            controller.dispose(); //释放动画资源
+
+            // 确保不会超出屏幕
+            if (isPositionInLeft) {
+              _left = 0;
+            } else {
+              _left = size.width - _currentSize.width;
+            }
             setState(() {
               isLeft = isPositionInLeft; //按钮在屏幕左侧
               isEdge = true; //按钮返回至边缘
@@ -66,16 +91,28 @@ class _FloatingButtonState extends State<FloatingButton> with TickerProviderStat
           }
         },
         child: GestureDetector(
+          key: _key,
           onTap: widget.onTap,
-          //拖拽更新
+          //拖拽的时候更新坐标
           onPanUpdate: (details) {
-            var pixelDetails = MediaQuery.of(context).size; //获取屏幕信息
+            var size = MediaQuery.of(context).size;
             setState(() {
               //拖拽更新坐标
               _left += details.delta.dx;
               _top += details.delta.dy;
-              //拖拽后更新按钮信息，是否处于边缘
-              isEdge = !(_left > 0 && _left < pixelDetails.width - _radius);
+
+              // 确保不会超出屏幕
+              if (_left < 0) {
+                _left = 0;
+              } else if (_left + _currentSize.width > size.width) {
+                _left = size.width - _currentSize.width;
+              }
+              if (_top < 0) {
+                _top = 0;
+              } else if (_top + _currentSize.height > size.height) {
+                _top = size.height - _currentSize.height;
+              }
+              isEdge = !(_left > 0 && _left < size.width - _radius);
             });
           },
           child: FutureBuilder<ui.Image>(
@@ -250,7 +287,10 @@ class FloatingButtonPainter extends CustomPainter {
     Paint paint = Paint();
     canvas.save(); //图片剪裁前保存图层
 
-    RRect imageRRect = RRect.fromRectAndRadius(Rect.fromLTWH(_radius - 17.5, _radius - 17.5, 35, 35), const Radius.circular(17.5));
+    RRect imageRRect = RRect.fromRectAndRadius(
+      Rect.fromLTWH(_radius - 17.5, _radius - 17.5, 35, 35),
+      const Radius.circular(17.5),
+    );
     canvas.clipRRect(imageRRect); //图片为圆形，圆形剪裁
     canvas.drawColor(Colors.white, BlendMode.srcOver); //设置填充颜色为白色
 

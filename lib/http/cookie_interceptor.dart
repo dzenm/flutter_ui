@@ -22,7 +22,7 @@ class CookieInterceptor extends Interceptor {
       _saveCookies(response);
     } else if (response.statusCode == 401) {
       _cookie = null;
-      SPManager.setCookie(_cookie);
+      SPManager.setToken(_cookie);
     }
     super.onResponse(response, handler);
   }
@@ -49,12 +49,12 @@ class CookieInterceptor extends Interceptor {
       // 将list类型的cookie转化成string类型
       _cookie = StrUtil.listToString(cookies, pattern: '&');
 
-      SPManager.setCookie(_cookie);
+      SPManager.setToken(_cookie);
     }
   }
 
   Future<void> _setCookies(RequestOptions options) async {
-    _cookie = _cookie ?? SPManager.getCookie();
+    _cookie = _cookie ?? SPManager.getToken();
 
     // 将string类型的cookie转化成list
     List<String> cookies = StrUtil.stringToList(_cookie, pattern: '&');

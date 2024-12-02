@@ -12,8 +12,8 @@ dependencies:
     sdk: flutter
   ########################################## BASE ########################################
   # config文件夹
-  package_info_plus: 8.0.2                      # 获取包名信息(全平台) https://pub.dev/packages/package_info_plus
-  device_info_plus: 10.1.2                      # 获取设备信息(全平台) https://pub.flutter-io.cn/packages/device_info_plus
+  package_info_plus: 8.1.0                      # 获取包名信息(全平台) https://pub.dev/packages/package_info_plus
+  device_info_plus: 11.1.0                      # 获取设备信息(全平台) https://pub.flutter-io.cn/packages/device_info_plus
   # db文件夹
   sqflite_common_ffi: 2.3.3                     # SQLite3数据库存储(全平台) https://pub.dev/packages/sqflite_common_ffi
   shared_preferences: 2.3.2                     # 本地Key-Value文件存储(全平台) https://pub.dev/packages/shared_preferences
@@ -22,7 +22,7 @@ dependencies:
   # resource文件夹
   json_annotation: 4.9.0                        # Json序列化(dart包) https://pub.dev/packages/json_annotation
   # utils文件夹
-  path_provider: 2.1.4                          # 获取本地文件路径(全平台) https://pub.dev/packages/path_provider
+  path_provider: 2.1.5                          # 获取本地文件路径(全平台) https://pub.dev/packages/path_provider
   # widgets文件夹
   bot_toast: 4.1.3                              # Toast(flutter包) https://pub.flutter-io.cn/packages/bot_toast
   cached_network_image: 3.4.1                   # 图片多级缓存 https://pub.flutter-io.cn/packages/cached_network_image

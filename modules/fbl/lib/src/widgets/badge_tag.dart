@@ -22,21 +22,25 @@ class BadgeTag extends StatelessWidget {
     bool isOver100 = count > 99;
     bool isOver10 = count > 9;
     bool isOver1 = count > 0;
+    bool isZero = count == 0;
 
     double width = 8; // 宽度
     double height = 8; // 高度
     String text = ''; // 数量
-    BoxShape shape = BoxShape.circle;
-    BorderRadius? borderRadius;
-    if (isOver1) {
+    BoxShape shape = BoxShape.rectangle;
+    BorderRadius? borderRadius = BorderRadius.circular(8);
+    if (isZero) {
+      shape = BoxShape.circle;
+      borderRadius = null;
+    } else if (isOver1) {
       width = 16;
       height = 16;
       text = '$count';
+      shape = BoxShape.circle;
+      borderRadius = null;
     } else if (isOver10) {
       width = 20;
       text = '$count';
-      shape = BoxShape.rectangle;
-      borderRadius = BorderRadius.circular(8);
     } else if (isOver100) {
       width = 24;
       text = '99+';

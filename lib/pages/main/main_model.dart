@@ -9,7 +9,8 @@ class MainModel with ChangeNotifier {
     _initial = false;
     _tabItems.clear();
     for (var tab in MainTab.values) {
-      _tabItems[tab] = _MainItem();
+      int count = tab.index >= 2 ? -1 : tab.index;
+      _tabItems[tab] = _MainItem(badge: count);
     }
   }
 

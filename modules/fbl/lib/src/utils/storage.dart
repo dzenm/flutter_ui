@@ -22,9 +22,25 @@ typedef CompleteCallback = void Function(int count, int size);
 /// 文件工具类
 class LocalStorage with _DirectoryMixin {
   LocalStorage._internal();
-
   factory LocalStorage() => _instance;
   static final LocalStorage _instance = LocalStorage._internal();
+
+  Future<void> clear() async {
+    List<Directory> dirs = [];
+    _DirectoryMixin._appDirs.forEach((key, value) async {
+      if (key == UserDirectory.databases) {
+        return;
+      }
+      dirs.add(value);
+    });
+    await Future.forEach(dirs, (item) async {
+      var list = item.list();
+      _log('清理目录：dir=$item');
+      await list.forEach((item) async {
+        await item.delete(recursive: true);
+      });
+    });
+  }
 
   /// 删除文件（根据路径删除）
   void delete(String? path) {
@@ -127,6 +143,42 @@ class LocalStorage with _DirectoryMixin {
     return '';
   }
 
+  String joins(String part1, [
+    String? part2,
+    String? part3,
+    String? part4,
+    String? part5,
+    String? part6,
+    String? part7,
+    String? part8,
+    String? part9,
+    String? part10,
+    String? part11,
+    String? part12,
+    String? part13,
+    String? part14,
+    String? part15,
+    String? part16,]) {
+    return join(
+      part1,
+      part2,
+      part3,
+      part4,
+      part5,
+      part6,
+      part7,
+      part8,
+      part9,
+      part10,
+      part11,
+      part12,
+      part13,
+      part14,
+      part15,
+      part16,
+    );
+  }
+
   // String _getMd5(String path) {
   //   int partSize = 1024 * 1024 * 3; //默认3m每块
   //   File file = File(path);
@@ -178,23 +230,27 @@ abstract mixin class _DirectoryMixin {
   static final Map<UserDirectory, Directory> _appDirs = {};
 
   Function? _logPrint;
-  String _rootDir = ''; // APP的根目录文件夹
 
   /// 初始化文件夹
-  Future<void> init({Function? logPrint, String rootDir = 'File'}) async {
+  Future<void> init({Function? logPrint, String? rootDir, String appDirName = 'File'}) async {
     _logPrint = logPrint;
-    _rootDir = rootDir;
-    _appRootDir = await _getAppRootDirectory();
+    _appRootDir = await _getAppRootDirectory(rootDir: rootDir, appDirName: appDirName);
   }
 
   /// 缓存文件夹路径 @see [init]、[_appDirs]
-  /// Android：/data/user/0/<package_name>/files/{dir}/
-  /// iOS：/var/mobile/Containers/Data/Application/{Random ID}/Library/Application Support/{dir}/
-  /// macOS：/Users/a0010/Documents/[_rootDir]/{dir}/
-  /// Windows：C:\Users\Administrator\Documents\[_rootDir]\{dir}\
-  Future<Directory> _getAppRootDirectory({String? dir}) async {
+  /// Android：/data/user/0/<package_name>/files/[dir]/
+  /// iOS：/var/mobile/Containers/Data/Application/{Random ID}/Library/Application Support/[dir]/
+  /// macOS：/Users/a0010/Documents/[appDirName]/[dir]/
+  /// Windows：C:\Users\Administrator\Documents\[appDirName]\[dir]\
+  Future<Directory> _getAppRootDirectory({
+    String? rootDir,
+    String? appDirName,
+    String? dir,
+  }) async {
     Directory appDocDir = await getApplicationDocumentsDirectory();
-    String appRootDir = join(appDocDir.path);
+    String appRootDir = join(rootDir ?? appDocDir.path);
+
+
     if (Platform.isAndroid) {
       appDocDir = await getApplicationSupportDirectory();
       appRootDir = join(appDocDir.path);
@@ -202,11 +258,11 @@ abstract mixin class _DirectoryMixin {
       appDocDir = await getApplicationSupportDirectory();
       appRootDir = join(appDocDir.path);
     } else if (Platform.isMacOS) {
-      appRootDir = join(appDocDir.path, _rootDir);
+      appRootDir = join(appDocDir.path, appDirName);
     } else if (Platform.isWindows) {
-      appRootDir = join(appDocDir.path, _rootDir);
+      appRootDir = join(appDocDir.path, appDirName);
     } else if (Platform.isLinux) {
-      appRootDir = join(appDocDir.path, _rootDir);
+      appRootDir = join(appDocDir.path, appDirName);
     }
     String parent = join(appRootDir, dir);
     Directory result = Directory(parent);
@@ -222,8 +278,8 @@ abstract mixin class _DirectoryMixin {
   /// 初始化登录用户目录
   /// Android：/data/user/0/<package_name>/files/{dir}/{userId}/
   /// iOS：/var/mobile/Containers/Data/Application/{Random ID}/Library/Application Support/{dir}/{userId}/
-  /// macOS：/Users/a0010/Documents/[_rootDir]/{dir}/{userId}/
-  /// Windows：C:\Users\Administrator\Documents\[_rootDir]\{dir}\{userId}\
+  /// macOS：/Users/a0010/Documents/[_appDir]/{dir}/{userId}/
+  /// Windows：C:\Users\Administrator\Documents\[_appDir]\{dir}\{userId}\
   void initLoginUserDirectory(String userId) {
     String parent = join(_appRootDir.path, userId);
     _userDir = Directory(parent);
@@ -245,15 +301,15 @@ abstract mixin class _DirectoryMixin {
   /// 缓存文件夹路径 @see [init]、[_appDirs]
   /// Android：/data/user/0/<package_name>/files/{dir}/{userId}/Messages/
   /// iOS：/var/mobile/Containers/Data/Application/{Random ID}/Library/Application Support/{dir}/{userId}/Messages/
-  /// macOS：/Users/a0010/Documents/[_rootDir]/{dir}/{userId}/Messages/
-  /// Windows：C:\Users\Administrator\Documents\[_rootDir]\{dir}\{userId}\Messages\
+  /// macOS：/Users/a0010/Documents/[_appDir]/{dir}/{userId}/Messages/
+  /// Windows：C:\Users\Administrator\Documents\[_appDir]\{dir}\{userId}\Messages\
   Directory get messagesDir => _appDirs[UserDirectory.messages]!;
 
   /// 缓存文件夹路径 @see [init]、[_appDirs]
   /// Android：/data/user/0/<package_name>/files/{dir}/{userId}/Files/
   /// iOS：/var/mobile/Containers/Data/Application/{Random ID}/Library/Application Support/{dir}/{userId}/Files/
-  /// macOS：/Users/a0010/Documents/[_rootDir]/{dir}/{userId}/Files/
-  /// Windows：C:\Users\Administrator\Documents\[_rootDir]\{dir}\{userId}\Files\
+  /// macOS：/Users/a0010/Documents/[_appDir]/{dir}/{userId}/Files/
+  /// Windows：C:\Users\Administrator\Documents\[_appDir]\{dir}\{userId}\Files\
   Directory get filesDir => _appDirs[UserDirectory.files]!;
 
   /// @see [getUserDirectory]
@@ -268,13 +324,13 @@ abstract mixin class _DirectoryMixin {
 
   /// 获取缓存文件的子目录 @see [messagesDir]
   Directory getUserDirectory(
-    String part1, [
-    String? part2,
-    String? part3,
-    String? part4,
-    String? part5,
-    String? part6,
-  ]) {
+      String part1, [
+        String? part2,
+        String? part3,
+        String? part4,
+        String? part5,
+        String? part6,
+      ]) {
     String parent = join(_userDir.path, part1, part2, part3, part4, part5, part6);
     Directory result = Directory(parent);
     if (!result.existsSync()) {
@@ -283,8 +339,18 @@ abstract mixin class _DirectoryMixin {
     return result;
   }
 
-  String getCopyFilePath(String fileName) {
-    return '';
+  /// 根据原文件 [path] 获取复制后重命名 [fileName] 的文件地址
+  /// path=/data/user/0/[_appDir]/document/1256381735362131.png
+  /// fileName=hash123456789
+  /// @return /data/user/0/[_appDir]/files/df662a0559204dd58d9c3441e0046763/Files/hash123456789.png
+  String getCopyFilePath(String path, String fileName, {String? extension}) {
+    String pathExtension = extension ?? '';
+    if (pathExtension.isEmpty) {
+      PathInfo info = PathInfo.parse(path);
+      pathExtension = info.extension ?? '';
+    }
+    String copyPath = join(filesDir.path, '$fileName.$pathExtension');
+    return copyPath;
   }
 
   void _log(String text) => _logPrint == null ? null : _logPrint!(text, tag: 'LocalStorage');
@@ -475,6 +541,7 @@ class FileScanner {
   int _size = 0;
 
   bool _refreshing = false;
+  bool _scanning = false;
 
   void scan({
     ProgressCallback? onProgress,
@@ -488,7 +555,9 @@ class FileScanner {
     _count = 0;
     _size = 0;
     try {
+      _scanning = true;
       await _scanDir(Directory(_path), onProgress: onProgress);
+      _scanning = false;
     } catch (e, st) {
       assert(false, 'Failed to scan directory: path=$_path, $e, $st');
     }
@@ -498,6 +567,10 @@ class FileScanner {
     }
   }
 
+  void dispose() {
+    _scanning = false;
+  }
+
   Future<void> _scanDir(
     Directory dir, {
     ProgressCallback? onProgress,
@@ -505,6 +578,7 @@ class FileScanner {
     LocalStorage()._log('Scanning directory: $dir');
     Stream<FileSystemEntity> files = dir.list();
     await files.forEach((item) async {
+      if (!_scanning) return;
       // directories, files, and links
       // does not include the special entries `'.'` and `'..'`.
       if (item is Directory) {

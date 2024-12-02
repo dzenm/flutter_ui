@@ -81,24 +81,11 @@ class SPManager with _SharedPreferencesMixin {
     _instance.setString(SPValue.userToken.value, token);
   }
 
-  /// 获取登录用户cookie
-  static String getCookie() {
-    return _instance.getString(SPValue.userCookie.value);
-  }
-
-  /// 保存登录用户cookie
-  static void setCookie(String? cookie) {
-    _instance.setString(SPValue.userCookie.value, cookie);
-  }
-
   /// 重置登录用户信息
   static void clearUser() {
-    _instance.remove(SPValue.userInfo.value);
-    _instance.remove(SPValue.userLoginState.value);
-    _instance.remove(SPValue.user.value);
-    _instance.remove(SPValue.userId.value);
-    _instance.remove(SPValue.userToken.value);
-    _instance.remove(SPValue.userCookie.value);
+    for (var item in SPValue.values) {
+      _instance.remove(item.value);
+    }
   }
 
   /// 获取APP设置
@@ -112,7 +99,7 @@ class SPManager with _SharedPreferencesMixin {
     _instance.setString(SPValue.settings.value, settings);
   }
 
-  ///============================== SP基本数据类型的操作 ================================
+///============================== SP基本数据类型的操作 ================================
 }
 
 /// SharedPreference 的基本API
@@ -201,9 +188,8 @@ enum SPValue {
   user('u_user'), // 登录的用户
   userId('u_id'), // 用户ID
   userName('u_name'), // 用户名
-  userInfo('u_info'), // 用户信息
   userToken('u_token'), // 登录的token信息
-  userCookie('u_cookie'), // 登录的cookie信息
+  userInfo('u_info'), // 用户信息
   /// APP设置相关的信息
   settings('u_settings'); // APP相关的设置
 
