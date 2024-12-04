@@ -2,28 +2,36 @@ import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../generated/l10n.dart';
 import '../../models/provider_manager.dart';
 import '../utils/notification_util.dart';
-import 'home/home_page.dart';
 import 'main_model.dart';
 import 'main_page_desktop.dart';
 import 'main_page_mobile.dart';
-import 'me/me_page.dart';
-import 'nav/nav_page.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56
 /// 主页页面
 class MainPage extends StatefulWidget {
-  const MainPage({super.key});
+  /// The navigation shell and container for the branch Navigators.
+  final StatefulNavigationShell navigationShell;
+
+  /// The children (branch Navigators) to display in a custom container
+  final Map<MainTab, Widget> tabs;
+
+  MainPage({
+    super.key,
+    required this.navigationShell,
+    List<Widget> children = const [],
+  }) : tabs = MainTab.toMap(children);
 
   @override
   State<StatefulWidget> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> with Logging, WidgetsBindingObserver {
-  final Map<MainTab, Widget> _tabs = {};
+  late final PageController _controller = PageController(
+    initialPage: widget.navigationShell.currentIndex,
+  );
 
   /// 感知生命周期变化
   @override
@@ -54,25 +62,12 @@ class _MainPageState extends State<MainPage> with Logging, WidgetsBindingObserve
     // 先初始化页面
     ProviderManager.main(context: context).init();
 
-    _initPage();
     _initData();
   }
 
   Future<void> _initData() async {
     logPage('initData');
     await _initProvider();
-  }
-
-  void _initPage() {
-    final List<Widget> pages = [
-      const HomePage(),
-      const NavPage(),
-      const MePage(),
-    ];
-
-    for (var tab in MainTab.values) {
-      _tabs[tab] = pages[tab.index];
-    }
   }
 
   /// 初始化Provider数据，使用context并且异步加载，必须放在页面执行
@@ -144,19 +139,17 @@ class _MainPageState extends State<MainPage> with Logging, WidgetsBindingObserve
 
     _useContextBeforeBuild(context);
 
-    if (BuildConfig.isMobile) {
-      return MainPageMobile(tabs: _tabs);
-    } else if (BuildConfig.isWeb) {
-      return MainPageDesktopWrapper(
-        child: MainPageDesktop(tabs: _tabs),
-      );
-    } else if (BuildConfig.isDesktop) {
-      return MainPageDesktopWrapper(
-        child: MainPageDesktop(tabs: _tabs),
-      );
-    }
-    return Center(
-      child: Text(S.of(context).unknownPlatform),
+    return PlatformView.builder(
+      mobileView: MainPageMobile(
+        navigationShell: widget.navigationShell,
+        controller: _controller,
+        tabs: widget.tabs,
+      ),
+      desktopView: MainPageDesktop(
+        navigationShell: widget.navigationShell,
+        controller: _controller,
+        tabs: widget.tabs,
+      ),
     );
   }
 }

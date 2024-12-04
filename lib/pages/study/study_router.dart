@@ -22,7 +22,6 @@ import 'http/http_page.dart';
 import 'load_image/load_image_page.dart';
 import 'provider/provider_page.dart';
 import 'router/router_page.dart';
-import 'study_page.dart';
 import 'video/video_page.dart';
 import 'window/main_window_page.dart';
 
@@ -59,182 +58,173 @@ class StudyRouter {
 
   static List<RouteBase> get routers => [
         ARoute(
-          name: study,
-          path: 'study',
+          name: convert,
+          path: '/convert',
           builder: (context, state) {
-            return const StudyPage();
+            return const ConvertPage();
           },
-          routes: [
-            ARoute(
-              name: convert,
-              path: 'convert',
-              builder: (context, state) {
-                return const ConvertPage();
-              },
-            ),
-            ARoute(
-              name: components,
-              path: 'components',
-              builder: (context, state) {
-                return const ComponentsPage();
-              },
-              routes: componentsRouter,
-            ),
-            ARoute(
-              name: http,
-              path: 'http',
-              builder: (context, state) {
-                return const HTTPListPage();
-              },
-            ),
-            ARoute(
-              name: loadImage,
-              path: 'loadImage',
-              builder: (context, state) {
-                return const LoadImagePage();
-              },
-            ),
-            ARoute(
-              name: provider,
-              path: 'provider',
-              builder: (context, state) {
-                return const ProviderPage();
-              },
-            ),
-            ARoute(
-              name: router,
-              path: 'router',
-              builder: (context, state) {
-                return const RouterPage();
-              },
-            ),
-            ARoute(
-              name: video,
-              path: 'video',
-              builder: (context, state) {
-                return const VideoPage();
-              },
-            ),
-            ARoute(
-              name: multiWindow,
-              path: 'multiWindow',
-              builder: (context, state) {
-                return const MainWindowPage();
-              },
-            ),
-            ARoute(
-              name: desktop,
-              path: 'desktop',
-              builder: (context, state) {
-                return const DesktopPage();
-              },
-            ),
-            ARoute(
-              name: screenCapture,
-              path: 'screenCapture',
-              builder: (context, state) {
-                return const ScreenCapturePage();
-              },
-            ),
-          ],
+        ),
+        ARoute(
+          name: components,
+          path: '/components',
+          builder: (context, state) {
+            return const ComponentsPage();
+          },
+          routes: componentsRouter,
+        ),
+        ARoute(
+          name: http,
+          path: '/http',
+          builder: (context, state) {
+            return const HTTPListPage();
+          },
+        ),
+        ARoute(
+          name: loadImage,
+          path: '/loadImage',
+          builder: (context, state) {
+            return const LoadImagePage();
+          },
+        ),
+        ARoute(
+          name: provider,
+          path: '/provider',
+          builder: (context, state) {
+            return const ProviderPage();
+          },
+        ),
+        ARoute(
+          name: router,
+          path: '/router',
+          builder: (context, state) {
+            return const RouterPage();
+          },
+        ),
+        ARoute(
+          name: video,
+          path: '/video',
+          builder: (context, state) {
+            return const VideoPage();
+          },
+        ),
+        ARoute(
+          name: multiWindow,
+          path: '/multiWindow',
+          builder: (context, state) {
+            return const MainWindowPage();
+          },
+        ),
+        ARoute(
+          name: desktop,
+          path: '/desktop',
+          builder: (context, state) {
+            return const DesktopPage();
+          },
+        ),
+        ARoute(
+          name: screenCapture,
+          path: '/screenCapture',
+          builder: (context, state) {
+            return const ScreenCapturePage();
+          },
         ),
       ];
 
   static List<ARoute> get componentsRouter => [
         ARoute(
           name: chat,
-          path: 'chat',
+          path: '/chat',
           builder: (context, state) {
             return const ChatPage();
           },
         ),
         ARoute(
           name: city,
-          path: 'city',
+          path: '/city',
           builder: (context, state) {
             return const CitySelectedPage();
           },
         ),
         ARoute(
           name: dialog,
-          path: 'dialog',
+          path: '/dialog',
           builder: (context, state) {
             return const DialogPage();
           },
         ),
         ARoute(
           name: dragList,
-          path: 'dragList',
+          path: '/dragList',
           builder: (context, state) {
             return const DragListPage();
           },
         ),
         ARoute(
           name: floatNavigation,
-          path: 'floatNavigation',
+          path: '/floatNavigation',
           builder: (context, state) {
             return const FloatNavigationPage();
           },
         ),
         ARoute(
           name: image,
-          path: 'image',
+          path: '/image',
           builder: (context, state) {
             return const ImageEditorPage();
           },
         ),
         ARoute(
           name: keyword,
-          path: 'keyword',
+          path: '/keyword',
           builder: (context, state) {
             return const KeywordBoardPage();
           },
         ),
         ARoute(
           name: list,
-          path: 'list',
+          path: '/list',
           builder: (context, state) {
             return const ListPage();
           },
         ),
         ARoute(
           name: popup,
-          path: 'popup',
+          path: '/popup',
           builder: (context, state) {
             return const PopupPage();
           },
         ),
         ARoute(
           name: qr,
-          path: 'qr',
+          path: '/qr',
           builder: (context, state) {
             return const QRPage();
           },
         ),
         ARoute(
           name: recording,
-          path: 'recording',
+          path: '/recording',
           builder: (context, state) {
             return const RecordingPage();
           },
         ),
         ARoute(
           name: slide,
-          path: 'slide',
+          path: '/slide',
           builder: (context, state) {
             return const SlidePage();
           },
         ),
         ARoute(
           name: state,
-          path: 'state',
+          path: '/state',
           builder: (context, state) {
             return const StatePage();
           },
         ),
         ARoute(
           name: text,
-          path: 'text',
+          path: '/text',
           builder: (context, state) {
             return const TextPage();
           },

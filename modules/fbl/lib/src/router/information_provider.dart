@@ -5,8 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-import 'configuration.dart';
 import 'match.dart';
+import 'path_utils.dart';
 
 /// The type of the navigation.
 ///
@@ -35,13 +35,13 @@ enum NavigatingType {
 /// The data class to be stored in [RouteInformation.state] to be used by
 /// [ARouteInformationParser].
 ///
-/// This state class is used internally in go_router and will not be sent to
+/// This state class is used internally in a_router and will not be sent to
 /// the engine.
 class RouteInformationState<T> {
   /// Creates an InternalRouteInformationState.
   @visibleForTesting
   RouteInformationState({
-    this.extras,
+    this.extra,
     this.completer,
     this.baseRouteMatchList,
     required this.type,
@@ -50,7 +50,7 @@ class RouteInformationState<T> {
         assert((type != NavigatingType.go) == (baseRouteMatchList != null));
 
   /// The extra object used when navigating with [ARouter].
-  final Object? extras;
+  final Object? extra;
 
   /// The completer that needs to be completed when the newly added route is
   /// popped off the screen.
@@ -68,28 +68,29 @@ class RouteInformationState<T> {
   final NavigatingType type;
 }
 
-/// The [RouteInformationProvider] created by go_router.
+/// The [RouteInformationProvider] created by a_router.
 class ARouteInformationProvider extends RouteInformationProvider
     with WidgetsBindingObserver, ChangeNotifier {
   /// Creates a [ARouteInformationProvider].
   ARouteInformationProvider({
     required String initialLocation,
     required Object? initialExtra,
-    required this.configuration,
     Listenable? refreshListenable,
+    bool routerNeglect = false,
   })  : _refreshListenable = refreshListenable,
         _value = RouteInformation(
           uri: Uri.parse(initialLocation),
           state: RouteInformationState<void>(
-              extras: initialExtra, type: NavigatingType.go),
+              extra: initialExtra, type: NavigatingType.go),
         ),
-        _valueInEngine = _kEmptyRouteInformation {
+        _valueInEngine = _kEmptyRouteInformation,
+        _routerNeglect = routerNeglect {
     _refreshListenable?.addListener(notifyListeners);
   }
 
   final Listenable? _refreshListenable;
 
-  final RouteConfiguration configuration;
+  final bool _routerNeglect;
 
   static WidgetsBinding get _binding => WidgetsBinding.instance;
   static final RouteInformation _kEmptyRouteInformation =
@@ -101,7 +102,6 @@ class ARouteInformationProvider extends RouteInformationProvider
           RouteInformationReportingType.none}) {
     // ARouteInformationParser should always report encoded route match list
     // in the state.
-
     assert(routeInformation.state != null);
     final bool replace;
     switch (type) {
@@ -121,7 +121,7 @@ class ARouteInformationProvider extends RouteInformationProvider
     SystemNavigator.routeInformationUpdated(
       uri: routeInformation.uri,
       state: routeInformation.state,
-      replace: replace,
+      replace: _routerNeglect || replace,
     );
     _value = _valueInEngine = routeInformation;
   }
@@ -136,11 +136,16 @@ class ARouteInformationProvider extends RouteInformationProvider
   }
 
   void _setValue(String location, Object state) {
-    final Uri uri = Uri.parse(location);
+    Uri uri = Uri.parse(location);
+
+    // Check for relative location
+    if (location.startsWith('./')) {
+      uri = concatenateUris(_value.uri, uri);
+    }
 
     final bool shouldNotify =
         _valueHasChanged(newLocationUri: uri, newState: state);
-    _value = RouteInformation(uri: Uri.parse(location), state: state);
+    _value = RouteInformation(uri: uri, state: state);
     if (shouldNotify) {
       notifyListeners();
     }
@@ -153,7 +158,7 @@ class ARouteInformationProvider extends RouteInformationProvider
     _setValue(
       location,
       RouteInformationState<T>(
-        extras: extra,
+        extra: extra,
         baseRouteMatchList: base,
         completer: completer,
         type: NavigatingType.push,
@@ -167,7 +172,7 @@ class ARouteInformationProvider extends RouteInformationProvider
     _setValue(
       location,
       RouteInformationState<void>(
-        extras: extra,
+        extra: extra,
         type: NavigatingType.go,
       ),
     );
@@ -178,7 +183,7 @@ class ARouteInformationProvider extends RouteInformationProvider
     _setValue(
       matchList.uri.toString(),
       RouteInformationState<void>(
-        extras: matchList.extra,
+        extra: matchList.extra,
         baseRouteMatchList: matchList,
         type: NavigatingType.restore,
       ),
@@ -193,7 +198,7 @@ class ARouteInformationProvider extends RouteInformationProvider
     _setValue(
       location,
       RouteInformationState<T>(
-        extras: extra,
+        extra: extra,
         baseRouteMatchList: base,
         completer: completer,
         type: NavigatingType.pushReplacement,
@@ -209,7 +214,7 @@ class ARouteInformationProvider extends RouteInformationProvider
     _setValue(
       location,
       RouteInformationState<T>(
-        extras: extra,
+        extra: extra,
         baseRouteMatchList: base,
         completer: completer,
         type: NavigatingType.replace,

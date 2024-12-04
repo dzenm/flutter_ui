@@ -17,6 +17,7 @@ import 'pages/main/me/me_model.dart';
 import 'pages/main/nav/nav_model.dart';
 import 'pages/mall/order/order_model.dart';
 import 'pages/my/my_page.dart';
+import 'pages/router_config.dart';
 import 'pages/routers.dart';
 import 'pages/study/study_model.dart';
 
@@ -48,8 +49,11 @@ class AppPage extends StatelessWidget with Logging {
     }
 
     return AppBox(
-      child: _buildProviderApp(
-        child: child,
+      child: LoginAuthScope(
+        notifier: Routers.auth,
+        child: _buildProviderApp(
+          child: child,
+        ),
       ),
     );
   }

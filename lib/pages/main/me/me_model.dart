@@ -19,15 +19,10 @@ class MeModel with ChangeNotifier {
   }
 
   /// 桌面端选中的页面
-  String? _selectedTab;
-
   String? get selectedTab => _selectedTab;
-
+  String? _selectedTab;
   set selectedTab(String? tab) {
     _selectedTab = tab;
-    if (tab != null) {
-      Application().context.push(tab!);
-    }
     notifyListeners();
   }
 

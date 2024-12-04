@@ -9,11 +9,16 @@ import 'main_model.dart';
 /// Created by a0010 on 2023/6/29 15:53
 ///
 class MainPageMobile extends StatelessWidget with Logging {
+  final StatefulNavigationShell navigationShell;
+  final PageController controller;
   final Map<MainTab, Widget> tabs;
 
-  MainPageMobile({super.key, required this.tabs});
-
-  final PageController _controller = PageController();
+  const MainPageMobile({
+    super.key,
+    required this.navigationShell,
+    required this.controller,
+    required this.tabs,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +26,7 @@ class MainPageMobile extends StatelessWidget with Logging {
 
     return Scaffold(
       body: PageView(
-        controller: _controller,
+        controller: controller,
         physics: const NeverScrollableScrollPhysics(),
         children: _buildBody(),
       ),
@@ -63,7 +68,16 @@ class MainPageMobile extends StatelessWidget with Logging {
     bool isSelected = context.read<MainModel>().isSelected(tab);
     if (!isSelected) {
       context.read<MainModel>().setSelectedTab(tab);
-      _controller.jumpToPage(tab.index);
+      int index = tab.index;
+      controller.jumpToPage(index);
+      navigationShell.goBranch(
+        index,
+        // A common pattern when using bottom navigation bars is to support
+        // navigating to the initial location when tapping the item that is
+        // already active. This example demonstrates how to support this behavior,
+        // using the initialLocation parameter of goBranch.
+        initialLocation: index == navigationShell.currentIndex,
+      );
     }
   }
 }

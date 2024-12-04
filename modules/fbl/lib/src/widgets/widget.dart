@@ -26,6 +26,7 @@ export 'menu_item.dart';
 export 'photo_grid_picker.dart';
 export 'picker/location.dart';
 export 'picker/picker_view.dart';
+export 'platform_view.dart';
 export 'refresh_list_view.dart';
 export 'scrollview_observer/scrollview_observer.dart';
 export 'shimmer.dart';

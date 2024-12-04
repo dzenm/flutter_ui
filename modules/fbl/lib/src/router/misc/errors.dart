@@ -1,23 +1,23 @@
 /// Thrown when [ARouter] is used incorrectly.
-class GoError extends Error {
-  /// Constructs a [GoError]
-  GoError(this.message);
+class AError extends Error {
+  /// Constructs a [AError]
+  AError(this.message);
 
   /// The error message.
   final String message;
 
   @override
-  String toString() => 'GoError: $message';
+  String toString() => 'AError: $message';
 }
 
 /// Thrown when [ARouter] can not handle a user request.
-class GoException implements Exception {
+class AException implements Exception {
   /// Creates an exception with message describing the reason.
-  GoException(this.message);
+  AException(this.message);
 
   /// The reason that causes this exception.
   final String message;
 
   @override
-  String toString() => 'GoException: $message';
+  String toString() => 'AException: $message';
 }

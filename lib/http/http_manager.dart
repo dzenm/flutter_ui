@@ -37,7 +37,8 @@ class HttpManager {
 
       // 更新数据
       context.read<UserModel>().user = user;
-      context.goNamed(Routers.main);
+      Routers.auth.signIn(username, password);
+      context.goNamed(Routers.home);
     });
   }
 
@@ -53,7 +54,8 @@ class HttpManager {
 
       // 更新数据
       context.read<UserModel>().user = user;
-      context.goNamed(Routers.main);
+      Routers.auth.signIn(username, password);
+      context.goNamed(Routers.home);
     });
   }
 
@@ -487,6 +489,7 @@ class HttpManager {
     await _httpClient.request(apiServices.logout(), success: (data) async {
       SPManager.clearUser();
       ProviderManager.clear();
+      Routers.auth.signOut();
       context.goNamed(Routers.login);
     });
   }

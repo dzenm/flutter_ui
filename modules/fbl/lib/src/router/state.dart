@@ -52,7 +52,7 @@ class ARouterState {
   /// The full path to this sub-route, e.g. /family/:fid
   ///
   /// For top level redirect, this is the entire path that matches the location.
-  /// It can be empty if go router can't find a match. In that case, the [error]
+  /// It can be empty if ARouter can't find a match. In that case, the [error]
   /// contains more information.
   final String? fullPath;
 
@@ -63,7 +63,7 @@ class ARouterState {
   final Object? extra;
 
   /// The error associated with this sub-route.
-  final GoException? error;
+  final AException? error;
 
   /// A unique string key for this sub-route.
   /// E.g.
@@ -98,7 +98,7 @@ class ARouterState {
   ///
   /// To access ARouterState from a widget.
   ///
-  /// ```
+  /// ```dart
   /// ARoute(
   ///   path: '/:id'
   ///   builder: (_, __) => MyWidget(),
@@ -112,25 +112,40 @@ class ARouterState {
   /// }
   /// ```
   static ARouterState of(BuildContext context) {
-    final ModalRoute<Object?>? route = ModalRoute.of(context);
-    if (route == null) {
-      throw GoError('There is no modal route above the current context.');
+    ModalRoute<Object?>? route;
+    ARouterStateRegistryScope? scope;
+    while (true) {
+      route = ModalRoute.of(context);
+      if (route == null) {
+        throw _noARouterStateError;
+      }
+      final RouteSettings settings = route.settings;
+      if (settings is Page<Object?>) {
+        scope = context
+            .dependOnInheritedWidgetOfExactType<ARouterStateRegistryScope>();
+        if (scope == null) {
+          throw _noARouterStateError;
+        }
+        final ARouterState? state = scope.notifier!
+            ._createPageRouteAssociation(
+                route.settings as Page<Object?>, route);
+        if (state != null) {
+          return state;
+        }
+      }
+      final NavigatorState? state = Navigator.maybeOf(context);
+      if (state == null) {
+        throw _noARouterStateError;
+      }
+      context = state.context;
     }
-    final RouteSettings settings = route.settings;
-    if (settings is! Page<Object?>) {
-      throw GoError(
-          'The parent route must be a page route to have a ARouterState');
-    }
-    final ARouterStateRegistryScope? scope = context
-        .dependOnInheritedWidgetOfExactType<ARouterStateRegistryScope>();
-    if (scope == null) {
-      throw GoError(
-          'There is no ARouterStateRegistryScope above the current context.');
-    }
-    final ARouterState state =
-        scope.notifier!._createPageRouteAssociation(settings, route);
-    return state;
   }
+
+  static AError get _noARouterStateError => AError(
+        'There is no ARouterState above the current context. '
+        'This method should only be called under the sub tree of a '
+        'RouteBase.builder.',
+      );
 
   /// Get a location from route name and parameters.
   /// This is useful for redirecting to a named location.
@@ -201,10 +216,12 @@ class ARouterStateRegistry extends ChangeNotifier {
   final Map<Route<Object?>, Page<Object?>> _routePageAssociation =
       <ModalRoute<Object?>, Page<Object?>>{};
 
-  ARouterState _createPageRouteAssociation(
+  ARouterState? _createPageRouteAssociation(
       Page<Object?> page, ModalRoute<Object?> route) {
     assert(route.settings == page);
-    assert(registry.containsKey(page));
+    if (!registry.containsKey(page)) {
+      return null;
+    }
     final Page<Object?>? oldPage = _routePageAssociation[route];
     if (oldPage == null) {
       // This is a new association.

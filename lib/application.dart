@@ -129,7 +129,7 @@ abstract mixin class _InitAppMixin {
     ]);
 
     log('  初始化 FileUtil');
-    await LocalStorage().init(logPrint: Log.i, rootDir: 'FlutterUI');
+    await LocalStorage().init(logPrint: Log.i, appDirName: 'FlutterUI');
 
     log('  初始化 HotkeyUtil');
     // await HotkeyUtil().init(logPrint: Log.d);

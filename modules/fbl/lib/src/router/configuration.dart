@@ -31,12 +31,9 @@ class RouteConfiguration {
     for (final RouteBase route in routes) {
       late bool subRouteIsTopLevel;
       if (route is ARoute) {
-        if (isTopLevel) {
-          assert(route.path.startsWith('/'),
-              'top-level path must start with "/": $route');
-        } else {
-          assert(!route.path.startsWith('/') && !route.path.endsWith('/'),
-              'sub-route path may not start or end with "/": $route');
+        if (route.path != '/') {
+          assert(!route.path.endsWith('/'),
+              'route path may not end with "/" except for the top "/" route. Found: $route');
         }
         subRouteIsTopLevel = false;
       } else if (route is ShellRouteBase) {
@@ -113,7 +110,7 @@ class RouteConfiguration {
       for (final String pathParam in route.pathParameters) {
         if (usedPathParams.containsKey(pathParam)) {
           final bool sameRoute = usedPathParams[pathParam] == route;
-          throw GoError(
+          throw AError(
               "duplicate path parameter, '$pathParam' found in ${sameRoute ? '$route' : '${usedPathParams[pathParam]}, and $route'}");
         }
         usedPathParams[pathParam] = route;
@@ -145,7 +142,8 @@ class RouteConfiguration {
                 'The default location of a StatefulShellBranch cannot be '
                 'a parameterized route');
           } else {
-            final RouteMatchList matchList = findMatch(branch.initialLocation!);
+            final RouteMatchList matchList =
+                findMatch(Uri.parse(branch.initialLocation!));
             assert(
                 !matchList.isError,
                 'initialLocation (${matchList.uri}) of StatefulShellBranch must '
@@ -173,7 +171,7 @@ class RouteConfiguration {
   /// The match used when there is an error during parsing.
   static RouteMatchList _errorRouteMatchList(
     Uri uri,
-    GoException exception, {
+    AException exception, {
     Object? extra,
   }) {
     return RouteMatchList(
@@ -239,6 +237,7 @@ class RouteConfiguration {
   /// When navigating using [ARouter.go] or [ARouter.push], one can provide
   /// an `extra` parameter along with it. If the extra contains complex data,
   /// consider provide a codec for serializing and deserializing the extra data.
+  ///
   final Codec<Object?, Object?>? extraCodec;
 
   final Map<String, String> _nameToPath = <String, String>{};
@@ -285,9 +284,7 @@ class RouteConfiguration {
   }
 
   /// Finds the routes that matched the given URL.
-  RouteMatchList findMatch(String location, {Object? extra}) {
-    final Uri uri = Uri.parse(canonicalUri(location));
-
+  RouteMatchList findMatch(Uri uri, {Object? extra}) {
     final Map<String, String> pathParameters = <String, String>{};
     final List<RouteMatchBase> matches =
         _getLocRouteMatches(uri, pathParameters);
@@ -295,7 +292,7 @@ class RouteConfiguration {
     if (matches.isEmpty) {
       return _errorRouteMatchList(
         uri,
-        GoException('no routes for location: $uri'),
+        AException('no routes for location: $uri'),
         extra: extra,
       );
     }
@@ -308,14 +305,13 @@ class RouteConfiguration {
 
   /// Reparse the input RouteMatchList
   RouteMatchList reparse(RouteMatchList matchList) {
-    RouteMatchList result =
-        findMatch(matchList.uri.toString(), extra: matchList.extra);
+    RouteMatchList result = findMatch(matchList.uri, extra: matchList.extra);
 
     for (final ImperativeRouteMatch imperativeMatch
         in matchList.matches.whereType<ImperativeRouteMatch>()) {
       final ImperativeRouteMatch match = ImperativeRouteMatch(
           pageKey: imperativeMatch.pageKey,
-          matches: findMatch(imperativeMatch.matches.uri.toString(),
+          matches: findMatch(imperativeMatch.matches.uri,
               extra: imperativeMatch.matches.extra),
           completer: imperativeMatch.completer);
       result = result.push(match);
@@ -454,10 +450,10 @@ class RouteConfiguration {
     List<RouteMatchList> redirectHistory,
   ) {
     try {
-      final RouteMatchList newMatch = findMatch(newLocation);
+      final RouteMatchList newMatch = findMatch(Uri.parse(newLocation));
       _addRedirect(redirectHistory, newMatch, previousLocation);
       return newMatch;
-    } on GoException catch (e) {
+    } on AException catch (e) {
       log('Redirection exception: ${e.message}');
       return _errorRouteMatchList(previousLocation, e);
     }
@@ -472,14 +468,14 @@ class RouteConfiguration {
     Uri prevLocation,
   ) {
     if (redirects.contains(newMatch)) {
-      throw GoException(
+      throw AException(
           'redirect loop detected ${_formatRedirectionHistory(<RouteMatchList>[
             ...redirects,
             newMatch
           ])}');
     }
     if (redirects.length > _routingConfig.value.redirectLimit) {
-      throw GoException(
+      throw AException(
           'too many redirects ${_formatRedirectionHistory(<RouteMatchList>[
             ...redirects,
             newMatch

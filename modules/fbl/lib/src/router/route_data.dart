@@ -349,7 +349,7 @@ class TypedRoute<T extends RouteData> {
   const TypedRoute();
 }
 
-/// A superclass for each typed go route descendant
+/// A superclass for each typed ARoute descendant
 @Target(<TargetKind>{TargetKind.library, TargetKind.classType})
 class TypedARoute<T extends ARouteData> extends TypedRoute<T> {
   /// Default const constructor

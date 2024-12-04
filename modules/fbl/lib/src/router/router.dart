@@ -16,7 +16,7 @@ import 'state.dart';
 /// The function signature of [ARouter.onException].
 ///
 /// Use `state.error` to access the exception.
-typedef GoExceptionHandler = void Function(
+typedef AExceptionHandler = void Function(
   BuildContext context,
   ARouterState state,
   ARouter router,
@@ -26,8 +26,9 @@ typedef Printer = void Function(String message, {String tag});
 
 /// A set of parameters that defines routing in ARouter.
 ///
-/// This is typically used with [ARouter.routingConfig] to create a go router
+/// This is typically used with [ARouter.routingConfig] to create a ARouter
 /// with dynamic routing config.
+///
 ///
 /// {@category Configuration}
 class RoutingConfig {
@@ -89,9 +90,13 @@ class RoutingConfig {
 /// If `onException` is not provided, the exception is passed to
 /// `errorPageBuilder` to build a page for the Router if it is not null;
 /// otherwise, it is passed to `errorBuilder` instead. If none of them are
-/// provided, go_router builds a default error screen to show the exception.
+/// provided, ARouter builds a default error screen to show the exception.
 ///
 /// To disable automatically requesting focus when new routes are pushed to the navigator, set `requestFocus` to false.
+///
+/// See also:
+/// * [ARouter], which provides APIs to define the routing table.
+///    which contains examples for different routing scenarios.
 /// {@category Get started}
 /// {@category Upgrading}
 /// {@category Configuration}
@@ -109,7 +114,7 @@ class ARouter implements RouterConfig<RouteMatchList> {
   factory ARouter({
     required List<RouteBase> routes,
     Codec<Object?, Object?>? extraCodec,
-    GoExceptionHandler? onException,
+    AExceptionHandler? onException,
     ARouterPageBuilder? errorPageBuilder,
     ARouterWidgetBuilder? errorBuilder,
     ARouterRedirect? redirect,
@@ -120,21 +125,20 @@ class ARouter implements RouterConfig<RouteMatchList> {
     bool overridePlatformDefaultLocation = false,
     Object? initialExtra,
     List<NavigatorObserver>? observers,
+    bool debugLogDiagnostics = false,
     GlobalKey<NavigatorState>? navigatorKey,
     String? restorationScopeId,
     bool requestFocus = true,
     Printer? debugLog,
   }) {
-    ValueNotifier<RoutingConfig> routingConfig = ValueNotifier(
-      RoutingConfig(
-        routes: routes,
-        redirect: redirect ?? RoutingConfig._defaultRedirect,
-        redirectLimit: redirectLimit,
-        debugLog: debugLog,
-      ),
-    );
     return ARouter.routingConfig(
-      routingConfig: routingConfig,
+      routingConfig: _ConstantRoutingConfig(
+        RoutingConfig(
+            routes: routes,
+            redirect: redirect ?? RoutingConfig._defaultRedirect,
+            redirectLimit: redirectLimit,
+            debugLog: debugLog),
+      ),
       extraCodec: extraCodec,
       onException: onException,
       errorPageBuilder: errorPageBuilder,
@@ -145,6 +149,7 @@ class ARouter implements RouterConfig<RouteMatchList> {
       overridePlatformDefaultLocation: overridePlatformDefaultLocation,
       initialExtra: initialExtra,
       observers: observers,
+      debugLogDiagnostics: debugLogDiagnostics,
       navigatorKey: navigatorKey,
       restorationScopeId: restorationScopeId,
       requestFocus: requestFocus,
@@ -152,10 +157,11 @@ class ARouter implements RouterConfig<RouteMatchList> {
   }
 
   /// Creates a [ARouter] with a dynamic [RoutingConfig].
+  ///
   ARouter.routingConfig({
     required ValueListenable<RoutingConfig> routingConfig,
     Codec<Object?, Object?>? extraCodec,
-    GoExceptionHandler? onException,
+    AExceptionHandler? onException,
     ARouterPageBuilder? errorPageBuilder,
     ARouterWidgetBuilder? errorBuilder,
     Listenable? refreshListenable,
@@ -164,6 +170,7 @@ class ARouter implements RouterConfig<RouteMatchList> {
     this.overridePlatformDefaultLocation = false,
     Object? initialExtra,
     List<NavigatorObserver>? observers,
+    bool debugLogDiagnostics = false,
     GlobalKey<NavigatorState>? navigatorKey,
     String? restorationScopeId,
     bool requestFocus = true,
@@ -183,7 +190,7 @@ class ARouter implements RouterConfig<RouteMatchList> {
             'Only one of onException, errorPageBuilder, or errorBuilder can be provided.') {
     WidgetsFlutterBinding.ensureInitialized();
 
-    navigatorKey ??= GlobalKey<NavigatorState>();
+    navigatorKey ??= GlobalKey<NavigatorState>(debugLabel: 'root');
 
     _routingConfig.addListener(_handleRoutingConfigChanged);
     configuration = RouteConfiguration(
@@ -214,7 +221,7 @@ class ARouter implements RouterConfig<RouteMatchList> {
       initialLocation: _effectiveInitialLocation(initialLocation),
       initialExtra: initialExtra,
       refreshListenable: refreshListenable,
-      configuration: configuration,
+      routerNeglect: routerNeglect,
     );
 
     routerDelegate = ARouterDelegate(
@@ -222,8 +229,8 @@ class ARouter implements RouterConfig<RouteMatchList> {
       errorPageBuilder: errorPageBuilder,
       errorBuilder: errorBuilder,
       routerNeglect: routerNeglect,
-      observers: [
-        ...observers ?? [],
+      observers: <NavigatorObserver>[
+        ...observers ?? <NavigatorObserver>[],
       ],
       restorationScopeId: restorationScopeId,
       requestFocus: requestFocus,
@@ -238,6 +245,14 @@ class ARouter implements RouterConfig<RouteMatchList> {
       return true;
     }());
   }
+
+  /// The top [ARouterState], the state of the route that was
+  /// last used in either [ARouter.go] or [ARouter.push].
+  ///
+  /// Accessing this property via ARouter.of(context).state will not
+  /// cause rebuild if the state has changed, consider using
+  /// ARouterState.of(context) instead.
+  ARouterState? get state => routerDelegate.state;
 
   /// Whether the imperative API affects browser URL bar.
   ///
@@ -259,7 +274,7 @@ class ARouter implements RouterConfig<RouteMatchList> {
   /// This option only affects web platform.
   static bool optionURLReflectsImperativeAPIs = false;
 
-  /// The route configuration used in go_router.
+  /// The route configuration used in ARouter.
   late final RouteConfiguration configuration;
 
   @override
@@ -443,7 +458,7 @@ class ARouter implements RouterConfig<RouteMatchList> {
   /// preserving the page key.
   ///
   /// This will preserve the state and not run any page animation. Optional
-  /// parameters can be provided to the named route, e.g. `name='person',
+  /// parameters can be providded to the named route, e.g. `name='person',
   /// pathParameters={'fid': 'f2', 'pid': 'p1'}`.
   ///
   /// See also:
@@ -520,6 +535,8 @@ class ARouter implements RouterConfig<RouteMatchList> {
       WidgetsBinding.instance.platformDispatcher.defaultRouteName,
     );
     if (platformDefaultUri.hasEmptyPath) {
+      // TODO(chunhtai): Clean up this once `RouteInformation.uri` is available
+      // in packages repo.
       platformDefaultUri = Uri(
         path: '/',
         queryParameters: platformDefaultUri.queryParameters,
@@ -534,4 +551,21 @@ class ARouter implements RouterConfig<RouteMatchList> {
       return platformDefault;
     }
   }
+}
+
+/// A routing config that is never going to change.
+class _ConstantRoutingConfig extends ValueListenable<RoutingConfig> {
+  const _ConstantRoutingConfig(this.value);
+  @override
+  void addListener(VoidCallback listener) {
+    // Intentionally empty because listener will never be called.
+  }
+
+  @override
+  void removeListener(VoidCallback listener) {
+    // Intentionally empty because listener will never be called.
+  }
+
+  @override
+  final RoutingConfig value;
 }

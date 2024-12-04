@@ -12,12 +12,11 @@ class RegisterPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (BuildConfig.isWeb) {
-      return _buildWebPage(context);
-    } else if (BuildConfig.isDesktop) {
-      return _buildDeskTopPage(context);
-    }
-    return _buildAppPage(context);
+    return PlatformView.builder(
+      mobileView: _buildAppPage(context),
+      desktopView: _buildDeskTopPage(context),
+      webView: _buildWebPage(context),
+    );
   }
 
   /// Web网页端展示的页面
@@ -85,7 +84,6 @@ class _EditRegisterInfoView extends StatefulWidget {
 }
 
 class __EditRegisterInfoViewState extends State<_EditRegisterInfoView> with Logging {
-
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _rPasswordController = TextEditingController();

@@ -17,6 +17,7 @@ class MainModel with ChangeNotifier {
   /// 主页是否初始化完成
   bool get initial => _initial;
   bool _initial = false;
+
   void initialComplete() {
     _initial = true;
     notifyListeners();
@@ -92,5 +93,23 @@ class _MainItem {
 enum MainTab {
   home,
   nav,
-  me,
+  me;
+
+  static MainTab parse(int index) {
+    MainTab selectedTab = MainTab.home;
+    for (var tab in MainTab.values) {
+      if (index != tab.index) continue;
+      selectedTab = tab;
+    }
+    return selectedTab;
+  }
+
+  static Map<MainTab, Widget> toMap(List<Widget> children) {
+    Map<MainTab, Widget> tabs = {};
+    final List<Widget> pages = children;
+    for (var tab in MainTab.values) {
+      tabs[tab] = pages[tab.index];
+    }
+    return tabs;
+  }
 }

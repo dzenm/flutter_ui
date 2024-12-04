@@ -12,24 +12,26 @@ class MallRouter {
   static List<RouteBase> get routers => [
         ARoute(
           name: mall,
-          path: 'mall',
+          path: '/mall',
           builder: (context, state) {
             return const MallPage();
           },
-        ),
-        ARoute(
-          name: orders,
-          path: 'orders',
-          builder: (context, state) {
-            return const OrderPage();
-          },
-        ),
-        ARoute(
-          name: addOrder,
-          path: 'addOrder',
-          builder: (context, state) {
-            return const AddOrderPage();
-          },
+          routes: [
+            ARoute(
+              name: orders,
+              path: '/orders',
+              builder: (context, state) {
+                return const OrderPage();
+              },
+            ),
+            ARoute(
+              name: addOrder,
+              path: '/addOrder',
+              builder: (context, state) {
+                return const AddOrderPage();
+              },
+            ),
+          ]
         ),
       ];
 }

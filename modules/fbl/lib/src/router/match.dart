@@ -1,3 +1,7 @@
+// Copyright 2013 The Flutter Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'dart:async';
 import 'dart:convert';
 
@@ -196,6 +200,7 @@ abstract class RouteMatchBase with Diagnosticable {
 
     final RegExpMatch? regExpMatch =
         route.matchPatternAsPrefix(remainingLocation);
+
     if (regExpMatch == null) {
       return _empty;
     }
@@ -487,7 +492,7 @@ class RouteMatchList with Diagnosticable {
       uri: Uri(),
       pathParameters: const <String, String>{});
 
-  /// The route matches.(Router stack)
+  /// The route matches.
   final List<RouteMatchBase> matches;
 
   /// Parameters for the matched route, URI-encoded.
@@ -505,7 +510,7 @@ class RouteMatchList with Diagnosticable {
   final Object? extra;
 
   /// An exception if there was an error during matching.
-  final GoException? error;
+  final AException? error;
 
   /// the full path pattern that matches the uri.
   ///
@@ -522,7 +527,7 @@ class RouteMatchList with Diagnosticable {
   /// This method ignores [ImperativeRouteMatch]s in the `matches`, as they
   /// don't contribute to the path.
   ///
-  /// This methods considers that [matches]'s elements verify the go route
+  /// This methods considers that [matches]'s elements verify the ARoute
   /// structure given to `ARouter`. For example, if the routes structure is
   ///
   /// ```dart
@@ -547,13 +552,9 @@ class RouteMatchList with Diagnosticable {
   /// [RouteMatchA(), RouteMatchB(), RouteMatchC()]
   /// ```
   static String _generateFullPath(Iterable<RouteMatchBase> matches) {
-    final StringBuffer buffer = StringBuffer();
-    bool addsSlash = false;
+    String fullPath = '';
     for (final RouteMatchBase match in matches
         .where((RouteMatchBase match) => match is! ImperativeRouteMatch)) {
-      if (addsSlash) {
-        buffer.write('/');
-      }
       final String pathSegment;
       if (match is RouteMatch) {
         pathSegment = match.route.path;
@@ -563,10 +564,9 @@ class RouteMatchList with Diagnosticable {
         assert(false, 'Unexpected match type: $match');
         continue;
       }
-      buffer.write(pathSegment);
-      addsSlash = pathSegment.isNotEmpty && (addsSlash || pathSegment != '/');
+      fullPath = concatenatePaths(fullPath, pathSegment);
     }
-    return buffer.toString();
+    return fullPath;
   }
 
   /// Returns true if there are no matches.
@@ -932,7 +932,7 @@ class _RouteMatchListDecoder
           ?.decode(encodedExtra[RouteMatchListCodec._encodedKey]);
     }
     RouteMatchList matchList =
-        configuration.findMatch(rootLocation, extra: extra);
+        configuration.findMatch(Uri.parse(rootLocation), extra: extra);
 
     final List<Object?>? imperativeMatches =
         input[RouteMatchListCodec._imperativeMatchesKey] as List<Object?>?;
@@ -945,6 +945,8 @@ class _RouteMatchListDecoder
             encodedImperativeMatch[RouteMatchListCodec._pageKey]! as String);
         final ImperativeRouteMatch imperativeMatch = ImperativeRouteMatch(
           pageKey: pageKey,
+          // TODO(chunhtai): Figure out a way to preserve future.
+          // https://github.com/flutter/flutter/issues/128122.
           completer: Completer<Object?>(),
           matches: imperativeMatchList,
         );

@@ -23,12 +23,11 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (BuildConfig.isWeb) {
-      return _buildWebPage(context);
-    } else if (BuildConfig.isDesktop) {
-      return _buildDeskTopPage(context);
-    }
-    return _buildAppPage(context);
+    return PlatformView.builder(
+      mobileView: _buildAppPage(context),
+      desktopView: _buildDeskTopPage(context),
+      webView: _buildWebPage(context),
+    );
   }
 
   /// Web网页端展示的页面
@@ -104,7 +103,6 @@ class _EditLoginInfoView extends StatefulWidget {
 }
 
 class _EditLoginInfoViewState extends State<_EditLoginInfoView> with Logging {
-
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _verifyCodeController = TextEditingController();
@@ -330,16 +328,12 @@ class _ProtocolInfoViewState extends State<ProtocolInfoView> with Logging {
               TextSpan(
                 text: S.of(context).registerProtocol,
                 style: TextStyle(color: theme.signText, fontSize: 12),
-                recognizer: _registerRecognizer
-                  ..onTap = () {
-                  },
+                recognizer: _registerRecognizer..onTap = () {},
               ),
               TextSpan(
                 text: S.of(context).privateProtocol,
                 style: TextStyle(color: theme.signText, fontSize: 12),
-                recognizer: _privateRecognizer
-                  ..onTap = () {
-                  },
+                recognizer: _privateRecognizer..onTap = () {},
               ),
             ]),
           ),

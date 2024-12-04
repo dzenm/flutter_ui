@@ -232,7 +232,11 @@ abstract mixin class _DirectoryMixin {
   Function? _logPrint;
 
   /// 初始化文件夹
-  Future<void> init({Function? logPrint, String? rootDir, String appDirName = 'File'}) async {
+  Future<void> init({
+    Function? logPrint,
+    String? rootDir,
+    String appDirName = 'File',
+  }) async {
     _logPrint = logPrint;
     _appRootDir = await _getAppRootDirectory(rootDir: rootDir, appDirName: appDirName);
   }

@@ -11,7 +11,7 @@ import 'route.dart';
 import 'route_data.dart';
 import 'state.dart';
 
-/// Signature of a go router builder function with navigator.
+/// Signature of a ARouter builder function with navigator.
 typedef ARouterBuilderWithNav = Widget Function(
   BuildContext context,
   Widget child,
@@ -55,13 +55,13 @@ class RouteBuilder {
     this.requestFocus = true,
   });
 
-  /// Builder function for a go router with Navigator.
+  /// Builder function for a ARouter with Navigator.
   final ARouterBuilderWithNav builderWithNav;
 
-  /// Error page builder for the go router delegate.
+  /// Error page builder for the ARouter delegate.
   final ARouterPageBuilder? errorPageBuilder;
 
-  /// Error widget builder for the go router delegate.
+  /// Error widget builder for the ARouter delegate.
   final ARouterWidgetBuilder? errorBuilder;
 
   /// The route configuration for the app.
@@ -93,7 +93,8 @@ class RouteBuilder {
   Widget build(
     BuildContext context,
     RouteMatchList matchList,
-    bool routerNeglect,
+    bool routerNeglect, // TODO(tolo): This parameter is not used and should be
+    // removed in the next major version.
   ) {
     if (matchList.isEmpty && !matchList.isError) {
       // The build method can be called before async redirect finishes. Build a
@@ -104,6 +105,8 @@ class RouteBuilder {
     return builderWithNav(
       context,
       _CustomNavigator(
+        // The state needs to persist across rebuild.
+        key: GlobalObjectKey(configuration.navigatorKey.hashCode),
         navigatorKey: configuration.navigatorKey,
         observers: observers,
         navigatorRestorationId: restorationScopeId,
@@ -225,7 +228,7 @@ class _CustomNavigatorState extends State<_CustomNavigator> {
     if (match is ShellRouteMatch) {
       return _buildPageForShellRoute(context, match);
     }
-    throw GoError('unknown match type ${match.runtimeType}');
+    throw AError('unknown match type ${match.runtimeType}');
   }
 
   /// Builds a [Page] for a [RouteMatch]
@@ -263,16 +266,22 @@ class _CustomNavigatorState extends State<_CustomNavigator> {
       route: match.route,
       routerState: state,
       navigatorKey: navigatorKey,
+      match: match,
       routeMatchList: widget.matchList,
-      navigatorBuilder:
-          (List<NavigatorObserver>? observers, String? restorationScopeId) {
+      navigatorBuilder: (
+        GlobalKey<NavigatorState> navigatorKey,
+        ShellRouteMatch match,
+        RouteMatchList matchList,
+        List<NavigatorObserver>? observers,
+        String? restorationScopeId,
+      ) {
         return _CustomNavigator(
           // The state needs to persist across rebuild.
           key: GlobalObjectKey(navigatorKey.hashCode),
           navigatorRestorationId: restorationScopeId,
           navigatorKey: navigatorKey,
           matches: match.matches,
-          matchList: widget.matchList,
+          matchList: matchList,
           configuration: widget.configuration,
           observers: observers ?? const <NavigatorObserver>[],
           onPopPageWithRouteMatch: widget.onPopPageWithRouteMatch,
@@ -311,14 +320,14 @@ class _CustomNavigatorState extends State<_CustomNavigator> {
 
       var log = widget.configuration.log;
       // can be null during testing
-      final Element? element = context is Element ? context : null;
+      final Element? elem = context is Element ? context : null;
 
-      if (element != null && isMaterialApp(element)) {
+      if (elem != null && isMaterialApp(elem)) {
         log('Using MaterialApp configuration');
         _pageBuilderForAppType = pageBuilderForMaterialApp;
         _errorBuilderForAppType =
             (BuildContext c, ARouterState s) => MaterialErrorScreen(s.error);
-      } else if (element != null && isCupertinoApp(element)) {
+      } else if (elem != null && isCupertinoApp(elem)) {
         log('Using CupertinoApp configuration');
         _pageBuilderForAppType = pageBuilderForCupertinoApp;
         _errorBuilderForAppType =
@@ -415,7 +424,6 @@ class _CustomNavigatorState extends State<_CustomNavigator> {
     if (_pages == null) {
       _updatePages(context);
     }
-    widget.configuration.log('CustomNavigator: build(pages=$_pages)');
     assert(_pages != null);
     return ARouterStateRegistryScope(
       registry: _registry,

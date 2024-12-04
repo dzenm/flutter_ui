@@ -19,30 +19,56 @@ import 'me_router.dart';
 ///
 /// Created by a0010 on 2022/7/28 10:56
 /// 我的页面
-class MePage extends StatelessWidget {
-  const MePage({super.key});
+class MePageMobile extends StatelessWidget {
+  const MePageMobile({super.key});
 
   @override
   Widget build(BuildContext context) {
-    if (BuildConfig.isMobile) {
-      return _MePage(
-        push: <String>(path) {
-          return context.pushNamed(path);
-        },
-      );
-    } else if (BuildConfig.isDesktop) {
-      return DesktopMenu(
-        width: 320,
-        secondaryChild: const MeContentPage(),
-        child: _MePage(
-          push: <String>(path) {
-            context.read<MeModel>().selectedTab = path;
-            return null;
-          },
-        ),
-      );
-    }
-    return const Placeholder();
+    return _MePage(push: <String>(path) {
+      return context.pushNamed(path);
+    });
+  }
+}
+
+class MePageDesktop extends StatelessWidget {
+  /// The navigation shell and container for the branch Navigators.
+  final StatefulNavigationShell navigationShell;
+
+  /// The children (branch Navigators) to display in a custom container
+  final List<Widget> children;
+
+  const MePageDesktop({
+    super.key,
+    required this.navigationShell,
+    required this.children,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return MeContentPage(
+      navigationShell: navigationShell,
+      children: children,
+      builder: (controller) {
+        return DesktopMenu(
+          width: 320,
+          secondaryChild: Material(
+            child: PageView(
+              controller: controller,
+              children: children,
+            ),
+          ),
+          child: _MePage(
+            push: <String>(path) async {
+              int index = MeRouter.getPathIndex(path);
+              context.read<MeModel>().selectedTab = path;
+              controller.jumpToPage(index);
+              navigationShell.goBranch(index);
+              return null;
+            },
+          ),
+        );
+      },
+    );
   }
 }
 
@@ -101,7 +127,7 @@ class _MePageState extends State<_MePage> with Logging {
           // toolbar背景色块
           Column(children: [
             const CommonBar(),
-            Expanded(child: Container(color: theme.divide)),
+            Expanded(child: Container(color: theme.cardBackground)),
           ]),
           // body
           _buildBody(theme, statusBarHeight),
@@ -128,6 +154,7 @@ class _MePageState extends State<_MePage> with Logging {
             color: theme.background,
             borderRadius: BorderRadius.circular(8),
           ),
+          clipBehavior: Clip.hardEdge,
           child: Column(children: [
             const SizedBox(height: 48),
             ..._buildChildrenButtons(theme),
@@ -155,96 +182,81 @@ class _MePageState extends State<_MePage> with Logging {
 
   List<Widget> _buildChildrenButtons(AppTheme theme) {
     return [
-      TapLayout(
-        height: 50.0,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        onTap: () {
-          push(MeRouter.medicine);
-        },
+      _SelectedView(
+        path: MeRouter.medicine,
+        onTap: push,
         child: SingleTextView(
           title: S.of(context).chineseMedicine,
           isShowForward: true,
         ),
       ),
       const SizedBox(height: 8),
-      TapLayout(
-        height: 50.0,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => push(MeRouter.collect),
+      _SelectedView(
+        path: MeRouter.collect,
+        onTap: push,
         child: SingleTextView(
           icon: Icons.collections,
           title: S.of(context).collect,
           isShowForward: true,
         ),
       ),
-      TapLayout(
-        height: 50.0,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => push(MeRouter.coin),
+      _SelectedView(
+        path: MeRouter.coin,
+        onTap: push,
         child: SingleTextView(
           icon: Icons.money,
           title: S.of(context).coinRecord,
           isShowForward: true,
         ),
       ),
-      TapLayout(
-        height: 50.0,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => push(MeRouter.rank),
+      _SelectedView(
+        path: MeRouter.rank,
+        onTap: push,
         child: SingleTextView(
           icon: Icons.money,
           title: S.of(context).integralRankingList,
           isShowForward: true,
         ),
       ),
-      TapLayout(
-        height: 50.0,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => push(MeRouter.article),
+      _SelectedView(
+        path: MeRouter.article,
+        onTap: push,
         child: SingleTextView(
           icon: Icons.article,
           title: S.of(context).sharedArticle,
           isShowForward: true,
         ),
       ),
-      TapLayout(
-        height: 50.0,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => push(StudyRouter.study)?.then((value) => logDebug('页面返回值：value=${value ?? 'null'}')),
+      _SelectedView(
+        path: StudyRouter.study,
+        onTap: push,
         child: SingleTextView(
           icon: Icons.real_estate_agent_sharp,
           title: S.of(context).studyMainPage(''),
           isShowForward: true,
         ),
       ),
-      TapLayout(
-        height: 50.0,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => push(MeRouter.info),
+      _SelectedView(
+        path: MeRouter.info,
+        onTap: push,
         child: SingleTextView(
           icon: Icons.supervised_user_circle_sharp,
           title: S.of(context).profile,
           isShowForward: true,
         ),
       ),
-      TapLayout(
-        height: 50.0,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => push(MallRouter.mall),
+      _SelectedView(
+        path: MallRouter.mall,
+        onTap: push,
         child: SingleTextView(
           icon: Icons.local_mall_rounded,
           title: S.of(context).mall,
           isShowForward: true,
         ),
       ),
-      TapLayout(
-        height: 50.0,
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(5),
-          bottomRight: Radius.circular(5),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        onTap: () => push(MeRouter.setting),
+      _SelectedView(
+        path: MeRouter.setting,
+        onTap: push,
         child: SingleTextView(
           icon: Icons.settings,
           title: S.of(context).setting,
@@ -276,5 +288,48 @@ class _MePageState extends State<_MePage> with Logging {
       context.read<UserModel>().collectCount = count;
       context.read<UserModel>().coin = coin;
     });
+  }
+}
+
+class _SelectedView extends StatelessWidget {
+  final Widget child;
+  final String path;
+  final Future<T?>? Function<T>(String path)? onTap;
+
+  const _SelectedView({
+    super.key,
+    required this.child,
+    required this.path,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Selector<MeModel, String?>(
+      selector: (_, model) => model.selectedTab,
+      builder: (c, selectedPath, w) {
+        bool isSelected = path == selectedPath;
+        AppTheme theme = context.watch<LocalModel>().theme;
+        Color color = isSelected ? theme.divide : theme.transparent;
+        return Theme(
+          data: ThemeData(
+            textTheme: TextTheme(
+              bodyMedium: TextStyle(color: theme.white),
+            ),
+          ),
+          child: TapLayout(
+            height: 50.0,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            background: color,
+            onTap: () {
+              if (onTap != null) {
+                onTap!(path);
+              }
+            },
+            child: child,
+          ),
+        );
+      },
+    );
   }
 }

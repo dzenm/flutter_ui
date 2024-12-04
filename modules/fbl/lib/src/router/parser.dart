@@ -67,31 +67,25 @@ class ARouteInformationParser extends RouteInformationParser<RouteMatchList> {
       return debugParserFuture = _redirect(context, matchList)
           .then<RouteMatchList>((RouteMatchList value) {
         if (value.isError && onParserException != null) {
+          // TODO(chunhtai): Figure out what to return if context is invalid.
+          // ignore: use_build_context_synchronously
           return onParserException!(context, value);
         }
         return value;
       });
     }
 
-    late final RouteMatchList initialMatches;
-    if (routeInformation.uri.hasEmptyPath) {
-      String newUri = '${routeInformation.uri.origin}/';
-      if (routeInformation.uri.hasQuery) {
-        newUri += '?${routeInformation.uri.query}';
-      }
-      if (routeInformation.uri.hasFragment) {
-        newUri += '#${routeInformation.uri.fragment}';
-      }
-      initialMatches = configuration.findMatch(
-        newUri,
-        extra: state.extras,
-      );
-    } else {
-      initialMatches = configuration.findMatch(
-        routeInformation.uri.toString(),
-        extra: state.extras,
-      );
+    Uri uri = routeInformation.uri;
+    if (uri.hasEmptyPath) {
+      uri = uri.replace(path: '/');
+    } else if (uri.path.length > 1 && uri.path.endsWith('/')) {
+      // Remove trailing `/`.
+      uri = uri.replace(path: uri.path.substring(0, uri.path.length - 1));
     }
+    final RouteMatchList initialMatches = configuration.findMatch(
+      uri,
+      extra: state.extra,
+    );
     if (initialMatches.isError) {
       configuration.log('No initial matches: ${routeInformation.uri.path}');
     }
@@ -101,6 +95,8 @@ class ARouteInformationParser extends RouteInformationParser<RouteMatchList> {
       initialMatches,
     ).then<RouteMatchList>((RouteMatchList matchList) {
       if (matchList.isError && onParserException != null) {
+        // TODO(chunhtai): Figure out what to return if context is invalid.
+        // ignore: use_build_context_synchronously
         return onParserException!(context, matchList);
       }
 
@@ -151,7 +147,6 @@ class ARouteInformationParser extends RouteInformationParser<RouteMatchList> {
         location = safeRoute.matches.uri.toString();
       }
     }
-
     return RouteInformation(
       uri: Uri.parse(location ?? configuration.uri.toString()),
       state: _routeMatchListCodec.encode(configuration),
@@ -185,22 +180,30 @@ class ARouteInformationParser extends RouteInformationParser<RouteMatchList> {
         );
       case NavigatingType.pushReplacement:
         final RouteMatch routeMatch = baseRouteMatchList!.last;
-        return baseRouteMatchList.remove(routeMatch).push(
-              ImperativeRouteMatch(
-                pageKey: _getUniqueValueKey(),
-                completer: completer!,
-                matches: newMatchList,
-              ),
-            );
+        baseRouteMatchList = baseRouteMatchList.remove(routeMatch);
+        if (baseRouteMatchList.isEmpty) {
+          return newMatchList;
+        }
+        return baseRouteMatchList.push(
+          ImperativeRouteMatch(
+            pageKey: _getUniqueValueKey(),
+            completer: completer!,
+            matches: newMatchList,
+          ),
+        );
       case NavigatingType.replace:
         final RouteMatch routeMatch = baseRouteMatchList!.last;
-        return baseRouteMatchList.remove(routeMatch).push(
-              ImperativeRouteMatch(
-                pageKey: routeMatch.pageKey,
-                completer: completer!,
-                matches: newMatchList,
-              ),
-            );
+        baseRouteMatchList = baseRouteMatchList.remove(routeMatch);
+        if (baseRouteMatchList.isEmpty) {
+          return newMatchList;
+        }
+        return baseRouteMatchList.push(
+          ImperativeRouteMatch(
+            pageKey: routeMatch.pageKey,
+            completer: completer!,
+            matches: newMatchList,
+          ),
+        );
       case NavigatingType.go:
         return newMatchList;
       case NavigatingType.restore:
