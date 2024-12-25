@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'article_entity.dart';
+part of 'article.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -10,19 +10,19 @@ ArticleEntity _$ArticleEntityFromJson(Map<String, dynamic> json) =>
     ArticleEntity()
       ..adminAdd = const BoolConvert().fromJson(json['adminAdd'])
       ..apkLink = json['apkLink'] as String?
-      ..audit = json['audit'] as int?
+      ..audit = (json['audit'] as num?)?.toInt()
       ..author = json['author'] as String?
       ..canEdit = const BoolConvert().fromJson(json['canEdit'])
-      ..chapterId = json['chapterId'] as int?
+      ..chapterId = (json['chapterId'] as num?)?.toInt()
       ..chapterName = json['chapterName'] as String?
       ..collect = const BoolConvert().fromJson(json['collect'])
-      ..courseId = json['courseId'] as int?
+      ..courseId = (json['courseId'] as num?)?.toInt()
       ..desc = json['desc'] as String?
       ..descMd = json['descMd'] as String?
       ..envelopePic = json['envelopePic'] as String?
       ..fresh = const BoolConvert().fromJson(json['fresh'])
       ..host = json['host'] as String?
-      ..id = json['id'] as int?
+      ..id = (json['id'] as num?)?.toInt()
       ..isAdminAdd = const BoolConvert().fromJson(json['isAdminAdd'])
       ..link = json['link'] as String?
       ..niceDate = json['niceDate'] as String?
@@ -30,20 +30,20 @@ ArticleEntity _$ArticleEntityFromJson(Map<String, dynamic> json) =>
       ..origin = json['origin'] as String?
       ..prefix = json['prefix'] as String?
       ..projectLink = json['projectLink'] as String?
-      ..publishTime = json['publishTime'] as int?
-      ..realSuperChapterId = json['realSuperChapterId'] as int?
+      ..publishTime = (json['publishTime'] as num?)?.toInt()
+      ..realSuperChapterId = (json['realSuperChapterId'] as num?)?.toInt()
       ..route = const BoolConvert().fromJson(json['route'])
-      ..selfVisible = json['selfVisible'] as int?
-      ..shareDate = json['shareDate'] as int?
+      ..selfVisible = (json['selfVisible'] as num?)?.toInt()
+      ..shareDate = (json['shareDate'] as num?)?.toInt()
       ..shareUser = json['shareUser'] as String?
-      ..superChapterId = json['superChapterId'] as int?
+      ..superChapterId = (json['superChapterId'] as num?)?.toInt()
       ..superChapterName = json['superChapterName'] as String?
       ..title = json['title'] as String?
       ..tags = const TagsConvert().fromJson(json['tags'])
-      ..type = json['type'] as int?
-      ..userId = json['userId'] as int?
-      ..visible = json['visible'] as int?
-      ..zan = json['zan'] as int?;
+      ..type = (json['type'] as num?)?.toInt()
+      ..userId = (json['userId'] as num?)?.toInt()
+      ..visible = (json['visible'] as num?)?.toInt()
+      ..zan = (json['zan'] as num?)?.toInt();
 
 Map<String, dynamic> _$ArticleEntityToJson(ArticleEntity instance) =>
     <String, dynamic>{

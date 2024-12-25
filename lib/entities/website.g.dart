@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'website_entity.dart';
+part of 'website.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -8,13 +8,13 @@ part of 'website_entity.dart';
 
 WebsiteEntity _$WebsiteEntityFromJson(Map<String, dynamic> json) =>
     WebsiteEntity()
-      ..id = json['id'] as int?
+      ..id = (json['id'] as num?)?.toInt()
       ..category = json['category'] as String?
       ..icon = json['icon'] as String?
       ..link = json['link'] as String?
       ..name = json['name'] as String?
-      ..order = json['order'] as int?
-      ..visible = json['visible'] as int?;
+      ..order = (json['order'] as num?)?.toInt()
+      ..visible = (json['visible'] as num?)?.toInt();
 
 Map<String, dynamic> _$WebsiteEntityToJson(WebsiteEntity instance) =>
     <String, dynamic>{

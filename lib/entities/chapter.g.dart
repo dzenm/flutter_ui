@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'chapter_entity.dart';
+part of 'chapter.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -13,18 +13,18 @@ ChapterEntity _$ChapterEntityFromJson(Map<String, dynamic> json) =>
           .toList()
       ..author = json['author'] as String?
       ..children = json['children'] as List<dynamic>
-      ..courseId = json['courseId'] as int?
+      ..courseId = (json['courseId'] as num?)?.toInt()
       ..cover = json['cover'] as String?
       ..desc = json['desc'] as String?
-      ..id = json['id'] as int?
+      ..id = (json['id'] as num?)?.toInt()
       ..lisense = json['lisense'] as String?
       ..lisenseLink = json['lisenseLink'] as String?
       ..name = json['name'] as String?
-      ..order = json['order'] as int?
-      ..parentChapterId = json['parentChapterId'] as int?
-      ..type = json['type'] as int?
+      ..order = (json['order'] as num?)?.toInt()
+      ..parentChapterId = (json['parentChapterId'] as num?)?.toInt()
+      ..type = (json['type'] as num?)?.toInt()
       ..userControlSetTop = json['userControlSetTop'] as bool?
-      ..visible = json['visible'] as int?;
+      ..visible = (json['visible'] as num?)?.toInt();
 
 Map<String, dynamic> _$ChapterEntityToJson(ChapterEntity instance) =>
     <String, dynamic>{

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'banner_entity.dart';
+part of 'banner.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -8,12 +8,12 @@ part of 'banner_entity.dart';
 
 BannerEntity _$BannerEntityFromJson(Map<String, dynamic> json) => BannerEntity()
   ..desc = json['desc'] as String?
-  ..id = json['id'] as int?
+  ..id = (json['id'] as num?)?.toInt()
   ..imagePath = json['imagePath'] as String?
-  ..isVisible = json['isVisible'] as int?
-  ..order = json['order'] as int?
+  ..isVisible = (json['isVisible'] as num?)?.toInt()
+  ..order = (json['order'] as num?)?.toInt()
   ..title = json['title'] as String?
-  ..type = json['type'] as int?
+  ..type = (json['type'] as num?)?.toInt()
   ..url = json['url'] as String?;
 
 Map<String, dynamic> _$BannerEntityToJson(BannerEntity instance) =>

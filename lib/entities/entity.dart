@@ -3,17 +3,17 @@
 ///
 library entity;
 
-export 'article_entity.dart';
-export 'banner_entity.dart';
-export 'chapter_entity.dart';
-export 'coin_entity.dart';
-export 'coin_record_entity.dart';
-export 'collect_entity.dart';
-export 'hotkey_entity.dart';
-export 'medicine_entity.dart';
-export 'navi_entity.dart';
-export 'order_entity.dart';
-export 'tool_entity.dart';
-export 'tree_entity.dart';
-export 'user_entity.dart';
-export 'website_entity.dart';
+export 'article.dart';
+export 'banner.dart';
+export 'chapter.dart';
+export 'coin.dart';
+export 'coin_record.dart';
+export 'collect.dart';
+export 'hotkey.dart';
+export 'medicine.dart';
+export 'navi.dart';
+export 'order.dart';
+export 'tool.dart';
+export 'tree.dart';
+export 'user.dart';
+export 'website.dart';

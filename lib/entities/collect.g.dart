@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'collect_entity.dart';
+part of 'collect.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -9,21 +9,21 @@ part of 'collect_entity.dart';
 CollectEntity _$CollectEntityFromJson(Map<String, dynamic> json) =>
     CollectEntity()
       ..author = json['author'] as String?
-      ..chapterId = json['chapterId'] as int?
+      ..chapterId = (json['chapterId'] as num?)?.toInt()
       ..chapterName = json['chapterName'] as String?
-      ..courseId = json['courseId'] as int?
+      ..courseId = (json['courseId'] as num?)?.toInt()
       ..desc = json['desc'] as String?
       ..envelopePic = json['envelopePic'] as String?
-      ..id = json['id'] as int?
+      ..id = (json['id'] as num?)?.toInt()
       ..link = json['link'] as String?
       ..niceDate = json['niceDate'] as String?
       ..origin = json['origin'] as String?
-      ..originId = json['originId'] as int?
-      ..publishTime = json['publishTime'] as int?
+      ..originId = (json['originId'] as num?)?.toInt()
+      ..publishTime = (json['publishTime'] as num?)?.toInt()
       ..title = json['title'] as String?
-      ..userId = json['userId'] as int?
-      ..visible = json['visible'] as int?
-      ..zan = json['zan'] as int?;
+      ..userId = (json['userId'] as num?)?.toInt()
+      ..visible = (json['visible'] as num?)?.toInt()
+      ..zan = (json['zan'] as num?)?.toInt();
 
 Map<String, dynamic> _$CollectEntityToJson(CollectEntity instance) =>
     <String, dynamic>{

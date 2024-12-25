@@ -1,9 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import 'package:fbl/fbl.dart';
-import 'article_entity.dart';
+import 'article.dart';
 
-part 'chapter_entity.g.dart';
+part 'chapter.g.dart';
 
 ///
 /// Created by a0010 on 2023/8/9 15:43

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'coin_record_entity.dart';
+part of 'coin_record.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -8,13 +8,13 @@ part of 'coin_record_entity.dart';
 
 CoinRecordEntity _$CoinRecordEntityFromJson(Map<String, dynamic> json) =>
     CoinRecordEntity()
-      ..coinCount = json['coinCount'] as int?
-      ..date = json['date'] as int?
+      ..coinCount = (json['coinCount'] as num?)?.toInt()
+      ..date = (json['date'] as num?)?.toInt()
       ..desc = json['desc'] as String?
-      ..id = json['id'] as int?
+      ..id = (json['id'] as num?)?.toInt()
       ..reason = json['reason'] as String?
-      ..type = json['type'] as int?
-      ..userId = json['userId'] as int?
+      ..type = (json['type'] as num?)?.toInt()
+      ..userId = (json['userId'] as num?)?.toInt()
       ..username = json['username'] as String?;
 
 Map<String, dynamic> _$CoinRecordEntityToJson(CoinRecordEntity instance) =>

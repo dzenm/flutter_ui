@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'package:fbl/fbl.dart';
 
-part 'tool_entity.g.dart';
+part 'tool.g.dart';
 
 ///
 /// Created by a0010 on 2023/8/9 16:27

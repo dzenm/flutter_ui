@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'converts/bool_convert.dart';
 
-part 'user_entity.g.dart';
+part 'user.g.dart';
 
 ///
 /// Created by a0010 on 2023/2/23 14:26
