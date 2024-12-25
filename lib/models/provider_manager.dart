@@ -8,10 +8,10 @@ import '../pages/main/main_model.dart';
 import '../pages/main/me/me_model.dart';
 import '../pages/main/nav/nav_model.dart';
 import '../pages/study/study_model.dart';
-import 'article_model.dart';
-import 'banner_model.dart';
-import 'user_model.dart';
-import 'website_model.dart';
+import 'article.dart';
+import 'banner.dart';
+import 'user.dart';
+import 'website.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56

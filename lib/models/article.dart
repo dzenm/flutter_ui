@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../entities/article_entity.dart';
+import '../entities/article.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56

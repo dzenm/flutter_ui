@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../entities/coin_entity.dart';
-import '../entities/user_entity.dart';
+import '../entities/coin.dart';
+import '../entities/user.dart';
 
 ///
 /// Created by a0010 on 2023/2/23 14:26
