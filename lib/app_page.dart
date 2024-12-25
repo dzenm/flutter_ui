@@ -7,10 +7,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'generated/l10n.dart';
-import 'models/article_model.dart';
-import 'models/banner_model.dart';
-import 'models/user_model.dart';
-import 'models/website_model.dart';
+import 'models/article.dart';
+import 'models/banner.dart';
+import 'models/user.dart';
+import 'models/website.dart';
 import 'pages/main/home/home_model.dart';
 import 'pages/main/main_model.dart';
 import 'pages/main/me/me_model.dart';

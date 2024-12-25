@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../generated/l10n.dart';
-import '../../../../models/user_model.dart';
+import '../../../../models/user.dart';
 import '../me_router.dart';
 
 ///

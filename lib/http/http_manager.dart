@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../application.dart';
 import '../entities/entity.dart';
 import '../models/provider_manager.dart';
-import '../models/user_model.dart';
+import '../models/user.dart';
 import '../pages/main/nav/nav_model.dart';
 import '../pages/routers.dart';
 import 'api_services.dart';
