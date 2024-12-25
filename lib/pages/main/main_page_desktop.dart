@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ui/pages/desktop_service.dart';
 import 'package:provider/provider.dart';
 
-import '../common/view_media_page.dart';
+import '../common/view_media.dart';
 import 'main_model.dart';
 
 ///

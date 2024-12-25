@@ -121,7 +121,7 @@ abstract mixin class _InitAppMixin {
     log('  初始化 DBManager');
     DBManager().init(logPrint: BuildConfig.showDBLog ? Log.b : null, packageName: 'FlutterUI', tables: [
       OrderEntity(),
-      ProductEntity(),
+      AddressEntity(),
       UserEntity(),
       BannerEntity(),
       ArticleEntity(),

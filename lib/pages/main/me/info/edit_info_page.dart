@@ -2,9 +2,9 @@ import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../entities/user_entity.dart';
+import '../../../../entities/user.dart';
 import '../../../../generated/l10n.dart';
-import '../../../../models/user_model.dart';
+import '../../../../models/user.dart';
 
 ///
 /// Created by a0010 on 2023/3/23 09:01

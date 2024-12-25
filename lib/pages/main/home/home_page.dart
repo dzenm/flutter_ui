@@ -4,12 +4,12 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../../config/configs.dart';
-import '../../../entities/article_entity.dart';
-import '../../../entities/banner_entity.dart';
+import '../../../entities/article.dart';
+import '../../../entities/banner.dart';
 import '../../../http/http_manager.dart';
-import '../../../models/article_model.dart';
-import '../../../models/banner_model.dart';
-import '../../../models/website_model.dart';
+import '../../../models/article.dart';
+import '../../../models/banner.dart';
+import '../../../models/website.dart';
 import '../../routers.dart';
 import '../main_model.dart';
 

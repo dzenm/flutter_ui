@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../generated/l10n.dart';
-import '../../../../models/user_model.dart';
-import '../../../common/view_media_page.dart';
+import '../../../../models/user.dart';
+import '../../../common/view_media.dart';
 import '../../../study/study_model.dart';
 import '../me_router.dart';
 

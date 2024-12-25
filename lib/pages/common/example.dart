@@ -1,8 +1,6 @@
 import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 
-
-
 ///
 /// Created by a0010 on 2023/3/23 09:01
 /// 快速页面创建

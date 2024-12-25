@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../config/configs.dart';
-import '../../../entities/tool_entity.dart';
+import '../../../entities/tool.dart';
 import '../../../http/http_manager.dart';
 import '../../routers.dart';
 import 'nav_model.dart';

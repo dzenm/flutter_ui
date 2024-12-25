@@ -1,7 +1,7 @@
 import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../entities/collect_entity.dart';
+import '../../../../entities/collect.dart';
 import '../../../../generated/l10n.dart';
 import '../../../../http/http_manager.dart';
 import '../../../common/widgets/list_page_state.dart';

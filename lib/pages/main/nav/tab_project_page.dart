@@ -2,7 +2,7 @@ import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../entities/article_entity.dart';
+import '../../../entities/article.dart';
 import '../../../http/http_manager.dart';
 import '../../routers.dart';
 import 'nav_model.dart';

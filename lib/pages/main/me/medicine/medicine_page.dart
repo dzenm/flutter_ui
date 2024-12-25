@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 
 import '../../../../config/configs.dart';
-import '../../../../entities/medicine_entity.dart';
+import '../../../../entities/medicine.dart';
 import '../../../../generated/l10n.dart';
 import '../../../../http/api_services.dart';
 

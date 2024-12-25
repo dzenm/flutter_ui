@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 
-import '../../../entities/article_entity.dart';
-import '../../../entities/chapter_entity.dart';
-import '../../../entities/tool_entity.dart';
+import '../../../entities/article.dart';
+import '../../../entities/chapter.dart';
+import '../../../entities/tool.dart';
 
 ///
 /// Created by a0010 on 2022/7/28 10:56

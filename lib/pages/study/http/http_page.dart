@@ -3,10 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../entities/article_entity.dart';
+import '../../../entities/article.dart';
 import '../../../generated/l10n.dart';
 import '../../../http/http_manager.dart';
-import '../../../models/article_model.dart';
+import '../../../models/article.dart';
 
 /// HTTP请求
 class HTTPListPage extends StatefulWidget {

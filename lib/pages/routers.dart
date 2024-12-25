@@ -2,14 +2,14 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:fbl/fbl.dart';
 import 'package:flutter/widgets.dart';
 
-import 'common/example_page.dart';
-import 'common/view_media_page.dart';
-import 'common/web_view_page.dart';
+import 'common/city_select.dart';
+import 'common/example.dart';
+import 'common/view_media.dart';
+import 'common/web_view.dart';
 import 'login/login_page.dart';
 import 'login/register_page.dart';
 import 'main/home/home_page.dart';
 import 'main/main_page.dart';
-import 'main/main_page_desktop.dart';
 import 'main/me/me_page.dart';
 import 'main/me/me_router.dart';
 import 'main/nav/nav_page.dart';
@@ -26,6 +26,8 @@ class Routers extends NavigatorObserver {
   static const String home = 'home';
   static const String nav = 'nav';
   static const String me = 'me';
+
+  static const String citySelected = 'citySelected';
   static const String example = 'example';
   static const String webView = 'webView';
   static const String viewMedia = 'viewMedia';
@@ -129,10 +131,10 @@ class _RouterMobile {
     ARoute(name: Routers.main, path: '/main', redirect: (_, __) => '/home'),
     StatefulShellRoute(
       builder: (
-          BuildContext context,
-          ARouterState state,
-          StatefulNavigationShell navigationShell,
-          ) {
+        BuildContext context,
+        ARouterState state,
+        StatefulNavigationShell navigationShell,
+      ) {
         // This nested StatefulShellRoute demonstrates the use of a
         // custom container for the branch Navigators. In this implementation,
         // no customization is done in the builder function (navigationShell
@@ -142,10 +144,10 @@ class _RouterMobile {
         return navigationShell;
       },
       navigatorContainerBuilder: (
-          BuildContext context,
-          StatefulNavigationShell navigationShell,
-          List<Widget> children,
-          ) {
+        BuildContext context,
+        StatefulNavigationShell navigationShell,
+        List<Widget> children,
+      ) {
         // Returning a customized container for the branch
         // Navigators (i.e. the `List<Widget> children` argument).
         //
@@ -276,36 +278,14 @@ class _RouterMobile {
       ],
     ),
     ...MeRouter.routers,
-    ARoute(
-      name: Routers.example,
-      path: 'example',
-      builder: (context, state) => const ExamplePage(),
-    ),
-    ARoute(
-      name: Routers.webView,
-      path: 'webView',
-      builder: (context, state) {
-        dynamic args = state.uri.queryParameters;
-        String title = args['title'] ?? '';
-        String url = args['url'] ?? '';
-        return WebViewPage(title: title, url: url);
-      },
-    ),
-    ARoute(
-      name: Routers.viewMedia,
-      path: 'viewMedia',
-      builder: (context, state) {
-        dynamic args = state.uri.queryParameters;
-        String title = args['title'] ?? '';
-        String url = args['url'] ?? '';
-        return const ViewMediaPage(medias: []);
-      },
-    ),
+    CommonRouters.citySelected,
+    CommonRouters.example,
+    CommonRouters.webView,
+    CommonRouters.viewMedia,
   ];
 }
 
 class _RouterDesktop {
-
   static final GlobalKey<NavigatorState> _rootKey = GlobalKey(debugLabel: 'main');
   static final GlobalKey<NavigatorState> _homeKey = GlobalKey(debugLabel: 'home');
   static final GlobalKey<NavigatorState> _navKey = GlobalKey(debugLabel: 'nav');
@@ -467,30 +447,38 @@ class _RouterDesktop {
         ),
       ],
     ),
-    ARoute(
-      name: Routers.example,
-      path: 'example',
-      builder: (context, state) => const ExamplePage(),
-    ),
-    ARoute(
-      name: Routers.webView,
-      path: 'webView',
-      builder: (context, state) {
-        dynamic args = state.uri.queryParameters;
-        String title = args['title'] ?? '';
-        String url = args['url'] ?? '';
-        return WebViewPage(title: title, url: url);
-      },
-    ),
-    ARoute(
-      name: Routers.viewMedia,
-      path: 'viewMedia',
-      builder: (context, state) {
-        dynamic args = state.uri.queryParameters;
-        String title = args['title'] ?? '';
-        String url = args['url'] ?? '';
-        return const ViewMediaPage(medias: []);
-      },
-    ),
   ];
+}
+
+class CommonRouters {
+  static ARoute citySelected = ARoute(
+    name: Routers.citySelected,
+    path: '/citySelected',
+    builder: (context, state) => const CitySelectedPage(),
+  );
+  static ARoute example = ARoute(
+    name: Routers.example,
+    path: '/example',
+    builder: (context, state) => const ExamplePage(),
+  );
+  static ARoute webView = ARoute(
+    name: Routers.webView,
+    path: '/webView',
+    builder: (context, state) {
+      dynamic args = state.uri.queryParameters;
+      String title = args['title'] ?? '';
+      String url = args['url'] ?? '';
+      return WebViewPage(title: title, url: url);
+    },
+  );
+  static ARoute viewMedia = ARoute(
+    name: Routers.viewMedia,
+    path: '/viewMedia',
+    builder: (context, state) {
+      dynamic args = state.uri.queryParameters;
+      String title = args['title'] ?? '';
+      String url = args['url'] ?? '';
+      return const ViewMediaPage(medias: []);
+    },
+  );
 }

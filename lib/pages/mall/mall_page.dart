@@ -20,6 +20,10 @@ class _MallPageState extends State<MallPage> {
         title: S.of(context).mall,
         actions: [
           IconButton(
+            onPressed: () => context.pushNamed(MallRouter.orders),
+            icon: const Icon(Icons.offline_pin_rounded),
+          ),
+          IconButton(
             onPressed: () => context.pushNamed(MallRouter.addOrder),
             icon: const Icon(Icons.add_circle_outline_outlined),
           ),

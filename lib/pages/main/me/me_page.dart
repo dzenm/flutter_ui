@@ -3,13 +3,13 @@ import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../entities/coin_entity.dart';
-import '../../../entities/user_entity.dart';
+import '../../../entities/coin.dart';
+import '../../../entities/user.dart';
 import '../../../generated/l10n.dart';
 import '../../../http/http_manager.dart';
 import '../../../models/provider_manager.dart';
-import '../../../models/user_model.dart';
-import '../../common/view_media_page.dart';
+import '../../../models/user.dart';
+import '../../common/view_media.dart';
 import '../../mall/mall_router.dart';
 import '../../study/study_router.dart';
 import 'me_content_page.dart';

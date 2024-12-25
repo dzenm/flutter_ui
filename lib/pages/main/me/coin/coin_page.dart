@@ -1,7 +1,7 @@
 import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../entities/coin_record_entity.dart';
+import '../../../../entities/coin_record.dart';
 import '../../../../generated/l10n.dart';
 import '../../../../http/http_manager.dart';
 import '../../../common/widgets/list_page_state.dart';

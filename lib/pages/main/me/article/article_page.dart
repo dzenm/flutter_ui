@@ -2,11 +2,11 @@ import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../entities/article_entity.dart';
-import '../../../../entities/coin_entity.dart';
+import '../../../../entities/article.dart';
+import '../../../../entities/coin.dart';
 import '../../../../generated/l10n.dart';
 import '../../../../http/http_manager.dart';
-import '../../../../models/user_model.dart';
+import '../../../../models/user.dart';
 import '../../../common/widgets/list_page_state.dart';
 
 ///

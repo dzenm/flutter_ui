@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../generated/l10n.dart';
-import '../common/permission_page.dart';
+import '../common/permission.dart';
 import '../main/main_model.dart';
 import '../utils/pick_files_helper.dart';
 import '../widgets/widgets.dart';
