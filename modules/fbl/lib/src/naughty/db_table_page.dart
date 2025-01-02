@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../db/db.dart';
-import '../widgets/widget.dart';
+import '../widgets/widgets.dart';
 import 'db_column_page.dart';
 import 'naughty.dart';
 

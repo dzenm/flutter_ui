@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../widgets/widget.dart';
+import '../widgets/widgets.dart';
 import 'http_entity.dart';
 
 /// 一个Http请求数据展示页面

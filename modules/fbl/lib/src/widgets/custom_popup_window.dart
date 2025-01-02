@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import 'tap_layout.dart';
+import 'tap.dart';
 
 typedef ItemTapCallback = void Function(int index);
 

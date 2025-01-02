@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'scrollview_observer/chat/chat_observer_scroll_physics.dart';
-import 'scrollview_observer/chat/chat_scroll_observer.dart';
-import 'scrollview_observer/listview/list_observer_controller.dart';
-import 'scrollview_observer/listview/list_observer_view.dart';
+import 'scrollview/chat/chat_observer_scroll_physics.dart';
+import 'scrollview/chat/chat_scroll_observer.dart';
+import 'scrollview/listview/list_observer_controller.dart';
+import 'scrollview/listview/list_observer_view.dart';
 
 ///
 /// Created by a0010 on 2023/11/27 16:22

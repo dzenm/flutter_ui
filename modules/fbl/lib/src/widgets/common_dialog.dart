@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'common_widget.dart';
-import 'tap_layout.dart';
+import 'tap.dart';
 
 typedef ItemClickCallback = void Function(int index);
 

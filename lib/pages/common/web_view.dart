@@ -33,7 +33,7 @@ class _WebViewPageState extends State<WebViewPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopView(
+    return PopWrapper(
       behavior: BackBehavior.custom,
       onPopInvoked: (didPop) async {
         if (_controller != null && (await _controller!.canGoBack())) {

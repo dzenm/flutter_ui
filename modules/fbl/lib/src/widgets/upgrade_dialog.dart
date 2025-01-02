@@ -10,8 +10,8 @@ import '../config/log.dart';
 import '../http/http.dart';
 import '../resource/resource.dart';
 import 'common_dialog.dart';
-import 'linear_percent_indicator.dart';
-import 'tap_layout.dart';
+import 'indicators.dart';
+import 'tap.dart';
 
 typedef InstallCallback = void Function(String filePath);
 
@@ -152,7 +152,6 @@ class _DownloadView extends StatefulWidget {
   final InstallCallback? install;
 
   const _DownloadView({
-    super.key,
     required this.children,
     required this.color,
     required this.appVersion,

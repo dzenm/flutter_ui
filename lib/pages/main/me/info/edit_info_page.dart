@@ -41,8 +41,8 @@ class _EditInfoPageState extends State<EditInfoPage> {
   @override
   Widget build(BuildContext context) {
     AppTheme theme = context.read<LocalModel>().theme;
-    return WillPopView(
-      onPopInvoked: (didPop) => WillPopView.promptBack(context, isChanged: !_disableButton),
+    return PopWrapper(
+      onPopInvoked: (didPop) => PopWrapper.promptBack(context, isChanged: !_disableButton),
       child: Scaffold(
         body: Container(
           color: theme.background,

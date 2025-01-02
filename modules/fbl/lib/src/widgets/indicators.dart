@@ -1,7 +1,288 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
-enum LinearStrokeCap { butt, round, roundAll }
+import 'tap.dart';
 
+///
+/// Created by a0010 on 2024/12/30 15:58
+/// 指示器的通用组件
+///
+
+/// An indicator showing the currently selected page of a PageController
+class DotsIndicator extends AnimatedWidget {
+  const DotsIndicator({
+    super.key,
+    required this.controller,
+    this.itemCount = 0,
+    required this.onPageSelected,
+    this.color = Colors.white,
+    this.dotsType = DotsType.text,
+    this.size = 8,
+    this.icons,
+  }) : super(listenable: controller);
+
+  /// The PageController that this DotsIndicator is representing.
+  final PageController controller;
+
+  /// The number of items managed by the PageController
+  final int itemCount;
+
+  /// Called when a dot is tapped
+  final ValueChanged<int> onPageSelected;
+
+  /// The color of the dots.
+  /// Defaults to `Colors.white`.
+  final Color color;
+
+  /// Dots展示的布局样式 @see [DotsType]
+  final DotsType dotsType;
+
+  /// Dots布局的大小
+  final double size;
+
+  /// 展示Dots的图标
+  final List<Widget>? icons;
+
+  @override
+  Widget build(BuildContext context) {
+    double page = controller.hasClients ? controller.page ?? 0 : 0;
+    int selectedIndex = page.round();
+    switch (dotsType) {
+      case DotsType.dot:
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List<Widget>.generate(itemCount, (index) => _buildDot(index == selectedIndex)),
+        );
+      case DotsType.text:
+        return _buildText(selectedIndex + 1);
+      case DotsType.icon:
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: List<Widget>.generate(itemCount, (index) => _buildIconTitle(index, selectedIndex)),
+        );
+    }
+  }
+
+  Widget _buildDot(bool isSelected) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 3.0),
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: isSelected ? Colors.grey : Colors.white,
+          border: Border.all(color: Colors.grey, width: 1),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildText(int index) {
+    return Container(
+      padding: const EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
+        color: Colors.grey.withOpacity(0.7),
+      ),
+      child: Text('$index / $itemCount', style: const TextStyle(color: Colors.white)),
+    );
+  }
+
+  Widget _buildIconTitle(int index, int selectedIndex) {
+    bool isSelected = index == selectedIndex;
+    return TapLayout(
+      width: 36,
+      height: 36,
+      foreground: Colors.transparent,
+      margin: const EdgeInsets.only(right: 10),
+      padding: const EdgeInsets.all(4),
+      borderRadius: BorderRadius.circular(4),
+      background: isSelected ? Colors.grey.shade300 : null,
+      onTap: () => onPageSelected(index),
+      child: icons![index],
+    );
+  }
+}
+
+/// 图标展示的样式
+enum DotsType {
+  dot,
+  text,
+  icon;
+}
+
+///
+/// Created by a0010 on 2024/12/26 13:20
+/// 风车指示器
+/// 示例：
+/// WindmillIndicator(
+///   size: 40.0,
+///   speed: 0.5,
+///   direction: RotationDirection.clockwise,
+/// )
+class WindmillIndicator extends StatefulWidget {
+  final double size;
+  final double speed; // 旋转速度，默认：1转/秒
+  final RotationDirection direction;
+
+  const WindmillIndicator({
+    super.key,
+    this.size = 50.0,
+    this.speed = 1.0,
+    this.direction = RotationDirection.clockwise,
+  })  : assert(speed > 0),
+        assert(size > 0);
+
+  @override
+  State<WindmillIndicator> createState() => _WindmillIndicatorState();
+}
+
+class _WindmillIndicatorState extends State<WindmillIndicator> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    int milliseconds = 1000 ~/ widget.speed;
+    _controller = AnimationController(duration: Duration(milliseconds: milliseconds), vsync: this);
+    _animation = Tween<double>(begin: 0, end: 1.0).animate(_controller)..addListener(_animatorListener);
+
+    _controller.repeat();
+  }
+
+  void _animatorListener() {
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedWindmill(
+      animation: _animation,
+      size: widget.size,
+      direction: widget.direction,
+    );
+  }
+
+  @override
+  void dispose() {
+    if (![AnimationStatus.completed, AnimationStatus.dismissed].contains(_controller.status)) {
+      _controller.stop();
+    }
+    _animation.removeListener(_animatorListener);
+    _controller.dispose();
+    super.dispose();
+  }
+}
+
+class AnimatedWindmill extends AnimatedWidget {
+  final double size;
+  final RotationDirection direction;
+
+  const AnimatedWindmill({
+    super.key,
+    required Animation<double> animation,
+    required this.direction,
+    this.size = 50.0,
+  }) : super(listenable: animation);
+
+  @override
+  Widget build(BuildContext context) {
+    final animation = listenable as Animation<double>;
+
+    final rotationAngle = direction == RotationDirection.clockwise //
+        ? 2 * pi * animation.value
+        : -2 * pi * animation.value;
+    return Stack(
+      alignment: Alignment.topCenter,
+      children: [
+        WindmillWing(
+          size: size,
+          color: Colors.blue,
+          angle: 0 + rotationAngle,
+        ),
+        WindmillWing(
+          size: size,
+          color: Colors.yellow,
+          angle: pi / 2 + rotationAngle,
+        ),
+        WindmillWing(
+          size: size,
+          color: Colors.green,
+          angle: pi + rotationAngle,
+        ),
+        WindmillWing(
+          size: size,
+          color: Colors.red,
+          angle: -pi / 2 + rotationAngle,
+        ),
+      ],
+    );
+  }
+}
+
+class WindmillWing extends StatelessWidget {
+  final double size;
+  final Color color;
+  final double angle;
+
+  const WindmillWing({
+    super.key,
+    required this.size,
+    required this.color,
+    required this.angle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      transformAlignment: Alignment.bottomCenter,
+      transform: Matrix4.translationValues(0, -size / 2, 0)..rotateZ(angle),
+      child: ClipPath(
+        clipper: WindWillClipPath(),
+        child: Container(
+          width: size,
+          height: size,
+          alignment: Alignment.center,
+          color: color,
+        ),
+      ),
+    );
+  }
+}
+
+class WindWillClipPath extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    var path = Path()
+      ..moveTo(size.width / 3, size.height)
+      ..arcToPoint(
+        Offset(0, size.height * 2 / 3),
+        radius: Radius.circular(size.width / 2),
+      )
+      ..arcToPoint(
+        Offset(size.width, 0),
+        radius: Radius.circular(size.width),
+      )
+      ..lineTo(size.width / 3, size.height);
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    return false;
+  }
+}
+
+enum RotationDirection {
+  clockwise,
+  antiClockwise,
+}
+
+/// 线性百分比进度加载指示器
 class LinearPercentIndicator extends StatefulWidget {
   ///Percent value between 0.0 and 1.0
   final double percent;
@@ -315,3 +596,5 @@ class LinearPainter extends CustomPainter {
     return true;
   }
 }
+
+enum LinearStrokeCap { butt, round, roundAll }

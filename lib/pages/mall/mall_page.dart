@@ -29,7 +29,13 @@ class _MallPageState extends State<MallPage> {
           ),
         ],
       ),
-      body: Container(),
+      body: const Center(
+        child: WindmillIndicator(
+          size: 40.0,
+          speed: 0.5,
+          direction: RotationDirection.clockwise,
+        ),
+      ),
     );
   }
 }

@@ -1,9 +1,28 @@
 import 'package:flutter/material.dart';
 
-import 'tap_layout.dart';
+import 'tap.dart';
 
 ///
-/// 状态展示
+/// Created by a0010 on 2024/12/30 15:58
+/// 展示状态的通用组件
+///
+
+/// 提醒为空的布局
+class EmptyView extends StatelessWidget {
+  final String text;
+
+  const EmptyView({super.key, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(text),
+    );
+  }
+}
+
+///
+/// 状态展示布局
 /// 使用 [StateController] 控制状态的展示
 /// StateView(
 ///   controller: _controller,
@@ -91,7 +110,7 @@ class StateView extends StatelessWidget {
   }
 }
 
-/// 底部状态展示
+/// 底部状态展示布局
 class FooterStateView extends StatelessWidget {
   final StateController controller;
   final GestureTapCallback? onTap;
@@ -135,7 +154,7 @@ class FooterStateView extends StatelessWidget {
   }
 }
 
-/// 主要控制的状态展示
+/// 主要控制的状态展示布局
 class LinearStateView extends StatelessWidget {
   final LoadState state;
   final double size;

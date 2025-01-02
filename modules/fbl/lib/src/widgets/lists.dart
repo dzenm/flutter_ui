@@ -1,6 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
-import 'state_view.dart';
+import 'states.dart';
+
+///
+/// Created by a0010 on 2024/12/30 15:58
+/// 指示器的通用组件
+///
 
 typedef RefreshFunction = Future<void> Function(bool refresh);
 
@@ -173,5 +180,89 @@ class _RefreshListViewState extends State<RefreshListView> {
       await widget.refresh!(false);
     }
     _isLoading = false;
+  }
+}
+
+/// 分割线
+class DividerView extends StatelessWidget {
+  final double height;
+  final double width;
+  final double indent;
+  final double endIndent;
+  final Color color;
+  final Direction direction;
+
+  const DividerView({
+    super.key,
+    this.height = 0.1,
+    this.width = 0.1,
+    this.indent = 0,
+    this.endIndent = 0,
+    this.color = const Color(0xFFF5F5F5),
+    this.direction = Direction.horizontal,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    switch (direction) {
+      case Direction.vertical:
+        return VerticalDivider(
+          width: width,
+          indent: indent,
+          endIndent: endIndent,
+          color: color,
+        );
+      case Direction.horizontal:
+        return Divider(
+          height: height,
+          indent: indent,
+          endIndent: endIndent,
+          color: color,
+        );
+    }
+  }
+}
+
+/// 方向
+enum Direction {
+  vertical,
+  horizontal,
+}
+
+/// 统一滚动控件
+class ScrollConfigurationWidget extends StatelessWidget {
+  final Widget child;
+
+  const ScrollConfigurationWidget(
+      this.child, {
+        super.key,
+      });
+
+  @override
+  Widget build(BuildContext context) {
+    return ScrollConfiguration(
+      behavior: ScrollBehave(),
+      child: Scrollbar(
+        thickness: 5, //宽度
+        radius: const Radius.circular(5), //圆角
+        child: child,
+      ),
+    );
+  }
+}
+
+/// 安卓系统去除滑动控件上下的蓝色水波纹
+class ScrollBehave extends ScrollBehavior {
+  @override
+  Widget buildOverscrollIndicator(
+      BuildContext context,
+      Widget child,
+      ScrollableDetails details,
+      ) {
+    if (Platform.isAndroid || Platform.isFuchsia) {
+      return child;
+    } else {
+      return super.buildOverscrollIndicator(context, child, details);
+    }
   }
 }

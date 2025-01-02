@@ -1,16 +1,73 @@
 import 'dart:io';
 
 import 'package:bot_toast/bot_toast.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 ///
+/// Created by a0010 on 2024/12/30 15:58
+/// 包裹某一类布局的通用组件
+///
+
+/// 区分平台布局
+class PlatformWrapper extends StatelessWidget {
+  final Widget? androidView;
+  final Widget? iOSView;
+  final Widget? windowsView;
+  final Widget? macOSView;
+  final Widget? linuxView;
+  final Widget? webView;
+
+  const PlatformWrapper({
+    super.key,
+    this.androidView,
+    this.iOSView,
+    this.windowsView,
+    this.macOSView,
+    this.linuxView,
+    this.webView,
+  });
+
+  const PlatformWrapper.builder({
+    super.key,
+    Widget? mobileView,
+    Widget? desktopView,
+    Widget? webView,
+  })  : androidView = mobileView,
+        iOSView = mobileView,
+        windowsView = desktopView,
+        macOSView = desktopView,
+        linuxView = desktopView,
+        webView = webView ?? desktopView;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget? child;
+    if (kIsWeb) {
+      child = webView;
+    } else if (defaultTargetPlatform == TargetPlatform.android) {
+      child = androidView;
+    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+      child = iOSView;
+    } else if (defaultTargetPlatform == TargetPlatform.windows) {
+      child = windowsView;
+    } else if (defaultTargetPlatform == TargetPlatform.macOS) {
+      child = macOSView;
+    } else if (defaultTargetPlatform == TargetPlatform.linux) {
+      child = linuxView;
+    }
+    return child ?? const Placeholder();
+  }
+}
+
+///
 /// 监听返回键的动作
-class WillPopView extends StatelessWidget {
+class PopWrapper extends StatelessWidget {
   final Widget child; //如果对返回键进行监听，必须放在最顶层
   final BackBehavior behavior; //返回键的行为
   final PopInvokedCallback? onPopInvoked;
 
-  const WillPopView({
+  const PopWrapper({
     super.key,
     required this.child,
     this.behavior = BackBehavior.custom,
@@ -38,8 +95,8 @@ class WillPopView extends StatelessWidget {
 
   /// 返回时提示退出
   /// 设置提示框，默认实现[_buildPromptBackDialog]
-  /// WillPopView(
-  //    onWillPop: () => WillPopView.promptBack(context, isChanged: text != newText),
+  /// PopWrapper(
+  //    onWillPop: () => PopWrapper.promptBack(context, isChanged: text != newText),
   //    child: Scaffold(),
   //  )
   static Future<bool> promptBack(
@@ -100,4 +157,44 @@ class WillPopView extends StatelessWidget {
 enum BackBehavior {
   custom, // 自定义返回键执行的方式
   doubleTap, // 双击返回键退出页面
+}
+
+///
+/// 缓存PageView的子页面，使其不被销毁
+/// KeepAliveWrapper(
+///   child: TabBarView(children: _tabItems),
+/// )
+class KeepAliveWrapper extends StatefulWidget {
+  final bool keepAlive;
+  final Widget child;
+
+  const KeepAliveWrapper({
+    super.key,
+    this.keepAlive = true,
+    required this.child,
+  });
+
+  @override
+  State<StatefulWidget> createState() => _KeepAliveWrapperState();
+}
+
+class _KeepAliveWrapperState extends State<KeepAliveWrapper> with AutomaticKeepAliveClientMixin {
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return widget.child;
+  }
+
+  @override
+  void didUpdateWidget(KeepAliveWrapper oldWidget) {
+    // 状态发生变化时调用
+    if (oldWidget.keepAlive != widget.keepAlive) {
+      // 更新KeepAlive状态
+      updateKeepAlive();
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  bool get wantKeepAlive => widget.keepAlive;
 }

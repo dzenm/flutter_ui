@@ -11,7 +11,7 @@ export 'src/naughty/http_interceptor.dart';
 export 'src/naughty/naughty.dart';
 export 'src/resource/resource.dart';
 export 'src/utils/util.dart';
-export 'src/widgets/widget.dart';
+export 'src/widgets/widgets.dart';
 
 /// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 常用特殊符号大全 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 /// https://zhuanlan.zhihu.com/p/637238481

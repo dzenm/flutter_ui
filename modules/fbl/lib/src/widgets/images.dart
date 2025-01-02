@@ -8,8 +8,11 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:http/http.dart' as http;
 
 ///
-/// Created by a0010 on 2023/8/15 15:23
+/// Created by a0010 on 2024/12/30 15:58
+/// 图像展示的通用组件
 ///
+
+/// 图片展示组件
 class ImageView extends StatelessWidget {
   final String url;
   final double? width;

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 ///
+/// Created by a0010 on 2024/12/30 15:58
+/// 标签类的通用组件
+///
+
 /// 徽章标签
 /// BadgeTag(count: 10),
 class BadgeTag extends StatelessWidget {
@@ -61,3 +65,4 @@ class BadgeTag extends StatelessWidget {
     );
   }
 }
+

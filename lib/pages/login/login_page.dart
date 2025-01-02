@@ -23,7 +23,7 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PlatformView.builder(
+    return PlatformWrapper.builder(
       mobileView: _buildAppPage(context),
       desktopView: _buildDeskTopPage(context),
       webView: _buildWebPage(context),

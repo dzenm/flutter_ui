@@ -103,4 +103,22 @@ class CommonWidget {
     }
     return spans;
   }
+
+  /// 默认的阴影
+  static List<BoxShadow> defaultShadows() {
+    return [
+      const BoxShadow(
+        offset: Offset(0, 1),
+        blurRadius: 10.0,
+        spreadRadius: 0.0,
+        color: Color(0x0D000000),
+      ),
+      const BoxShadow(
+        offset: Offset(0, 1),
+        blurRadius: 4.0,
+        spreadRadius: 0.0,
+        color: Color(0x14000000),
+      ),
+    ];
+  }
 }

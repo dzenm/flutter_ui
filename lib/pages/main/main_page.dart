@@ -139,7 +139,7 @@ class _MainPageState extends State<MainPage> with Logging, WidgetsBindingObserve
 
     _useContextBeforeBuild(context);
 
-    return PlatformView.builder(
+    return PlatformWrapper.builder(
       mobileView: MainPageMobile(
         navigationShell: widget.navigationShell,
         controller: _controller,

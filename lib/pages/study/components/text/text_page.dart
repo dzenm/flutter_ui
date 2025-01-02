@@ -60,8 +60,8 @@ class _TextPageState extends State<TextPage> {
   Widget build(BuildContext context) {
     return KeyboardMediaQuery(
       //用于键盘弹出的时候页面可以滚动到输入框的位置
-      child: WillPopView(
-        onPopInvoked: (didPop) => WillPopView.promptBack(context, isChanged: text != newText),
+      child: PopWrapper(
+        onPopInvoked: (didPop) => PopWrapper.promptBack(context, isChanged: text != newText),
         child: Scaffold(
           appBar: const CommonBar(
             title: '文本和输入框',

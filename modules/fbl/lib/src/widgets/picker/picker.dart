@@ -11,13 +11,14 @@ const double _kPickerItemHeight = 40.0;
 
 /// 列表选择器
 class PickerView<T> extends StatefulWidget {
-  final List<PickerItem> list;
+  final List<PickerEntity> list;
   final List<String>? initialItem;
   final IndexedWidgetBuilder? itemBuilder;
   final PickerPopupRoute route;
-  final ValueChanged<List<dynamic>>? onChanged;
+  final ValueChanged<List<PickerEntity>>? onChanged;
 
-  const PickerView({super.key,
+  const PickerView({
+    super.key,
     required this.list,
     this.initialItem,
     this.itemBuilder,
@@ -33,34 +34,34 @@ class PickerView<T> extends StatefulWidget {
   ///     Log.d('选中的结果: results=$results');
   ///   }
   /// )
-  static void showLocation(BuildContext context, {
+  static Future<T?> showLocation<T>(
+    BuildContext context, {
     List<String>? initialItem,
-    ValueChanged<List<dynamic>>? onChanged,
+    ValueChanged<List<String>>? onChanged,
     int maxColumn = 3,
-  }) {
-    List<PickerItem> list = _getLocation(maxColumn);
+  }) async {
+    assert(maxColumn <= 3, 'maxColumn must be less than 3');
+    List<PickerEntity> list = _getLocation(maxColumn);
 
-    Navigator.push(
+    return await Navigator.push<T>(
       context,
-      PickerPopupRoute<String>(
+      PickerPopupRoute<T>(
         list: list,
         initialItem: initialItem,
-        onChanged: onChanged,
+        onChanged: onChanged == null ? null : (list) => onChanged(list.map((e) => e.name ?? '').toList()),
         theme: Theme.of(context),
-        barrierLabel: MaterialLocalizations
-            .of(context)
-            .modalBarrierDismissLabel,
+        barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
       ),
     );
   }
 
   /// 获取位置信息的数据
-  static List<PickerItem> _getLocation(int maxColumn) {
-    List<PickerItem> provinceList = [];
+  static List<PickerEntity> _getLocation(int maxColumn) {
+    List<PickerEntity> provinceList = [];
     for (var province in locations) {
       // 添加省份信息
-      List<PickerItem> cityList = [];
-      provinceList.add(PickerItem(
+      List<PickerEntity> cityList = [];
+      provinceList.add(PickerEntity(
         name: province['name'] ?? '',
         list: cityList,
       ));
@@ -68,11 +69,11 @@ class PickerView<T> extends StatefulWidget {
 
       List<dynamic> cities = province['cityList'] ?? [];
       for (var city in cities) {
-        List<PickerItem> areaList = [];
+        List<PickerEntity> areaList = [];
         bool showCity = maxColumn == 2 && city['name'] != null;
         if (maxColumn == 3 || showCity) {
           // 添加城市信息
-          cityList.add(PickerItem(
+          cityList.add(PickerEntity(
             name: city['name'] ?? '',
             list: areaList,
           ));
@@ -82,7 +83,7 @@ class PickerView<T> extends StatefulWidget {
         List<dynamic> areas = city['areaList'] ?? [];
         for (var area in areas) {
           // 添加区域信息
-          (showCity ? cityList : areaList).add(PickerItem(name: area));
+          (showCity ? cityList : areaList).add(PickerEntity(name: area));
         }
       }
     }
@@ -99,23 +100,24 @@ class PickerView<T> extends StatefulWidget {
   ///     Log.i('选中的回调: $_selectedValue');
   ///   },
   /// )
-  static void showList(BuildContext context, {
+  static Future<String?> showList(
+    BuildContext context, {
     required List<String> list,
     String? initialItem,
     ValueChanged<String>? onChanged,
-  }) {
-    Navigator.push(
+  }) async {
+    var result = await Navigator.push<List<String>>(
       context,
-      PickerPopupRoute<String>(
-        list: list.map((item) => PickerItem(name: item)).toList(),
+      PickerPopupRoute<List<String>>(
+        list: list.map((item) => PickerEntity(name: item)).toList(),
         initialItem: initialItem == null ? null : [initialItem],
-        onChanged: onChanged == null ? null : (list) => onChanged(list[0]),
+        onChanged: onChanged == null ? null : (list) => onChanged(list[0].name ?? ''),
         theme: Theme.of(context),
-        barrierLabel: MaterialLocalizations
-            .of(context)
-            .modalBarrierDismissLabel,
+        barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
       ),
     );
+    if (result == null) return null;
+    return result[0];
   }
 
   @override
@@ -124,7 +126,7 @@ class PickerView<T> extends StatefulWidget {
 
 /// 列表选择器的状态
 class _PickerViewState<T> extends State<PickerView> {
-  List<PickerItem> _list = [];
+  List<PickerEntity> _list = [];
   List<int> _selectedIndexes = [];
   List<FixedExtentScrollController> _controllers = [];
   int _len = 0;
@@ -139,7 +141,7 @@ class _PickerViewState<T> extends State<PickerView> {
 
     // 初始化选中的下标
     _selectedIndexes = List.generate(_len, (index) => 0);
-    List<PickerItem>? data = _list;
+    List<PickerEntity>? data = _list;
     List<String> names = widget.initialItem ?? [];
     for (int i = 0; i < names.length; i++) {
       // 数据为空不处理
@@ -153,11 +155,14 @@ class _PickerViewState<T> extends State<PickerView> {
         break;
       }
     }
-    _controllers = List.generate(_len, (index) => FixedExtentScrollController(initialItem: _selectedIndexes[index]));
+    _controllers = List.generate(
+      _len,
+      (index) => FixedExtentScrollController(initialItem: _selectedIndexes[index]),
+    );
   }
 
   /// 获取List的最大深度
-  int _getMaxLevel(int level, List<PickerItem> list) {
+  int _getMaxLevel(int level, List<PickerEntity> list) {
     if (list.isNotEmpty && list[0].list == null) {
       return level + 1;
     }
@@ -205,9 +210,7 @@ class _PickerViewState<T> extends State<PickerView> {
             child: Text(
               '取消',
               style: TextStyle(
-                color: Theme
-                    .of(context)
-                    .unselectedWidgetColor,
+                color: Theme.of(context).unselectedWidgetColor,
                 fontSize: 16.0,
               ),
             ),
@@ -220,24 +223,25 @@ class _PickerViewState<T> extends State<PickerView> {
             child: Text(
               '确定',
               style: TextStyle(
-                color: Theme
-                    .of(context)
-                    .primaryColor,
+                color: Theme.of(context).primaryColor,
                 fontSize: 16.0,
               ),
             ),
             onPressed: () {
+              List<PickerEntity> results = [];
+              List<PickerEntity> data = _list;
+              for (var index in _selectedIndexes) {
+                PickerEntity item = data[index];
+                results.add(PickerEntity(
+                  name: item.name,
+                  data: item.data,
+                ));
+                data = item.list ?? [];
+              }
               if (widget.onChanged != null) {
-                List<String> results = [];
-                List<PickerItem> data = _list;
-                for (var index in _selectedIndexes) {
-                  PickerItem item = data[index];
-                  results.add(item.name ?? '');
-                  data = item.list ?? [];
-                }
                 widget.onChanged!(results);
               }
-              Navigator.pop(context);
+              Navigator.pop(context, results);
             },
           ),
         ),
@@ -247,7 +251,7 @@ class _PickerViewState<T> extends State<PickerView> {
 
   /// 选择布局列表
   Widget _buildPickerListView() {
-    List<PickerItem> getData(int i, int level, List<PickerItem> list, int index) {
+    List<PickerEntity> getData(int i, int level, List<PickerEntity> list, int index) {
       if (i == level) {
         return list;
       }
@@ -271,10 +275,10 @@ class _PickerViewState<T> extends State<PickerView> {
   /// 单个选择列表的布局
   /// [index] 单个列表所在的下标
   /// [list] 单个选择列表布局对应展示的数据列表
-  Widget _buildSinglePickerView(int index, List<PickerItem> list) {
+  Widget _buildSinglePickerView(int index, List<PickerEntity> list) {
     List<Widget> widgets = [];
     for (int i = 0; i < list.length; i++) {
-      PickerItem item = list[i];
+      PickerEntity item = list[i];
       if (widget.itemBuilder == null) {
         widgets.add(_buildPickerItemView(item.name ?? ''));
       } else {
@@ -336,14 +340,22 @@ class _PickerViewState<T> extends State<PickerView> {
     _selectedIndexes[index] = i;
     setState(() {});
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+    for (var controller in _controllers) {
+      controller.dispose();
+    }
+  }
 }
 
 /// Popup弹入弹出的动画
 class PickerPopupRoute<T> extends PopupRoute<T> {
-  final List<PickerItem> list;
+  final List<PickerEntity> list;
   final List<String>? initialItem;
   final IndexedWidgetBuilder? itemBuilder;
-  final ValueChanged<List<dynamic>>? onChanged;
+  final ValueChanged<List<PickerEntity>>? onChanged;
   final ThemeData theme;
   final bool dismissible;
 
@@ -388,12 +400,12 @@ class PickerPopupRoute<T> extends PopupRoute<T> {
 }
 
 /// Picker展示的数据
-class PickerItem<T> {
+class PickerEntity<T> {
   String? name;
-  List<PickerItem>? list;
+  List<PickerEntity>? list;
   T? data;
 
-  PickerItem({this.name, this.list, this.data});
+  PickerEntity({this.name, this.list, this.data});
 }
 
 class _BottomPickerLayout extends SingleChildLayoutDelegate {
