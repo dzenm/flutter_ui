@@ -13,7 +13,7 @@ class CenterText extends StatelessWidget {
   final TextStyle? style;
   final TextOverflow? overflow;
   final int? maxLines;
-  final TextSpan? txtSpan;
+  final TextSpan? textSpan;
   final bool isRichText;
 
   const CenterText(
@@ -22,7 +22,7 @@ class CenterText extends StatelessWidget {
     this.style,
     this.overflow,
     this.maxLines,
-    this.txtSpan,
+    this.textSpan,
     this.isRichText = false,
   });
 
@@ -36,7 +36,9 @@ class CenterText extends StatelessWidget {
             maxLines: maxLines,
           )
         : RichText(
-            text: txtSpan!,
+            text: textSpan ?? TextSpan(text: text, style: style),
+            overflow: overflow ?? TextOverflow.clip,
+            maxLines: maxLines,
             textAlign: TextAlign.center,
           );
 
