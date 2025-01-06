@@ -3,7 +3,6 @@ import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../http/connection/state.dart';
 import '../study_router.dart';
 
 ///
@@ -17,15 +16,10 @@ class DesktopPage extends StatefulWidget {
 }
 
 class _DesktopPageState extends State<DesktopPage> {
-  // late Connection connection;
-  late ConnectionStateMachine machine;
 
   @override
   void initState() {
     super.initState();
-    // connection = Connection();
-    // machine = ConnectionStateMachine(connection);
-    // machine.start();
   }
 
   @override
