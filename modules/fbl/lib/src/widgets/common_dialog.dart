@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'common_widget.dart';
+import 'lists.dart';
 import 'tap.dart';
 
 typedef ItemClickCallback = void Function(int index);
@@ -543,7 +544,7 @@ class CupertinoDialogButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      CommonWidget.divider(color: const Color(0xFFBABABA), height: 0.5),
+      const DividerView(color: Color(0xFFBABABA), height: 0.5),
       Row(children: [
         Expanded(
           child: TapLayout(

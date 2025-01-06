@@ -198,7 +198,7 @@ class DividerView extends StatelessWidget {
     this.width = 0.1,
     this.indent = 0,
     this.endIndent = 0,
-    this.color = const Color(0xFFF5F5F5),
+    this.color = const Color(0xFFF5F5F5), // 0xFFEFEFEF
     this.direction = Direction.horizontal,
   });
 

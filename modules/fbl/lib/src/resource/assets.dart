@@ -28,7 +28,7 @@ final class Assets {
   ///================================ 图片 ================================
   static const String a = '${imagePath}a.jpg';
   static const String b = '${imagePath}b.jpg';
-  static const String bgUpgradeTop = '${imagePath}bg_upgrade_top.png';
+  static const String upgradeTopBg = '${imagePath}bg_upgrade_top.png';
   static const String c = '${imagePath}c.jpg';
   static const String d = '${imagePath}d.jpg';
   static const String e = '${imagePath}e.jpg';
