@@ -37,6 +37,9 @@ final class Assets {
   static const String icVNote = '${imagePath}ic_vnote.png';
   static const String thumbVideoCover = '${imagePath}thumb_video_cover.png';
 
+  static const String bottleThrow = '${imagePath}throws.gif';
+  static const String bottlePickup = '${imagePath}pickup.gif';
+
   ///================================ 视频 ================================
   static const String butterfly = '${videoPath}butterfly.mp4';
 }

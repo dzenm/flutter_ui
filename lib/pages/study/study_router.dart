@@ -1,4 +1,5 @@
 import 'package:fbl/fbl.dart';
+import 'package:flutter_ui/pages/study/components/gif/gif_page.dart';
 
 import 'components/chat/chat_page.dart';
 import 'components/city/city_page.dart';
@@ -46,6 +47,7 @@ class StudyRouter {
   static const String dialog = 'dialog';
   static const String dragList = 'dragList';
   static const String floatNavigation = 'floatNavigation';
+  static const String gif = 'gif';
   static const String image = 'image';
   static const String keyword = 'keyword';
   static const String list = 'list';
@@ -164,6 +166,13 @@ class StudyRouter {
           path: '/floatNavigation',
           builder: (context, state) {
             return const FloatNavigationPage();
+          },
+        ),
+        ARoute(
+          name: gif,
+          path: '/gif',
+          builder: (context, state) {
+            return const GifPage();
           },
         ),
         ARoute(

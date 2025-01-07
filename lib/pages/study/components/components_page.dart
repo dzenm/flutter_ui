@@ -72,6 +72,14 @@ class ComponentsPage extends StatelessWidget {
         child: _text('浮动的导航栏和PopupWindow'),
       ),
       const SizedBox(height: 8),
+      // 播放Gif图片
+      MaterialButton(
+        textColor: Colors.white,
+        color: theme.button,
+        onPressed: () => context.pushNamed(StudyRouter.gif),
+        child: _text('播放Gif图片'),
+      ),
+      const SizedBox(height: 8),
       // 自定义键盘
       MaterialButton(
         textColor: Colors.white,
