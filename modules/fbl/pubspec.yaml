@@ -12,8 +12,8 @@ dependencies:
     sdk: flutter
   ########################################## BASE ########################################
   # config文件夹
-  package_info_plus: 8.1.0                      # 获取包名信息(全平台) https://pub.dev/packages/package_info_plus
-  device_info_plus: 11.1.0                      # 获取设备信息(全平台) https://pub.flutter-io.cn/packages/device_info_plus
+  package_info_plus: 8.1.2                      # 获取包名信息(全平台) https://pub.dev/packages/package_info_plus
+  device_info_plus: 11.2.0                      # 获取设备信息(全平台) https://pub.flutter-io.cn/packages/device_info_plus
   # db文件夹
   sqflite_common_ffi: 2.3.3                     # SQLite3数据库存储(全平台) https://pub.dev/packages/sqflite_common_ffi
   shared_preferences: 2.3.2                     # 本地Key-Value文件存储(全平台) https://pub.dev/packages/shared_preferences
@@ -28,6 +28,9 @@ dependencies:
   cached_network_image: 3.4.1                   # 图片多级缓存 https://pub.flutter-io.cn/packages/cached_network_image
   flutter_cache_manager: 3.4.1                  # 缓存管理工具 https://pub.flutter-io.cn/packages/flutter_cache_manager
   photo_view: 0.15.0                            # 图片预览控件(全平台) https://pub.flutter-io.cn/packages/photo_view
+  media_kit: 1.1.11                             # 音频全平台核心依赖 https://pub.flutter-io.cn/packages/media_kit
+  media_kit_video: 1.2.5                        # 音频渲染组件 https://pub.flutter-io.cn/packages/media_kit_video
+  video_player_media_kit: 1.0.5                 # 视频播放全平台核心依赖 https://pub.flutter-io.cn/packages/video_player_media_kit
 
 dev_dependencies:
   flutter_test:

@@ -12,7 +12,6 @@ class NotificationUtil {
     _notificationsPlugin.initialize(
       const InitializationSettings(
         android: AndroidInitializationSettings('@mipmap/ic_launcher'),
-        iOS: DarwinInitializationSettings(onDidReceiveLocalNotification: onDidReceiveLocalNotification),
       ),
       onDidReceiveNotificationResponse: onTap,
     );

@@ -48,18 +48,18 @@ dependencies:
     path: ./modules/fsm
 
   provider: 6.1.2                               # 状态管理(flutter包) https://pub.dev/packages/provider
-  retrofit: 4.2.0                               # Restful方式使用HTTP请求(dart包) https://pub.flutter-io.cn/packages/retrofit
+  retrofit: 4.4.2                               # Restful方式使用HTTP请求(dart包) https://pub.flutter-io.cn/packages/retrofit
   #  dio_cookie_manager: 2.0.0                     # HTTP请求的cookie管理 https://pub.flutter-io.cn/packages/dio_cookie_manager
   #  cookie_jar: 3.0.1                             # HTTP请求的cookie持久化 https://pub.flutter-io.cn/packages/cookie_jar
-  convert: 3.1.1                                # 字符串转化工具(dart包) https://pub.dev/packages/convert
-  flutter_local_notifications: 17.2.2           # 通知栏通知提醒(缺少Windows平台) https://pub.flutter-io.cn/packages/flutter_local_notifications
+  convert: 3.1.2                                # 字符串转化工具(dart包) https://pub.dev/packages/convert
+  flutter_local_notifications: 18.0.1           # 通知栏通知提醒(缺少Windows平台) https://pub.flutter-io.cn/packages/flutter_local_notifications
   ########################################## UI ########################################
-  back_button_interceptor: 7.0.3                # 返回按钮拦截 https://pub.flutter-io.cn/packages/back_button_interceptor
+  back_button_interceptor: 8.0.3                # 返回按钮拦截 https://pub.flutter-io.cn/packages/back_button_interceptor
   extended_text_field: 15.0.0                   # 输入框扩展组件 https://pub.flutter-io.cn/packages/extended_text_field
   azlistview: 2.0.0                             # az列表 https://pub.flutter-io.cn/packages/azlistview
-  flutter_slidable: 3.1.1                       # 可左右滑动的列表展示 https://pub.flutter-io.cn/packages/flutter_slidable
+  flutter_slidable: 3.1.2                       # 可左右滑动的列表展示 https://pub.flutter-io.cn/packages/flutter_slidable
   #  scrollview_observer: 1.19.1                   # 聊天列表 https://pub.flutter-io.cn/packages/scrollview_observer
-  image: 4.2.0                                  # 图片读取和存储 https://pub.flutter-io.cn/packages/image
+  image: 4.5.2                                  # 图片读取和存储 https://pub.flutter-io.cn/packages/image
   transparent_image: 2.0.1                      # 展示透明的图像 https://pub.flutter-io.cn/packages/transparent_image
   flutter_screenutil: 5.9.3                     # 屏幕适配 https://pub.flutter-io.cn/packages/flutter_screenutil
   fluent_ui: 4.9.1                              # UI工具 https://pub.dev/packages/fluent_ui
@@ -74,19 +74,19 @@ dependencies:
   #  charts_flutter: 0.10.0                        # 图表 （没有图例） https://pub.flutter-io.cn/packages/charts_flutter
   #  multi_image_picker: 4.6.1                     # 多图选择 https://pub.flutter-io.cn/packages/multi_image_picker
 
-  url_launcher: 6.3.0                           # 打开网页工具(全平台) https://pub.flutter-io.cn/packages/url_launcher
+  url_launcher: 6.3.1                           # 打开网页工具(全平台) https://pub.flutter-io.cn/packages/url_launcher
   file_selector: 1.0.3                          # 文件选择(全平台) https://pub.flutter-io.cn/packages/file_selector
   image_picker: 1.1.2                           # 图片选择器(全平台) https://pub.flutter-io.cn/packages/image_picker
-  video_player: 2.9.1                           # 视频播放(移动端) https://pub.flutter-io.cn/packages/video_player
+  video_player: 2.9.2                           # 视频播放(移动端) https://pub.flutter-io.cn/packages/video_player
   fijkplayer: 0.11.0                            # 视频播放(移动端) https://pub.flutter-io.cn/packages/fijkplayer
   flutter_vlc_player: 7.4.2                     # 视频播放(移动端) https://pub.flutter-io.cn/packages/fijkplayer
-  mobile_scanner: 5.2.3                         # 扫描二维码(移动端) https://pub.flutter-io.cn/packages/mobile_scanner
+  mobile_scanner: 6.0.2                         # 扫描二维码(移动端) https://pub.flutter-io.cn/packages/mobile_scanner
   webview_flutter: 4.8.0                        # WebView(移动端) https://pub.dev/packages/webview_flutter
   flutter_html: 3.0.0-beta.2                    # Flutter加载html(移动端) https://pub.flutter-io.cn/packages/flutter_html
   permission_handler: 11.3.1
   ########################################## 工具 ########################################
   lpinyin: 2.0.3                                # 汉字转拼音(全平台) https://pub.flutter-io.cn/packages/lpinyin
-  crypto: 3.0.5                                 # 加密解密工具(全平台) https://pub.flutter-io.cn/packages/crypto
+  crypto: 3.0.6                                 # 加密解密工具(全平台) https://pub.flutter-io.cn/packages/crypto
 dev_dependencies:
   flutter_test:
     sdk: flutter
