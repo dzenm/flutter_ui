@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'package:fbl/fbl.dart';
 import '../utils/image_util.dart';
-import 'user_logo_view.dart';
 
 ///
 /// Created by a0010 on 2023/12/19 11:12
@@ -48,7 +47,6 @@ class _EnsureSendFileWidgetState extends State<EnsureSendFileWidget> {
         const SizedBox(height: 10),
         Row(children: [
           const SizedBox(width: 8),
-          UserLogoView(url: widget.logo, width: 40),
           const SizedBox(width: 10),
           Text(widget.title ?? ''),
         ]),

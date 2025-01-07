@@ -5,13 +5,13 @@ import 'package:fbl/fbl.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/pages/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
 import '../../generated/l10n.dart';
 import '../common/permission.dart';
 import '../main/main_model.dart';
 import '../utils/pick_files_helper.dart';
-import '../widgets/widgets.dart';
 import 'study_main.dart';
 import 'study_router.dart';
 

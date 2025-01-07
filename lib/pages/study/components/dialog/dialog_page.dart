@@ -166,7 +166,7 @@ class _DialogPageState extends State<DialogPage> {
                       '277&yingid=pp_wap_ppcn&vh=7641e6ccaaae10b280b634ba8e225deb&sf=133168324&sh=10&appid=29805&apprd=',
                   version: '1.2.0',
                 );
-                UpgradeDialog.upgrade(context, version: version);
+                UpgradeView.show(context, version: version);
               },
               child: Row(children: [_text('升级弹窗')]),
             ),
