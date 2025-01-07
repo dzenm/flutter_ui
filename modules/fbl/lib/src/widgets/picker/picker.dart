@@ -34,7 +34,7 @@ class PickerView<T> extends StatefulWidget {
   ///     Log.d('选中的结果: results=$results');
   ///   }
   /// )
-  static Future<T?> showLocation<T>(
+  static Future<List<PickerEntity>?> showLocation<T>(
     BuildContext context, {
     List<String>? initialItem,
     ValueChanged<List<String>>? onChanged,
@@ -43,9 +43,9 @@ class PickerView<T> extends StatefulWidget {
     assert(maxColumn <= 3, 'maxColumn must be less than 3');
     List<PickerEntity> list = _getLocation(maxColumn);
 
-    return await Navigator.push<T>(
+    var result = await Navigator.push<List<PickerEntity>>(
       context,
-      PickerPopupRoute<T>(
+      PickerPopupRoute<List<PickerEntity>>(
         list: list,
         initialItem: initialItem,
         onChanged: onChanged == null ? null : (list) => onChanged(list.map((e) => e.name ?? '').toList()),
@@ -53,6 +53,7 @@ class PickerView<T> extends StatefulWidget {
         barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
       ),
     );
+    return result ?? [];
   }
 
   /// 获取位置信息的数据
@@ -106,9 +107,9 @@ class PickerView<T> extends StatefulWidget {
     String? initialItem,
     ValueChanged<String>? onChanged,
   }) async {
-    var result = await Navigator.push<List<String>>(
+    var result = await Navigator.push<List<PickerEntity>>(
       context,
-      PickerPopupRoute<List<String>>(
+      PickerPopupRoute<List<PickerEntity>>(
         list: list.map((item) => PickerEntity(name: item)).toList(),
         initialItem: initialItem == null ? null : [initialItem],
         onChanged: onChanged == null ? null : (list) => onChanged(list[0].name ?? ''),
@@ -117,7 +118,7 @@ class PickerView<T> extends StatefulWidget {
       ),
     );
     if (result == null) return null;
-    return result[0];
+    return result[0].name;
   }
 
   @override

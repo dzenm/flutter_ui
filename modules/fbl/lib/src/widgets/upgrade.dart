@@ -13,18 +13,18 @@ typedef PrepareCallback = Future<bool> Function();
 ///
 /// Created by a0010 on 2022/3/28 16:28
 /// 更新弹窗
-class UpgradeDialog extends StatelessWidget {
+class UpgradeView extends StatelessWidget {
   final AppVersionEntity version;
   final Widget child;
 
-  const UpgradeDialog({
+  const UpgradeView({
     super.key,
     required this.version,
     required this.child,
   });
 
   ///苹果导到应用商店，安卓内测时应用内下载apk
-  static Future<bool?> upgrade(
+  static Future<bool?> show(
     BuildContext context, {
     required AppVersionEntity version,
     InstallCallback? onInstall,
@@ -36,7 +36,7 @@ class UpgradeDialog extends StatelessWidget {
       barrierColor: Colors.black26,
       context: context,
       builder: (context) {
-        Widget child = UpgradeDialog(
+        Widget child = UpgradeView(
           version: version,
           child: _DownloadView(
             version: version,

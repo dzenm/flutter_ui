@@ -198,3 +198,90 @@ class _KeepAliveWrapperState extends State<KeepAliveWrapper> with AutomaticKeepA
   @override
   bool get wantKeepAlive => widget.keepAlive;
 }
+
+/// 通用页面布局
+class PageWrapper extends StatelessWidget {
+  final Widget child;
+  final void Function()? onPop;
+  final bool isTouchRemoveFocus;
+  final bool canPop;
+
+  PageWrapper({
+    super.key,
+    this.onPop,
+    required this.child,
+    this.isTouchRemoveFocus = false,
+    this.canPop = true,
+  });
+
+  PageWrapper.willPop({
+    Key? key,
+    required Widget child,
+    void Function()? onPop,
+  }) : this(
+          key: key,
+          child: child,
+          onPop: onPop,
+          isTouchRemoveFocus: true,
+          canPop: false,
+        );
+
+  @override
+  Widget build(BuildContext context) {
+    Widget content = child;
+    if (!canPop) {
+      content = PopScope(
+        canPop: false, // 自定义退出
+        onPopInvoked: (bool didPop) async {
+          if (didPop) return;
+
+          if (Navigator.of(context).canPop()) {
+            if (onPop == null) {
+              Navigator.pop(context);
+            } else {
+              onPop!();
+            }
+          }
+        },
+        child: content,
+      );
+    }
+
+    if (isTouchRemoveFocus) {
+      content = KeywordWrapper(child: content);
+    }
+    return content;
+  }
+}
+
+class PageContentWrapper extends StatelessWidget {
+  final Widget child;
+  final Color color;
+  final EdgeInsets? padding;
+
+  const PageContentWrapper({super.key, required this.child, this.color = Colors.white, this.padding});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: color,
+      padding: padding ?? EdgeInsets.all(16),
+      child: child,
+    );
+  }
+}
+
+class KeywordWrapper extends StatelessWidget {
+  final Widget child;
+
+  const KeywordWrapper({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () => FocusScope.of(context).unfocus(), //l 触摸收起键盘
+      child: child,
+    );
+  }
+}
