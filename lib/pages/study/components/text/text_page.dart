@@ -79,7 +79,6 @@ class _TextPageState extends State<TextPage> {
                   maxLength: 12,
                   fontSize: 14,
                   horizontalPadding: 0,
-                  keyboardType: CustomKeywordBoard.license,
                 ),
                 Container(
                   color: Colors.blue,
