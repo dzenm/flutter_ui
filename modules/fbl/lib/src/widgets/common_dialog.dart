@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bot_toast/bot_toast.dart';
+import 'package:fbl/src/widgets/wrapper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -464,6 +465,7 @@ class CommonDialog {
 /// Dialog设置是否可以点击外部取消显示
 class DialogWrapper extends StatelessWidget {
   final bool isTouchOutsideDismiss; // 点击弹窗外部关闭弹窗，默认为true， true：可以关闭 false：不可以关闭
+  final bool canCancel; // 点击返回按钮关闭弹窗
   final GestureTapCallback? barrierOnTap; // 弹窗关闭回调
   final Widget? child;
   final Color color;
@@ -474,6 +476,7 @@ class DialogWrapper extends StatelessWidget {
   const DialogWrapper({
     super.key,
     this.isTouchOutsideDismiss = false,
+    this.canCancel = false,
     this.barrierOnTap,
     this.child,
     Color? color,
@@ -491,24 +494,28 @@ class DialogWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: isTouchOutsideDismiss ? barrierOnTap ?? () => Navigator.of(context).pop() : null, // 外部触摸事件，关闭弹窗
-      behavior: HitTestBehavior.opaque,
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        resizeToAvoidBottomInset: false, // 防止软键盘弹出像素溢出
-        body: GestureDetector(
-          onTap: () {}, // 内部触摸事件，防止触发外部触摸事件（阻断外部触摸事件的执行，所以不做处理）
-          child: Center(
-            child: Container(
-              margin: margin,
-              constraints: constraints,
-              decoration: BoxDecoration(
-                borderRadius: borderRadius,
-                color: color,
+    return PopWrapper.custom(
+      child: GestureDetector(
+        onTap: canCancel && isTouchOutsideDismiss //
+            ? barrierOnTap ?? () => Navigator.of(context).pop()
+            : null, // 外部触摸事件，关闭弹窗
+        behavior: HitTestBehavior.opaque,
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          resizeToAvoidBottomInset: false, // 防止软键盘弹出像素溢出
+          body: GestureDetector(
+            onTap: () {}, // 内部触摸事件，防止触发外部触摸事件（阻断外部触摸事件的执行，所以不做处理）
+            child: Center(
+              child: Container(
+                margin: margin,
+                constraints: constraints,
+                decoration: BoxDecoration(
+                  borderRadius: borderRadius,
+                  color: color,
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: child,
               ),
-              clipBehavior: Clip.antiAlias,
-              child: child,
             ),
           ),
         ),

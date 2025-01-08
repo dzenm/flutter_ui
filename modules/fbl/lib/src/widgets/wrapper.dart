@@ -74,6 +74,35 @@ class PopWrapper extends StatelessWidget {
     this.onPopInvoked,
   });
 
+  const PopWrapper.exit({
+    Key? key,
+    required Widget child,
+  }) : this(
+          key: key,
+          child: child,
+          behavior: BackBehavior.doubleTap,
+        );
+
+  const PopWrapper.background({
+    Key? key,
+    required Widget child,
+  }) : this(
+          key: key,
+          child: child,
+          behavior: BackBehavior.background,
+        );
+
+  const PopWrapper.custom({
+    Key? key,
+    required Widget child,
+    PopInvokedCallback? onPopInvoked,
+  }) : this(
+          key: key,
+          child: child,
+          behavior: BackBehavior.custom,
+          onPopInvoked: onPopInvoked,
+        );
+
   /// 点击返回时, 存在未保存的内容时弹出的提示框
   static Widget _buildPromptBackDialog(BuildContext context) {
     return AlertDialog(
@@ -99,32 +128,36 @@ class PopWrapper extends StatelessWidget {
   //    onWillPop: () => PopWrapper.promptBack(context, isChanged: text != newText),
   //    child: Scaffold(),
   //  )
-  static Future<bool> promptBack(
+  static Future<bool> showPrompt(
     BuildContext context, {
     bool isChanged = false,
-    bool isShowDialog = true,
     WidgetBuilder? builder,
   }) async {
-    if (isChanged && isShowDialog) {
-      await showDialog<bool>(
-        context: context,
-        builder: builder ?? _buildPromptBackDialog,
-      ).then((value) {
+    if (isChanged) {
+      var result = await showDialog<bool>(
+            context: context,
+            builder: builder ?? _buildPromptBackDialog,
+          ) ??
+          true;
+      await Future.delayed(const Duration(milliseconds: 300));
+      if (context.mounted && result) {
         // 为true点击确定，false点击取消
-        if (value ?? true) {
-          Navigator.pop(context);
-        }
-      });
+        Navigator.pop(context);
+      }
+    } else {
+      Navigator.pop(context);
     }
-    return !isChanged; // 根据isChanged的值决定调用系统返回键的处理
+    return isChanged;
   }
 
   static DateTime _lastTap = DateTime.now(); //上次点击时间
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      child: PopScope(onPopInvoked: _onPopInvoked, child: child),
+    return PopScope(
+      onPopInvoked: _onPopInvoked,
+      canPop: false,
+      child: child,
     );
   }
 
@@ -132,9 +165,15 @@ class PopWrapper extends StatelessWidget {
   void _onPopInvoked(bool didPop) async {
     switch (behavior) {
       case BackBehavior.custom:
+        if (didPop) {
+          return;
+        }
         if (onPopInvoked != null) {
           onPopInvoked!(didPop);
         }
+        break;
+      case BackBehavior.background:
+        break;
       case BackBehavior.doubleTap:
         DateTime now = DateTime.now();
         if (now.difference(_lastTap) > const Duration(seconds: 2)) {
@@ -149,6 +188,7 @@ class PopWrapper extends StatelessWidget {
           // 退出app
           exit(0);
         }
+        break;
     }
   }
 }
@@ -156,6 +196,7 @@ class PopWrapper extends StatelessWidget {
 /// 返回行为
 enum BackBehavior {
   custom, // 自定义返回键执行的方式
+  background, // 点击返回键使页面处于后台运行,不销毁页面
   doubleTap, // 双击返回键退出页面
 }
 
@@ -206,7 +247,7 @@ class PageWrapper extends StatelessWidget {
   final bool isTouchRemoveFocus;
   final bool canPop;
 
-  PageWrapper({
+  const PageWrapper({
     super.key,
     this.onPop,
     required this.child,
@@ -214,7 +255,7 @@ class PageWrapper extends StatelessWidget {
     this.canPop = true,
   });
 
-  PageWrapper.willPop({
+  const PageWrapper.pop({
     Key? key,
     required Widget child,
     void Function()? onPop,
@@ -230,11 +271,8 @@ class PageWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget content = child;
     if (!canPop) {
-      content = PopScope(
-        canPop: false, // 自定义退出
-        onPopInvoked: (bool didPop) async {
-          if (didPop) return;
-
+      content = PopWrapper.custom(
+        onPopInvoked: (bool didPop) {
           if (Navigator.of(context).canPop()) {
             if (onPop == null) {
               Navigator.pop(context);
