@@ -132,7 +132,9 @@ class _GifViewState extends State<GifView> with SingleTickerProviderStateMixin {
       oldWidget.controller?.removeListener(_listener);
       _initAnimation();
     }
-    if ((widget.image != oldWidget.image) || (widget.fps != oldWidget.fps) || (widget.duration != oldWidget.duration)) {
+    if ((widget.image != oldWidget.image) || //
+        (widget.fps != oldWidget.fps) ||
+        (widget.duration != oldWidget.duration)) {
       _loadFrames().then((value) {
         if (widget.image != oldWidget.image) {
           _autostart();
@@ -196,7 +198,9 @@ class _GifViewState extends State<GifView> with SingleTickerProviderStateMixin {
   void _listener() {
     if (_frames.isNotEmpty && mounted) {
       setState(() {
-        _frameIndex = _frames.isEmpty ? 0 : ((_frames.length - 1) * _controller.value).floor();
+        _frameIndex = _frames.isEmpty //
+            ? 0
+            : ((_frames.length - 1) * _controller.value).floor();
       });
     }
   }
@@ -208,18 +212,20 @@ class _GifViewState extends State<GifView> with SingleTickerProviderStateMixin {
     if (!mounted) return;
 
     _GifInfo gif = widget.useCache
-        ? GifView._cache.caches.containsKey(_getImageKey(widget.image))
-            ? GifView._cache.caches[_getImageKey(widget.image)]!
+        ? GifView._cache.containsKey(_getImageKey(widget.image))
+            ? GifView._cache.get(_getImageKey(widget.image))!
             : await _fetchFrames(widget.image)
         : await _fetchFrames(widget.image);
 
     if (!mounted) return;
 
-    if (widget.useCache) GifView._cache.caches.putIfAbsent(_getImageKey(widget.image), () => gif);
+    if (widget.useCache) GifView._cache.put(_getImageKey(widget.image), gif);
 
     setState(() {
       _frames = gif.frames;
-      _controller.duration = widget.fps != null ? Duration(milliseconds: (_frames.length / widget.fps! * 1000).round()) : widget.duration ?? gif.duration;
+      _controller.duration = widget.fps != null //
+          ? Duration(milliseconds: (_frames.length / widget.fps! * 1000).round())
+          : widget.duration ?? gif.duration;
       if (widget.onFetchCompleted != null) {
         widget.onFetchCompleted!();
       }
@@ -266,6 +272,15 @@ class _GifViewState extends State<GifView> with SingleTickerProviderStateMixin {
 
 class _GifCache {
   final Map<String, _GifInfo> caches = {};
+
+  /// The Key is exists the caches
+  bool containsKey(Object? key) => caches.containsKey(key);
+
+  /// Get value from the cache by the key
+  _GifInfo? get(Object? key) => caches[key];
+
+  /// Cache a new value if the key is not exist；
+  _GifInfo put(String key, _GifInfo value) => caches.putIfAbsent(key, () => value);
 
   /// Clears all the stored gifs from the cache.
   void clear() => caches.clear();
