@@ -476,7 +476,7 @@ class DialogWrapper extends StatelessWidget {
   const DialogWrapper({
     super.key,
     this.isTouchOutsideDismiss = false,
-    this.canCancel = false,
+    this.canCancel = true,
     this.barrierOnTap,
     this.child,
     Color? color,

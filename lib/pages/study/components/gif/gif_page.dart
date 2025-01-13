@@ -12,23 +12,6 @@ class GifPage extends StatefulWidget {
 }
 
 class _GifPageState extends State<GifPage> with TickerProviderStateMixin {
-  late AnimationController _controller;
-  late AnimationController _controller1;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(vsync: this);
-    _controller1 = AnimationController(vsync: this);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _controller.dispose();
-    _controller1.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,28 +21,10 @@ class _GifPageState extends State<GifPage> with TickerProviderStateMixin {
       body: FutureBuilder<bool>(
         future: _request(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return GifView(
-              image: const AssetImage(Assets.bottleThrow),
-              controller: _controller,
-              autostart: Autostart.loop,
-              onFetchCompleted: () {
-                _controller.reset();
-                _controller.forward();
-              },
-            );
-          } else if (snapshot.connectionState == ConnectionState.done) {
-            return GifView(
-              image: const AssetImage(Assets.bottlePickup),
-              controller: _controller1,
-              autostart: Autostart.once,
-              onFetchCompleted: () {
-                _controller1.reset();
-                _controller1.forward();
-              },
-            );
-          }
-          return const SizedBox.shrink();
+          return const GifView(
+            image: AssetImage(Assets.bottleThrow),
+            autostart: Autostart.loop,
+          );
         },
       ),
     );

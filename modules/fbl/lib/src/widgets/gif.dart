@@ -26,6 +26,9 @@ class GifView extends StatefulWidget {
   /// This playback controller.
   final AnimationController? controller;
 
+  /// Called when gif is played completed.
+  final VoidCallback? onCompleted;
+
   /// Frames per second at which this runs.
   final int? fps;
 
@@ -34,6 +37,9 @@ class GifView extends StatefulWidget {
 
   /// If and how to start this gif.
   final Autostart autostart;
+
+  /// Auto play gif
+  final bool autoPlay;
 
   /// Rendered when gif frames fetch is still not completed.
   final Widget Function(BuildContext context)? placeholder;
@@ -58,9 +64,11 @@ class GifView extends StatefulWidget {
     super.key,
     required this.image,
     this.controller,
+    this.onCompleted,
     this.fps,
     this.duration,
     this.autostart = Autostart.no,
+    this.autoPlay = true,
     this.placeholder,
     this.onFetchCompleted,
     this.semanticLabel,
@@ -128,10 +136,6 @@ class _GifViewState extends State<GifView> with SingleTickerProviderStateMixin {
   @override
   void didUpdateWidget(GifView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.controller != oldWidget.controller) {
-      oldWidget.controller?.removeListener(_listener);
-      _initAnimation();
-    }
     if ((widget.image != oldWidget.image) || //
         (widget.fps != oldWidget.fps) ||
         (widget.duration != oldWidget.duration)) {
@@ -170,6 +174,7 @@ class _GifViewState extends State<GifView> with SingleTickerProviderStateMixin {
   void _autostart() {
     if (mounted && widget.autostart != Autostart.no) {
       _controller.reset();
+      if (!widget.autoPlay) return;
       if (widget.autostart == Autostart.loop) {
         _controller.repeat();
       } else {
@@ -196,6 +201,11 @@ class _GifViewState extends State<GifView> with SingleTickerProviderStateMixin {
   /// The calculation is based on the frames of the gif
   /// and the [Duration] of [AnimationController].
   void _listener() {
+    if (_controller.isCompleted) {
+      if (widget.onCompleted != null) {
+        widget.onCompleted!();
+      }
+    }
     if (_frames.isNotEmpty && mounted) {
       setState(() {
         _frameIndex = _frames.isEmpty //
