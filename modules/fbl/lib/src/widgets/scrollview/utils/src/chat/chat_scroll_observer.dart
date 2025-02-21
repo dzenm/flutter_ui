@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-import '../listview/list_observer_controller.dart';
-import '../listview/models/listview_observe_displaying_child_model.dart';
-import '../observer/observer_controller.dart';
+import '../../../common/typedefs.dart';
+import '../../../listview/list_observer_controller.dart';
+import '../../../listview/models/listview_observe_displaying_child_model.dart';
 import '../observer_utils.dart';
 import 'chat_scroll_observer_model.dart';
+import 'chat_scroll_observer_typedefs.dart';
 
 class ChatScrollObserver {
   ChatScrollObserver(this.observerController) {
@@ -57,12 +58,31 @@ class ChatScrollObserver {
   ///
   /// This callback will be called when handling in [ClampingScrollPhysics]'s
   /// [adjustPositionForNewDimensions].
-  void Function(ChatScrollObserverHandlePositionResultModel)? onHandlePositionResultCallback;
+  @Deprecated(
+      'It will be removed in version 2, please use [onHandlePositionResultCallback] instead')
+  void Function(ChatScrollObserverHandlePositionType)? onHandlePositionCallback;
+
+  /// The result callback for processing chat location.
+  ///
+  /// This callback will be called when handling in [ClampingScrollPhysics]'s
+  /// [adjustPositionForNewDimensions].
+  void Function(ChatScrollObserverHandlePositionResultModel)?
+      onHandlePositionResultCallback;
 
   /// The mode of processing.
   ChatScrollObserverHandleMode innerMode = ChatScrollObserverHandleMode.normal;
 
-  /// Observation result of reference subParts after ScrollView children update.
+  /// Customize the delta of the adjustPosition.
+  ///
+  /// If the return value is null, the default processing will be performed.
+  ChatScrollObserverCustomAdjustPositionDelta? customAdjustPositionDelta;
+
+  /// Customize the scroll position for new viewport dimensions.
+  ///
+  /// If the return value is null, the default processing will be performed.
+  ChatScrollObserverCustomAdjustPosition? customAdjustPosition;
+
+  /// Observation result of reference subparts after ScrollView children update.
   ListViewObserveDisplayingChildModel? observeRefItem() {
     return observerController.observeItem(
       index: refItemIndexAfterUpdate,
@@ -83,7 +103,7 @@ class ChatScrollObserver {
   /// message before insertion to [refItemIndex], and assign the index of the
   /// reference message after insertion to [refItemIndexAfterUpdate].
   /// Note that they should refer to the index of the same message.
-  void standby({
+  standby({
     BuildContext? sliverContext,
     bool isRemove = false,
     int changeCount = 1,
@@ -98,6 +118,8 @@ class ChatScrollObserver {
     int refItemRelativeIndexAfterUpdate = 0,
     int refItemIndex = 0,
     int refItemIndexAfterUpdate = 0,
+    ChatScrollObserverCustomAdjustPosition? customAdjustPosition,
+    ChatScrollObserverCustomAdjustPositionDelta? customAdjustPositionDelta,
   }) async {
     innerMode = mode;
     this.isRemove = isRemove;
@@ -129,9 +151,9 @@ class ChatScrollObserver {
         myInnerRefItemLayoutOffset = model.layoutOffset;
         break;
       case ChatScrollObserverHandleMode.specified:
-      // Prioritize the values ​​of [refItemIndex] and [refItemIndexAfterUpdate]
+        // Prioritize the values ​​of [refItemIndex] and [refItemIndexAfterUpdate]
         int myRefItemIndex =
-        refItemIndex != 0 ? refItemIndex : refItemRelativeIndex;
+            refItemIndex != 0 ? refItemIndex : refItemRelativeIndex;
         int myRefItemIndexAfterUpdate = refItemIndexAfterUpdate != 0
             ? refItemIndexAfterUpdate
             : refItemRelativeIndexAfterUpdate;
@@ -158,7 +180,6 @@ class ChatScrollObserver {
             final currentFirstDisplayingChildIndex =
                 observeResult.observeResult?.firstChild?.index ?? 0;
             int index = currentFirstDisplayingChildIndex + myRefItemIndex;
-            if (sliverContext == null || !sliverContext.mounted) return;
             final model = observerController.observeItem(
               sliverContext: sliverContext,
               index: index,
@@ -186,6 +207,8 @@ class ChatScrollObserver {
     innerRefItemIndex = myInnerRefItemIndex;
     innerRefItemIndexAfterUpdate = myInnerRefItemIndexAfterUpdate;
     innerRefItemLayoutOffset = myInnerRefItemLayoutOffset;
+    this.customAdjustPosition = customAdjustPosition;
+    this.customAdjustPositionDelta = customAdjustPositionDelta;
 
     // When the heights of items are similar, the viewport will not call
     // [performLayout], In this case, the [adjustPositionForNewDimensions] of
@@ -198,9 +221,9 @@ class ChatScrollObserver {
     //
     // Related issue
     // https://github.com/fluttercandies/flutter_scrollview_observer/issues/64
-    final mySliverContext = observerController.fetchSliverContext();
-    if (mySliverContext == null || !mySliverContext.mounted) return;
-    final obj = ObserverUtils.findRenderObject(mySliverContext);
+    final myCtx = observerController.fetchSliverContext();
+    if (myCtx == null) return;
+    final obj = ObserverUtils.findRenderObject(myCtx);
     if (obj == null) return;
     final viewport = ObserverUtils.findViewport(obj);
     if (viewport == null) return;
@@ -209,7 +232,7 @@ class ChatScrollObserver {
     viewport.markNeedsLayout();
   }
 
-  void observeSwitchShrinkWrap() {
+  observeSwitchShrinkWrap() {
     ambiguate(WidgetsBinding.instance)?.addPostFrameCallback((_) {
       final ctx = observerController.fetchSliverContext();
       if (ctx == null) return;

@@ -5,6 +5,8 @@ import 'package:fbl/fbl.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/pages/study/provider.dart';
+import 'package:flutter_ui/pages/utils/plugin_manager.dart';
 import 'package:flutter_ui/pages/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -26,14 +28,32 @@ class StudyPage extends StatefulWidget {
 }
 
 class _StudyPageState extends State<StudyPage> with Logging {
+  late StudyProviderModel _model;
   @override
   void initState() {
     super.initState();
     StudyMain.main();
+    Friend friend = BusinessFriend();
+    logInfo('测试：${friend is GoodFriend}');
+    logInfo('测试：${friend is BusinessFriend}');
+    logInfo('测试：${friend is Child}');
+    logInfo('测试：${friend is Student}');
+    logInfo('测试：${friend is NameMixin}');
+    logInfo('测试：${friend.toJson()}');
+    _model = StudyProviderModel();
   }
 
   @override
   Widget build(BuildContext context) {
+    return ProviderModel(
+      notifier: _model,
+      child: Builder(builder: (context) {
+        return _buildPage(context);
+      }),
+    );
+  }
+
+  Widget _buildPage(BuildContext context) {
     AppTheme theme = context.watch<LocalModel>().theme;
     return NestedScrollView(
       floatHeaderSlivers: true,
@@ -65,21 +85,21 @@ class _StudyPageState extends State<StudyPage> with Logging {
           ),
         ];
       },
-      body: _buildBody(theme),
+      body: _buildBody(context, theme),
     );
   }
 
-  Widget _buildBody(AppTheme theme) {
+  Widget _buildBody(BuildContext context, AppTheme theme) {
     return Container(
       color: theme.background,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: SingleChildScrollView(
-        child: Column(children: _buildChildrenButtons()),
+        child: Column(children: _buildChildrenButtons(context)),
       ),
     );
   }
 
-  List<Widget> _buildChildrenButtons() {
+  List<Widget> _buildChildrenButtons(BuildContext context) {
     AppTheme theme = context.watch<LocalModel>().theme;
     return [
       const SizedBox(height: 8),
@@ -146,12 +166,20 @@ class _StudyPageState extends State<StudyPage> with Logging {
         onPressed: () => context.pushNamed(StudyRouter.video),
         child: _text('视频播放'),
       ),
+      // WI-FI热点
+      MaterialButton(
+        textColor: Colors.white,
+        color: theme.button,
+        onPressed: () => context.pushNamed(StudyRouter.wifi),
+        // onPressed: () => PluginManager.openWifiHotspot(),
+        child: _text('WI-FI热点'),
+      ),
       // 多窗口测试
       const SizedBox(height: 8),
       MaterialButton(
         textColor: Colors.white,
         color: theme.button,
-        onPressed: () => context.pushNamed(StudyRouter.multiWindow),
+        onPressed: () => context.pushNamed(StudyRouter.window),
         child: _text('多窗口测试'),
       ),
       const SizedBox(height: 8),
@@ -199,6 +227,29 @@ class _StudyPageState extends State<StudyPage> with Logging {
         },
         child: _text('请求麦克风权限'),
       ),
+      const SizedBox(height: 8),
+      MaterialButton(
+        textColor: Colors.white,
+        color: theme.button,
+        onPressed: () async {
+          ProviderModel.read(context).add();
+        },
+        child: _text('更改数据'),
+      ),
+      const SizedBox(height: 8),
+      MaterialButton(
+        textColor: Colors.white,
+        color: theme.button,
+        onPressed: () async {
+          ProviderModel.read(context).reset();
+        },
+        child: _text('重置数据'),
+      ),
+      const SizedBox(height: 8),
+      Selector0<String>(builder: (c, text, w) {
+        return Text(text);
+      }, selector: (context) => ProviderModel.of(context).value.toString(),
+      ),
     ];
   }
 
@@ -227,3 +278,48 @@ class _StudyPageState extends State<StudyPage> with Logging {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text(text)]);
   }
 }
+
+abstract class People implements Student {
+
+}
+
+abstract class Friend extends People {
+
+  String name = 'hello';
+  int age = 0;
+
+  Map<String, dynamic> toJson() => {
+    'name': name,
+    'age': 32,
+  };
+}
+
+class GoodFriend extends Friend {
+
+  @override
+  Map<String, dynamic> toJson() => super.toJson()..addAll({
+    'age': 24,
+  });
+}
+
+class BusinessFriend extends Friend with NameMixin {
+
+  @override
+  Map<String, dynamic> toJson() => super.toJson()..addAll({
+    'age': 24,
+  });
+}
+
+mixin NameMixin on Friend {
+  @override
+  String get name => 'modify name';
+}
+
+abstract interface class Child {
+
+}
+
+abstract interface class Student {
+
+}
+

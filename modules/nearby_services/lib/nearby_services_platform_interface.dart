@@ -26,4 +26,61 @@ abstract class NearbyServicesPlatform extends PlatformInterface {
   Future<String?> getPlatformVersion() {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
+
+  Future<String?> getPlatformModel() {
+    throw UnimplementedError('getPlatformModel() has not been implemented.');
+  }
+
+  Future<bool> initialize() {
+    throw UnimplementedError('initialize() has not been implemented.');
+  }
+
+  Future<bool> register() {
+    throw UnimplementedError('register() has not been implemented.');
+  }
+
+  Future<bool> unregister() {
+    throw UnimplementedError('unregister() has not been implemented.');
+  }
+
+  Future<bool> discover() {
+    throw UnimplementedError('discover() has not been implemented.');
+  }
+
+  Future<bool> stopDiscovery() {
+    throw UnimplementedError('stopDiscovery() has not been implemented.');
+  }
+
+  Future<bool> connect(String address) {
+    throw UnimplementedError('connect() has not been implemented.');
+  }
+
+  Future<bool> disconnect() {
+    throw UnimplementedError('disconnect() has not been implemented.');
+  }
+
+  Future<bool> createGroup() {
+    throw UnimplementedError('createGroup() has not been implemented.');
+  }
+
+  Future<bool> removeGroup() {
+    throw UnimplementedError('removeGroup() has not been implemented.');
+  }
+
+  Future<bool> isGPSEnabled() {
+    throw UnimplementedError('isGPSEnabled() has not been implemented.');
+  }
+
+  Future<bool> openLocationSettingsPage() {
+    throw UnimplementedError(
+        'openLocationSettingsPage() has not been implemented.');
+  }
+
+  Future<bool> isWifiEnabled() {
+    throw UnimplementedError('isWifiEnabled() has not been implemented.');
+  }
+
+  Future<bool> openWifiSettingsPage() {
+    throw UnimplementedError('openWifiSettingsPage() has not been implemented.');
+  }
 }

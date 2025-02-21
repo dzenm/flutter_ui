@@ -142,7 +142,7 @@ class WifiDirectManager(private val context: Context) {
     /**
      * 停止设备扫描
      */
-    private fun stopPeerDiscovery(result: MethodChannel.Result) {
+    fun stopPeerDiscovery(result: MethodChannel.Result) {
         wifiChannel?.also { channel ->
             wifiManager?.stopPeerDiscovery(channel, object : WifiP2pManager.ActionListener {
                 override fun onSuccess() {

@@ -11,7 +11,8 @@ class SliverViewportObserveModel {
   final SliverViewportObserveDisplayingChildModel firstChild;
 
   /// Stores observing model list of displaying children widgets.
-  final List<SliverViewportObserveDisplayingChildModel> displayingChildModelList;
+  final List<SliverViewportObserveDisplayingChildModel>
+      displayingChildModelList;
 
   SliverViewportObserveModel({
     required this.viewport,
@@ -23,7 +24,9 @@ class SliverViewportObserveModel {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is SliverViewportObserveModel) {
-      return viewport == other.viewport && firstChild == other.firstChild && listEquals(displayingChildModelList, other.displayingChildModelList);
+      return viewport == other.viewport &&
+          firstChild == other.firstChild &&
+          listEquals(displayingChildModelList, other.displayingChildModelList);
     } else {
       return false;
     }
@@ -31,6 +34,8 @@ class SliverViewportObserveModel {
 
   @override
   int get hashCode {
-    return viewport.hashCode + firstChild.hashCode + displayingChildModelList.hashCode;
+    return viewport.hashCode +
+        firstChild.hashCode +
+        displayingChildModelList.hashCode;
   }
 }

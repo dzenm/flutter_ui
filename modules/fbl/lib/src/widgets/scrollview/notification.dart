@@ -9,7 +9,6 @@ class ScrollViewOnceObserveNotification extends Notification {
   /// If true, the observe callback will be called when the observation result
   /// come out.
   final bool isDependObserveCallback;
-
   ScrollViewOnceObserveNotification({
     this.isForce = false,
     this.isDependObserveCallback = true,
@@ -17,7 +16,8 @@ class ScrollViewOnceObserveNotification extends Notification {
 }
 
 /// The Notification for Triggering an ListView observation
-class ListViewOnceObserveNotification extends ScrollViewOnceObserveNotification {
+class ListViewOnceObserveNotification
+    extends ScrollViewOnceObserveNotification {
   ListViewOnceObserveNotification({
     super.isForce,
     super.isDependObserveCallback,
@@ -25,7 +25,8 @@ class ListViewOnceObserveNotification extends ScrollViewOnceObserveNotification 
 }
 
 /// The Notification for Triggering an GridView observation
-class GridViewOnceObserveNotification extends ScrollViewOnceObserveNotification {
+class GridViewOnceObserveNotification
+    extends ScrollViewOnceObserveNotification {
   GridViewOnceObserveNotification({
     super.isForce,
     super.isDependObserveCallback,
@@ -54,7 +55,8 @@ class ObserverScrollStartNotification extends ObserverScrollNotification {}
 
 /// A notification that a scrolling task has interrupted due to calling the
 /// jumpTo or animateTo method of [ObserverController].
-class ObserverScrollInterruptionNotification extends ObserverScrollNotification {}
+class ObserverScrollInterruptionNotification
+    extends ObserverScrollNotification {}
 
 /// A notification that the data of the specified index item is determined
 /// during the execution of the scrolling task.

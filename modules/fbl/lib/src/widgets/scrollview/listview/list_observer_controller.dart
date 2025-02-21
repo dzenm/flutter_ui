@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-
-import '../observer/observer_controller.dart';
-import '../scrollview_observer.dart';
+import '../common/models/observer_handle_contexts_result_model.dart';
+import '../common/observer_controller.dart';
+import '../common/observer_typedef.dart';
+import '../common/typedefs.dart';
+import '../notification.dart';
+import 'list_observer_notification_result.dart';
+import 'models/listview_observe_displaying_child_model.dart';
+import 'models/listview_observe_model.dart';
 
 class ListObserverController extends ObserverController
     with
         ObserverControllerForInfo,
         ObserverControllerForScroll,
-        ObserverControllerForNotification<ListViewObserveModel, ObserverHandleContextsResultModel<ListViewObserveModel>, ListViewOnceObserveNotificationResult> {
+        ObserverControllerForNotification<
+            ListViewObserveModel,
+            ObserverHandleContextsResultModel<ListViewObserveModel>,
+            ListViewOnceObserveNotificationResult> {
   ListObserverController({
     super.controller,
   });
@@ -62,9 +70,11 @@ class ListObserverController extends ObserverController
 
   /// Create a observation notification result.
   @override
-  ListViewOnceObserveNotificationResult innerCreateOnceObserveNotificationResult({
+  ListViewOnceObserveNotificationResult
+      innerCreateOnceObserveNotificationResult({
     required ObserverWidgetObserveResultType resultType,
-    required ObserverHandleContextsResultModel<ListViewObserveModel>? resultModel,
+    required ObserverHandleContextsResultModel<ListViewObserveModel>?
+        resultModel,
   }) {
     return ListViewOnceObserveNotificationResult(
       type: resultType,

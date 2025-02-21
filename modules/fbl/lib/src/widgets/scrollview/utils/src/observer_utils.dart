@@ -1,12 +1,12 @@
-import 'dart:math' as math;
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'dart:math' as math;
 
-import 'listview/models/listview_observe_displaying_child_model.dart';
-import 'listview/models/listview_observe_model.dart';
-import 'observer/models/observe_model.dart';
+import '../../common/models/observe_model.dart';
+import '../../gridview/models/gridview_observe_displaying_child_model.dart';
+import '../../gridview/models/gridview_observe_model.dart';
+import '../../listview/models/listview_observe_model.dart';
+import 'log.dart';
 
 class ObserverUtils {
   ObserverUtils._();
@@ -34,28 +34,72 @@ class ObserverUtils {
   /// Calculate the anchor tab index.
   static int calcAnchorTabIndex({
     required ObserveModel observeModel,
-    required List<int> tabIndexes,
+    required List<int> tabIndexs,
     required int currentTabIndex,
   }) {
-    if (currentTabIndex >= tabIndexes.length) {
+    if (currentTabIndex >= tabIndexs.length) {
       return currentTabIndex;
     }
     if (observeModel is ListViewObserveModel) {
       final topIndex = observeModel.firstChild?.index ?? 0;
-      final index = tabIndexes.indexOf(topIndex);
+      final index = tabIndexs.indexOf(topIndex);
       if (isValidListIndex(index)) {
         return index;
       }
       var targetTabIndex = currentTabIndex - 1;
-      if (targetTabIndex < 0 || targetTabIndex >= tabIndexes.length) {
+      if (targetTabIndex < 0 || targetTabIndex >= tabIndexs.length) {
         return currentTabIndex;
       }
-      var curIndex = tabIndexes[currentTabIndex];
-      var lastIndex = tabIndexes[currentTabIndex - 1];
+      var curIndex = tabIndexs[currentTabIndex];
+      var lastIndex = tabIndexs[currentTabIndex - 1];
       if (curIndex > topIndex && lastIndex < topIndex) {
-        final lastTabIndex = tabIndexes.indexOf(lastIndex);
+        final lastTabIndex = tabIndexs.indexOf(lastIndex);
         if (isValidListIndex(lastTabIndex)) {
           return lastTabIndex;
+        }
+      }
+    } else if (observeModel is GridViewObserveModel) {
+      final firstGroupChildList = observeModel.firstGroupChildList;
+      if (firstGroupChildList.isEmpty) {
+        return currentTabIndex;
+      }
+      // Record the child with the shortest distance from the bottom.
+      GridViewObserveDisplayingChildModel mainChildModel =
+          firstGroupChildList.first;
+      for (var firstGroupChildModel in firstGroupChildList) {
+        final index = tabIndexs.indexOf(firstGroupChildModel.index);
+        if (isValidListIndex(index)) {
+          // Found the target index from tabIndexs, return directly.
+          return index;
+        }
+        if (mainChildModel.trailingMarginToViewport <
+            firstGroupChildModel.trailingMarginToViewport) {
+          mainChildModel = firstGroupChildModel;
+        }
+      }
+      // Target index not found from tabIndexs.
+      var targetTabIndex = currentTabIndex - 1;
+      if (targetTabIndex < 0 || targetTabIndex >= tabIndexs.length) {
+        return currentTabIndex;
+      }
+      var curIndex = tabIndexs[currentTabIndex];
+      final firstGroupIndexList =
+          firstGroupChildList.map((e) => e.index).toList();
+      final minOffset = mainChildModel.layoutOffset;
+      final maxOffset =
+          mainChildModel.layoutOffset + mainChildModel.mainAxisSize;
+      final displayingChildModelList =
+          observeModel.displayingChildModelList.where((e) {
+        return !firstGroupIndexList.contains(e.index) &&
+            e.layoutOffset >= minOffset &&
+            e.layoutOffset <= maxOffset;
+      }).toList();
+      // If the indexes of all the children currently being displayed are
+      // greater than curIndex, keep using currentTabIndex.
+      // Otherwise, using targetTabIndex.
+      for (var model in displayingChildModelList) {
+        if (model.index <= curIndex) {
+          return targetTabIndex;
         }
       }
     }
@@ -79,11 +123,14 @@ class ObserverUtils {
     final double targetFirstChildSize;
     try {
       // In some cases, getting size may throw an exception.
-      targetFirstChildSize = scrollDirection == Axis.vertical ? targetChild.size.height : targetChild.size.width;
+      targetFirstChildSize = scrollDirection == Axis.vertical
+          ? targetChild.size.height
+          : targetChild.size.width;
     } catch (_) {
       return false;
     }
-    return scrollViewOffset < targetFirstChildSize * toNextOverPercent + targetFirstChildOffset;
+    return scrollViewOffset <
+        targetFirstChildSize * toNextOverPercent + targetFirstChildOffset;
   }
 
   /// Determines whether the target child widget has reached the specified
@@ -99,7 +146,9 @@ class ObserverUtils {
       scrollDirection: scrollDirection,
       targetChild: targetChild,
       toNextOverPercent: toNextOverPercent,
-    )) return false;
+    )) {
+      return false;
+    }
     final parentData = targetChild.parentData;
     if (parentData is! SliverMultiBoxAdaptorParentData) {
       return false;
@@ -209,7 +258,7 @@ class ObserverUtils {
       // It throws an exception when getting renderObject of inactive element.
       return context?.findRenderObject();
     } catch (e) {
-      debugPrint('Cannot get renderObject of inactive element.\n'
+      Log.warning('Cannot get renderObject of inactive element.\n'
           'Please call the reattach method of ObserverController to re-record '
           'BuildContext.');
       return null;
@@ -235,7 +284,7 @@ class ObserverUtils {
       // https://github.com/fluttercandies/flutter_scrollview_observer/issues/35
       context.visitChildElements(visitor);
     } catch (e) {
-      debugPrint(
+      Log.warning(
         'This widget has been unmounted, so the State no longer has a context (and should be considered defunct). \n'
         'Consider canceling any active work during "dispose" or using the "mounted" getter to determine if the State is still active.',
       );
@@ -266,120 +315,15 @@ class ObserverUtils {
     );
   }
 
-  /// Handles observation logic of a sliver similar to [SliverList].
-  static ListViewObserveModel? handleListObserve({
-    required BuildContext context,
-    double Function()? fetchLeadingOffset,
-    double? Function(BuildContext)? customOverlap,
-    double toNextOverPercent = 1,
-  }) {
-    var obj = ObserverUtils.findRenderObject(context);
-    if (obj is! RenderSliverMultiBoxAdaptor) return null;
-    final viewport = ObserverUtils.findViewport(obj);
-    if (viewport == null) return null;
-    if (kDebugMode) {
-      if (viewport.debugNeedsPaint) return null;
-    }
-    // The geometry.visible is not absolutely reliable.
-    if (!(obj.geometry?.visible ?? false) || obj.constraints.remainingPaintExtent < 1e-10) {
-      return ListViewObserveModel(
-        sliverList: obj,
-        viewport: viewport,
-        visible: false,
-        firstChild: null,
-        displayingChildModelList: [],
-      );
-    }
-    final scrollDirection = obj.constraints.axis;
-    var firstChild = obj.firstChild;
-    if (firstChild == null) return null;
-
-    final offset = fetchLeadingOffset?.call() ?? 0;
-    final overlap = customOverlap?.call(context) ?? obj.constraints.overlap;
-    final rawScrollViewOffset = obj.constraints.scrollOffset + overlap;
-    var scrollViewOffset = rawScrollViewOffset + offset;
-    var parentData = firstChild.parentData as SliverMultiBoxAdaptorParentData;
-    var index = parentData.index ?? 0;
-
-    // Find out the first child which is displaying
-    var targetFirstChild = firstChild;
-
-    while (!ObserverUtils.isBelowOffsetWidgetInSliver(
-      scrollViewOffset: scrollViewOffset,
-      scrollDirection: scrollDirection,
-      targetChild: targetFirstChild,
-      toNextOverPercent: toNextOverPercent,
-    )) {
-      index = index + 1;
-      var nextChild = obj.childAfter(targetFirstChild);
-      if (nextChild == null) break;
-
-      if (nextChild is! RenderIndexedSemantics) {
-        // It is separator
-        nextChild = obj.childAfter(nextChild);
-      }
-      if (nextChild == null) break;
-      targetFirstChild = nextChild;
-    }
-    if (targetFirstChild is! RenderIndexedSemantics) return null;
-
-    List<ListViewObserveDisplayingChildModel> displayingChildModelList = [
-      ListViewObserveDisplayingChildModel(
-        sliverList: obj,
-        viewport: viewport,
-        index: targetFirstChild.index,
-        renderObject: targetFirstChild,
-      ),
-    ];
-
-    // Find the remaining children that are being displayed
-    final showingChildrenMaxOffset = rawScrollViewOffset + obj.constraints.remainingPaintExtent - overlap;
-    var displayingChild = obj.childAfter(targetFirstChild);
-    while (ObserverUtils.isDisplayingChildInSliver(
-      targetChild: displayingChild,
-      showingChildrenMaxOffset: showingChildrenMaxOffset,
-      scrollViewOffset: scrollViewOffset,
-      scrollDirection: scrollDirection,
-      toNextOverPercent: toNextOverPercent,
-    )) {
-      if (displayingChild == null) {
-        break;
-      }
-      if (displayingChild is! RenderIndexedSemantics) {
-        // It is separator
-        displayingChild = obj.childAfter(displayingChild);
-        continue;
-      }
-      displayingChildModelList.add(ListViewObserveDisplayingChildModel(
-        sliverList: obj,
-        viewport: viewport,
-        index: displayingChild.index,
-        renderObject: displayingChild,
-      ));
-      displayingChild = obj.childAfter(displayingChild);
-    }
-
-    return ListViewObserveModel(
-      sliverList: obj,
-      viewport: viewport,
-      visible: true,
-      firstChild: ListViewObserveDisplayingChildModel(
-        sliverList: obj,
-        viewport: viewport,
-        index: targetFirstChild.index,
-        renderObject: targetFirstChild,
-      ),
-      displayingChildModelList: displayingChildModelList,
-    );
-  }
-
   /// Safely obtain [RenderSliver.constraints].
-  static SliverConstraints? sliverConstraints(RenderSliver sliver) {
+  static SliverConstraints? sliverConstraints(
+    RenderSliver sliver,
+  ) {
     SliverConstraints? constraints;
     try {
       constraints = sliver.constraints;
     } catch (e) {
-      debugPrint(
+      Log.warning(
         'A RenderObject does not have any constraints before it has been laid out.',
       );
     }

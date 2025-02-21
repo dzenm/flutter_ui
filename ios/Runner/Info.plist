@@ -73,5 +73,13 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSBonjourServices</key>
+      <array>
+        <string>_mp-connection._tcp</string>
+      </array>
+    <key>UIRequiresPersistentWiFi</key>
+    <true/>
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>App需要您的同意才能使用Wi-Fi</string>
 </dict>
 </plist>

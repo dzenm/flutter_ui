@@ -15,6 +15,9 @@ abstract class ObserveModel {
   /// Stores model list for children widgets those are displaying.
   List<ObserveDisplayingChildModel> innerDisplayingChildModelList;
 
+  /// Stores model map for children widgets those are displaying.
+  Map<int, ObserveDisplayingChildModel> innerDisplayingChildModelMap;
+
   /// Stores index list for children widgets those are displaying.
   List<int> get displayingChildIndexList =>
       innerDisplayingChildModelList.map((e) => e.index).toList();
@@ -30,40 +33,6 @@ abstract class ObserveModel {
     required this.sliver,
     required this.viewport,
     required this.innerDisplayingChildModelList,
+    required this.innerDisplayingChildModelMap,
   });
-}
-
-class ObserveScrollChildModel {
-  /// The size of child widget.
-  double size;
-
-  /// The layout offset of child widget.
-  double layoutOffset;
-
-  ObserveScrollChildModel({
-    required this.size,
-    required this.layoutOffset,
-  });
-}
-
-/// [ObserveFindChildModel] is used to pass data internally.
-class ObserveFindChildModel {
-  ObserveFindChildModel({
-    required this.sliver,
-    required this.viewport,
-    required this.index,
-    required this.renderObject,
-  });
-
-  /// The target sliverList.
-  RenderSliver sliver;
-
-  /// The viewport of sliver.
-  RenderViewportBase viewport;
-
-  /// The index of child widget.
-  int index;
-
-  /// The renderObject [RenderIndexedSemantics] of child widget.
-  RenderIndexedSemantics renderObject;
 }

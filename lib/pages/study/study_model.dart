@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../shared/shared.dart';
+
 ///
 /// Created by a0010 on 2022/11/3 16:14
 ///
@@ -57,6 +59,15 @@ class StudyModel with ChangeNotifier {
       _users.removeAt(index);
       notifyListeners();
     }
+  }
+
+  final Map<String, BleEntity> _devices = {};
+
+  List<BleEntity> get devices => _devices.values.toList();
+
+  void updateDevice(String deviceId, BleEntity ble) {
+    _devices[deviceId] = ble;
+    notifyListeners();
   }
 
   /// 清空数据

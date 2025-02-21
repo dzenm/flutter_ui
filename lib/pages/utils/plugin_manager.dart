@@ -10,6 +10,7 @@ class PluginManager {
   static const MethodChannel _channel = MethodChannel('flutter_ui/channel/');
   static const String _methodBackToDesktop = 'backToDesktop';
   static const String _methodInstallAPK = 'installAPK';
+  static const String _methodOpenWifiHotspot = 'openWifiHotspot';
 
   /// 点击返回键回退到手机桌面
   static Future<bool> backToDesktop() async {
@@ -32,6 +33,19 @@ class PluginManager {
       Map<String, dynamic> inData = {'filePath': filePath};
       String outData = await _channel.invokeMethod(_methodInstallAPK, inData);
       Log.d('安装APK: outData=$outData, inData=$inData');
+      return true;
+    } on PlatformException catch (e) {
+      Log.e(e.message);
+    }
+    return false;
+  }
+
+  /// 打开Wi-Fi热点
+  static Future<bool> openWifiHotspot() async {
+    if (!Platform.isAndroid) return false;
+    try {
+      // APK文件路径
+      _channel.invokeMethod(_methodOpenWifiHotspot);
       return true;
     } on PlatformException catch (e) {
       Log.e(e.message);

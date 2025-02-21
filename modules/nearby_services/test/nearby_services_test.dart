@@ -10,6 +10,48 @@ class MockNearbyServicesPlatform
 
   @override
   Future<String?> getPlatformVersion() => Future.value('42');
+
+  @override
+  Future<bool> connect(String address) => Future.value(true);
+
+  @override
+  Future<bool> createGroup() => Future.value(true);
+
+  @override
+  Future<bool> disconnect() => Future.value(true);
+
+  @override
+  Future<bool> discover() => Future.value(true);
+
+  @override
+  Future<String?> getPlatformModel() => Future.value('Google');
+
+  @override
+  Future<bool> initialize() => Future.value(true);
+
+  @override
+  Future<bool> isGPSEnabled() => Future.value(true);
+
+  @override
+  Future<bool> isWifiEnabled() => Future.value(true);
+
+  @override
+  Future<bool> openLocationSettingsPage() => Future.value(true);
+
+  @override
+  Future<bool> openWifiSettingsPage() => Future.value(true);
+
+  @override
+  Future<bool> register() => Future.value(true);
+
+  @override
+  Future<bool> removeGroup() => Future.value(true);
+
+  @override
+  Future<bool> stopDiscovery() => Future.value(true);
+
+  @override
+  Future<bool> unregister() => Future.value(true);
 }
 
 void main() {

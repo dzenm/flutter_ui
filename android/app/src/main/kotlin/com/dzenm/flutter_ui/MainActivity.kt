@@ -15,13 +15,15 @@ class MainActivity: FlutterActivity() {
         private val TAG = MainActivity::class.java.simpleName
     }
 
+    private val manager = FlutterPluginManager()
+
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         Log.d(TAG, "════════════════════════════════════════ configureFlutterEngine: ${System.currentTimeMillis()}")
         flutterEngine.let {
             // 注册flutter第三方依赖初始化
             GeneratedPluginRegistrant.registerWith(flutterEngine)
             val messenger = it.dartExecutor.binaryMessenger
-            FlutterPluginManager().register(messenger, this)
+            manager.register(messenger, this)
         }
     }
 
@@ -46,5 +48,11 @@ class MainActivity: FlutterActivity() {
     override fun onDestroy() {
         super.onDestroy()
         Log.d(TAG, "════════════════════════════════════════ onDestroy")
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        manager.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 }

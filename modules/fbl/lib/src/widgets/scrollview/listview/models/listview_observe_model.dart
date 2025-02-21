@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
-import '../../observer/models/observe_model.dart';
+import '../../common/models/observe_model.dart';
 import 'listview_observe_displaying_child_model.dart';
 
 class ListViewObserveModel extends ObserveModel {
@@ -10,10 +10,12 @@ class ListViewObserveModel extends ObserveModel {
     required super.viewport,
     required this.firstChild,
     required this.displayingChildModelList,
+    required this.displayingChildModelMap,
     required super.visible,
   }) : super(
           sliver: sliverList,
           innerDisplayingChildModelList: displayingChildModelList,
+          innerDisplayingChildModelMap: displayingChildModelMap,
         );
 
   /// The target sliverList.
@@ -26,11 +28,17 @@ class ListViewObserveModel extends ObserveModel {
   /// Stores observing model list of displaying children widgets.
   final List<ListViewObserveDisplayingChildModel> displayingChildModelList;
 
+  /// Stores observing model map of displaying children widgets.
+  final Map<int, ListViewObserveDisplayingChildModel> displayingChildModelMap;
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is ListViewObserveModel) {
-      return firstChild == other.firstChild && listEquals(displayingChildModelList, other.displayingChildModelList);
+      return firstChild == other.firstChild &&
+          listEquals(
+              displayingChildModelList, other.displayingChildModelList) &&
+          mapEquals(displayingChildModelMap, other.displayingChildModelMap);
     } else {
       return false;
     }
@@ -38,6 +46,8 @@ class ListViewObserveModel extends ObserveModel {
 
   @override
   int get hashCode {
-    return firstChild.hashCode + displayingChildModelList.hashCode;
+    return firstChild.hashCode +
+        displayingChildModelList.hashCode +
+        displayingChildModelMap.hashCode;
   }
 }

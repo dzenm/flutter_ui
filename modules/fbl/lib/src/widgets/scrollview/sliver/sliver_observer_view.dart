@@ -1,19 +1,25 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+import '../common/models/observe_model.dart';
+import '../common/observer_typedef.dart';
+import '../common/observer_widget.dart';
 import '../listview/list_observer_view.dart';
-import '../observe_notification.dart';
-import '../observer/models/observe_model.dart';
-import '../observer/observer_view.dart';
-import '../observer_utils.dart';
+import '../notification.dart';
+import '../observer_core.dart';
+import '../utils/src/observer_utils.dart';
+import 'models/sliver_observer_observe_result_model.dart';
 import 'models/sliver_viewport_observe_displaying_child_model.dart';
 import 'models/sliver_viewport_observe_model.dart';
 import 'sliver_observer_controller.dart';
-import 'sliver_observer_notification_result.dart';
+import 'sliver_observer_listener.dart';
 
-class SliverViewObserver extends ObserverView<SliverObserverController, ObserveModel, ScrollViewOnceObserveNotification> {
+class SliverViewObserver extends ObserverWidget<SliverObserverController,
+    ObserveModel, ScrollViewOnceObserveNotification> {
   /// The callback of getting all slivers those are displayed in viewport.
-  final Function(SliverViewportObserveModel)? onObserveViewport;
+  final OnObserveViewportCallback? onObserveViewport;
 
   /// It's used to handle the observation logic for other types of Sliver
   /// besides [RenderSliverList], [RenderSliverFixedExtentList] and
@@ -30,8 +36,12 @@ class SliverViewObserver extends ObserverView<SliverObserverController, ObserveM
   const SliverViewObserver({
     super.key,
     required super.child,
+    super.tag,
     this.controller,
-    super.sliverContexts,
+    @Deprecated(
+        'It will be removed in version 2, please use [sliverContexts] instead')
+    List<BuildContext> Function()? sliverListContexts,
+    List<BuildContext> Function()? sliverContexts,
     super.onObserveAll,
     super.onObserve,
     this.onObserveViewport,
@@ -39,21 +49,111 @@ class SliverViewObserver extends ObserverView<SliverObserverController, ObserveM
     super.dynamicLeadingOffset,
     this.customOverlap,
     super.toNextOverPercent,
+    super.scrollNotificationPredicate,
     super.autoTriggerObserveTypes,
     super.triggerOnObserveType,
     super.customHandleObserve,
     this.extendedHandleObserve,
   }) : super(
           sliverController: controller,
+          sliverContexts: sliverContexts ?? sliverListContexts,
         );
 
   @override
   State<SliverViewObserver> createState() => MixViewObserverState();
+
+  /// Returning the closest instance of this class that encloses the given
+  /// context.
+  ///
+  /// If you give a tag, it will give priority find the corresponding instance
+  /// of this class with the given tag and return it.
+  ///
+  /// If there is no [SliverViewObserver] widget, then null is returned.
+  ///
+  /// Calling this method will create a dependency on the closest
+  /// [SliverViewObserver] in the [context], if there is one.
+  ///
+  /// See also:
+  ///
+  /// * [SliverViewObserver.of], which is similar to this method, but asserts
+  ///   if no [SliverViewObserver] instance is found.
+  static MixViewObserverState? maybeOf(
+    BuildContext context, {
+    String? tag,
+  }) {
+    final state = ObserverWidget.maybeOf<SliverObserverController,
+        ObserveModel, ScrollViewOnceObserveNotification, SliverViewObserver>(
+      context,
+      tag: tag,
+    );
+    if (state is! MixViewObserverState) return null;
+    return state;
+  }
+
+  /// Returning the closest instance of this class that encloses the given
+  /// context.
+  ///
+  /// If you give a tag, it will give priority find the corresponding instance
+  /// of this class with the given tag and return it.
+  ///
+  /// If no instance is found, this method will assert in debug mode, and throw
+  /// an exception in release mode.
+  ///
+  /// Calling this method will create a dependency on the closest
+  /// [ObserverWidget] in the [context].
+  ///
+  /// See also:
+  ///
+  /// * [ObserverWidget.maybeOf], which is similar to this method, but returns
+  ///   null if no [ObserverWidget] instance is found.
+  static MixViewObserverState of(
+    BuildContext context, {
+    String? tag,
+  }) {
+    final state = ObserverWidget.of<SliverObserverController, ObserveModel,
+        ScrollViewOnceObserveNotification, SliverViewObserver>(
+      context,
+      tag: tag,
+    );
+    return state as MixViewObserverState;
+  }
 }
 
-class MixViewObserverState extends ObserverViewState<SliverObserverController, ObserveModel, ScrollViewOnceObserveNotification, SliverViewObserver> {
+class MixViewObserverState extends ObserverWidgetState<SliverObserverController,
+    ObserveModel, ScrollViewOnceObserveNotification, SliverViewObserver> {
   /// The last viewport observation result.
   SliverViewportObserveModel? lastViewportObserveResultModel;
+
+  /// The listener list state for a [SliverViewObserver] returned by
+  /// [SliverViewObserver.of].
+  ///
+  /// It supports a listener list instead of just a single observation
+  /// callback (such as onObserveViewport).
+  @protected
+  @visibleForTesting
+  LinkedList<SliverObserverListenerEntry>? innerSliverListeners =
+      LinkedList<SliverObserverListenerEntry>();
+
+  bool _debugAssertNotDisposed() {
+    assert(() {
+      if (innerSliverListeners == null) {
+        throw FlutterError(
+          'A $runtimeType was used after being disposed.\n'
+          'Once you have called dispose() on a $runtimeType, it can no longer be used.',
+        );
+      }
+      return true;
+    }());
+    return true;
+  }
+
+  @override
+  void dispose() {
+    assert(_debugAssertNotDisposed());
+    innerSliverListeners?.clear();
+    innerSliverListeners = null;
+    super.dispose();
+  }
 
   @override
   SliverObserverHandleContextsResultModel<ObserveModel>? handleContexts({
@@ -72,6 +172,7 @@ class MixViewObserverState extends ObserverViewState<SliverObserverController, O
       isForceObserve: isForceObserve,
       isDependObserveCallback: isDependObserveCallback,
     );
+    _notifySliverListeners(observeViewportResult);
 
     // Slivers（SliverList, GridView etc.）
     final handleContextsResult = super.handleContexts(
@@ -97,9 +198,16 @@ class MixViewObserverState extends ObserverViewState<SliverObserverController, O
     if (widget.customHandleObserve != null) {
       return widget.customHandleObserve?.call(ctx);
     }
-    final renderObject = ObserverUtils.findRenderObject(ctx);
-    if (ListViewObserver.isSupportRenderSliverType(renderObject)) {
-      return ObserverUtils.handleListObserve(
+    final myObj = ObserverUtils.findRenderObject(ctx);
+    if (ListViewObserver.isSupportRenderSliverType(myObj)) {
+      return ObserverCore.handleListObserve(
+        context: ctx,
+        fetchLeadingOffset: fetchLeadingOffset,
+        customOverlap: widget.customOverlap,
+        toNextOverPercent: widget.toNextOverPercent,
+      );
+    } else if (myObj is RenderSliverGrid) {
+      return ObserverCore.handleGridObserve(
         context: ctx,
         fetchLeadingOffset: fetchLeadingOffset,
         customOverlap: widget.customOverlap,
@@ -114,15 +222,22 @@ class MixViewObserverState extends ObserverViewState<SliverObserverController, O
     bool isForceObserve = false,
     bool isDependObserveCallback = true,
   }) {
-    final isForbidObserveViewportCallback = widget.sliverController?.isForbidObserveViewportCallback ?? false;
-    final onObserveViewport = isForbidObserveViewportCallback ? null : widget.onObserveViewport;
-    if (isDependObserveCallback && onObserveViewport == null) return null;
+    final isForbidObserveViewportCallback =
+        widget.sliverController?.isForbidObserveViewportCallback ?? false;
+    final onObserveViewport =
+        isForbidObserveViewportCallback ? null : widget.onObserveViewport;
+    if (isDependObserveCallback &&
+        onObserveViewport == null &&
+        (innerSliverListeners?.isEmpty ?? true)) {
+      return null;
+    }
 
-    final isHandlingScroll = widget.sliverController?.innerIsHandlingScroll ?? false;
+    final isHandlingScroll =
+        widget.sliverController?.innerIsHandlingScroll ?? false;
     if (isHandlingScroll) return null;
 
-    final myContexts = fetchTargetSliverContexts();
-    final objList = myContexts.map((e) => ObserverUtils.findRenderObject(e)).toList();
+    final ctxs = fetchTargetSliverContexts();
+    final objList = ctxs.map((e) => ObserverUtils.findRenderObject(e)).toList();
     if (objList.isEmpty) return null;
     final firstObj = objList.first;
     if (firstObj == null) return null;
@@ -159,14 +274,19 @@ class MixViewObserverState extends ObserverViewState<SliverObserverController, O
       indexOfTargetChild = objList.indexOf(targetChild);
     }
 
-    if (targetChild == null || !ObserverUtils.isValidListIndex(indexOfTargetChild)) return null;
-    final targetCtx = myContexts[indexOfTargetChild];
+    if (targetChild == null ||
+        !ObserverUtils.isValidListIndex(indexOfTargetChild)) {
+      return null;
+    }
+    final targetCtx = ctxs[indexOfTargetChild];
     final firstChild = SliverViewportObserveDisplayingChildModel(
       sliverContext: targetCtx,
       sliver: targetChild,
     );
 
-    List<SliverViewportObserveDisplayingChildModel> displayingChildModelList = [firstChild];
+    List<SliverViewportObserveDisplayingChildModel> displayingChildModelList = [
+      firstChild
+    ];
 
     // Find the remaining children that are being displayed.
     targetChild = viewport.childAfter(targetChild);
@@ -177,12 +297,14 @@ class MixViewObserverState extends ObserverViewState<SliverObserverController, O
         sliver: targetChild,
         viewportPixels: startCalcPixels,
         viewportBottomOffset: viewportBottomOffset,
-      )) break;
+      )) {
+        break;
+      }
 
       indexOfTargetChild = objList.indexOf(targetChild);
       if (ObserverUtils.isValidListIndex(indexOfTargetChild)) {
         // The current targetChild is target.
-        final context = myContexts[indexOfTargetChild];
+        final context = ctxs[indexOfTargetChild];
         displayingChildModelList.add(SliverViewportObserveDisplayingChildModel(
           sliverContext: context,
           sliver: targetChild,
@@ -197,12 +319,15 @@ class MixViewObserverState extends ObserverViewState<SliverObserverController, O
       displayingChildModelList: displayingChildModelList,
     );
     bool canReturnResult = false;
-    if (isForceObserve || widget.triggerOnObserveType == ObserverTriggerOnObserveType.directly) {
+    if (isForceObserve ||
+        widget.triggerOnObserveType == ObserverTriggerOnObserveType.directly) {
       canReturnResult = true;
     } else if (model != lastViewportObserveResultModel) {
       canReturnResult = true;
     }
-    if (canReturnResult && isDependObserveCallback && onObserveViewport != null) {
+    if (canReturnResult &&
+        isDependObserveCallback &&
+        onObserveViewport != null) {
       onObserveViewport(model);
     }
 
@@ -211,38 +336,93 @@ class MixViewObserverState extends ObserverViewState<SliverObserverController, O
 
     return canReturnResult ? model : null;
   }
-}
-
-class SliverObserveContext extends SliverPadding {
-  final void Function(BuildContext) onObserve;
-  const SliverObserveContext({
-    super.key,
-    Widget? child,
-    required this.onObserve,
-  }) : super(
-    padding: EdgeInsets.zero,
-    sliver: child,
-  );
 
   @override
-  RenderSliverPadding createRenderObject(BuildContext context) {
-    onObserve.call(context);
-    return super.createRenderObject(context);
+  void addListener({
+    BuildContext? context,
+    OnObserveCallback<ObserveModel>? onObserve,
+    OnObserveAllCallback<ObserveModel>? onObserveAll,
+    OnObserveViewportCallback? onObserveViewport,
+  }) {
+    assert(_debugAssertNotDisposed());
+    assert(
+      onObserve != null || onObserveAll != null || onObserveViewport != null,
+      'At least one callback must be provided.',
+    );
+    super.addListener(
+      context: context,
+      onObserve: onObserve,
+      onObserveAll: onObserveAll,
+    );
+    // Add the listener for the viewport observation.
+    if (onObserveViewport != null) {
+      innerSliverListeners?.add(SliverObserverListenerEntry(
+        context: context,
+        onObserveViewport: onObserveViewport,
+      ));
+    }
   }
-}
-
-class SliverObserveContextToBoxAdapter extends SliverToBoxAdapter {
-  final void Function(BuildContext) onObserve;
-
-  const SliverObserveContextToBoxAdapter({
-    super.key,
-    required super.child,
-    required this.onObserve,
-  });
 
   @override
-  RenderSliverToBoxAdapter createRenderObject(BuildContext context) {
-    onObserve.call(context);
-    return super.createRenderObject(context);
+  void removeListener({
+    BuildContext? context,
+    OnObserveCallback<ObserveModel>? onObserve,
+    OnObserveAllCallback<ObserveModel>? onObserveAll,
+    OnObserveViewportCallback? onObserveViewport,
+  }) {
+    assert(_debugAssertNotDisposed());
+    assert(
+      onObserve != null || onObserveAll != null || onObserveViewport != null,
+      'At least one callback must be provided.',
+    );
+    super.removeListener(
+      context: context,
+      onObserve: onObserve,
+      onObserveAll: onObserveAll,
+    );
+    // Remove the listener for the viewport observation.
+    final listeners = innerSliverListeners;
+    if (listeners == null) return;
+    for (final SliverObserverListenerEntry entry in listeners) {
+      if (entry.context == context &&
+          entry.onObserveViewport == onObserveViewport) {
+        entry.unlink();
+        return;
+      }
+    }
+  }
+
+  void _notifySliverListeners(
+    SliverViewportObserveModel? observeViewportResult,
+  ) {
+    assert(_debugAssertNotDisposed());
+    if (observeViewportResult == null) return;
+    final listeners = innerSliverListeners;
+    if (listeners == null || listeners.isEmpty) return;
+
+    final List<SliverObserverListenerEntry> localListeners =
+        List<SliverObserverListenerEntry>.of(listeners);
+    for (final SliverObserverListenerEntry entry in localListeners) {
+      try {
+        if (entry.list != null) {
+          entry.onObserveViewport?.call(observeViewportResult);
+        }
+      } catch (exception, stack) {
+        FlutterError.reportError(FlutterErrorDetails(
+          exception: exception,
+          stack: stack,
+          library: 'scrollview_observer',
+          context:
+              ErrorDescription('while dispatching result for $runtimeType'),
+          informationCollector: () => <DiagnosticsNode>[
+            DiagnosticsProperty<ObserverWidgetState>(
+              'The $runtimeType sending result was',
+              this,
+              style: DiagnosticsTreeStyle.errorProperty,
+            ),
+          ],
+        ));
+      }
+    }
   }
 }

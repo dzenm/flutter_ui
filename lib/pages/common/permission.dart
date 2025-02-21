@@ -9,17 +9,13 @@ class PermissionPage extends StatefulWidget {
   final XPermission permission;
   final bool isShowPermanentlyDeniedInfo;
 
-  const PermissionPage({
-    super.key,
-    required this.permission,
-    this.isShowPermanentlyDeniedInfo = true,
-  });
-
   static Future<bool> request(
-    BuildContext context, {
-    required XPermission permission,
-    bool isShowPermanentlyDeniedInfo = true,
-  }) async {
+      BuildContext context, {
+        required XPermission permission,
+        bool isShowPermanentlyDeniedInfo = true,
+      }) async {
+    // 延迟一段时间后再打开权限请求页面，不然会有bug
+    await Future.delayed(Duration(milliseconds: 500));
     bool? result = await Navigator.of(context).push<bool?>(_TransparentRoute<bool?>(
       builder: (context) {
         return PermissionPage(
@@ -31,12 +27,18 @@ class PermissionPage extends StatefulWidget {
     return result ?? false;
   }
 
+  const PermissionPage({
+    super.key,
+    required this.permission,
+    this.isShowPermanentlyDeniedInfo = true,
+  });
+
   static List<Permission> get databasePermissions => [
-        /// Android: External Storage
-        /// iOS: Access to folders like `Documents` or `Downloads`. Implicitly
-        /// granted.
-        // Permission.storage,
-      ];
+    /// Android: External Storage
+    /// iOS: Access to folders like `Documents` or `Downloads`. Implicitly
+    /// granted.
+    // Permission.storage,
+  ];
 
   static List<Permission> get photoReadingPermissions => _photoReadingPermissions;
   static final List<Permission> _photoReadingPermissions = [
@@ -68,18 +70,18 @@ class PermissionPage extends StatefulWidget {
   ];
 
   static List<Permission> get cameraPermissions => [
-        /// Android: Camera
-        /// iOS: Photos (Camera Roll and Camera)
-        Permission.camera,
+    /// Android: Camera
+    /// iOS: Photos (Camera Roll and Camera)
+    Permission.camera,
 
-        // Permission.storage,
-      ];
+    // Permission.storage,
+  ];
 
   static List<Permission> get microphonePermissions => [
-        /// Android: Microphone
-        /// iOS: Microphone
-        Permission.microphone,
-      ];
+    /// Android: Microphone
+    /// iOS: Microphone
+    Permission.microphone,
+  ];
 
   @override
   State<PermissionPage> createState() => _PermissionPageState();
@@ -97,39 +99,32 @@ class _PermissionPageState extends State<PermissionPage> with Logging {
   /// 请求权限
   void _requestPermissions(XPermission myPermission) async {
     Permission permission = myPermission.permission;
+    // 已授权直接返回
     if ((await permission.isGranted) && mounted) {
-      // 已授权直接返回
       Navigator.pop(context, true);
       return;
     }
 
     // android端权限未授权，才弹出顶部说明弹窗
     if (BuildConfig.isAndroid) {
-      // 未被永久拒绝时显示
-      // var status = await permission.status;
-      // bool isPermanentlyDenied = status.isPermanentlyDenied;
-      // bool isDenied = status.isDenied;
-      // setState(() => _showPermissionInfo = !isPermanentlyDenied);
-      setState(() => _showPermissionInfo = true);
+      if (mounted) setState(() => _showPermissionInfo = true);
     }
+
     // 请求权限
     PermissionStatus status = await permission.request();
     logDebug('权限${Permission.byValue(permission.value)}请求的结果：result=${status.name}');
+
+    if(mounted && _showPermissionInfo) {
+      setState(() => _showPermissionInfo = false);
+    }
+
     // 请求权限的结果处理
-    if (status.isGranted) {
-      setState(() => _showPermissionInfo = false);
-      // 已授予权限
-      if (mounted) Navigator.pop(context, true);
-      // } else if (result.isDenied) {
-      // 拒绝本次授予权限
+    bool isGranted = status.isGranted;
+    if(!isGranted && widget.isShowPermanentlyDeniedInfo) {
+      // 永久拒绝权限弹窗
+      _showPermissionDialog();
     } else {
-      setState(() => _showPermissionInfo = false);
-      if (widget.isShowPermanentlyDeniedInfo) {
-        // 永久拒绝授予权限
-        _showPermissionDialog();
-      } else {
-        if (mounted) Navigator.pop(context, false);
-      }
+      if (mounted) Navigator.pop(context, isGranted);
     }
   }
 
@@ -205,8 +200,8 @@ class _TransparentRoute<T> extends PageRoute<T> {
   _TransparentRoute({
     required this.builder,
   }) : super(
-          settings: const RouteSettings(name: 'TransparentRoute'),
-        );
+    settings: const RouteSettings(name: 'TransparentRoute'),
+  );
 
   final WidgetBuilder builder;
 
@@ -224,21 +219,21 @@ class _TransparentRoute<T> extends PageRoute<T> {
 
   @override
   Widget buildPage(
-    BuildContext context,
-    Animation<double> animation,
-    Animation<double> secondaryAnimation,
-  ) {
+      BuildContext context,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+      ) {
     return builder(context);
   }
 
   /// 页面切换动画
   @override
   Widget buildTransitions(
-    BuildContext context,
-    Animation<double> animation,
-    Animation<double> secondaryAnimation,
-    Widget child,
-  ) {
+      BuildContext context,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+      Widget child,
+      ) {
     return FadeTransition(opacity: animation, child: child);
   }
 
@@ -252,10 +247,19 @@ enum XPermission {
   photos(Permission.photos, '相册权限', '图片或视频的上传、保存。'),
   microphone(Permission.microphone, '麦克风权限', '语音录制、语音通话。'),
   storage(Permission.storage, '存储权限', '查看、保存和发送文件、图片、视频'),
-  manageExternalStorage(Permission.manageExternalStorage, '所有文件权限', '在聊天中发送文件'),
+  manageExternalStorage(Permission.manageExternalStorage,'所有文件权限', '在聊天中发送文件'),
   contacts(Permission.contacts, '联系人权限', '同步联系人、通话记录，实现应用内拨打电话或快速加好友'),
   notification(Permission.notification, '通知权限', '接收云鱼聊天、系统通知'),
-  phone(Permission.phone, '拨打电话权限', '拨打电话');
+
+  // 以下权限都需要（详见权限flutter插件中文件PermissionUtils）
+  // 读取手机状态     case Manifest.permission.READ_PHONE_STATE:
+  // 读取电话号码     case Manifest.permission.READ_PHONE_NUMBERS:
+  // 拨打电话        case Manifest.permission.CALL_PHONE:
+  // 读取通话记录     case Manifest.permission.READ_CALL_LOG:
+  // 写入通话记录     case Manifest.permission.WRITE_CALL_LOG:
+  // 添加语音邮件     case Manifest.permission.ADD_VOICEMAIL:
+  // 使用会话初始协议  case Manifest.permission.USE_SIP:
+  phone(Permission.phone, '拨打电话、读取通话记录权限', '拨打电话');
 
   final Permission permission;
   final String title;

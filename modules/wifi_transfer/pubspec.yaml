@@ -10,6 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  wifi_iot: 0.3.19+1                            # 打开网页工具(全平台) https://pub.flutter-io.cn/packages/url_launcher
 
 dev_dependencies:
   flutter_test:

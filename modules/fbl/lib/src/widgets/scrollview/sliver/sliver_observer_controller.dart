@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 
-import '../observer/observer_controller.dart';
-import '../scrollview_observer.dart';
+import '../common/models/observe_model.dart';
+import '../common/observer_controller.dart';
+import '../common/observer_typedef.dart';
+import '../common/typedefs.dart';
+import '../notification.dart';
+import 'models/sliver_observer_observe_result_model.dart';
+import 'sliver_observer_notification_result.dart';
 
 class SliverObserverController extends ObserverController
     with
         ObserverControllerForInfo,
         ObserverControllerForScroll,
-        ObserverControllerForNotification<ObserveModel, SliverObserverHandleContextsResultModel<ObserveModel>, ScrollViewOnceObserveNotificationResult> {
+        ObserverControllerForNotification<
+            ObserveModel,
+            SliverObserverHandleContextsResultModel<ObserveModel>,
+            ScrollViewOnceObserveNotificationResult> {
   /// Whether to forbid the onObserveViewport callback.
   bool isForbidObserveViewportCallback = false;
 
@@ -32,7 +40,8 @@ class SliverObserverController extends ObserverController
 
   /// Create a observation notification result.
   @override
-  ScrollViewOnceObserveNotificationResult innerCreateOnceObserveNotificationResult({
+  ScrollViewOnceObserveNotificationResult
+      innerCreateOnceObserveNotificationResult({
     required ObserverWidgetObserveResultType resultType,
     required SliverObserverHandleContextsResultModel<ObserveModel>? resultModel,
   }) {
@@ -60,6 +69,7 @@ class SliverObserverController extends ObserverController
     double alignment = 0,
     ObserverLocateIndexOffsetCallback? offset,
     ObserverRenderSliverType? renderSliverType,
+    ObserverOnPrepareScrollToIndex? onPrepareScrollToIndex,
   }) {
     return innerAnimateTo(
       index: index,
@@ -71,6 +81,7 @@ class SliverObserverController extends ObserverController
       alignment: alignment,
       offset: offset,
       renderSliverType: renderSliverType,
+      onPrepareScrollToIndex: onPrepareScrollToIndex,
     );
   }
 
@@ -99,6 +110,7 @@ class SliverObserverController extends ObserverController
     EdgeInsets padding = EdgeInsets.zero,
     ObserverLocateIndexOffsetCallback? offset,
     ObserverRenderSliverType? renderSliverType,
+    ObserverOnPrepareScrollToIndex? onPrepareScrollToIndex,
   }) {
     return innerJumpTo(
       index: index,
@@ -108,6 +120,7 @@ class SliverObserverController extends ObserverController
       padding: padding,
       offset: offset,
       renderSliverType: renderSliverType,
+      onPrepareScrollToIndex: onPrepareScrollToIndex,
     );
   }
 }

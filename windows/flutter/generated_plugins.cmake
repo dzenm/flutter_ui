@@ -15,6 +15,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   screen_brightness_windows
   screen_retriever_windows
   tray_manager
+  universal_ble
   url_launcher_windows
   window_manager
   windows_single_instance

@@ -1,16 +1,17 @@
 import 'package:flutter/rendering.dart';
+import '../../common/models/observe_displaying_child_model.dart';
+import '../../common/models/observe_displaying_child_model_mixin.dart';
 
-import '../../observer/models/observe_displaying_child_model.dart';
-
-class ListViewObserveDisplayingChildModel extends ObserveDisplayingChildModel with ObserveDisplayingChildModelMixin {
+class ListViewObserveDisplayingChildModel extends ObserveDisplayingChildModel
+    with ObserveDisplayingChildModelMixin {
   ListViewObserveDisplayingChildModel({
     required this.sliverList,
     required super.viewport,
     required super.index,
     required super.renderObject,
   }) : super(
-    sliver: sliverList,
-  );
+          sliver: sliverList,
+        );
 
   /// The target sliverList.
   /// It would be [RenderSliverList] or [RenderSliverFixedExtentList].

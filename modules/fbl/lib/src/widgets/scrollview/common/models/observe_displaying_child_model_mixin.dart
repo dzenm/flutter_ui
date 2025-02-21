@@ -1,25 +1,6 @@
 import 'package:flutter/rendering.dart';
 
-abstract class ObserveDisplayingChildModel {
-  /// The target sliverList.
-  RenderSliver sliver;
-
-  /// The viewport of sliver.
-  RenderViewportBase viewport;
-
-  /// The index of child widget.
-  int index;
-
-  /// The renderObject [RenderBox] of child widget.
-  RenderBox renderObject;
-
-  ObserveDisplayingChildModel({
-    required this.sliver,
-    required this.viewport,
-    required this.index,
-    required this.renderObject,
-  });
-}
+import 'observe_displaying_child_model.dart';
 
 mixin ObserveDisplayingChildModelMixin on ObserveDisplayingChildModel {
   /// The axis of sliver.
@@ -41,6 +22,9 @@ mixin ObserveDisplayingChildModelMixin on ObserveDisplayingChildModel {
   double get paintExtent => sliver.geometry?.paintExtent ?? 0;
 
   /// The precedingScrollExtent of sliver
+  ///
+  /// Note: Before Flutter 3.22.0, this value may be inaccurate in some scenarios.
+  /// Related PR: https://github.com/flutter/flutter/pull/143661
   double get precedingScrollExtent => sliver.constraints.precedingScrollExtent;
 
   /// The layout offset of child widget.
@@ -57,7 +41,8 @@ mixin ObserveDisplayingChildModelMixin on ObserveDisplayingChildModel {
   double get viewportMainAxisExtent =>
       sliver.constraints.viewportMainAxisExtent;
 
-  /// The number of pixels the viewport can display in the main axis.
+  /// The number of pixels to offset the children in the opposite of the axis
+  /// direction.
   double get viewportPixels =>
       viewport.offset.hasPixels ? viewport.offset.pixels : 0;
 

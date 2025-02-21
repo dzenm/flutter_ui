@@ -1,5 +1,4 @@
 import 'package:fbl/fbl.dart';
-import 'package:flutter_ui/pages/study/components/gif/gif_page.dart';
 
 import 'components/chat/chat_page.dart';
 import 'components/city/city_page.dart';
@@ -7,6 +6,7 @@ import 'components/components_page.dart';
 import 'components/dialog/dialog_page.dart';
 import 'components/drag/drag_list_page.dart';
 import 'components/float_navigation/float_navigation_page.dart';
+import 'components/gif/gif_page.dart';
 import 'components/image/image_editor_page.dart';
 import 'components/keyword/keyword_board_page.dart';
 import 'components/list/list_page.dart';
@@ -23,6 +23,8 @@ import 'http/http_page.dart';
 import 'load_image/load_image_page.dart';
 import 'provider/provider_page.dart';
 import 'router/router_page.dart';
+import 'shared/ble_page.dart';
+import 'shared/wifi_page.dart';
 import 'video/video_page.dart';
 import 'window/main_window_page.dart';
 
@@ -32,13 +34,14 @@ import 'window/main_window_page.dart';
 class StudyRouter {
   static const String study = 'study';
   static const String convert = 'convert';
+  static const String desktop = 'desktop';
   static const String http = 'http';
   static const String loadImage = 'loadImage';
   static const String provider = 'provider';
   static const String router = 'router';
   static const String video = 'video';
-  static const String multiWindow = 'multiWindow';
-  static const String desktop = 'desktop';
+  static const String wifi = 'wifi';
+  static const String window = 'window';
   static const String screenCapture = 'screenCapture';
 
   static const String components = 'components';
@@ -60,6 +63,14 @@ class StudyRouter {
 
   static List<RouteBase> get routers => [
         ARoute(
+          name: components,
+          path: '/components',
+          builder: (context, state) {
+            return const ComponentsPage();
+          },
+          routes: componentsRouter,
+        ),
+        ARoute(
           name: convert,
           path: '/convert',
           builder: (context, state) {
@@ -67,12 +78,11 @@ class StudyRouter {
           },
         ),
         ARoute(
-          name: components,
-          path: '/components',
+          name: desktop,
+          path: '/desktop',
           builder: (context, state) {
-            return const ComponentsPage();
+            return const DesktopPage();
           },
-          routes: componentsRouter,
         ),
         ARoute(
           name: http,
@@ -110,17 +120,17 @@ class StudyRouter {
           },
         ),
         ARoute(
-          name: multiWindow,
-          path: '/multiWindow',
+          name: wifi,
+          path: '/wifi',
           builder: (context, state) {
-            return const MainWindowPage();
+            return const FlutterWifiIoT();
           },
         ),
         ARoute(
-          name: desktop,
-          path: '/desktop',
+          name: window,
+          path: '/window',
           builder: (context, state) {
-            return const DesktopPage();
+            return const MainWindowPage();
           },
         ),
         ARoute(

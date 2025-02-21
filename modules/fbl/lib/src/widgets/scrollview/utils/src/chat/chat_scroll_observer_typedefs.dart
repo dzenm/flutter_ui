@@ -1,19 +1,14 @@
-class ChatScrollObserverHandlePositionResultModel {
-  /// The type of processing location.
-  final ChatScrollObserverHandlePositionType type;
+import 'chat_scroll_observer_model.dart';
 
-  /// The mode of processing.
-  final ChatScrollObserverHandleMode mode;
+/// Customize the delta of the adjustPosition.
+typedef ChatScrollObserverCustomAdjustPositionDelta = double? Function(
+  ChatScrollObserverCustomAdjustPositionDeltaModel,
+);
 
-  /// The number of messages added.
-  final int changeCount;
-
-  ChatScrollObserverHandlePositionResultModel({
-    required this.type,
-    required this.mode,
-    required this.changeCount,
-  });
-}
+/// Customize the scroll position should be given new viewport dimensions.
+typedef ChatScrollObserverCustomAdjustPosition = double? Function(
+  ChatScrollObserverCustomAdjustPositionModel,
+);
 
 enum ChatScrollObserverHandlePositionType {
   /// Nothing will be done.
