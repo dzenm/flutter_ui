@@ -1,6 +1,7 @@
+import 'package:nearby_services/src/entities/p2p_entity.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import 'nearby_services_method_channel.dart';
+import 'nearby_services_android_channel.dart';
 
 abstract class NearbyServicesPlatform extends PlatformInterface {
   /// Constructs a NearbyServicesPlatform.
@@ -82,5 +83,15 @@ abstract class NearbyServicesPlatform extends PlatformInterface {
 
   Future<bool> openWifiSettingsPage() {
     throw UnimplementedError('openWifiSettingsPage() has not been implemented.');
+  }
+
+  Stream<List<PeerInfo>> discoverPeersStream() {
+    throw UnimplementedError(
+        'discoverPeersStream() has not been implemented.');
+  }
+
+  Stream<WifiP2PInfo> wifiP2PStream() {
+    throw UnimplementedError(
+        'wifiP2PStream() has not been implemented.');
   }
 }

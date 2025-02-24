@@ -1,7 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:nearby_services/nearby_services.dart';
-import 'package:nearby_services/nearby_services_platform_interface.dart';
-import 'package:nearby_services/nearby_services_method_channel.dart';
+import 'package:nearby_services/src/entities/p2p_entity.dart';
+import '../lib/nearby_services.dart';
+import 'package:nearby_services/src/platforms/nearby_services_platform_interface.dart';
+import 'package:nearby_services/src/platforms/nearby_services_android_channel.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 class MockNearbyServicesPlatform
@@ -52,6 +53,16 @@ class MockNearbyServicesPlatform
 
   @override
   Future<bool> unregister() => Future.value(true);
+
+  @override
+  Stream<List<PeerInfo>> discoverPeersStream() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Stream<WifiP2PInfo> wifiP2PStream() {
+    throw UnimplementedError();
+  }
 }
 
 void main() {

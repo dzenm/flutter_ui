@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:nearby_services/nearby_services_method_channel.dart';
+import 'package:nearby_services/src/platforms/nearby_services_android_channel.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

@@ -1,4 +1,4 @@
-import 'nearby_services_platform_interface.dart';
+import 'src/platforms/nearby_services_platform_interface.dart';
 
 class NearbyServices {
   Future<String?> getPlatformVersion() {
