@@ -9,7 +9,6 @@ import 'grid_observer_notification_result.dart';
 import 'models/gridview_observe_displaying_child_model.dart';
 import 'models/gridview_observe_model.dart';
 
-
 class GridObserverController extends ObserverController
     with
         ObserverControllerForInfo,

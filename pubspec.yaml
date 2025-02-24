@@ -87,9 +87,7 @@ dependencies:
   ########################################## 工具 ########################################
   lpinyin: 2.0.3                                # 汉字转拼音(全平台) https://pub.flutter-io.cn/packages/lpinyin
   crypto: 3.0.6                                 # 加密解密工具(全平台) https://pub.flutter-io.cn/packages/crypto
-  wifi_iot: 0.3.19+1                            # Wi-Fi热点 https://pub.flutter-io.cn/packages/wifi_iot
   universal_ble: 0.15.0                         # 蓝牙 https://pub.flutter-io.cn/packages/universal_ble
-  nearby_service: 0.1.2                         # 发现附近的设备 https://pub.flutter-io.cn/packages/nearby_service
 dev_dependencies:
   flutter_test:
     sdk: flutter

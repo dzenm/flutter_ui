@@ -1,5 +1,8 @@
 library scrollview_observer;
 
+export 'gridview/grid_observer_controller.dart';
+export 'gridview/grid_observer_notification_result.dart';
+export 'gridview/grid_observer_view.dart';
 export 'listview/list_observer_controller.dart';
 export 'listview/list_observer_notification_result.dart';
 export 'listview/list_observer_view.dart';

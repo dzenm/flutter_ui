@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import '../../common/models/observe_model.dart';
-import '../..//gridview/models/gridview_observe_displaying_child_model.dart';
+import '../../gridview/models/gridview_observe_displaying_child_model.dart';
 
 class GridViewObserveModel extends ObserveModel {
   GridViewObserveModel({
