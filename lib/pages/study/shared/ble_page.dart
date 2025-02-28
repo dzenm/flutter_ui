@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ui/pages/study/study_model.dart';
 import 'package:provider/provider.dart';
 
-import '../../shared/ble.dart';
-
 ///
 /// Created by a0010 on 2025/1/25 11:57
 ///
@@ -36,7 +34,7 @@ class _BlePageState extends State<BlePage> {
             borderRadius: BorderRadius.circular(4),
             height: 40,
             onTap: () {
-              BleManager().start();
+              // BleManager().start();
             },
             child: const Text('开始扫描'),
           ),
@@ -46,7 +44,7 @@ class _BlePageState extends State<BlePage> {
             borderRadius: BorderRadius.circular(4),
             height: 40,
             onTap: () {
-              BleManager().stop();
+              // BleManager().stop();
             },
             child: const Text('停止扫描'),
           ),
@@ -58,14 +56,14 @@ class _BlePageState extends State<BlePage> {
   }
 
   List<Widget> _buildBleList() {
-    List<BleEntity> list = context.watch<StudyModel>().devices;
+    // List<BleEntity> list = context.watch<StudyModel>().devices;
     List<Widget> children = [];
-    for (var item in list) {
-      children.add(TapLayout(
-        height: 40,
-        child: Text(item.name),
-      ));
-    }
+    // for (var item in list) {
+    //   children.add(TapLayout(
+    //     height: 40,
+    //     child: Text(item.name),
+    //   ));
+    // }
     return children;
   }
 }

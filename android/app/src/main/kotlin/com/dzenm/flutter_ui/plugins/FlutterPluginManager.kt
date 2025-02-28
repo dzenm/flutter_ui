@@ -27,6 +27,7 @@ class FlutterPluginManager {
         MethodChannel(messenger, FLUTTER_CHANNEL).setMethodCallHandler { methodCall, result ->
             queryChannelMethod(activity, methodCall, result)
         }
+        wifiHotspot = WifiHotspot(activity)
     }
 
     private fun queryChannelMethod(activity: Activity, methodCall: MethodCall, result: MethodChannel.Result) {

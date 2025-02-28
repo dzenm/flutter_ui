@@ -24,6 +24,7 @@ import 'load_image/load_image_page.dart';
 import 'provider/provider_page.dart';
 import 'router/router_page.dart';
 import 'shared/ble_page.dart';
+import 'shared/nearby_page.dart';
 import 'shared/wifi_page.dart';
 import 'video/video_page.dart';
 import 'window/main_window_page.dart';
@@ -123,7 +124,7 @@ class StudyRouter {
           name: wifi,
           path: '/wifi',
           builder: (context, state) {
-            return const FlutterWifiIoT();
+            return const WifiDirectPage();
           },
         ),
         ARoute(

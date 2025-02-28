@@ -46,6 +46,8 @@ dependencies:
     path: ./modules/fbl
   fsm:
     path: ./modules/fsm
+  pp_transfer:
+    path: ./modules/pp_transfer
 
   provider: 6.1.2                               # 状态管理(flutter包) https://pub.dev/packages/provider
   retrofit: 4.4.2                               # Restful方式使用HTTP请求(dart包) https://pub.flutter-io.cn/packages/retrofit
@@ -87,7 +89,6 @@ dependencies:
   ########################################## 工具 ########################################
   lpinyin: 2.0.3                                # 汉字转拼音(全平台) https://pub.flutter-io.cn/packages/lpinyin
   crypto: 3.0.6                                 # 加密解密工具(全平台) https://pub.flutter-io.cn/packages/crypto
-  universal_ble: 0.15.0                         # 蓝牙 https://pub.flutter-io.cn/packages/universal_ble
 dev_dependencies:
   flutter_test:
     sdk: flutter

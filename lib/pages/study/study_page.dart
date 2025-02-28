@@ -6,7 +6,6 @@ import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ui/pages/study/provider.dart';
-import 'package:flutter_ui/pages/utils/plugin_manager.dart';
 import 'package:flutter_ui/pages/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -29,6 +28,7 @@ class StudyPage extends StatefulWidget {
 
 class _StudyPageState extends State<StudyPage> with Logging {
   late StudyProviderModel _model;
+
   @override
   void initState() {
     super.initState();
@@ -47,9 +47,11 @@ class _StudyPageState extends State<StudyPage> with Logging {
   Widget build(BuildContext context) {
     return ProviderModel(
       notifier: _model,
-      child: Builder(builder: (context) {
-        return _buildPage(context);
-      }),
+      child: Material(
+        child: Builder(builder: (context) {
+          return _buildPage(context);
+        }),
+      ),
     );
   }
 
@@ -166,6 +168,7 @@ class _StudyPageState extends State<StudyPage> with Logging {
         onPressed: () => context.pushNamed(StudyRouter.video),
         child: _text('视频播放'),
       ),
+      const SizedBox(height: 8),
       // WI-FI热点
       MaterialButton(
         textColor: Colors.white,
@@ -246,9 +249,11 @@ class _StudyPageState extends State<StudyPage> with Logging {
         child: _text('重置数据'),
       ),
       const SizedBox(height: 8),
-      Selector0<String>(builder: (c, text, w) {
-        return Text(text);
-      }, selector: (context) => ProviderModel.of(context).value.toString(),
+      Selector0<String>(
+        builder: (c, text, w) {
+          return Text(text);
+        },
+        selector: (context) => ProviderModel.of(context).value.toString(),
       ),
     ];
   }
@@ -279,35 +284,42 @@ class _StudyPageState extends State<StudyPage> with Logging {
   }
 }
 
-abstract class People implements Student {
-
-}
+abstract class People implements Student {}
 
 abstract class Friend extends People {
-
   String name = 'hello';
   int age = 0;
 
   Map<String, dynamic> toJson() => {
-    'name': name,
-    'age': 32,
-  };
+        'name': name,
+        'age': 32,
+      };
 }
 
 class GoodFriend extends Friend {
-
   @override
-  Map<String, dynamic> toJson() => super.toJson()..addAll({
-    'age': 24,
-  });
+  Map<String, dynamic> toJson() => super.toJson()
+    ..addAll({
+      'age': 24,
+    });
 }
 
-class BusinessFriend extends Friend with NameMixin {
+class BusinessFriend extends Friend with NameMixin, AddressMixin {
+  @override
+  String address = 'my address';
+
+  BusinessFriend({String? address});
 
   @override
-  Map<String, dynamic> toJson() => super.toJson()..addAll({
-    'age': 24,
-  });
+  Map<String, dynamic> toJson() => super.toJson()
+    ..addAll({
+      'age': 24,
+      'address': address,
+    });
+}
+
+mixin AddressMixin {
+  String address = 'hello address';
 }
 
 mixin NameMixin on Friend {
@@ -315,11 +327,6 @@ mixin NameMixin on Friend {
   String get name => 'modify name';
 }
 
-abstract interface class Child {
+abstract interface class Child {}
 
-}
-
-abstract interface class Student {
-
-}
-
+abstract interface class Student {}

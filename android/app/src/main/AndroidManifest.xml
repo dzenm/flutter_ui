@@ -1,5 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission
+        android:name="android.permission.NEARBY_WIFI_DEVICES"
+        android:usesPermissionFlags="neverForLocation" />
+    <!-- If your app derives location information from
+         Wi-Fi APIs, don't include the "usesPermissionFlags"
+         attribute. -->
+
     <uses-permission android:name="android.permission.INTERNET" /> <!-- 访问网络权限 -->
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" /> <!-- 读取设置权限 -->
     <uses-permission
