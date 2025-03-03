@@ -66,6 +66,15 @@ class WifiDirectAndroid extends WifiDirectPlatform {
   }
 
   @override
+  Future<WifiP2pGroup?> requestGroup() async {
+    final result = await methodChannel.invokeMethod<String>('requestGroup');
+    if (result == null) {
+      return null;
+    }
+    return WifiP2pGroup.fromJson(jsonDecode(result));
+  }
+
+  @override
   Future<bool> createGroup() async {
     final result = await methodChannel.invokeMethod<bool>('createGroup');
     return result ?? false;

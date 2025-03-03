@@ -3,7 +3,7 @@
 ///
 abstract interface class Connection {
   /// 是否准备好
-  Future<bool> get isPrepare;
+  bool get isPrepare;
 
   /// 是否已连接
   bool get isConnected;
@@ -12,26 +12,17 @@ abstract interface class Connection {
   bool get isTransiting;
 }
 
-abstract interface class Executor {
-
-  Future<bool> initialize();
-
-  void connect(String deviceAddress);
-
-  void dispose();
-}
-
 /// iOS方式连接
-abstract interface class MultipeerConnection implements Connection, Executor {}
+abstract interface class MultipeerConnection implements Connection {}
 
 /// Wi-Fi Direct连接
-abstract interface class WifiDirectConnection implements Connection, Executor {}
+abstract interface class WifiDirectConnection implements Connection {}
 
 /// 蓝牙连接
-abstract interface class BleConnection implements Connection, Executor {}
+abstract interface class BleConnection implements Connection {}
 
 /// Wi-Fi连接
-abstract interface class WifiConnection implements Connection, Executor {}
+abstract interface class WifiConnection implements Connection {}
 
 /// 角色
 abstract interface class Role {}

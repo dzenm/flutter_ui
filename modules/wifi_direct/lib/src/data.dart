@@ -68,7 +68,7 @@ class WifiP2pGroup {
   final bool isGroupOwner;
 
   /// Get the details of the group owner as a [WifiP2pDevice] object
-  final WifiP2pDevice owner;
+  final WifiP2pDevice? owner;
 
   /// Get the list of clients currently part of the p2p group
   final List<WifiP2pDevice> clients;
@@ -92,7 +92,7 @@ class WifiP2pGroup {
   WifiP2pGroup({
     required this.networkName,
     required this.isGroupOwner,
-    required this.owner,
+    this.owner,
     required this.clients,
     required this.passphrase,
     required this.interfaceName,
@@ -104,7 +104,7 @@ class WifiP2pGroup {
     return WifiP2pGroup(
       networkName: json['networkName'] ?? '',
       isGroupOwner: json['isGroupOwner'] ?? false,
-      owner: WifiP2pDevice.fromJson(json['owner']),
+      owner: json['owner'] == null ? null : WifiP2pDevice.fromJson(json['owner']),
       clients: ((json['clients'] ?? []) as List<dynamic>).map((e) => WifiP2pDevice.fromJson(e)).toList(),
       passphrase: json['passphrase'] ?? '',
       interfaceName: json['interfaceName'] ?? '',
@@ -116,7 +116,7 @@ class WifiP2pGroup {
   Map<String, dynamic> toJson() => {
         'networkName': networkName,
         'isGroupOwner': isGroupOwner,
-        'owner': owner.toJson(),
+        'owner': owner?.toJson(),
         'clients': clients.map((e) => e.toJson()).toList(),
         'passphrase': passphrase,
         'interfaceName': interfaceName,
@@ -200,6 +200,8 @@ class WifiP2pDevice {
         'isServiceDiscoveryCapable': isServiceDiscoveryCapable,
         'isGroupOwner': isGroupOwner,
       };
+
+  bool get isConnected => status == DeviceStatus.connected;
 }
 
 /// 设备连接状态

@@ -36,6 +36,10 @@ class WifiDirect {
     return WifiDirectPlatform.instance.disconnect();
   }
 
+  Future<WifiP2pGroup?> requestGroup() async {
+    return WifiDirectPlatform.instance.requestGroup();
+  }
+
   Future<bool> createGroup() async {
     return WifiDirectPlatform.instance.createGroup();
   }

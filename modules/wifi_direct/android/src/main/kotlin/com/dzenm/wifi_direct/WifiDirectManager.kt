@@ -47,6 +47,7 @@ class WifiDirectManager(private val context: Context) {
     fun openLocationSettingsPage(result: MethodChannel.Result) {
         try {
             context.startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+            log("进入位置设置页面")
             result.success(true)
         } catch (e: Exception) {
             result.success(false)
@@ -71,6 +72,7 @@ class WifiDirectManager(private val context: Context) {
         try {
             context.startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))
             result.success(true)
+            log("进入Wi-Fi设置页面")
         } catch (e: Exception) {
             result.success(false)
         }
@@ -126,45 +128,47 @@ class WifiDirectManager(private val context: Context) {
     }
 
     /**
-     * 发现设备
+     * 启动扫描设备进程
      */
     fun discoverPeers() {
         // 成功检测到对等设备存在时，系统会广播 WIFI_P2P_PEERS_CHANGED_ACTION 意向
         wifiChannel?.also { channel ->
             wifiManager.discoverPeers(channel, object : WifiP2pManager.ActionListener {
                 override fun onSuccess() {
-                    // 仅通知发现进程已成功
-                    log("已启动发现进程")
+                    // 仅通知扫描进程已成功
+                    log("已启动扫描设备进程")
                 }
 
                 override fun onFailure(reasonCode: Int) {
-                    // 仅通知发现进程启动失败
-                    log("发现进程启动失败：reasonCode=$reasonCode")
+                    // 仅通知扫描进程启动失败
+                    log("扫描设备进程启动失败：reasonCode=$reasonCode")
                 }
             })
         }
     }
 
     /**
-     * 停止设备扫描
+     * 关闭设备扫描
      */
     fun stopPeerDiscovery(result: MethodChannel.Result) {
         wifiChannel?.also { channel ->
             wifiManager.stopPeerDiscovery(channel, object : WifiP2pManager.ActionListener {
                 override fun onSuccess() {
                     result.success(true)
+                    log("已关闭设备扫描进程")
                 }
 
                 override fun onFailure(reasonCode: Int) {
                     Log.e(tag, "see https://developer.android.com/reference/android/net/wifi/p2p/WifiP2pManager.ActionListener#onFailure(int) for codes")
                     result.success(false)
+                    log("扫描设备进程关闭失败：reasonCode=$reasonCode")
                 }
             })
         }
     }
 
     /**
-     * 请求已发现设备的列表
+     * 请求已扫描设备的列表
      */
     fun requestPeers() {
         wifiChannel?.also { channel ->
@@ -174,7 +178,8 @@ class WifiDirectManager(private val context: Context) {
                 for (device: WifiP2pDevice in peers.deviceList) {
                     list.add(mergeDeviceInfo(device))
                 }
-                addPeers(peers = list)
+                addDevices(peers = list)
+                log("请求已扫描设备的列表：list=${toJson(list)}")
             }
         }
     }
@@ -213,7 +218,7 @@ class WifiDirectManager(private val context: Context) {
                 override fun onSuccess() {
                     //success logic
                     result.success(true)
-                    log("连接到设备 `$deviceAddress` 成功")
+                    log("已连接到设备 `$deviceAddress`")
                 }
 
                 override fun onFailure(reason: Int) {
@@ -237,9 +242,10 @@ class WifiDirectManager(private val context: Context) {
                             // The other device acts as the peer (client). In this case,
                             // you'll want to create a peer thread that connects
                             // to the group owner.
+                            info.groupFormed
                         }
                     }
-
+                    log("连接信息可用监听：${info.toString()}")
                 }
             })
         }
@@ -253,12 +259,32 @@ class WifiDirectManager(private val context: Context) {
             wifiManager.cancelConnect(channel, object : WifiP2pManager.ActionListener {
                 override fun onSuccess() {
                     result.success(true)
+                    log("已断开设备连接")
                 }
 
                 override fun onFailure(reasonCode: Int) {
                     result.success(false)
+                    log("断开设备连接失败")
                 }
             })
+        }
+    }
+
+    /**
+     * 请求群组信息
+     */
+    fun requestGroup(result: MethodChannel.Result) {
+        wifiChannel?.also { channel ->
+            wifiManager.requestGroupInfo(channel) { group ->
+                var json: String? = null
+                if (group == null) {
+                    result.success(null)
+                } else {
+                    json = toJson(mergeGroup(group = group))
+                    result.success(json)
+                }
+                log("请求群组信息：json=$json")
+            }
         }
     }
 
@@ -270,7 +296,7 @@ class WifiDirectManager(private val context: Context) {
             wifiManager.createGroup(channel, object : WifiP2pManager.ActionListener {
                 override fun onSuccess() {
                     result.success(true)
-                    log("创建群组成功")
+                    log("已创建群组")
                 }
 
                 override fun onFailure(reasonCode: Int) {
@@ -289,24 +315,13 @@ class WifiDirectManager(private val context: Context) {
             wifiManager.removeGroup(channel, object : WifiP2pManager.ActionListener {
                 override fun onSuccess() {
                     result.success(true)
+                    log("已移除群组")
                 }
 
                 override fun onFailure(reasonCode: Int) {
                     result.success(false)
+                    log("移除群组失败")
                 }
-            })
-        }
-    }
-
-    /**
-     * 请求群组信息
-     */
-    fun requestGroupInfo() {
-        wifiChannel?.also { channel ->
-            wifiManager.requestGroupInfo(channel, WifiP2pManager.GroupInfoListener { group: WifiP2pGroup? ->
-                if (group == null) return@GroupInfoListener
-                addGroup(mergeGroup(group = group))
-                Log.d(tag, "requestGroupInfo：group=" + getWifiP2PInfo())
             })
         }
     }
@@ -347,21 +362,21 @@ class WifiDirectManager(private val context: Context) {
     /**
      * 找到的附近设备
      */
-    private var foundPeers: MutableList<Any> = mutableListOf()
+    private var foundDevices: MutableList<Any> = mutableListOf()
 
     /**
      * 添加找到的附近设备
      */
-    private fun addPeers(peers: MutableList<Any>) {
-        if (foundPeers.toString() == peers.toString()) return
-        foundPeers = peers
-        Log.d(tag, "requestPeers：Peers=" + getPeers())
+    private fun addDevices(peers: MutableList<Any>) {
+        if (foundDevices.toString() == peers.toString()) return
+        foundDevices = peers
+        Log.d(tag, "requestPeers：Peers=" + getDevices())
     }
 
     /**
      * 获取设备
      */
-    fun getPeers(): String = Gson().toJson(foundPeers)
+    fun getDevices(): String = toJson(foundDevices)
 
     private var mNetworkInfo: NetworkInfo? = null
     private var mWifiP2pInfo: WifiP2pInfo? = null
@@ -370,7 +385,7 @@ class WifiDirectManager(private val context: Context) {
     /**
      * 设置连接的信息
      */
-    fun setConnectionInfo(network: NetworkInfo, wifiP2pInfo: WifiP2pInfo, group: WifiP2pGroup?) {
+    fun addConnection(network: NetworkInfo, wifiP2pInfo: WifiP2pInfo, group: WifiP2pGroup?) {
         if (network == mNetworkInfo || wifiP2pInfo == mWifiP2pInfo) return
         mNetworkInfo = network
         mWifiP2pInfo = wifiP2pInfo
@@ -390,7 +405,7 @@ class WifiDirectManager(private val context: Context) {
     /**
      * 获取群组信息
      */
-    private fun getGroup(): String = Gson().toJson(mGroup)
+    private fun getGroup(): String = toJson(mGroup)
 
     /**
      * 获取Wi-Fi P2P信息
@@ -413,8 +428,10 @@ class WifiDirectManager(private val context: Context) {
 
             val group: Any = mGroup
         }
-        return Gson().toJson(obj)
+        return toJson(obj)
     }
+
+    private fun toJson(any: Any) = Gson().toJson(any)
 
     private fun log(msg: String) = Log.d(tag, msg)
 }

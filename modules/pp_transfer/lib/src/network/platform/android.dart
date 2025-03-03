@@ -1,53 +1,64 @@
-import 'package:permission_handler/permission_handler.dart';
-import 'package:wifi_direct/wifi_direct.dart';
+import 'dart:async';
 
-import '../connection/wifi_direct.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:pp_transfer/src/network/service/connection.dart';
+import 'package:pp_transfer/src/network/service/service.dart';
+import 'package:wifi_direct/wifi_direct.dart';
 
 ///
 /// Created by a0010 on 2025/2/26 11:28
 ///
-class Android2Android {
-  WifiDirectConnectionClient connection = WifiDirectConnectionClient();
+class Android2Android implements NearbyService, Connection {
+  final WifiDirect client = WifiDirect();
 
-  Future<bool> initialize({bool isGroup = true}) async {
-    await _checkPermission();
-    return await connection.initialize(isGroup: isGroup);
+  void setOnDeviceListener(DeviceListener listener) {
+    _listener = listener;
   }
+  DeviceListener? _listener;
 
-  void connect(String deviceAddress) {
-    connection.connect(deviceAddress);
-  }
+  @override
+  bool get isPrepare => _isPrepare;
+  bool _isPrepare = false;
 
-  void dispose() {
-    connection.dispose();
-  }
+  @override
+  bool get isConnected => _isConnected;
+  bool _isConnected = false;
 
-  Stream<List<WifiP2pDevice>> get discoverPeersStream => connection.discoverPeersStream;
-  Stream<WifiP2pInfo> get wifiStream => connection.wifiStream;
+  @override
+  bool get isTransiting => _isTransiting;
+  final bool _isTransiting = false;
 
-  /// 执行前先检查
-  void _check(void Function() callback) async {
-    if (!await _checkPermission()) return;
-    callback();
+  @override
+  Future<bool> requestPermission() async {
+    String result = await _checkPermission();
+    if (result.isEmpty) {
+      _isPrepare = true;
+      return true;
+    }
+    return false;
   }
 
   /// 检查权限
-  Future<bool> _checkPermission() async {
+  Future<String> _checkPermission() async {
     // 判断位置服务有没有打开
-    if (await connection.client.isGPSEnabled()) {
+    if (await client.isGPSEnabled()) {
       // 判断Wi-Fi服务有没有打开
-      if (await connection.client.isWifiEnabled()) {
+      if (await client.isWifiEnabled()) {
         // 请求权限
-        return await _requestPermissions();
+        bool res = await _requestPermissions();
+        if (res) {
+          return '';
+        }
+        return '未打开附近的设备或位置权限';
       } else {
         // 进入Wi-Fi设置
-        await connection.client.openWifiSettingsPage();
+        await client.openWifiSettingsPage();
       }
     } else {
       // 进入位置服务设置
-      await connection.client.openLocationSettingsPage();
+      await client.openLocationSettingsPage();
     }
-    return false;
+    return '未打开GPS权限';
   }
 
   /// 请求连接权限
@@ -60,4 +71,110 @@ class Android2Android {
         statuses[Permission.nearbyWifiDevices] == PermissionStatus.granted;
   }
 
+  StreamSubscription<List<WifiP2pDevice>>? _discoverPeersSubscription;
+  StreamSubscription<WifiP2pInfo>? _wifiSubscription;
+
+  /// 获取扫描到附近的设备
+  List<WifiP2pDevice> get device => _devices;
+  final List<WifiP2pDevice> _devices = [];
+
+  /// 创建的群组信息
+  WifiP2pInfo? get wifi => _wifi;
+  WifiP2pInfo? _wifi;
+
+  @override
+  Future<bool> initialize() async {
+    if (!await client.initialize()) return false;
+    if (!await client.register()) return false;
+    await client.disconnect();
+    _discoverPeersSubscription = client.getDiscoverPeersStream().listen((data) {
+      _listener?.onListen(_merge(data));
+      _devices.clear();
+      _devices.addAll(data);
+    });
+    _wifiSubscription = client.getWifiStream().listen((data) {
+      _wifi = data;
+    });
+    // 获取群组信息
+    WifiP2pGroup? group = await client.requestGroup();
+    if (group == null) {
+      if (await client.createGroup()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  @override
+  Future<List<SocketAddress>> discoverDevices() async {
+    WifiP2pInfo? wifi = _wifi;
+    if (wifi == null) {
+      return [];
+    }
+    if (await client.discover()) {
+      await Future.delayed(const Duration(milliseconds: 1200));
+
+    }
+    return [];
+  }
+
+  @override
+  Future<bool> connect(SocketAddress remote) async {
+    if (await client.connect(remote.remoteAddress)) {
+      _isConnected = true;
+    }
+    return false;
+  }
+
+  @override
+  Future<void> dispose() async {
+    await _discoverPeersSubscription?.cancel();
+    await _wifiSubscription?.cancel();
+  }
+
+  List<SocketAddress> _merge(List<WifiP2pDevice> list) {
+    return list.map((device) {
+      return WifiDirectAddress(
+        isGroupOwner: device.isGroupOwner,
+        isConnected: device.isConnected,
+        deviceName: device.deviceName,
+        localAddress: '',
+        remoteAddress: device.deviceAddress,
+      );
+    }).toList();
+  }
+}
+
+class WifiDirectAddress implements SocketAddress {
+  WifiDirectAddress({
+    required bool isGroupOwner,
+    required bool isConnected,
+    required String deviceName,
+    required String localAddress,
+    required String remoteAddress,
+  })  : _isGroupOwner = isGroupOwner,
+        _isConnected = isConnected,
+        _deviceName = deviceName,
+        _localAddress = localAddress,
+        _remoteAddress = remoteAddress;
+
+  @override
+  bool get isGroupOwner => _isGroupOwner;
+  final bool _isGroupOwner;
+
+  @override
+  bool get isConnected => _isConnected;
+  final bool _isConnected;
+
+  @override
+  String get deviceName => _deviceName;
+  final String _deviceName;
+
+  @override
+  String get localAddress => _localAddress;
+  final String _localAddress;
+
+  @override
+  String get remoteAddress => _remoteAddress;
+  final String _remoteAddress;
 }

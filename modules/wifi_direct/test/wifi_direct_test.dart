@@ -1,14 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:wifi_direct/src/data.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:wifi_direct/src/wifi_direct.dart';
 import 'package:wifi_direct/src/wifi_direct_android.dart';
 import 'package:wifi_direct/src/wifi_direct_platform_interface.dart';
-import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-class MockWifiDirectPlatform
-    with MockPlatformInterfaceMixin
-    implements WifiDirectPlatform {
-
+class MockWifiDirectPlatform with MockPlatformInterfaceMixin implements WifiDirectPlatform {
   @override
   Future<String?> getPlatformVersion() => Future.value('42');
 
@@ -111,6 +107,12 @@ class MockWifiDirectPlatform
   @override
   void cancel() {
     // TODO: implement cancel
+  }
+
+  @override
+  Future<WifiP2pGroup?> requestGroup() {
+    // TODO: implement requestGroup
+    throw UnimplementedError();
   }
 }
 

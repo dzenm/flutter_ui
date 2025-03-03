@@ -13,5 +13,5 @@ class MultipeerConnectionClient implements Connection {
 
   @override
   // TODO: implement isPrepare
-  Future<bool> get isPrepare => throw UnimplementedError();
+  bool get isPrepare => throw UnimplementedError();
 }

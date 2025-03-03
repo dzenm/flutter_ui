@@ -60,6 +60,10 @@ abstract class WifiDirectPlatform extends PlatformInterface {
     throw UnimplementedError('disconnect() has not been implemented.');
   }
 
+  Future<WifiP2pGroup?> requestGroup() {
+    throw UnimplementedError('requestGroup() has not been implemented.');
+  }
+
   Future<bool> createGroup() {
     throw UnimplementedError('createGroup() has not been implemented.');
   }

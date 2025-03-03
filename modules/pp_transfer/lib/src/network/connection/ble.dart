@@ -136,7 +136,7 @@ class BleConnectionClient with Logging implements BleConnection {
 
   @override
   // TODO: implement isPrepare
-  Future<bool> get isPrepare => throw UnimplementedError();
+  bool get isPrepare => throw UnimplementedError();
 
   @override
   void connect(String deviceAddress) {

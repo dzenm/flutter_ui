@@ -1,30 +1,42 @@
 ///
 /// Created by a0010 on 2025/2/26 11:04
 ///
-abstract class NearbyService {
+abstract interface class NearbyService {
   /// 请求权限
+  /// [return] true=已获取权限；false=未获取权限；
   Future<bool> requestPermission();
 
   /// 初始化
+  /// [return] true=初始化成功；false=初始化失败；
   Future<bool> initialize();
 
-  /// 连接
-  Future<bool> connect();
+  /// 扫描设备
+  /// [return] 扫描的设备信息
+  Future<List<SocketAddress>> discoverDevices();
 
-  /// 传输
-  Future<bool> transfer();
+  /// 连接设备
+  /// [remote] 连接的设备地址
+  /// [return] true=连接设备成功；false=连接设备失败；
+  Future<bool> connect(SocketAddress remote);
+
+  /// 清除信息
+  Future<void> dispose();
 }
 
-/// 连接的地址
-abstract interface class Address {
-  String get localAddress;
-  String get remoteAddress;
+abstract interface class DeviceListener {
+  void onListen(List<SocketAddress> addresses);
 }
 
 /// 连接的Socket地址
-abstract class SocketAddress implements Address {
-  @override
+abstract interface class SocketAddress {
+  /// 是否是群组拥有者
+  bool get isGroupOwner;
+  /// 是否连接成功
+  bool get isConnected;
+  /// 设备名称
+  String get deviceName;
+  /// 本机地址
   String get localAddress => '';
-  @override
+  /// 服务器地址
   String get remoteAddress => '';
 }

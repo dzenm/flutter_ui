@@ -3,7 +3,6 @@ library pp_transfer;
 export 'src/network/connection/ble.dart';
 export 'src/network/connection/multipeer.dart';
 export 'src/network/connection/wifi.dart';
-export 'src/network/connection/wifi_direct.dart';
 export 'src/network/platform/android.dart';
 export 'src/network/platform/ios.dart';
 export 'src/network/platform/others.dart';

@@ -48,7 +48,7 @@ class WiFiDirectBroadcastReceiver(
                 val wifiP2pInfo: WifiP2pInfo? = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_INFO)
                 val group: WifiP2pGroup? = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_GROUP)
                 if (networkInfo == null || wifiP2pInfo == null) return
-                manager.setConnectionInfo(network = networkInfo, wifiP2pInfo = wifiP2pInfo, group = group)
+                manager.addConnection(network = networkInfo, wifiP2pInfo = wifiP2pInfo, group = group)
                 if (networkInfo.isConnected) {
                     log("已连接 P2P 设备")
                 } else {

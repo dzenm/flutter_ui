@@ -57,10 +57,9 @@ class WifiDirectPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         }
 
         "disconnect" -> mManager.disconnect(result)
+        "requestGroup" -> mManager.requestGroup(result)
         "createGroup" -> mManager.createGroup(result)
         "removeGroup" -> mManager.removeGroup(result)
-//                "groupInfo" -> mManager.requestGroupInfo(result)
-//                "fetchPeers" -> mManager.fetchPeers(result)
         "isGPSEnabled" -> mManager.isGPSEnabled(result)
         "openLocationSettingsPage" -> mManager.openLocationSettingsPage(result)
         "isWifiEnabled" -> mManager.isWifiEnabled(result)
@@ -89,7 +88,7 @@ class WifiDirectPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
       val runnable: Runnable = object : Runnable {
         override fun run() {
           handler.post {
-            val json = mManager.getPeers()
+            val json = mManager.getDevices()
             eventSink?.success(json)
           }
           handler.postDelayed(this, 1000)
