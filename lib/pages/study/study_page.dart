@@ -37,10 +37,16 @@ class _StudyPageState extends State<StudyPage> with Logging {
     logInfo('测试：${friend is GoodFriend}');
     logInfo('测试：${friend is BusinessFriend}');
     logInfo('测试：${friend is Child}');
-    logInfo('测试：${friend is Student}');
     logInfo('测试：${friend is NameMixin}');
     logInfo('测试：${friend.toJson()}');
     _model = StudyProviderModel();
+
+    Map<String, dynamic> json = {
+      'userUid': '7i21g1n1j23u1g1',
+      'userName': '玉皇大帝',
+    };
+    User user = User.fromJson(json);
+    logInfo('测试：${user.toJson()}');
   }
 
   @override
@@ -330,3 +336,35 @@ mixin NameMixin on Friend {
 abstract interface class Child {}
 
 abstract interface class Student {}
+
+abstract class Data {
+  late String userUid;
+
+  Data({required this.userUid});
+
+  // Data.fromJson(Map<String, dynamic> json) : this(userUid: json['userUid']);
+
+  Data.fromJson(Map<String, dynamic> json) {
+    userUid = '';
+  }
+
+  Map<String, dynamic> toJson() => {
+        'userUid': userUid,
+      };
+}
+
+class User extends Data {
+  late String userName;
+
+  User({required super.userUid, required this.userName});
+
+  User.fromJson(super.json)
+      : userName = '',
+        super.fromJson();
+
+  @override
+  Map<String, dynamic> toJson() => super.toJson()
+    ..addAll({
+      'userName': userName,
+    });
+}

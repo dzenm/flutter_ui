@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:fbl/fbl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pp_transfer/src/network/service/connection.dart';
 import 'package:pp_transfer/src/network/service/service.dart';
@@ -8,7 +9,7 @@ import 'package:wifi_direct/wifi_direct.dart';
 ///
 /// Created by a0010 on 2025/2/26 11:28
 ///
-class Android2Android implements NearbyService, Connection {
+class Android2Android with Logging implements NearbyService, Connection {
   final WifiDirect client = WifiDirect();
 
   void setOnDeviceListener(DeviceListener listener) {
@@ -81,19 +82,20 @@ class Android2Android implements NearbyService, Connection {
   /// 创建的群组信息
   WifiP2pInfo? get wifi => _wifi;
   WifiP2pInfo? _wifi;
+  
+  bool _isRegister = false;
 
   @override
   Future<bool> initialize() async {
+    if (_isRegister) {
+      await client.unregister();
+      _isRegister = false;
+    }
     if (!await client.initialize()) return false;
     if (!await client.register()) return false;
-    await client.disconnect();
-    _discoverPeersSubscription = client.getDiscoverPeersStream().listen((data) {
-      _listener?.onListen(_merge(data));
-      _devices.clear();
-      _devices.addAll(data);
-    });
-    _wifiSubscription = client.getWifiStream().listen((data) {
-      _wifi = data;
+    _isRegister = true;
+    client.getConnectionStream().listen((data) {
+      logInfo('接收到的数据：data');
     });
     // 获取群组信息
     WifiP2pGroup? group = await client.requestGroup();
@@ -101,20 +103,17 @@ class Android2Android implements NearbyService, Connection {
       if (await client.createGroup()) {
         return true;
       }
+      return false;
     }
-    return false;
+    return true;
   }
 
   @override
   Future<List<SocketAddress>> discoverDevices() async {
-    WifiP2pInfo? wifi = _wifi;
-    if (wifi == null) {
-      return [];
-    }
-    if (await client.discover()) {
-      await Future.delayed(const Duration(milliseconds: 1200));
-
-    }
+    // 移除自身创建的群组
+    await client.disconnect();
+    await client.removeGroup();
+    await client.discover();
     return [];
   }
 

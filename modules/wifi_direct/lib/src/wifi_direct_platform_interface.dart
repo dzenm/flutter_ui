@@ -89,12 +89,7 @@ abstract class WifiDirectPlatform extends PlatformInterface {
     throw UnimplementedError('openWifiSettingsPage() has not been implemented.');
   }
 
-  Stream<List<WifiP2pDevice>> getDiscoverPeersStream() {
-    throw UnimplementedError(
-        'discoverPeersStream() has not been implemented.');
-  }
-
-  Stream<WifiP2pInfo> getWifiStream() {
+  Stream<String?> getConnectionStream() {
     throw UnimplementedError(
         'wifiP2PStream() has not been implemented.');
   }

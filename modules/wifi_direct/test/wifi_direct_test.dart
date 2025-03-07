@@ -33,19 +33,13 @@ class MockWifiDirectPlatform with MockPlatformInterfaceMixin implements WifiDire
   }
 
   @override
-  Stream<List<WifiP2pDevice>> getDiscoverPeersStream() {
-    // TODO: implement getDiscoverPeersStream
-    throw UnimplementedError();
-  }
-
-  @override
   Future<String?> getPlatformModel() {
     // TODO: implement getPlatformModel
     throw UnimplementedError();
   }
 
   @override
-  Stream<WifiP2pInfo> getWifiStream() {
+  Stream<String?> getConnectionStream() {
     // TODO: implement getWifiStream
     throw UnimplementedError();
   }

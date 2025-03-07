@@ -112,45 +112,29 @@ class WifiDirectAndroid extends WifiDirectPlatform {
 
   bool _isRegister = false;
 
-  final EventChannel _peersChannel = const EventChannel('wifi_direct_discover_peers');
-
   final EventChannel _connectionChannel = const EventChannel('wifi_direct_connection');
 
-  Stream<List<WifiP2pDevice>>? _discoverPeersStream;
+  Stream<String?>? _connectionStream;
   @override
-  Stream<List<WifiP2pDevice>> getDiscoverPeersStream() {
-    Stream<List<WifiP2pDevice>>? stream = _discoverPeersStream;
+  Stream<String?> getConnectionStream() {
+    Stream<String?>? stream = _connectionStream;
     if (stream == null) {
-      stream = _peersChannel.receiveBroadcastStream().map((peers) {
-        if (peers == null) return [];
-        Iterable iterable = jsonDecode(peers);
-        List<WifiP2pDevice> result = iterable.map((json) => WifiP2pDevice.fromJson(json)).toList();
-        return result;
-      });
-      _discoverPeersStream = stream;
-    }
-    return stream;
-  }
-
-  Stream<WifiP2pInfo>? _wifiStream;
-  @override
-  Stream<WifiP2pInfo> getWifiStream() {
-    Stream<WifiP2pInfo>? stream = _wifiStream;
-    if (stream == null) {
-      stream = _connectionChannel.receiveBroadcastStream().map((wifiP2P) {
-        bool isEmpty = wifiP2P == null || wifiP2P == 'null' || wifiP2P.toString().isEmpty;
+      stream = _connectionChannel.receiveBroadcastStream().map((connection) {
+        return connection;
+        bool isEmpty = connection == null || connection == 'null' || connection.toString().isEmpty;
         if (isEmpty) {
-          return WifiP2pInfo(
-            groupFormed: false,
-            isGroupOwner: false,
-            groupOwnerAddress: '',
-            isConnected: false,
-            isAvailable: false,
-            reason: '',
-            extraInfo: '',
-          );
+          return null;
+          // return WifiP2pInfo(
+          //   groupFormed: false,
+          //   isGroupOwner: false,
+          //   groupOwnerAddress: '',
+          //   isConnected: false,
+          //   isAvailable: false,
+          //   reason: '',
+          //   extraInfo: '',
+          // );
         }
-        Map<String, dynamic> json = jsonDecode(wifiP2P);
+        Map<String, dynamic> json = jsonDecode(connection);
         List<WifiP2pDevice> clients = [];
         WifiP2pGroup? group;
         if (json['group'] != null) {
@@ -165,18 +149,19 @@ class WifiDirectAndroid extends WifiDirectPlatform {
         } else {
           isConnected = json['isConnected'];
         }
-        return WifiP2pInfo(
-          groupFormed: json['groupFormed'],
-          isGroupOwner: json['isGroupOwner'],
-          groupOwnerAddress: json['groupOwnerAddress'],
-          isConnected: isConnected,
-          isAvailable: json['isAvailable'],
-          reason: json['reason'],
-          extraInfo: json['extraInfo'],
-          group: group,
-        );
+        return null;
+        // return WifiP2pInfo(
+        //   groupFormed: json['groupFormed'],
+        //   isGroupOwner: json['isGroupOwner'],
+        //   groupOwnerAddress: json['groupOwnerAddress'],
+        //   isConnected: isConnected,
+        //   isAvailable: json['isAvailable'],
+        //   reason: json['reason'],
+        //   extraInfo: json['extraInfo'],
+        //   group: group,
+        // );
       });
-      _wifiStream = stream;
+      _connectionStream = stream;
     }
     return stream;
   }
@@ -184,7 +169,6 @@ class WifiDirectAndroid extends WifiDirectPlatform {
   @override
   void cancel() {
     _isRegister = false;
-    _discoverPeersStream = null;
-    _wifiStream = null;
+    _connectionStream = null;
   }
 }

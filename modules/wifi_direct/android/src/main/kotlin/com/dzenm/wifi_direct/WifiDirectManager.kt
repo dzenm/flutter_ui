@@ -13,13 +13,16 @@ import android.net.wifi.p2p.WifiP2pGroup
 import android.net.wifi.p2p.WifiP2pInfo
 import android.net.wifi.p2p.WifiP2pManager
 import android.os.Build
+import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import com.google.gson.Gson
+import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
+import java.lang.ref.WeakReference
 
-class WifiDirectManager(private val context: Context) {
+class WifiDirectManager(private val context: Context, private val connection: WeakReference<ConnectionStream>) {
 
     private val tag = "WiFiDirect"
 
@@ -84,7 +87,7 @@ class WifiDirectManager(private val context: Context) {
     fun initialize(result: MethodChannel.Result) {
         // 1. 获取 WifiP2pManager 的实例，并通过调用 initialize() 将应用注册到 Wi-Fi P2P 框架
         wifiChannel = wifiManager.initialize(context, Looper.getMainLooper(), null)
-        receiver = WiFiDirectBroadcastReceiver(this)
+        receiver = WiFiDirectBroadcastReceiver(this, connection)
         result.success(true)
         log("初始化Wi-Fi Manager并创建广播接收器和过滤器")
     }
@@ -170,7 +173,7 @@ class WifiDirectManager(private val context: Context) {
     /**
      * 请求已扫描设备的列表
      */
-    fun requestPeers() {
+    fun requestPeers(result: MethodChannel.Result? = null) {
         wifiChannel?.also { channel ->
             wifiManager.requestPeers(channel) { peers ->
                 // Handle peers list
@@ -179,6 +182,7 @@ class WifiDirectManager(private val context: Context) {
                     list.add(mergeDeviceInfo(device))
                 }
                 addDevices(peers = list)
+                result?.success(toJson(list))
                 log("请求已扫描设备的列表：list=${toJson(list)}")
             }
         }
@@ -187,7 +191,7 @@ class WifiDirectManager(private val context: Context) {
     /**
      * 将 [device] 转化为需要的信息
      */
-    private fun mergeDeviceInfo(device: WifiP2pDevice): Any {
+    fun mergeDeviceInfo(device: WifiP2pDevice): Any {
         val result = object {
             // from https://developer.android.com/reference/android/net/wifi/p2p/WifiP2pDevice
             val deviceName: String = if (device.deviceName == null) "" else device.deviceName
@@ -273,16 +277,14 @@ class WifiDirectManager(private val context: Context) {
     /**
      * 请求群组信息
      */
-    fun requestGroup(result: MethodChannel.Result) {
+    fun requestGroup(result: MethodChannel.Result? = null) {
         wifiChannel?.also { channel ->
             wifiManager.requestGroupInfo(channel) { group ->
                 var json: String? = null
-                if (group == null) {
-                    result.success(null)
-                } else {
+                if (group != null) {
                     json = toJson(mergeGroup(group = group))
-                    result.success(json)
                 }
+                result?.success(json)
                 log("请求群组信息：json=$json")
             }
         }
@@ -326,7 +328,7 @@ class WifiDirectManager(private val context: Context) {
         }
     }
 
-    private fun mergeGroup(group: WifiP2pGroup): Any {
+    fun mergeGroup(group: WifiP2pGroup): Any {
         val result = object {
             val networkName: String = if (group.networkName == null) "" else group.networkName
             val isGroupOwner: Boolean = group.isGroupOwner
@@ -351,7 +353,7 @@ class WifiDirectManager(private val context: Context) {
     /**
      * 将 [devices] 转化为需要的信息
      */
-    private fun mergeDevices(devices: MutableCollection<WifiP2pDevice>): MutableList<Any> {
+    fun mergeDevices(devices: MutableCollection<WifiP2pDevice>): MutableList<Any> {
         val list: MutableList<Any> = mutableListOf()
         for (device: WifiP2pDevice in devices) {
             list.add(mergeDeviceInfo(device))
@@ -431,7 +433,21 @@ class WifiDirectManager(private val context: Context) {
         return toJson(obj)
     }
 
-    private fun toJson(any: Any) = Gson().toJson(any)
+    fun toJson(any: Any) = Gson().toJson(any)
 
     private fun log(msg: String) = Log.d(tag, msg)
+}
+
+class ConnectionStream : EventChannel.StreamHandler {
+
+    private var mHandler: Handler = Handler(Looper.getMainLooper())
+    var mEventSink: EventChannel.EventSink? = null
+
+    override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+        mEventSink = events
+    }
+
+    override fun onCancel(arguments: Any?) {
+        mEventSink = null
+    }
 }

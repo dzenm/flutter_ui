@@ -64,12 +64,8 @@ class WifiDirect {
     return WifiDirectPlatform.instance.openWifiSettingsPage();
   }
 
-  Stream<List<WifiP2pDevice>> getDiscoverPeersStream() {
-    return WifiDirectPlatform.instance.getDiscoverPeersStream();
-  }
-
-  Stream<WifiP2pInfo> getWifiStream() {
-    return WifiDirectPlatform.instance.getWifiStream();
+  Stream<String?> getConnectionStream() {
+    return WifiDirectPlatform.instance.getConnectionStream();
   }
 
   void cancel() {

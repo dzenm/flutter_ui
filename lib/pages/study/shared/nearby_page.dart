@@ -41,7 +41,7 @@ class _WifiDirectBodyPageState extends State<WifiDirectBodyPage> with Logging im
   }
 
   void _initialize() async {
-    if (!await services.initialize()) return;
+    await services.initialize();
     services.setOnDeviceListener(this);
   }
 
@@ -107,6 +107,9 @@ class DiscoverPeers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<SocketAddress> devices = WifiModel.of(context).devices;
+    if (devices.isEmpty) {
+      return const EmptyView(text: '未获取到设备');
+    }
     return ListView.builder(
       scrollDirection: Axis.horizontal,
       itemCount: devices.length,

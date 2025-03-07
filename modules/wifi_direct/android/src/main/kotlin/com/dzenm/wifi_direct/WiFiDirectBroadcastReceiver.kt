@@ -9,20 +9,23 @@ import android.net.wifi.p2p.WifiP2pGroup
 import android.net.wifi.p2p.WifiP2pInfo
 import android.net.wifi.p2p.WifiP2pManager
 import android.util.Log
+import java.lang.ref.WeakReference
 
 /**
  * A BroadcastReceiver that notifies of important Wi-Fi p2p events.
  */
 class WiFiDirectBroadcastReceiver(
     private val manager: WifiDirectManager,
+    connectionWrf: WeakReference<ConnectionStream>,
 ) : BroadcastReceiver() {
+
+    private val connection = connectionWrf.get()
 
     private val tag = "WiFiDirect"
     override fun onReceive(context: Context, intent: Intent) {
         val action: String? = intent.action
         when (action) {
             WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION -> {
-                // Check to see if Wi-Fi is enabled and notify appropriate activity
                 // Check to see if Wi-Fi is enabled and notify appropriate activity
                 when (val state: Int = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1)) {
                     WifiP2pManager.WIFI_P2P_STATE_ENABLED -> {
@@ -47,6 +50,7 @@ class WiFiDirectBroadcastReceiver(
                 val networkInfo: NetworkInfo? = intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO)
                 val wifiP2pInfo: WifiP2pInfo? = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_INFO)
                 val group: WifiP2pGroup? = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_GROUP)
+                manager.requestGroup()
                 if (networkInfo == null || wifiP2pInfo == null) return
                 manager.addConnection(network = networkInfo, wifiP2pInfo = wifiP2pInfo, group = group)
                 if (networkInfo.isConnected) {
@@ -61,6 +65,9 @@ class WiFiDirectBroadcastReceiver(
                 val device = intent.getParcelableExtra<WifiP2pDevice>(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE)
                 if (device != null) {
                     log("设备信息改变：$device")
+                    connection?.also {
+                        connection.mEventSink?.success(manager.toJson(manager.mergeDeviceInfo(device)))
+                    }
                 }
             }
         }

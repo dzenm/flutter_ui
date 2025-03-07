@@ -108,8 +108,8 @@ class WifiP2pGroup {
       clients: ((json['clients'] ?? []) as List<dynamic>).map((e) => WifiP2pDevice.fromJson(e)).toList(),
       passphrase: json['passphrase'] ?? '',
       interfaceName: json['interfaceName'] ?? '',
-      networkId: json['networkId'],
-      frequency: json['frequency'],
+      networkId: json['networkId'] ?? 0,
+      frequency: json['frequency'] ?? 0,
     );
   }
 
@@ -177,14 +177,14 @@ class WifiP2pDevice {
     return WifiP2pDevice(
       deviceName: json['deviceName'] ?? '',
       deviceAddress: json['deviceAddress'] ?? '',
-      primaryDeviceType: json['primaryDeviceType'],
-      secondaryDeviceType: json['secondaryDeviceType'],
+      primaryDeviceType: json['primaryDeviceType'] ?? '',
+      secondaryDeviceType: json['secondaryDeviceType'] ?? '',
       status: DeviceStatus.parse(json['status']),
-      wpsPbcSupported: json['wpsPbcSupported'],
-      wpsKeypadSupported: json['wpsKeypadSupported'],
-      wpsDisplaySupported: json['wpsDisplaySupported'],
-      isServiceDiscoveryCapable: json['isServiceDiscoveryCapable'],
-      isGroupOwner: json['isGroupOwner'],
+      wpsPbcSupported: json['wpsPbcSupported'] ?? false,
+      wpsKeypadSupported: json['wpsKeypadSupported'] ?? false,
+      wpsDisplaySupported: json['wpsDisplaySupported'] ?? false,
+      isServiceDiscoveryCapable: json['isServiceDiscoveryCapable'] ?? false,
+      isGroupOwner: json['isGroupOwner'] ?? false,
     );
   }
 
@@ -216,7 +216,7 @@ enum DeviceStatus {
 
   const DeviceStatus(this.value);
 
-  static DeviceStatus parse(int value) {
+  static DeviceStatus parse(int? value) {
     for (var item in DeviceStatus.values) {
       if (item.value == value) return item;
     }
