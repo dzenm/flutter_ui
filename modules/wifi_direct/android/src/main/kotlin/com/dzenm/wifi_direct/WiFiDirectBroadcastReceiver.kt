@@ -5,58 +5,52 @@ import android.content.Context
 import android.content.Intent
 import android.net.NetworkInfo
 import android.net.wifi.p2p.WifiP2pDevice
-import android.net.wifi.p2p.WifiP2pGroup
 import android.net.wifi.p2p.WifiP2pInfo
 import android.net.wifi.p2p.WifiP2pManager
-import android.util.Log
-import java.lang.ref.WeakReference
 
 /**
  * A BroadcastReceiver that notifies of important Wi-Fi p2p events.
  */
 class WiFiDirectBroadcastReceiver(
     private val manager: WifiDirectManager,
-    connectionWrf: WeakReference<ConnectionStream>,
+    private val listener: P2pConnectionListener,
 ) : BroadcastReceiver() {
 
-    private val connection = connectionWrf.get()
-
-    private val tag = "WiFiDirect"
     override fun onReceive(context: Context, intent: Intent) {
         val action: String? = intent.action
         when (action) {
             WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION -> {
                 // Check to see if Wi-Fi is enabled and notify appropriate activity
-                when (val state: Int = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1)) {
-                    WifiP2pManager.WIFI_P2P_STATE_ENABLED -> {
-                        // Wifi P2P is enabled
-                        log("NearbyServices: Wi-Fi state enabled, Int=${state}")
-                    }
+                val state: Int = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1)
+                // Wifi P2P is enabled or not enabled
+                val enabled = state == WifiP2pManager.WIFI_P2P_STATE_ENABLED
 
-                    else -> {
-                        // Wi-Fi P2P is not enabled
-                        log("NearbyServices: Wi-Fi state disabled, Int=${state}")
-                    }
-                }
+                listener.onP2pState(enabled)
+                listener.onPeersAvailable(emptyList())
+                log("WIFI_P2P_STATE_CHANGED_ACTION: enabled=$enabled")
             }
 
             WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION -> {
                 // Call WifiP2pManager.requestPeers() to get a list of current peers
-                manager.requestPeers()
+                manager.requestPeers { peers ->
+                    val list = peers.deviceList.toList()
+                    listener.onPeersAvailable(list)
+                    log("WIFI_P2P_STATE_CHANGED_ACTION: peers=$list")
+                }
             }
 
             WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION -> {
                 // Respond to new connection or disconnections
-                val networkInfo: NetworkInfo? = intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO)
-                val wifiP2pInfo: WifiP2pInfo? = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_INFO)
-                val group: WifiP2pGroup? = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_GROUP)
-                manager.requestGroup()
-                if (networkInfo == null || wifiP2pInfo == null) return
-                manager.addConnection(network = networkInfo, wifiP2pInfo = wifiP2pInfo, group = group)
-                if (networkInfo.isConnected) {
+                val networkInfo = intent.getParcelableExtra<NetworkInfo>(WifiP2pManager.EXTRA_NETWORK_INFO)
+                manager.requestConnection { info ->
+                    listener.onConnectionInfoAvailable(info)
+                }
+                log("WIFI_P2P_CONNECTION_CHANGED_ACTION")
+                if ( networkInfo?.isConnected == true) {
                     log("已连接 P2P 设备")
                 } else {
-                    log("已断开与 P2P 设备连接")
+                    listener.onDisconnected()
+                    log("已断开 P2P 连接")
                 }
             }
 
@@ -64,14 +58,18 @@ class WiFiDirectBroadcastReceiver(
                 // Respond to this device's wifi state changing
                 val device = intent.getParcelableExtra<WifiP2pDevice>(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE)
                 if (device != null) {
-                    log("设备信息改变：$device")
-                    connection?.also {
-                        connection.mEventSink?.success(manager.toJson(manager.mergeDeviceInfo(device)))
-                    }
+                    listener.onSelfP2pChanged(device)
                 }
+                log("WIFI_P2P_THIS_DEVICE_CHANGED_ACTION：device=$device")
             }
         }
     }
+}
 
-    private fun log(msg: String) = Log.d(tag, msg)
+interface P2pConnectionListener {
+    fun onP2pState(enabled: Boolean)
+    fun onPeersAvailable(peers: List<WifiP2pDevice>)
+    fun onConnectionInfoAvailable(info: WifiP2pInfo)
+    fun onDisconnected()
+    fun onSelfP2pChanged(device: WifiP2pDevice)
 }

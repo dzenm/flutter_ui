@@ -51,11 +51,8 @@ class WifiDirectPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 "unregister" -> mManager.unregister(result)
                 "discover" -> mManager.discoverPeers()
                 "stopDiscovery" -> mManager.stopPeerDiscovery(result)
-                "connect" -> {
-                    val address: String = call.argument("address") ?: ""
-                    mManager.connect(address, result)
-                }
-
+                "requestPeers" -> mManager.requestPeers(result)
+                "connect" -> mManager.connect(call.argument("address") ?: "", result)
                 "disconnect" -> mManager.disconnect(result)
                 "requestGroup" -> mManager.requestGroup(result)
                 "createGroup" -> mManager.createGroup(result)

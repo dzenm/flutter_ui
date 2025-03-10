@@ -80,8 +80,8 @@ dependencies:
   file_selector: 1.0.3                          # 文件选择(全平台) https://pub.flutter-io.cn/packages/file_selector
   image_picker: 1.1.2                           # 图片选择器(全平台) https://pub.flutter-io.cn/packages/image_picker
   video_player: 2.9.2                           # 视频播放(移动端) https://pub.flutter-io.cn/packages/video_player
-  fijkplayer: 0.11.0                            # 视频播放(移动端) https://pub.flutter-io.cn/packages/fijkplayer
-  flutter_vlc_player: 7.4.2                     # 视频播放(移动端) https://pub.flutter-io.cn/packages/fijkplayer
+#  fijkplayer: 0.11.0                            # 视频播放(移动端) https://pub.flutter-io.cn/packages/fijkplayer
+#  flutter_vlc_player: 7.4.2                     # 视频播放(移动端) https://pub.flutter-io.cn/packages/fijkplayer
   mobile_scanner: 6.0.2                         # 扫描二维码(移动端) https://pub.flutter-io.cn/packages/mobile_scanner
   webview_flutter: 4.8.0                        # WebView(移动端) https://pub.dev/packages/webview_flutter
   flutter_html: 3.0.0-beta.2                    # Flutter加载html(移动端) https://pub.flutter-io.cn/packages/flutter_html
@@ -150,10 +150,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-  fonts:
-    - family: CustomIcons
-      fonts:
-        - asset: assets/fonts/CustomIcons.ttf
+
 flutter_intl:
   enabled: true
 
