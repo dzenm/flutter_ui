@@ -219,7 +219,7 @@ mixin LoggerMixin implements Logger {
   void page(Object? msg, {String? tag}) => (_level & LogManager._kVerboseFlag) > 0 &&
       output(msg, level: ' PAGE  ', tag: tag, color: colorGreenLight) > 0;
   @override
-  void debug(Object? msg, {String? tag}) => (_level & LogManager._kDebug) > 0 &&
+  void debug(Object? msg, {String? tag}) => (_level & LogManager._kDebugFlag) > 0 &&
       output(msg, level: ' DEBUG ', tag: tag, color: colorBlueDark) > 0;
   @override
   void info(Object? msg, {String? tag}) => (_level & LogManager._kInfoFlag) > 0 &&
@@ -270,9 +270,10 @@ class LogManager {
     this.builder,
     this.isDebug = true,
     this.tag = _tag,
-    this.level = Level.debug,
+    Level level = Level.release,
     LogConfig? config,
-  }) : config = config ?? const LogConfig();
+  }) : level = isDebug ? Level.debug : level,
+       config = config ?? const LogConfig();
 
   Logger get logger => builder == null
       ? DefaultLogger(logManager: this)
