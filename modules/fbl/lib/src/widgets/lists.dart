@@ -232,20 +232,23 @@ enum Direction {
 /// 统一滚动控件
 class ScrollConfigurationWidget extends StatelessWidget {
   final Widget child;
+  final ScrollController? controller;
 
-  const ScrollConfigurationWidget(
-      this.child, {
-        super.key,
-      });
+  const ScrollConfigurationWidget({
+    super.key,
+    required this.child,
+    this.controller,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ScrollConfiguration(
       behavior: ScrollBehave(),
       child: Scrollbar(
-        thickness: 5, //宽度
-        radius: const Radius.circular(5), //圆角
+        thickness: 5, // 宽度
+        radius: Radius.circular(5), //圆角
         child: child,
+        controller: controller,
       ),
     );
   }

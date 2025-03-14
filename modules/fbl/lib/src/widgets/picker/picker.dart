@@ -121,6 +121,32 @@ class PickerView<T> extends StatefulWidget {
     return result[0].name;
   }
 
+  // 获取所有城市名称
+  static List<String> getAllCities() {
+    List<String> cityList = [];
+    List cities = locations.map((item) {
+      String province = item['name']; // 省
+      List? cityNames = item['cityList'];
+      if ((cityNames?.isEmpty ?? true) || cityNames!.where((element) => element['name'] != null).toList().isEmpty) {
+        return [province]; // 无城市 - 默认省
+      }
+
+      List<String> proCityList = [];
+      for (var cityItem in cityNames) {
+        if (cityItem['name'] != null) {
+          proCityList.add(cityItem['name']);
+        }
+      }
+      return proCityList;
+    }).toList();
+
+    for (var element in cities) {
+      cityList.addAll(element);
+    }
+
+    return cityList;
+  }
+
   @override
   State<StatefulWidget> createState() => _PickerViewState();
 }

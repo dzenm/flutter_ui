@@ -239,6 +239,7 @@ class CommonDialog {
     double height = 45.0,
     String cancelText = 'cancel',
     bool isMaterial = false,
+    bool isDismissible = true,
   }) async {
     List<String> data = [];
     for (var item in items) {
@@ -299,6 +300,7 @@ class CommonDialog {
       context: context,
       backgroundColor: Colors.transparent,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      isDismissible: isDismissible,
       builder: (builder) {
         return Container(
           constraints: BoxConstraints(
