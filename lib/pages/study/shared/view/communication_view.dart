@@ -9,21 +9,21 @@ class CommunicationView extends StatefulWidget {
 
 class _CommunicationViewState extends State<CommunicationView> {
   String message = '';
-  List<PlatformFile> files = [];
+  // List<PlatformFile> files = [];
 
   @override
   Widget build(BuildContext context) {
     final service = context.watch<NearbyModel>();
-    final filesLoadings = service.filesLoadings;
-    final device = service.connectedDevice;
-    if (device == null) {
-      return Center(
-        child: ActionButton(
-          onTap: context.read<NearbyModel>().stopListeningAll,
-          title: 'Restart',
-        ),
-      );
-    }
+    // final filesLoadings = service.filesLoadings;
+    // final device = service.connectedDevice;
+    // if (device == null) {
+    //   return Center(
+    //     child: ActionButton(
+    //       onTap: context.read<NearbyModel>().stopListeningAll,
+    //       title: 'Restart',
+    //     ),
+    //   );
+    // }
     final inputBorder = OutlineInputBorder(
       borderSide: const BorderSide(color: kGreenColor),
       borderRadius: BorderRadius.circular(32),
@@ -32,7 +32,7 @@ class _CommunicationViewState extends State<CommunicationView> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        DevicePreview(device: device, largeView: true),
+        // DevicePreview(device: device, largeView: true),
         const SizedBox(height: 10),
         Flexible(
           child: Row(
@@ -81,57 +81,57 @@ class _CommunicationViewState extends State<CommunicationView> {
                   type: ActionType.success,
                   title: 'Choose files',
                   onTap: () async {
-                    final result = await FilePicker.platform.pickFiles(
-                      allowMultiple: true,
-                    );
+                    // final result = await FilePicker.platform.pickFiles(
+                    //   allowMultiple: true,
+                    // );
                     setState(() {
-                      files = [...?result?.files];
+                      // files = [...?result?.files];
                     });
                   },
                 ),
               ),
-              Flexible(
-                child: ActionButton(
-                  title: 'Send',
-                  onTap: () => context.read<NearbyModel>().sendFilesRequest([
-                    ...files
-                        .map((e) => e.path)
-                        .where((element) => element != null)
-                        .cast<String>(),
-                  ]),
-                ),
-              ),
+              // Flexible(
+              //   child: ActionButton(
+              //     title: 'Send',
+              //     onTap: () => context.read<NearbyModel>().sendFilesRequest([
+              //       ...files
+              //           .map((e) => e.path)
+              //           .where((element) => element != null)
+              //           .cast<String>(),
+              //     ]),
+              //   ),
+              // ),
             ],
           ),
         ),
         const SizedBox(height: 10),
         Column(
           children: [
-            ...filesLoadings.entries.map((entry) {
-              return Text(
-                'Files pack ${entry.key} with ${entry.value} files is loading.',
-              );
-            }),
+            // ...filesLoadings.entries.map((entry) {
+            //   return Text(
+            //     'Files pack ${entry.key} with ${entry.value} files is loading.',
+            //   );
+            // }),
           ],
         ),
         const SizedBox(height: 10),
         const Text('Selected files:', style: TextStyle(fontSize: 18)),
-        Flexible(
-          child: GridView.count(
-            shrinkWrap: true,
-            crossAxisCount: 2,
-            mainAxisSpacing: 12,
-            crossAxisSpacing: 12,
-            physics: const NeverScrollableScrollPhysics(),
-            children: [
-              ...files.where((element) => element.path != null).map(
-                (e) {
-                  return FilePreview(file: e);
-                },
-              ),
-            ],
-          ),
-        ),
+        // Flexible(
+        //   child: GridView.count(
+        //     shrinkWrap: true,
+        //     crossAxisCount: 2,
+        //     mainAxisSpacing: 12,
+        //     crossAxisSpacing: 12,
+        //     physics: const NeverScrollableScrollPhysics(),
+        //     children: [
+        //       ...files.where((element) => element.path != null).map(
+        //         (e) {
+        //           return FilePreview(file: e);
+        //         },
+        //       ),
+        //     ],
+        //   ),
+        // ),
       ],
     );
   }

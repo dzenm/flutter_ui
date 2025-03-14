@@ -85,6 +85,7 @@ abstract mixin class _InitAppMixin {
     Log.init(
       manager: LogManager(
         config: LogConfig(packageName: BuildConfig.packageInfo.packageName),
+        level: Level.release,
       ),
     );
     log('╔══════════════════════════════════════════ 开始初始化 ═════════════════════════════════════════════╗');

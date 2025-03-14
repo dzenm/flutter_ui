@@ -47,6 +47,28 @@ class _StudyPageState extends State<StudyPage> with Logging {
     };
     User user = User.fromJson(json);
     logInfo('测试：${user.toJson()}');
+
+    const int _kVerboseFlag = 1 << 3;
+    const int _kDebugFlag   = 1 << 4;
+    const int _kInfoFlag    = 1 << 5;
+    const int _kWarningFlag = 1 << 6;
+    const int _kErrorFlag   = 1 << 7;
+
+    const int _kDebug   = _kVerboseFlag|_kDebugFlag|_kInfoFlag|_kWarningFlag|_kErrorFlag;
+    const int _kDevelop =                           _kInfoFlag|_kWarningFlag|_kErrorFlag;
+    const int _kRelease =                                      _kWarningFlag|_kErrorFlag;
+    logDebug('结果：$_kVerboseFlag');
+    logDebug('结果：$_kDebugFlag');
+    logDebug('结果：$_kInfoFlag');
+    logDebug('结果：$_kWarningFlag');
+    logDebug('结果：$_kErrorFlag');
+
+    logDebug('结果：$_kDebug');
+    logDebug('结果：$_kDevelop');
+    logDebug('结果：$_kRelease');
+    logDebug('结果：${_kDebug&_kDebugFlag}');
+    logDebug('结果：${_kDevelop&_kDebugFlag}');
+    logDebug('结果：${_kRelease&_kDebugFlag}');
   }
 
   @override

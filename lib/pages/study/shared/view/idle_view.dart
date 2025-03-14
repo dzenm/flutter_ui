@@ -64,7 +64,7 @@ class _IdleViewState extends State<IdleView> {
             ),
           ActionButton(
             onTap: () {
-              context.read<AppService>().initialize(controller.text);
+              context.read<NearbyModel>().initialize(controller.text);
             },
             title: 'Tap to start',
           ),
