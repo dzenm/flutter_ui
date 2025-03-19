@@ -48,6 +48,7 @@ class _WifiDirectBodyPageState extends State<WifiDirectBodyPage> with Logging im
   @override
   void dispose() {
     services.dispose();
+    services.unregister();
     super.dispose();
   }
 

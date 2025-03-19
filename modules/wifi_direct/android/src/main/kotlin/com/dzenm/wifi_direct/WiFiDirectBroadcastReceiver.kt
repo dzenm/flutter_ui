@@ -46,11 +46,11 @@ class WiFiDirectBroadcastReceiver(
                     listener.onConnectionInfoAvailable(info)
                 }
                 log("WIFI_P2P_CONNECTION_CHANGED_ACTION")
-                if ( networkInfo?.isConnected == true) {
-                    log("已连接 P2P 设备")
+                if (networkInfo?.isConnected == true) {
+                    log("设备P2P 处于连接状态")
                 } else {
                     listener.onDisconnected()
-                    log("已断开 P2P 连接")
+                    log("设备P2P 处于断开状态")
                 }
             }
 

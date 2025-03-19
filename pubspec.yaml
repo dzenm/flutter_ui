@@ -85,7 +85,7 @@ dependencies:
   mobile_scanner: 6.0.2                         # 扫描二维码(移动端) https://pub.flutter-io.cn/packages/mobile_scanner
   webview_flutter: 4.8.0                        # WebView(移动端) https://pub.dev/packages/webview_flutter
   flutter_html: 3.0.0-beta.2                    # Flutter加载html(移动端) https://pub.flutter-io.cn/packages/flutter_html
-  permission_handler: 11.3.1
+  permission_handler: 11.3.1                    # 权限请求(全平台) https://pub.flutter-io.cn/packages/permission_handler
   ########################################## 工具 ########################################
   lpinyin: 2.0.3                                # 汉字转拼音(全平台) https://pub.flutter-io.cn/packages/lpinyin
   crypto: 3.0.6                                 # 加密解密工具(全平台) https://pub.flutter-io.cn/packages/crypto

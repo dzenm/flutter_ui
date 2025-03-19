@@ -1,8 +1,6 @@
 package com.dzenm.wifi_direct
 
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -19,8 +17,6 @@ import java.lang.ref.WeakReference
  */
 class WifiDirectPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
-    private val tag = "WiFiDirect"
-
     /// The MethodChannel that will the communication between Flutter and native Android
     ///
     /// This local reference serves to register the plugin with the Flutter Engine and unregister it
@@ -28,15 +24,15 @@ class WifiDirectPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     private lateinit var channel: MethodChannel
     private lateinit var mManager: WifiDirectManager
     private lateinit var connectionChannel: EventChannel
-    private val connection: WeakReference<ConnectionStream> by lazy(LazyThreadSafetyMode.NONE) {
-        WeakReference<ConnectionStream>(ConnectionStream())
+    private val connection: WeakReference<WifiDirectStream> by lazy(LazyThreadSafetyMode.NONE) {
+        WeakReference<WifiDirectStream>(WifiDirectStream())
     }
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         val context = flutterPluginBinding.applicationContext
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "wifi_direct")
         channel.setMethodCallHandler(this)
-        connectionChannel = EventChannel(flutterPluginBinding.binaryMessenger, "wifi_direct_connection")
+        connectionChannel = EventChannel(flutterPluginBinding.binaryMessenger, "wifi_direct_stream")
         connectionChannel.setStreamHandler(connection.get())
         mManager = WifiDirectManager(context, connection)
     }
@@ -49,8 +45,8 @@ class WifiDirectPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 "initialize" -> mManager.initialize(result)
                 "register" -> mManager.register(result)
                 "unregister" -> mManager.unregister(result)
-                "discover" -> mManager.discoverPeers()
-                "stopDiscovery" -> mManager.stopPeerDiscovery(result)
+                "discoverPeers" -> mManager.discoverPeers()
+                "stopPeerDiscovery" -> mManager.stopPeerDiscovery(result)
                 "requestPeers" -> mManager.requestPeers(result)
                 "connect" -> mManager.connect(call.argument("address") ?: "", result)
                 "disconnect" -> mManager.disconnect(result)
@@ -73,52 +69,6 @@ class WifiDirectPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         channel.setMethodCallHandler(null)
         connectionChannel.setStreamHandler(null)
-    }
-
-    private val foundPeersHandler = object : EventChannel.StreamHandler {
-        private var handler: Handler = Handler(Looper.getMainLooper())
-        private var eventSink: EventChannel.EventSink? = null
-
-        override fun onListen(p0: Any?, sink: EventChannel.EventSink) {
-            eventSink = sink
-            val runnable: Runnable = object : Runnable {
-                override fun run() {
-                    handler.post {
-                        val json = mManager.getDevices()
-                        eventSink?.success(json)
-                    }
-                    handler.postDelayed(this, 1000)
-                }
-            }
-            handler.postDelayed(runnable, 1000)
-        }
-
-        override fun onCancel(p0: Any?) {
-            eventSink = null
-        }
-    }
-
-    private val connectedPeersHandler = object : EventChannel.StreamHandler {
-        private var handler: Handler = Handler(Looper.getMainLooper())
-        private var eventSink: EventChannel.EventSink? = null
-
-        override fun onListen(p0: Any?, sink: EventChannel.EventSink) {
-            eventSink = sink
-            val runnable: Runnable = object : Runnable {
-                override fun run() {
-                    handler.post {
-                        val json = mManager.getWifiP2PInfo()
-                        eventSink?.success(json)
-                    }
-                    handler.postDelayed(this, 1000)
-                }
-            }
-            handler.postDelayed(runnable, 1000)
-        }
-
-        override fun onCancel(p0: Any?) {
-            eventSink = null
-        }
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {

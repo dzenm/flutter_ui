@@ -1,6 +1,5 @@
 package com.dzenm.wifi_direct
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -13,7 +12,6 @@ import android.net.wifi.p2p.WifiP2pGroup
 import android.net.wifi.p2p.WifiP2pInfo
 import android.net.wifi.p2p.WifiP2pManager
 import android.os.Build
-import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
 import android.util.Log
@@ -24,14 +22,18 @@ import java.lang.ref.WeakReference
 
 class WifiDirectManager(
     private val context: Context,
-    private val connection: WeakReference<ConnectionStream>,
+    connection: WeakReference<WifiDirectStream>,
 ) : P2pConnectionListener {
 
     private val wifiManager: WifiP2pManager by lazy(LazyThreadSafetyMode.NONE) {
         context.getSystemService(Context.WIFI_P2P_SERVICE) as WifiP2pManager
     }
     private var wifiChannel: WifiP2pManager.Channel? = null
-    private var receiver: BroadcastReceiver? = null
+    private var receiver: WiFiDirectBroadcastReceiver? = null
+
+    private var conn = connection.get()
+
+    ////////////////////////////////////////////////////////////////////////////
 
     /**
      * GPS是否开启
@@ -177,12 +179,11 @@ class WifiDirectManager(
         wifiChannel?.also { channel ->
             wifiManager.requestPeers(channel) { peers ->
                 // Handle peers list
-                val list: MutableList<Any> = mutableListOf()
+                val list: MutableList<Map<String, Any>> = mutableListOf()
                 for (device: WifiP2pDevice in peers.deviceList) {
                     list.add(mergeDevice(device))
                 }
-                addDevices(peers = list)
-                result.success(toJson(list))
+                result.success(list)
                 log("请求已扫描设备的列表：list=${toJson(list)}")
             }
         }
@@ -191,23 +192,22 @@ class WifiDirectManager(
     /**
      * 将 [device] 转化为需要的信息
      */
-    fun mergeDevice(device: WifiP2pDevice): Any {
-        val result = object {
-            // from https://developer.android.com/reference/android/net/wifi/p2p/WifiP2pDevice
-            val deviceName: String = if (device.deviceName == null) "" else device.deviceName
-            val deviceAddress: String = if (device.deviceAddress == null) "" else device.deviceAddress
-            val primaryDeviceType: String? = if (device.primaryDeviceType == null) "" else device.primaryDeviceType
-            val secondaryDeviceType: String? = if (device.secondaryDeviceType == null) "" else device.secondaryDeviceType
-            val status: Int = device.status
+    private fun mergeDevice(device: WifiP2pDevice): Map<String, Any> {
+        // from https://developer.android.com/reference/android/net/wifi/p2p/WifiP2pDevice
+        return mapOf(
+            "deviceName" to if (device.deviceName == null) "" else device.deviceName,
+            "deviceAddress" to if (device.deviceAddress == null) "" else device.deviceAddress,
+            "primaryDeviceType" to if (device.primaryDeviceType == null) "" else device.primaryDeviceType,
+            "secondaryDeviceType" to if (device.secondaryDeviceType == null) "" else device.secondaryDeviceType,
+            "status" to device.status,
 
             // methods called on object before sending through channel
-            val wpsPbcSupported: Boolean = if (device.deviceName == null) false else device.wpsPbcSupported()
-            val wpsKeypadSupported: Boolean = if (device.deviceName == null) false else device.wpsKeypadSupported()
-            val wpsDisplaySupported: Boolean = if (device.deviceName == null) false else device.wpsDisplaySupported()
-            val isServiceDiscoveryCapable: Boolean = if (device.deviceName == null) false else device.isServiceDiscoveryCapable
-            val isGroupOwner: Boolean = if (device.deviceName == null) false else device.isGroupOwner
-        }
-        return result
+            "wpsPbcSupported" to if (device.deviceName == null) false else device.wpsPbcSupported(),
+            "wpsKeypadSupported" to if (device.deviceName == null) false else device.wpsKeypadSupported(),
+            "wpsDisplaySupported" to if (device.deviceName == null) false else device.wpsDisplaySupported(),
+            "isServiceDiscoveryCapable" to if (device.deviceName == null) false else device.isServiceDiscoveryCapable,
+            "isGroupOwner" to if (device.deviceName == null) false else device.isGroupOwner,
+        )
     }
 
     /**
@@ -280,12 +280,12 @@ class WifiDirectManager(
     fun requestGroup(result: MethodChannel.Result? = null) {
         wifiChannel?.also { channel ->
             wifiManager.requestGroupInfo(channel) { group ->
-                var json: String? = null
+                var json: Map<String, Any> = emptyMap()
                 if (group != null) {
-                    json = toJson(mergeGroup(group = group))
+                    json = mergeGroup(group = group)
                 }
                 result?.success(json)
-                log("请求群组信息：json=$json")
+                log("请求群组信息：json=${toJson(json)}")
             }
         }
     }
@@ -328,94 +328,51 @@ class WifiDirectManager(
         }
     }
 
-    private fun mergeGroup(group: WifiP2pGroup): Any {
-        val result = object {
-            val networkName: String = if (group.networkName == null) "" else group.networkName
-            val isGroupOwner: Boolean = group.isGroupOwner
-            val owner: Any = mergeDevice(group.owner)
-            val clients: Any = mergeDevices(group.clientList)
-            val passphrase: String = if (group.passphrase == null) "" else group.passphrase
-            val interfaceName: String = if (group.getInterface() == null) "" else group.getInterface()
-            val networkId: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+    ////////////////////////////////////////////////////////////////////////////
+
+    private fun mergeGroup(group: WifiP2pGroup): Map<String, Any> {
+        return mapOf(
+            "networkName" to if (group.networkName == null) "" else group.networkName,
+            "isGroupOwner" to group.isGroupOwner,
+            "owner" to mergeDevice(group.owner),
+            "clients" to mergeDevices(group.clientList),
+            "passphrase" to if (group.passphrase == null) "" else group.passphrase,
+            "interfaceName" to if (group.getInterface() == null) "" else group.getInterface(),
+            "networkId" to if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 group.networkId
             } else {
                 -1
-            }
-            val frequency: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            },
+            "frequency" to if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 group.frequency
             } else {
                 -1
-            }
-        }
-        return result
+            },
+        )
     }
 
     /**
      * 将 [devices] 转化为需要的信息
      */
-    private fun mergeDevices(devices: MutableCollection<WifiP2pDevice>): MutableList<Any> {
-        val list: MutableList<Any> = mutableListOf()
+    private fun mergeDevices(devices: MutableCollection<WifiP2pDevice>): MutableList<Map<String, Any>> {
+        val list: MutableList<Map<String, Any>> = mutableListOf()
         for (device: WifiP2pDevice in devices) {
             list.add(mergeDevice(device))
         }
         return list
     }
 
-    /**
-     * 找到的附近设备
-     */
-    private var foundDevices: MutableList<Any> = mutableListOf()
-
-    /**
-     * 添加找到的附近设备
-     */
-    private fun addDevices(peers: MutableList<Any>) {
-        if (foundDevices.toString() == peers.toString()) return
-        foundDevices = peers
-        log("requestPeers：Peers=" + getDevices())
-    }
-
-    /**
-     * 获取设备
-     */
-    fun getDevices(): String = toJson(foundDevices)
-
     private var mNetworkInfo: NetworkInfo? = null
     private var mWifiP2pInfo: WifiP2pInfo? = null
     private var mGroup: Any = {}
 
     /**
-     * 设置连接的信息
-     */
-    fun addConnection(network: NetworkInfo, wifiP2pInfo: WifiP2pInfo, group: WifiP2pGroup?) {
-        if (network == mNetworkInfo || wifiP2pInfo == mWifiP2pInfo) return
-        mNetworkInfo = network
-        mWifiP2pInfo = wifiP2pInfo
-        if (group == null) return
-        addGroup(mergeGroup(group = group))
-    }
-
-    /**
-     * 添加搜索到的群组内设备
-     */
-    private fun addGroup(group: Any) {
-        if (mGroup.toString() == group.toString()) return
-        mGroup = group
-        log("requestPeers：Peers=" + getGroup())
-    }
-
-    /**
-     * 获取群组信息
-     */
-    private fun getGroup(): String = toJson(mGroup)
-
-    /**
      * 获取Wi-Fi P2P信息
      */
-    fun getWifiP2PInfo(): String {
+    fun getWifiP2PInfo(): Map<String, Any> {
         val ni = mNetworkInfo
         val wi = mWifiP2pInfo
-        if (ni == null || wi == null) return ""
+        if (ni == null || wi == null) return emptyMap()
 
         val obj = object {
             // https://developer.android.com/reference/android/net/wifi/p2p/WifiP2pGroup
@@ -430,58 +387,96 @@ class WifiDirectManager(
 
             val group: Any = mGroup
         }
-        return toJson(obj)
+        return emptyMap()
     }
 
     private fun toJson(any: Any) = Gson().toJson(any)
 
     fun requestPeers(listener: WifiP2pManager.PeerListListener) {
         wifiChannel?.also { channel ->
-            wifiManager.requestPeers(channel) { peers ->
-                // Handle peers list
-                listener.onPeersAvailable(peers)
-            }
+            wifiManager.requestPeers(channel, listener)
         }
     }
 
     fun requestConnection(listener: WifiP2pManager.ConnectionInfoListener) {
         wifiChannel?.also { channel ->
-            wifiManager.requestConnectionInfo(channel) { info ->
-                // Handle peers list
-                listener.onConnectionInfoAvailable(info)
-            }
+            wifiManager.requestConnectionInfo(channel, listener)
         }
     }
 
     override fun onP2pState(enabled: Boolean) {
-
+        conn?.send(
+            mapOf(
+                "p2pState" to enabled
+            )
+        )
     }
 
     override fun onPeersAvailable(peers: List<WifiP2pDevice>) {
+        conn?.send(mapOf("peersAvailable" to mergeDevices(peers.toMutableList())))
     }
 
     override fun onConnectionInfoAvailable(info: WifiP2pInfo) {
+        conn?.send(
+            mapOf(
+                "connectionAvailable" to mapOf(
+                    "groupFormed" to info.groupFormed,
+                    "isGroupOwner" to info.isGroupOwner,
+                    "groupOwnerAddress" to if (info.groupOwnerAddress == null) "" else info.groupOwnerAddress.toString(),
+                )
+            )
+        )
+
     }
 
     override fun onDisconnected() {
+        conn?.send(
+            mapOf(
+                "p2pConnection" to false
+            )
+        )
     }
 
-    override fun onSelfP2pChanged(device: WifiP2pDevice) {}
+    override fun onSelfP2pChanged(device: WifiP2pDevice) {
+        conn?.send(
+            mapOf(
+                "selfP2pChanged" to mergeDevice(device)
+            )
+        )
+    }
 }
 
-class ConnectionStream : EventChannel.StreamHandler {
-
-    private var mHandler: Handler = Handler(Looper.getMainLooper())
+class WifiDirectStream : EventChannel.StreamHandler {
     private var mEventSink: EventChannel.EventSink? = null
 
     override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
         mEventSink = events
+        log("监听 [WifiDirectStream] 开启：arguments=$arguments")
     }
 
     override fun onCancel(arguments: Any?) {
         mEventSink = null
+        log("监听 [WifiDirectStream] 取消：arguments=$arguments")
     }
+
+    fun send(params: Any) {
+        mEventSink?.also { sink ->
+            sink.success(params)
+        }
+    }
+
+    fun error(str1: String, str2: String, params: Any) {
+        mEventSink?.also { sink ->
+            sink.error(str1, str2, params)
+        }
+    }
+
+    fun cancel() {
+        mEventSink?.also { sink ->
+            sink.endOfStream()
+        }
+    }
+
 }
 
-
-fun log(msg: String) = Log.d("WifiDirect", msg)
+fun log(msg: String) = if (false) null else Log.d("WifiDirect", msg)

@@ -11,6 +11,37 @@ class WifiP2pInfo {
   /// Group owner address
   final String groupOwnerAddress;
 
+  WifiP2pInfo({
+    required this.groupFormed,
+    required this.isGroupOwner,
+    required this.groupOwnerAddress,
+  });
+
+  factory WifiP2pInfo.fromJson(Map<String, dynamic> json) {
+    return WifiP2pInfo(
+      groupFormed: json['groupFormed'] ?? false,
+      isGroupOwner: json['isGroupOwner'] ?? false,
+      groupOwnerAddress: json['groupOwnerAddress'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'groupFormed': groupFormed,
+        'isGroupOwner': isGroupOwner,
+        'groupOwnerAddress': groupOwnerAddress,
+      };
+}
+
+class WifiP2p {
+  /// Indicates if a p2p group has been successfully formed
+  final bool groupFormed;
+
+  /// Indicates if the current device is the group owner
+  final bool isGroupOwner;
+
+  /// Group owner address
+  final String groupOwnerAddress;
+
   /// Indicates whether network connectivity exists and it is possible to establish connections and pass
   /// data.
   /// Always call this before attempting to perform data transactions.
@@ -35,7 +66,7 @@ class WifiP2pInfo {
   /// @see [WifiP2pGroup]
   final WifiP2pGroup? group;
 
-  WifiP2pInfo({
+  WifiP2p({
     required this.groupFormed,
     required this.isGroupOwner,
     required this.groupOwnerAddress,
@@ -47,15 +78,15 @@ class WifiP2pInfo {
   });
 
   Map<String, dynamic> toJson() => {
-    'groupFormed': groupFormed,
-    'isGroupOwner': isGroupOwner,
-    'groupOwnerAddress': groupOwnerAddress,
-    'isConnected': isConnected,
-    'isAvailable': isAvailable,
-    'reason': reason,
-    'extraInfo': extraInfo,
-    'group': group?.toJson(),
-  };
+        'groupFormed': groupFormed,
+        'isGroupOwner': isGroupOwner,
+        'groupOwnerAddress': groupOwnerAddress,
+        'isConnected': isConnected,
+        'isAvailable': isAvailable,
+        'reason': reason,
+        'extraInfo': extraInfo,
+        'group': group?.toJson(),
+      };
 }
 
 /// 群组信息
@@ -222,4 +253,16 @@ enum DeviceStatus {
     }
     return DeviceStatus.unavailable;
   }
+}
+
+abstract interface class P2pConnectionListener {
+  void onP2pState(bool enabled);
+
+  void onPeersAvailable(List<WifiP2pDevice> peers);
+
+  void onConnectionInfoAvailable(WifiP2pInfo info);
+
+  void onDisconnected();
+
+  void onSelfP2pChanged(WifiP2pDevice device);
 }

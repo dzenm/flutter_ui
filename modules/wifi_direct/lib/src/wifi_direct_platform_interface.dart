@@ -44,12 +44,16 @@ abstract class WifiDirectPlatform extends PlatformInterface {
     throw UnimplementedError('unregister() has not been implemented.');
   }
 
-  Future<bool> discover() {
-    throw UnimplementedError('discover() has not been implemented.');
+  Future<bool> discoverPeers() {
+    throw UnimplementedError('discoverPeers() has not been implemented.');
   }
 
-  Future<bool> stopDiscovery() {
-    throw UnimplementedError('stopDiscovery() has not been implemented.');
+  Future<bool> stopPeerDiscovery() {
+    throw UnimplementedError('stopPeerDiscovery() has not been implemented.');
+  }
+
+  Future<List<WifiP2pDevice>> requestPeers() {
+    throw UnimplementedError('requestPeers() has not been implemented.');
   }
 
   Future<bool> connect(String address) {
@@ -89,13 +93,13 @@ abstract class WifiDirectPlatform extends PlatformInterface {
     throw UnimplementedError('openWifiSettingsPage() has not been implemented.');
   }
 
-  Stream<String?> getConnectionStream() {
+  void setP2pConnectionListener(P2pConnectionListener listener) {
     throw UnimplementedError(
-        'wifiP2PStream() has not been implemented.');
+        'setP2pConnectionListener() has not been implemented.');
   }
 
-  void cancel() {
+  Stream<String?> receiveConnectionStream() {
     throw UnimplementedError(
-        'wifiP2PStream() has not been implemented.');
+        'receiveConnectionStream() has not been implemented.');
   }
 }

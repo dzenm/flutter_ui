@@ -20,12 +20,16 @@ class WifiDirect {
     return WifiDirectPlatform.instance.unregister();
   }
 
-  Future<bool> discover() async {
-    return WifiDirectPlatform.instance.discover();
+  Future<bool> discoverPeers() async {
+    return WifiDirectPlatform.instance.discoverPeers();
   }
 
-  Future<bool> stopDiscovery() async {
-    return WifiDirectPlatform.instance.stopDiscovery();
+  Future<bool> stopPeerDiscovery() async {
+    return WifiDirectPlatform.instance.stopPeerDiscovery();
+  }
+
+  Future<List<WifiP2pDevice>> requestPeers() async {
+    return WifiDirectPlatform.instance.requestPeers();
   }
 
   Future<bool> connect(String address) async {
@@ -64,11 +68,10 @@ class WifiDirect {
     return WifiDirectPlatform.instance.openWifiSettingsPage();
   }
 
-  Stream<String?> getConnectionStream() {
-    return WifiDirectPlatform.instance.getConnectionStream();
-  }
+  void setP2pConnectionListener(P2pConnectionListener listener) => //
+      WifiDirectPlatform.instance.setP2pConnectionListener(listener);
 
-  void cancel() {
-    WifiDirectPlatform.instance.cancel();
+  Stream<String?> receiveConnectionStream() {
+    return WifiDirectPlatform.instance.receiveConnectionStream();
   }
 }

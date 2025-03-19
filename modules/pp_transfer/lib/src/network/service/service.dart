@@ -23,6 +23,35 @@ abstract interface class NearbyService {
   Future<void> dispose();
 }
 
+abstract interface class NearbyServiceInterface {
+
+  /// 初始化
+  /// [return] @see [WifiError]
+  Future<ServeStatus> initialize();
+
+  /// 扫描设备
+  /// [return] 扫描的设备信息
+  Future<bool> discoverDevices();
+
+  /// 连接设备
+  /// [remote] 连接的设备地址
+  /// [return] true=连接设备成功；false=连接设备失败；
+  Future<bool> connect(SocketAddress remote);
+
+  /// 清除信息
+  Future<void> dispose();
+}
+
+enum ServeStatus {
+  none, // 初始状态
+  nearbyOrLocationPermissionError, // 附近的设备或位置权限未打开
+  wifiOrGPSPermissionError, // Wi-Fi或GPS权限未打开
+  grantedPermission, // 已授权
+  initializeError, // 初始化错误
+  createGroupError, // 创建群组错误
+  initialize, // 初始化完成
+}
+
 abstract interface class DeviceListener {
   void onListen(List<SocketAddress> addresses);
 }

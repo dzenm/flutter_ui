@@ -27,20 +27,20 @@ class MockWifiDirectPlatform with MockPlatformInterfaceMixin implements WifiDire
   }
 
   @override
-  Future<bool> discover() {
-    // TODO: implement discover
+  Future<bool> discoverPeers() {
+    // TODO: implement discoverPeers
+    throw UnimplementedError();
+  }
+
+  @override
+  Stream<String?> receiveConnectionStream() {
+    // TODO: implement getConnectionStream
     throw UnimplementedError();
   }
 
   @override
   Future<String?> getPlatformModel() {
     // TODO: implement getPlatformModel
-    throw UnimplementedError();
-  }
-
-  @override
-  Stream<String?> getConnectionStream() {
-    // TODO: implement getWifiStream
     throw UnimplementedError();
   }
 
@@ -87,8 +87,25 @@ class MockWifiDirectPlatform with MockPlatformInterfaceMixin implements WifiDire
   }
 
   @override
-  Future<bool> stopDiscovery() {
-    // TODO: implement stopDiscovery
+  Future<WifiP2pGroup?> requestGroup() {
+    // TODO: implement requestGroup
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<WifiP2pDevice>> requestPeers() {
+    // TODO: implement requestPeers
+    throw UnimplementedError();
+  }
+
+  @override
+  void setP2pConnectionListener(P2pConnectionListener listener) {
+    // TODO: implement setP2pConnectionListener
+  }
+
+  @override
+  Future<bool> stopPeerDiscovery() {
+    // TODO: implement stopPeerDiscovery
     throw UnimplementedError();
   }
 
@@ -98,16 +115,6 @@ class MockWifiDirectPlatform with MockPlatformInterfaceMixin implements WifiDire
     throw UnimplementedError();
   }
 
-  @override
-  void cancel() {
-    // TODO: implement cancel
-  }
-
-  @override
-  Future<WifiP2pGroup?> requestGroup() {
-    // TODO: implement requestGroup
-    throw UnimplementedError();
-  }
 }
 
 void main() {
