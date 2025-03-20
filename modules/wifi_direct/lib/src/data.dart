@@ -132,11 +132,17 @@ class WifiP2pGroup {
   });
 
   factory WifiP2pGroup.fromJson(Map<String, dynamic> json) {
+    var owner = json['owner'] == null ? null : json['owner'] as Map<Object?, Object?>;
+    var ownerJson = owner?.map((key, val) => MapEntry(key.toString(), val));
+    var clients = json['clients'] == null ? null : json['clients'] as List<Object?>;
+    var clientsJson = clients?.map((e) {
+      return (e as Map<Object?, Object?>).map((key, val) => MapEntry(key.toString(), val));
+    }).toList() ?? [];
     return WifiP2pGroup(
       networkName: json['networkName'] ?? '',
       isGroupOwner: json['isGroupOwner'] ?? false,
-      owner: json['owner'] == null ? null : WifiP2pDevice.fromJson(json['owner']),
-      clients: ((json['clients'] ?? []) as List<dynamic>).map((e) => WifiP2pDevice.fromJson(e)).toList(),
+      owner: ownerJson == null ? null : WifiP2pDevice.fromJson(ownerJson),
+      clients: clientsJson.map((e) => WifiP2pDevice.fromJson(e)).toList(),
       passphrase: json['passphrase'] ?? '',
       interfaceName: json['interfaceName'] ?? '',
       networkId: json['networkId'] ?? 0,

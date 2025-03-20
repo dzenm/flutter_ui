@@ -40,8 +40,9 @@ class WifiDirectPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     override fun onMethodCall(call: MethodCall, result: Result) {
         try {
             when (call.method) {
-                "getPlatformVersion" -> result.success("Android: ${Build.VERSION.RELEASE}")
-                "getPlatformModel" -> result.success("model: ${Build.MODEL}")
+                "getPlatformVersion" -> result.success(Build.VERSION.RELEASE)
+                "getPlatformSDKVersion" -> result.success(Build.VERSION.SDK_INT)
+                "getPlatformModel" -> result.success(Build.MODEL)
                 "initialize" -> mManager.initialize(result)
                 "register" -> mManager.register(result)
                 "unregister" -> mManager.unregister(result)

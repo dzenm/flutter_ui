@@ -26,8 +26,8 @@ abstract interface class NearbyService {
 abstract interface class NearbyServiceInterface {
 
   /// 初始化
-  /// [return] @see [WifiError]
-  Future<ServeStatus> initialize();
+  /// [return] true=初始化成功，false=初始化失败
+  Future<bool> initialize();
 
   /// 扫描设备
   /// [return] 扫描的设备信息
@@ -40,16 +40,6 @@ abstract interface class NearbyServiceInterface {
 
   /// 清除信息
   Future<void> dispose();
-}
-
-enum ServeStatus {
-  none, // 初始状态
-  nearbyOrLocationPermissionError, // 附近的设备或位置权限未打开
-  wifiOrGPSPermissionError, // Wi-Fi或GPS权限未打开
-  grantedPermission, // 已授权
-  initializeError, // 初始化错误
-  createGroupError, // 创建群组错误
-  initialize, // 初始化完成
 }
 
 abstract interface class DeviceListener {

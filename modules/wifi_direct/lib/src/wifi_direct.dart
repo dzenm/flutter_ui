@@ -4,74 +4,78 @@ import 'wifi_direct_platform_interface.dart';
 export 'data.dart';
 
 class WifiDirect {
-  Future<String?> getPlatformVersion() {
-    return WifiDirectPlatform.instance.getPlatformVersion();
+  Future<String?> getPlatformVersion() async {
+    return await WifiDirectPlatform.instance.getPlatformVersion();
+  }
+
+  Future<int> getPlatformSDKVersion() async {
+    return await WifiDirectPlatform.instance.getPlatformSDKVersion();
   }
 
   Future<bool> initialize() async {
-    return WifiDirectPlatform.instance.initialize();
+    return await WifiDirectPlatform.instance.initialize();
   }
 
   Future<bool> register() async {
-    return WifiDirectPlatform.instance.register();
+    return await WifiDirectPlatform.instance.register();
   }
 
   Future<bool> unregister() async {
-    return WifiDirectPlatform.instance.unregister();
+    return await WifiDirectPlatform.instance.unregister();
   }
 
   Future<bool> discoverPeers() async {
-    return WifiDirectPlatform.instance.discoverPeers();
+    return await WifiDirectPlatform.instance.discoverPeers();
   }
 
   Future<bool> stopPeerDiscovery() async {
-    return WifiDirectPlatform.instance.stopPeerDiscovery();
+    return await WifiDirectPlatform.instance.stopPeerDiscovery();
   }
 
   Future<List<WifiP2pDevice>> requestPeers() async {
-    return WifiDirectPlatform.instance.requestPeers();
+    return await WifiDirectPlatform.instance.requestPeers();
   }
 
   Future<bool> connect(String address) async {
-    return WifiDirectPlatform.instance.connect(address);
+    return await WifiDirectPlatform.instance.connect(address);
   }
 
   Future<bool> disconnect() async {
-    return WifiDirectPlatform.instance.disconnect();
+    return await WifiDirectPlatform.instance.disconnect();
   }
 
   Future<WifiP2pGroup?> requestGroup() async {
-    return WifiDirectPlatform.instance.requestGroup();
+    return await WifiDirectPlatform.instance.requestGroup();
   }
 
   Future<bool> createGroup() async {
-    return WifiDirectPlatform.instance.createGroup();
+    return await WifiDirectPlatform.instance.createGroup();
   }
 
   Future<bool> removeGroup() async {
-    return WifiDirectPlatform.instance.removeGroup();
+    return await WifiDirectPlatform.instance.removeGroup();
   }
 
   Future<bool> isGPSEnabled() async {
-    return WifiDirectPlatform.instance.isGPSEnabled();
+    return await WifiDirectPlatform.instance.isGPSEnabled();
   }
 
   Future<bool> openLocationSettingsPage() async {
-    return WifiDirectPlatform.instance.openLocationSettingsPage();
+    return await WifiDirectPlatform.instance.openLocationSettingsPage();
   }
 
   Future<bool> isWifiEnabled() async {
-    return WifiDirectPlatform.instance.isWifiEnabled();
+    return await WifiDirectPlatform.instance.isWifiEnabled();
   }
 
   Future<bool> openWifiSettingsPage() async {
-    return WifiDirectPlatform.instance.openWifiSettingsPage();
+    return await WifiDirectPlatform.instance.openWifiSettingsPage();
   }
 
   void setP2pConnectionListener(P2pConnectionListener listener) => //
       WifiDirectPlatform.instance.setP2pConnectionListener(listener);
 
-  Stream<String?> receiveConnectionStream() {
+  Stream<bool> receiveConnectionStream() {
     return WifiDirectPlatform.instance.receiveConnectionStream();
   }
 }

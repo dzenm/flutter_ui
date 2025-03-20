@@ -1,7 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES"/>
+    <uses-permission
+        android:name="android.permission.NEARBY_WIFI_DEVICES"
+        android:usesPermissionFlags="neverForLocation" android:minSdkVersion="33"/>
     <!-- If your app derives location information from
          Wi-Fi APIs, don't include the "usesPermissionFlags"
          attribute. -->

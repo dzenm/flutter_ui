@@ -19,10 +19,18 @@ class WifiDirectAndroid extends WifiDirectPlatform {
   }
 
   @override
+  Future<int> getPlatformSDKVersion() async {
+    final version = await methodChannel.invokeMethod<int>('getPlatformSDKVersion');
+    return version ?? 0;
+  }
+
+  @override
   Future<bool> initialize() async {
     final result = await methodChannel.invokeMethod<bool>('initialize');
     return result ?? false;
   }
+
+  bool _isRegister = false;
 
   @override
   Future<bool> register() async {
@@ -79,7 +87,7 @@ class WifiDirectAndroid extends WifiDirectPlatform {
   @override
   Future<WifiP2pGroup?> requestGroup() async {
     final result = await methodChannel.invokeMethod<Map<Object?, Object?>>('requestGroup');
-    if (result == null) {
+    if (result == null || result.isEmpty) {
       return null;
     }
     var json = result.map((key, val) => MapEntry(key.toString(), val));
@@ -122,19 +130,17 @@ class WifiDirectAndroid extends WifiDirectPlatform {
     return result ?? false;
   }
 
-  bool _isRegister = false;
-
   final EventChannel _connectionChannel = const EventChannel('wifi_direct_stream');
 
-  Stream<String?>? _connectionStream;
+  Stream<bool>? _connectionStream;
 
   @override
   void setP2pConnectionListener(P2pConnectionListener listener) => _listener = listener;
   P2pConnectionListener? _listener;
 
   @override
-  Stream<String?> receiveConnectionStream() {
-    Stream<String?>? stream = _connectionStream;
+  Stream<bool> receiveConnectionStream() {
+    Stream<bool>? stream = _connectionStream;
     if (stream == null) {
       stream = _connectionChannel.receiveBroadcastStream().map((result) {
         if (result['p2pState'] != null) {
@@ -160,45 +166,7 @@ class WifiDirectAndroid extends WifiDirectPlatform {
           WifiP2pDevice selfDevice = WifiP2pDevice.fromJson(json);
           _listener?.onSelfP2pChanged(selfDevice);
         }
-        return '';
-        // bool isEmpty = connection == null || connection == 'null' || connection.toString().isEmpty;
-        // if (isEmpty) {
-        //   return null;
-        //   // return WifiP2pInfo(
-        //   //   groupFormed: false,
-        //   //   isGroupOwner: false,
-        //   //   groupOwnerAddress: '',
-        //   //   isConnected: false,
-        //   //   isAvailable: false,
-        //   //   reason: '',
-        //   //   extraInfo: '',
-        //   // );
-        // }
-        // Map<String, dynamic> json = jsonDecode(connection);
-        // List<WifiP2pDevice> clients = [];
-        // WifiP2pGroup? group;
-        // if (json['group'] != null) {
-        //   Map<String, dynamic> map = json['group'];
-        //   group = WifiP2pGroup.fromJson(map);
-        // }
-        //
-        // bool isConnected = false;
-        // if (json['isGroupOwner'] == true) {
-        //   isConnected = json['isConnected'] == true && clients.isNotEmpty;
-        // } else {
-        //   isConnected = json['isConnected'];
-        // }
-        return null;
-        // return WifiP2pInfo(
-        //   groupFormed: json['groupFormed'],
-        //   isGroupOwner: json['isGroupOwner'],
-        //   groupOwnerAddress: json['groupOwnerAddress'],
-        //   isConnected: isConnected,
-        //   isAvailable: json['isAvailable'],
-        //   reason: json['reason'],
-        //   extraInfo: json['extraInfo'],
-        //   group: group,
-        // );
+        return true;
       });
       _connectionStream = stream;
     }

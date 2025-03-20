@@ -9,6 +9,9 @@ class MockWifiDirectPlatform with MockPlatformInterfaceMixin implements WifiDire
   Future<String?> getPlatformVersion() => Future.value('42');
 
   @override
+  Future<int> getPlatformSDKVersion() => Future.value(0);
+
+  @override
   Future<bool> connect(String address) {
     // TODO: implement connect
     throw UnimplementedError();
@@ -33,7 +36,7 @@ class MockWifiDirectPlatform with MockPlatformInterfaceMixin implements WifiDire
   }
 
   @override
-  Stream<String?> receiveConnectionStream() {
+  Stream<bool> receiveConnectionStream() {
     // TODO: implement getConnectionStream
     throw UnimplementedError();
   }

@@ -28,6 +28,10 @@ abstract class WifiDirectPlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
+  Future<int> getPlatformSDKVersion() {
+    throw UnimplementedError('getPlatformSDKVersion() has not been implemented.');
+  }
+
   Future<String?> getPlatformModel() {
     throw UnimplementedError('getPlatformModel() has not been implemented.');
   }
@@ -98,7 +102,7 @@ abstract class WifiDirectPlatform extends PlatformInterface {
         'setP2pConnectionListener() has not been implemented.');
   }
 
-  Stream<String?> receiveConnectionStream() {
+  Stream<bool> receiveConnectionStream() {
     throw UnimplementedError(
         'receiveConnectionStream() has not been implemented.');
   }

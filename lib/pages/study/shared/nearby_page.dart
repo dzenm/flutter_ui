@@ -13,8 +13,8 @@ class WifiDirectPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WifiInfo wifi = WifiInfo();
-    return WifiModel(
+    PPModel wifi = PPModel();
+    return P2PWidget(
       notifier: wifi,
       child: Builder(builder: (context) {
         return const WifiDirectBodyPage();
@@ -30,19 +30,19 @@ class WifiDirectBodyPage extends StatefulWidget {
   State<WifiDirectBodyPage> createState() => _WifiDirectBodyPageState();
 }
 
-class _WifiDirectBodyPageState extends State<WifiDirectBodyPage> with Logging implements DeviceListener {
+class _WifiDirectBodyPageState extends State<WifiDirectBodyPage> with Logging {
   late Android2Android services;
 
   @override
   void initState() {
     super.initState();
     services = Android2Android();
+    services.register();
     _initialize();
   }
 
   void _initialize() async {
     await services.initialize();
-    services.setOnDeviceListener(this);
   }
 
   @override
@@ -57,26 +57,33 @@ class _WifiDirectBodyPageState extends State<WifiDirectBodyPage> with Logging im
     AppTheme theme = context.watch<LocalModel>().theme;
     return Scaffold(
       appBar: const CommonBar(
-        title: 'Wifi Direct',
+        title: 'P2P',
       ),
       body: Container(
         padding: const EdgeInsets.all(16),
         child: ListView(children: [
           const SizedBox(height: 10),
+          Selector0<ServeStatus>(
+            selector: (context) => P2PWidget.of(context).status,
+            builder: (c, status, w) {
+              return Text('P2P状态：$status');
+            },
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () {
+              services.discoverDevices();
+            },
+            child: const Text("I am to join a group"),
+          ),
+          const SizedBox(height: 16),
           SizedBox(
-            height: 100,
             width: MediaQuery.of(context).size.width,
             child: DiscoverPeers(
               onTap: (device) {
                 services.connect(device);
               },
             ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              services.discoverDevices();
-            },
-            child: const Text("I am to join a group"),
           ),
         ]),
       ),
@@ -93,11 +100,6 @@ class _WifiDirectBodyPageState extends State<WifiDirectBodyPage> with Logging im
       ),
     );
   }
-
-  @override
-  void onListen(List<SocketAddress> addresses) {
-    WifiModel.read(context).updateDevices(addresses);
-  }
 }
 
 class DiscoverPeers extends StatelessWidget {
@@ -107,40 +109,37 @@ class DiscoverPeers extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<SocketAddress> devices = WifiModel.of(context).devices;
+    List<SocketAddress> devices = P2PWidget.of(context).devices;
     if (devices.isEmpty) {
       return const EmptyView(text: '未获取到设备');
     }
-    return ListView.builder(
-      scrollDirection: Axis.horizontal,
-      itemCount: devices.length,
-      itemBuilder: (context, index) {
-        SocketAddress device = devices[index];
-        return Center(
-          child: GestureDetector(
-            onTap: () {
-              _viewInfo(context, device);
-            },
-            child: Container(
-              height: 80,
-              width: 80,
-              decoration: BoxDecoration(
-                color: Colors.grey,
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: Center(
-                child: Text(
-                  device.deviceName.toString().characters.first.toUpperCase(),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 30,
-                  ),
+    return Wrap(
+      spacing: 12,
+      runSpacing: 12,
+      children: devices.map((device) {
+        return InkWell(
+          onTap: () {
+            _viewInfo(context, device);
+          },
+          child: Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+              color: Colors.grey,
+              borderRadius: BorderRadius.circular(50),
+            ),
+            child: Center(
+              child: Text(
+                device.deviceName.toString().characters.first.toUpperCase(),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 30,
                 ),
               ),
             ),
           ),
         );
-      },
+      }).toList(),
     );
   }
 

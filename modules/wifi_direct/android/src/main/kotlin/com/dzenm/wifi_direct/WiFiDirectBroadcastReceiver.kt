@@ -35,7 +35,7 @@ class WiFiDirectBroadcastReceiver(
                 manager.requestPeers { peers ->
                     val list = peers.deviceList.toList()
                     listener.onPeersAvailable(list)
-                    log("WIFI_P2P_STATE_CHANGED_ACTION: peers=$list")
+                    log("WIFI_P2P_PEERS_CHANGED_ACTION: peers=$list")
                 }
             }
 

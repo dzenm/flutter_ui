@@ -1,10 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:fbl/fbl.dart';
+import 'package:fbl/src/config/notification.dart' as ln;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pp_transfer/src/network/service/connection.dart';
 import 'package:pp_transfer/src/network/service/service.dart';
 import 'package:wifi_direct/wifi_direct.dart';
+
+import '../names.dart';
 
 ///
 /// Created by a0010 on 2025/2/26 11:28
@@ -15,6 +19,7 @@ class Android2Android with Logging implements NearbyServiceInterface, Connection
   void setOnDeviceListener(DeviceListener listener) {
     _listener = listener;
   }
+
   DeviceListener? _listener;
 
   @override
@@ -41,76 +46,96 @@ class Android2Android with Logging implements NearbyServiceInterface, Connection
   WifiP2pInfo? get wifi => _wifi;
   WifiP2pInfo? _wifi;
 
-  /// 注册监听/取消注册监听
-  void register() => client.register();
+  /// 注册监听
+  void register() => client
+    ..register()
+    ..setP2pConnectionListener(this)
+    ..receiveConnectionStream().listen((value) {});
+
+  /// 取消注册监听
   void unregister() => client.unregister();
 
   @override
-  Future<ServeStatus> initialize() async {
+  Future<bool> initialize() async {
+    return (await _initialize()) == ServeStatus.completed;
+  }
+
+  void _setStatus(ServeStatus status) {
+    _status = status;
+    var nc = ln.NotificationCenter();
+    nc.postNotification(WifiDirectNames.kStatusChanged, this, {
+      'status': status,
+    });
+  }
+
+  ServeStatus _status = ServeStatus.none;
+
+  ServeStatus get status => _status;
+
+  /// 初始化
+  Future<ServeStatus> _initialize() async {
     // 1. 授权
     logInfo('1. 开始获取权限');
-    ServeStatus status = await _checkPermission();
-    if (status != ServeStatus.grantedPermission) {
-      return status;
+    // 判断GPS有没有打开
+    _setStatus(ServeStatus.gPS);
+    if (!await client.isGPSEnabled()) {
+      // 进入位置服务设置
+      await client.openLocationSettingsPage();
+      return ServeStatus.gPS;
+    }
+    // 判断Wi-Fi服务有没有打开
+    _setStatus(ServeStatus.wifi);
+    if (!await client.isWifiEnabled()) {
+      // 进入Wi-Fi设置
+      await client.openWifiSettingsPage();
+      return ServeStatus.wifi;
+    }
+    // 请求位置权限和附近的设备权限
+    _setStatus(ServeStatus.nearbyOrLocationPermission);
+    if (!await _requestPermissions()) {
+      return ServeStatus.nearbyOrLocationPermission;
     }
 
     // 2. 开始初始化信息
     logInfo('2. 开始初始化信息');
+    _setStatus(ServeStatus.initialize);
     if (!await client.initialize()) {
-      return ServeStatus.initializeError;
+      return ServeStatus.initialize;
     }
 
-    await client.register();
-    // 3. 设置监听回调
-    logInfo('3. 设置监听回调');
-    client.setP2pConnectionListener(this);
-    client.receiveConnectionStream();
-
-    // 4. 建立群组信息
-    logInfo('4. 建立群组信息');
-    WifiP2pGroup? group = await client.requestGroup() ;
+    // 3. 建立群组信息
+    logInfo('3. 获取群组信息');
+    _setStatus(ServeStatus.requestGroup);
+    WifiP2pGroup? group = await client.requestGroup();
     if (group == null) {
+      _setStatus(ServeStatus.createGroup);
       if (!await client.createGroup()) {
-        return ServeStatus.createGroupError;
+        return ServeStatus.createGroup;
       }
+      group = await client.requestGroup();
     }
 
-    logInfo('5. 准备好了');
+    logInfo('4. 准备好了：group=${group?.toJson()}');
     _isPrepare = true;
-    return ServeStatus.initialize;
-  }
-
-  /// 检查权限
-  Future<ServeStatus> _checkPermission() async {
-    // 判断位置服务有没有打开
-    if (await client.isGPSEnabled()) {
-      // 判断Wi-Fi服务有没有打开
-      if (await client.isWifiEnabled()) {
-        // 请求权限
-        bool res = await _requestPermissions();
-        if (res) {
-          return ServeStatus.grantedPermission;
-        }
-        return ServeStatus.nearbyOrLocationPermissionError;
-      } else {
-        // 进入Wi-Fi设置
-        await client.openWifiSettingsPage();
-      }
-    } else {
-      // 进入位置服务设置
-      await client.openLocationSettingsPage();
-    }
-    return ServeStatus.wifiOrGPSPermissionError;
+    _setStatus(ServeStatus.completed);
+    return ServeStatus.completed;
   }
 
   /// 请求连接权限
   Future<bool> _requestPermissions() async {
+    int sdk = await client.getPlatformSDKVersion();
+    if (sdk >= 33) {
+      Map<Permission, PermissionStatus> statuses = await [
+        Permission.location,
+        Permission.nearbyWifiDevices,
+      ].request();
+      return statuses[Permission.location] == PermissionStatus.granted && //
+          statuses[Permission.nearbyWifiDevices] == PermissionStatus.granted;
+    }
     Map<Permission, PermissionStatus> statuses = await [
       Permission.location,
-      Permission.nearbyWifiDevices,
     ].request();
-    return statuses[Permission.location] == PermissionStatus.granted && //
-        statuses[Permission.nearbyWifiDevices] == PermissionStatus.granted;
+    return statuses[Permission.location] == PermissionStatus.granted;
   }
 
   @override
@@ -129,8 +154,7 @@ class Android2Android with Logging implements NearbyServiceInterface, Connection
   }
 
   @override
-  Future<void> dispose() async {
-  }
+  Future<void> dispose() async {}
 
   List<SocketAddress> _merge(List<WifiP2pDevice> list) {
     return list.map((device) {
@@ -151,9 +175,14 @@ class Android2Android with Logging implements NearbyServiceInterface, Connection
 
   @override
   void onPeersAvailable(List<WifiP2pDevice> peers) {
-    logInfo('获取到可用的设备：peers=${peers.length}');
+    logInfo('获取到可用的设备：peers=${jsonEncode(peers)}');
     _devices.clear();
     _devices.addAll(peers);
+    var list = _merge(peers);
+    var nc = ln.NotificationCenter();
+    nc.postNotification(WifiDirectNames.kDevicesChanged, this, {
+      'peers': list,
+    });
   }
 
   @override
@@ -171,7 +200,23 @@ class Android2Android with Logging implements NearbyServiceInterface, Connection
   void onSelfP2pChanged(WifiP2pDevice device) {
     logInfo('自己的设备信息发送变化：device=${device.toJson()}');
     _self = device;
+    var nc = ln.NotificationCenter();
+    nc.postNotification(WifiDirectNames.kSelfChanged, this, {
+      'self': device,
+    });
   }
+}
+
+enum ServeStatus {
+  none, // 初始状态
+  gPS, // 检测GPS权限
+  wifi, // 检测Wi-Fi
+  nearbyOrLocationPermission, // 检测附近的设备或位置权限
+  grantedPermission, // 授权
+  initialize, // 初始化
+  requestGroup, // 获取群组
+  createGroup, // 创建群组
+  completed, // 初始化完成
 }
 
 class WifiDirectAddress implements SocketAddress {
@@ -207,4 +252,3 @@ class WifiDirectAddress implements SocketAddress {
   String get remoteAddress => _remoteAddress;
   final String _remoteAddress;
 }
-

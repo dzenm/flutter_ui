@@ -3,5 +3,9 @@
 ///
 abstract class WifiDirectNames {
 
+  static const String kStatusChanged = 'WifiDirectStatusChanged';
+
+  static const String kSelfChanged = 'WifiDirectSelfChanged';
+
   static const String kDevicesChanged = 'WifiDirectDevicesChanged';
 }
