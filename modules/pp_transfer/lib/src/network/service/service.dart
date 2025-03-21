@@ -42,10 +42,6 @@ abstract interface class NearbyServiceInterface {
   Future<void> dispose();
 }
 
-abstract interface class DeviceListener {
-  void onListen(List<SocketAddress> addresses);
-}
-
 /// 连接的Socket地址
 abstract interface class SocketAddress {
   /// 是否是群组拥有者

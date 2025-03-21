@@ -37,18 +37,16 @@ class _WifiDirectBodyPageState extends State<WifiDirectBodyPage> with Logging {
   void initState() {
     super.initState();
     services = Android2Android();
-    services.register();
     _initialize();
   }
 
   void _initialize() async {
-    await services.initialize();
+    Future.delayed(Duration.zero, () async => await services.initialize());
   }
 
   @override
   void dispose() {
     services.dispose();
-    services.unregister();
     super.dispose();
   }
 

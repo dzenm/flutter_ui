@@ -6,6 +6,7 @@ import android.content.IntentFilter
 import android.location.LocationManager
 import android.net.NetworkInfo
 import android.net.wifi.WifiManager
+import android.net.wifi.WpsInfo
 import android.net.wifi.p2p.WifiP2pConfig
 import android.net.wifi.p2p.WifiP2pDevice
 import android.net.wifi.p2p.WifiP2pGroup
@@ -216,6 +217,7 @@ class WifiDirectManager(
     fun connect(deviceAddress: String, result: MethodChannel.Result) {
         val config = WifiP2pConfig()
         config.deviceAddress = deviceAddress
+        config.wps.setup = WpsInfo.PBC
         wifiChannel?.also { channel ->
             // connect方法在随后将自动创建群组并选择群组所有者
             wifiManager.connect(channel, config, object : WifiP2pManager.ConnectionInfoListener, WifiP2pManager.ActionListener {

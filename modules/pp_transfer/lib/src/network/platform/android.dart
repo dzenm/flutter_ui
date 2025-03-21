@@ -16,11 +16,13 @@ import '../names.dart';
 class Android2Android with Logging implements NearbyServiceInterface, Connection, P2pConnectionListener {
   final WifiDirect client = WifiDirect();
 
-  void setOnDeviceListener(DeviceListener listener) {
-    _listener = listener;
+  Android2Android() {
+    // 注册监听
+    client
+      ..register()
+      ..setP2pConnectionListener(this)
+      ..receiveConnectionStream().listen((value) {});
   }
-
-  DeviceListener? _listener;
 
   @override
   bool get isPrepare => _isPrepare;
@@ -45,15 +47,6 @@ class Android2Android with Logging implements NearbyServiceInterface, Connection
   /// 创建的群组信息
   WifiP2pInfo? get wifi => _wifi;
   WifiP2pInfo? _wifi;
-
-  /// 注册监听
-  void register() => client
-    ..register()
-    ..setP2pConnectionListener(this)
-    ..receiveConnectionStream().listen((value) {});
-
-  /// 取消注册监听
-  void unregister() => client.unregister();
 
   @override
   Future<bool> initialize() async {
@@ -141,6 +134,7 @@ class Android2Android with Logging implements NearbyServiceInterface, Connection
   @override
   Future<bool> discoverDevices() async {
     logInfo('扫描附近的设备');
+    await client.removeGroup();
     return await client.discoverPeers();
   }
 
@@ -154,18 +148,20 @@ class Android2Android with Logging implements NearbyServiceInterface, Connection
   }
 
   @override
-  Future<void> dispose() async {}
+  Future<void> dispose() async {
+    // 取消注册监听
+    await client.unregister();
+    await client.removeGroup();
+  }
 
-  List<SocketAddress> _merge(List<WifiP2pDevice> list) {
-    return list.map((device) {
-      return WifiDirectAddress(
-        isGroupOwner: device.isGroupOwner,
-        isConnected: device.isConnected,
-        deviceName: device.deviceName,
-        localAddress: '',
-        remoteAddress: device.deviceAddress,
-      );
-    }).toList();
+  SocketAddress _mergeDevice(WifiP2pDevice device) {
+    return WifiDirectAddress(
+      isGroupOwner: device.isGroupOwner,
+      isConnected: device.isConnected,
+      deviceName: device.deviceName,
+      localAddress: '',
+      remoteAddress: device.deviceAddress,
+    );
   }
 
   @override
@@ -178,7 +174,7 @@ class Android2Android with Logging implements NearbyServiceInterface, Connection
     logInfo('获取到可用的设备：peers=${jsonEncode(peers)}');
     _devices.clear();
     _devices.addAll(peers);
-    var list = _merge(peers);
+    var list = peers.map((device) => _mergeDevice(device)).toList();
     var nc = ln.NotificationCenter();
     nc.postNotification(WifiDirectNames.kDevicesChanged, this, {
       'peers': list,

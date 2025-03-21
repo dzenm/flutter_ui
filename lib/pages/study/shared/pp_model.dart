@@ -39,6 +39,9 @@ class PPModel extends ChangeNotifier implements ln.Observer {
   ServeStatus get status => _status;
   ServeStatus _status = ServeStatus.none;
 
+  WifiP2pDevice? get self => _self;
+  WifiP2pDevice? _self;
+
   @override
   Future<void> onReceiveNotification(ln.Notification notification) async {
     var name = notification.name;
@@ -48,7 +51,7 @@ class PPModel extends ChangeNotifier implements ln.Observer {
       notifyListeners();
     } else if (name == WifiDirectNames.kSelfChanged) {
       var self = notification.userInfo?['self'];
-      _status = self;
+      _self = self;
       notifyListeners();
     } else if (name == WifiDirectNames.kDevicesChanged) {
       var peers = notification.userInfo?['peers'];
