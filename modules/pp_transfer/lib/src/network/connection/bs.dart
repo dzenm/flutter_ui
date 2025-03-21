@@ -8,6 +8,10 @@ import 'package:fbl/fbl.dart';
 /// Created by a0010 on 2025/3/3 11:24
 ///
 class BSSocket {
+  BSSocket({
+    required this.host,
+    int? port,
+  })  : port = port ?? 1212;
   static const String _tag = 'BSSocket';
 
   /// 处理接收的字节数据，每次接收的数据长度不一样，先缓存下来，再进行处理
@@ -33,6 +37,10 @@ class BSSocket {
 
   bool get isAlive => !isClosed && isConnected;
 
+  final String host;
+
+  final int port;
+
   Future<bool> bind() async {
     _SocketCreator? socket = _socket;
     if (socket != null) {
@@ -40,7 +48,7 @@ class BSSocket {
       return false;
     }
     socket = _SocketCreator();
-    bool result = await socket.bind();
+    bool result = await socket.bind(host, port);
     if (result) {
       await _setSocket(socket);
       _caches.clear();
@@ -115,8 +123,8 @@ class _SocketCreator {
     return isConnected;
   }
 
-  Future<bool> bind() async {
-    return await _bindSocket();
+  Future<bool> bind(String host, int port) async {
+    return await _bindSocket(host, port);
   }
 
   void listen(void Function(Uint8List data) onData) => _socket?.listen(
@@ -147,11 +155,11 @@ class _SocketCreator {
     return true;
   }
 
-  Future<bool> _bindSocket() async {
+  Future<bool> _bindSocket(String host, int port) async {
     if (_connecting) return false;
     _connecting = true;
     try {
-      ServerSocket serverSocket = await ServerSocket.bind("127.0.0.1", 1212);
+      ServerSocket serverSocket = await ServerSocket.bind(host, port);
       var subscription = serverSocket.listen((socket) async {
         socket.port;
         await _setSocket(socket);

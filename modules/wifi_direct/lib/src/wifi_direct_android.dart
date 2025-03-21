@@ -47,6 +47,17 @@ class WifiDirectAndroid extends WifiDirectPlatform {
   }
 
   @override
+  Future<bool> addLocalService(String instanceName, String serviceType, Map<String, String> json) async {
+    final args = {
+      'instanceName': instanceName,
+      'serviceType': serviceType,
+      'json': json,
+    };
+    final result = await methodChannel.invokeMethod<bool>('addLocalService', args);
+    return result ?? false;
+  }
+
+  @override
   Future<bool> discoverPeers() async {
     final result = await methodChannel.invokeMethod<bool>('discoverPeers');
     return result ?? false;
@@ -154,13 +165,8 @@ class WifiDirectAndroid extends WifiDirectPlatform {
           _listener?.onPeersAvailable(list);
         } else if (result['connectionAvailable'] != null) {
           var json = (result['connectionAvailable'] as Map<Object?, Object?>).map((key, val) => MapEntry(key.toString(), val));
-          WifiP2pInfo info = WifiP2pInfo.fromJson(json);
+          WifiP2pConnection info = WifiP2pConnection.fromJson(json);
           _listener?.onConnectionInfoAvailable(info);
-        } else if (result['p2pConnection'] != null) {
-          var res = result['p2pConnection'];
-          if (!res) {
-            _listener?.onDisconnected();
-          }
         } else if (result['selfP2pChanged'] != null) {
           var json = (result['selfP2pChanged'] as Map<Object?, Object?>).map((key, val) => MapEntry(key.toString(), val));
           WifiP2pDevice selfDevice = WifiP2pDevice.fromJson(json);

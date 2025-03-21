@@ -1,38 +1,7 @@
 ///
 /// Created by a0010 on 2025/2/20 10:11
 ///
-class WifiP2pInfo {
-  /// Indicates if a p2p group has been successfully formed
-  final bool groupFormed;
-
-  /// Indicates if the current device is the group owner
-  final bool isGroupOwner;
-
-  /// Group owner address
-  final String groupOwnerAddress;
-
-  WifiP2pInfo({
-    required this.groupFormed,
-    required this.isGroupOwner,
-    required this.groupOwnerAddress,
-  });
-
-  factory WifiP2pInfo.fromJson(Map<String, dynamic> json) {
-    return WifiP2pInfo(
-      groupFormed: json['groupFormed'] ?? false,
-      isGroupOwner: json['isGroupOwner'] ?? false,
-      groupOwnerAddress: json['groupOwnerAddress'] ?? '',
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-        'groupFormed': groupFormed,
-        'isGroupOwner': isGroupOwner,
-        'groupOwnerAddress': groupOwnerAddress,
-      };
-}
-
-class WifiP2p {
+class WifiP2pConnection {
   /// Indicates if a p2p group has been successfully formed
   final bool groupFormed;
 
@@ -66,7 +35,7 @@ class WifiP2p {
   /// @see [WifiP2pGroup]
   final WifiP2pGroup? group;
 
-  WifiP2p({
+  WifiP2pConnection({
     required this.groupFormed,
     required this.isGroupOwner,
     required this.groupOwnerAddress,
@@ -76,6 +45,20 @@ class WifiP2p {
     required this.extraInfo,
     this.group,
   });
+
+  factory WifiP2pConnection.fromJson(Map<String, dynamic> json) {
+    var group = json['group'] == null ? null: (json['group'] as Map<Object?, Object?>).map((key, val) => MapEntry(key.toString(), val));
+    return WifiP2pConnection(
+      groupFormed: json['groupFormed'] ?? false,
+      isGroupOwner: json['isGroupOwner'] ?? false,
+      groupOwnerAddress: json['groupOwnerAddress'] ?? '',
+      isConnected: json['isConnected'] ?? false,
+      isAvailable: json['isAvailable'] ?? false,
+      reason: json['reason'] ?? '',
+      extraInfo: json['extraInfo'] ?? '',
+      group: group == null ? null : WifiP2pGroup.fromJson(group),
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         'groupFormed': groupFormed,
@@ -136,8 +119,9 @@ class WifiP2pGroup {
     var ownerJson = owner?.map((key, val) => MapEntry(key.toString(), val));
     var clients = json['clients'] == null ? null : json['clients'] as List<Object?>;
     var clientsJson = clients?.map((e) {
-      return (e as Map<Object?, Object?>).map((key, val) => MapEntry(key.toString(), val));
-    }).toList() ?? [];
+          return (e as Map<Object?, Object?>).map((key, val) => MapEntry(key.toString(), val));
+        }).toList() ??
+        [];
     return WifiP2pGroup(
       networkName: json['networkName'] ?? '',
       isGroupOwner: json['isGroupOwner'] ?? false,
@@ -266,9 +250,7 @@ abstract interface class P2pConnectionListener {
 
   void onPeersAvailable(List<WifiP2pDevice> peers);
 
-  void onConnectionInfoAvailable(WifiP2pInfo info);
-
-  void onDisconnected();
+  void onConnectionInfoAvailable(WifiP2pConnection connection);
 
   void onSelfP2pChanged(WifiP2pDevice device);
 }

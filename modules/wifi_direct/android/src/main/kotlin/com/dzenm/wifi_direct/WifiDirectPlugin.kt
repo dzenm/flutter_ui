@@ -46,7 +46,13 @@ class WifiDirectPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 "initialize" -> mManager.initialize(result)
                 "register" -> mManager.register(result)
                 "unregister" -> mManager.unregister(result)
-                "discoverPeers" -> mManager.discoverPeers()
+                "addLocalService" -> mManager.addLocalService(
+                    call.argument("instanceName") ?: "",
+                    call.argument("serviceType") ?: "",
+                    call.argument("json") ?: emptyMap(),
+                    result,
+                )
+                "discoverPeers" -> mManager.discoverPeers(result)
                 "stopPeerDiscovery" -> mManager.stopPeerDiscovery(result)
                 "requestPeers" -> mManager.requestPeers(result)
                 "connect" -> mManager.connect(call.argument("address") ?: "", result)

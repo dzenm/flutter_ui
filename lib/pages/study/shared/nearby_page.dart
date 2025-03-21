@@ -70,7 +70,6 @@ class _WifiDirectBodyPageState extends State<WifiDirectBodyPage> with Logging {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {
-              services.discoverDevices();
             },
             child: const Text("I am to join a group"),
           ),

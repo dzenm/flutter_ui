@@ -12,6 +12,7 @@ import android.net.wifi.p2p.WifiP2pDevice
 import android.net.wifi.p2p.WifiP2pGroup
 import android.net.wifi.p2p.WifiP2pInfo
 import android.net.wifi.p2p.WifiP2pManager
+import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo
 import android.os.Build
 import android.os.Looper
 import android.provider.Settings
@@ -105,7 +106,7 @@ class WifiDirectManager(
         // 在搭载 Android 10 及更高版本的设备上，以下广播 intent 是非粘性 intent：
         // WIFI_P2P_CONNECTION_CHANGED_ACTION
         //
-        receiver = WiFiDirectBroadcastReceiver(this, this)
+        receiver = WiFiDirectBroadcastReceiver(this)
         val intentFilter = IntentFilter().apply {
             addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION)
             addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION)
@@ -135,20 +136,57 @@ class WifiDirectManager(
     }
 
     /**
+     * 添加本地服务
+     */
+    fun addLocalService(
+        instanceName: String,
+        serviceType: String,
+        json: Map<String, String>,
+        result: MethodChannel.Result,
+    ) {
+        // Service information.  Pass it an instance name, service type
+        // _protocol._transport layer , and the map containing
+        // information other devices will want once they connect to this one.
+        val serviceInfo = WifiP2pDnsSdServiceInfo.newInstance(instanceName, serviceType, json)
+
+        // Add the local service, sending the service info, network channel,
+        // and listener that will be used to indicate success or failure of
+        // the request.
+        wifiChannel?.also { channel ->
+            wifiManager.addLocalService(channel, serviceInfo, object : WifiP2pManager.ActionListener {
+                override fun onSuccess() {
+                    // Command successful! Code isn't necessarily needed here,
+                    // Unless you want to update the UI or add logging statements.
+                    log("已添加本地服务：json=$json")
+                    result.success(true)
+                }
+
+                override fun onFailure(reasonCode: Int) {
+                    // Command failed.  Check for P2P_UNSUPPORTED, ERROR, or BUSY
+                    log("添加本地服务失败：reasonCode=$reasonCode")
+                    result.success(false)
+                }
+            })
+        }
+    }
+
+    /**
      * 启动扫描设备进程
      */
-    fun discoverPeers() {
+    fun discoverPeers(result: MethodChannel.Result) {
         // 成功检测到对等设备存在时，系统会广播 WIFI_P2P_PEERS_CHANGED_ACTION 意向
         wifiChannel?.also { channel ->
             wifiManager.discoverPeers(channel, object : WifiP2pManager.ActionListener {
                 override fun onSuccess() {
                     // 仅通知扫描进程已成功
                     log("已启动扫描设备进程")
+                    result.success(true)
                 }
 
                 override fun onFailure(reasonCode: Int) {
                     // 仅通知扫描进程启动失败
                     log("扫描设备进程启动失败：reasonCode=$reasonCode")
+                    result.success(false)
                 }
             })
         }
@@ -364,47 +402,7 @@ class WifiDirectManager(
         return list
     }
 
-    private var mNetworkInfo: NetworkInfo? = null
-    private var mWifiP2pInfo: WifiP2pInfo? = null
-    private var mGroup: Any = {}
-
-    /**
-     * 获取Wi-Fi P2P信息
-     */
-    fun getWifiP2PInfo(): Map<String, Any> {
-        val ni = mNetworkInfo
-        val wi = mWifiP2pInfo
-        if (ni == null || wi == null) return emptyMap()
-
-        val obj = object {
-            // https://developer.android.com/reference/android/net/wifi/p2p/WifiP2pGroup
-            val isConnected: Boolean = ni.isConnected
-            val isAvailable: Boolean = ni.isAvailable
-            val reason: String = if (ni.reason == null) "" else ni.reason
-            val extraInfo: String = if (ni.extraInfo == null) "" else ni.extraInfo
-
-            val groupFormed: Boolean = wi.groupFormed
-            val isGroupOwner: Boolean = wi.isGroupOwner
-            val groupOwnerAddress: String = if (wi.groupOwnerAddress == null) "" else wi.groupOwnerAddress.toString()
-
-            val group: Any = mGroup
-        }
-        return emptyMap()
-    }
-
     private fun toJson(any: Any) = Gson().toJson(any)
-
-    fun requestPeers(listener: WifiP2pManager.PeerListListener) {
-        wifiChannel?.also { channel ->
-            wifiManager.requestPeers(channel, listener)
-        }
-    }
-
-    fun requestConnection(listener: WifiP2pManager.ConnectionInfoListener) {
-        wifiChannel?.also { channel ->
-            wifiManager.requestConnectionInfo(channel, listener)
-        }
-    }
 
     override fun onP2pState(enabled: Boolean) {
         conn?.send(
@@ -418,23 +416,20 @@ class WifiDirectManager(
         conn?.send(mapOf("peersAvailable" to mergeDevices(peers.toMutableList())))
     }
 
-    override fun onConnectionInfoAvailable(info: WifiP2pInfo) {
+    override fun onConnectionInfoAvailable(network: NetworkInfo?, info: WifiP2pInfo?, group: WifiP2pGroup?) {
+        // https://developer.android.com/reference/android/net/wifi/p2p/WifiP2pGroup
         conn?.send(
             mapOf(
                 "connectionAvailable" to mapOf(
-                    "groupFormed" to info.groupFormed,
-                    "isGroupOwner" to info.isGroupOwner,
-                    "groupOwnerAddress" to if (info.groupOwnerAddress == null) "" else info.groupOwnerAddress.toString(),
+                    "isConnected" to network?.isConnected,
+                    "isAvailable" to network?.isAvailable,
+                    "reason" to if (network?.reason == null) "" else network.reason,
+                    "extraInfo" to if (network?.extraInfo == null) "" else network.extraInfo,
+                    "groupFormed" to info?.groupFormed,
+                    "isGroupOwner" to info?.isGroupOwner,
+                    "groupOwnerAddress" to if (info?.groupOwnerAddress == null) "" else info.groupOwnerAddress.toString(),
+                    "group" to if (group == null) null else mergeGroup(group),
                 )
-            )
-        )
-
-    }
-
-    override fun onDisconnected() {
-        conn?.send(
-            mapOf(
-                "p2pConnection" to false
             )
         )
     }

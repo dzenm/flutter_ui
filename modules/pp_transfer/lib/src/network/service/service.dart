@@ -29,10 +29,6 @@ abstract interface class NearbyServiceInterface {
   /// [return] true=初始化成功，false=初始化失败
   Future<bool> initialize();
 
-  /// 扫描设备
-  /// [return] 扫描的设备信息
-  Future<bool> discoverDevices();
-
   /// 连接设备
   /// [remote] 连接的设备地址
   /// [return] true=连接设备成功；false=连接设备失败；

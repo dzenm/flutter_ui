@@ -12,6 +12,12 @@ class MockWifiDirectPlatform with MockPlatformInterfaceMixin implements WifiDire
   Future<int> getPlatformSDKVersion() => Future.value(0);
 
   @override
+  Future<bool> addLocalService(String instanceName, String serviceType, Map<String, String> json) {
+    // TODO: implement addLocalService
+    throw UnimplementedError();
+  }
+
+  @override
   Future<bool> connect(String address) {
     // TODO: implement connect
     throw UnimplementedError();
@@ -32,12 +38,6 @@ class MockWifiDirectPlatform with MockPlatformInterfaceMixin implements WifiDire
   @override
   Future<bool> discoverPeers() {
     // TODO: implement discoverPeers
-    throw UnimplementedError();
-  }
-
-  @override
-  Stream<bool> receiveConnectionStream() {
-    // TODO: implement getConnectionStream
     throw UnimplementedError();
   }
 
@@ -74,6 +74,12 @@ class MockWifiDirectPlatform with MockPlatformInterfaceMixin implements WifiDire
   @override
   Future<bool> openWifiSettingsPage() {
     // TODO: implement openWifiSettingsPage
+    throw UnimplementedError();
+  }
+
+  @override
+  Stream<bool> receiveConnectionStream() {
+    // TODO: implement receiveConnectionStream
     throw UnimplementedError();
   }
 
@@ -117,6 +123,8 @@ class MockWifiDirectPlatform with MockPlatformInterfaceMixin implements WifiDire
     // TODO: implement unregister
     throw UnimplementedError();
   }
+
+
 
 }
 

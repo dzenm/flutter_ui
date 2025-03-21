@@ -48,6 +48,10 @@ abstract class WifiDirectPlatform extends PlatformInterface {
     throw UnimplementedError('unregister() has not been implemented.');
   }
 
+  Future<bool> addLocalService(String instanceName, String serviceType, Map<String, String> json) {
+    throw UnimplementedError('addLocalService() has not been implemented.');
+  }
+
   Future<bool> discoverPeers() {
     throw UnimplementedError('discoverPeers() has not been implemented.');
   }

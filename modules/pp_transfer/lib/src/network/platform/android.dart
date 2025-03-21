@@ -45,8 +45,8 @@ class Android2Android with Logging implements NearbyServiceInterface, Connection
   final List<WifiP2pDevice> _devices = [];
 
   /// 创建的群组信息
-  WifiP2pInfo? get wifi => _wifi;
-  WifiP2pInfo? _wifi;
+  WifiP2pConnection? get connection => _connection;
+  WifiP2pConnection? _connection;
 
   @override
   Future<bool> initialize() async {
@@ -99,16 +99,13 @@ class Android2Android with Logging implements NearbyServiceInterface, Connection
     // 3. 建立群组信息
     logInfo('3. 获取群组信息');
     _setStatus(ServeStatus.requestGroup);
-    WifiP2pGroup? group = await client.requestGroup();
-    if (group == null) {
-      _setStatus(ServeStatus.createGroup);
-      if (!await client.createGroup()) {
-        return ServeStatus.createGroup;
-      }
-      group = await client.requestGroup();
+
+    _setStatus(ServeStatus.discover);
+    if (!await client.discoverPeers()) {
+      return ServeStatus.discover;
     }
 
-    logInfo('4. 准备好了：group=${group?.toJson()}');
+    logInfo('4. 准备好了');
     _isPrepare = true;
     _setStatus(ServeStatus.completed);
     return ServeStatus.completed;
@@ -129,13 +126,6 @@ class Android2Android with Logging implements NearbyServiceInterface, Connection
       Permission.location,
     ].request();
     return statuses[Permission.location] == PermissionStatus.granted;
-  }
-
-  @override
-  Future<bool> discoverDevices() async {
-    logInfo('扫描附近的设备');
-    await client.removeGroup();
-    return await client.discoverPeers();
   }
 
   @override
@@ -182,14 +172,8 @@ class Android2Android with Logging implements NearbyServiceInterface, Connection
   }
 
   @override
-  void onConnectionInfoAvailable(WifiP2pInfo info) {
+  void onConnectionInfoAvailable(WifiP2pConnection info) {
     logInfo('连接信息发送变化：info=${info.toJson()}');
-  }
-
-  @override
-  void onDisconnected() {
-    logInfo('已断开连接');
-    _isConnected = false;
   }
 
   @override
@@ -211,7 +195,7 @@ enum ServeStatus {
   grantedPermission, // 授权
   initialize, // 初始化
   requestGroup, // 获取群组
-  createGroup, // 创建群组
+  discover, // 发现设备
   completed, // 初始化完成
 }
 
