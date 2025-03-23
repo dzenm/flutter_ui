@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
@@ -90,8 +88,8 @@ class WifiDirectAndroid extends WifiDirectPlatform {
   }
 
   @override
-  Future<bool> disconnect() async {
-    final result = await methodChannel.invokeMethod<bool>('disconnect');
+  Future<bool> cancelConnect() async {
+    final result = await methodChannel.invokeMethod<bool>('cancelConnect');
     return result ?? false;
   }
 
@@ -171,6 +169,9 @@ class WifiDirectAndroid extends WifiDirectPlatform {
           var json = (result['selfP2pChanged'] as Map<Object?, Object?>).map((key, val) => MapEntry(key.toString(), val));
           WifiP2pDevice selfDevice = WifiP2pDevice.fromJson(json);
           _listener?.onSelfP2pChanged(selfDevice);
+        } else if (result['discoverChanged'] != null) {
+          var res = result['p2pState'] as bool;
+          _listener?.onDiscoverChanged(res);
         }
         return true;
       });
@@ -179,4 +180,3 @@ class WifiDirectAndroid extends WifiDirectPlatform {
     return stream;
   }
 }
-

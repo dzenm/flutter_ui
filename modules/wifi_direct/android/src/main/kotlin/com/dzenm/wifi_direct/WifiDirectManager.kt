@@ -296,18 +296,18 @@ class WifiDirectManager(
     }
 
     /**
-     * 断开设备连接
+     * 取消正在的连接设备
      */
-    fun disconnect(result: MethodChannel.Result) {
+    fun cancelConnect(result: MethodChannel.Result) {
         wifiChannel?.also { channel ->
             wifiManager.cancelConnect(channel, object : WifiP2pManager.ActionListener {
                 override fun onSuccess() {
-                    log("已断开设备连接")
+                    log("已取消正在的连接设备")
                     result.success(true)
                 }
 
                 override fun onFailure(reasonCode: Int) {
-                    log("断开设备连接失败: reasonCode=$reasonCode")
+                    log("取消正在的连接设备失败: reasonCode=$reasonCode")
                     result.success(false)
                 }
             })
@@ -320,7 +320,7 @@ class WifiDirectManager(
     fun requestGroup(result: MethodChannel.Result? = null) {
         wifiChannel?.also { channel ->
             wifiManager.requestGroupInfo(channel) { group ->
-                var json: Map<String, Any> = emptyMap()
+                var json: Map<String, Any?> = emptyMap()
                 if (group != null) {
                     json = mergeGroup(group = group)
                 }
@@ -370,11 +370,11 @@ class WifiDirectManager(
 
     ////////////////////////////////////////////////////////////////////////////
 
-    private fun mergeGroup(group: WifiP2pGroup): Map<String, Any> {
+    private fun mergeGroup(group: WifiP2pGroup): Map<String, Any?> {
         return mapOf(
             "networkName" to if (group.networkName == null) "" else group.networkName,
             "isGroupOwner" to group.isGroupOwner,
-            "owner" to mergeDevice(group.owner),
+            "owner" to if (group.owner == null) null else mergeDevice(group.owner),
             "clients" to mergeDevices(group.clientList),
             "passphrase" to if (group.passphrase == null) "" else group.passphrase,
             "interfaceName" to if (group.getInterface() == null) "" else group.getInterface(),
@@ -438,6 +438,14 @@ class WifiDirectManager(
         conn?.send(
             mapOf(
                 "selfP2pChanged" to mergeDevice(device)
+            )
+        )
+    }
+
+    override fun onDiscoverChanged(isDiscover: Boolean) {
+        conn?.send(
+            mapOf(
+                "discoverChanged" to isDiscover
             )
         )
     }

@@ -1,7 +1,7 @@
 import 'package:fbl/fbl.dart';
 import 'package:universal_ble/universal_ble.dart';
 
-import '../service/connection.dart';
+import '../../server/connection.dart';
 
 ///
 /// Created by a0010 on 2025/2/26 11:25

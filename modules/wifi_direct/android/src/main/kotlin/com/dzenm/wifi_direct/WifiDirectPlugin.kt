@@ -17,7 +17,7 @@ import java.lang.ref.WeakReference
  */
 class WifiDirectPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
-    /// The MethodChannel that will the communication between Flutter and native Android
+    /// The MethodChannel that will the communication between Flutter an   nat ive Android
     ///
     /// This local reference serves to register the plugin with the Flutter Engine and unregister it
     /// when the Flutter Engine is detached from the Activity
@@ -56,7 +56,7 @@ class WifiDirectPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 "stopPeerDiscovery" -> mManager.stopPeerDiscovery(result)
                 "requestPeers" -> mManager.requestPeers(result)
                 "connect" -> mManager.connect(call.argument("address") ?: "", result)
-                "disconnect" -> mManager.disconnect(result)
+                "cancelConnect" -> mManager.cancelConnect(result)
                 "requestGroup" -> mManager.requestGroup(result)
                 "createGroup" -> mManager.createGroup(result)
                 "removeGroup" -> mManager.removeGroup(result)

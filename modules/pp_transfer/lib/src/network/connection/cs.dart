@@ -3,17 +3,19 @@ import 'dart:typed_data';
 
 import 'package:fbl/fbl.dart';
 
+import '../../server/channel.dart';
+
 /// Socket连接超时重连时间
 const int _kSocketTimeout = 30000;
 
 ///
 /// Created by a0010 on 2025/3/3 11:23
 ///
-class CSSocket with Logging {
+class CSSocket extends Channel with Logging {
   CSSocket({
     required this.host,
     int? port,
-  })  : port = port ?? 1212;
+  }) : port = port ?? 1212;
   static const String _tag = 'CSSocket';
 
   /// 处理接收的字节数据，每次接收的数据长度不一样，先缓存下来，再进行处理
@@ -31,18 +33,23 @@ class CSSocket with Logging {
     }
   }
 
+  @override
   bool get isClosed => _socket?.isClosed == true;
 
+  @override
   bool get isConnecting => _socket?.isConnecting == true;
 
+  @override
   bool get isConnected => _socket?.isConnected == true;
 
+  @override
   bool get isAlive => !isClosed && isConnected;
 
   final String host;
 
   final int port;
 
+  @override
   Future<bool> connect() async {
     _SocketCreator? socket = _socket;
     if (socket != null) {
@@ -65,6 +72,7 @@ class CSSocket with Logging {
     return result;
   }
 
+  @override
   Future<int> write(List<int> data) async {
     _SocketCreator? socket = _socket;
     if (socket == null) {
@@ -76,6 +84,7 @@ class CSSocket with Logging {
     return await socket.write(data);
   }
 
+  @override
   Future<Uint8List?> read(int maxLen) async {
     if (_caches.isEmpty) {
       return null;
@@ -84,6 +93,7 @@ class CSSocket with Logging {
     return _caches.removeAt(0);
   }
 
+  @override
   Future<void> close() async {
     await _setSocket(null);
     Log.d('Old socket is closed', tag: _tag);

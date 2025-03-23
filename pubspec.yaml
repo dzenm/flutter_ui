@@ -57,7 +57,7 @@ dependencies:
   flutter_local_notifications: 18.0.1           # 通知栏通知提醒(缺少Windows平台) https://pub.flutter-io.cn/packages/flutter_local_notifications
   ########################################## UI ########################################
   back_button_interceptor: 8.0.3                # 返回按钮拦截 https://pub.flutter-io.cn/packages/back_button_interceptor
-  extended_text_field: 15.0.0                   # 输入框扩展组件 https://pub.flutter-io.cn/packages/extended_text_field
+  extended_text_field: 16.0.2                   # 输入框扩展组件 https://pub.flutter-io.cn/packages/extended_text_field
   azlistview: 2.0.0                             # az列表 https://pub.flutter-io.cn/packages/azlistview
   flutter_slidable: 3.1.2                       # 可左右滑动的列表展示 https://pub.flutter-io.cn/packages/flutter_slidable
   #  scrollview_observer: 1.19.1                   # 聊天列表 https://pub.flutter-io.cn/packages/scrollview_observer
@@ -89,6 +89,7 @@ dependencies:
   ########################################## 工具 ########################################
   lpinyin: 2.0.3                                # 汉字转拼音(全平台) https://pub.flutter-io.cn/packages/lpinyin
   crypto: 3.0.6                                 # 加密解密工具(全平台) https://pub.flutter-io.cn/packages/crypto
+  universal_ble: 0.16.0                         # 蓝牙 https://pub.flutter-io.cn/packages/universal_ble
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -150,7 +151,10 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-
+  fonts:
+    - family: CustomIcons
+      fonts:
+        - asset: assets/fonts/CustomIcons.ttf
 flutter_intl:
   enabled: true
 

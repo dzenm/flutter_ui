@@ -1,3 +1,4 @@
+import 'package:fbl/fbl.dart';
 import 'package:fbl/src/config/notification.dart' as ln;
 import 'package:flutter/widgets.dart';
 import 'package:pp_transfer/pp_transfer.dart';
@@ -25,6 +26,7 @@ class PPModel extends ChangeNotifier implements ln.Observer {
     nc.addObserver(this, WifiDirectNames.kStatusChanged);
     nc.addObserver(this, WifiDirectNames.kSelfChanged);
     nc.addObserver(this, WifiDirectNames.kDevicesChanged);
+    nc.addObserver(this, WifiDirectNames.kReceiveTextData);
   }
 
   @override
@@ -33,6 +35,7 @@ class PPModel extends ChangeNotifier implements ln.Observer {
     nc.removeObserver(this, WifiDirectNames.kStatusChanged);
     nc.removeObserver(this, WifiDirectNames.kSelfChanged);
     nc.removeObserver(this, WifiDirectNames.kDevicesChanged);
+    nc.removeObserver(this, WifiDirectNames.kReceiveTextData);
     super.dispose();
   }
 
@@ -41,6 +44,25 @@ class PPModel extends ChangeNotifier implements ln.Observer {
 
   WifiP2pDevice? get self => _self;
   WifiP2pDevice? _self;
+
+  int get length => _iMsg.length;
+  List<ChatMsg> get messages => _iMsg;
+  final List<ChatMsg> _iMsg = [];
+  ChatMsg? getMsg(int index) => index >= length ? null : _iMsg[index];
+  void insertMsg(String text) {
+    ChatMsg cMsg = ChatMsg(
+      chattingUid: StrUtil.generateUid(),
+      userName: _self?.deviceName ?? '',
+      text: text,
+    );
+    _iMsg.add(cMsg);
+    notifyListeners();
+  }
+
+  void deleteMsg(int index) {
+    _iMsg.removeAt(index);
+    notifyListeners();
+  }
 
   @override
   Future<void> onReceiveNotification(ln.Notification notification) async {
@@ -58,7 +80,32 @@ class PPModel extends ChangeNotifier implements ln.Observer {
       _peers.clear();
       _peers.addAll(peers);
       notifyListeners();
+    } else if (name == WifiDirectNames.kReceiveTextData) {
+      var text = notification.userInfo?['text'];
+      ChatMsg cMsg = ChatMsg(
+        chattingUid: StrUtil.generateUid(),
+        userName: _self?.deviceName ?? '',
+        text: text,
+        isSender: false,
+      );
+      _iMsg.add(cMsg);
+      notifyListeners();
     }
-
   }
+}
+
+class ChatMsg {
+  String chattingUid;
+  String userName;
+  String text;
+
+  ChatMsg({
+    required this.chattingUid,
+    required this.userName,
+    this.text = '',
+    bool isSender = true,
+  }) : _isSender = isSender;
+
+  bool get isSender => _isSender;
+  final bool _isSender;
 }

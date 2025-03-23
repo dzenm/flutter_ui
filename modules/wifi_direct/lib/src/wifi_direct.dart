@@ -40,8 +40,8 @@ class WifiDirect {
     return await WifiDirectPlatform.instance.connect(address);
   }
 
-  Future<bool> disconnect() async {
-    return await WifiDirectPlatform.instance.disconnect();
+  Future<bool> cancelConnect() async {
+    return await WifiDirectPlatform.instance.cancelConnect();
   }
 
   Future<WifiP2pGroup?> requestGroup() async {

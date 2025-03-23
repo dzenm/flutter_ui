@@ -2,9 +2,6 @@
 /// Created by a0010 on 2025/1/25 13:07
 ///
 abstract interface class Connection {
-  /// 是否准备好
-  bool get isPrepare;
-
   /// 是否已连接
   bool get isConnected;
 

@@ -4,14 +4,16 @@ import 'dart:typed_data';
 
 import 'package:fbl/fbl.dart';
 
+import '../../server/channel.dart';
+
 ///
 /// Created by a0010 on 2025/3/3 11:24
 ///
-class BSSocket {
+class BSSocket extends Channel with Logging {
   BSSocket({
     required this.host,
     int? port,
-  })  : port = port ?? 1212;
+  }) : port = port ?? 1212;
   static const String _tag = 'BSSocket';
 
   /// 处理接收的字节数据，每次接收的数据长度不一样，先缓存下来，再进行处理
@@ -29,19 +31,24 @@ class BSSocket {
     }
   }
 
+  @override
   bool get isClosed => _socket?.isClosed == true;
 
+  @override
   bool get isConnecting => _socket?.isConnecting == true;
 
+  @override
   bool get isConnected => _socket?.isConnected == true;
 
+  @override
   bool get isAlive => !isClosed && isConnected;
 
   final String host;
 
   final int port;
 
-  Future<bool> bind() async {
+  @override
+  Future<bool> connect() async {
     _SocketCreator? socket = _socket;
     if (socket != null) {
       Log.e('Socket already connected: socket=$socket', tag: _tag);
@@ -63,6 +70,7 @@ class BSSocket {
     return result;
   }
 
+  @override
   Future<int> write(List<int> data) async {
     _SocketCreator? socket = _socket;
     if (socket == null) {
@@ -74,6 +82,7 @@ class BSSocket {
     return await socket.write(data);
   }
 
+  @override
   Future<Uint8List?> read(int maxLen) async {
     if (_caches.isEmpty) {
       return null;
@@ -82,6 +91,7 @@ class BSSocket {
     return _caches.removeAt(0);
   }
 
+  @override
   Future<void> close() async {
     await _setSocket(null);
     Log.d('Old socket is closed', tag: _tag);
@@ -123,8 +133,13 @@ class _SocketCreator {
     return isConnected;
   }
 
-  Future<bool> bind(String host, int port) async {
-    return await _bindSocket(host, port);
+  Future<bool> bind(String host, int port, [int timeout = 10000]) async {
+    await _bindSocket(host, port);
+    if (await _checkState(timeout, () => _connected)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   void listen(void Function(Uint8List data) onData) => _socket?.listen(
@@ -161,7 +176,6 @@ class _SocketCreator {
     try {
       ServerSocket serverSocket = await ServerSocket.bind(host, port);
       var subscription = serverSocket.listen((socket) async {
-        socket.port;
         await _setSocket(socket);
       });
       _subscription = subscription;
@@ -170,5 +184,22 @@ class _SocketCreator {
       await _setSocket(null);
       return false;
     }
+  }
+
+  Future<bool> _checkState(int timeout, bool Function() condition) async {
+    if (timeout <= 0) {
+      // non-blocking
+      return true;
+    }
+    DateTime expired = DateTime.now().add(Duration(milliseconds: timeout));
+    while (!condition()) {
+      // condition not true, wait a while to check again
+      await Future.delayed(const Duration(milliseconds: 128));
+      if (DateTime.now().isAfter(expired)) {
+        return false;
+      }
+    }
+    // condition true now
+    return true;
   }
 }

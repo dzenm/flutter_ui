@@ -68,8 +68,8 @@ abstract class WifiDirectPlatform extends PlatformInterface {
     throw UnimplementedError('connect() has not been implemented.');
   }
 
-  Future<bool> disconnect() {
-    throw UnimplementedError('disconnect() has not been implemented.');
+  Future<bool> cancelConnect() {
+    throw UnimplementedError('cancelConnect() has not been implemented.');
   }
 
   Future<WifiP2pGroup?> requestGroup() {
@@ -89,8 +89,7 @@ abstract class WifiDirectPlatform extends PlatformInterface {
   }
 
   Future<bool> openLocationSettingsPage() {
-    throw UnimplementedError(
-        'openLocationSettingsPage() has not been implemented.');
+    throw UnimplementedError('openLocationSettingsPage() has not been implemented.');
   }
 
   Future<bool> isWifiEnabled() {
@@ -102,12 +101,10 @@ abstract class WifiDirectPlatform extends PlatformInterface {
   }
 
   void setP2pConnectionListener(P2pConnectionListener listener) {
-    throw UnimplementedError(
-        'setP2pConnectionListener() has not been implemented.');
+    throw UnimplementedError('setP2pConnectionListener() has not been implemented.');
   }
 
   Stream<bool> receiveConnectionStream() {
-    throw UnimplementedError(
-        'receiveConnectionStream() has not been implemented.');
+    throw UnimplementedError('receiveConnectionStream() has not been implemented.');
   }
 }

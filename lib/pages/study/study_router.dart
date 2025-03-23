@@ -1,4 +1,5 @@
 import 'package:fbl/fbl.dart';
+import 'package:flutter_ui/pages/study/shared/nearby/chat_page.dart';
 
 import 'components/chat/chat_page.dart';
 import 'components/city/city_page.dart';
@@ -23,9 +24,7 @@ import 'http/http_page.dart';
 import 'load_image/load_image_page.dart';
 import 'provider/provider_page.dart';
 import 'router/router_page.dart';
-import 'shared/ble_page.dart';
-import 'shared/nearby_page.dart';
-import 'shared/wifi_page.dart';
+import 'shared/nearby/nearby_page.dart';
 import 'video/video_page.dart';
 import 'window/main_window_page.dart';
 
@@ -42,6 +41,7 @@ class StudyRouter {
   static const String router = 'router';
   static const String video = 'video';
   static const String wifi = 'wifi';
+  static const String device = 'device';
   static const String window = 'window';
   static const String screenCapture = 'screenCapture';
 
@@ -126,6 +126,15 @@ class StudyRouter {
           builder: (context, state) {
             return const WifiDirectPage();
           },
+          routes: [
+            ARoute(
+              name: device,
+              path: '/device',
+              builder: (context, state) {
+                return const DeviceChatPage();
+              },
+            ),
+          ],
         ),
         ARoute(
           name: window,

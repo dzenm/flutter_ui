@@ -2,15 +2,6 @@
 /// Created by a0010 on 2025/2/20 10:11
 ///
 class WifiP2pConnection {
-  /// Indicates if a p2p group has been successfully formed
-  final bool groupFormed;
-
-  /// Indicates if the current device is the group owner
-  final bool isGroupOwner;
-
-  /// Group owner address
-  final String groupOwnerAddress;
-
   /// Indicates whether network connectivity exists and it is possible to establish connections and pass
   /// data.
   /// Always call this before attempting to perform data transactions.
@@ -32,30 +23,39 @@ class WifiP2pConnection {
   /// layers.
   final String extraInfo;
 
+  /// Indicates if a p2p group has been successfully formed
+  final bool groupFormed;
+
+  /// Indicates if the current device is the group owner
+  final bool isGroupOwner;
+
+  /// Group owner address
+  final String groupOwnerAddress;
+
   /// @see [WifiP2pGroup]
   final WifiP2pGroup? group;
 
   WifiP2pConnection({
-    required this.groupFormed,
-    required this.isGroupOwner,
-    required this.groupOwnerAddress,
     required this.isConnected,
     required this.isAvailable,
     required this.reason,
     required this.extraInfo,
+    required this.groupFormed,
+    required this.isGroupOwner,
+    required this.groupOwnerAddress,
     this.group,
   });
 
   factory WifiP2pConnection.fromJson(Map<String, dynamic> json) {
-    var group = json['group'] == null ? null: (json['group'] as Map<Object?, Object?>).map((key, val) => MapEntry(key.toString(), val));
+    var group = json['group'] == null ? null : (json['group'] as Map<Object?, Object?>).map((key, val) => MapEntry(key.toString(), val));
     return WifiP2pConnection(
-      groupFormed: json['groupFormed'] ?? false,
-      isGroupOwner: json['isGroupOwner'] ?? false,
-      groupOwnerAddress: json['groupOwnerAddress'] ?? '',
       isConnected: json['isConnected'] ?? false,
       isAvailable: json['isAvailable'] ?? false,
       reason: json['reason'] ?? '',
       extraInfo: json['extraInfo'] ?? '',
+      groupFormed: json['groupFormed'] ?? false,
+      isGroupOwner: json['isGroupOwner'] ?? false,
+      groupOwnerAddress: json['groupOwnerAddress'] ?? '',
       group: group == null ? null : WifiP2pGroup.fromJson(group),
     );
   }
@@ -253,4 +253,6 @@ abstract interface class P2pConnectionListener {
   void onConnectionInfoAvailable(WifiP2pConnection connection);
 
   void onSelfP2pChanged(WifiP2pDevice device);
+
+  void onDiscoverChanged(bool isDiscover);
 }

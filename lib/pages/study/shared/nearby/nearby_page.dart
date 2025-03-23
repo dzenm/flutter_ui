@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:pp_transfer/pp_transfer.dart';
 import 'package:provider/provider.dart';
 
-import 'pp_model.dart';
+import '../../study_router.dart';
+import '../pp_model.dart';
 
 ///
 /// Created by a0010 on 2025/2/17 14:32
@@ -13,13 +14,7 @@ class WifiDirectPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PPModel wifi = PPModel();
-    return P2PWidget(
-      notifier: wifi,
-      child: Builder(builder: (context) {
-        return const WifiDirectBodyPage();
-      }),
-    );
+    return const WifiDirectBodyPage();
   }
 }
 
@@ -37,6 +32,7 @@ class _WifiDirectBodyPageState extends State<WifiDirectBodyPage> with Logging {
   void initState() {
     super.initState();
     services = Android2Android();
+    services.start();
     _initialize();
   }
 
@@ -46,6 +42,7 @@ class _WifiDirectBodyPageState extends State<WifiDirectBodyPage> with Logging {
 
   @override
   void dispose() {
+    services.stop();
     services.dispose();
     super.dispose();
   }
@@ -54,12 +51,20 @@ class _WifiDirectBodyPageState extends State<WifiDirectBodyPage> with Logging {
   Widget build(BuildContext context) {
     AppTheme theme = context.watch<LocalModel>().theme;
     return Scaffold(
-      appBar: const CommonBar(
+      appBar: CommonBar(
         title: 'P2P',
+        actions: [
+          IconButton(
+              onPressed: () {
+                services.discoverPeers();
+              },
+              icon: const Icon(Icons.refresh_rounded)),
+        ],
       ),
+      backgroundColor: const Color.fromARGB(255, 100, 100, 100),
       body: Container(
         padding: const EdgeInsets.all(16),
-        child: ListView(children: [
+        child: Column(children: [
           const SizedBox(height: 10),
           Selector0<ServeStatus>(
             selector: (context) => P2PWidget.of(context).status,
@@ -68,20 +73,12 @@ class _WifiDirectBodyPageState extends State<WifiDirectBodyPage> with Logging {
             },
           ),
           const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () {
-            },
-            child: const Text("I am to join a group"),
-          ),
-          const SizedBox(height: 16),
           SizedBox(
             width: MediaQuery.of(context).size.width,
-            child: DiscoverPeers(
-              onTap: (device) {
-                services.connect(device);
-              },
-            ),
+            child: DiscoverPeers(services: services),
           ),
+          Expanded(child: Container()),
+          const SizedBox(height: 16),
         ]),
       ),
     );
@@ -100,9 +97,9 @@ class _WifiDirectBodyPageState extends State<WifiDirectBodyPage> with Logging {
 }
 
 class DiscoverPeers extends StatelessWidget {
-  final void Function(SocketAddress device) onTap;
+  final Android2Android services;
 
-  const DiscoverPeers({super.key, required this.onTap});
+  const DiscoverPeers({super.key, required this.services});
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +141,9 @@ class DiscoverPeers extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) {
-        String text = device.isConnected ? 'disconnect' : 'connect';
+        var status = device.status;
+        var isConnected = status == DeviceStatus.connected;
+        String text = isConnected ? 'disconnect' : 'connect';
         return Center(
           child: AlertDialog(
             content: SizedBox(
@@ -156,17 +155,55 @@ class DiscoverPeers extends StatelessWidget {
                   Text("name: ${device.deviceName}"),
                   Text("address: ${device.remoteAddress}"),
                   Text("isGroupOwner: ${device.isGroupOwner}"),
-                  Text("isConnected: ${device.isConnected}"),
+                  Text("status: $status"),
+                  Text("isConnected: $isConnected"),
                 ],
               ),
             ),
             actions: [
               TextButton(
                 onPressed: () async {
-                  onTap(device);
                   Navigator.of(context).pop();
+                  switch (status) {
+                    case DeviceStatus.connected:
+                      services.removeGroup();
+                      break;
+                    case DeviceStatus.invited:
+                      var snackBar = SnackBar(
+                        content: const Text('已请求过连接'),
+                        action: SnackBarAction(
+                            label: '取消连接',
+                            onPressed: () {
+                              services.cancelConnect();
+                            }),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      break;
+                    case DeviceStatus.failed:
+                      var snackBar = const SnackBar(
+                        content: Text('连接失败，请稍后再试'),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      break;
+                    case DeviceStatus.available:
+                      services.connect(device);
+                      break;
+                    case DeviceStatus.unavailable:
+                      var snackBar = const SnackBar(
+                        content: Text('设备不可用，暂时无法连接'),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      break;
+                  }
                 },
                 child: Text(text),
+              ),
+              TextButton(
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  context.pushNamed(StudyRouter.device);
+                },
+                child: const Text('进入会话'),
               ),
             ],
           ),

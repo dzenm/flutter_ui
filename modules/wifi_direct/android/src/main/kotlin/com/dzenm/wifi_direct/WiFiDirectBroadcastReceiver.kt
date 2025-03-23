@@ -59,6 +59,12 @@ class WiFiDirectBroadcastReceiver(private val listener: P2pConnectionListener) :
                     listener.onSelfP2pChanged(device)
                 }
             }
+
+            WifiP2pManager.WIFI_P2P_DISCOVERY_CHANGED_ACTION -> {
+                val device = intent.getParcelableExtra<WifiP2pDevice>(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE)
+                val state = intent.getIntExtra(WifiP2pManager.EXTRA_DISCOVERY_STATE, WifiP2pManager.WIFI_P2P_DISCOVERY_STOPPED)
+                listener.onDiscoverChanged(state == WifiP2pManager.WIFI_P2P_DISCOVERY_STARTED)
+            }
         }
     }
 }
@@ -68,4 +74,5 @@ interface P2pConnectionListener {
     fun onPeersAvailable(peers: List<WifiP2pDevice>)
     fun onConnectionInfoAvailable(network: NetworkInfo?, info: WifiP2pInfo?, group: WifiP2pGroup?)
     fun onSelfP2pChanged(device: WifiP2pDevice)
+    fun onDiscoverChanged(isDiscover: Boolean)
 }

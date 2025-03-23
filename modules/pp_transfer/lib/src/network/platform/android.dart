@@ -3,38 +3,61 @@ import 'dart:convert';
 
 import 'package:fbl/fbl.dart';
 import 'package:fbl/src/config/notification.dart' as ln;
+import 'package:fsm/fsm.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:pp_transfer/src/network/service/connection.dart';
-import 'package:pp_transfer/src/network/service/service.dart';
+import 'package:pp_transfer/src/network/connection/cs.dart';
+import 'package:pp_transfer/src/server/channel.dart';
+import 'package:pp_transfer/src/server/service.dart';
 import 'package:wifi_direct/wifi_direct.dart';
 
-import '../names.dart';
+import '../../constant/names.dart';
+import '../common/device.dart';
+import '../common/im.dart';
+import '../connection/bs.dart';
 
 ///
 /// Created by a0010 on 2025/2/26 11:28
 ///
-class Android2Android with Logging implements NearbyServiceInterface, Connection, P2pConnectionListener {
-  final WifiDirect client = WifiDirect();
-
-  Android2Android() {
+class Android2Android extends Runner //
+    with
+        WifiDirectMixin,
+        DeviceMixin,
+        Logging,
+        ChannelMixin
+    implements
+        NearbyServiceInterface {
+  Android2Android() : super(Runner.intervalSlow) {
     // 注册监听
-    client
+    _client
       ..register()
       ..setP2pConnectionListener(this)
       ..receiveConnectionStream().listen((value) {});
   }
 
   @override
-  bool get isPrepare => _isPrepare;
-  bool _isPrepare = false;
+  Future<bool> initialize() async {
+    return (await _initialize()) == ServeStatus.completed;
+  }
 
   @override
-  bool get isConnected => _isConnected;
-  bool _isConnected = false;
+  Future<bool> connect(SocketAddress remote) async {
+    return await _connectDevice(remote);
+  }
 
   @override
-  bool get isTransiting => _isTransiting;
-  final bool _isTransiting = false;
+  Future<void> dispose() async {
+    await _clear();
+  }
+
+  @override
+  Future<bool> process() async {
+    return await receiveMsg();
+  }
+}
+
+/// 处理 WiFi Direct
+mixin WifiDirectMixin implements DeviceMixin, Logging, P2pConnectionListener {
+  final WifiDirect _client = WifiDirect();
 
   /// 自己设备的信息
   WifiP2pDevice? get self => _self;
@@ -48,10 +71,8 @@ class Android2Android with Logging implements NearbyServiceInterface, Connection
   WifiP2pConnection? get connection => _connection;
   WifiP2pConnection? _connection;
 
-  @override
-  Future<bool> initialize() async {
-    return (await _initialize()) == ServeStatus.completed;
-  }
+  ServeStatus get status => _status;
+  ServeStatus _status = ServeStatus.none;
 
   void _setStatus(ServeStatus status) {
     _status = status;
@@ -61,9 +82,7 @@ class Android2Android with Logging implements NearbyServiceInterface, Connection
     });
   }
 
-  ServeStatus _status = ServeStatus.none;
-
-  ServeStatus get status => _status;
+  Map<String, ServerDevice> _allDevices = {};
 
   /// 初始化
   Future<ServeStatus> _initialize() async {
@@ -71,16 +90,16 @@ class Android2Android with Logging implements NearbyServiceInterface, Connection
     logInfo('1. 开始获取权限');
     // 判断GPS有没有打开
     _setStatus(ServeStatus.gPS);
-    if (!await client.isGPSEnabled()) {
+    if (!await _client.isGPSEnabled()) {
       // 进入位置服务设置
-      await client.openLocationSettingsPage();
+      await _client.openLocationSettingsPage();
       return ServeStatus.gPS;
     }
     // 判断Wi-Fi服务有没有打开
     _setStatus(ServeStatus.wifi);
-    if (!await client.isWifiEnabled()) {
+    if (!await _client.isWifiEnabled()) {
       // 进入Wi-Fi设置
-      await client.openWifiSettingsPage();
+      await _client.openWifiSettingsPage();
       return ServeStatus.wifi;
     }
     // 请求位置权限和附近的设备权限
@@ -92,7 +111,7 @@ class Android2Android with Logging implements NearbyServiceInterface, Connection
     // 2. 开始初始化信息
     logInfo('2. 开始初始化信息');
     _setStatus(ServeStatus.initialize);
-    if (!await client.initialize()) {
+    if (!await _client.initialize()) {
       return ServeStatus.initialize;
     }
 
@@ -101,19 +120,18 @@ class Android2Android with Logging implements NearbyServiceInterface, Connection
     _setStatus(ServeStatus.requestGroup);
 
     _setStatus(ServeStatus.discover);
-    if (!await client.discoverPeers()) {
+    if (!await discoverPeers()) {
       return ServeStatus.discover;
     }
 
     logInfo('4. 准备好了');
-    _isPrepare = true;
     _setStatus(ServeStatus.completed);
     return ServeStatus.completed;
   }
 
   /// 请求连接权限
   Future<bool> _requestPermissions() async {
-    int sdk = await client.getPlatformSDKVersion();
+    int sdk = await _client.getPlatformSDKVersion();
     if (sdk >= 33) {
       Map<Permission, PermissionStatus> statuses = await [
         Permission.location,
@@ -128,26 +146,56 @@ class Android2Android with Logging implements NearbyServiceInterface, Connection
     return statuses[Permission.location] == PermissionStatus.granted;
   }
 
-  @override
-  Future<bool> connect(SocketAddress remote) async {
-    logInfo('连接到群组：remote=${remote.remoteAddress}');
-    if (await client.connect(remote.remoteAddress)) {
-      _isConnected = true;
+  /// 发现设备
+  Future<bool> discoverPeers() async {
+    return await _client.discoverPeers();
+  }
+
+  /// 连接到 [remote] 设备
+  Future<bool> _connectDevice(SocketAddress remote) async {
+    List<WifiP2pDevice> devices = _devices.where((device) => remote.remoteAddress == device.deviceAddress).toList();
+    if (devices.isEmpty) {
+      return false;
     }
+    WifiP2pDevice device = devices.first;
+    switch (device.status) {
+      case DeviceStatus.connected:
+        return true;
+      case DeviceStatus.invited:
+        return false;
+      case DeviceStatus.failed:
+        return false;
+      case DeviceStatus.available:
+        break;
+      case DeviceStatus.unavailable:
+        return false;
+    }
+    logInfo('连接到群组：remote=${remote.remoteAddress}');
+    await _client.connect(device.deviceAddress);
     return false;
   }
 
-  @override
-  Future<void> dispose() async {
+  /// 取消正在连接的设备
+  Future<bool> cancelConnect() async {
+    return _client.cancelConnect();
+  }
+
+  /// 离开群组，断开连接
+  Future<bool> removeGroup() async {
+    return _client.removeGroup();
+  }
+
+  /// 清除所有数据
+  Future<void> _clear() async {
     // 取消注册监听
-    await client.unregister();
-    await client.removeGroup();
+    await _client.unregister();
+    await _client.removeGroup();
   }
 
   SocketAddress _mergeDevice(WifiP2pDevice device) {
     return WifiDirectAddress(
       isGroupOwner: device.isGroupOwner,
-      isConnected: device.isConnected,
+      status: device.status,
       deviceName: device.deviceName,
       localAddress: '',
       remoteAddress: device.deviceAddress,
@@ -164,7 +212,12 @@ class Android2Android with Logging implements NearbyServiceInterface, Connection
     logInfo('获取到可用的设备：peers=${jsonEncode(peers)}');
     _devices.clear();
     _devices.addAll(peers);
-    var list = peers.map((device) => _mergeDevice(device)).toList();
+    List<SocketAddress> list = [];
+    for (var peer in peers) {
+      SocketAddress address = _mergeDevice(peer);
+      list.add(address);
+      _allDevices[peer.deviceAddress] = ServerDevice(address: address, device: peer);
+    }
     var nc = ln.NotificationCenter();
     nc.postNotification(WifiDirectNames.kDevicesChanged, this, {
       'peers': list,
@@ -172,8 +225,28 @@ class Android2Android with Logging implements NearbyServiceInterface, Connection
   }
 
   @override
-  void onConnectionInfoAvailable(WifiP2pConnection info) {
-    logInfo('连接信息发送变化：info=${info.toJson()}');
+  void onConnectionInfoAvailable(WifiP2pConnection connection) async {
+    logInfo('连接信息发送变化：info=${connection.toJson()}');
+    if (connection.isConnected) {
+      String host = connection.groupOwnerAddress.substring(1);
+      int port = 1212;
+      Channel socket;
+      if (connection.groupFormed && connection.isGroupOwner) {
+        // 自己创建的群组且自己为群主
+        socket = BSSocket(host: host, port: port);
+      } else if (connection.groupFormed) {
+        // 加入到群组中的群成员
+        socket = CSSocket(host: host, port: port);
+      } else {
+        // 不应该发生的事情
+        return;
+      }
+      if (await socket.connect()) {
+        String deviceAddress = connection.group?.owner?.deviceAddress ?? '';
+        get(deviceAddress)?.setSocket(socket);
+        socket.write(utf8.encode('测试'));
+      }
+    }
   }
 
   @override
@@ -184,6 +257,11 @@ class Android2Android with Logging implements NearbyServiceInterface, Connection
     nc.postNotification(WifiDirectNames.kSelfChanged, this, {
       'self': device,
     });
+  }
+
+  @override
+  void onDiscoverChanged(bool isDiscover) {
+    logInfo('搜索附近的设备：isDiscover=$isDiscover');
   }
 }
 
@@ -202,12 +280,12 @@ enum ServeStatus {
 class WifiDirectAddress implements SocketAddress {
   WifiDirectAddress({
     required bool isGroupOwner,
-    required bool isConnected,
+    required DeviceStatus status,
     required String deviceName,
     required String localAddress,
     required String remoteAddress,
   })  : _isGroupOwner = isGroupOwner,
-        _isConnected = isConnected,
+        _status = status,
         _deviceName = deviceName,
         _localAddress = localAddress,
         _remoteAddress = remoteAddress;
@@ -217,8 +295,8 @@ class WifiDirectAddress implements SocketAddress {
   final bool _isGroupOwner;
 
   @override
-  bool get isConnected => _isConnected;
-  final bool _isConnected;
+  DeviceStatus get status => _status;
+  final DeviceStatus _status;
 
   @override
   String get deviceName => _deviceName;

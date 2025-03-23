@@ -1,3 +1,5 @@
+import 'package:pp_transfer/pp_transfer.dart';
+
 ///
 /// Created by a0010 on 2025/2/26 11:04
 ///
@@ -24,7 +26,6 @@ abstract interface class NearbyService {
 }
 
 abstract interface class NearbyServiceInterface {
-
   /// 初始化
   /// [return] true=初始化成功，false=初始化失败
   Future<bool> initialize();
@@ -42,12 +43,16 @@ abstract interface class NearbyServiceInterface {
 abstract interface class SocketAddress {
   /// 是否是群组拥有者
   bool get isGroupOwner;
-  /// 是否连接成功
-  bool get isConnected;
+
+  /// 设备状态
+  DeviceStatus get status;
+
   /// 设备名称
   String get deviceName;
+
   /// 本机地址
   String get localAddress => '';
+
   /// 服务器地址
   String get remoteAddress => '';
 }

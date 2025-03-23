@@ -12,8 +12,8 @@ dependencies:
     sdk: flutter
   fbl:
     path: ../fbl
-  shared:
-    path: ../shared
+  fsm:
+    path: ../fsm
   wifi_direct:
     path: ../wifi_direct
   universal_ble: 0.16.0                         # 蓝牙 https://pub.flutter-io.cn/packages/universal_ble

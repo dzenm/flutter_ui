@@ -30,7 +30,7 @@ class MockWifiDirectPlatform with MockPlatformInterfaceMixin implements WifiDire
   }
 
   @override
-  Future<bool> disconnect() {
+  Future<bool> cancelConnect() {
     // TODO: implement disconnect
     throw UnimplementedError();
   }
@@ -123,9 +123,6 @@ class MockWifiDirectPlatform with MockPlatformInterfaceMixin implements WifiDire
     // TODO: implement unregister
     throw UnimplementedError();
   }
-
-
-
 }
 
 void main() {
