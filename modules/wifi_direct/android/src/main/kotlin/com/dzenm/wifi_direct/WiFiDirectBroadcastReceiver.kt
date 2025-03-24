@@ -23,7 +23,6 @@ class WiFiDirectBroadcastReceiver(private val listener: P2pConnectionListener) :
                 val state: Int = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1)
                 // Wifi P2P is enabled or not enabled
                 val enabled = state == WifiP2pManager.WIFI_P2P_STATE_ENABLED
-
                 listener.onP2pState(enabled)
                 listener.onPeersAvailable(emptyList())
                 log("WIFI_P2P_STATE_CHANGED_ACTION: enabled=$enabled")
@@ -63,6 +62,7 @@ class WiFiDirectBroadcastReceiver(private val listener: P2pConnectionListener) :
             WifiP2pManager.WIFI_P2P_DISCOVERY_CHANGED_ACTION -> {
                 val device = intent.getParcelableExtra<WifiP2pDevice>(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE)
                 val state = intent.getIntExtra(WifiP2pManager.EXTRA_DISCOVERY_STATE, WifiP2pManager.WIFI_P2P_DISCOVERY_STOPPED)
+                log("WIFI_P2P_DISCOVERY_CHANGED_ACTION：state=$state")
                 listener.onDiscoverChanged(state == WifiP2pManager.WIFI_P2P_DISCOVERY_STARTED)
             }
         }

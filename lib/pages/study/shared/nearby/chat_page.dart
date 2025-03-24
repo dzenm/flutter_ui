@@ -2,7 +2,7 @@ import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../pp_model.dart';
+import 'pp_model.dart';
 
 class DeviceChatPage extends StatefulWidget {
   const DeviceChatPage({super.key});

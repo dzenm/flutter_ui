@@ -8,26 +8,18 @@ import 'package:pp_transfer/pp_transfer.dart';
 import '../../server/channel.dart';
 import '../../server/connection.dart';
 
-class ServerDevice implements Connection {
+class ServeDevice {
   final SocketAddress address;
 
   final WifiP2pDevice device;
 
-  ServerDevice({required this.address, required this.device});
+  ServeDevice({required this.address, required this.device});
 
-  @override
-  bool get isConnected => _isConnected;
-  bool _isConnected = false;
-  void setConnected() => _isConnected = true;
-
-  @override
-  bool get isTransiting => _isTransiting;
-  bool _isTransiting = false;
-  void setTransiting() => _isTransiting = true;
-
-  void setSocket(Channel socket) => _socket = socket;
+  void setSocket(Channel? socket) => _socket = socket;
   Channel? _socket;
-  void sendMsg(String deviceAddress, String text) {
+  Channel? get socket => _socket;
+
+  void sendMsg(String text) {
     Channel? socket = _socket;
     if (socket == null) {
       return;
@@ -35,7 +27,6 @@ class ServerDevice implements Connection {
 
     Uint8List data = utf8.encode(text);
     socket.write(data);
-    Log.d('发送的数据：text=$text');
   }
 
   Future<bool> receiveMsg() async {
@@ -54,6 +45,7 @@ class ServerDevice implements Connection {
     Log.d('接收的数据：text=$text');
     var nc = ln.NotificationCenter();
     nc.postNotification(WifiDirectNames.kReceiveTextData, this, {
+      'address': address.remoteAddress,
       'text': text,
     });
     return true;

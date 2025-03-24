@@ -3,7 +3,7 @@ import '../../server/connection.dart';
 ///
 /// Created by a0010 on 2025/2/26 11:26
 ///
-class WifiConnectionClient implements Connection {
+class WifiConnectionClient implements WifiConnection {
   @override
   bool get isConnected => throw UnimplementedError();
 

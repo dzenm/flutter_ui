@@ -5,15 +5,15 @@ import 'package:fbl/fbl.dart';
 import 'package:fbl/src/config/notification.dart' as ln;
 import 'package:fsm/fsm.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:pp_transfer/src/network/connection/cs.dart';
 import 'package:pp_transfer/src/server/channel.dart';
 import 'package:pp_transfer/src/server/service.dart';
 import 'package:wifi_direct/wifi_direct.dart';
 
 import '../../constant/names.dart';
+import '../../socket/bs.dart';
+import '../../socket/cs.dart';
 import '../common/device.dart';
 import '../common/im.dart';
-import '../connection/bs.dart';
 
 ///
 /// Created by a0010 on 2025/2/26 11:28
@@ -22,8 +22,8 @@ class Android2Android extends Runner //
     with
         WifiDirectMixin,
         DeviceMixin,
-        Logging,
-        ChannelMixin
+        ChannelMixin,
+        Logging
     implements
         NearbyServiceInterface {
   Android2Android() : super(Runner.intervalSlow) {
@@ -56,7 +56,7 @@ class Android2Android extends Runner //
 }
 
 /// 处理 WiFi Direct
-mixin WifiDirectMixin implements DeviceMixin, Logging, P2pConnectionListener {
+mixin WifiDirectMixin implements DeviceMixin, ChannelMixin, Logging, P2pConnectionListener {
   final WifiDirect _client = WifiDirect();
 
   /// 自己设备的信息
@@ -81,8 +81,6 @@ mixin WifiDirectMixin implements DeviceMixin, Logging, P2pConnectionListener {
       'status': status,
     });
   }
-
-  Map<String, ServerDevice> _allDevices = {};
 
   /// 初始化
   Future<ServeStatus> _initialize() async {
@@ -214,9 +212,11 @@ mixin WifiDirectMixin implements DeviceMixin, Logging, P2pConnectionListener {
     _devices.addAll(peers);
     List<SocketAddress> list = [];
     for (var peer in peers) {
+      String deviceAddress = peer.deviceAddress;
       SocketAddress address = _mergeDevice(peer);
       list.add(address);
-      _allDevices[peer.deviceAddress] = ServerDevice(address: address, device: peer);
+      var device = ServeDevice(address: address, device: peer);
+      setDevice(deviceAddress, device);
     }
     var nc = ln.NotificationCenter();
     nc.postNotification(WifiDirectNames.kDevicesChanged, this, {
@@ -243,7 +243,7 @@ mixin WifiDirectMixin implements DeviceMixin, Logging, P2pConnectionListener {
       }
       if (await socket.connect()) {
         String deviceAddress = connection.group?.owner?.deviceAddress ?? '';
-        get(deviceAddress)?.setSocket(socket);
+        setSocket(deviceAddress, socket);
         socket.write(utf8.encode('测试'));
       }
     }

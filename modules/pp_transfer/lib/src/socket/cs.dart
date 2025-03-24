@@ -1,20 +1,22 @@
-import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:fbl/fbl.dart';
 
-import '../../server/channel.dart';
+import '../server/channel.dart';
+
+/// Socket连接超时重连时间
+const int _kSocketTimeout = 30000;
 
 ///
-/// Created by a0010 on 2025/3/3 11:24
+/// Created by a0010 on 2025/3/3 11:23
 ///
-class BSSocket extends Channel with Logging {
-  BSSocket({
+class CSSocket extends Channel with Logging {
+  CSSocket({
     required this.host,
     int? port,
   }) : port = port ?? 1212;
-  static const String _tag = 'BSSocket';
+  static const String _tag = 'CSSocket';
 
   /// 处理接收的字节数据，每次接收的数据长度不一样，先缓存下来，再进行处理
   final List<Uint8List> _caches = [];
@@ -54,8 +56,8 @@ class BSSocket extends Channel with Logging {
       Log.e('Socket already connected: socket=$socket', tag: _tag);
       return false;
     }
-    socket = _SocketCreator();
-    bool result = await socket.bind(host, port);
+    socket = _SocketCreator(host, port);
+    bool result = await socket.connect();
     if (result) {
       await _setSocket(socket);
       _caches.clear();
@@ -99,9 +101,11 @@ class BSSocket extends Channel with Logging {
 }
 
 class _SocketCreator {
-  _SocketCreator();
+  String host;
+  int port;
 
-  StreamSubscription<Socket>? _subscription;
+  _SocketCreator(this.host, this.port);
+
   Socket? _socket;
 
   bool get isClosed => _closed;
@@ -133,8 +137,8 @@ class _SocketCreator {
     return isConnected;
   }
 
-  Future<bool> bind(String host, int port, [int timeout = 10000]) async {
-    await _bindSocket(host, port);
+  Future<bool> connect([int timeout = 10000]) async {
+    await _connectSocket();
     if (await _checkState(timeout, () => _connected)) {
       return true;
     } else {
@@ -165,20 +169,21 @@ class _SocketCreator {
       return false;
     } else {
       await _setSocket(null);
-      _subscription?.cancel();
     }
-    return true;
+    return await _checkState(timeout, () => _closed);
   }
 
-  Future<bool> _bindSocket(String host, int port) async {
+  Future<bool> _connectSocket() async {
     if (_connecting) return false;
     _connecting = true;
     try {
-      ServerSocket serverSocket = await ServerSocket.bind(host, port);
-      var subscription = serverSocket.listen((socket) async {
-        await _setSocket(socket);
-      });
-      _subscription = subscription;
+      Duration timeout = const Duration(milliseconds: _kSocketTimeout);
+      Socket socket = await Socket.connect(
+        host,
+        port,
+        timeout: timeout,
+      );
+      await _setSocket(socket);
       return true;
     } catch (e) {
       await _setSocket(null);

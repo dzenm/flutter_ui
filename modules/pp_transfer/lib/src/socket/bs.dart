@@ -1,22 +1,20 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:fbl/fbl.dart';
 
-import '../../server/channel.dart';
-
-/// Socket连接超时重连时间
-const int _kSocketTimeout = 30000;
+import '../server/channel.dart';
 
 ///
-/// Created by a0010 on 2025/3/3 11:23
+/// Created by a0010 on 2025/3/3 11:24
 ///
-class CSSocket extends Channel with Logging {
-  CSSocket({
+class BSSocket extends Channel with Logging {
+  BSSocket({
     required this.host,
     int? port,
   }) : port = port ?? 1212;
-  static const String _tag = 'CSSocket';
+  static const String _tag = 'BSSocket';
 
   /// 处理接收的字节数据，每次接收的数据长度不一样，先缓存下来，再进行处理
   final List<Uint8List> _caches = [];
@@ -56,8 +54,8 @@ class CSSocket extends Channel with Logging {
       Log.e('Socket already connected: socket=$socket', tag: _tag);
       return false;
     }
-    socket = _SocketCreator(host, port);
-    bool result = await socket.connect();
+    socket = _SocketCreator();
+    bool result = await socket.bind(host, port);
     if (result) {
       await _setSocket(socket);
       _caches.clear();
@@ -101,11 +99,9 @@ class CSSocket extends Channel with Logging {
 }
 
 class _SocketCreator {
-  String host;
-  int port;
+  _SocketCreator();
 
-  _SocketCreator(this.host, this.port);
-
+  StreamSubscription<Socket>? _subscription;
   Socket? _socket;
 
   bool get isClosed => _closed;
@@ -117,7 +113,9 @@ class _SocketCreator {
   bool get isConnected => _connected;
   bool _connected = false;
 
-  Future<bool> _setSocket(Socket? socket) async {
+  List<Socket> _sockets = [];
+
+  Future<bool> _addSocket(Socket? socket) async {
     bool isNull = socket == null;
     // 1. replace with new socket
     Socket? old = _socket;
@@ -137,8 +135,12 @@ class _SocketCreator {
     return isConnected;
   }
 
-  Future<bool> connect([int timeout = 10000]) async {
-    await _connectSocket();
+  Future<bool> _removeSocket() {
+
+  }
+
+  Future<bool> bind(String host, int port, [int timeout = 10000]) async {
+    await _bindSocket(host, port);
     if (await _checkState(timeout, () => _connected)) {
       return true;
     } else {
@@ -169,24 +171,22 @@ class _SocketCreator {
       return false;
     } else {
       await _setSocket(null);
+      _subscription?.cancel();
     }
-    return await _checkState(timeout, () => _closed);
+    return true;
   }
 
-  Future<bool> _connectSocket() async {
+  Future<bool> _bindSocket(String host, int port) async {
     if (_connecting) return false;
     _connecting = true;
     try {
-      Duration timeout = const Duration(milliseconds: _kSocketTimeout);
-      Socket socket = await Socket.connect(
-        host,
-        port,
-        timeout: timeout,
-      );
-      await _setSocket(socket);
+      ServerSocket serverSocket = await ServerSocket.bind(host, port);
+      var subscription = serverSocket.listen((socket) async {
+        await _addSocket(socket);
+      });
+      _subscription = subscription;
       return true;
     } catch (e) {
-      await _setSocket(null);
       return false;
     }
   }

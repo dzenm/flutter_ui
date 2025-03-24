@@ -4,7 +4,7 @@ import 'package:pp_transfer/pp_transfer.dart';
 import 'package:provider/provider.dart';
 
 import '../../study_router.dart';
-import '../pp_model.dart';
+import 'pp_model.dart';
 
 ///
 /// Created by a0010 on 2025/2/17 14:32
@@ -14,7 +14,13 @@ class WifiDirectPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const WifiDirectBodyPage();
+    PPModel wifi = PPModel();
+    return P2PWidget(
+      notifier: wifi,
+      child: Builder(builder: (context) {
+        return const WifiDirectBodyPage();
+      }),
+    );
   }
 }
 
