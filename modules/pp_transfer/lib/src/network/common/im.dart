@@ -6,9 +6,10 @@ import 'package:fbl/src/config/notification.dart' as ln;
 
 import '../../constant/names.dart';
 import '../../server/channel.dart';
-import '../../server/connection.dart';
+import '../../socket/bs.dart';
 import 'device.dart';
 
+/// 设备处理
 mixin DeviceMixin {
   final Map<String, ServeDevice?> _allDevices = {};
 
@@ -37,24 +38,31 @@ mixin DeviceMixin {
       await old.close();
     }
   }
+
+  void clearAll() {
+    _allDevices.clear();
+  }
 }
 
+/// 客户端处理
 mixin ClientMixin {
-  Future<void> setSocket(Channel? socket) async {
+  Future<void> setClient(Channel? socket) async {
     // 1. replace with new socket
-    Channel? old = _socket;
-    _socket = socket;
+    Channel? old = _client;
+    _client = socket;
     // 2. close old socket
     if (old == null || identical(old, socket)) {
     } else {
       await old.close();
     }
   }
-  Channel? _socket;
-  Channel? get socket => _socket;
+
+  Channel? _client;
+
+  Channel? get client => _client;
 
   void sendMsg(String text) {
-    Channel? socket = _socket;
+    Channel? socket = _client;
     if (socket == null) {
       return;
     }
@@ -64,7 +72,7 @@ mixin ClientMixin {
   }
 
   Future<bool> receiveMsg() async {
-    Channel? socket = _socket;
+    Channel? socket = _client;
     if (socket == null) {
       return false;
     }
@@ -85,7 +93,7 @@ mixin ClientMixin {
   }
 
   Future<void> close() async {
-    Channel? socket = _socket;
+    Channel? socket = _client;
     if (socket == null) {
       return;
     }
@@ -93,17 +101,16 @@ mixin ClientMixin {
   }
 }
 
-mixin ServerMixin implements ClientMixin {
-  final Map<String, Channel?> _allSockets = {};
+/// 服务端处理
+mixin ServerMixin {
+  Channel? _server;
 
-  Channel? get(String deviceAddress) {
-    return _allSockets[deviceAddress];
-  }
+  Channel? get server => _server;
 
-  Future<void> addSocket(String deviceAddress, Channel? socket) async {
+  Future<void> setServer(Channel socket) async {
     // 1. replace with new socket
-    Channel? old = _allSockets[deviceAddress];
-    _allSockets[deviceAddress] = socket;
+    Channel? old = _server;
+    _server = socket;
     // 2. close old socket
     if (old == null || identical(old, socket)) {
     } else {
@@ -111,37 +118,11 @@ mixin ServerMixin implements ClientMixin {
     }
   }
 
-  /// 转发消息
-  Future<void> transform() async {
-    socket.cast<List<int>>().transform(utf8.decoder).listen((event) {
-      //     print(event);
-      //     socket.write("Niyehaoa");
-      // });
-  }
-}
-
-
-mixin ChannelMixin implements DeviceMixin {
-
-  void sendMsg(String deviceAddress, String text) {
-    ServeDevice? device = _allDevices[deviceAddress];
-    if (device == null) return;
-    device.sendMsg(text);
-    Log.d('发送的数据：deviceAddress=$deviceAddress, text=$text');
-  }
-
-  Future<bool> receiveMsg() async {
-    bool needWork = false;
-    for (var deviceAddress in _allDevices.keys) {
-      ServeDevice? device = _allDevices[deviceAddress];
-      if (device == null) {
-        if (!needWork) needWork = false;
-        continue;
-      }
-      bool result = await device.receiveMsg();
-      if (result) needWork = true;
+  Future<void> disconnect() async {
+    Channel? socket = _server;
+    if (socket == null) {
+      return;
     }
-    return needWork;
+    await socket.close();
   }
 }
-

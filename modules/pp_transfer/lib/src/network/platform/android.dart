@@ -22,7 +22,8 @@ class Android2Android extends Runner //
     with
         WifiDirectMixin,
         DeviceMixin,
-        ChannelMixin,
+        ClientMixin,
+        ServerMixin,
         Logging
     implements
         NearbyServiceInterface {
@@ -56,7 +57,7 @@ class Android2Android extends Runner //
 }
 
 /// 处理 WiFi Direct
-mixin WifiDirectMixin implements DeviceMixin, ChannelMixin, Logging, P2pConnectionListener {
+mixin WifiDirectMixin implements DeviceMixin, ClientMixin, ServerMixin, Logging, P2pConnectionListener {
   final WifiDirect _client = WifiDirect();
 
   /// 自己设备的信息
@@ -168,6 +169,9 @@ mixin WifiDirectMixin implements DeviceMixin, ChannelMixin, Logging, P2pConnecti
       case DeviceStatus.unavailable:
         return false;
     }
+    clearAll();
+    await disconnect();
+    await close();
     logInfo('连接到群组：remote=${remote.remoteAddress}');
     await _client.connect(device.deviceAddress);
     return false;
@@ -230,21 +234,31 @@ mixin WifiDirectMixin implements DeviceMixin, ChannelMixin, Logging, P2pConnecti
     if (connection.isConnected) {
       String host = connection.groupOwnerAddress.substring(1);
       int port = 1212;
-      Channel socket;
       if (connection.groupFormed && connection.isGroupOwner) {
-        // 自己创建的群组且自己为群主
-        socket = BSSocket(host: host, port: port);
-      } else if (connection.groupFormed) {
-        // 加入到群组中的群成员
-        socket = CSSocket(host: host, port: port);
+        if (server?.isConnected == false) {
+          // 自己创建的群组且自己为群主
+          Channel server = BSSocket(host: host, port: port);
+          await server.connect();
+
+          Channel client = CSSocket(host: host, port: port);
+          if (await client.connect()) {
+            String deviceAddress = connection.group?.owner?.deviceAddress ?? '';
+            setSocket(deviceAddress, client);
+          }
+        }
+      } else if (connection.groupFormed && !connection.isGroupOwner) {
+        if (client?.isConnected == false) {
+          // 加入到群组中的群成员
+          Channel client = CSSocket(host: host, port: port);
+          if (await client.connect()) {
+            String deviceAddress = connection.group?.owner?.deviceAddress ?? '';
+            setSocket(deviceAddress, client);
+            client.write(utf8.encode('测试'));
+          }
+        }
       } else {
         // 不应该发生的事情
         return;
-      }
-      if (await socket.connect()) {
-        String deviceAddress = connection.group?.owner?.deviceAddress ?? '';
-        setSocket(deviceAddress, socket);
-        socket.write(utf8.encode('测试'));
       }
     }
   }

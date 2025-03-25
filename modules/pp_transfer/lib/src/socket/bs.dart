@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -16,8 +17,6 @@ class BSSocket extends Channel with Logging {
   }) : port = port ?? 1212;
   static const String _tag = 'BSSocket';
 
-  /// 处理接收的字节数据，每次接收的数据长度不一样，先缓存下来，再进行处理
-  final List<Uint8List> _caches = [];
   _SocketCreator? _socket;
 
   Future<void> _setSocket(_SocketCreator? socket) async {
@@ -58,11 +57,6 @@ class BSSocket extends Channel with Logging {
     bool result = await socket.bind(host, port);
     if (result) {
       await _setSocket(socket);
-      _caches.clear();
-      // read buffer
-      socket.listen((data) {
-        _caches.add(data);
-      });
     } else {
       await _setSocket(null);
     }
@@ -72,37 +66,24 @@ class BSSocket extends Channel with Logging {
 
   @override
   Future<int> write(List<int> data) async {
-    _SocketCreator? socket = _socket;
-    if (socket == null) {
-      Log.e('Socket not connect: socket=$socket', tag: _tag);
-      return -1;
-    } else if (data.isEmpty) {
-      return 0;
-    }
-    return await socket.write(data);
+    return 0;
   }
 
   @override
   Future<Uint8List?> read(int maxLen) async {
-    if (_caches.isEmpty) {
-      return null;
-    }
-
-    return _caches.removeAt(0);
+    return null;
   }
 
   @override
   Future<void> close() async {
     await _setSocket(null);
-    Log.d('Old socket is closed', tag: _tag);
   }
 }
 
-class _SocketCreator {
+class _SocketCreator with Logging {
   _SocketCreator();
 
   StreamSubscription<Socket>? _subscription;
-  Socket? _socket;
 
   bool get isClosed => _closed;
   bool _closed = true;
@@ -113,67 +94,57 @@ class _SocketCreator {
   bool get isConnected => _connected;
   bool _connected = false;
 
-  List<Socket> _sockets = [];
-
-  Future<bool> _addSocket(Socket? socket) async {
-    bool isNull = socket == null;
-    // 1. replace with new socket
-    Socket? old = _socket;
-    if (!isNull) {
-      _socket = socket;
-      // } else {
-      //   _ws = null;
-    }
-    // 2. close old socket
-    if (old == null || identical(old, socket)) {
-    } else {
-      await old.close();
-    }
-    _closed = isNull;
-    _connecting = false;
-    _connected = !isNull;
-    return isConnected;
-  }
-
-  Future<bool> _removeSocket() {
-
-  }
+  final List<_Socket> _sockets = [];
 
   Future<bool> bind(String host, int port, [int timeout = 10000]) async {
-    await _bindSocket(host, port);
-    if (await _checkState(timeout, () => _connected)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  void listen(void Function(Uint8List data) onData) => _socket?.listen(
-        (data) => onData(data),
-        onError: (err) {},
-        onDone: () {
-          close();
-        },
-      );
-
-  Future<int> write(List<int> data) async {
-    Socket? socket = _socket;
-    if (socket == null || !_connected) {
-      return -1;
-    }
-    socket.add(data);
-    return data.length;
+    return await _bindSocket(host, port);
   }
 
   Future<bool> close([int timeout = 8000]) async {
-    Socket? socket = _socket;
-    if (socket == null) {
+    List<_Socket> sockets = _sockets;
+    if (sockets.isEmpty) {
       return false;
     } else {
-      await _setSocket(null);
+      for (var socket in sockets) {
+        await socket.socket.close();
+      }
       _subscription?.cancel();
     }
+    _closed = true;
     return true;
+  }
+
+  void _addSocket(Socket socket) async {
+    _Socket sock = _Socket(socket);
+    _sockets.add(sock);
+    _listen(sock);
+  }
+
+  void _listen(_Socket socket) {
+    var s = socket.socket;
+    s.listen(
+      (data) {
+        String iMsg = utf8.decode(data);
+        logInfo('接收到用户 `userUid=${socket.userUid}` 发送的数据: $iMsg');
+        List<_Socket> sockets = _sockets;
+        for (var sock in sockets) {
+          // 不对发送的客户端进行转发消息
+          // if (sock == socket) continue;
+          // if (sock.userUid.isEmpty) continue;
+          sock.socket.write(iMsg);
+          logInfo('转发给用户 `userUid=${sock.userUid}` 消息：$iMsg');
+        }
+      },
+      onError: (err) {},
+      onDone: () {
+        _removeSocket(socket);
+      },
+    );
+  }
+
+  Future<void> _removeSocket(_Socket socket) async {
+    _sockets.removeWhere((sock) => socket == sock);
+    socket.socket.close();
   }
 
   Future<bool> _bindSocket(String host, int port) async {
@@ -182,29 +153,33 @@ class _SocketCreator {
     try {
       ServerSocket serverSocket = await ServerSocket.bind(host, port);
       var subscription = serverSocket.listen((socket) async {
-        await _addSocket(socket);
+        _addSocket(socket);
       });
       _subscription = subscription;
+      _connected = true;
+      _closed = false;
       return true;
     } catch (e) {
       return false;
     }
   }
+}
 
-  Future<bool> _checkState(int timeout, bool Function() condition) async {
-    if (timeout <= 0) {
-      // non-blocking
-      return true;
-    }
-    DateTime expired = DateTime.now().add(Duration(milliseconds: timeout));
-    while (!condition()) {
-      // condition not true, wait a while to check again
-      await Future.delayed(const Duration(milliseconds: 128));
-      if (DateTime.now().isAfter(expired)) {
-        return false;
-      }
-    }
-    // condition true now
-    return true;
+class _Socket {
+  final Socket socket;
+
+  _Socket(this.socket);
+
+  void setUserUid(String userUid) => _userUid = userUid;
+  String _userUid = '';
+  String get userUid => '';
+
+  @override
+  bool operator ==(Object other) {
+    if (other.runtimeType != runtimeType) return false;
+    return other is _Socket && _userUid == other._userUid;
   }
+
+  @override
+  int get hashCode => Object.hash(socket, userUid);
 }
