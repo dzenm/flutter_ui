@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 import 'package:pp_transfer/pp_transfer.dart';
@@ -62,7 +65,12 @@ class _WifiDirectBodyPageState extends State<WifiDirectBodyPage> with Logging {
         actions: [
           IconButton(
               onPressed: () {
-                services.discoverPeers();
+                List<Uint8List> data = [];
+                data.add(utf8.encode('这是第一条消息'));
+                data.add(utf8.encode('这是第2条消息'));
+                data.add(utf8.encode('这是第三条消息'));
+                data.add(utf8.encode('这是第4条消息'));
+                services.addData(data);
               },
               icon: const Icon(Icons.refresh_rounded)),
         ],

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:pp_transfer/pp_transfer.dart';
 
 ///
@@ -29,6 +31,10 @@ abstract interface class NearbyServiceInterface {
   /// 初始化
   /// [return] true=初始化成功，false=初始化失败
   Future<bool> initialize();
+
+  /// 添加发送的数据
+  /// [data] 待发送的数据
+  void addData(List<Uint8List> data);
 
   /// 连接设备
   /// [remote] 连接的设备地址

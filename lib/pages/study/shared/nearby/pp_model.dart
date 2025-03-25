@@ -18,7 +18,7 @@ class P2PWidget extends InheritedNotifier<PPModel> {
 }
 
 class PPModel extends ChangeNotifier implements ln.Observer {
-  List<SocketAddress> get devices => _peers;
+  List<SocketAddress> get devices => List.castFrom(_peers);
   final List<SocketAddress> _peers = [];
 
   PPModel() {

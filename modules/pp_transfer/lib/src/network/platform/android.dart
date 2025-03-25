@@ -1,17 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:fbl/fbl.dart';
 import 'package:fbl/src/config/notification.dart' as ln;
 import 'package:fsm/fsm.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:pp_transfer/src/server/channel.dart';
 import 'package:pp_transfer/src/server/service.dart';
 import 'package:wifi_direct/wifi_direct.dart';
 
 import '../../constant/names.dart';
-import '../../socket/bs.dart';
-import '../../socket/cs.dart';
 import '../common/device.dart';
 import '../common/im.dart';
 
@@ -22,8 +20,7 @@ class Android2Android extends Runner //
     with
         WifiDirectMixin,
         DeviceMixin,
-        ClientMixin,
-        ServerMixin,
+        ConnectionMixin,
         Logging
     implements
         NearbyServiceInterface {
@@ -41,6 +38,11 @@ class Android2Android extends Runner //
   }
 
   @override
+  void addData(List<Uint8List> data) {
+    addPrepareData(data);
+  }
+
+  @override
   Future<bool> connect(SocketAddress remote) async {
     return await _connectDevice(remote);
   }
@@ -52,12 +54,17 @@ class Android2Android extends Runner //
 
   @override
   Future<bool> process() async {
-    return await receiveMsg();
+    bool isSend = await sendData();
+    bool isReceive = await receiveData();
+    if (isSend || isReceive) {
+      return true;
+    }
+    return false;
   }
 }
 
 /// 处理 WiFi Direct
-mixin WifiDirectMixin implements DeviceMixin, ClientMixin, ServerMixin, Logging, P2pConnectionListener {
+mixin WifiDirectMixin implements DeviceMixin, ConnectionMixin, Logging, P2pConnectionListener {
   final WifiDirect _client = WifiDirect();
 
   /// 自己设备的信息
@@ -170,8 +177,6 @@ mixin WifiDirectMixin implements DeviceMixin, ClientMixin, ServerMixin, Logging,
         return false;
     }
     clearAll();
-    await disconnect();
-    await close();
     logInfo('连接到群组：remote=${remote.remoteAddress}');
     await _client.connect(device.deviceAddress);
     return false;
@@ -211,6 +216,9 @@ mixin WifiDirectMixin implements DeviceMixin, ClientMixin, ServerMixin, Logging,
 
   @override
   void onPeersAvailable(List<WifiP2pDevice> peers) {
+    if (jsonEncode(peers) == jsonEncode(_devices)) {
+      return;
+    }
     logInfo('获取到可用的设备：peers=${jsonEncode(peers)}');
     _devices.clear();
     _devices.addAll(peers);
@@ -235,27 +243,11 @@ mixin WifiDirectMixin implements DeviceMixin, ClientMixin, ServerMixin, Logging,
       String host = connection.groupOwnerAddress.substring(1);
       int port = 1212;
       if (connection.groupFormed && connection.isGroupOwner) {
-        if (server?.isConnected == false) {
-          // 自己创建的群组且自己为群主
-          Channel server = BSSocket(host: host, port: port);
-          await server.connect();
-
-          Channel client = CSSocket(host: host, port: port);
-          if (await client.connect()) {
-            String deviceAddress = connection.group?.owner?.deviceAddress ?? '';
-            setSocket(deviceAddress, client);
-          }
-        }
+        await connectSocket(host, port, flag: -1);
       } else if (connection.groupFormed && !connection.isGroupOwner) {
-        if (client?.isConnected == false) {
-          // 加入到群组中的群成员
-          Channel client = CSSocket(host: host, port: port);
-          if (await client.connect()) {
-            String deviceAddress = connection.group?.owner?.deviceAddress ?? '';
-            setSocket(deviceAddress, client);
-            client.write(utf8.encode('测试'));
-          }
-        }
+        await connectSocket(host, port, flag: 1);
+        await Future.delayed(const Duration(seconds: 1));
+        await sendMessage(utf8.encode('这是1秒之后发送的数据'));
       } else {
         // 不应该发生的事情
         return;
@@ -265,6 +257,9 @@ mixin WifiDirectMixin implements DeviceMixin, ClientMixin, ServerMixin, Logging,
 
   @override
   void onSelfP2pChanged(WifiP2pDevice device) {
+    if (jsonEncode(device) == jsonEncode(_self)) {
+      return;
+    }
     logInfo('自己的设备信息发送变化：device=${device.toJson()}');
     _self = device;
     var nc = ln.NotificationCenter();
