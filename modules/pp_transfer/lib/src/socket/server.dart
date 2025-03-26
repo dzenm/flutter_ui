@@ -10,8 +10,8 @@ import '../server/channel.dart';
 ///
 /// Created by a0010 on 2025/3/3 11:24
 ///
-class BSSocket extends Channel with Logging {
-  BSSocket({
+class ServerChannel extends Channel with Logging {
+  ServerChannel({
     required this.host,
     int? port,
   }) : port = port ?? 1212;

@@ -11,8 +11,8 @@ const int _kSocketTimeout = 30000;
 ///
 /// Created by a0010 on 2025/3/3 11:23
 ///
-class CSSocket extends Channel with Logging {
-  CSSocket({
+class ClientChannel extends Channel with Logging {
+  ClientChannel({
     required this.host,
     int? port,
   }) : port = port ?? 1212;

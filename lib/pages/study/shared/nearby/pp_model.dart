@@ -82,10 +82,11 @@ class PPModel extends ChangeNotifier implements ln.Observer {
       notifyListeners();
     } else if (name == WifiDirectNames.kReceiveTextData) {
       var text = notification.userInfo?['text'];
+      TextMessage message = text;
       ChatMsg cMsg = ChatMsg(
         chattingUid: StrUtil.generateUid(),
         userName: _self?.deviceName ?? '',
-        text: text,
+        text: message.text,
         isSender: false,
       );
       _iMsg.add(cMsg);

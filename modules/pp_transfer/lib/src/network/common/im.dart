@@ -8,7 +8,9 @@ import '../../constant/names.dart';
 import '../../server/channel.dart';
 import '../../socket/client.dart';
 import '../../socket/owner.dart';
+import 'codec.dart';
 import 'device.dart';
+import 'message.dart';
 
 /// 设备处理
 mixin DeviceMixin {
@@ -128,6 +130,7 @@ mixin ServerMixin {
   }
 }
 
+/// Socket连接处理
 mixin ConnectionMixin {
   bool get isPair => _isPair;
   bool _isPair = false; // 是否配对成功
@@ -141,22 +144,23 @@ mixin ConnectionMixin {
   Channel? _socket; // 当前连接的socket
 
   /// 等待发送的数据
-  void addPrepareData(List<Uint8List> data) => _data.addAll(data);
-  final List<Uint8List> _data = [];
+  void addPrepareData(Message message) => _data.add(message);
+  final List<Message> _data = [];
 
   /// 连接socket
-  Future<bool> connectSocket(String host, int port, {int flag = -1}) async {
+  Future<bool> connectSocket(String host, int port, {SocketFlag flag = SocketFlag.client}) async {
     _isPair = true;
     Channel? socket = _socket;
     if (socket != null && socket.isConnected) {
       return true;
     }
-    if (flag == -1) {
-      socket = BSSocket(host: host, port: port);
-    } else if (flag == 1) {
-      socket = CSSocket(host: host, port: port);
-    } else {
-      throw Exception('It should not happen');
+    switch (flag) {
+      case SocketFlag.server:
+        socket = OwnerChannel(host: host, port: port);
+        break;
+      case SocketFlag.client:
+        socket = ClientChannel(host: host, port: port);
+        break;
     }
     if (await socket.connect()) {
       _isConnecting = false;
@@ -164,9 +168,6 @@ mixin ConnectionMixin {
       await _setSocket(socket);
       return true;
     }
-    _isConnecting = false;
-    _isConnected = false;
-    await _setSocket(null);
     return false;
   }
 
@@ -181,11 +182,11 @@ mixin ConnectionMixin {
 
   /// 发送数据
   Future<bool> sendData() async {
-    List<Uint8List> dataList = _data;
+    List<Message> dataList = _data;
     if (dataList.isEmpty) {
       return false;
     }
-    List<Uint8List> send = [];
+    List<Message> send = [];
     for (var data in dataList) {
       if (!await sendMessage(data)) {
         send.add(data);
@@ -197,11 +198,12 @@ mixin ConnectionMixin {
   }
 
   /// 发送消息
-  Future<bool> sendMessage(Uint8List data) async {
+  Future<bool> sendMessage(Message message) async {
     Channel? socket = _socket;
     if (socket == null || !isConnected) {
       return false;
     }
+    List<int> data = mc.encode(message);
     await socket.write(data);
     return true;
   }
@@ -219,12 +221,29 @@ mixin ConnectionMixin {
     if (data.isEmpty) {
       return false;
     }
-    String text = utf8.decode(data);
-    Log.d('接收的数据：text=$text');
+    Message message = mc.decode(data);
+    Log.d('接收的数据：text=${message.toJson()}');
     var nc = ln.NotificationCenter();
     nc.postNotification(WifiDirectNames.kReceiveTextData, this, {
-      'text': text,
+      'text': message,
     });
     return true;
+  }
+}
+
+/// Socket的类型
+enum SocketFlag {
+  server(-1),
+  client(1);
+
+  final int value;
+
+  const SocketFlag(this.value);
+
+  static SocketFlag parse(int? value) {
+    for (var item in SocketFlag.values) {
+      if (item.value == value) return item;
+    }
+    return SocketFlag.client;
   }
 }

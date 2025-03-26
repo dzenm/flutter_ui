@@ -33,8 +33,8 @@ abstract interface class NearbyServiceInterface {
   Future<bool> initialize();
 
   /// 添加发送的数据
-  /// [data] 待发送的数据
-  void addData(List<Uint8List> data);
+  /// [message] 待发送的数据
+  void addMessage(IMessage message);
 
   /// 连接设备
   /// [remote] 连接的设备地址
@@ -43,6 +43,10 @@ abstract interface class NearbyServiceInterface {
 
   /// 清除信息
   Future<void> dispose();
+}
+
+abstract interface class IMessage {
+
 }
 
 /// 连接的Socket地址

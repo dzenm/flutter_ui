@@ -65,12 +65,10 @@ class _WifiDirectBodyPageState extends State<WifiDirectBodyPage> with Logging {
         actions: [
           IconButton(
               onPressed: () {
-                List<Uint8List> data = [];
-                data.add(utf8.encode('这是第一条消息'));
-                data.add(utf8.encode('这是第2条消息'));
-                data.add(utf8.encode('这是第三条消息'));
-                data.add(utf8.encode('这是第4条消息'));
-                services.addData(data);
+                services.addMessage(TextMessage(body: utf8.encode('这是第2条消息')));
+                services.addMessage(TextMessage(body: utf8.encode('11231312312')));
+                services.addMessage(TextMessage(body: utf8.encode('这是第三条消息')));
+                services.addMessage(TextMessage(body: utf8.encode('这是第4条消息')));
               },
               icon: const Icon(Icons.refresh_rounded)),
         ],

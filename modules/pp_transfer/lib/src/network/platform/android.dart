@@ -10,8 +10,10 @@ import 'package:pp_transfer/src/server/service.dart';
 import 'package:wifi_direct/wifi_direct.dart';
 
 import '../../constant/names.dart';
+import '../common/codec.dart';
 import '../common/device.dart';
 import '../common/im.dart';
+import '../common/message.dart';
 
 ///
 /// Created by a0010 on 2025/2/26 11:28
@@ -38,8 +40,10 @@ class Android2Android extends Runner //
   }
 
   @override
-  void addData(List<Uint8List> data) {
-    addPrepareData(data);
+  void addMessage(IMessage message) {
+    if (message is Message) {
+      addPrepareData(message);
+    }
   }
 
   @override
@@ -243,11 +247,12 @@ mixin WifiDirectMixin implements DeviceMixin, ConnectionMixin, Logging, P2pConne
       String host = connection.groupOwnerAddress.substring(1);
       int port = 1212;
       if (connection.groupFormed && connection.isGroupOwner) {
-        await connectSocket(host, port, flag: -1);
+        await connectSocket(host, port, flag: SocketFlag.server);
       } else if (connection.groupFormed && !connection.isGroupOwner) {
-        await connectSocket(host, port, flag: 1);
+        await connectSocket(host, port, flag: SocketFlag.client);
         await Future.delayed(const Duration(seconds: 1));
-        await sendMessage(utf8.encode('这是1秒之后发送的数据'));
+        Message message = TextMessage(body: utf8.encode('这是1秒之后发送的数据'));
+        await sendMessage(message);
       } else {
         // 不应该发生的事情
         return;

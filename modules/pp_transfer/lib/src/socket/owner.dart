@@ -9,12 +9,12 @@ import '../server/channel.dart';
 ///
 /// Created by a0010 on 2025/3/3 11:24
 ///
-class BSSocket extends Channel with Logging {
-  BSSocket({
+class OwnerChannel extends Channel with Logging {
+  OwnerChannel({
     required this.host,
     int? port,
   }) : port = port ?? 1212;
-  static const String _tag = 'BSSocket';
+  static const String _tag = 'Owner';
 
   /// 处理接收的字节数据，每次接收的数据长度不一样，先缓存下来，再进行处理
   final List<Uint8List> _caches = [];
