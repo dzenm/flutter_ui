@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +40,6 @@ class _WifiDirectBodyPageState extends State<WifiDirectBodyPage> with Logging {
   void initState() {
     super.initState();
     services = Android2Android();
-    services.start();
     _initialize();
   }
 
@@ -51,7 +49,6 @@ class _WifiDirectBodyPageState extends State<WifiDirectBodyPage> with Logging {
 
   @override
   void dispose() {
-    services.stop();
     services.dispose();
     super.dispose();
   }

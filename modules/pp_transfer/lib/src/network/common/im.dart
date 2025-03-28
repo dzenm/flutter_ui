@@ -3,11 +3,13 @@ import 'dart:typed_data';
 
 import 'package:fbl/fbl.dart';
 import 'package:fbl/src/config/notification.dart' as ln;
+import 'package:fsm/fsm.dart';
 
 import '../../constant/names.dart';
 import '../../server/channel.dart';
 import '../../socket/client.dart';
 import '../../socket/owner.dart';
+import '../queue/queue.dart';
 import 'codec.dart';
 import 'device.dart';
 import 'message.dart';
@@ -131,25 +133,31 @@ mixin ServerMixin {
 }
 
 /// Socket连接处理
-mixin ConnectionMixin {
+abstract class Hub extends Runner with Logging {
+  Hub(super.millis);
+
   bool get isPair => _isPair;
   bool _isPair = false; // 是否配对成功
+  void setPair(bool isPair) => _isPair = isPair;
 
   bool get isConnecting => _isConnecting;
   bool _isConnecting = false; // 是否正在连接中
+  void setConnecting() => _isConnecting = true;
 
   bool get isConnected => _isConnected;
   bool _isConnected = false; // 是否连接成功
 
   Channel? _socket; // 当前连接的socket
 
-  /// 等待发送的数据
-  void addPrepareData(Message message) => _data.add(message);
-  final List<Message> _data = [];
-
   /// 连接socket
   Future<bool> connectSocket(String host, int port, {SocketFlag flag = SocketFlag.client}) async {
-    _isPair = true;
+    if (_isConnecting) {
+      return false;
+    }
+    _isConnecting = true;
+    if (_isConnected) {
+      return true;
+    }
     Channel? socket = _socket;
     if (socket != null && socket.isConnected) {
       return true;
@@ -163,11 +171,13 @@ mixin ConnectionMixin {
         break;
     }
     if (await socket.connect()) {
+      logInfo('连接到 `$host:$port` 成功');
       _isConnecting = false;
       _isConnected = true;
       await _setSocket(socket);
       return true;
     }
+    logInfo('连接到 `$host:$port` 失败');
     return false;
   }
 
@@ -180,38 +190,49 @@ mixin ConnectionMixin {
     }
   }
 
-  /// 发送数据
-  Future<bool> sendData() async {
-    List<Message> dataList = _data;
-    if (dataList.isEmpty) {
-      return false;
-    }
-    List<Message> send = [];
-    for (var data in dataList) {
-      if (!await sendMessage(data)) {
-        send.add(data);
-      }
-    }
-    dataList.clear();
-    dataList.addAll(send);
-    return send.isEmpty;
+  Future<void> close() async {
+    await _setSocket(null);
+    _isPair = false;
+    _isConnecting = false;
+    _isConnected = false;
   }
+}
 
-  /// 发送消息
-  Future<bool> sendMessage(Message message) async {
+/// 发送方
+mixin Sender on Hub {
+  final IMessageQueue<Message> _queue = IMessageQueue(); // 发送消息的队列
+
+  /// 等待发送的数据
+  void addPrepareData(Message message) => _queue.add(message);
+
+  /// 发送数据
+  Future<bool> _sendData() async {
     Channel? socket = _socket;
     if (socket == null || !isConnected) {
       return false;
     }
+    Log.d('发送的数据：text=_sendData');
+    var queue = _queue;
+    if (queue.isEmpty) {
+      return false;
+    }
+    var message = queue.poll();
+    if (message == null) {
+      return false;
+    }
+    Log.d('发送的数据：text=${message.toJson()}');
     List<int> data = mc.encode(message);
     await socket.write(data);
     return true;
   }
+}
 
+/// 接收方
+mixin Receiver on Hub {
   /// 发送数据
-  Future<bool> receiveData() async {
+  Future<bool> _receiveData() async {
     Channel? socket = _socket;
-    if (socket == null) {
+    if (socket == null || !isConnected) {
       return false;
     }
     Uint8List? data = await socket.read(0);
@@ -228,6 +249,21 @@ mixin ConnectionMixin {
       'text': message,
     });
     return true;
+  }
+}
+
+/// Socket管理
+class IMManager extends Hub with Sender, Receiver {
+  IMManager() : super(Runner.intervalSlow);
+
+  @override
+  Future<bool> process() async {
+    bool isSend = await _sendData();
+    bool isReceive = await _receiveData();
+    if (isSend || isReceive) {
+      return true;
+    }
+    return false;
   }
 }
 

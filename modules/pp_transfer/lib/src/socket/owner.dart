@@ -178,9 +178,13 @@ class _SocketCreator {
       var subscription = serverSocket.listen((socket) async {
         await _setSocket(socket);
       });
+      _closed = false;
+      _connecting = false;
+      _connected = true;
       _subscription = subscription;
       return true;
     } catch (e) {
+      _connected = false;
       await _setSocket(null);
       return false;
     }

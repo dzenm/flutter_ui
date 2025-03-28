@@ -1,16 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:fbl/fbl.dart';
 import 'package:fbl/src/config/notification.dart' as ln;
-import 'package:fsm/fsm.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pp_transfer/src/server/service.dart';
 import 'package:wifi_direct/wifi_direct.dart';
 
 import '../../constant/names.dart';
-import '../common/codec.dart';
 import '../common/device.dart';
 import '../common/im.dart';
 import '../common/message.dart';
@@ -18,20 +15,20 @@ import '../common/message.dart';
 ///
 /// Created by a0010 on 2025/2/26 11:28
 ///
-class Android2Android extends Runner //
+class Android2Android //
     with
         WifiDirectMixin,
         DeviceMixin,
-        ConnectionMixin,
         Logging
     implements
         NearbyServiceInterface {
-  Android2Android() : super(Runner.intervalSlow) {
+  Android2Android() {
     // 注册监听
     _client
       ..register()
       ..setP2pConnectionListener(this)
       ..receiveConnectionStream().listen((value) {});
+    _manager.start();
   }
 
   @override
@@ -42,7 +39,7 @@ class Android2Android extends Runner //
   @override
   void addMessage(IMessage message) {
     if (message is Message) {
-      addPrepareData(message);
+      _manager.addPrepareData(message);
     }
   }
 
@@ -55,21 +52,12 @@ class Android2Android extends Runner //
   Future<void> dispose() async {
     await _clear();
   }
-
-  @override
-  Future<bool> process() async {
-    bool isSend = await sendData();
-    bool isReceive = await receiveData();
-    if (isSend || isReceive) {
-      return true;
-    }
-    return false;
-  }
 }
 
 /// 处理 WiFi Direct
-mixin WifiDirectMixin implements DeviceMixin, ConnectionMixin, Logging, P2pConnectionListener {
+mixin WifiDirectMixin implements DeviceMixin, Logging, P2pConnectionListener {
   final WifiDirect _client = WifiDirect();
+  final IMManager _manager = IMManager();
 
   /// 自己设备的信息
   WifiP2pDevice? get self => _self;
@@ -181,8 +169,12 @@ mixin WifiDirectMixin implements DeviceMixin, ConnectionMixin, Logging, P2pConne
         return false;
     }
     clearAll();
-    logInfo('连接到群组：remote=${remote.remoteAddress}');
-    await _client.connect(device.deviceAddress);
+    if (await _client.connect(device.deviceAddress)) {
+      logInfo('连接到群组：remote=${remote.remoteAddress} 成功');
+      _manager.setConnecting();
+      return true;
+    }
+    logInfo('连接到群组：remote=${remote.remoteAddress} 失败');
     return false;
   }
 
@@ -199,7 +191,13 @@ mixin WifiDirectMixin implements DeviceMixin, ConnectionMixin, Logging, P2pConne
   /// 清除所有数据
   Future<void> _clear() async {
     // 取消注册监听
+    await _exitGroup();
     await _client.unregister();
+  }
+
+  Future<void> _exitGroup() async {
+    await _manager.close();
+    await _manager.stop();
     await _client.removeGroup();
   }
 
@@ -242,20 +240,49 @@ mixin WifiDirectMixin implements DeviceMixin, ConnectionMixin, Logging, P2pConne
 
   @override
   void onConnectionInfoAvailable(WifiP2pConnection connection) async {
+    if (jsonEncode(connection) == jsonEncode(_connection)) {
+      return;
+    }
+    _connection = connection;
     logInfo('连接信息发送变化：info=${connection.toJson()}');
-    if (connection.isConnected) {
-      String host = connection.groupOwnerAddress.substring(1);
-      int port = 1212;
-      if (connection.groupFormed && connection.isGroupOwner) {
-        await connectSocket(host, port, flag: SocketFlag.server);
-      } else if (connection.groupFormed && !connection.isGroupOwner) {
-        await connectSocket(host, port, flag: SocketFlag.client);
+    if (!connection.isConnected) {
+      await _exitGroup();
+      logInfo('连接已断开');
+      await discoverPeers();
+      return;
+    }
+    if (!connection.groupFormed) {
+      logInfo('群组未建立');
+      return;
+    }
+    WifiP2pGroup? group = connection.group;
+    if (group == null) {
+      logInfo('群组信息为空');
+      return;
+    }
+    WifiP2pDevice? owner = group.owner;
+    if (owner == null) {
+      logInfo('群主设备信息为空');
+      return;
+    }
+    String host = connection.groupOwnerAddress.substring(1);
+    int port = 1212;
+    if (group.isGroupOwner) {
+      if (!_manager.isConnected) {
+        await _manager.connectSocket(host, port, flag: SocketFlag.server);
+        logInfo('群组已建立（我是群主）且已连接到Socket');
+      } else {
+        logInfo('群组已建立（我是群主）且已连接到Socket，无需重复操作');
+      }
+    } else {
+      if (!_manager.isConnected) {
+        await _manager.connectSocket(host, port, flag: SocketFlag.client);
+        logInfo('群组已建立（我是群成员）且已连接到Socket');
         await Future.delayed(const Duration(seconds: 1));
         Message message = TextMessage(body: utf8.encode('这是1秒之后发送的数据'));
-        await sendMessage(message);
+        _manager.addPrepareData(message);
       } else {
-        // 不应该发生的事情
-        return;
+        logInfo('群组已建立（我是群成员）且已连接到Socket，无需重复操作');
       }
     }
   }
