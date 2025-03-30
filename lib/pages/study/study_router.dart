@@ -1,5 +1,4 @@
 import 'package:fbl/fbl.dart';
-import 'package:flutter_ui/pages/study/shared/nearby/chat_page.dart';
 
 import 'components/chat/chat_page.dart';
 import 'components/city/city_page.dart';
@@ -24,6 +23,7 @@ import 'http/http_page.dart';
 import 'load_image/load_image_page.dart';
 import 'provider/provider_page.dart';
 import 'router/router_page.dart';
+import 'shared/nearby/chat_page.dart';
 import 'shared/nearby/nearby_page.dart';
 import 'video/video_page.dart';
 import 'window/main_window_page.dart';

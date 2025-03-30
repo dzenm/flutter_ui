@@ -4,9 +4,13 @@
 abstract class WifiDirectNames {
   static const String kStatusChanged = 'WifiDirectStatusChanged';
 
+  static const String kDevicesChanged = 'WifiDirectDevicesChanged';
+
+  static const String kConnectionChanged = 'WifiDirectConnectionChanged';
+
   static const String kSelfChanged = 'WifiDirectSelfChanged';
 
-  static const String kDevicesChanged = 'WifiDirectDevicesChanged';
+  static const String kSendTextData = 'WifiDirectSendTextData';
 
   static const String kReceiveTextData = 'WifiDirectReceiveTextData';
 }

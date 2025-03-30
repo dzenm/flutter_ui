@@ -19,6 +19,7 @@ import 'pages/mall/order/order_model.dart';
 import 'pages/my/my_page.dart';
 import 'pages/router_config.dart';
 import 'pages/routers.dart';
+import 'pages/study/shared/nearby/pp_model.dart';
 import 'pages/study/study_model.dart';
 
 typedef HandleContext = void Function(BuildContext context);
@@ -106,6 +107,7 @@ class AppPage extends StatelessWidget with Logging {
       ChangeNotifierProvider(create: (context) => WebsiteModel()),
       ChangeNotifierProvider(create: (context) => StudyModel()),
       ChangeNotifierProvider(create: (context) => OrderModel()),
+      ChangeNotifierProvider(create: (context) => PPModel()),
     ], child: child);
   }
 

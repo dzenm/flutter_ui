@@ -14,9 +14,9 @@ const int _kSocketTimeout = 30000;
 class ClientChannel extends Channel with Logging {
   ClientChannel({
     required this.host,
-    int? port,
-  }) : port = port ?? 1212;
-  static const String _tag = 'CSSocket';
+    required this.port,
+  });
+  static const String _tag = 'ClientChannel';
 
   /// 处理接收的字节数据，每次接收的数据长度不一样，先缓存下来，再进行处理
   final List<Uint8List> _caches = [];

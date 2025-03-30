@@ -2,7 +2,6 @@ import 'package:fbl/fbl.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/pages/mall/mall_router.dart';
 
-import '../../study/shared/nearby/pp_model.dart';
 import '../../study/study_page.dart';
 import '../../study/study_router.dart';
 import 'article/article_page.dart';
@@ -73,11 +72,6 @@ class _MeRouterMobile {
           name: StudyRouter.study,
           path: '/study',
           builder: (context, state) {
-            PPModel wifi = PPModel();
-            return P2PWidget(
-              notifier: wifi,
-              child: const StudyPage(),
-            );
             return const StudyPage();
           },
           routes: StudyRouter.routers,

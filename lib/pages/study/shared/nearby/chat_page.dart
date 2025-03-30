@@ -1,7 +1,13 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 import 'package:fbl/fbl.dart';
+import 'package:fbl/src/config/notification.dart' as ln;
 import 'package:flutter/material.dart';
+import 'package:pp_transfer/pp_transfer.dart';
 import 'package:provider/provider.dart';
 
+import 'nearby_page.dart';
 import 'pp_model.dart';
 
 class DeviceChatPage extends StatefulWidget {
@@ -59,10 +65,13 @@ class _DeviceChatPageState extends State<DeviceChatPage> {
 
   @override
   Widget build(BuildContext context) {
+    WifiP2pConnection? connection = Provider.of<PPModel>(context).connection;
+    WifiP2pGroup? group = connection?.group;
+    String title = group?.networkName == null ? 'Chat' : group?.networkName ?? 'Chat';
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 100, 100, 100),
       appBar: CommonBar(
-        title: 'Chat',
+        title: title,
         backgroundColor: const Color.fromARGB(255, 19, 19, 19),
         actions: [
           TextButton(
@@ -97,6 +106,18 @@ class _DeviceChatPageState extends State<DeviceChatPage> {
   Widget _buildBody() {
     Widget resultWidget = Column(
       children: [
+        const SizedBox(height: 12),
+        Selector0<List<SocketAddress>>(
+          selector: (context) => Provider.of<PPModel>(context).connectionDevices,
+          builder: (c, devices, w) {
+            return PeersView(
+              devices: devices,
+              size: 52,
+              onTap: (device) {},
+            );
+          },
+        ),
+        const SizedBox(height: 12),
         Expanded(child: _buildListView()),
         CompositedTransformTarget(
           link: layerLink,
@@ -114,45 +135,35 @@ class _DeviceChatPageState extends State<DeviceChatPage> {
   }
 
   Widget _buildEditView() {
-    return Shortcuts(
-      shortcuts: {
-        // LogicalKeySet(LogicalKeyboardKey.enter): SendMsgIntent(),
-      },
-      child: Actions(
-        actions: {
-          // SendMsgIntent: CallbackAction<SendMsgIntent>(onInvoke: (intent) => _sendMessage()),
-        },
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.white, width: 0.5),
-            borderRadius: BorderRadius.circular(4),
-            // color: Colors.white,
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    isCollapsed: true,
-                  ),
-                  style: const TextStyle(color: Colors.white),
-                  maxLines: 4,
-                  minLines: 1,
-                  showCursor: true,
-                  readOnly: editViewReadOnly,
-                  controller: editViewController,
-                ),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.white, width: 0.5),
+        borderRadius: BorderRadius.circular(4),
+        // color: Colors.white,
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+                isCollapsed: true,
               ),
-              IconButton(
-                onPressed: () => _sendMessage(),
-                icon: const Icon(Icons.send_sharp),
-              ),
-            ],
+              style: const TextStyle(color: Colors.white),
+              maxLines: 4,
+              minLines: 1,
+              showCursor: true,
+              readOnly: editViewReadOnly,
+              controller: editViewController,
+            ),
           ),
-        ),
+          IconButton(
+            onPressed: () => _sendMessage(),
+            icon: const Icon(Icons.send_sharp),
+          ),
+        ],
       ),
     );
   }
@@ -178,7 +189,7 @@ class _DeviceChatPageState extends State<DeviceChatPage> {
 
   Widget _buildListView({ScrollPhysics? physics}) {
     return Selector0<int>(
-      selector: (context) => P2PWidget.of(context).length,
+      selector: (context) => Provider.of<PPModel>(context).length,
       builder: (c, itemCount, w) {
         return ChatView(
           physics: physics,
@@ -193,7 +204,7 @@ class _DeviceChatPageState extends State<DeviceChatPage> {
               itemCount: itemCount,
               onRemove: () {
                 _chatObserver.standby(isRemove: true);
-                P2PWidget.of(context).deleteMsg(index);
+                Provider.of<PPModel>(context, listen: false).deleteMsg(index);
               },
             );
           },
@@ -225,7 +236,20 @@ class _DeviceChatPageState extends State<DeviceChatPage> {
     if (text.isEmpty) return;
     editViewController.text = '';
     _chatObserver.standby(changeCount: 1);
-    P2PWidget.of(context).insertMsg(text);
+
+    WifiP2pDevice? self = context.read<PPModel>().self;
+    List<int> data = utf8.encode(text);
+    TextMessage message = TextMessage(
+      hash: md5.convert(data).toString(),
+      sendUid: self!.deviceAddress,
+      receiveUid: '',
+    );
+    Log.d('测试：${message.toJson()}');
+    Provider.of<PPModel>(context, listen: false).insertMsg(message);
+    var nc = ln.NotificationCenter();
+    nc.postNotification(WifiDirectNames.kSendTextData, this, {
+      'message': message,
+    });
   }
 
   updateUnreadMsgCount({
@@ -261,31 +285,42 @@ class ChatItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector0<ChatMsg?>(
-      selector: (context) => P2PWidget.of(context).getMsg(index),
+    WifiP2pDevice? self = context.watch<PPModel>().self;
+    if (self == null) {
+      return const SizedBox.shrink();
+    }
+    return Selector0<ChatMessage?>(
+      selector: (context) => Provider.of<PPModel>(context).getMsg(index),
       builder: (c, message, w) {
         if (message == null) return const SizedBox.shrink();
-        final isOwn = message.isSender;
-        final nickName = message.userName;
+        bool isSender = self.deviceAddress == message.sendUid;
+        final isOwn = !isSender;
+        // final nickName = message.userName;
+        String text = message is TextMessage ? message.text : '';
         Widget resultWidget = Row(
           textDirection: isOwn ? TextDirection.ltr : TextDirection.rtl,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: isOwn ? Colors.blue : Colors.white30,
-              ),
-              child: Center(
-                child: Text(
-                  nickName,
-                  style: const TextStyle(
-                    color: Colors.white,
+            Selector0(
+              builder: (c, nickName, w) {
+                return Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: isOwn ? Colors.blue : Colors.white30,
                   ),
-                ),
-              ),
+                  child: Center(
+                    child: Text(
+                      nickName,
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                );
+              },
+              selector: (context) => Provider.of<PPModel>(context).getName(message.sendUid),
             ),
             const SizedBox(width: 10),
             Expanded(
@@ -296,7 +331,7 @@ class ChatItemWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Text(
-                  '------------ ${itemCount - index} ------------ \n ${message.text}',
+                  '------------ ${itemCount - index} ------------ \n $text',
                   style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w500,

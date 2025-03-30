@@ -43,11 +43,6 @@ class WiFiDirectBroadcastReceiver(private val listener: P2pConnectionListener) :
                 val wifiP2pGroup = intent.getParcelableExtra<WifiP2pGroup>(WifiP2pManager.EXTRA_WIFI_P2P_GROUP)
                 log("WIFI_P2P_CONNECTION_CHANGED_ACTION")
                 listener.onConnectionInfoAvailable(networkInfo, wifiP2pInfo, wifiP2pGroup)
-                if (networkInfo?.isConnected == true) {
-                    log("设备P2P 处于连接状态")
-                } else {
-                    log("设备P2P 处于断开状态")
-                }
             }
 
             WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION -> {

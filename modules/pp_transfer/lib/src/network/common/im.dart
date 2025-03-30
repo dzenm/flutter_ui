@@ -1,140 +1,34 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:fbl/fbl.dart';
 import 'package:fbl/src/config/notification.dart' as ln;
 import 'package:fsm/fsm.dart';
+import 'package:pp_transfer/pp_transfer.dart';
 
-import '../../constant/names.dart';
 import '../../server/channel.dart';
+import '../../server/connection.dart';
 import '../../socket/client.dart';
 import '../../socket/owner.dart';
+import '../../socket/server.dart';
 import '../queue/queue.dart';
-import 'codec.dart';
-import 'device.dart';
-import 'message.dart';
 
-/// 设备处理
-mixin DeviceMixin {
-  final Map<String, ServeDevice?> _allDevices = {};
+///
+/// 建立连接，就可以使用套接字在设备之间传输数据。传输数据的基本步骤如下：
+///
+/// 创建一个ServerSocket。此套接字等待来自指定端口上的客户端的连接并阻塞直到发生连接，因此请在后台线程中执行此操作。
+/// 创建客户端Socket。客户端使用服务器套接字的 IP 地址和端口连接到服务器设备。
+/// 从客户端向服务器发送数据。当客户端套接字成功连接到服务器套接字时，就可以用字节流将数据从客户端发送到服务器。
+/// 服务器套接字等待客户端连接（使用accept()方法）。此调用会阻塞，直到客户端连接为止，因此调用此方法是另一个线程。
+/// 连接发生时，服务器设备可以从客户端接收数据。使用此数据执行任何操作，例如将其保存到文件或呈现给用户。
+///
 
-  ServeDevice? get(String deviceAddress) {
-    return _allDevices[deviceAddress];
-  }
-
-  Future<void> setDevice(String deviceAddress, ServeDevice? device) async {
-    // 1. replace with new device
-    ServeDevice? old = _allDevices[deviceAddress];
-    _allDevices[deviceAddress] = device;
-    // 2. close old device
-    if (old == null || identical(old, device)) {
-    } else {
-      await old.close();
-    }
-  }
-
-  Future<void> setSocket(String deviceAddress, Channel? socket) async {
-    // 1. replace with new socket
-    Channel? old = _allDevices[deviceAddress]?.socket;
-    _allDevices[deviceAddress]?.setSocket(socket);
-    // 2. close old socket
-    if (old == null || identical(old, socket)) {
-    } else {
-      await old.close();
-    }
-  }
-
-  void clearAll() {
-    _allDevices.clear();
-  }
-}
-
-/// 客户端处理
-mixin ClientMixin {
-  Future<void> setClient(Channel? socket) async {
-    // 1. replace with new socket
-    Channel? old = _client;
-    _client = socket;
-    // 2. close old socket
-    if (old == null || identical(old, socket)) {
-    } else {
-      await old.close();
-    }
-  }
-
-  Channel? _client;
-
-  Channel? get client => _client;
-
-  void sendMsg(String text) {
-    Channel? socket = _client;
-    if (socket == null) {
-      return;
-    }
-
-    Uint8List data = utf8.encode(text);
-    socket.write(data);
-  }
-
-  Future<bool> receiveMsg() async {
-    Channel? socket = _client;
-    if (socket == null) {
-      return false;
-    }
-    Uint8List? data = await socket.read(0);
-    if (data == null) {
-      return false;
-    }
-    if (data.isEmpty) {
-      return false;
-    }
-    String text = utf8.decode(data);
-    Log.d('接收的数据：text=$text');
-    var nc = ln.NotificationCenter();
-    nc.postNotification(WifiDirectNames.kReceiveTextData, this, {
-      'text': text,
-    });
-    return true;
-  }
-
-  Future<void> close() async {
-    Channel? socket = _client;
-    if (socket == null) {
-      return;
-    }
-    await socket.close();
-  }
-}
-
-/// 服务端处理
-mixin ServerMixin {
-  Channel? _server;
-
-  Channel? get server => _server;
-
-  Future<void> setServer(Channel socket) async {
-    // 1. replace with new socket
-    Channel? old = _server;
-    _server = socket;
-    // 2. close old socket
-    if (old == null || identical(old, socket)) {
-    } else {
-      await old.close();
-    }
-  }
-
-  Future<void> disconnect() async {
-    Channel? socket = _server;
-    if (socket == null) {
-      return;
-    }
-    await socket.close();
-  }
-}
-
+///=========================== 客户端 ===========================
 /// Socket连接处理
-abstract class Hub extends Runner with Logging {
-  Hub(super.millis);
+abstract class SocketManager extends Runner with Logging implements ln.Observer {
+  SocketManager(super.millis) {
+    var nc = ln.NotificationCenter();
+    nc.addObserver(this, WifiDirectNames.kSendTextData);
+  }
 
   bool get isPair => _isPair;
   bool _isPair = false; // 是否配对成功
@@ -150,17 +44,20 @@ abstract class Hub extends Runner with Logging {
   Channel? _socket; // 当前连接的socket
 
   /// 连接socket
-  Future<bool> connectSocket(String host, int port, {SocketFlag flag = SocketFlag.client}) async {
-    if (_isConnecting) {
-      return false;
-    }
-    _isConnecting = true;
+  Future<bool> connectSocket(
+    String host,
+    int port, {
+    SocketFlag flag = SocketFlag.client,
+  }) async {
     if (_isConnected) {
       return true;
     }
     Channel? socket = _socket;
-    if (socket != null && socket.isConnected) {
-      return true;
+    if (socket != null) {
+      if (socket.isConnected) {
+        return true;
+      }
+      return false;
     }
     switch (flag) {
       case SocketFlag.server:
@@ -171,13 +68,14 @@ abstract class Hub extends Runner with Logging {
         break;
     }
     if (await socket.connect()) {
-      logInfo('连接到 `$host:$port` 成功');
+      logDebug('连接到 `$host:$port` 成功');
+
       _isConnecting = false;
       _isConnected = true;
       await _setSocket(socket);
       return true;
     }
-    logInfo('连接到 `$host:$port` 失败');
+    logError('连接到 `$host:$port` 失败');
     return false;
   }
 
@@ -199,11 +97,16 @@ abstract class Hub extends Runner with Logging {
 }
 
 /// 发送方
-mixin Sender on Hub {
+mixin SenderMixin on SocketManager implements Sender {
   final IMessageQueue<Message> _queue = IMessageQueue(); // 发送消息的队列
 
   /// 等待发送的数据
-  void addPrepareData(Message message) => _queue.add(message);
+  @override
+  void addData(IMessage message) {
+    if (message is Message) {
+      _queue.add(message);
+    }
+  }
 
   /// 发送数据
   Future<bool> _sendData() async {
@@ -211,24 +114,24 @@ mixin Sender on Hub {
     if (socket == null || !isConnected) {
       return false;
     }
-    Log.d('发送的数据：text=_sendData');
     var queue = _queue;
-    if (queue.isEmpty) {
-      return false;
-    }
     var message = queue.poll();
     if (message == null) {
       return false;
     }
-    Log.d('发送的数据：text=${message.toJson()}');
     List<int> data = mc.encode(message);
-    await socket.write(data);
-    return true;
+    if ((await socket.write(data)) > 0) {
+      return true;
+    }
+    logError('发送的数据失败');
+    return false;
   }
 }
 
 /// 接收方
-mixin Receiver on Hub {
+mixin ReceiverMixin on SocketManager implements Receiver {
+  final List<int> _caches = [];
+
   /// 发送数据
   Future<bool> _receiveData() async {
     Channel? socket = _socket;
@@ -242,19 +145,31 @@ mixin Receiver on Hub {
     if (data.isEmpty) {
       return false;
     }
+    _caches.addAll(data);
+    if (!isFullMessage(_caches)) {
+      return false;
+    }
+
     Message message = mc.decode(data);
-    Log.d('接收的数据：text=${message.toJson()}');
-    var nc = ln.NotificationCenter();
-    nc.postNotification(WifiDirectNames.kReceiveTextData, this, {
-      'text': message,
-    });
+    receiveData(message);
     return true;
+  }
+
+  @override
+  void receiveData(IMessage message) {
+    if (message is Message) {
+      logDebug('接收的数据：text=${message.toJson()}');
+      var nc = ln.NotificationCenter();
+      nc.postNotification(WifiDirectNames.kReceiveTextData, this, {
+        'text': message,
+      });
+    }
   }
 }
 
-/// Socket管理
-class IMManager extends Hub with Sender, Receiver {
-  IMManager() : super(Runner.intervalSlow);
+/// 客户端Socket
+class ClientManager extends SocketManager with SenderMixin, ReceiverMixin {
+  ClientManager() : super(Runner.intervalSlow);
 
   @override
   Future<bool> process() async {
@@ -264,6 +179,113 @@ class IMManager extends Hub with Sender, Receiver {
       return true;
     }
     return false;
+  }
+
+  @override
+  Future<void> onReceiveNotification(ln.Notification notification) async {
+    var name = notification.name;
+    var userInfo = notification.userInfo;
+    if (name == WifiDirectNames.kSendTextData) {
+      var message = userInfo?['message'];
+      addData(message);
+    }
+  }
+}
+
+///=========================== 服务端 ===========================
+
+/// 服务端Socket
+class ServerManager extends Runner with Logging {
+  ServerChannel? _server;
+
+  ServerManager() : super(Runner.intervalSlow);
+
+  Future<bool> listen(String host, int port) async {
+    ServerChannel? server = _server;
+    if (server != null && (server.isConnected || server.isConnecting)) {
+      return true;
+    }
+    server = ServerChannel(host: host, port: port);
+    await server.connect();
+    _server = server;
+    logInfo('Server服务已创建');
+    return true;
+  }
+
+  Future<void> close() async {
+    await _server?.close();
+    _server = null;
+  }
+
+  final List<int> _caches = [];
+
+  Future<bool> transformAll() async {
+    ServerChannel? server = _server;
+    if (server == null) {
+      return false;
+    }
+    int count = 0;
+    for (var item in server.sockets) {
+      if (await transform(item)) {
+        count++;
+      }
+    }
+    return count > 0;
+  }
+
+  Future<bool> transform(UserSocket socket) async {
+    ServerChannel? server = _server;
+    if (server == null) {
+      return false;
+    }
+
+    Uint8List? data = socket.read();
+    if (data == null) {
+      return false;
+    }
+    if (data.isEmpty) {
+      return false;
+    }
+    _caches.addAll(data);
+    if (!isFullMessage(_caches)) {
+      return false;
+    }
+
+    Message message = mc.decode(data);
+    if (message is AuthMessage) {
+      String userUid = message.userUid;
+      socket.setUserUid(userUid);
+      logDebug('用户 `$userUid` 已登录成功');
+    } else if (message is ChatMessage) {
+      String? sendUid = message.sendUid;
+      String? receiveUid = message.receiveUid;
+      logDebug('接收到用户 `$sendUid` 的消息：${message.toJson()}');
+
+      for (var item in server.sockets) {
+        String userUid = item.userUid;
+        if (sendUid == userUid) {
+          continue;
+        }
+        if (receiveUid.isEmpty) {
+          item.write(data);
+          logDebug('转发给所有用户，当前转发的用户为 `$userUid` 的消息：${message.toJson()}');
+        } else if (receiveUid == userUid) {
+          item.write(data);
+          logDebug('转发给单用户，当前转发的用户为 `$userUid` 的消息：${message.toJson()}');
+          break;
+        } else {
+          continue;
+        }
+      }
+    } else {
+      logInfo('It not should happen');
+    }
+    return true;
+  }
+
+  @override
+  Future<bool> process() async {
+    return await transformAll();
   }
 }
 

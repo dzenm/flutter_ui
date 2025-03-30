@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:pp_transfer/pp_transfer.dart';
 
 ///
@@ -45,9 +43,7 @@ abstract interface class NearbyServiceInterface {
   Future<void> dispose();
 }
 
-abstract interface class IMessage {
-
-}
+abstract interface class IMessage {}
 
 /// 连接的Socket地址
 abstract interface class SocketAddress {

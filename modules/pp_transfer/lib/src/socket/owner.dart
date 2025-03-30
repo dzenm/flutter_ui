@@ -12,9 +12,10 @@ import '../server/channel.dart';
 class OwnerChannel extends Channel with Logging {
   OwnerChannel({
     required this.host,
-    int? port,
-  }) : port = port ?? 1212;
-  static const String _tag = 'Owner';
+    required this.port,
+  });
+
+  static const String _tag = 'OwnerChannel';
 
   /// 处理接收的字节数据，每次接收的数据长度不一样，先缓存下来，再进行处理
   final List<Uint8List> _caches = [];
@@ -174,17 +175,13 @@ class _SocketCreator {
     if (_connecting) return false;
     _connecting = true;
     try {
-      ServerSocket serverSocket = await ServerSocket.bind(host, port);
+      ServerSocket serverSocket = await ServerSocket.bind(host, port, shared: true);
       var subscription = serverSocket.listen((socket) async {
         await _setSocket(socket);
       });
-      _closed = false;
-      _connecting = false;
-      _connected = true;
       _subscription = subscription;
       return true;
     } catch (e) {
-      _connected = false;
       await _setSocket(null);
       return false;
     }

@@ -11,6 +11,7 @@ final class IMessageQueue<S extends Message> with Logging {
   final Queue<S> _queue = Queue();
 
   LinkedQueue get messages => _messageQueue;
+
   /// 发送消息的消息队列（双向链表）
   final LinkedQueue<S> _messageQueue = LinkedQueue();
 
@@ -29,9 +30,11 @@ final class IMessageQueue<S extends Message> with Logging {
     if (_queue.isEmpty) return null;
     S iMsg = _queue.removeFirst();
     // 单聊/群聊消息要处理返回结果
-    String uid = StrUtil.generateUid();
-    _messageQueue.addFirst(iMsg, id: uid);
-    logDebug('准备发送消息（已插入消息链表节点）：uid=$uid，linked=${_messageQueue.toLinkedString()}');
+    if (iMsg is ChatMessage) {
+      String uid = iMsg.hash;
+      _messageQueue.addFirst(iMsg, id: uid);
+      logDebug('准备发送消息（已插入消息链表节点）：uid=$uid，linked=${_messageQueue.toLinkedString()}');
+    }
     return iMsg;
   }
 

@@ -78,6 +78,11 @@ class WifiP2pGroup {
   /// the network name.
   final String networkName;
 
+  /// et the passphrase of the group. This function will return a valid passphrase only at the group
+  /// owner. Legacy Wi-Fi clients will need this passphrase alongside network name obtained from
+  /// getNetworkName() to join the group
+  final String passphrase;
+
   /// Check whether this device is the group owner of the created p2p group
   final bool isGroupOwner;
 
@@ -86,11 +91,6 @@ class WifiP2pGroup {
 
   /// Get the list of clients currently part of the p2p group
   final List<WifiP2pDevice> clients;
-
-  /// et the passphrase of the group. This function will return a valid passphrase only at the group
-  /// owner. Legacy Wi-Fi clients will need this passphrase alongside network name obtained from
-  /// getNetworkName() to join the group
-  final String passphrase;
 
   /// Get the interface name on which the group is created
   final String interfaceName;
@@ -105,10 +105,10 @@ class WifiP2pGroup {
 
   WifiP2pGroup({
     required this.networkName,
+    required this.passphrase,
     required this.isGroupOwner,
     this.owner,
     required this.clients,
-    required this.passphrase,
     required this.interfaceName,
     required this.networkId,
     required this.frequency,
@@ -124,10 +124,10 @@ class WifiP2pGroup {
         [];
     return WifiP2pGroup(
       networkName: json['networkName'] ?? '',
+      passphrase: json['passphrase'] ?? '',
       isGroupOwner: json['isGroupOwner'] ?? false,
       owner: ownerJson == null ? null : WifiP2pDevice.fromJson(ownerJson),
       clients: clientsJson.map((e) => WifiP2pDevice.fromJson(e)).toList(),
-      passphrase: json['passphrase'] ?? '',
       interfaceName: json['interfaceName'] ?? '',
       networkId: json['networkId'] ?? 0,
       frequency: json['frequency'] ?? 0,
@@ -136,10 +136,10 @@ class WifiP2pGroup {
 
   Map<String, dynamic> toJson() => {
         'networkName': networkName,
+        'passphrase': passphrase,
         'isGroupOwner': isGroupOwner,
         'owner': owner?.toJson(),
         'clients': clients.map((e) => e.toJson()).toList(),
-        'passphrase': passphrase,
         'interfaceName': interfaceName,
         'networkId': networkId,
         'frequency': frequency,

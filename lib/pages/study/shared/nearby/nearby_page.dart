@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 import 'package:pp_transfer/pp_transfer.dart';
@@ -11,40 +9,29 @@ import 'pp_model.dart';
 ///
 /// Created by a0010 on 2025/2/17 14:32
 ///
-class WifiDirectPage extends StatelessWidget {
+class WifiDirectPage extends StatefulWidget {
   const WifiDirectPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    PPModel wifi = PPModel();
-    return P2PWidget(
-      notifier: wifi,
-      child: Builder(builder: (context) {
-        return const WifiDirectBodyPage();
-      }),
-    );
-  }
+  State<WifiDirectPage> createState() => _WifiDirectPageState();
 }
 
-class WifiDirectBodyPage extends StatefulWidget {
-  const WifiDirectBodyPage({super.key});
-
-  @override
-  State<WifiDirectBodyPage> createState() => _WifiDirectBodyPageState();
-}
-
-class _WifiDirectBodyPageState extends State<WifiDirectBodyPage> with Logging {
+class _WifiDirectPageState extends State<WifiDirectPage> with Logging {
   late Android2Android services;
 
   @override
   void initState() {
     super.initState();
     services = Android2Android();
-    _initialize();
   }
 
-  void _initialize() async {
-    Future.delayed(Duration.zero, () async => await services.initialize());
+  void _initialize(bool isGroupOwner) async {
+    Future.delayed(
+      Duration.zero,
+      () async => await services.initialize(
+        isGroupOwner: isGroupOwner,
+      ),
+    );
   }
 
   @override
@@ -60,89 +47,132 @@ class _WifiDirectBodyPageState extends State<WifiDirectBodyPage> with Logging {
       appBar: CommonBar(
         title: 'P2P',
         actions: [
-          IconButton(
+          Builder(builder: (context) {
+            return IconButton(
               onPressed: () {
-                services.addMessage(TextMessage(body: utf8.encode('这是第2条消息')));
-                services.addMessage(TextMessage(body: utf8.encode('11231312312')));
-                services.addMessage(TextMessage(body: utf8.encode('这是第三条消息')));
-                services.addMessage(TextMessage(body: utf8.encode('这是第4条消息')));
+                PersistentBottomSheetController controller = TransferView.showView(context, services);
               },
-              icon: const Icon(Icons.refresh_rounded)),
+              icon: const Icon(Icons.file_copy_rounded),
+            );
+          }),
         ],
       ),
       backgroundColor: const Color.fromARGB(255, 100, 100, 100),
-      body: Container(
-        padding: const EdgeInsets.all(16),
-        child: Column(children: [
-          const SizedBox(height: 10),
-          Selector0<ServeStatus>(
-            selector: (context) => P2PWidget.of(context).status,
-            builder: (c, status, w) {
-              return Text('P2P状态：$status');
-            },
-          ),
-          const SizedBox(height: 16),
-          SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: DiscoverPeers(services: services),
-          ),
-          Expanded(child: Container()),
-          const SizedBox(height: 16),
-        ]),
-      ),
+      body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Expanded(
+          child: _buildItemView(context, '我要创建群组', Colors.yellow, () {
+            _initialize(true);
+          }),
+        ),
+        Expanded(
+          child: _buildItemView(context, '我要加入群组', Colors.green, () {
+            _initialize(false);
+          }),
+        ),
+      ]),
     );
   }
 
-  void snack(String msg) async {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        duration: const Duration(seconds: 2),
-        content: Text(
-          msg,
+  Widget _buildItemView(
+    BuildContext context,
+    String title,
+    Color color,
+    GestureTapCallback onTap,
+  ) {
+    AppTheme theme = context.watch<LocalModel>().theme;
+    return TapLayout(
+      background: color,
+      onTap: onTap,
+      child: Center(
+        child: Text(
+          title,
+          style: TextStyle(color: theme.primaryText),
         ),
       ),
     );
   }
 }
 
-class DiscoverPeers extends StatelessWidget {
+class TransferView extends StatelessWidget {
   final Android2Android services;
 
-  const DiscoverPeers({super.key, required this.services});
+  const TransferView({super.key, required this.services});
+
+  static PersistentBottomSheetController showView(BuildContext context, Android2Android services) {
+    return showBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+      ),
+      constraints: const BoxConstraints(maxHeight: 600),
+      builder: (context) {
+        AppTheme theme = context.watch<LocalModel>().theme;
+        return Container(
+          decoration: BoxDecoration(
+            color: theme.background,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+          child: TransferView(services: services),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    List<SocketAddress> devices = P2PWidget.of(context).devices;
-    if (devices.isEmpty) {
-      return const EmptyView(text: '未获取到设备');
-    }
-    return Wrap(
-      spacing: 12,
-      runSpacing: 12,
-      children: devices.map((device) {
-        return InkWell(
-          onTap: () {
-            _viewInfo(context, device);
+    return Column(children: [
+      _buildTitle(),
+      const DividerView(),
+      const SizedBox(height: 10),
+      Selector0<ServeStatus>(
+        selector: (context) => Provider.of<PPModel>(context).status,
+        builder: (c, status, w) {
+          return Text('P2P状态：$status');
+        },
+      ),
+      const SizedBox(height: 16),
+      Expanded(
+          child: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        child: Selector0<List<SocketAddress>>(
+          selector: (context) => Provider.of<PPModel>(context).devices,
+          builder: (c, devices, w) {
+            return PeersView(devices: devices, onTap: (device) => _viewInfo(context, device));
           },
-          child: Container(
-            width: 80,
-            height: 80,
-            decoration: BoxDecoration(
-              color: Colors.grey,
-              borderRadius: BorderRadius.circular(50),
-            ),
-            child: Center(
-              child: Text(
-                device.deviceName.toString().characters.first.toUpperCase(),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 30,
-                ),
-              ),
+        ),
+      )),
+      const DividerView(),
+      _buildUserInfo(),
+    ]);
+  }
+
+  Widget _buildTitle() {
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: SizedBox(
+        height: 56,
+        child: Stack(children: [
+          Align(
+            child: Text(
+              '隔空投送副本',
+              style: TextStyle(fontSize: 18),
             ),
           ),
-        );
-      }).toList(),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Text(
+              '完成',
+              style: TextStyle(color: Colors.blue),
+            ),
+          ),
+        ]),
+      ),
     );
   }
 
@@ -218,6 +248,81 @@ class DiscoverPeers extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildUserInfo() {
+    return const SizedBox(
+      height: 64,
+      child: Row(children: [
+        SizedBox(width: 32),
+        Text(
+          '用户信息',
+          style: TextStyle(fontSize: 18),
+        ),
+      ]),
+    );
+  }
+}
+
+class PeersView extends StatefulWidget {
+  final List<SocketAddress> devices;
+  final void Function(SocketAddress) onTap;
+  final double size;
+
+  const PeersView({
+    super.key,
+    required this.devices,
+    required this.onTap,
+    this.size = 80,
+  });
+
+  @override
+  State<PeersView> createState() => _PeersViewState();
+}
+
+class _PeersViewState extends State<PeersView> {
+  List<SocketAddress> devices = [];
+
+  @override
+  void initState() {
+    super.initState();
+    devices = widget.devices;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    double size = widget.size;
+    if (devices.isEmpty) {
+      return const EmptyView(text: '未获取到设备');
+    }
+    return Wrap(
+      spacing: 12,
+      runSpacing: 12,
+      children: devices.map((device) {
+        return Column(mainAxisSize: MainAxisSize.min, children: [
+          TapLayout(
+            width: size,
+            height: size,
+            border: device.isGroupOwner ? Border.all(color: Colors.yellow, width: 2) : null,
+            background: device.isGroupOwner ? Colors.yellow : Colors.grey,
+            onTap: () {
+              widget.onTap(device);
+            },
+            isCircle: true,
+            child: Center(
+              child: Text(
+                (device.deviceName.isEmpty ? 'Empty' : device.deviceName).characters.first.toUpperCase(),
+                style: TextStyle(color: Colors.white, fontSize: size / 2),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(device.deviceName),
+          const SizedBox(height: 12),
+          Text(device.remoteAddress),
+        ]);
+      }).toList(),
     );
   }
 }

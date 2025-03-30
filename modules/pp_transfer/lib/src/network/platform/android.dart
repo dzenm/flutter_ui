@@ -29,17 +29,18 @@ class Android2Android //
       ..setP2pConnectionListener(this)
       ..receiveConnectionStream().listen((value) {});
     _manager.start();
+    _server.start();
   }
 
   @override
-  Future<bool> initialize() async {
-    return (await _initialize()) == ServeStatus.completed;
+  Future<bool> initialize({bool isGroupOwner = true}) async {
+    return (await _initialize(isGroupOwner: isGroupOwner)) == ServeStatus.completed;
   }
 
   @override
   void addMessage(IMessage message) {
     if (message is Message) {
-      _manager.addPrepareData(message);
+      _manager.addData(message);
     }
   }
 
@@ -57,15 +58,12 @@ class Android2Android //
 /// 处理 WiFi Direct
 mixin WifiDirectMixin implements DeviceMixin, Logging, P2pConnectionListener {
   final WifiDirect _client = WifiDirect();
-  final IMManager _manager = IMManager();
+  final ClientManager _manager = ClientManager();
+  final ServerManager _server = ServerManager();
 
   /// 自己设备的信息
   WifiP2pDevice? get self => _self;
   WifiP2pDevice? _self;
-
-  /// 获取扫描到附近的设备
-  List<WifiP2pDevice> get devices => _devices;
-  final List<WifiP2pDevice> _devices = [];
 
   /// 创建的群组信息
   WifiP2pConnection? get connection => _connection;
@@ -82,10 +80,17 @@ mixin WifiDirectMixin implements DeviceMixin, Logging, P2pConnectionListener {
     });
   }
 
+  bool _isInit = false;
+
   /// 初始化
-  Future<ServeStatus> _initialize() async {
-    // 1. 授权
-    logInfo('1. 开始获取权限');
+  Future<ServeStatus> _initialize({bool isGroupOwner = true}) async {
+    logInfo('1. 检测WiFi是否打开');
+    // 1. WiFi开启状态
+    if (!_isEnabledWifiDirect) {
+      return ServeStatus.disableWifi;
+    }
+    // 2. 授权
+    logInfo('2. 开始获取权限');
     // 判断GPS有没有打开
     _setStatus(ServeStatus.gPS);
     if (!await _client.isGPSEnabled()) {
@@ -106,20 +111,33 @@ mixin WifiDirectMixin implements DeviceMixin, Logging, P2pConnectionListener {
       return ServeStatus.nearbyOrLocationPermission;
     }
 
-    // 2. 开始初始化信息
-    logInfo('2. 开始初始化信息');
-    _setStatus(ServeStatus.initialize);
-    if (!await _client.initialize()) {
-      return ServeStatus.initialize;
+    if (!_isInit) {
+      _setStatus(ServeStatus.initialize);
+      if (!await _client.initialize()) {
+        return ServeStatus.initialize;
+      }
+      _isInit = true;
     }
 
-    // 3. 建立群组信息
-    logInfo('3. 获取群组信息');
-    _setStatus(ServeStatus.requestGroup);
-
-    _setStatus(ServeStatus.discover);
-    if (!await discoverPeers()) {
-      return ServeStatus.discover;
+    if (isGroupOwner) {
+      // 3. 建立群组信息
+      logInfo('3. 获取群组信息');
+      _setStatus(ServeStatus.requestGroup);
+      WifiP2pGroup? group = await _client.requestGroup();
+      if (group == null) {
+        _setStatus(ServeStatus.createGroup);
+        if (!await _client.createGroup()) {
+          return ServeStatus.createGroup;
+        }
+        group = await _client.requestGroup();
+      }
+    } else {
+      // 3. 开始发现附近的设备
+      logInfo('3. 开始发现附近的设备');
+      _setStatus(ServeStatus.discover);
+      if (!await discoverPeers()) {
+        return ServeStatus.discover;
+      }
     }
 
     logInfo('4. 准备好了');
@@ -151,11 +169,11 @@ mixin WifiDirectMixin implements DeviceMixin, Logging, P2pConnectionListener {
 
   /// 连接到 [remote] 设备
   Future<bool> _connectDevice(SocketAddress remote) async {
-    List<WifiP2pDevice> devices = _devices.where((device) => remote.remoteAddress == device.deviceAddress).toList();
-    if (devices.isEmpty) {
+    await removeGroup();
+    WifiP2pDevice? device = get(remote.remoteAddress);
+    if (device == null) {
       return false;
     }
-    WifiP2pDevice device = devices.first;
     switch (device.status) {
       case DeviceStatus.connected:
         return true;
@@ -170,17 +188,30 @@ mixin WifiDirectMixin implements DeviceMixin, Logging, P2pConnectionListener {
     }
     clearAll();
     if (await _client.connect(device.deviceAddress)) {
-      logInfo('连接到群组：remote=${remote.remoteAddress} 成功');
+      logDebug('连接到群组：remote=${remote.remoteAddress} 成功');
       _manager.setConnecting();
       return true;
     }
-    logInfo('连接到群组：remote=${remote.remoteAddress} 失败');
+    logError('连接到群组：remote=${remote.remoteAddress} 失败');
     return false;
   }
 
   /// 取消正在连接的设备
   Future<bool> cancelConnect() async {
     return _client.cancelConnect();
+  }
+
+  /// 成群组拥有者
+  Future<bool> becomeGroupOwner() async {
+    WifiP2pGroup? group = await _client.requestGroup();
+    if (group == null) {
+      _setStatus(ServeStatus.createGroup);
+      if (!await _client.createGroup()) {
+        return false;
+      }
+      group = await _client.requestGroup();
+    }
+    return true;
   }
 
   /// 离开群组，断开连接
@@ -198,43 +229,29 @@ mixin WifiDirectMixin implements DeviceMixin, Logging, P2pConnectionListener {
   Future<void> _exitGroup() async {
     await _manager.close();
     await _manager.stop();
+    await _server.close();
+    await _server.stop();
     await _client.removeGroup();
   }
 
-  SocketAddress _mergeDevice(WifiP2pDevice device) {
-    return WifiDirectAddress(
-      isGroupOwner: device.isGroupOwner,
-      status: device.status,
-      deviceName: device.deviceName,
-      localAddress: '',
-      remoteAddress: device.deviceAddress,
-    );
-  }
+  bool _isEnabledWifiDirect = false;
 
   @override
   void onP2pState(bool enabled) {
-    logInfo('P2P状态改变：enabled=$enabled');
+    logDebug('设备的 Wi-Fi Direct 启用或禁用状态：enabled=$enabled');
+    _isEnabledWifiDirect = enabled;
   }
 
   @override
   void onPeersAvailable(List<WifiP2pDevice> peers) {
-    if (jsonEncode(peers) == jsonEncode(_devices)) {
-      return;
-    }
-    logInfo('获取到可用的设备：peers=${jsonEncode(peers)}');
-    _devices.clear();
-    _devices.addAll(peers);
-    List<SocketAddress> list = [];
+    logDebug('获取更新的对等点列表：peers=${jsonEncode(peers)}');
     for (var peer in peers) {
       String deviceAddress = peer.deviceAddress;
-      SocketAddress address = _mergeDevice(peer);
-      list.add(address);
-      var device = ServeDevice(address: address, device: peer);
-      setDevice(deviceAddress, device);
+      setDevice(deviceAddress, peer);
     }
     var nc = ln.NotificationCenter();
     nc.postNotification(WifiDirectNames.kDevicesChanged, this, {
-      'peers': list,
+      'peers': peers,
     });
   }
 
@@ -244,9 +261,12 @@ mixin WifiDirectMixin implements DeviceMixin, Logging, P2pConnectionListener {
       return;
     }
     _connection = connection;
-    logInfo('连接信息发送变化：info=${connection.toJson()}');
+    var nc = ln.NotificationCenter();
+    nc.postNotification(WifiDirectNames.kConnectionChanged, this, {
+      'connection': connection,
+    });
+    logDebug('设备的 Wi-Fi 连接状态改变：info=${connection.toJson()}');
     if (!connection.isConnected) {
-      await _exitGroup();
       logInfo('连接已断开');
       await discoverPeers();
       return;
@@ -265,34 +285,36 @@ mixin WifiDirectMixin implements DeviceMixin, Logging, P2pConnectionListener {
       logInfo('群主设备信息为空');
       return;
     }
+    bool isGroupOwner = group.isGroupOwner;
+    String text = isGroupOwner ? '（我是群主）' : '（我是群成员）';
+    if (_manager.isConnected) {
+      logInfo('群组已建立$text，已连接无需重复连接');
+      return;
+    }
     String host = connection.groupOwnerAddress.substring(1);
-    int port = 1212;
-    if (group.isGroupOwner) {
-      if (!_manager.isConnected) {
-        await _manager.connectSocket(host, port, flag: SocketFlag.server);
-        logInfo('群组已建立（我是群主）且已连接到Socket');
-      } else {
-        logInfo('群组已建立（我是群主）且已连接到Socket，无需重复操作');
-      }
-    } else {
-      if (!_manager.isConnected) {
-        await _manager.connectSocket(host, port, flag: SocketFlag.client);
-        logInfo('群组已建立（我是群成员）且已连接到Socket');
-        await Future.delayed(const Duration(seconds: 1));
-        Message message = TextMessage(body: utf8.encode('这是1秒之后发送的数据'));
-        _manager.addPrepareData(message);
-      } else {
-        logInfo('群组已建立（我是群成员）且已连接到Socket，无需重复操作');
-      }
+    int port = 2121;
+
+    // 启动服务器
+    if (isGroupOwner) {
+      await _server.listen(host, port);
+      logInfo('群组已建立$text，服务器已启动');
+    }
+
+    // 启动客户端
+    bool result = await _manager.connectSocket(host, port);
+    logInfo('群组已建立$text，连接Socket${result ? '成功' : '失败'}');
+    if (result) {
+      _manager.addData(AuthMessage(
+        sessionUid: StrUtil.generateUid(),
+        userUid: self!.deviceAddress,
+      ));
+      logInfo('发送登录认证消息');
     }
   }
 
   @override
   void onSelfP2pChanged(WifiP2pDevice device) {
-    if (jsonEncode(device) == jsonEncode(_self)) {
-      return;
-    }
-    logInfo('自己的设备信息发送变化：device=${device.toJson()}');
+    logDebug('设备的 Wi-Fi 状态变化：device=${device.toJson()}');
     _self = device;
     var nc = ln.NotificationCenter();
     nc.postNotification(WifiDirectNames.kSelfChanged, this, {
@@ -302,18 +324,20 @@ mixin WifiDirectMixin implements DeviceMixin, Logging, P2pConnectionListener {
 
   @override
   void onDiscoverChanged(bool isDiscover) {
-    logInfo('搜索附近的设备：isDiscover=$isDiscover');
+    logDebug('搜索附近的设备：isDiscover=$isDiscover');
   }
 }
 
 enum ServeStatus {
   none, // 初始状态
+  disableWifi, // WiFi未打开
   gPS, // 检测GPS权限
   wifi, // 检测Wi-Fi
   nearbyOrLocationPermission, // 检测附近的设备或位置权限
   grantedPermission, // 授权
   initialize, // 初始化
-  requestGroup, // 获取群组
+  requestGroup, // 发现设备
+  createGroup, // 发现设备
   discover, // 发现设备
   completed, // 初始化完成
 }
