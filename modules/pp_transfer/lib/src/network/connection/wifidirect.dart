@@ -172,7 +172,7 @@ abstract class WifiDirectManager extends Runner with Logging {
     String host = connection.groupOwnerAddress.substring(1);
     int port = 2121;
 
-    SocketFlag flag = isGroupOwner ? SocketFlag.server : SocketFlag.server;
+    SocketFlag flag = isGroupOwner ? SocketFlag.server : SocketFlag.client;
     // 启动客户端
     bool result = await _client.connectSocket(host, port, flag: flag);
     logInfo('群组已建立$text，连接Socket${result ? '成功' : '失败'}');

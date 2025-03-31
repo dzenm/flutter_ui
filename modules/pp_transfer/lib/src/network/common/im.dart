@@ -32,10 +32,6 @@ abstract class SocketManager extends Runner with Logging implements ln.Observer 
     nc.addObserver(this, WifiDirectNames.kSendTextData);
   }
 
-  bool get isPair => _isPair;
-  bool _isPair = false; // 是否配对成功
-  void setPair(bool isPair) => _isPair = isPair;
-
   bool get isConnecting => _isConnecting;
   bool _isConnecting = false; // 是否正在连接中
   void setConnecting() => _isConnecting = true;
@@ -51,9 +47,8 @@ abstract class SocketManager extends Runner with Logging implements ln.Observer 
     int port, {
     SocketFlag flag = SocketFlag.client,
   }) async {
-    if (_isConnected) {
-      return true;
-    }
+    if (_isConnecting) return false;
+    _isConnecting = true;
     Channel? socket = _socket;
     if (socket != null) {
       if (socket.isConnected) {
@@ -72,8 +67,6 @@ abstract class SocketManager extends Runner with Logging implements ln.Observer 
     if (await socket.connect()) {
       logDebug('连接到 `$host:$port` 成功');
 
-      _isConnecting = false;
-      _isConnected = true;
       await _setSocket(socket);
       return true;
     }
@@ -89,11 +82,13 @@ abstract class SocketManager extends Runner with Logging implements ln.Observer 
     } else {
       await old.close();
     }
+    bool connected = socket != null;
+    _isConnecting = false;
+    _isConnected = connected;
   }
 
   Future<void> close() async {
     await _setSocket(null);
-    _isPair = false;
     _isConnecting = false;
     _isConnected = false;
   }
@@ -125,7 +120,7 @@ mixin SenderMixin on SocketManager implements Sender {
     if (socket == null) {
       return false;
     }
-    if (!isConnected) {
+    if (!_isConnected) {
       logError('Socket channel lost: socket=$socket');
       return false;
     }
@@ -177,7 +172,7 @@ mixin ReceiverMixin on SocketManager implements Receiver {
   /// 接收数据
   Future<bool> _receiveData() async {
     Channel? socket = _socket;
-    if (socket == null || !isConnected) {
+    if (socket == null || !_isConnected) {
       return false;
     }
     Uint8List? data = await socket.read(0);

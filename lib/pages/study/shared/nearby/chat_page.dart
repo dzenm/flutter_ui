@@ -244,7 +244,6 @@ class _DeviceChatPageState extends State<DeviceChatPage> {
       sendUid: self!.deviceAddress,
       receiveUid: '',
     );
-    Log.d('测试：${message.toJson()}');
     Provider.of<PPModel>(context, listen: false).insertMsg(message);
     var nc = ln.NotificationCenter();
     nc.postNotification(WifiDirectNames.kSendTextData, this, {
