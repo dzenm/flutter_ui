@@ -9,7 +9,7 @@ import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugins.GeneratedPluginRegistrant
 
-class MainActivity: FlutterActivity() {
+class MainActivity : FlutterActivity() {
 
     companion object {
         private val TAG = MainActivity::class.java.simpleName
@@ -51,7 +51,8 @@ class MainActivity: FlutterActivity() {
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         manager.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
