@@ -12,6 +12,8 @@ import '../../socket/owner.dart';
 import '../../socket/server.dart';
 import '../queue/queue.dart';
 
+const int kExpires = 16 * 1000; // 16 seconds
+
 ///
 /// 建立连接，就可以使用套接字在设备之间传输数据。传输数据的基本步骤如下：
 ///
@@ -76,6 +78,7 @@ abstract class SocketManager extends Runner with Logging implements ln.Observer 
       return true;
     }
     logError('连接到 `$host:$port` 失败');
+    await _setSocket(null);
     return false;
   }
 
@@ -108,10 +111,22 @@ mixin SenderMixin on SocketManager implements Sender {
     }
   }
 
+  DateTime? get lastSentTime => _lastSentTime;
+  DateTime? _lastSentTime;
+
+  bool isSentRecently(DateTime now) {
+    int last = _lastSentTime?.millisecondsSinceEpoch ?? 0;
+    return now.millisecondsSinceEpoch <= last + kExpires;
+  }
+
   /// 发送数据
   Future<bool> _sendData() async {
     Channel? socket = _socket;
-    if (socket == null || !isConnected) {
+    if (socket == null) {
+      return false;
+    }
+    if (!isConnected) {
+      logError('Socket channel lost: socket=$socket');
       return false;
     }
     var queue = _queue;
@@ -120,19 +135,46 @@ mixin SenderMixin on SocketManager implements Sender {
       return false;
     }
     List<int> data = mc.encode(message);
-    if ((await socket.write(data)) > 0) {
+    if ((await _doSend(data)) > 0) {
       return true;
     }
     logError('发送的数据失败');
     return false;
   }
+
+  Future<int> _doSend(List<int> data) async {
+    Channel? socket = _socket;
+    if (socket == null || !isConnected) {
+      logError('Socket channel lost: socket=$socket');
+      return -1;
+    }
+    int sentLen = await socket.write(data);
+    if (sentLen > 0) {
+      // update sent time
+      _lastSentTime = DateTime.now();
+    }
+    return sentLen;
+  }
 }
 
 /// 接收方
 mixin ReceiverMixin on SocketManager implements Receiver {
-  final List<int> _caches = [];
+  List<int> _caches = [];
 
-  /// 发送数据
+  DateTime? get lastReceivedTime => _lastReceivedTime;
+  DateTime? _lastReceivedTime;
+
+  bool isReceivedRecently(DateTime now) {
+    int last = _lastReceivedTime?.millisecondsSinceEpoch ?? 0;
+    return now.millisecondsSinceEpoch <= last + kExpires;
+  }
+
+  bool isNotReceivedLongTimeAgo(DateTime now) {
+    int last = _lastReceivedTime?.millisecondsSinceEpoch ?? 0;
+    return now.millisecondsSinceEpoch > last + (kExpires << 3);
+  }
+
+  /// 接收数据
   Future<bool> _receiveData() async {
     Channel? socket = _socket;
     if (socket == null || !isConnected) {
@@ -145,14 +187,30 @@ mixin ReceiverMixin on SocketManager implements Receiver {
     if (data.isEmpty) {
       return false;
     }
-    _caches.addAll(data);
-    if (!isFullMessage(_caches)) {
+    _lastReceivedTime = DateTime.now(); // update received time
+
+    Message? message = onDistributeMessage(data);
+    if (message == null) {
       return false;
     }
-
-    Message message = mc.decode(data);
     receiveData(message);
     return true;
+  }
+
+  final VerifyPacketData _verify = VerifyPacketData();
+
+  Message? onDistributeMessage(Uint8List data) {
+    List<int> caches = _caches;
+    caches.addAll(data);
+    if (!_verify.isFull(caches)) {
+      return null;
+    }
+    int singleByte = kHeaderLen + _verify.length;
+    List<int> bytes = caches.sublist(0, singleByte); // 获取单条消息数据
+    _caches = caches.sublist(singleByte); // 删除解析成功的数据
+
+    Message message = mc.decode(bytes); // 解析单条数据
+    return message;
   }
 
   @override
@@ -217,7 +275,7 @@ class ServerManager extends Runner with Logging {
     _server = null;
   }
 
-  final List<int> _caches = [];
+  List<int> _caches = [];
 
   Future<bool> transformAll() async {
     ServerChannel? server = _server;
@@ -233,6 +291,8 @@ class ServerManager extends Runner with Logging {
     return count > 0;
   }
 
+  final VerifyPacketData _verify = VerifyPacketData();
+
   Future<bool> transform(UserSocket socket) async {
     ServerChannel? server = _server;
     if (server == null) {
@@ -246,12 +306,16 @@ class ServerManager extends Runner with Logging {
     if (data.isEmpty) {
       return false;
     }
-    _caches.addAll(data);
-    if (!isFullMessage(_caches)) {
+    List<int> caches = _caches;
+    caches.addAll(data);
+    if (!_verify.isFull(caches)) {
       return false;
     }
+    int singleByte = kHeaderLen + _verify.length;
+    List<int> bytes = caches.sublist(0, singleByte); // 获取单条消息数据
+    _caches = caches.sublist(singleByte); // 删除解析成功的数据
 
-    Message message = mc.decode(data);
+    Message message = mc.decode(bytes); // 解析单条数据
     if (message is AuthMessage) {
       String userUid = message.userUid;
       socket.setUserUid(userUid);

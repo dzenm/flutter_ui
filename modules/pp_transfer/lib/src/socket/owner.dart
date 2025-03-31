@@ -175,7 +175,7 @@ class _SocketCreator {
     if (_connecting) return false;
     _connecting = true;
     try {
-      ServerSocket serverSocket = await ServerSocket.bind(host, port, shared: true);
+      ServerSocket serverSocket = await ServerSocket.bind(host, port);
       var subscription = serverSocket.listen((socket) async {
         await _setSocket(socket);
       });

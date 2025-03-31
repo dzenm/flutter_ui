@@ -12,3 +12,4 @@ export 'src/network/platform/android.dart';
 export 'src/network/platform/ios.dart';
 export 'src/network/platform/others.dart';
 export 'src/server/service.dart';
+export 'src/network/connection/wifidirect.dart';

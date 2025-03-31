@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 import 'package:pp_transfer/pp_transfer.dart';
@@ -17,26 +20,27 @@ class WifiDirectPage extends StatefulWidget {
 }
 
 class _WifiDirectPageState extends State<WifiDirectPage> with Logging {
-  late Android2Android services;
-
+  // late Android2Android services;
+  late WifiDirectClient client;
   @override
   void initState() {
     super.initState();
-    services = Android2Android();
+    // services = Android2Android();
+    client = WifiDirectClient();
   }
 
   void _initialize(bool isGroupOwner) async {
-    Future.delayed(
-      Duration.zero,
-      () async => await services.initialize(
-        isGroupOwner: isGroupOwner,
-      ),
-    );
+    // Future.delayed(
+    //   Duration.zero,
+    //   () async => await services.initialize(
+    //     isGroupOwner: isGroupOwner,
+    //   ),
+    // );
   }
 
   @override
   void dispose() {
-    services.dispose();
+    client.dispose();
     super.dispose();
   }
 
@@ -50,7 +54,8 @@ class _WifiDirectPageState extends State<WifiDirectPage> with Logging {
           Builder(builder: (context) {
             return IconButton(
               onPressed: () {
-                PersistentBottomSheetController controller = TransferView.showView(context, services);
+                client.initialize();
+                PersistentBottomSheetController controller = TransferView.showView(context, client);
               },
               icon: const Icon(Icons.file_copy_rounded),
             );
@@ -94,11 +99,11 @@ class _WifiDirectPageState extends State<WifiDirectPage> with Logging {
 }
 
 class TransferView extends StatelessWidget {
-  final Android2Android services;
+  final WifiDirectClient services;
 
   const TransferView({super.key, required this.services});
 
-  static PersistentBottomSheetController showView(BuildContext context, Android2Android services) {
+  static PersistentBottomSheetController showView(BuildContext context, WifiDirectClient services) {
     return showBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -204,16 +209,13 @@ class TransferView extends StatelessWidget {
                 onPressed: () async {
                   Navigator.of(context).pop();
                   switch (status) {
-                    case DeviceStatus.connected:
-                      services.removeGroup();
-                      break;
                     case DeviceStatus.invited:
                       var snackBar = SnackBar(
                         content: const Text('已请求过连接'),
                         action: SnackBarAction(
                             label: '取消连接',
                             onPressed: () {
-                              services.cancelConnect();
+                              // services.cancelConnect();
                             }),
                       );
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -224,8 +226,15 @@ class TransferView extends StatelessWidget {
                       );
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       break;
+                    case DeviceStatus.connected:
                     case DeviceStatus.available:
-                      services.connect(device);
+                      List<int> data = utf8.encode(text);
+                      TextMessage message = TextMessage(
+                        hash: md5.convert(data).toString(),
+                        sendUid: device.remoteAddress,
+                        receiveUid: '',
+                      );
+                      services.sendMessage(device, message);
                       break;
                     case DeviceStatus.unavailable:
                       var snackBar = const SnackBar(

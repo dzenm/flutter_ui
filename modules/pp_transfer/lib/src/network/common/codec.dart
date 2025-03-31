@@ -72,17 +72,6 @@ class BytesConvertMessage extends Converter<List<int>, Message> {
   }
 }
 
-bool isFullMessage(List<int> data) {
-  VerifyPacketData verify = VerifyPacketData();
-  if (!verify.isFull(data)) {
-    return false;
-  }
-  if (!verify.isCorrectHeader) {
-    return false;
-  }
-  return true;
-}
-
 /// 校验包数据
 class VerifyPacketData {
   int _magicCode = kMagicCode; // 2 byte，客户端口令
@@ -90,6 +79,7 @@ class VerifyPacketData {
   int _jsonLength = 0; // 4 byte，json数据长度
   int _bodyLength = 0; // 4 byte，消息体数据长度
 
+  int get length => _length;
   int _length = 0; // 消息体总长度
 
   /// 是否是完整的数据
@@ -109,13 +99,10 @@ class VerifyPacketData {
     _bodyLength = bodyLength;
     _length = jsonLength + bodyLength;
 
+    // 是否是正确的Header
+    if (magicCode == kMagicCode && version == kVersionCode) return false;
     // 长度比指定的消息长度小
     if (kHeaderLen + _length > data.length) return false;
     return true;
-  }
-
-  /// 是否是正确的Header
-  bool get isCorrectHeader {
-    return _magicCode == kMagicCode && _version == kVersionCode;
   }
 }

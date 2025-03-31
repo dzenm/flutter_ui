@@ -3,17 +3,38 @@ import 'package:pp_transfer/pp_transfer.dart';
 ///
 /// Created by a0010 on 2025/1/25 13:07
 ///
-/// iOS方式连接
-abstract interface class MultipeerConnection {}
+/// 连接状态
+abstract interface class Connection {
+  /// 是否配对成功
+  bool get isPair;
 
-/// Wi-Fi Direct连接
-abstract interface class WifiDirectConnection {}
+  /// 是否关闭
+  bool get isClosed;
 
-/// 蓝牙连接
-abstract interface class BleConnection {}
+  /// 是否正在连接中
+  bool get isConnecting;
 
-/// Wi-Fi连接
-abstract interface class WifiConnection {}
+  /// 是否连接成功
+  bool get isConnected;
+
+  /// 是否还存活
+  bool get isAlive;
+
+  /// 是否正在传输中
+  bool get isTransiting;
+}
+
+abstract interface class TimedConnection {
+  DateTime? get lastSentTime;
+
+  DateTime? get lastReceivedTime;
+
+  bool isSentRecently(DateTime now);
+
+  bool isReceivedRecently(DateTime now);
+
+  bool isNotReceivedLongTimeAgo(DateTime now);
+}
 
 /// 角色
 abstract interface class Role {}
