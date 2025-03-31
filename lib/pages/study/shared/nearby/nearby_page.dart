@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:fbl/fbl.dart';
+import 'package:fbl/src/config/notification.dart' as ln;
 import 'package:flutter/material.dart';
 import 'package:pp_transfer/pp_transfer.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +23,7 @@ class WifiDirectPage extends StatefulWidget {
 class _WifiDirectPageState extends State<WifiDirectPage> with Logging {
   // late Android2Android services;
   late WifiDirectClient client;
+
   @override
   void initState() {
     super.initState();
@@ -55,7 +57,7 @@ class _WifiDirectPageState extends State<WifiDirectPage> with Logging {
             return IconButton(
               onPressed: () {
                 client.initialize();
-                PersistentBottomSheetController controller = TransferView.showView(context, client);
+                TransferView.showView(context, client);
               },
               icon: const Icon(Icons.file_copy_rounded),
             );
@@ -65,11 +67,13 @@ class _WifiDirectPageState extends State<WifiDirectPage> with Logging {
       backgroundColor: const Color.fromARGB(255, 100, 100, 100),
       body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         Expanded(
+          flex: 1,
           child: _buildItemView(context, '我要创建群组', Colors.yellow, () {
             _initialize(true);
           }),
         ),
         Expanded(
+          flex: 1,
           child: _buildItemView(context, '我要加入群组', Colors.green, () {
             _initialize(false);
           }),
@@ -103,8 +107,8 @@ class TransferView extends StatelessWidget {
 
   const TransferView({super.key, required this.services});
 
-  static PersistentBottomSheetController showView(BuildContext context, WifiDirectClient services) {
-    return showBottomSheet(
+  static void showView(BuildContext context, WifiDirectClient services) {
+    showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -143,15 +147,18 @@ class TransferView extends StatelessWidget {
       ),
       const SizedBox(height: 16),
       Expanded(
-          child: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        child: Selector0<List<SocketAddress>>(
-          selector: (context) => Provider.of<PPModel>(context).devices,
-          builder: (c, devices, w) {
-            return PeersView(devices: devices, onTap: (device) => _viewInfo(context, device));
-          },
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: DiscoverPeersView(
+            builder: (peers) {
+              return PeersView(
+                devices: peers,
+                onTap: (device) => _viewInfo(context, device),
+              );
+            },
+          ),
         ),
-      )),
+      ),
       const DividerView(),
       _buildUserInfo(),
     ]);
@@ -274,7 +281,58 @@ class TransferView extends StatelessWidget {
   }
 }
 
-class PeersView extends StatefulWidget {
+class DiscoverPeersView extends StatefulWidget {
+  final Widget Function(List<SocketAddress> peers) builder;
+
+  const DiscoverPeersView({
+    super.key,
+    required this.builder,
+  });
+
+  @override
+  State<DiscoverPeersView> createState() => _DiscoverPeersViewState();
+}
+
+class _DiscoverPeersViewState extends State<DiscoverPeersView> implements ln.Observer {
+  List<SocketAddress> _devices = [];
+
+  @override
+  void initState() {
+    super.initState();
+    var nc = ln.NotificationCenter();
+    nc.addObserver(this, WifiDirectNames.kDevicesChanged);
+  }
+
+  @override
+  void dispose() {
+    var nc = ln.NotificationCenter();
+    nc.removeObserver(this, WifiDirectNames.kDevicesChanged);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.builder(_devices);
+  }
+
+  @override
+  Future<void> onReceiveNotification(ln.Notification notification) async {
+    var name = notification.name;
+    if (name == WifiDirectNames.kDevicesChanged) {
+      var peers = notification.userInfo?['peers'];
+
+      List<WifiP2pDevice> list = peers as List<WifiP2pDevice>;
+      List<SocketAddress> result = [];
+      for (var item in list) {
+        result.add(PPModel.mergeDevice(item));
+      }
+      _devices = List.castFrom(result);
+      setState(() {});
+    }
+  }
+}
+
+class PeersView extends StatelessWidget {
   final List<SocketAddress> devices;
   final void Function(SocketAddress) onTap;
   final double size;
@@ -287,21 +345,7 @@ class PeersView extends StatefulWidget {
   });
 
   @override
-  State<PeersView> createState() => _PeersViewState();
-}
-
-class _PeersViewState extends State<PeersView> {
-  List<SocketAddress> devices = [];
-
-  @override
-  void initState() {
-    super.initState();
-    devices = widget.devices;
-  }
-
-  @override
   Widget build(BuildContext context) {
-    double size = widget.size;
     if (devices.isEmpty) {
       return const EmptyView(text: '未获取到设备');
     }
@@ -316,7 +360,7 @@ class _PeersViewState extends State<PeersView> {
             border: device.isGroupOwner ? Border.all(color: Colors.yellow, width: 2) : null,
             background: device.isGroupOwner ? Colors.yellow : Colors.grey,
             onTap: () {
-              widget.onTap(device);
+              onTap(device);
             },
             isCircle: true,
             child: Center(

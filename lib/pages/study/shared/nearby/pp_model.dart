@@ -61,13 +61,13 @@ class PPModel extends ChangeNotifier implements ln.Observer {
 
     WifiP2pDevice? self = _self;
     if (self != null) {
-      list.add(_mergeDevice(self, isGroupOwner: group.isGroupOwner));
+      list.add(mergeDevice(self, isGroupOwner: group.isGroupOwner));
     }
     if (!group.isGroupOwner) {
-      list.add(_mergeDevice(group.owner!, isGroupOwner: true));
+      list.add(mergeDevice(group.owner!, isGroupOwner: true));
     }
     for (var item in group.clients) {
-      list.add(_mergeDevice(item));
+      list.add(mergeDevice(item));
     }
     return list;
   }
@@ -119,7 +119,7 @@ class PPModel extends ChangeNotifier implements ln.Observer {
     notifyListeners();
   }
 
-  SocketAddress _mergeDevice(WifiP2pDevice device, {bool? isGroupOwner}) {
+  static SocketAddress mergeDevice(WifiP2pDevice device, {bool? isGroupOwner}) {
     return WifiDirectAddress(
       isGroupOwner: isGroupOwner ?? device.isGroupOwner,
       status: device.status,
@@ -142,9 +142,9 @@ class PPModel extends ChangeNotifier implements ln.Observer {
       List<WifiP2pDevice> list = peers as List<WifiP2pDevice>;
       List<SocketAddress> result = [];
       for (var item in list) {
-        result.add(_mergeDevice(item));
+        result.add(mergeDevice(item));
       }
-      _peers = result;
+      _peers = List.castFrom(result);
       notifyListeners();
     } else if (name == WifiDirectNames.kConnectionChanged) {
       var connection = notification.userInfo?['connection'];
