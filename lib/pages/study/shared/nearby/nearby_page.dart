@@ -147,8 +147,9 @@ class TransferView extends StatelessWidget {
       ),
       const SizedBox(height: 16),
       Expanded(
-        child: SizedBox(
+        child: Container(
           width: MediaQuery.of(context).size.width,
+          padding: const EdgeInsets.all(16),
           child: DiscoverPeersView(
             builder: (peers) {
               return PeersView(
@@ -254,13 +255,14 @@ class TransferView extends StatelessWidget {
                 },
                 child: Text(text),
               ),
-              if (isConnected) TextButton(
-                onPressed: () async {
-                  Navigator.of(context).pop();
-                  context.pushNamed(StudyRouter.device);
-                },
-                child: const Text('进入会话'),
-              ),
+              if (isConnected)
+                TextButton(
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                    context.pushNamed(StudyRouter.device);
+                  },
+                  child: const Text('进入会话'),
+                ),
             ],
           ),
         );

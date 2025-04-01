@@ -137,7 +137,7 @@ class _DeviceChatPageState extends State<DeviceChatPage> {
   Widget _buildEditView() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.white, width: 0.5),
         borderRadius: BorderRadius.circular(4),
