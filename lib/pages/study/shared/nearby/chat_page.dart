@@ -243,6 +243,7 @@ class _DeviceChatPageState extends State<DeviceChatPage> {
       hash: md5.convert(data).toString(),
       sendUid: self!.deviceAddress,
       receiveUid: '',
+      body: data,
     );
     Provider.of<PPModel>(context, listen: false).insertMsg(message);
     var nc = ln.NotificationCenter();

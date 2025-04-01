@@ -49,14 +49,14 @@ class _StudyPageState extends State<StudyPage> with Logging {
     logInfo('测试：${user.toJson()}');
 
     const int _kVerboseFlag = 1 << 3;
-    const int _kDebugFlag   = 1 << 4;
-    const int _kInfoFlag    = 1 << 5;
+    const int _kDebugFlag = 1 << 4;
+    const int _kInfoFlag = 1 << 5;
     const int _kWarningFlag = 1 << 6;
-    const int _kErrorFlag   = 1 << 7;
+    const int _kErrorFlag = 1 << 7;
 
-    const int _kDebug   = _kVerboseFlag|_kDebugFlag|_kInfoFlag|_kWarningFlag|_kErrorFlag;
-    const int _kDevelop =                           _kInfoFlag|_kWarningFlag|_kErrorFlag;
-    const int _kRelease =                                      _kWarningFlag|_kErrorFlag;
+    const int _kDebug = _kVerboseFlag | _kDebugFlag | _kInfoFlag | _kWarningFlag | _kErrorFlag;
+    const int _kDevelop = _kInfoFlag | _kWarningFlag | _kErrorFlag;
+    const int _kRelease = _kWarningFlag | _kErrorFlag;
     logDebug('结果：$_kVerboseFlag');
     logDebug('结果：$_kDebugFlag');
     logDebug('结果：$_kInfoFlag');
@@ -66,9 +66,9 @@ class _StudyPageState extends State<StudyPage> with Logging {
     logDebug('结果：$_kDebug');
     logDebug('结果：$_kDevelop');
     logDebug('结果：$_kRelease');
-    logDebug('结果：${_kDebug&_kDebugFlag}');
-    logDebug('结果：${_kDevelop&_kDebugFlag}');
-    logDebug('结果：${_kRelease&_kDebugFlag}');
+    logDebug('结果：${_kDebug & _kDebugFlag}');
+    logDebug('结果：${_kDevelop & _kDebugFlag}');
+    logDebug('结果：${_kRelease & _kDebugFlag}');
   }
 
   @override
@@ -326,10 +326,10 @@ abstract class Friend extends People {
 
 class GoodFriend extends Friend {
   @override
-  Map<String, dynamic> toJson() => super.toJson()
-    ..addAll({
-      'age': 24,
-    });
+  Map<String, dynamic> toJson() => {
+        ...super.toJson(),
+        'age': 24,
+      };
 }
 
 class BusinessFriend extends Friend with NameMixin, AddressMixin {
@@ -339,11 +339,11 @@ class BusinessFriend extends Friend with NameMixin, AddressMixin {
   BusinessFriend({String? address});
 
   @override
-  Map<String, dynamic> toJson() => super.toJson()
-    ..addAll({
-      'age': 24,
-      'address': address,
-    });
+  Map<String, dynamic> toJson() => {
+        ...super.toJson(),
+        'age': 24,
+        'address': address,
+      };
 }
 
 mixin AddressMixin {
@@ -385,8 +385,8 @@ class User extends Data {
         super.fromJson();
 
   @override
-  Map<String, dynamic> toJson() => super.toJson()
-    ..addAll({
-      'userName': userName,
-    });
+  Map<String, dynamic> toJson() => {
+        ...super.toJson(),
+        'userName': userName,
+      };
 }

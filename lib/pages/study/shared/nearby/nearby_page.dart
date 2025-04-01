@@ -56,7 +56,6 @@ class _WifiDirectPageState extends State<WifiDirectPage> with Logging {
           Builder(builder: (context) {
             return IconButton(
               onPressed: () {
-                client.initialize();
                 TransferView.showView(context, client);
               },
               icon: const Icon(Icons.file_copy_rounded),
@@ -102,6 +101,7 @@ class _WifiDirectPageState extends State<WifiDirectPage> with Logging {
   }
 }
 
+/// 传输的设备信息布局
 class TransferView extends StatelessWidget {
   final WifiDirectClient services;
 
@@ -240,8 +240,9 @@ class TransferView extends StatelessWidget {
                         hash: md5.convert(data).toString(),
                         sendUid: device.remoteAddress,
                         receiveUid: '',
+                        body: data,
                       );
-                      services.sendMessage(device, message);
+                      services.connect(device.remoteAddress);
                       break;
                     case DeviceStatus.unavailable:
                       var snackBar = const SnackBar(
@@ -253,7 +254,7 @@ class TransferView extends StatelessWidget {
                 },
                 child: Text(text),
               ),
-              TextButton(
+              if (isConnected) TextButton(
                 onPressed: () async {
                   Navigator.of(context).pop();
                   context.pushNamed(StudyRouter.device);
@@ -281,6 +282,7 @@ class TransferView extends StatelessWidget {
   }
 }
 
+/// 监听扫描的设备信息布局
 class DiscoverPeersView extends StatefulWidget {
   final Widget Function(List<SocketAddress> peers) builder;
 
@@ -301,6 +303,7 @@ class _DiscoverPeersViewState extends State<DiscoverPeersView> implements ln.Obs
     super.initState();
     var nc = ln.NotificationCenter();
     nc.addObserver(this, WifiDirectNames.kDevicesChanged);
+    _devices = Provider.of<PPModel>(context, listen: false).devices;
   }
 
   @override
@@ -332,6 +335,7 @@ class _DiscoverPeersViewState extends State<DiscoverPeersView> implements ln.Obs
   }
 }
 
+/// 设备信息布局
 class PeersView extends StatelessWidget {
   final List<SocketAddress> devices;
   final void Function(SocketAddress) onTap;

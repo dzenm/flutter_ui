@@ -99,8 +99,6 @@ class VerifyPacketData {
     _bodyLength = bodyLength;
     _length = jsonLength + bodyLength;
 
-    // 是否是正确的Header
-    if (magicCode == kMagicCode && version == kVersionCode) return false;
     // 长度比指定的消息长度小
     if (kHeaderLen + _length > data.length) return false;
     return true;

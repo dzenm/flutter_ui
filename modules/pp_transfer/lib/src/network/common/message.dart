@@ -43,6 +43,10 @@ abstract class Message implements IMessage {
   Map<String, dynamic> toJson() => {
         'headFlag': _headFlag.value,
       };
+
+  Map<String, dynamic> toDebugJson() => {
+        'headFlag': _headFlag.value,
+      };
 }
 
 class AuthMessage extends Message {
@@ -62,15 +66,22 @@ class AuthMessage extends Message {
   }
 
   @override
-  Map<String, dynamic> toJson() => super.toJson()
-    ..addAll(
-      {
+  Map<String, dynamic> toJson() => {
+        ...super.toJson(),
         'message': {
           'sessionUid': sessionUid,
           'userUid': userUid,
         },
-      },
-    );
+      };
+
+  @override
+  Map<String, dynamic> toDebugJson() => {
+        ...super.toJson(),
+        'message': {
+          'sessionUid': sessionUid,
+          'userUid': userUid,
+        },
+      };
 }
 
 class ChatMessage extends Message {
@@ -135,9 +146,8 @@ class ChatMessage extends Message {
   }
 
   @override
-  Map<String, dynamic> toJson() => super.toJson()
-    ..addAll(
-      {
+  Map<String, dynamic> toJson() => {
+        ...super.toJson(),
         'message': {
           'flag': _flag.value,
           'title': _title,
@@ -145,8 +155,21 @@ class ChatMessage extends Message {
           'sendUid': _sendUid,
           'receiveUid': _receiveUid,
         },
-      },
-    );
+      };
+
+  @override
+  Map<String, dynamic> toDebugJson() => {
+    ...super.toJson(),
+    'message': _toJson,
+  };
+
+  Map<String, dynamic> get _toJson => {
+        'flag': _flag.value,
+        'title': _title,
+        'hash': _hash,
+        'sendUid': _sendUid,
+        'receiveUid': _receiveUid,
+      };
 }
 
 class TextMessage extends ChatMessage {
@@ -160,6 +183,12 @@ class TextMessage extends ChatMessage {
   String get text {
     return utf8.decode(_body);
   }
+
+  @override
+  Map<String, dynamic> get _toJson => {
+        ...super._toJson,
+        'text': text,
+      };
 }
 
 class FileMessage extends ChatMessage {

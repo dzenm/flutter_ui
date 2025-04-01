@@ -178,31 +178,38 @@ abstract class WifiDirectManager extends Runner with Logging {
     logInfo('群组已建立$text，连接Socket${result ? '成功' : '失败'}');
   }
 
-  Future<bool> sendMessage(SocketAddress remote, IMessage message) async {
-    bool? isConnected = _isConnected(remote);
+  Future<bool> sendMessage(WifiP2pDevice device, IMessage message) async {
+    bool? isConnected = _isConnected(device);
     if (isConnected == null) {
       return false; // 设备不可用
     }
     // 先添加到消息队列
     _client.addData(message);
     if (isConnected) {
-      logDebug('8. 已连接到设备，准备发送消息');
       _setStep(StepFlag.connected);
       return true; // 已连接，直接发送
     }
+    return await connect(device.deviceAddress);
+  }
+
+  Future<bool> connect(String remoteAddress) async {
+    WifiP2pDevice? device = _discoverDevices[remoteAddress];
+    if (device == null) {
+      return false;
+    }
     // 未连接，先连接
-    if (!await _manager.connect(remote.remoteAddress)) {
+    if (!await _manager.connect(device.deviceAddress)) {
       logError('7. 连接设备失败');
       return false;
     }
-    logDebug('7. 开始连接设备：remote=${remote.remoteAddress}');
+    logDebug('7. 开始连接设备：remote=${device.deviceAddress}');
     _setStep(StepFlag.connecting);
     return true;
   }
 
   /// 指定的ID判断设备是否连接
-  bool? _isConnected(SocketAddress remote) {
-    WifiP2pDevice? device = _discoverDevices[remote.remoteAddress];
+  bool? _isConnected(WifiP2pDevice remote) {
+    WifiP2pDevice? device = _discoverDevices[remote.deviceAddress];
     if (device == null) {
       return false;
     }
@@ -230,7 +237,7 @@ abstract class WifiDirectManager extends Runner with Logging {
   }
 }
 
-class WifiDirectClient extends WifiDirectManager implements P2pConnectionListener {
+class WifiDirectClient extends WifiDirectManager implements ln.Observer, P2pConnectionListener {
   WifiDirectClient() {
     // 注册监听
     _manager
@@ -238,16 +245,25 @@ class WifiDirectClient extends WifiDirectManager implements P2pConnectionListene
       ..setP2pConnectionListener(this)
       ..receiveConnectionStream().listen((value) {});
     _client.start();
+    var nc = ln.NotificationCenter();
+    nc.addObserver(this, WifiDirectNames.kSendTextData);
   }
 
   @override
+  void dispose() {
+    var nc = ln.NotificationCenter();
+    nc.removeObserver(this, WifiDirectNames.kSendTextData);
+    super.dispose();
+  }
+  @override
   void onP2pState(bool enabled) async {
-    logDebug('设备的 Wi-Fi Direct 启用或禁用状态：enabled=$enabled');
     bool oldEnabled = _isEnabledWifiDirect;
-    _isEnabledWifiDirect = enabled;
-    if (oldEnabled != enabled) {
-      await initialize();
+    if (oldEnabled == enabled) {
+      return;
     }
+    _isEnabledWifiDirect = enabled;
+    logDebug('设备的 Wi-Fi Direct 启用或禁用状态：enabled=$enabled');
+    await initialize();
   }
 
   @override
@@ -276,11 +292,11 @@ class WifiDirectClient extends WifiDirectManager implements P2pConnectionListene
     logDebug('设备的 Wi-Fi 连接状态改变：info=${connection.toJson()}');
 
     if (!connection.isConnected) {
-      logInfo('连接已断开');
+      logInfo('设备的 Wi-Fi 连接状态：已断开');
       return;
     }
     if (!connection.groupFormed) {
-      logInfo('群组未建立');
+      logInfo('设备的 Wi-Fi 连接状态：群组未建立');
       return;
     }
     _onConnectionSuccess(connection);
@@ -288,6 +304,9 @@ class WifiDirectClient extends WifiDirectManager implements P2pConnectionListene
 
   @override
   void onSelfP2pChanged(WifiP2pDevice device) {
+    if (jsonEncode(device) == jsonEncode(_selfDevice)) {
+      return;
+    }
     logDebug('设备的 Wi-Fi 状态变化：device=${device.toJson()}');
     _selfDevice = device;
     var nc = ln.NotificationCenter();
@@ -299,5 +318,26 @@ class WifiDirectClient extends WifiDirectManager implements P2pConnectionListene
   @override
   void onDiscoverChanged(bool isDiscover) {
     logDebug('搜索附近的设备：isDiscover=$isDiscover');
+  }
+
+  @override
+  Future<void> onReceiveNotification(ln.Notification notification) async {
+    var name = notification.name;
+    var userInfo = notification.userInfo;
+    if (name == WifiDirectNames.kSendTextData) {
+      var message = userInfo?['message'];
+      WifiP2pGroup? group = _connection?.group;
+      if (group == null) {
+        logInfo('发送失败，未建立群组');
+        return;
+      }
+      if (group.isGroupOwner) {
+        for (var item in group.clients) {
+          sendMessage(item, message);
+        }
+      } else {
+        sendMessage(group.owner!, message);
+      }
+    }
   }
 }

@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:fbl/fbl.dart';
@@ -26,11 +27,8 @@ const int kExpires = 16 * 1000; // 16 seconds
 
 ///=========================== 客户端 ===========================
 /// Socket连接处理
-abstract class SocketManager extends Runner with Logging implements ln.Observer {
-  SocketManager(super.millis) {
-    var nc = ln.NotificationCenter();
-    nc.addObserver(this, WifiDirectNames.kSendTextData);
-  }
+abstract class SocketManager extends Runner with Logging {
+  SocketManager(super.millis);
 
   bool get isConnecting => _isConnecting;
   bool _isConnecting = false; // 是否正在连接中
@@ -139,11 +137,29 @@ mixin SenderMixin on SocketManager implements Sender {
 
   Future<int> _doSend(List<int> data) async {
     Channel? socket = _socket;
-    if (socket == null || !isConnected) {
+    if (socket == null || !_isConnected) {
       logError('Socket channel lost: socket=$socket');
       return -1;
     }
-    int sentLen = await socket.write(data);
+
+    // 分块发送
+    List<int> bytes = List.castFrom(data);
+    int start = 0, sentLen = 0, senCount = 0;
+    while (start < bytes.length) {
+      int len = min(start + 1024, bytes.length);
+      sentLen += await socket.write(bytes.sublist(start, len));
+      start = len;
+      senCount++;
+    }
+
+    if (data.length > sentLen) {
+      logError('发送失败：data=${data.length}，sentLen=$sentLen');
+      return -1;
+    } else if (data.length < sentLen) {
+      logError('It should not happen');
+      return -1;
+    }
+    logDebug('发送的数据长度：count=$senCount, sentLen=$sentLen');
     if (sentLen > 0) {
       // update sent time
       _lastSentTime = DateTime.now();
@@ -172,10 +188,14 @@ mixin ReceiverMixin on SocketManager implements Receiver {
   /// 接收数据
   Future<bool> _receiveData() async {
     Channel? socket = _socket;
-    if (socket == null || !_isConnected) {
+    if (socket == null) {
       return false;
     }
-    Uint8List? data = await socket.read(0);
+    if (!_isConnected) {
+      logError('Socket channel lost: socket=$socket');
+      return false;
+    }
+    Uint8List? data = await socket.read(1024);
     if (data == null) {
       return false;
     }
@@ -185,10 +205,9 @@ mixin ReceiverMixin on SocketManager implements Receiver {
     _lastReceivedTime = DateTime.now(); // update received time
 
     Message? message = onDistributeMessage(data);
-    if (message == null) {
-      return false;
+    if (message != null) {
+      receiveData(message);
     }
-    receiveData(message);
     return true;
   }
 
@@ -211,7 +230,7 @@ mixin ReceiverMixin on SocketManager implements Receiver {
   @override
   void receiveData(IMessage message) {
     if (message is Message) {
-      logDebug('接收的数据：text=${message.toJson()}');
+      logDebug('接收的数据：text=${message.toDebugJson()}');
       var nc = ln.NotificationCenter();
       nc.postNotification(WifiDirectNames.kReceiveTextData, this, {
         'text': message,
@@ -232,16 +251,6 @@ class ClientManager extends SocketManager with SenderMixin, ReceiverMixin {
       return true;
     }
     return false;
-  }
-
-  @override
-  Future<void> onReceiveNotification(ln.Notification notification) async {
-    var name = notification.name;
-    var userInfo = notification.userInfo;
-    if (name == WifiDirectNames.kSendTextData) {
-      var message = userInfo?['message'];
-      addData(message);
-    }
   }
 }
 
