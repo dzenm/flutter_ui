@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui/pages/study/study_model.dart';
+import 'package:provider/provider.dart';
 
 import 'chat_item_widget.dart';
 import 'chat_model.dart';
@@ -23,7 +25,6 @@ class _ChatPageState extends State<ChatPage> {
   late ListObserverController _controller;
   late ChatScrollObserver _chatObserver;
 
-  List<ChatModel> chatModels = [];
   ValueNotifier<int> unreadMsgCount = ValueNotifier<int>(0);
   bool needIncrementUnreadMsgCount = false;
   bool editViewReadOnly = false;
@@ -36,7 +37,7 @@ class _ChatPageState extends State<ChatPage> {
   void initState() {
     super.initState();
 
-    chatModels = createChatModels();
+    Provider.of<StudyModel>(context, listen: false).initModels();
     _scrollerController.addListener(scrollControllerListener);
     _controller = ListObserverController(controller: _scrollerController)..cacheJumpIndexOffset = false;
     _chatObserver = ChatScrollObserver(_controller)
@@ -186,23 +187,28 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget _buildListView({ScrollPhysics? physics}) {
-    return ChatView(
-      physics: physics,
-      itemCount: chatModels.length,
-      scrollerController: _scrollerController,
-      controller: _controller,
-      observer: _chatObserver,
-      reverse: true,
-      itemBuilder: (context, index) {
-        return ChatItemWidget(
-          chatModel: chatModels[index],
-          index: index,
+    return Selector0<List<ChatModel>>(
+      selector: (context) => Provider.of<StudyModel>(context).chatModels,
+      builder: (c, chatModels, w) {
+        return ChatView(
+          scrollerController: _scrollerController,
+          controller: _controller,
+          observer: _chatObserver,
+          physics: physics,
+          reverse: true,
           itemCount: chatModels.length,
-          onRemove: () {
-            _chatObserver.standby(isRemove: true);
-            setState(() {
-              chatModels.removeAt(index);
-            });
+          itemBuilder: (context, index) {
+            return ChatItemWidget(
+              chatModel: chatModels[index],
+              index: index,
+              itemCount: chatModels.length,
+              onRemove: () {
+                _chatObserver.standby(isRemove: true);
+                setState(() {
+                  chatModels.removeAt(index);
+                });
+              },
+            );
           },
         );
       },
@@ -227,16 +233,12 @@ class _ChatPageState extends State<ChatPage> {
     ));
   }
 
-  List<ChatModel> createChatModels({int num = 3}) {
-    return Iterable<int>.generate(num).map((e) => createChatModel()).toList();
-  }
-
   void _sendMessage() {
     _chatObserver.standby(changeCount: 1);
     editViewController.text = '';
     setState(() {
       needIncrementUnreadMsgCount = true;
-      chatModels.insert(0, createChatModel());
+      Provider.of<StudyModel>(context, listen: false).insert();
     });
   }
 
@@ -245,7 +247,7 @@ class _ChatPageState extends State<ChatPage> {
     setState(() {
       needIncrementUnreadMsgCount = true;
       for (var i = 0; i < count; i++) {
-        chatModels.insert(0, createChatModel());
+        Provider.of<StudyModel>(context, listen: false).insert();
       }
     });
   }
@@ -273,28 +275,6 @@ class _ChatPageState extends State<ChatPage> {
     return x.floor();
   }
 
-  List<String> chatContents = [
-    'My name is LinXunFeng',
-    'Twitter: https://twitter.com/xunfenghellolo'
-        'Github: https://github.com/LinXunFeng',
-    'Blog: https://fullstackaction.com/',
-    'Juejin: https://juejin.cn/user/1820446984512392/posts',
-    'Artile: Flutter-获取ListView当前正在显示的Widget信息\nhttps://juejin.cn/post/7103058155692621837',
-    'Artile: Flutter-列表滚动定位超强辅助库，墙裂推荐！🔥\nhttps://juejin.cn/post/7129888644290068487',
-    'A widget for observing data related to the child widgets being displayed in a scrollview.\nhttps://github.com/LinXunFeng/flutter_scrollview_observer',
-    '📱 Swifty screen adaptation solution (Support Objective-C and Swift)\nhttps://github.com/LinXunFeng/SwiftyFitsize'
-  ];
-
-  ChatModel createChatModel({
-    bool? isOwn,
-  }) {
-    final random = Random();
-    final content = chatContents[random.nextInt(chatContents.length)];
-    return ChatModel(
-      isOwn: isOwn ?? random.nextBool(),
-      content: content,
-    );
-  }
 }
 
 /// 发送消息快捷键创建 Intent

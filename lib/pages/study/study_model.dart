@@ -1,4 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+
+import 'components/chat/chat_model.dart';
 
 ///
 /// Created by a0010 on 2022/11/3 16:14
@@ -57,6 +61,23 @@ class StudyModel with ChangeNotifier {
       _users.removeAt(index);
       notifyListeners();
     }
+  }
+
+  List<ChatModel> _chatModels = [];
+  List<ChatModel> get chatModels => _chatModels;
+
+  void initModels() async {
+    _chatModels = ChatModel.createChatModels();
+    notifyListeners();
+  }
+
+  void insert() async {
+    await Future.delayed(const Duration(seconds: 2));
+    List<ChatModel> list = List.generate(5, (index) => ChatModel.createChatModel());
+    for (var item in list) {
+      _chatModels.insert(0, item);
+    }
+    notifyListeners();
   }
 
   /// 清空数据

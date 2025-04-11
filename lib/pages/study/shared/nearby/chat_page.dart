@@ -72,7 +72,9 @@ class _DeviceChatPageState extends State<DeviceChatPage> {
       backgroundColor: const Color.fromARGB(255, 100, 100, 100),
       appBar: CommonBar(
         title: title,
-        backgroundColor: const Color.fromARGB(255, 19, 19, 19),
+        // backgroundColor: const Color.fromARGB(255, 19, 19, 19),
+        backgroundColor: Colors.white,
+        titleColor: Colors.black,
         actions: [
           TextButton(
             onPressed: () {
