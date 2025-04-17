@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 
 import 'tap.dart';
 
-typedef ItemTapCallback = void Function(int index);
-
 ///
 /// Created by a0010 on 2022/11/25 13:51
 ///
@@ -142,7 +140,7 @@ class CustomPopupWindow extends StatefulWidget {
     double radius = 8,
     Color color = const Color(0xff4c4c4c),
     Color? textColor,
-    ItemTapCallback? onItemTap,
+    void Function(int index)? onItemTap,
     double elevation = 0,
   }) async {
     return await show(
@@ -208,7 +206,7 @@ class CustomPopupWindow extends StatefulWidget {
     List<String> titles, {
     Color? color,
     EdgeInsetsGeometry? padding,
-    required ItemTapCallback onTap,
+    required void Function(int index) onTap,
   }) {
     List<Widget> widgets = [];
     for (int i = 0; i < titles.length; i++) {

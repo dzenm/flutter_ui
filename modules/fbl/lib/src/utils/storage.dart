@@ -669,6 +669,7 @@ Map<String, MimeType> mimeTypes = {
   '3gpp2': MimeType.video,
   'avi': MimeType.video,
   'mp4': MimeType.video,
+  'mov': MimeType.video,
   'x-msvideo': MimeType.video,
   'x-matroska': MimeType.video,
   'mpeg': MimeType.video,
@@ -694,3 +695,4 @@ Map<String, MimeType> mimeTypes = {
   'pptx': MimeType.ppt,
   'apk': MimeType.apk,
 };
+

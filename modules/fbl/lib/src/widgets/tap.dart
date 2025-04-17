@@ -25,7 +25,7 @@ class TapLayout extends StatelessWidget {
   final List<BoxShadow>? boxShadow;
   final Gradient? gradient;
   final bool isCircle; //是否为圆形
-  final bool isRipple; // true为点击有波纹效果，false为点击有背景效果
+  final ColorMode colorMode; // @see [ColorMode]
   final Duration onTapDuration; // 点击的间隔时间
   final Duration delayedDuration; // 点击后延后的执行点击时间
   final Widget? child;
@@ -51,7 +51,7 @@ class TapLayout extends StatelessWidget {
     this.boxShadow,
     this.gradient,
     this.isCircle = false,
-    this.isRipple = false,
+    this.colorMode = ColorMode.color,
     Duration? onTapDuration,
     Duration? delayedDuration,
     required this.child,
@@ -81,7 +81,7 @@ class TapLayout extends StatelessWidget {
       current = Padding(padding: padding!, child: current);
     }
 
-    if (isRipple) {
+    if (colorMode.index == ColorMode.ripple.index) {
       current = _TapLayoutRipple(
         onTap: onTap == null ? null : _onTap,
         onDoubleTap: onDoubleTap,
@@ -106,6 +106,7 @@ class TapLayout extends StatelessWidget {
         onSecondaryTap: onSecondaryTap,
         width: w,
         height: h,
+        colorMode: colorMode,
         foreground: foreground,
         background: background,
         hoverColor: highlightColor,
@@ -169,6 +170,7 @@ class _TapLayout extends StatelessWidget {
   final GestureTapCallback? onSecondaryTap;
   final double? width;
   final double? height;
+  final ColorMode colorMode;
   final Color? foreground;
   final Color? background;
   final Color? hoverColor;
@@ -185,6 +187,7 @@ class _TapLayout extends StatelessWidget {
     this.onSecondaryTap,
     this.width,
     this.height,
+    this.colorMode = ColorMode.color,
     this.foreground,
     this.background = Colors.transparent,
     this.hoverColor,
@@ -233,7 +236,7 @@ class _TapLayout extends StatelessWidget {
       child: current,
       builder: (context, isTouchDown, child) {
         Color? color = background;
-        if (isExistTap && isTouchDown) {
+        if (isExistTap && isTouchDown && colorMode == ColorMode.color) {
           // 再处理触摸点击事件
           color = foreground ?? Theme.of(context).highlightColor;
         }
@@ -314,11 +317,10 @@ class _TapLayoutRipple extends StatelessWidget {
 
   /// 带有水波纹按钮的布局
   Widget _buildRippleView(BuildContext context) {
-    bool isCircle = shape == BoxShape.circle;
     Color highlightColor = Platform.isAndroid || Platform.isIOS
         ? Colors.transparent // 鼠标高亮色
         : Theme.of(context).highlightColor;
-    BorderRadius? effectiveBorderRadius = isCircle
+    BorderRadius? effectiveBorderRadius = shape == BoxShape.circle
         ? BorderRadius.all(Radius.circular(width ?? height ?? 0)) // 水波纹的圆角
         : borderRadius;
 
@@ -354,15 +356,19 @@ class _TapLayoutRipple extends StatelessWidget {
     // 必须在Material包裹下才会生效
     current = Material(
       color: Colors.transparent,
-      borderRadius: effectiveBorderRadius,
-      // 设置圆角，包括水波纹、悬停、正常的圆角
+      borderRadius: effectiveBorderRadius, // 设置圆角，包括水波纹、悬停、正常的圆角
       clipBehavior: Clip.hardEdge,
-      type: isCircle ? MaterialType.circle : MaterialType.canvas,
       child: current,
     );
 
     return current;
   }
+}
+
+enum ColorMode {
+  none,
+  color,
+  ripple,
 }
 
 class WrapButton extends StatelessWidget {

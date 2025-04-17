@@ -9,8 +9,6 @@ import 'common_widget.dart';
 import 'lists.dart';
 import 'tap.dart';
 
-typedef ItemClickCallback = void Function(int index);
-
 const kMaxWidthInDialog = 640.0;
 const kMaxHeightInDialog = 600.0;
 
@@ -235,7 +233,7 @@ class CommonDialog {
   static Future<T?> showListBottomSheet<T>(
     BuildContext context,
     List<String> items,
-    ItemClickCallback? onTap, {
+    void Function(int index)? onTap, {
     double height = 45.0,
     String cancelText = 'cancel',
     bool isMaterial = false,
@@ -594,7 +592,7 @@ class CupertinoDialogButton extends StatelessWidget {
 /// )
 class ListDialog extends Dialog {
   final List<String> list;
-  final ItemClickCallback? onTap;
+  final void Function(int index)? onTap;
 
   const ListDialog({
     super.key,
@@ -639,7 +637,6 @@ class ListDialog extends Dialog {
   Widget _buildItemView(BuildContext context, int index) {
     return TapLayout(
       background: Colors.white,
-      isRipple: false,
       child: Container(
         height: 48,
         alignment: Alignment.centerLeft,
