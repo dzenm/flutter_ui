@@ -33,42 +33,7 @@ class _StudyPageState extends State<StudyPage> with Logging {
   void initState() {
     super.initState();
     StudyMain.main();
-    Friend friend = BusinessFriend();
-    logInfo('测试：${friend is GoodFriend}');
-    logInfo('测试：${friend is BusinessFriend}');
-    logInfo('测试：${friend is Child}');
-    logInfo('测试：${friend is NameMixin}');
-    logInfo('测试：${friend.toJson()}');
     _model = StudyProviderModel();
-
-    Map<String, dynamic> json = {
-      'userUid': '7i21g1n1j23u1g1',
-      'userName': '玉皇大帝',
-    };
-    User user = User.fromJson(json);
-    logInfo('测试：${user.toJson()}');
-
-    const int _kVerboseFlag = 1 << 3;
-    const int _kDebugFlag = 1 << 4;
-    const int _kInfoFlag = 1 << 5;
-    const int _kWarningFlag = 1 << 6;
-    const int _kErrorFlag = 1 << 7;
-
-    const int _kDebug = _kVerboseFlag | _kDebugFlag | _kInfoFlag | _kWarningFlag | _kErrorFlag;
-    const int _kDevelop = _kInfoFlag | _kWarningFlag | _kErrorFlag;
-    const int _kRelease = _kWarningFlag | _kErrorFlag;
-    logDebug('结果：$_kVerboseFlag');
-    logDebug('结果：$_kDebugFlag');
-    logDebug('结果：$_kInfoFlag');
-    logDebug('结果：$_kWarningFlag');
-    logDebug('结果：$_kErrorFlag');
-
-    logDebug('结果：$_kDebug');
-    logDebug('结果：$_kDevelop');
-    logDebug('结果：$_kRelease');
-    logDebug('结果：${_kDebug & _kDebugFlag}');
-    logDebug('结果：${_kDevelop & _kDebugFlag}');
-    logDebug('结果：${_kRelease & _kDebugFlag}');
   }
 
   @override
@@ -310,83 +275,4 @@ class _StudyPageState extends State<StudyPage> with Logging {
   Widget _text(String text) {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text(text)]);
   }
-}
-
-abstract class People implements Student {}
-
-abstract class Friend extends People {
-  String name = 'hello';
-  int age = 0;
-
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'age': 32,
-      };
-}
-
-class GoodFriend extends Friend {
-  @override
-  Map<String, dynamic> toJson() => {
-        ...super.toJson(),
-        'age': 24,
-      };
-}
-
-class BusinessFriend extends Friend with NameMixin, AddressMixin {
-  @override
-  String address = 'my address';
-
-  BusinessFriend({String? address});
-
-  @override
-  Map<String, dynamic> toJson() => {
-        ...super.toJson(),
-        'age': 24,
-        'address': address,
-      };
-}
-
-mixin AddressMixin {
-  String address = 'hello address';
-}
-
-mixin NameMixin on Friend {
-  @override
-  String get name => 'modify name';
-}
-
-abstract interface class Child {}
-
-abstract interface class Student {}
-
-abstract class Data {
-  late String userUid;
-
-  Data({required this.userUid});
-
-  // Data.fromJson(Map<String, dynamic> json) : this(userUid: json['userUid']);
-
-  Data.fromJson(Map<String, dynamic> json) {
-    userUid = '';
-  }
-
-  Map<String, dynamic> toJson() => {
-        'userUid': userUid,
-      };
-}
-
-class User extends Data {
-  late String userName;
-
-  User({required super.userUid, required this.userName});
-
-  User.fromJson(super.json)
-      : userName = '',
-        super.fromJson();
-
-  @override
-  Map<String, dynamic> toJson() => {
-        ...super.toJson(),
-        'userName': userName,
-      };
 }

@@ -67,7 +67,9 @@ class StudyModel with ChangeNotifier {
   List<ChatModel> get chatModels => _chatModels;
 
   void initModels() async {
-    _chatModels = ChatModel.createChatModels();
+    await Future.delayed(const Duration(seconds: 1), () {
+      _chatModels = ChatModel.createChatModels();
+    });
     notifyListeners();
   }
 

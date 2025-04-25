@@ -11,6 +11,10 @@ class StudyMain {
 
   static void main() async {
     await _pathProviderTest();
+    _implementsTest();
+
+    Uri uri = Uri.parse('https://dart.dev/guides/libraries/library-tour#utility-classes');
+    _log(uri.toString());
   }
 
   static Future<void> _pathProviderTest() async {
@@ -60,7 +64,102 @@ class StudyMain {
     }
   }
 
+  static void _implementsTest() {
+    Friend friend = BusinessFriend();
+    _log('测试：${friend is GoodFriend}');
+    _log('测试：${friend is BusinessFriend}');
+    _log('测试：${friend is Child}');
+    _log('测试：${friend is NameMixin}');
+    _log('测试：${friend.toJson()}');
+
+    Map<String, dynamic> json = {
+      'userUid': '7i21g1n1j23u1g1',
+      'userName': '玉皇大帝',
+    };
+    User user = User.fromJson(json);
+    _log('测试：${user.toJson()}');
+  }
+
   static void _log(String msg) {
     Log.d(msg, tag: _tag);
   }
+}
+
+abstract interface class Child {}
+
+abstract interface class Student {}
+
+abstract class People implements Student {}
+
+abstract class Friend extends People {
+  String name = 'hello';
+  int age = 0;
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'age': 32,
+      };
+}
+
+class GoodFriend extends Friend {
+  @override
+  Map<String, dynamic> toJson() => {
+        ...super.toJson(),
+        'age': 24,
+      };
+}
+
+class BusinessFriend extends Friend with NameMixin, AddressMixin {
+  @override
+  String address = 'my address';
+
+  BusinessFriend({String? address});
+
+  @override
+  Map<String, dynamic> toJson() => {
+        ...super.toJson(),
+        'age': 24,
+        'address': address,
+      };
+}
+
+mixin AddressMixin {
+  String address = 'hello address';
+}
+
+mixin NameMixin on Friend {
+  @override
+  String get name => 'modify name';
+}
+
+abstract class Data {
+  late String userUid;
+
+  Data({required this.userUid});
+
+  // Data.fromJson(Map<String, dynamic> json) : this(userUid: json['userUid']);
+
+  Data.fromJson(Map<String, dynamic> json) {
+    userUid = '';
+  }
+
+  Map<String, dynamic> toJson() => {
+        'userUid': userUid,
+      };
+}
+
+class User extends Data {
+  late String userName;
+
+  User({required super.userUid, required this.userName});
+
+  User.fromJson(super.json)
+      : userName = '',
+        super.fromJson();
+
+  @override
+  Map<String, dynamic> toJson() => {
+        ...super.toJson(),
+        'userName': userName,
+      };
 }
