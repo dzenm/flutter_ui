@@ -15,9 +15,10 @@ class TextPage extends StatefulWidget {
   State<StatefulWidget> createState() => _TextPageState();
 }
 
-class _TextPageState extends State<TextPage> {
+class _TextPageState extends State<TextPage> with Logging {
   static const String _tag = 'TextPage';
   final TextEditingController _controller = TextEditingController(text: "初始化");
+  final TextEditingController _textController = TextEditingController();
   String text = '';
   String newText = '';
   bool switchState = true;
@@ -94,7 +95,17 @@ class _TextPageState extends State<TextPage> {
                   style: TextStyle(fontSize: 10),
                 ),
                 ExtendedTextField(
+                  controller: _textController,
                   specialTextSpanBuilder: MySpecialTextSpanBuilder(showAtBackground: true, type: BuilderType.extendedTextField),
+                  onChanged: (s) {
+                    logDebug('输入文本变化：s=$s');
+                  },
+                  onEditingComplete: () {
+                    logDebug('编辑完成');
+                  },
+                  onSubmitted: (s) {
+                    logDebug('提交结果：s=$s');
+                  },
                 ),
                 CommonWidget.divider(),
                 const SizedBox(height: 24),
