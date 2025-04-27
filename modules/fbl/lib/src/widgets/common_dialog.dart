@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:bot_toast/bot_toast.dart';
-import 'package:fbl/src/widgets/wrapper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -26,25 +25,16 @@ class CommonDialog {
 
   /// 加载中对话框
   /// CommonDialog.loading()
-  static CancelFunc loading({
-    String loadingTxt = 'loading',
-    bool isVertical = true,
-    bool light = false,
-  }) {
+  static CancelFunc loading({String? loadingTxt, bool isVertical = true, bool light = false}) {
+    loadingTxt ??= '加载中';
     List<Widget> widgets = [
       const SizedBox(
         width: 30,
         height: 30,
-        child: CircularProgressIndicator(
-          strokeWidth: 2,
-          backgroundColor: Colors.white,
-        ),
+        child: CircularProgressIndicator(strokeWidth: 2, backgroundColor: Colors.white),
       ),
       const SizedBox(width: 20, height: 20),
-      Text(
-        loadingTxt,
-        style: const TextStyle(color: Colors.white, fontSize: 16),
-      ),
+      Text(loadingTxt, style: const TextStyle(color: Colors.white, fontSize: 16)),
     ];
     Widget child = isVertical
         ? Column(mainAxisSize: MainAxisSize.min, children: widgets) //纵向布局
@@ -56,151 +46,13 @@ class CommonDialog {
       clickClose: false,
       allowClick: false,
       crossPage: false,
-      toastBuilder: (_) {
-        return Container(
-          padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 40),
-          decoration: const BoxDecoration(
-            color: Colors.black54,
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-          ),
-          child: child,
-        );
-      },
-    );
-  }
-
-  static Future<T?> show<T>(
-    BuildContext context,
-    String? title,
-    dynamic body, {
-    VoidCallback? callback,
-  }) async {
-    if (body is String) {
-      body = Text(body);
-    }
-    Widget? child;
-    if ((title ?? '').isNotEmpty) {
-      child = Text(title!);
-    }
-    return await showCupertinoModalPopup<T>(
-      context: context,
-      builder: (BuildContext context) => CupertinoAlertDialog(
-        title: child,
-        content: body,
-        actions: [
-          CupertinoDialogAction(
-            isDefaultAction: true,
-            onPressed: () {
-              Navigator.pop(context);
-              if (callback != null) {
-                callback();
-              }
-            },
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  static Future<T?> confirm<T>(
-    BuildContext context,
-    String? title,
-    dynamic body, {
-    String? okTitle,
-    VoidCallback? okAction,
-    String? cancelTitle,
-    VoidCallback? cancelAction,
-  }) async {
-    okTitle ??= 'OK';
-    cancelTitle ??= 'Cancel';
-    if (body is String) {
-      body = Text(body);
-    }
-    Widget? child;
-    if ((title ?? '').isNotEmpty) {
-      child = Text(title!);
-    }
-    return await showCupertinoDialog<T>(
-      context: context,
-      builder: (context) => CupertinoAlertDialog(
-        title: child,
-        content: body,
-        actions: [
-          CupertinoDialogAction(
-            onPressed: () {
-              Navigator.pop(context);
-              if (okAction != null) {
-                okAction();
-              }
-            },
-            child: Text(okTitle!),
-          ),
-          CupertinoDialogAction(
-            onPressed: () {
-              Navigator.pop(context);
-              if (cancelAction != null) {
-                cancelAction();
-              }
-            },
-            isDestructiveAction: true,
-            child: Text(cancelTitle!),
-          ),
-        ],
-      ),
-    );
-  }
-
-  static Future<T?> actionSheet<T>(
-    BuildContext context,
-    String? title,
-    String? message,
-    dynamic action1,
-    VoidCallback callback1, [
-    dynamic action2,
-    VoidCallback? callback2,
-    dynamic action3,
-    VoidCallback? callback3,
-  ]) async {
-    return await showCupertinoModalPopup<T>(
-      context: context,
-      builder: (context) => CupertinoActionSheet(
-        title: title == null || title.isEmpty ? null : Text(title),
-        message: message == null || message.isEmpty ? null : Text(message),
-        actions: [
-          CupertinoActionSheetAction(
-            onPressed: () {
-              Navigator.pop(context);
-              callback1();
-            },
-            child: action1 is String ? Text(action1) : action1,
-          ),
-          if (action2 != null)
-            CupertinoActionSheetAction(
-              onPressed: () {
-                Navigator.pop(context);
-                if (callback2 != null) {
-                  callback2();
-                }
-              },
-              child: action2 is String ? Text(action2) : action2,
-            ),
-          if (action3 != null)
-            CupertinoActionSheetAction(
-              onPressed: () {
-                Navigator.pop(context);
-                if (callback3 != null) {
-                  callback3();
-                }
-              },
-              child: action3 is String ? Text(action3) : action3,
-            ),
-          CupertinoActionSheetAction(
-            onPressed: () => Navigator.pop(context),
-            isDestructiveAction: true,
-            child: const Text('Cancel'),
-          ),
-        ],
+      toastBuilder: (_) => Container(
+        padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 40),
+        decoration: const BoxDecoration(
+          color: Colors.black54,
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+        child: child,
       ),
     );
   }
@@ -209,14 +61,12 @@ class CommonDialog {
   /// CommonDialog.showSelectImageBottomSheet(context)
   static Future<T?> showSelectImageBottomSheet<T>(
     BuildContext context, {
-    String cameraText = 'camera',
-    String galleryText = 'gallery',
     Function? onCameraTap,
     Function? onGalleryTap,
   }) async {
-    return await showListBottomSheet<T>(context, [
-      cameraText,
-      galleryText,
+    return await showListBottomSheet(context, [
+      '拍照',
+      '相册',
     ], (item) async {
       if (item == 0) {
         if (onCameraTap != null) onCameraTap();
@@ -235,7 +85,6 @@ class CommonDialog {
     List<String> items,
     void Function(int index)? onTap, {
     double height = 45.0,
-    String cancelText = 'cancel',
     bool isMaterial = false,
     bool isDismissible = true,
   }) async {
@@ -244,7 +93,7 @@ class CommonDialog {
       data.add(item);
     }
     if (!isMaterial) data.add('CommonWidget.divider');
-    data.add(cancelText);
+    data.add('取消');
 
     double realHeight = (items.length + 1) * height;
 
@@ -274,7 +123,7 @@ class CommonDialog {
           },
           child: Column(children: [
             Expanded(child: Container(alignment: Alignment.center, child: Text(data[index]))),
-            if (!isMaterial && index < items.length - 1) CommonWidget.divider(),
+            if (!isMaterial && index < items.length - 1) const DividerView(),
           ]),
         ),
       );
@@ -376,8 +225,8 @@ class CommonDialog {
     Widget? mainWidget,
     String? contentText,
     bool oneBtn = false,
-    String cancelText = 'cancel',
-    String confirmText = 'confirm',
+    String? cancelText,
+    String? confirmText,
     Function? confirmCallback,
     Function? dismissCallback,
     Color? cancelColor, //l 取消按钮字体颜色
@@ -396,7 +245,7 @@ class CommonDialog {
           if (!oneBtn)
             CupertinoDialogAction(
               child: Text(
-                cancelText,
+                cancelText ?? '取消',
                 style: TextStyle(fontSize: 15, color: cancelColor),
               ),
               onPressed: () {
@@ -405,7 +254,7 @@ class CommonDialog {
             ),
           CupertinoDialogAction(
             child: Text(
-              confirmText,
+              confirmText ?? '确定',
               style: const TextStyle(fontSize: 15),
             ),
             onPressed: () {
@@ -465,7 +314,6 @@ class CommonDialog {
 /// Dialog设置是否可以点击外部取消显示
 class DialogWrapper extends StatelessWidget {
   final bool isTouchOutsideDismiss; // 点击弹窗外部关闭弹窗，默认为true， true：可以关闭 false：不可以关闭
-  final bool canCancel; // 点击返回按钮关闭弹窗
   final GestureTapCallback? barrierOnTap; // 弹窗关闭回调
   final Widget? child;
   final Color color;
@@ -476,7 +324,6 @@ class DialogWrapper extends StatelessWidget {
   const DialogWrapper({
     super.key,
     this.isTouchOutsideDismiss = false,
-    this.canCancel = true,
     this.barrierOnTap,
     this.child,
     Color? color,
@@ -494,28 +341,24 @@ class DialogWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PopWrapper.custom(
-      child: GestureDetector(
-        onTap: canCancel && isTouchOutsideDismiss //
-            ? barrierOnTap ?? () => Navigator.of(context).pop()
-            : null, // 外部触摸事件，关闭弹窗
-        behavior: HitTestBehavior.opaque,
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          resizeToAvoidBottomInset: false, // 防止软键盘弹出像素溢出
-          body: GestureDetector(
-            onTap: () {}, // 内部触摸事件，防止触发外部触摸事件（阻断外部触摸事件的执行，所以不做处理）
-            child: Center(
-              child: Container(
-                margin: margin,
-                constraints: constraints,
-                decoration: BoxDecoration(
-                  borderRadius: borderRadius,
-                  color: color,
-                ),
-                clipBehavior: Clip.antiAlias,
-                child: child,
+    return GestureDetector(
+      onTap: isTouchOutsideDismiss ? barrierOnTap ?? () => Navigator.of(context).pop() : null, // 外部触摸事件，关闭弹窗
+      behavior: HitTestBehavior.opaque,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        resizeToAvoidBottomInset: false, // 防止软键盘弹出像素溢出
+        body: GestureDetector(
+          onTap: () {}, // 内部触摸事件，防止触发外部触摸事件（阻断外部触摸事件的执行，所以不做处理）
+          child: Center(
+            child: Container(
+              margin: margin,
+              constraints: constraints,
+              decoration: BoxDecoration(
+                borderRadius: borderRadius,
+                color: color,
               ),
+              clipBehavior: Clip.antiAlias,
+              child: child,
             ),
           ),
         ),

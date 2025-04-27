@@ -13,7 +13,7 @@ import 'package:http/http.dart' as http;
 ///
 
 /// 图片展示组件
-class ImageView extends StatelessWidget {
+class ImageCacheView extends StatelessWidget {
   final String url;
   final double? width;
   final double? height;
@@ -23,7 +23,7 @@ class ImageView extends StatelessWidget {
   final Widget? placeholder;
   final Widget? errorPlaceholder;
 
-  const ImageView({
+  const ImageCacheView({
     super.key,
     required this.url,
     this.width,

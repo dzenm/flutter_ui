@@ -206,7 +206,7 @@ class Banner extends StatelessWidget with Logging {
       builder: (context, banners, widget) {
         return BannerView(
           repeat: true,
-          builder: (imagePath) => ImageView(url: imagePath ?? '', fit: BoxFit.cover),
+          builder: (imagePath) => ImageCacheView(url: imagePath ?? '', fit: BoxFit.cover),
           data: banners.map((banner) => BannerData(title: banner.title, data: banner.imagePath)).toList(),
           onTap: (index) {
             BannerEntity banner = banners[index];

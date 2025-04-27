@@ -76,18 +76,6 @@ class SPManager with _SharedPreferencesMixin {
     return _instance.getString(SPValue.userToken.value);
   }
 
-  /// 保存登录用户token
-  static void setToken(String? token) {
-    _instance.setString(SPValue.userToken.value, token);
-  }
-
-  /// 重置登录用户信息
-  static void clearUser() {
-    for (var item in SPValue.values) {
-      _instance.remove(item.value);
-    }
-  }
-
   /// 获取APP设置
   static String getSettings() {
     String settings = _instance.getString(SPValue.settings.value);
@@ -99,6 +87,27 @@ class SPManager with _SharedPreferencesMixin {
     _instance.setString(SPValue.settings.value, settings);
   }
 
+  /// 保存登录用户token
+  static void setToken(String? token) {
+    _instance.setString(SPValue.userToken.value, token);
+  }
+
+  /// 获取登录用户缓存目录
+  static String getRootDir() {
+    return _instance.getString(SPValue.rootDir.value);
+  }
+
+  /// 保存登录用户缓存目录
+  static void setRootDir(String? rootDir) {
+    _instance.setString(SPValue.rootDir.value, rootDir);
+  }
+
+  /// 重置登录用户信息
+  static void clearUser() {
+    for (var item in SPValue.values) {
+      _instance.remove(item.value);
+    }
+  }
 ///============================== SP基本数据类型的操作 ================================
 }
 
@@ -191,7 +200,8 @@ enum SPValue {
   userToken('u_token'), // 登录的token信息
   userInfo('u_info'), // 用户信息
   /// APP设置相关的信息
-  settings('u_settings'); // APP相关的设置
+  settings('u_settings'), // APP相关的设置
+  rootDir('u_rootDir'); // 根目录路径
 
   final String value;
 

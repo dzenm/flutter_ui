@@ -71,7 +71,7 @@ class _EnsureSendFileWidgetState extends State<EnsureSendFileWidget> {
         Widget child;
         String path = file.path;
         if (info.mimeType == MimeType.image) {
-          child = ImageView(url: path, width: 40, height: 56, fit: BoxFit.cover);
+          child = ImageCacheView(url: path, width: 40, height: 56, fit: BoxFit.cover);
         } else if (info.mimeType == MimeType.video) {
           child = Image.asset(ImageUtil.getFileIcon(path), width: 40, height: 56);
         } else {

@@ -258,10 +258,10 @@ class ScrollConfigurationWidget extends StatelessWidget {
 class ScrollBehave extends ScrollBehavior {
   @override
   Widget buildOverscrollIndicator(
-      BuildContext context,
-      Widget child,
-      ScrollableDetails details,
-      ) {
+    BuildContext context,
+    Widget child,
+    ScrollableDetails details,
+  ) {
     if (Platform.isAndroid || Platform.isFuchsia) {
       return child;
     } else {

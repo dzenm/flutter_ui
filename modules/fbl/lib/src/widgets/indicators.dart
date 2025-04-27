@@ -17,7 +17,7 @@ class DotsIndicator extends AnimatedWidget {
     this.itemCount = 0,
     required this.onPageSelected,
     this.color = Colors.white,
-    this.dotsType = DotsType.text,
+    this.dotsType = DotsType.dot,
     this.size = 8,
     this.icons,
   }) : super(listenable: controller);

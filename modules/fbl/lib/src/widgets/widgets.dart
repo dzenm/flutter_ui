@@ -17,6 +17,7 @@ export 'indicators.dart';
 export 'lists.dart';
 export 'picker/location.dart';
 export 'picker/picker.dart';
+export 'progress.dart';
 export 'rows.dart';
 export 'scrollview/scrollview_observer.dart';
 export 'shimmer.dart';

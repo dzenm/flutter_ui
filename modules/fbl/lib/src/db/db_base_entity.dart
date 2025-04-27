@@ -1,3 +1,5 @@
+import 'db_manager.dart';
+
 /// 数据的基类，数据和实体类的转换，数据库表的信息
 abstract class DBBaseEntity {
 
@@ -17,5 +19,24 @@ abstract class DBBaseEntity {
       sb.write(s.toLowerCase());
     }
     return 't${sb.toString()}';
+  }
+
+  Future<String?> getRecentDate({String attr = 'updateDate'}) async {
+    List<Map<String, dynamic>> list = await DBManager().query(
+      tableName,
+      where: 'isDelete = ?',
+      whereArgs: [0],
+      orderBy: '$attr DESC',
+      limit: 1,
+    );
+    if (list.isNotEmpty) {
+      return list.first[attr];
+    }
+    return null;
+  }
+
+  Future<int> clear() async {
+    String sql = 'DELETE FROM $tableName';
+    return await DBManager().rawDelete(sql, null);
   }
 }

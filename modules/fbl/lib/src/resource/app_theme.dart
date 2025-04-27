@@ -16,9 +16,9 @@ import 'theme/purple_theme.dart';
 import 'theme/red_theme.dart';
 import 'theme/teal_theme.dart';
 
-////
-//// Created by a0010 on 2023/1/30 15:15
-////
+///
+/// Created by a0010 on 2023/1/30 15:15
+///
 abstract class AppTheme with _BaseColorMixin, _AppColorMixin {
   static final Map<AppThemeMode, AppTheme> appTheme = {
     AppThemeMode.light: LightTheme(),
@@ -202,7 +202,7 @@ abstract mixin class _BaseColorMixin {
 }
 
 /// APP相关的颜色，在此处增加自定义的功能颜色
-abstract mixin class _AppColorMixin implements _BaseColorMixin {
+abstract mixin class _AppColorMixin implements _BaseColorMixin  {
   ///================================ 根据功能命名(整体) ================================
   Color get primaryDark => purple700; // 主要颜色(深色)
   Color get primary => purple500; // 主要颜色

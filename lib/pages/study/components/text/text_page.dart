@@ -107,7 +107,7 @@ class _TextPageState extends State<TextPage> with Logging {
                     logDebug('提交结果：s=$s');
                   },
                 ),
-                CommonWidget.divider(),
+                const DividerView(),
                 const SizedBox(height: 24),
                 CommonWidget.titleView('输入框的特殊表情: '),
                 Container(
@@ -139,7 +139,7 @@ class _TextPageState extends State<TextPage> with Logging {
                   ],
                 ),
                 const SizedBox(height: 8),
-                CommonWidget.divider(),
+                const DividerView(),
                 const SizedBox(height: 24),
                 CommonWidget.titleView('设置页面常用单行布局: '),
                 TapLayout(

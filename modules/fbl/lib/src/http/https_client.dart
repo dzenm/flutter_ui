@@ -304,7 +304,8 @@ final class HttpsClient {
     dynamic data, {
     CancelToken? cancelToken,
     Success? success,
-    Progress? progress,
+    Progress? onSendProgress,
+    Progress? onReceiveProgress,
     Failed? failed,
     bool canCancel = true,
   }) async {
@@ -322,7 +323,7 @@ final class HttpsClient {
         ),
         onSendProgress: (int count, int total) {
           // 未实现/禁止取消/通过token取消下载等情况不能再进行处理
-          if (progress == null || (canCancel && (cancelToken?.isCancelled ?? false))) return;
+          if (onSendProgress == null || (canCancel && (cancelToken?.isCancelled ?? false))) return;
           if (total == -1) {
             // 无法获取文件大小
             _HttpException ex = _HttpException.fileNotExist;
@@ -330,8 +331,16 @@ final class HttpsClient {
           } else {
             // 获取下载进度
             double progressPercent = double.parse((count / total).toStringAsFixed(2));
-            progress(progressPercent, count, total);
+            onSendProgress(progressPercent, count, total);
           }
+        },
+        onReceiveProgress: (int count, int total) {
+          // 未实现/禁止取消/通过token取消下载等情况不能再进行处理
+          if (onReceiveProgress == null || (canCancel && (cancelToken?.isCancelled ?? false))) return;
+
+          // 获取接收进度
+          double progressPercent = double.parse((count / total).toStringAsFixed(2));
+          onReceiveProgress(progressPercent, count, total);
         },
       );
       log('上传结果: statusCode=${response.statusCode}, statusMessage=${response.statusMessage}, data=${response.data}');

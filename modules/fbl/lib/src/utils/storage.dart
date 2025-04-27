@@ -22,9 +22,11 @@ typedef CompleteCallback = void Function(int count, int size);
 /// 文件工具类
 class LocalStorage with _DirectoryMixin {
   LocalStorage._internal();
+
   factory LocalStorage() => _instance;
   static final LocalStorage _instance = LocalStorage._internal();
 
+  /// 清理用户目录除数据库文件夹的缓存
   Future<void> clear() async {
     List<Directory> dirs = [];
     _DirectoryMixin._appDirs.forEach((key, value) async {
@@ -143,7 +145,8 @@ class LocalStorage with _DirectoryMixin {
     return '';
   }
 
-  String joins(String part1, [
+  String joins(
+    String part1, [
     String? part2,
     String? part3,
     String? part4,
@@ -158,7 +161,8 @@ class LocalStorage with _DirectoryMixin {
     String? part13,
     String? part14,
     String? part15,
-    String? part16,]) {
+    String? part16,
+  ]) {
     return join(
       part1,
       part2,
@@ -238,7 +242,10 @@ abstract mixin class _DirectoryMixin {
     String appDirName = 'File',
   }) async {
     _logPrint = logPrint;
-    _appRootDir = await _getAppRootDirectory(rootDir: rootDir, appDirName: appDirName);
+    _appRootDir = await _getAppRootDirectory(
+      rootDir: rootDir,
+      appDirName: appDirName,
+    );
   }
 
   /// 缓存文件夹路径 @see [init]、[_appDirs]
@@ -253,8 +260,6 @@ abstract mixin class _DirectoryMixin {
   }) async {
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String appRootDir = join(rootDir ?? appDocDir.path);
-
-
     if (Platform.isAndroid) {
       appDocDir = await getApplicationSupportDirectory();
       appRootDir = join(appDocDir.path);
@@ -328,13 +333,13 @@ abstract mixin class _DirectoryMixin {
 
   /// 获取缓存文件的子目录 @see [messagesDir]
   Directory getUserDirectory(
-      String part1, [
-        String? part2,
-        String? part3,
-        String? part4,
-        String? part5,
-        String? part6,
-      ]) {
+    String part1, [
+    String? part2,
+    String? part3,
+    String? part4,
+    String? part5,
+    String? part6,
+  ]) {
     String parent = join(_userDir.path, part1, part2, part3, part4, part5, part6);
     Directory result = Directory(parent);
     if (!result.existsSync()) {
@@ -579,8 +584,8 @@ class FileScanner {
     Directory dir, {
     ProgressCallback? onProgress,
   }) async {
+    Stream<FileSystemEntity> files = dir.list(recursive: true, followLinks: true);
     LocalStorage()._log('Scanning directory: $dir');
-    Stream<FileSystemEntity> files = dir.list();
     await files.forEach((item) async {
       if (!_scanning) return;
       // directories, files, and links
@@ -695,4 +700,3 @@ Map<String, MimeType> mimeTypes = {
   'pptx': MimeType.ppt,
   'apk': MimeType.apk,
 };
-

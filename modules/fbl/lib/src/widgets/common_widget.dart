@@ -1,27 +1,6 @@
 import 'package:flutter/material.dart';
 
 class CommonWidget {
-  /// 分割线
-  static Widget divider({
-    bool isVertical = false,
-    double height = 0.1,
-    double left = 0,
-    double right = 0,
-    double width = 0,
-    Color? color,
-  }) {
-    return Container(
-      color: color ?? const Color(0xFFEFEFEF),
-      child: isVertical
-          ? const SizedBox()
-          : Divider(
-              height: height,
-              indent: left,
-              endIndent: right,
-              color: Colors.transparent,
-            ),
-    );
-  }
 
   static Widget? leadingView({bool isLight = true}) {
     return BackButton(color: brightnessTheme(isLight: isLight));

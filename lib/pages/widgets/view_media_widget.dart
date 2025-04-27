@@ -35,7 +35,7 @@ class _ViewMediaWidgetState extends State<ViewMediaWidget> {
             if (url.isEmpty || url.startsWith('http')) return Container();
             PathInfo path = PathInfo.parse(url);
             if (path.mimeType == MimeType.image) {
-              return ImageView(
+              return ImageCacheView(
                 url: url,
                 width: MediaQuery.of(context).size.width,
                 isOrigin: true,

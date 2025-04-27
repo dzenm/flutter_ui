@@ -6,21 +6,22 @@ import 'package:photo_view/photo_view.dart';
 
 import 'images.dart';
 import 'tap.dart';
+import 'video_layout.dart';
 
 /// 下载回调
-typedef DownloadCallback = void Function(MediaEntity media);
+typedef DownloadCallback = void Function(ImageEntity media);
 
 /// Item图片创建器
 typedef ItemBuilderDelegate = Widget Function(String url);
 
 /// 图片展示对应的实体类
-class MediaEntity<T> {
+class ImageEntity<T> {
   String url;
   String? uid;
   bool isVideo;
   T? data;
 
-  MediaEntity({required this.url, this.uid, this.isVideo = false, this.data});
+  ImageEntity({required this.url, this.uid, this.isVideo = false, this.data});
 
   @override
   String toString() {
@@ -34,7 +35,7 @@ class MediaEntity<T> {
 
 /// 图片预览页面
 class ViewMedia extends StatefulWidget {
-  final List<MediaEntity> medias;
+  final List<ImageEntity> medias;
   final int initialItem;
   final ImageProvider<Object>? imageProvider;
   final TransitionBuilder? builder;
@@ -62,7 +63,7 @@ class ViewMedia extends StatefulWidget {
 }
 
 class _ViewMediaState extends State<ViewMedia> {
-  final List<MediaEntity> _medias = [];
+  final List<ImageEntity> _medias = [];
   int _currentIndex = 0;
   late PageController _controller;
 
@@ -119,7 +120,7 @@ class _ViewMediaState extends State<ViewMedia> {
       onPageChanged: (index) => setState(() => _currentIndex = index),
       itemCount: _medias.length,
       itemBuilder: (BuildContext context, int index) {
-        MediaEntity media = _medias[index];
+        ImageEntity media = _medias[index];
 
         Widget child = _buildContent(media);
 
@@ -144,13 +145,13 @@ class _ViewMediaState extends State<ViewMedia> {
     );
   }
 
-  Widget _buildContent(MediaEntity media) {
+  Widget _buildContent(ImageEntity media) {
     String url = media.url;
     if (media.isVideo) {
-      // return VideoLayout(url: url);
+      return VideoLayout(url: url);
     }
     if (widget.delegate == null) {
-      return ImageView(
+      return ImageCacheView(
         url: url,
         width: MediaQuery.of(context).size.width,
         isOrigin: true,

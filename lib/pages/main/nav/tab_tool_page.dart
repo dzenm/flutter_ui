@@ -85,7 +85,7 @@ class _TabToolPageState extends State<TabToolPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(children: [
-                ImageView(url: icon, width: 20, height: 20),
+                ImageCacheView(url: icon, width: 20, height: 20),
                 const SizedBox(width: 8),
                 Expanded(child: Text(name, style: TextStyle(color: theme.primaryText))),
               ]),

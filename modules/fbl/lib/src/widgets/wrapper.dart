@@ -240,64 +240,31 @@ class _KeepAliveWrapperState extends State<KeepAliveWrapper> with AutomaticKeepA
   bool get wantKeepAlive => widget.keepAlive;
 }
 
-/// 通用页面布局
-class PageWrapper extends StatelessWidget {
+class ScreenWrapper extends StatelessWidget {
   final Widget child;
-  final void Function()? onPop;
-  final bool isTouchRemoveFocus;
-  final bool canPop;
+  final Color color;
 
-  const PageWrapper({
+  const ScreenWrapper({
     super.key,
-    this.onPop,
     required this.child,
-    this.isTouchRemoveFocus = false,
-    this.canPop = true,
+    this.color = Colors.white,
   });
-
-  const PageWrapper.pop({
-    Key? key,
-    required Widget child,
-    void Function()? onPop,
-  }) : this(
-          key: key,
-          child: child,
-          onPop: onPop,
-          isTouchRemoveFocus: true,
-          canPop: false,
-        );
 
   @override
   Widget build(BuildContext context) {
-    Widget content = child;
-    if (!canPop) {
-      content = PopWrapper.custom(
-        onPopInvoked: (bool didPop) {
-          if (Navigator.of(context).canPop()) {
-            if (onPop == null) {
-              Navigator.pop(context);
-            } else {
-              onPop!();
-            }
-          }
-        },
-        child: content,
-      );
-    }
-
-    if (isTouchRemoveFocus) {
-      content = KeywordWrapper(child: content);
-    }
-    return content;
+    return Container(
+      color: color,
+      child: child,
+    );
   }
 }
 
-class PageContentWrapper extends StatelessWidget {
+class ScreenBodyWrapper extends StatelessWidget {
   final Widget child;
   final Color color;
   final EdgeInsets? padding;
 
-  const PageContentWrapper({super.key, required this.child, this.color = Colors.white, this.padding});
+  const ScreenBodyWrapper({super.key, required this.child, this.color = Colors.white, this.padding});
 
   @override
   Widget build(BuildContext context) {

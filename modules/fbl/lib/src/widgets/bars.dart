@@ -63,7 +63,6 @@ class CommonBar extends StatelessWidget implements PreferredSizeWidget {
       titleSpacing: titleSpacing,
       leading: _buildLeading(
         context,
-        titleColor,
         leading: leading,
         onBackTap: onBackTap,
       ),
@@ -98,8 +97,7 @@ class CommonBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   Widget? _buildLeading(
-    BuildContext context,
-    Color? titleColor, {
+    BuildContext context,{
     Widget? leading,
     Function? onBackTap,
   }) {

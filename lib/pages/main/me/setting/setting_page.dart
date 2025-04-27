@@ -111,7 +111,7 @@ class _SettingPageState extends State<SettingPage> with Logging {
                   textAlign: TextAlign.right,
                 ),
               ),
-              CommonWidget.divider(height: 8),
+              const DividerView(height: 8),
               TapLayout(
                 height: 50.0,
                 background: theme.white,
@@ -147,7 +147,7 @@ class _SettingPageState extends State<SettingPage> with Logging {
                 onTap: () => context.pushNamed(MeRouter.about),
                 child: SingleTextView(title: S.of(context).aboutMe, isShowForward: true),
               ),
-              CommonWidget.divider(height: 8),
+              const DividerView(height: 8),
               TapLayout(
                 height: 50.0,
                 background: theme.white,

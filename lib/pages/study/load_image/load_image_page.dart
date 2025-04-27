@@ -39,7 +39,7 @@ class _LoadImagePageState extends State<LoadImagePage> {
               const SizedBox(height: 8),
               CommonWidget.titleView('CachedNetworkImage'),
               const SizedBox(height: 8),
-              const ImageView(
+              const ImageCacheView(
                 url: 'https://www.wanandroid.com/blogimgs/62c1bd68-b5f3-4a3c-a649-7ca8c7dfabe6.png',
               ),
               const SizedBox(height: 16),

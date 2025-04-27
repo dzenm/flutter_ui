@@ -223,6 +223,7 @@ class _SingleCheck extends StatelessWidget {
   final Color color;
 
   const _SingleCheck({
+    super.key,
     required this.text,
     this.isCheck = false,
     required this.onChanged,

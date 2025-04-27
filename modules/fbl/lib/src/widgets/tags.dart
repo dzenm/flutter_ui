@@ -65,4 +65,3 @@ class BadgeTag extends StatelessWidget {
     );
   }
 }
-

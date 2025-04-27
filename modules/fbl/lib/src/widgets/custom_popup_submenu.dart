@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'tap.dart';
 
-typedef CustomRouteBuilder = Widget Function(PopupRoute route);
-
 const Duration _kWindowDuration = Duration(milliseconds: 0);
 const double _kWindowCloseIntervalEnd = 2.0 / 3.0;
 const double _kWindowMaxWidth = 240.0;
@@ -56,6 +54,7 @@ class CustomPopupSubmenu<T> extends StatelessWidget {
     GlobalKey targetKey,
     List<String> items, {
     void Function(String item)? onTap,
+    Alignment? alignment,
     double width = 100,
   }) async {
     // GlobalKey popupKey = GlobalKey();
@@ -101,7 +100,7 @@ class CustomPopupSubmenu<T> extends StatelessWidget {
                   (item) => Column(children: [
                     TapLayout(
                       height: 35,
-                      alignment: Alignment.centerLeft,
+                      alignment: alignment,
                       foreground: Colors.transparent,
                       onTap: () {
                         Navigator.pop(context);
@@ -178,7 +177,7 @@ class _CustomPopupSubmenuRoute<T> extends PopupRoute<T> {
     this.barrierLabel,
   }) : super();
 
-  final CustomRouteBuilder builder;
+  final Widget Function(PopupRoute route) builder;
   final RelativeRect position;
   final double elevation;
   final ThemeData? theme;
