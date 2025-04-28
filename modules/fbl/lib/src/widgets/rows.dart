@@ -587,6 +587,9 @@ class _EditLayoutState extends State<EditLayout> {
             maxLines: widget.maxLines,
             maxLength: widget.maxLength,
             maxLengthEnforcement: MaxLengthEnforcement.enforced,
+            onTapOutside: (event) {
+              _focusNode.unfocus();
+            },
             onChanged: widget.onChanged,
             controller: widget.controller,
           ),
