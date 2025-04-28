@@ -141,7 +141,7 @@ class _MePageState extends State<_MePage> with Logging {
     List<String> urls = [
       Assets.a,
     ];
-    List<MediaEntity> images = urls.map((url) => MediaEntity(url: url)).toList();
+    List<ImageEntity> images = urls.map((url) => ImageEntity(url: url)).toList();
     return SingleChildScrollView(
       padding: EdgeInsets.only(left: 16, right: 16, top: statusBarHeight),
       // AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()): iOS上拉下拉弹簧效果，

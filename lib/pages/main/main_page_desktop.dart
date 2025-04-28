@@ -86,7 +86,7 @@ class _MainPageDesktopState extends State<MainPageDesktop> with Logging {
     List<String> urls = [
       Assets.a,
     ];
-    List<MediaEntity> images = urls.map((url) => MediaEntity(url: url)).toList();
+    List<ImageEntity> images = urls.map((url) => ImageEntity(url: url)).toList();
     return TapLayout(
       border: Border.all(width: 3.0, color: const Color(0xfffcfcfc)),
       borderRadius: const BorderRadius.all(Radius.circular(32)),

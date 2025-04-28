@@ -47,7 +47,7 @@ class _InfoPageState extends State<InfoPage> {
             Assets.a,
             Assets.b,
           ];
-          List<MediaEntity> images = urls.map((url) => MediaEntity(url: url)).toList();
+          List<ImageEntity> images = urls.map((url) => ImageEntity(url: url)).toList();
           return TapLayout(
             height: 50,
             background: theme.white,

@@ -6,7 +6,7 @@ import 'package:fbl/fbl.dart';
 /// Created by a0010 on 2024/1/11 11:55
 ///
 class ViewMediaWidget extends StatefulWidget {
-  final List<MediaEntity> medias;
+  final List<ImageEntity> medias;
   final int initialItem;
 
   const ViewMediaWidget({

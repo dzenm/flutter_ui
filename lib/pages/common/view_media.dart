@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 ///
 class ViewMediaPage extends StatelessWidget {
   final Object? tag;
-  final List<MediaEntity> medias;
+  final List<ImageEntity> medias;
   final int initialItem;
   final ImageProvider<Object>? imageProvider;
   final DownloadCallback? onDownload;
@@ -29,7 +29,7 @@ class ViewMediaPage extends StatelessWidget {
   static Future<T?> show<T>(
     BuildContext context, {
     Object? tag,
-    required List<MediaEntity> medias,
+    required List<ImageEntity> medias,
     ImageProvider<Object>? imageProvider,
     int initialItem = 0,
     DownloadCallback? onDownload,
