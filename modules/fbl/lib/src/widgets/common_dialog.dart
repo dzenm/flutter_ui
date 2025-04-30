@@ -4,7 +4,6 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'common_widget.dart';
 import 'lists.dart';
 import 'tap.dart';
 
@@ -64,7 +63,7 @@ class CommonDialog {
     Function? onCameraTap,
     Function? onGalleryTap,
   }) async {
-    return await showListBottomSheet(context, [
+    return await showListBottomSheet<T>(context, [
       '拍照',
       '相册',
     ], (item) async {
