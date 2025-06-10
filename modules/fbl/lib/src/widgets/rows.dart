@@ -68,7 +68,7 @@ class SingleTextView extends StatelessWidget {
     this.textAlign = TextAlign.left,
     this.suffix,
     this.isShowForward = false,
-    this.badgeCount = -1,
+    this.badgeCount = 0,
     this.forwardColor,
   });
 
@@ -99,35 +99,36 @@ class SingleTextView extends StatelessWidget {
       ),
       if (text != null) SizedBox(width: 8 + contentDistance),
       // 后缀布局
-      Offstage(offstage: suffix == null, child: suffix),
+
+      if (suffix != null) suffix!,
       if (suffix != null && isShowForward) const SizedBox(width: 8),
       // 小红点
-      Offstage(offstage: badgeCount < 0, child: BadgeTag(count: badgeCount)),
+      if (badgeCount != 0) BadgeTag(count: badgeCount),
       // 下一级图标
       _buildForwardIcon(),
     ]);
   }
 
   Widget _buildSummaryText() {
-    return Offstage(
-      offstage: summary == null,
-      child: Text(
-        summary ?? '',
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(
-          fontSize: fontSize - 2,
-          color: summaryColor,
-        ),
+    if (summary == null) {
+      return const SizedBox.shrink();
+    }
+    return Text(
+      summary ?? '',
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: TextStyle(
+        fontSize: fontSize - 2,
+        color: summaryColor,
       ),
     );
   }
 
   Widget _buildForwardIcon() {
-    return Offstage(
-      offstage: !isShowForward,
-      child: Icon(Icons.keyboard_arrow_right, color: forwardColor, size: 16),
-    );
+    if (!isShowForward) {
+      return const SizedBox.shrink();
+    }
+    return Icon(Icons.keyboard_arrow_right, color: forwardColor, size: 16);
   }
 }
 
@@ -187,32 +188,34 @@ class TitleView extends StatelessWidget {
       _buildTitleText(),
       if (prefix != null) const SizedBox(width: 8),
       // 前缀布局
-      Offstage(offstage: prefix == null, child: prefix),
-      if ((icon != null || title != null) && !isDense) const SizedBox(width: 16),
+      if (prefix != null) prefix!,
+      if ((icon != null || image != null || title != null) && !isDense) const SizedBox(width: 16),
       // 文本内容(Expanded用于解决文本过长导致布局溢出的错误)
       mainAxisSize == MainAxisSize.max ? Expanded(child: _buildContentText()) : _buildContentText(),
     ]);
   }
 
   Widget _buildTitleIcon() {
-    Widget? child = icon != null ? Icon(icon, color: iconColor, size: fontSize + 4) : image ?? const SizedBox.shrink();
-    return Offstage(
-      offstage: icon == null && image == null,
-      child: child,
-    );
+    if (icon != null) {
+      return Icon(icon, color: iconColor, size: fontSize + 4);
+    }
+    if (image != null) {
+      return image!;
+    }
+    return const SizedBox.shrink();
   }
 
   Widget _buildTitleText() {
-    return Offstage(
-      offstage: title == null,
-      child: Text(
-        title ?? '',
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(
-          fontSize: fontSize,
-          color: titleColor,
-        ),
+    if (title == null) {
+      return const SizedBox.shrink();
+    }
+    return Text(
+      title ?? '',
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: TextStyle(
+        fontSize: fontSize,
+        color: titleColor,
       ),
     );
   }

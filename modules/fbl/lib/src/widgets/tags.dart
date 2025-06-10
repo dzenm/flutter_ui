@@ -8,59 +8,55 @@ import 'package:flutter/material.dart';
 /// 徽章标签
 /// BadgeTag(count: 10),
 class BadgeTag extends StatelessWidget {
-  final int count; // 展示的数量, 为0时展示小红点不展示数量，为-1时不展示
+  final int count; // 展示的数量, 为0时不展示小红点和数量，为负数时展示小红点不展示数量
   final Color color; // 背景颜色
+  final double fontSize; // 文本大小
 
   const BadgeTag({
     super.key,
-    this.count = -1,
+    this.count = 0,
     this.color = Colors.red,
+    this.fontSize = 10,
   });
 
   @override
   Widget build(BuildContext context) {
-    // 当数量小于0，不展示
-    if (count < 0) {
+    // 当数量为于0，不展示
+    if (count == 0) {
       return const SizedBox.shrink();
     }
-    bool isOver100 = count > 99;
-    bool isOver10 = count > 9;
-    bool isOver1 = count > 0;
-    bool isZero = count == 0;
+    bool isOver100 = count > 99; // 数量为三位数
+    bool isOver10 = 9 < count && count <= 99; // 数量为两位数
+    bool isOver1 = 0 < count && count <= 9; // 数量为一位数
+    bool isNegative = count < 0; // 负数
 
-    double width = 8; // 宽度
-    double height = 8; // 高度
     String text = ''; // 数量
     BoxShape shape = BoxShape.rectangle;
-    BorderRadius? borderRadius = BorderRadius.circular(8);
-    if (isZero) {
+    BorderRadius? borderRadius;
+    EdgeInsetsGeometry? padding;
+    if (isNegative) {
       shape = BoxShape.circle;
-      borderRadius = null;
+      padding = const EdgeInsets.symmetric(horizontal: 4, vertical: 4);
     } else if (isOver1) {
-      width = 16;
-      height = 16;
       text = '$count';
       shape = BoxShape.circle;
-      borderRadius = null;
+      padding = EdgeInsets.symmetric(horizontal: fontSize / 2, vertical: 1);
     } else if (isOver10) {
-      width = 20;
       text = '$count';
+      borderRadius = BorderRadius.circular(2 * fontSize);
+      padding = EdgeInsets.symmetric(horizontal: fontSize / 2, vertical: 1);
     } else if (isOver100) {
-      width = 24;
       text = '99+';
+      borderRadius = BorderRadius.circular(2 * fontSize);
+      padding = EdgeInsets.symmetric(horizontal: fontSize / 2, vertical: 1);
     }
     return Container(
-      height: height,
-      width: width,
+      padding: padding,
       alignment: Alignment.center,
-      decoration: BoxDecoration(
-        shape: shape,
-        borderRadius: borderRadius,
-        color: color,
-      ),
+      decoration: BoxDecoration(shape: shape, borderRadius: borderRadius, color: color),
       child: Text(
         text,
-        style: const TextStyle(color: Colors.white, fontSize: 8),
+        style: TextStyle(color: Colors.white, fontSize: fontSize),
       ),
     );
   }

@@ -263,6 +263,37 @@ class _MePageState extends State<_MePage> with Logging {
           isShowForward: true,
         ),
       ),
+      TapLayout(
+        height: 50.0,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        onTap: () {
+          context.read<MeModel>().updateText('测试数据');
+        },
+        child: SingleTextView(
+          icon: Icons.settings,
+          title: '测试数据',
+          isShowForward: true,
+        ),
+      ),
+      TapLayout(
+        height: 50.0,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        onTap: () {
+          context.read<MeModel>().updateText('这是测试数据');
+        },
+        child: SingleTextView(
+          icon: Icons.settings,
+          title: '这是测试数据',
+          isShowForward: true,
+        ),
+      ),
+      const SizedBox(height: 16),
+      Builder(builder: (context) {
+        logPage('Builder.build');
+        String text = context.select<MeModel, String>((model) => model.text);
+        return Text(text);
+      }),
+      const SizedBox(height: 16),
     ];
   }
 

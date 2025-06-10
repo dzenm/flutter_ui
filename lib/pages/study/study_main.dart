@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:fbl/fbl.dart';
+import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 
 ///
@@ -62,22 +63,29 @@ class StudyMain {
       Directory? library = await getLibraryDirectory();
       _log('获取文件路径：library=${library.path}');
     }
+
   }
 
   static void _implementsTest() {
     Friend friend = BusinessFriend();
-    _log('测试：${friend is GoodFriend}');
-    _log('测试：${friend is BusinessFriend}');
-    _log('测试：${friend is Child}');
-    _log('测试：${friend is NameMixin}');
-    _log('测试：${friend.toJson()}');
+    _log('测试：friend is GoodFriend=${friend is GoodFriend}');
+    _log('测试：friend is BusinessFriend=${friend is BusinessFriend}');
+    _log('测试：friend is Child=${friend is Child}');
+    _log('测试：friend is NameMixin=${friend is NameMixin}');
+    _log('测试：friend is Good=${friend is Good}');
+    _log('测试：friend is Business=${friend is Business}');
+    _log('测试：friend=${friend.toJson()}');
 
     Map<String, dynamic> json = {
       'userUid': '7i21g1n1j23u1g1',
       'userName': '玉皇大帝',
     };
-    User user = User.fromJson(json);
-    _log('测试：${user.toJson()}');
+    Data user = User.fromJson(json);
+    user.userUid = '17601487212';
+    if (user is User) {
+      user.userName = 'dingzhenyan';
+    }
+    _log('测试：user=${user.toJson()}');
   }
 
   static void _log(String msg) {
@@ -88,6 +96,10 @@ class StudyMain {
 abstract interface class Child {}
 
 abstract interface class Student {}
+
+abstract interface class Business {}
+
+abstract interface class Good {}
 
 abstract class People implements Student {}
 
@@ -109,7 +121,7 @@ class GoodFriend extends Friend {
       };
 }
 
-class BusinessFriend extends Friend with NameMixin, AddressMixin {
+class BusinessFriend extends Friend with NameMixin, AddressMixin implements Business {
   @override
   String address = 'my address';
 
@@ -154,7 +166,7 @@ class User extends Data {
   User({required super.userUid, required this.userName});
 
   User.fromJson(super.json)
-      : userName = '',
+      : userName = json['userName'],
         super.fromJson();
 
   @override

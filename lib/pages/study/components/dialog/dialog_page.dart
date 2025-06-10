@@ -117,7 +117,17 @@ class _DialogPageState extends State<DialogPage> {
                 context,
                 titleString: '昵称',
                 content: const Text('这是设置好的昵称'),
-                onPositiveTap: () => CommonDialog.showToast('修改成功'),
+                onPositiveTap: () {
+                  CommonDialog.showPromptDialog(
+                    context,
+                    titleString: '昵称',
+                    content: const Text('这是设置好的昵称'),
+                    onPositiveTap: () {
+                      CommonDialog.showToast('修改成功');
+                    },
+                  );
+                  CommonDialog.showToast('修改成功');
+                },
               ),
               child: Row(children: [_text('提示弹窗')]),
             ),
