@@ -26,6 +26,25 @@ class PickerView<T> extends StatefulWidget {
     this.onChanged,
   });
 
+  static Future<List<PickerEntity>?> show<T>(
+    BuildContext context, {
+    required List<PickerEntity> list,
+    List<String>? initialItem,
+    ValueChanged<List<String>>? onChanged,
+  }) async {
+    var result = await Navigator.push<List<PickerEntity>>(
+      context,
+      PickerPopupRoute<List<PickerEntity>>(
+        list: list,
+        initialItem: initialItem,
+        onChanged: onChanged == null ? null : (list) => onChanged(list.map((e) => e.name ?? '').toList()),
+        theme: Theme.of(context),
+        barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      ),
+    );
+    return result ?? [];
+  }
+
   /// 选择地区
   /// PickerView.showLocation(
   ///   context,

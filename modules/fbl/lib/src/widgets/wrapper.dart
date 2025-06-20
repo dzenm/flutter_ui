@@ -130,24 +130,14 @@ class PopWrapper extends StatelessWidget {
   //  )
   static Future<bool> showPrompt(
     BuildContext context, {
-    bool isChanged = false,
     WidgetBuilder? builder,
   }) async {
-    if (isChanged) {
-      var result = await showDialog<bool>(
-            context: context,
-            builder: builder ?? _buildPromptBackDialog,
-          ) ??
-          true;
-      await Future.delayed(const Duration(milliseconds: 300));
-      if (context.mounted && result) {
-        // 为true点击确定，false点击取消
-        Navigator.pop(context);
-      }
-    } else {
-      Navigator.pop(context);
-    }
-    return isChanged;
+    var result = await showDialog<bool>(
+          context: context,
+          builder: builder ?? _buildPromptBackDialog,
+        ) ??
+        true;
+    return result;
   }
 
   static DateTime _lastTap = DateTime.now(); //上次点击时间
@@ -264,13 +254,18 @@ class ScreenBodyWrapper extends StatelessWidget {
   final Color color;
   final EdgeInsets? padding;
 
-  const ScreenBodyWrapper({super.key, required this.child, this.color = Colors.white, this.padding});
+  const ScreenBodyWrapper({
+    super.key,
+    required this.child,
+    this.color = Colors.white,
+    this.padding,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: color,
-      padding: padding ?? EdgeInsets.all(16),
+      padding: padding ?? const EdgeInsets.all(16),
       child: child,
     );
   }

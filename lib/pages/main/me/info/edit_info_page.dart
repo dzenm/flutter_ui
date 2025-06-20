@@ -42,7 +42,13 @@ class _EditInfoPageState extends State<EditInfoPage> {
   Widget build(BuildContext context) {
     AppTheme theme = context.read<LocalModel>().theme;
     return PopWrapper.custom(
-      onPopInvoked: (didPop) => PopWrapper.showPrompt(context, isChanged: !_disableButton),
+      onPopInvoked: (didPop) async {
+        var result = await PopWrapper.showPrompt(context);
+        if (context.mounted && result) {
+          // 为true点击确定，false点击取消
+          Navigator.pop(context);
+        }
+      },
       child: Scaffold(
         body: Container(
           color: theme.background,

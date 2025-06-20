@@ -62,7 +62,13 @@ class _TextPageState extends State<TextPage> with Logging {
     return KeyboardMediaQuery(
       //用于键盘弹出的时候页面可以滚动到输入框的位置
       child: PopWrapper.custom(
-        onPopInvoked: (didPop) => PopWrapper.showPrompt(context, isChanged: text != newText),
+        onPopInvoked: (didPop) async {
+          var result = await PopWrapper.showPrompt(context);
+          if (context.mounted && result) {
+            // 为true点击确定，false点击取消
+            Navigator.pop(context);
+          }
+        },
         child: Scaffold(
           appBar: const CommonBar(
             title: '文本和输入框',

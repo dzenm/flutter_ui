@@ -12,13 +12,14 @@ class DeleteIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TapLayout(
-        background: Colors.transparent,
-        onTap: onTap,
-        child: const Icon(
-          Icons.cancel,
-          size: 20,
-          color: Colors.black,
-        ));
+      background: Colors.transparent,
+      onTap: onTap,
+      child: const Icon(
+        Icons.cancel,
+        size: 20,
+        color: Colors.black,
+      ),
+    );
   }
 }
 

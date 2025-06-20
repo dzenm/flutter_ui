@@ -39,6 +39,9 @@ class CustomPopupWindow extends StatefulWidget {
   /// 方向指示器是否相对于Target固定在中间，如果为true，那么 [directOffset] 的设置将失效
   final bool isPin;
 
+  /// 当Target比Popup小的时候，Popup在箭头所在方向固定居中；
+  final bool isPinCenterWhenTargetIsSmall;
+
   /// z轴的高度
   final double elevation;
 
@@ -57,6 +60,7 @@ class CustomPopupWindow extends StatefulWidget {
     bool? isOverflow,
     bool? isCollapsed,
     bool? isPin,
+    bool? isPinCenterWhenTargetIsSmall,
     this.elevation = 0,
     this.borderRadius,
   })  : direction = direction ?? PopupDirection.bottom,
@@ -64,7 +68,8 @@ class CustomPopupWindow extends StatefulWidget {
         directOffset = directOffset ?? const Offset(16, 16),
         isOverflow = isOverflow ?? false,
         isCollapsed = isCollapsed ?? false,
-        isPin = isPin ?? false;
+        isPin = isPin ?? false,
+        isPinCenterWhenTargetIsSmall = isPinCenterWhenTargetIsSmall ?? true;
 
   /// 创建一个自定义的PopupWindow
   static Future<T?> show<T>(

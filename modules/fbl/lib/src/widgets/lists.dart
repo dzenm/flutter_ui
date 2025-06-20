@@ -357,8 +357,8 @@ class ScrollConfigurationWidget extends StatelessWidget {
       behavior: ScrollBehave(),
       child: Scrollbar(
         thickness: 5, // 宽度
-        radius: const Radius.circular(5),
-        controller: controller, //圆角
+        radius: const Radius.circular(5), //圆角
+        controller: controller,
         child: child,
       ),
     );

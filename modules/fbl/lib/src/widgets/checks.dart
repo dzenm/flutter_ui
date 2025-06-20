@@ -10,7 +10,7 @@ import 'tap.dart';
 
 /// 有状态的单选组件
 class SingleCheck extends StatefulWidget {
-  final String text;
+  final Widget text;
   final bool initialState;
   final void Function(bool isCheck) onChanged;
   final Color color;
@@ -54,7 +54,7 @@ class _SingleCheckState extends State<SingleCheck> {
       child: Row(mainAxisSize: MainAxisSize.min, children: [
         Icon(icon, size: 14, color: myColor),
         const SizedBox(width: 8),
-        Text(widget.text, style: const TextStyle(fontSize: 16)),
+        widget.text,
       ]),
     );
   }
@@ -77,7 +77,7 @@ class _SingleCheckState extends State<SingleCheck> {
 /// )
 /// 单选组，配合 [_SingleCheck] 使用
 class CheckGroup extends StatefulWidget {
-  final List<String> list;
+  final List<Widget> titles;
   final int initialValue;
   final Color color;
   final Color selectColor;
@@ -91,7 +91,7 @@ class CheckGroup extends StatefulWidget {
 
   const CheckGroup({
     super.key,
-    required this.list,
+    required this.titles,
     this.initialValue = 0,
     this.color = Colors.grey,
     this.selectColor = Colors.blue,
@@ -135,12 +135,12 @@ class _CheckGroupState extends State<CheckGroup> {
 
   List<Widget> _buildItems() {
     List<Widget> widgets = [];
-    List<String> list = widget.list;
-    for (int index = 0; index < list.length; index++) {
+    List<Widget> titles = widget.titles;
+    for (int index = 0; index < titles.length; index++) {
       widgets.add(
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           _SingleCheck(
-            text: list[index],
+            text: titles[index],
             color: widget.color,
             isCheck: _selectedIndex == index,
             onChanged: () {
@@ -158,7 +158,7 @@ class _CheckGroupState extends State<CheckGroup> {
 
 /// 在一个单选组里选中一个选项
 class SingleCheckGroup extends StatefulWidget {
-  final List<String> titles;
+  final List<Widget> titles;
   final int initialItem;
   final double spacer;
   final void Function(int index)? onChecked;
@@ -193,7 +193,7 @@ class _SingleCheckGroupState extends State<SingleCheckGroup> {
     List<Widget> children = [];
     int len = widget.titles.length;
     for (int i = 0; i < len; i++) {
-      String text = widget.titles[i];
+      Widget text = widget.titles[i];
       bool isCheck = _selected == i;
       children.add(
         _SingleCheck(
@@ -217,7 +217,7 @@ class _SingleCheckGroupState extends State<SingleCheckGroup> {
 
 /// 无状态的单选组件
 class _SingleCheck extends StatelessWidget {
-  final String text;
+  final Widget text;
   final bool isCheck;
   final void Function() onChanged;
   final Color color;
@@ -246,7 +246,7 @@ class _SingleCheck extends StatelessWidget {
       child: Row(mainAxisSize: MainAxisSize.min, children: [
         Icon(icon, size: 14, color: myColor),
         const SizedBox(width: 8),
-        Text(text, style: const TextStyle(fontSize: 16)),
+        text,
       ]),
     );
   }

@@ -103,8 +103,8 @@ class CustomPopupSubmenu<T> extends StatelessWidget {
                       alignment: alignment,
                       foreground: Colors.transparent,
                       onTap: () {
-                        Navigator.pop(context);
                         if (onTap != null) onTap(item);
+                        Navigator.pop(context);
                       },
                       child: Text(item, style: const TextStyle(fontSize: 16)),
                     ),

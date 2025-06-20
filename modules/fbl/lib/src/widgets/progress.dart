@@ -23,18 +23,18 @@ class _UploadProgressViewState extends State<UploadProgressView> implements ln.O
   void initState() {
     super.initState();
     var nc = ln.NotificationCenter();
-    nc.addObserver(this, UploadName.kFileUploadSuccess);
-    nc.addObserver(this, UploadName.kFileUploading);
-    nc.addObserver(this, UploadName.kFileUploadFailure);
+    nc.addObserver(this, UploadNames.kFileUploadSuccess);
+    nc.addObserver(this, UploadNames.kFileUploading);
+    nc.addObserver(this, UploadNames.kFileUploadFailure);
   }
 
   @override
   void dispose() {
     super.dispose();
     var nc = ln.NotificationCenter();
-    nc.removeObserver(this, UploadName.kFileUploadSuccess);
-    nc.removeObserver(this, UploadName.kFileUploading);
-    nc.removeObserver(this, UploadName.kFileUploadFailure);
+    nc.removeObserver(this, UploadNames.kFileUploadSuccess);
+    nc.removeObserver(this, UploadNames.kFileUploading);
+    nc.removeObserver(this, UploadNames.kFileUploadFailure);
   }
 
   @override
@@ -52,27 +52,26 @@ class _UploadProgressViewState extends State<UploadProgressView> implements ln.O
   @override
   Future<void> onReceiveNotification(ln.Notification notification) async {
     String name = notification.name;
-    Map? info = notification.userInfo;
-    if (name == UploadName.kFileUploading) {
+    if (name == UploadNames.kFileUploading) {
       _show = true;
-      String? taskUid = info?['taskUid'];
+      String? taskUid = notification.userInfo?['taskUid'];
       if (taskUid != null && taskUid == widget.taskUid) {
-        double? progress = info?['progress'];
+        double? progress = notification.userInfo?['progress'];
         _progress = progress ?? 0.0;
         setState(() {});
       }
-    } else if (name == UploadName.kFileUploadSuccess) {
+    } else if (name == UploadNames.kFileUploadSuccess) {
       _show = false;
       setState(() {});
-    } else if (name == UploadName.kFileUploadFailure) {
+    } else if (name == UploadNames.kFileUploadFailure) {
       _show = false;
       setState(() {});
     }
   }
 }
 
-abstract class UploadName {
-  static const String kFileUploadSuccess = 'FileUploadSuccess';
-  static const String kFileUploading = 'FileUploading';
-  static const String kFileUploadFailure = 'FileUploadFailure';
+abstract class UploadNames {
+  static const kFileUploadSuccess = 'FileUploadSuccess';
+  static const kFileUploading = 'FileUploading';
+  static const kFileUploadFailure = 'FileUploadFailure';
 }

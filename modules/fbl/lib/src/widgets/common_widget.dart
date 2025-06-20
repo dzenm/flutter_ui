@@ -2,13 +2,6 @@ import 'package:flutter/material.dart';
 
 class CommonWidget {
 
-  static Widget? leadingView({bool isLight = true}) {
-    return BackButton(color: brightnessTheme(isLight: isLight));
-  }
-
-  static Color brightnessTheme({bool isLight = true}) => //
-      isLight ? Colors.white : Colors.black87;
-
   /// 标题
   static Widget titleView(
     String title, {
@@ -42,45 +35,6 @@ class CommonWidget {
         Expanded(child: Text(msg)),
       ]),
     );
-  }
-
-  /// highlight搜索字段
-  static List<TextSpan> getHighlightTextSpans(
-    String keyword,
-    String searchText, {
-    TextStyle? style,
-  }) {
-    List<TextSpan> spans = [];
-    if (keyword.isEmpty) return spans;
-    // 搜索关键字高亮忽略大小写
-    String wordL = keyword.toLowerCase(), keywordL = searchText.toLowerCase();
-    List<String> arr = wordL.split(keywordL);
-    TextStyle normalStyle = style ?? const TextStyle(color: Colors.grey, fontSize: 12);
-    TextStyle keywordStyle = normalStyle.copyWith(color: Colors.blue);
-    int preIndex = 0;
-    for (int i = 0; i < arr.length; i++) {
-      if (i != 0) {
-        // 搜索关键字高亮忽略大小写
-        preIndex = wordL.indexOf(keywordL, preIndex);
-        spans.add(
-          TextSpan(
-            text: keyword.substring(preIndex, preIndex + searchText.length),
-            style: keywordStyle,
-          ),
-        );
-      }
-      String val = arr[i];
-      if (val.isNotEmpty) {
-        preIndex = wordL.indexOf(val, preIndex);
-        spans.add(
-          TextSpan(
-            text: keyword.substring(preIndex, preIndex + val.length),
-            style: normalStyle,
-          ),
-        );
-      }
-    }
-    return spans;
   }
 
   /// 默认的阴影

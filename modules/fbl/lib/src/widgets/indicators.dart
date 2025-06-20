@@ -139,7 +139,9 @@ class WindmillIndicator extends StatefulWidget {
   State<WindmillIndicator> createState() => _WindmillIndicatorState();
 }
 
-class _WindmillIndicatorState extends State<WindmillIndicator> with SingleTickerProviderStateMixin {
+class _WindmillIndicatorState extends State<WindmillIndicator> //
+    with
+        SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -389,7 +391,10 @@ class LinearPercentIndicator extends StatefulWidget {
   State<StatefulWidget> createState() => _LinearPercentIndicatorState();
 }
 
-class _LinearPercentIndicatorState extends State<LinearPercentIndicator> with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+class _LinearPercentIndicatorState extends State<LinearPercentIndicator> //
+    with
+        SingleTickerProviderStateMixin,
+        AutomaticKeepAliveClientMixin {
   AnimationController? _animationController;
   Animation? _animation;
   double _percent = 0.0;
@@ -671,40 +676,40 @@ class CircularPercentIndicator extends StatefulWidget {
 
   const CircularPercentIndicator(
       {super.key,
-        this.percent = 0.0,
-        this.lineWidth = 5.0,
-        this.startAngle = 0.0,
-        required this.radius,
-        this.fillColor = Colors.transparent,
-        this.backgroundColor = const Color(0xFFB8C7CB),
-        Color? progressColor,
-        this.backgroundWidth = -1, //negative values ignored, replaced with lineWidth
-        this.linearGradient,
-        this.animation = false,
-        this.animationDuration = 500,
-        this.header,
-        this.footer,
-        this.center,
-        this.addAutomaticKeepAlive = true,
-        this.circularStrokeCap,
-        this.arcBackgroundColor,
-        this.arcType,
-        this.animateFromLastPercent = false,
-        this.reverse = false,
-        this.curve = Curves.linear,
-        this.maskFilter,
-        this.restartAnimation = false})
+      this.percent = 0.0,
+      this.lineWidth = 5.0,
+      this.startAngle = 0.0,
+      required this.radius,
+      this.fillColor = Colors.transparent,
+      this.backgroundColor = const Color(0xFFB8C7CB),
+      Color? progressColor,
+      this.backgroundWidth = -1, //negative values ignored, replaced with lineWidth
+      this.linearGradient,
+      this.animation = false,
+      this.animationDuration = 500,
+      this.header,
+      this.footer,
+      this.center,
+      this.addAutomaticKeepAlive = true,
+      this.circularStrokeCap,
+      this.arcBackgroundColor,
+      this.arcType,
+      this.animateFromLastPercent = false,
+      this.reverse = false,
+      this.curve = Curves.linear,
+      this.maskFilter,
+      this.restartAnimation = false})
       : assert(
-  linearGradient == null || progressColor == null,
-  'Cannot provide both linearGradient and progressColor',
-  ),
-        assert(
-        0.0 <= startAngle && startAngle <= 1.0,
-        'Percent value must be a double between 0.0 and 1.0',
+          linearGradient == null || progressColor == null,
+          'Cannot provide both linearGradient and progressColor',
         ),
         assert(
-        arcBackgroundColor == null || arcType != null,
-        'arcType is required when you arcBackgroundColor',
+          0.0 <= startAngle && startAngle <= 1.0,
+          'Percent value must be a double between 0.0 and 1.0',
+        ),
+        assert(
+          arcBackgroundColor == null || arcType != null,
+          'arcType is required when you arcBackgroundColor',
         ),
         progressColor = progressColor ?? Colors.red;
 
@@ -735,13 +740,13 @@ class _CircularPercentIndicatorState extends State<CircularPercentIndicator> //
       _animation = Tween(begin: 0.0, end: widget.percent).animate(
         CurvedAnimation(parent: _animationController!, curve: widget.curve),
       )..addListener(() {
-        setState(() {
-          _percent = _animation!.value;
+          setState(() {
+            _percent = _animation!.value;
+          });
+          if (widget.restartAnimation && _percent == 1.0) {
+            _animationController!.repeat(min: 0, max: 1.0);
+          }
         });
-        if (widget.restartAnimation && _percent == 1.0) {
-          _animationController!.repeat(min: 0, max: 1.0);
-        }
-      });
       _animationController!.forward();
     } else {
       _updateProgress();
@@ -791,7 +796,7 @@ class _CircularPercentIndicatorState extends State<CircularPercentIndicator> //
               radius: (widget.radius / 2) - widget.lineWidth / 2,
               lineWidth: widget.lineWidth,
               backgroundWidth: //negative values ignored, replaced with lineWidth
-              widget.backgroundWidth >= 0.0 ? (widget.backgroundWidth) : widget.lineWidth,
+                  widget.backgroundWidth >= 0.0 ? (widget.backgroundWidth) : widget.lineWidth,
               arcBackgroundColor: widget.arcBackgroundColor,
               arcType: widget.arcType,
               reverse: widget.reverse,
@@ -808,10 +813,10 @@ class _CircularPercentIndicatorState extends State<CircularPercentIndicator> //
       color: widget.fillColor,
       child: Container(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: items,
-          )),
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: items,
+      )),
     );
   }
 
@@ -839,18 +844,18 @@ class CirclePainter extends CustomPainter {
 
   CirclePainter(
       {required this.lineWidth,
-        required this.backgroundWidth,
-        required this.progress,
-        required this.radius,
-        required this.progressColor,
-        required this.backgroundColor,
-        this.startAngle = 0.0,
-        this.circularStrokeCap = CircularStrokeCap.round,
-        this.linearGradient,
-        required this.reverse,
-        this.arcBackgroundColor,
-        this.arcType,
-        this.maskFilter}) {
+      required this.backgroundWidth,
+      required this.progress,
+      required this.radius,
+      required this.progressColor,
+      required this.backgroundColor,
+      this.startAngle = 0.0,
+      this.circularStrokeCap = CircularStrokeCap.round,
+      this.linearGradient,
+      required this.reverse,
+      this.arcBackgroundColor,
+      this.arcType,
+      this.maskFilter}) {
     _paintBackground.color = backgroundColor;
     _paintBackground.style = PaintingStyle.stroke;
     _paintBackground.strokeWidth = backgroundWidth;

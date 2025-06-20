@@ -36,23 +36,25 @@ class _PopupPageState extends State<PopupPage> {
 
   Widget _buildMenuView() {
     List<String> list = ['左下', '正左', '左上', '上左', '正上', '上右', '右上', '正右', '右下', '下右', '正下', '下左'];
+    List<Widget> children = list.map((e) => Text(e)).toList();
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Flexible(
-          child: CheckGroup(
-        list: list,
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        initialValue: 10,
-        childAspectRatio: 2.2,
-        crossAxisCount: 3,
-        crossAxisSpacing: 2,
-        onChanged: (index) {
-          for (var direct in PopupDirection.values) {
-            if (direct.index == index) {
-              _direction = direct;
+        child: CheckGroup(
+          titles: children,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          initialValue: 10,
+          childAspectRatio: 2.2,
+          crossAxisCount: 3,
+          crossAxisSpacing: 2,
+          onChanged: (index) {
+            for (var direct in PopupDirection.values) {
+              if (direct.index == index) {
+                _direction = direct;
+              }
             }
-          }
-        },
-      )),
+          },
+        ),
+      ),
       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         SizedBox(
           key: _targetKey,

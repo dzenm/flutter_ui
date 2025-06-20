@@ -97,7 +97,7 @@ class CommonBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   Widget? _buildLeading(
-    BuildContext context,{
+    BuildContext context, {
     Widget? leading,
     Function? onBackTap,
   }) {
@@ -299,10 +299,10 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
 
         effectiveActionsIconButtonTheme = IconButtonThemeData(
             style: iconButtonTheme.style?.copyWith(
-              foregroundColor: actionsIconButtonStyle.foregroundColor,
-              overlayColor: actionsIconButtonStyle.overlayColor,
-              iconSize: actionsIconButtonStyle.iconSize,
-            ));
+          foregroundColor: actionsIconButtonStyle.foregroundColor,
+          overlayColor: actionsIconButtonStyle.overlayColor,
+          iconSize: actionsIconButtonStyle.iconSize,
+        ));
       }
 
       actions = IconButtonTheme(
@@ -433,11 +433,11 @@ class _ToolbarContainerLayout extends SingleChildLayoutDelegate {
 class _AppBarDefaultsM2 extends AppBarTheme {
   _AppBarDefaultsM2(this.context)
       : super(
-    elevation: 4.0,
-    shadowColor: const Color(0xFF000000),
-    titleSpacing: NavigationToolbar.kMiddleSpacing,
-    toolbarHeight: kToolbarHeight,
-  );
+          elevation: 4.0,
+          shadowColor: const Color(0xFF000000),
+          titleSpacing: NavigationToolbar.kMiddleSpacing,
+          toolbarHeight: kToolbarHeight,
+        );
 
   final BuildContext context;
   late final ThemeData _theme = Theme.of(context);
@@ -462,8 +462,8 @@ class _AppBarDefaultsM2 extends AppBarTheme {
 class _PreferredAppBarSize extends Size {
   _PreferredAppBarSize(this.toolbarHeight, this.bottomHeight)
       : super.fromHeight(
-    (toolbarHeight ?? kToolbarHeight) + (bottomHeight ?? 0),
-  );
+          (toolbarHeight ?? kToolbarHeight) + (bottomHeight ?? 0),
+        );
 
   final double? toolbarHeight;
   final double? bottomHeight;
@@ -501,14 +501,14 @@ class FloatNavigationBar extends StatefulWidget {
   final List<String>? title; // 显示的文本
 
   const FloatNavigationBar(
-      this.icons, {
-        super.key,
-        this.actionIndex = 0,
-        this.barHeight = 48.0,
-        this.actionColor = Colors.blue,
-        this.inactionColor = Colors.grey,
-        this.title,
-      });
+    this.icons, {
+    super.key,
+    this.actionIndex = 0,
+    this.barHeight = 48.0,
+    this.actionColor = Colors.blue,
+    this.inactionColor = Colors.grey,
+    this.title,
+  });
 
   @override
   State<StatefulWidget> createState() => _FloatNavigatorState();
@@ -550,9 +550,7 @@ class _FloatNavigatorState extends State<FloatNavigationBar> with SingleTickerPr
     double itemWidth = width / _itemCount;
 
     // 顶部偏离的距离
-    double top = getNavigationValue() <= 0.5
-        ? (getNavigationValue() * widget.barHeight * padding) - _radius / 3 * 2
-        : (1 - getNavigationValue()) * widget.barHeight * padding - _radius / 3 * 2;
+    double top = getNavigationValue() <= 0.5 ? (getNavigationValue() * widget.barHeight * padding) - _radius / 3 * 2 : (1 - getNavigationValue()) * widget.barHeight * padding - _radius / 3 * 2;
     // 左边偏移的距离
     double left = _moveTween * itemWidth + (itemWidth - _radius) / 2 - padding;
 
@@ -589,9 +587,8 @@ class _FloatNavigatorState extends State<FloatNavigationBar> with SingleTickerPr
           children: widget.icons
               .asMap()
               .map(
-                (i, v) => MapEntry(
-                i, GestureDetector(child: getItem(i, _activeIndex == i), onTap: () => _switchNavigationItem(i))),
-          )
+                (i, v) => MapEntry(i, GestureDetector(child: getItem(i, _activeIndex == i), onTap: () => _switchNavigationItem(i))),
+              )
               .values
               .toList(),
         ),
@@ -618,8 +615,7 @@ class _FloatNavigatorState extends State<FloatNavigationBar> with SingleTickerPr
     double newPosition = newIndex.toDouble();
     if (oldPosition != newPosition && _animationController?.status != AnimationStatus.forward) {
       _animationController?.reset();
-      Animation<double>? animation = Tween(begin: oldPosition, end: newPosition)
-          .animate(CurvedAnimation(parent: _animationController!, curve: Curves.easeInCubic));
+      Animation<double>? animation = Tween(begin: oldPosition, end: newPosition).animate(CurvedAnimation(parent: _animationController!, curve: Curves.easeInCubic));
       animation
         ..addListener(() => setState(() => _moveTween = animation.value))
         ..addStatusListener((AnimationStatus status) {

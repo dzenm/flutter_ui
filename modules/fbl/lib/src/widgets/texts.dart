@@ -258,3 +258,60 @@ class _AdapterSizeTextState extends State<AdapterSizeText> {
     return false;
   }
 }
+
+
+List<TextSpan> buildKeywordTextSpan(String text, {List<String> keywords = const [], TextStyle? style}) {
+  List<TextSpan> spans = [];
+  if (text.isEmpty) return [];
+  TextStyle normalStyle = style ?? const TextStyle(fontSize: 12);
+  TextStyle keywordStyle = normalStyle.copyWith();
+
+  if (keywords.isEmpty) {
+    spans.add(TextSpan(text: text, style: normalStyle));
+    return spans;
+  }
+
+  // 搜索关键字高亮忽略大小写
+  int len = text.length;
+  int index = 0, previousIndex = 0;
+  while (index < len) {
+    int start = index;
+    // 检查每一个关键字是否匹配
+    for (var keyword in keywords) {
+      // 检查关键字是否匹配
+      int end = start + keyword.length; // 匹配的长度在待匹配的实际下标
+      if (end >= len) {
+        // 超出范围
+        index = start = len;
+        break;
+      }
+      String temp = text.substring(start, end); // 第i个与关键字长度的相同的字符串
+      if (temp == keyword) {
+        // 匹配成功
+        start = end;
+        continue;
+      }
+    }
+    if (index == start) {
+      // 未找到
+      if (index < len - 1) {
+        // 未超出界限，进入下一个下标匹配
+        index++;
+        continue;
+      }
+    }
+    // 找到，记录结果
+    if (previousIndex < index && index <= len) {
+      String normal = text.substring(previousIndex, index);
+      spans.add(TextSpan(text: normal, style: normalStyle));
+    }
+    if (index < start && start <= len) {
+      String keyword = text.substring(index, start);
+      spans.add(TextSpan(text: keyword, style: keywordStyle));
+    } else {
+      break;
+    }
+    previousIndex = index = start;
+  }
+  return spans;
+}

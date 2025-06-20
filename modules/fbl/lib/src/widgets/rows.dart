@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'tags.dart';
+import 'tap.dart';
 
 ///
 /// Created by a0010 on 2024/12/30 15:58
@@ -598,6 +599,40 @@ class _EditLayoutState extends State<EditLayout> {
           ),
         ),
       ]),
+    );
+  }
+}
+
+/// 常用的子布局
+class SubTitleView extends StatelessWidget {
+  final String text;
+  final GestureTapCallback? onTap;
+  final Widget? image;
+  final Widget? suffix;
+  final bool isShowForward;
+
+  const SubTitleView({
+    super.key,
+    required this.text,
+    this.image,
+    this.suffix,
+    this.onTap,
+    this.isShowForward = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TapLayout(
+      background: Colors.white,
+      height: 45,
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      onTap: onTap,
+      child: SingleTextView(
+        image: image,
+        suffix: suffix,
+        isShowForward: isShowForward,
+        child: Text(text, style: const TextStyle(fontSize: 16)),
+      ),
     );
   }
 }
