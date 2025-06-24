@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 ///
 /// Created by a0010 on 2024/12/30 15:58
@@ -283,5 +284,56 @@ class KeywordWrapper extends StatelessWidget {
       onTap: () => FocusScope.of(context).unfocus(), //l 触摸收起键盘
       child: child,
     );
+  }
+}
+
+/// 自动固定屏幕垂直，[enterVertical] 在进入屏幕前是否需要固定屏幕垂直, [exitVertical] 在
+/// 退出屏幕后是否需要固定屏幕垂直，二者默认都为true，如需改变，实现并重写即可
+mixin FixedScreenVerticalMixin<T extends StatefulWidget> on State<T> {
+  bool get enterVertical => true; // 是否进入垂直
+  bool get exitVertical => true; // 是否退出垂直
+
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setPreferredOrientations(_getOrientation(enterVertical));
+  }
+
+  @override
+  void dispose() {
+    SystemChrome.setPreferredOrientations(_getOrientation(exitVertical));
+    super.dispose();
+  }
+
+  List<DeviceOrientation> _getOrientation(bool vertical) {
+    if (vertical) {
+      return [DeviceOrientation.portraitUp];
+    }
+    return [
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ];
+  }
+}
+
+/// 自动切换全屏和垂直屏幕
+mixin AutomaticFullScreenMixin<T extends StatefulWidget> on State<T> {
+  void toggleScreen() {
+    Orientation current = MediaQuery.of(context).orientation;
+    if (current == Orientation.landscape) {
+      // 如果是全屏就切换竖屏
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
+    } else {
+      // 如果是竖屏就切换全屏
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ]);
+    }
   }
 }

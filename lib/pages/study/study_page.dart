@@ -26,7 +26,7 @@ class StudyPage extends StatefulWidget {
   State<StatefulWidget> createState() => _StudyPageState();
 }
 
-class _StudyPageState extends State<StudyPage> with Logging {
+class _StudyPageState extends State<StudyPage> with Logging, FixedScreenVerticalMixin {
   late StudyProviderModel _model;
 
   @override
