@@ -64,7 +64,7 @@ class _InfoPageState extends State<InfoPage> {
                   child: Image.asset(Assets.a, fit: BoxFit.cover, width: 24, height: 24),
                 ),
               ),
-              isShowForward: true,
+              forward: const ForwardView(),
             ),
           );
         },
@@ -83,7 +83,7 @@ class _InfoPageState extends State<InfoPage> {
               title: S.of(context).id,
               text: id,
               textAlign: TextAlign.right,
-              isShowForward: true,
+              forward: const ForwardView(),
             ),
           );
         },
@@ -102,7 +102,7 @@ class _InfoPageState extends State<InfoPage> {
               title: S.of(context).username,
               text: username,
               textAlign: TextAlign.right,
-              isShowForward: true,
+              forward: const ForwardView(),
             ),
           );
         },
@@ -121,7 +121,7 @@ class _InfoPageState extends State<InfoPage> {
               title: S.of(context).email,
               text: email,
               textAlign: TextAlign.right,
-              isShowForward: true,
+              forward: const ForwardView(),
             ),
           );
         },
@@ -140,7 +140,7 @@ class _InfoPageState extends State<InfoPage> {
               title: S.of(context).coin,
               text: coinCount,
               textAlign: TextAlign.right,
-              isShowForward: true,
+              forward: const ForwardView(),
             ),
           );
         },

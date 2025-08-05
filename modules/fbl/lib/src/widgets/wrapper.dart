@@ -272,21 +272,6 @@ class ScreenBodyWrapper extends StatelessWidget {
   }
 }
 
-class KeywordWrapper extends StatelessWidget {
-  final Widget child;
-
-  const KeywordWrapper({super.key, required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onTap: () => FocusScope.of(context).unfocus(), //l 触摸收起键盘
-      child: child,
-    );
-  }
-}
-
 /// 自动固定屏幕垂直，[enterVertical] 在进入屏幕前是否需要固定屏幕垂直, [exitVertical] 在
 /// 退出屏幕后是否需要固定屏幕垂直，二者默认都为true，如需改变，实现并重写即可
 mixin FixedScreenVerticalMixin<T extends StatefulWidget> on State<T> {

@@ -35,8 +35,6 @@ class SingleItemView extends StatelessWidget {
         title: title,
         suffix: suffix,
         titleColor: titleColor,
-        isShowForward: isShowForward,
-        forwardColor: Colors.grey,
       ),
     );
   }

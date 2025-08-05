@@ -59,3 +59,16 @@ class AddView extends StatelessWidget {
     );
   }
 }
+
+/// 指向下一级的图标布局
+class ForwardView extends StatelessWidget {
+  final Color? color;
+  final double size;
+
+  const ForwardView({super.key, this.color, this.size = 16});
+
+  @override
+  Widget build(BuildContext context) {
+    return Icon(Icons.keyboard_arrow_right, color: color, size: size);
+  }
+}

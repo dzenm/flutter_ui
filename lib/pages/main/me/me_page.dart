@@ -187,7 +187,7 @@ class _MePageState extends State<_MePage> with Logging {
         onTap: push,
         child: SingleTextView(
           title: S.of(context).chineseMedicine,
-          isShowForward: true,
+          forward: const ForwardView(),
         ),
       ),
       const SizedBox(height: 8),
@@ -197,7 +197,7 @@ class _MePageState extends State<_MePage> with Logging {
         child: SingleTextView(
           icon: Icons.collections,
           title: S.of(context).collect,
-          isShowForward: true,
+          forward: const ForwardView(),
         ),
       ),
       _SelectedView(
@@ -206,7 +206,7 @@ class _MePageState extends State<_MePage> with Logging {
         child: SingleTextView(
           icon: Icons.money,
           title: S.of(context).coinRecord,
-          isShowForward: true,
+          forward: const ForwardView(),
         ),
       ),
       _SelectedView(
@@ -215,7 +215,7 @@ class _MePageState extends State<_MePage> with Logging {
         child: SingleTextView(
           icon: Icons.money,
           title: S.of(context).integralRankingList,
-          isShowForward: true,
+          forward: const ForwardView(),
         ),
       ),
       _SelectedView(
@@ -224,7 +224,7 @@ class _MePageState extends State<_MePage> with Logging {
         child: SingleTextView(
           icon: Icons.article,
           title: S.of(context).sharedArticle,
-          isShowForward: true,
+          forward: const ForwardView(),
         ),
       ),
       _SelectedView(
@@ -233,7 +233,7 @@ class _MePageState extends State<_MePage> with Logging {
         child: SingleTextView(
           icon: Icons.real_estate_agent_sharp,
           title: S.of(context).studyMainPage(''),
-          isShowForward: true,
+          forward: const ForwardView(),
         ),
       ),
       _SelectedView(
@@ -242,7 +242,7 @@ class _MePageState extends State<_MePage> with Logging {
         child: SingleTextView(
           icon: Icons.supervised_user_circle_sharp,
           title: S.of(context).profile,
-          isShowForward: true,
+          forward: const ForwardView(),
         ),
       ),
       _SelectedView(
@@ -251,7 +251,7 @@ class _MePageState extends State<_MePage> with Logging {
         child: SingleTextView(
           icon: Icons.local_mall_rounded,
           title: S.of(context).mall,
-          isShowForward: true,
+          forward: const ForwardView(),
         ),
       ),
       _SelectedView(
@@ -260,7 +260,7 @@ class _MePageState extends State<_MePage> with Logging {
         child: SingleTextView(
           icon: Icons.settings,
           title: S.of(context).setting,
-          isShowForward: true,
+          forward: const ForwardView(),
         ),
       ),
       TapLayout(
@@ -272,7 +272,7 @@ class _MePageState extends State<_MePage> with Logging {
         child: SingleTextView(
           icon: Icons.settings,
           title: '测试数据',
-          isShowForward: true,
+          forward: const ForwardView(),
         ),
       ),
       TapLayout(
@@ -284,7 +284,7 @@ class _MePageState extends State<_MePage> with Logging {
         child: SingleTextView(
           icon: Icons.settings,
           title: '这是测试数据',
-          isShowForward: true,
+          forward: const ForwardView(),
         ),
       ),
       const SizedBox(height: 16),

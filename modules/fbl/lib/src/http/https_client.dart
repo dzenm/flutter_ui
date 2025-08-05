@@ -208,7 +208,7 @@ final class HttpsClient {
         result = data;
       } else {
         // 根据前后端协议
-        if (data.errorCode == 0 || data.errorCode == 200) {
+        if (data.isSuccessful) {
           result = data.data;
         } else {
           error = parse(code: data.errorCode, msg: data.errorMsg);

@@ -26,14 +26,33 @@ class StudyPage extends StatefulWidget {
   State<StatefulWidget> createState() => _StudyPageState();
 }
 
-class _StudyPageState extends State<StudyPage> with Logging, FixedScreenVerticalMixin {
+class _StudyPageState extends State<StudyPage> //
+    with
+        Logging,
+        FixedScreenVerticalMixin,
+        KeyboardObserverMixin,
+        WidgetsBindingObserver {
   late StudyProviderModel _model;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+
     StudyMain.main();
     _model = StudyProviderModel();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+    didScreenKeyboardChanged();
   }
 
   @override
@@ -138,6 +157,14 @@ class _StudyPageState extends State<StudyPage> with Logging, FixedScreenVertical
         child: _text('加载图片'),
       ),
       const SizedBox(height: 8),
+      // Mdns服务
+      MaterialButton(
+        textColor: Colors.white,
+        color: theme.button,
+        onPressed: () => context.pushNamed(StudyRouter.mdns),
+        child: _text('MDNS服务'),
+      ),
+      const SizedBox(height: 8),
       // Provider
       MaterialButton(
         textColor: Colors.white,
@@ -170,8 +197,8 @@ class _StudyPageState extends State<StudyPage> with Logging, FixedScreenVertical
         // onPressed: () => PluginManager.openWifiHotspot(),
         child: _text('WI-FI热点'),
       ),
-      // 多窗口测试
       const SizedBox(height: 8),
+      // 多窗口测试
       MaterialButton(
         textColor: Colors.white,
         color: theme.button,
@@ -179,6 +206,7 @@ class _StudyPageState extends State<StudyPage> with Logging, FixedScreenVertical
         child: _text('多窗口测试'),
       ),
       const SizedBox(height: 8),
+      // 返回并传递数据
       MaterialButton(
         textColor: Colors.white,
         color: theme.button,
@@ -189,6 +217,7 @@ class _StudyPageState extends State<StudyPage> with Logging, FixedScreenVertical
         child: _text('返回并传递数据'),
       ),
       const SizedBox(height: 8),
+      // 选择文件并计算md5
       MaterialButton(
         textColor: Colors.white,
         color: theme.button,
@@ -204,6 +233,7 @@ class _StudyPageState extends State<StudyPage> with Logging, FixedScreenVertical
         child: _text('选择文件并计算md5'),
       ),
       const SizedBox(height: 8),
+      // 请求位置权限
       MaterialButton(
         textColor: Colors.white,
         color: theme.button,
@@ -214,6 +244,7 @@ class _StudyPageState extends State<StudyPage> with Logging, FixedScreenVertical
         child: _text('请求位置权限'),
       ),
       const SizedBox(height: 8),
+      // 请求麦克风权限
       MaterialButton(
         textColor: Colors.white,
         color: theme.button,
@@ -224,6 +255,7 @@ class _StudyPageState extends State<StudyPage> with Logging, FixedScreenVertical
         child: _text('请求麦克风权限'),
       ),
       const SizedBox(height: 8),
+      // 更改数据
       MaterialButton(
         textColor: Colors.white,
         color: theme.button,
@@ -233,6 +265,7 @@ class _StudyPageState extends State<StudyPage> with Logging, FixedScreenVertical
         child: _text('更改数据'),
       ),
       const SizedBox(height: 8),
+      // 重置数据
       MaterialButton(
         textColor: Colors.white,
         color: theme.button,
@@ -242,14 +275,57 @@ class _StudyPageState extends State<StudyPage> with Logging, FixedScreenVertical
         child: _text('重置数据'),
       ),
       const SizedBox(height: 8),
+      // 输入框监听
       Selector0<String>(
         builder: (c, text, w) {
           return Text(text);
         },
         selector: (context) => ProviderModel.of(context).value.toString(),
       ),
+      const SizedBox(height: 8),
+      TextField(
+        focusNode: focusNode,
+        onChanged: (s) {
+          setState(() => _writeText = s);
+        },
+      ),
+      const SizedBox(height: 8),
+      Text(_readText),
+      const SizedBox(height: 8),
+      // 读取数据
+      MaterialButton(
+        textColor: Colors.white,
+        color: theme.button,
+        onPressed: () async {
+          String path = _path;
+          File file = File(path);
+          String text = await file.readAsString();
+          _readText = text;
+          setState(() {});
+        },
+        child: _text('读取数据'),
+      ),
+      const SizedBox(height: 8),
+      // 写入数据
+      MaterialButton(
+        textColor: Colors.white,
+        color: theme.button,
+        onPressed: () async {
+          String text = _writeText;
+          String path = _path;
+          File file = File(path);
+          await file.writeAsString(text);
+          CommonDialog.showToast("写入成功");
+        },
+        child: _text('写入数据'),
+      ),
+      const SizedBox(height: 8),
     ];
   }
+
+  String _readText = "";
+  String _writeText = "";
+  String _path = LocalStorage().tempPath + "/test.txt";
 
   Future<String> calculateFileMd5(String filePath) async {
     final file = File(filePath);

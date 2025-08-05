@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'tags.dart';
+import 'icons.dart';
 import 'tap.dart';
 
 ///
@@ -18,19 +18,17 @@ import 'tap.dart';
 /// SingleTextView(
 ///   icon: Icons.language,
 ///   title: S.of(context).language,
-///   isShowForward: true,
+///   forward: const ForwardView(),
 ///   text: _convertLocale(locale),
 ///   isTextLeft: false,
 /// )
 class SingleTextView extends StatelessWidget {
   final IconData? icon; // 标题图标
   final Color? iconColor; // 标题图标颜色
-
   final Widget? image; // 标题图像
   final String? title; // 标题文本
   final Color? titleColor; // 标题文本颜色
   final double contentDistance; // 内容两边的间距
-
   final Widget? prefix; // 标题后内容前的布局
   final bool isDense; // 标题和内容是否存在间距
 
@@ -45,10 +43,8 @@ class SingleTextView extends StatelessWidget {
   final TextAlign textAlign; // 内容展示的起始位置
 
   final Widget? suffix; // 指向下一级按钮前的布局
-
-  final bool isShowForward; // 是否显示指向下一级图标
-  final int badgeCount; // 小红点数量
-  final Color? forwardColor; // 指向下一级图标颜色
+  final Widget? badge; // 徽章布局（小红点/数量提示）
+  final Widget? forward; // 前进布局（可点击进入下一级）
 
   const SingleTextView({
     super.key,
@@ -68,9 +64,8 @@ class SingleTextView extends StatelessWidget {
     this.fontSize = 14,
     this.textAlign = TextAlign.left,
     this.suffix,
-    this.isShowForward = false,
-    this.badgeCount = 0,
-    this.forwardColor,
+    this.badge,
+    this.forward,
   });
 
   @override
@@ -78,7 +73,7 @@ class SingleTextView extends StatelessWidget {
     return Row(children: [
       Expanded(
         child: Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.start, children: [
-          TitleView(
+          _TitleView(
             icon: icon,
             iconColor: iconColor,
             image: image,
@@ -100,16 +95,12 @@ class SingleTextView extends StatelessWidget {
       ),
       if (text != null) SizedBox(width: 8 + contentDistance),
       // 后缀布局
-
       if (suffix != null) suffix!,
-      if (suffix != null && isShowForward) const SizedBox(width: 8),
-      // 小红点
-      if (badgeCount != 0) BadgeTag(count: badgeCount),
-      // 下一级图标
-      _buildForwardIcon(),
+      if (suffix != null && (badge != null || forward != null)) const SizedBox(width: 8),
+      if (badge != null) badge!, // 小红点
+      if (forward != null) forward!, // 下一级
     ]);
   }
-
   Widget _buildSummaryText() {
     if (summary == null) {
       return const SizedBox.shrink();
@@ -124,13 +115,6 @@ class SingleTextView extends StatelessWidget {
       ),
     );
   }
-
-  Widget _buildForwardIcon() {
-    if (!isShowForward) {
-      return const SizedBox.shrink();
-    }
-    return Icon(Icons.keyboard_arrow_right, color: forwardColor, size: 16);
-  }
 }
 
 ///
@@ -141,7 +125,7 @@ class SingleTextView extends StatelessWidget {
 ///   isDense: true,
 ///   mainAxisSize: MainAxisSize.min,
 /// )
-class TitleView extends StatelessWidget {
+class _TitleView extends StatelessWidget {
   final IconData? icon; // 标题图标
   final Color? iconColor; // 标题图标颜色
 
@@ -159,9 +143,8 @@ class TitleView extends StatelessWidget {
 
   final double fontSize; //字体大小
   final TextAlign textAlign; // 内容展示的起始位置
-  final MainAxisSize mainAxisSize;
 
-  const TitleView({
+  const _TitleView({
     super.key,
     this.icon,
     this.iconColor,
@@ -176,12 +159,11 @@ class TitleView extends StatelessWidget {
     this.textColor,
     this.fontSize = 14,
     this.textAlign = TextAlign.left,
-    this.mainAxisSize = MainAxisSize.max,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Row(mainAxisSize: mainAxisSize, children: [
+    return Row(children: [
       // 标题图标
       _buildTitleIcon(),
       if ((icon != null || image != null) && title != null) SizedBox(width: 8 + contentDistance),
@@ -192,7 +174,7 @@ class TitleView extends StatelessWidget {
       if (prefix != null) prefix!,
       if ((icon != null || image != null || title != null) && !isDense) const SizedBox(width: 16),
       // 文本内容(Expanded用于解决文本过长导致布局溢出的错误)
-      mainAxisSize == MainAxisSize.max ? Expanded(child: _buildContentText()) : _buildContentText(),
+      Flexible(child: _buildContentText()),
     ]);
   }
 
@@ -630,7 +612,7 @@ class SubTitleView extends StatelessWidget {
       child: SingleTextView(
         image: image,
         suffix: suffix,
-        isShowForward: isShowForward,
+        forward: isShowForward ? const ForwardView() : null,
         child: Text(text, style: const TextStyle(fontSize: 16)),
       ),
     );

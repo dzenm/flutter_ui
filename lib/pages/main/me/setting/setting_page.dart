@@ -89,7 +89,7 @@ class _SettingPageState extends State<SettingPage> with Logging {
                 child: SingleTextView(
                   icon: Icons.color_lens,
                   title: S.of(context).theme,
-                  isShowForward: true,
+                  forward: const ForwardView(),
                   suffix: Container(
                     height: 24,
                     width: 24,
@@ -106,7 +106,7 @@ class _SettingPageState extends State<SettingPage> with Logging {
                 child: SingleTextView(
                   icon: Icons.language,
                   title: S.of(context).language,
-                  isShowForward: true,
+                  forward: const ForwardView(),
                   text: _convertLocale(locale),
                   textAlign: TextAlign.right,
                 ),
@@ -118,8 +118,8 @@ class _SettingPageState extends State<SettingPage> with Logging {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: SingleTextView(
                   title: S.of(context).loginRecord,
-                  badgeCount: 0,
-                  isShowForward: true,
+                  badge: const BadgeTag(count: 0),
+                  forward: const ForwardView(),
                 ),
               ),
               TapLayout(
@@ -136,8 +136,8 @@ class _SettingPageState extends State<SettingPage> with Logging {
                 child: SingleTextView(
                   title: S.of(context).checkUpgrade,
                   suffix: Text('v$currentVersion'),
-                  badgeCount: 0,
-                  isShowForward: true,
+                  badge: const BadgeTag(count: 0),
+                  forward: const ForwardView(),
                 ),
               ),
               TapLayout(
@@ -145,7 +145,7 @@ class _SettingPageState extends State<SettingPage> with Logging {
                 background: theme.white,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 onTap: () => context.pushNamed(MeRouter.about),
-                child: SingleTextView(title: S.of(context).aboutMe, isShowForward: true),
+                child: SingleTextView(title: S.of(context).aboutMe, forward: const ForwardView()),
               ),
               const DividerView(height: 8),
               TapLayout(
@@ -153,7 +153,7 @@ class _SettingPageState extends State<SettingPage> with Logging {
                 background: theme.white,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 onTap: () => HttpManager().logout(),
-                child: SingleTextView(title: S.of(context).exitLogout, isShowForward: true),
+                child: SingleTextView(title: S.of(context).exitLogout, forward: const ForwardView()),
               ),
             ],
           ),

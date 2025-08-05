@@ -31,7 +31,7 @@ class UpgradeView extends StatelessWidget {
     PrepareCallback? onPrepare,
   }) async {
     String currentVersion = BuildConfig.packageInfo.version;
-    if (!needUpgrade(currentVersion, version.version)) return null;
+    if (!needUpgrade(currentVersion, version.newVersion)) return null;
     var result = await showDialog<bool>(
       barrierColor: Colors.black26,
       context: context,
@@ -46,11 +46,18 @@ class UpgradeView extends StatelessWidget {
             onPrepare: onPrepare,
           ),
         );
-        return DialogWrapper(
-          color: Colors.transparent,
-          isTouchOutsideDismiss: false,
-          borderRadius: const BorderRadius.all(Radius.circular(4)),
-          child: child,
+        return PopWrapper(
+          onPopInvoked: (bool didPop) {
+            if (didPop) {
+              Navigator.of(context).pop();
+            }
+          },
+          child: DialogWrapper(
+            color: Colors.transparent,
+            isTouchOutsideDismiss: version.isForceUpgrade,
+            borderRadius: const BorderRadius.all(Radius.circular(4)),
+            child: child,
+          ),
         );
       },
     );
@@ -178,7 +185,7 @@ class _DownloadViewState extends State<_DownloadView> {
     }
     _cancel = CancelToken();
     await HttpsClient().download(
-      widget.version.url!,
+      widget.version.url,
       cancelToken: _cancel,
       success: (data) async {
         await file.writeAsBytes(data);
@@ -213,7 +220,7 @@ class _DownloadViewState extends State<_DownloadView> {
     var external = await getExternalCacheDirectories();
     // /storage/emulated/0/Android/data/packageName/cache/
     String? cachePath = external?.firstOrNull?.path;
-    String savePath = '$cachePath/app_release v${widget.version.version}.apk';
+    String savePath = '$cachePath/app_release v${widget.version.newVersion}.apk';
     Log.d('文件路径：savePath=$savePath');
     return savePath;
   }
@@ -277,10 +284,12 @@ class _DownloadViewState extends State<_DownloadView> {
       height: 40,
       alignment: Alignment.center,
       borderRadius: const BorderRadius.all(Radius.circular(4)),
-      onTap: () {
-        _cancel?.cancel('取消下载');
-        Navigator.pop(context, false);
-      },
+      onTap: widget.version.isForceUpgrade
+          ? null
+          : () {
+              _cancel?.cancel('取消下载');
+              Navigator.pop(context, false);
+            },
       child: const Text('稍后升级'),
     );
   }
@@ -288,42 +297,67 @@ class _DownloadViewState extends State<_DownloadView> {
 
 /// 版本更新的数据对应的实体类
 class AppVersionEntity {
-  String? uid;
-  String? title;
-  String? content;
-  String? url;
-  int? status; // 0为未发布，1为已发布
-  String? version;
+  String get upgradeUid => _upgradeUid;
+  late String _upgradeUid; // 更新的ID
+  String get newVersion => _newVersion;
+  late String _newVersion; // 更新的版本
+  String get title => _title;
+  late String _title; // 更新的标题
+  String get content => _content; // 更新的内容
+  late String _content; // 更新的内容
+  String get url => _url;
+  late String _url; // 更新的url
+  bool get isForceUpgrade => _isForceUpgrade;
+  bool _isForceUpgrade = false; // 是否强制更新，0:不强制  1:强制
+  bool get isPublish => _isPublish;
+  late bool _isPublish; // 0为未发布，1为已发布
 
-  AppVersionEntity({this.uid, this.title, this.content, this.url, this.status = 0, this.version});
+  AppVersionEntity({
+    String? upgradeUid,
+    String? newVersion,
+    String? title,
+    String? content,
+    String? url,
+    bool? upgradeStatus,
+    bool? isForceUpgrade,
+    bool? isPublish,
+  })  : _upgradeUid = upgradeUid ?? '',
+        _newVersion = newVersion ?? '',
+        _title = title ?? '',
+        _content = content ?? '',
+        _url = url ?? '',
+        _isForceUpgrade = isForceUpgrade ?? false,
+        _isPublish = isPublish ?? false;
 
   AppVersionEntity.fromJson(Map<String, dynamic> json) {
-    uid = json['uid'];
-    title = json['title'];
-    content = json['content'];
-    url = json['url'];
-    status = json['status'];
-    version = json['version'];
+    _upgradeUid = json['uid'] ?? '';
+    _newVersion = json['version'] ?? '';
+    _title = json['title'] ?? '';
+    _content = json['content'] ?? '';
+    _url = json['url'] ?? '';
+    _isForceUpgrade = (json['forceUpgrade'] ?? 0) == 1;
+    _isPublish = (json['upgradeStatus'] ?? 0) == 1;
   }
 
   Map<String, dynamic> toJson() => {
-        'uid': uid,
-        'title': title,
-        'content': content,
-        'url': url,
-        'status': status,
-        'version': version,
+        'uid': _upgradeUid,
+        'newVersion': _newVersion,
+        'title': _title,
+        'content': _content,
+        'url': _url,
+        'forceUpgrade': _isForceUpgrade ? 1 : 0,
+        'upgradeStatus': _isPublish ? 1 : 0,
       };
 
   @override
   String toString() {
     StringBuffer sb = StringBuffer('{');
-    sb.write("\"uid\":\"$uid\"");
-    sb.write("\"title\":\"$title\"");
-    sb.write(",\"content\":\"$content\"");
-    sb.write(",\"url\":\"$url\"");
-    sb.write(",\"status\":\"$status\"");
-    sb.write(",\"version\":\"$version\"");
+    sb.write("\"uid\":\"$_upgradeUid\"");
+    sb.write(",\"_newVersion\":\"$_newVersion\"");
+    sb.write("\"title\":\"$_title\"");
+    sb.write(",\"content\":\"$_content\"");
+    sb.write(",\"url\":\"$_url\"");
+    sb.write(",\"status\":\"$_isPublish\"");
     sb.write('}');
     return sb.toString();
   }

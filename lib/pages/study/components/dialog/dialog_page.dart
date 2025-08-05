@@ -168,13 +168,13 @@ class _DialogPageState extends State<DialogPage> {
               color: theme.appbar,
               onPressed: () {
                 AppVersionEntity version = AppVersionEntity(
-                  uid: '1',
+                  upgradeUid: '1',
                   title: '测试',
                   content: '不知道更新了什么',
                   url: 'https://ucdl.25pp.com/fs08/2023/08/14/6/110_612a0e357913d43e504044debbddff35.apk?cc=850312032&nrd=0&f'
                       'name=%E7%99%BE%E5%BA%A6%E5%9C%B0%E5%9B%BE&productid=&packageid=601220125&pkg=com.baidu.BaiduMap&vcode=1'
                       '277&yingid=pp_wap_ppcn&vh=7641e6ccaaae10b280b634ba8e225deb&sf=133168324&sh=10&appid=29805&apprd=',
-                  version: '1.2.0',
+                  newVersion: '1.2.0',
                 );
                 UpgradeView.show(context, version: version);
               },

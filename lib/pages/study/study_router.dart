@@ -1,4 +1,5 @@
 import 'package:fbl/fbl.dart';
+import 'package:flutter_ui/pages/study/mdns/mdns_page.dart';
 
 import 'components/chat/chat_page.dart';
 import 'components/city/city_page.dart';
@@ -37,6 +38,7 @@ class StudyRouter {
   static const String desktop = 'desktop';
   static const String http = 'http';
   static const String loadImage = 'loadImage';
+  static const String mdns = 'mdns';
   static const String provider = 'provider';
   static const String router = 'router';
   static const String video = 'video';
@@ -97,6 +99,13 @@ class StudyRouter {
           path: '/loadImage',
           builder: (context, state) {
             return const LoadImagePage();
+          },
+        ),
+        ARoute(
+          name: mdns,
+          path: '/mdns',
+          builder: (context, state) {
+            return const RadarPage();
           },
         ),
         ARoute(

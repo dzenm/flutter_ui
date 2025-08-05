@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:crypto/crypto.dart';
@@ -20,7 +21,7 @@ typedef CompleteCallback = void Function(int count, int size);
 ///
 /// Created by a0010 on 2022/9/1 11:56
 /// 文件工具类
-class LocalStorage with _DirectoryMixin {
+class LocalStorage with _DirectoryMixin, FileIOMixin {
   LocalStorage._internal();
 
   factory LocalStorage() => _instance;
@@ -363,6 +364,92 @@ abstract mixin class _DirectoryMixin {
   }
 
   void _log(String text) => _logPrint == null ? null : _logPrint!(text, tag: 'LocalStorage');
+}
+
+/// 文件IO操作
+mixin class FileIOMixin {
+  /// 读取文件的字符串
+  /// [path] 读取的文件路径
+  Future<String> readString(String? path) async {
+    if (path == null || path.isEmpty) {
+      return "";
+    }
+    File file = File(path);
+    if (!await file.exists()) {
+      return "";
+    }
+    return file.readAsString();
+  }
+
+  /// 写入字符串到文件
+  /// [path] 写入的文件路径
+  /// [text] 写入的文件内容
+  Future<File?> writeString(String? path, String? text) async {
+    if (path == null || path.isEmpty) {
+      return null;
+    }
+    if (text == null || text.isEmpty) {
+      return null;
+    }
+    File file = File(path);
+    if (!await file.exists()) {
+      Directory dir = file.parent;
+      await dir.create(recursive: true);
+    }
+    return file.writeAsString(text);
+  }
+
+  /// 读取文件的二进制流并转化为字符串
+  /// [path] 读取的文件路径
+  Future<String> readBinaryAsString(String? path) async {
+    try {
+      if (path == null || path.isEmpty) {
+        return "";
+      }
+      File file = File(path);
+      if (!await file.exists()) {
+        return "";
+      }
+      final sink = file.openRead();
+      var contents = sink.transform(utf8.decoder).transform(const LineSplitter());
+      StringBuffer sb = StringBuffer();
+      await for (var text in contents) {
+        sb.write(text);
+      }
+      return sb.toString();
+    } catch (err) {
+      return "";
+    }
+  }
+
+  /// 字符串转化为二进制流写入到文件
+  /// [path] 写入的文件路径
+  /// [text] 写入的文件内容
+  Future<File?> writeStringAsBinary(String? path, String? text) async {
+    try {
+      if (path == null || path.isEmpty) {
+        return null;
+      }
+      if (text == null || text.isEmpty) {
+        return null;
+      }
+      File file = File(path);
+      if (!await file.exists()) {
+        Directory dir = file.parent;
+        await dir.create(recursive: true);
+      }
+      List<String> lines = text.split("\n");
+      final sink = file.openWrite(mode: FileMode.write);
+      final encoder = utf8.encoder;
+      for (var line in lines) {
+        sink.add(encoder.convert('$line\n')); // 写入每一行数据，并添加换行符
+      }
+      await sink.close(); // 写入完成关闭流
+      return file;
+    } catch (err) {
+      return null;
+    }
+  }
 }
 
 /// 对路径进行解析获取常用的字符信息

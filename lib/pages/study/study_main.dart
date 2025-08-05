@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:fbl/fbl.dart';
-import 'package:flutter/widgets.dart';
+import 'package:get_ip_address/get_ip_address.dart';
 import 'package:path_provider/path_provider.dart';
 
 ///
@@ -13,9 +13,7 @@ class StudyMain {
   static void main() async {
     await _pathProviderTest();
     _implementsTest();
-
-    Uri uri = Uri.parse('https://dart.dev/guides/libraries/library-tour#utility-classes');
-    _log(uri.toString());
+    _getIP();
   }
 
   static Future<void> _pathProviderTest() async {
@@ -63,7 +61,6 @@ class StudyMain {
       Directory? library = await getLibraryDirectory();
       _log('获取文件路径：library=${library.path}');
     }
-
   }
 
   static void _implementsTest() {
@@ -86,6 +83,30 @@ class StudyMain {
       user.userName = 'dingzhenyan';
     }
     _log('测试：user=${user.toJson()}');
+
+    Map<String, dynamic> map = {
+      'name': '清华大学'
+    };
+    School school = School.fromJson(map);
+    _log('测试：school=${school.toJson()}');
+
+  }
+
+  static void _getIP() async {
+    try {
+      /// Initialize Ip Address
+      var ipAddress = IpAddress(type: RequestType.json);
+
+      /// Get the IpAddress based on requestType.
+      dynamic data = await ipAddress.getIpAddress();
+      _log(data.toString());
+    } on IpAddressException catch (exception) {
+      /// Handle the exception.
+      _log(exception.message);
+    }
+
+    Uri uri = Uri.parse('https://dart.dev/guides/libraries/library-tour#utility-classes');
+    _log(uri.toString());
   }
 
   static void _log(String msg) {
@@ -174,4 +195,24 @@ class User extends Data {
         ...super.toJson(),
         'userName': userName,
       };
+}
+
+class School {
+  String get name => _name;
+  late final String _name;
+
+  School({String? name}) : _name = name ?? '';
+
+  School.fromJson(Map<String, dynamic> json) {
+    _name = json['name'];
+  }
+
+  Map<String, dynamic> toJson() => {
+        'name': _name,
+      };
+}
+
+class SocketAddress {
+  final String ip;
+  SocketAddress(this.ip);
 }

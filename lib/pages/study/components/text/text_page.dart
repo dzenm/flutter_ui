@@ -154,7 +154,7 @@ class _TextPageState extends State<TextPage> with Logging {
                   onTap: () => context.pushNamed(MeRouter.setting),
                   child: SingleTextView(
                     title: S.of(context).setting,
-                    isShowForward: true,
+                    forward: const ForwardView(),
                     prefix: const BadgeTag(count: 10),
                   ),
                 ),
@@ -165,7 +165,7 @@ class _TextPageState extends State<TextPage> with Logging {
                     title: S.of(context).phone,
                     text: '17601487212',
                     textAlign: TextAlign.right,
-                    isShowForward: true,
+                    forward: const ForwardView(),
                   ),
                 ),
                 TapLayout(
@@ -176,7 +176,7 @@ class _TextPageState extends State<TextPage> with Logging {
                     title: '生日',
                     text: '1997/2/12',
                     textAlign: TextAlign.right,
-                    isShowForward: true,
+                    forward: const ForwardView(),
                   ),
                 ),
                 TapLayout(
@@ -186,8 +186,8 @@ class _TextPageState extends State<TextPage> with Logging {
                     icon: Icons.adb,
                     title: '关于',
                     textAlign: TextAlign.right,
-                    isShowForward: true,
-                    badgeCount: 0,
+                    forward: const ForwardView(),
+                    badge: const BadgeTag(count: 0),
                   ),
                 ),
                 TapLayout(
@@ -206,7 +206,7 @@ class _TextPageState extends State<TextPage> with Logging {
                         height: 24,
                       ),
                     ),
-                    isShowForward: true,
+                    forward: const ForwardView(),
                   ),
                 ),
                 TapLayout(
@@ -231,8 +231,8 @@ class _TextPageState extends State<TextPage> with Logging {
                   child: const SingleTextView(
                     title: '登陆记录',
                     summary: '查看最近所有的登录记录',
-                    badgeCount: 0,
-                    isShowForward: true,
+                    badge: const BadgeTag(count: 0),
+                    forward: const ForwardView(),
                   ),
                 ),
                 const SizedBox(height: 24),
