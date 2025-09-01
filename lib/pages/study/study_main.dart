@@ -14,6 +14,10 @@ class StudyMain {
     await _pathProviderTest();
     _implementsTest();
     _getIP();
+
+    int value = 0;
+    Stranger flag = Stranger.parse(value);
+    _log('枚举结果：${flag.isNormal}');
   }
 
   static Future<void> _pathProviderTest() async {
@@ -111,6 +115,20 @@ class StudyMain {
 
   static void _log(String msg) {
     Log.d(msg, tag: _tag);
+  }
+}
+
+enum Stranger {
+  none(0),
+  temporary(1);
+  final int value; //
+  const Stranger(this.value); //
+  bool get isNormal => this == Stranger.none;//
+  static Stranger parse(int? value) {
+    for (var item in Stranger.values) {
+      if (item.value == value) return item;
+    }
+    return Stranger.none;
   }
 }
 

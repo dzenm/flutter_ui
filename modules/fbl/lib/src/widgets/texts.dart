@@ -259,7 +259,6 @@ class _AdapterSizeTextState extends State<AdapterSizeText> {
   }
 }
 
-
 List<TextSpan> buildKeywordTextSpan(String text, {List<String> keywords = const [], TextStyle? style}) {
   List<TextSpan> spans = [];
   if (text.isEmpty) return [];
@@ -314,4 +313,72 @@ List<TextSpan> buildKeywordTextSpan(String text, {List<String> keywords = const 
     previousIndex = index = start;
   }
   return spans;
+}
+
+/// 前面带图标的文本
+class IconText extends StatelessWidget {
+  final String text;
+  final TextStyle? style;
+  final double distance;
+  final IconData icon;
+  final double? size;
+  final Color? color;
+
+  const IconText({
+    super.key,
+    required this.text,
+    this.distance = 6,
+    this.style,
+    required this.icon,
+    this.size,
+    this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(mainAxisSize: MainAxisSize.min, children: [
+      Icon(icon, size: size, color: color),
+      SizedBox(width: distance),
+      Text(
+        text,
+        style: style ?? const TextStyle(fontSize: 16),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+    ]);
+  }
+}
+
+/// 前面带图片的文本
+class ImageText extends StatelessWidget {
+  final String text;
+  final TextStyle? style;
+  final double distance;
+  final String path;
+  final double? size;
+  final Color? color;
+
+  const ImageText({
+    super.key,
+    required this.text,
+    this.distance = 6,
+    this.style,
+    required this.path,
+    this.size = 20,
+    this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(mainAxisSize: MainAxisSize.min, children: [
+      Image.asset(path, color: color, width: size, height: size),
+      SizedBox(width: distance),
+      Text(
+        text,
+        style: style ?? const TextStyle(fontSize: 16),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+    ]);
+  }
 }

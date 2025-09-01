@@ -1,3 +1,5 @@
+import 'dart:math';
+
 /// 创建日志打印
 typedef LoggerBuilder = Logger Function(LogManager manager);
 
@@ -7,7 +9,7 @@ typedef LoggerBuilder = Logger Function(LogManager manager);
 /// ║                                                                                   .                                                  ║
 /// ║                                          .       [_DefaultConsolePrinter] ←───┐                                                      ║
 /// ║                                                                               │                                                      ║
-/// ║               [DefaultLogger] ←─── [LoggerMixin] ←───┐                        └───┬─── [Logger.printers] ←─── [LogPrinter.output]    ║
+/// ║              [_DefaultLogger] ←─── [LoggerMixin] ←───┐                        └───┬─── [Logger.printers] ←─── [LogPrinter.output]    ║
 /// ║                                                      │                            ├─── [Logger.http]                                 ║
 /// ║                 [LogManager] ←───┐                   │                            ├─── [Logger.db]                                   ║
 /// ║                                  │                   │                            ├─── [Logger.page]                                 ║
@@ -29,13 +31,13 @@ typedef LoggerBuilder = Logger Function(LogManager manager);
 /// ╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
 /// 日志输出
 /// 直接输出
-///  Log.d('this is log');
+///  Log.d("this is log");
 /// 如果需要自定义，请在打印前，调用 [Log.init] 进行设置。
 ///
 /// [Logging] 是可以通过混入在其它类里，然后直接调用日志输出的级别，默认tag为当前混入
 /// 的类的类名
 ///
-/// [Logger] 是组装日志信息的结构，[DefaultLogger] 为默认的展示格式，如果对当前展示的格式
+/// [Logger] 是组装日志信息的结构，[_DefaultLogger] 为默认的展示格式，如果对当前展示的格式
 /// 不满意，可以进行继承实现，然后通过 [LogManager.builder] 进行构建
 ///
 /// [LogPrinter] 是日志最终处理的结果，[_DefaultConsolePrinter] 是默认的处理方式，如果需
@@ -63,14 +65,21 @@ final class Log {
 /// Log with class name
 mixin Logging {
   void logVerbose(Object? msg) => Log.v(msg, tag: _tag);
+
   void logHttp(Object? msg) => Log.h(msg, tag: _tag);
+
   void logDB(Object? msg) => Log.b(msg, tag: _tag);
+
   void logPage(Object? msg) => Log.p(msg, tag: _tag);
+
   void logDebug(Object? msg) => Log.d(msg, tag: _tag);
+
   void logInfo(Object? msg) => Log.i(msg, tag: _tag);
   void logWarning(Object? msg) => Log.w(msg, tag: _tag);
+
   void logError(Object? msg) => Log.e(msg, tag: _tag);
-  String get _tag => '$runtimeType'.replaceAll('_', '').replaceAll('State', '');
+
+  String get _tag => "$runtimeType".replaceAll("_", "").replaceAll("State", "");
 }
 
 /// 日志处理的方式
@@ -79,9 +88,10 @@ abstract class LogPrinter {
   void output(
     LogManager manager,
     String title,
+    String titleReplaceBlank,
     String body, {
-    String head = '',
-    String tail = '',
+    String head = "",
+    String tail = "",
   });
 }
 
@@ -91,36 +101,25 @@ class _DefaultConsolePrinter extends LogPrinter {
   void output(
     LogManager manager,
     String title,
+    String titleReplaceBlank,
     String body, {
-    String head = '',
-    String tail = '',
+    String head = "",
+    String tail = "",
   }) {
-    LogConfig config = Log._manager.config;
-    int limitLength = config.limitLength;
+    LogConfig config = manager.config;
     int chunkLength = config.chunkLength;
-    String carriageReturn = config.carriageReturn;
+    int size = body.length;
 
-    int index = body.indexOf('\n');
-    int size = index == -1 ? body.length : index;
-    if (0 < limitLength && limitLength < size) {
-      body = '${body.substring(0, limitLength - 3)}...';
-      size = limitLength;
-    }
-    int start = 0, end = chunkLength;
-    for (; end <= size; start = end, end += chunkLength) {
-      _print(title + head + body.substring(start, end) + carriageReturn + tail);
-    }
-    if (start >= size) {
-      // all chunks printed
-      assert(start == size, 'should not happen');
-    } else if (start == 0) {
-      // body too short
-      _print(title + head + body + tail);
-    } else {
-      // print last chunk
-      _print(title + head + body.substring(start) + tail);
+    int start = 0, end = 0;
+    while (end < size) {
+      start = end;
+      end = min(start + chunkLength, size);
+      // first line print title, others line print blank
+      String text = start == 0 ? title : titleReplaceBlank;
+      _print(text + head + body.substring(start, end) + tail);
     }
   }
+
   /// override for redirecting outputs
   void _print(dynamic object) => print(object);
 }
@@ -141,112 +140,122 @@ abstract class Logger {
 
 /// 组装和输出不同级别[Level]的日志
 mixin LoggerMixin implements Logger {
-  static String colorRedLight = '31m';
-  static String colorRedDark = '91m';
-  static String colorGreenLight = '32m';
-  static String colorGreenDark = '92m';
-  static String colorYellowLight = '33m';
-  static String colorYellowDark = '93m';
-  static String colorBlueLight = '34m';
-  static String colorBlueDark = '94m';
-  static String colorMagentaLight = '35m';
-  static String colorMagentaDark = '95m';
-  static String colorCyanLight = '36m';
-  static String colorCyanDark = '96m';
-  static String colorWhiteLight = '37m';
-  static String colorWhiteDark = '97m';
-  static String colorGreyDark = '99m';
-  static String colorStart = '\x1B[';
-  static String colorClear = '\x1B[0m';
+  static String colorRedLight = "31m";
+  static String colorRedDark = "91m";
+  static String colorGreenLight = "32m";
+  static String colorGreenDark = "92m";
+  static String colorYellowLight = "33m";
+  static String colorYellowDark = "93m";
+  static String colorBlueLight = "34m";
+  static String colorBlueDark = "94m";
+  static String colorMagentaLight = "35m";
+  static String colorMagentaDark = "95m";
+  static String colorCyanLight = "36m";
+  static String colorCyanDark = "96m";
+  static String colorWhiteLight = "37m";
+  static String colorWhiteDark = "97m";
+  static String colorGreyDark = "99m";
+  static String colorStart = "\x1B[";
+  static String colorClear = "\x1B[0m";
+  static String colorForeground = "\x1B[1;37;";
 
   int get _level => manager.level.value;
 
-  int output(Object? msg, {String? level, String? tag, String color = ''}) {
+  int output(Object? msg, {String level = "", String? tag, String color = ""}) {
     LogConfig config = manager.config;
 
-    // 给日志增加颜色
-    String head = '', tail = '';
+    // 为文本展示增加颜色
+    String head = "", tail = "";
     if (config.isColorful && color.isNotEmpty) {
-      head = '$colorStart$color '; // 字符变色的前缀
-      tail = ' $colorClear'; // 字符变色的后缀
+      head = "$colorStart$color "; // 字符变色的前缀
+      tail = " $colorClear"; // 字符变色的后缀
     }
 
-    String? now = config.showTime ? ' ${config.now}': '';
-    StringBuffer sb = StringBuffer();
-    // 基本信息
-    sb..write(config.packageName)
-      ..write(now);
-    // 输出调用的位置
-    if (config.showCaller) {
-      LogCaller? myCaller = LogCaller.parse(StackTrace.current);
-      if (myCaller != null) {
-        sb.write('   $myCaller   ');
+    String title = "", titleReplaceBlank = "";
+    if (!config.showOnlyMessage) {
+      String caller = "";
+      // 输出调用的位置
+      if (config.showCaller) {
+        LogCaller? myCaller = LogCaller.parse(StackTrace.current);
+        if (myCaller != null) {
+          caller = "   $myCaller   ";
+        }
       }
-    }
-    // 输出tag
-    String myTag = tag ?? manager.tag;
-    if (config.isAligned) {
-      int len = config.alignedTagMaxLength;
-      if (len < myTag.length) {
-        myTag = '${myTag.substring(0, len - 3)}...';
+      // 输出tag
+      String myTag = tag ?? manager.tag;
+      int tagMaxLength = config.alignedTagMaxLength;
+      if (tagMaxLength < myTag.length) {
+        myTag = "${myTag.substring(0, tagMaxLength - 2)}..";
       }
-      myTag = myTag.padRight(len);
+      myTag = myTag.padRight(tagMaxLength);
+      // 输出Level
+      String myLevel = "";
+      if (config.isColorful && color.isNotEmpty) {
+        String? colorful = color.replaceFirst("3", "4").replaceFirst("9", "10");
+        myLevel = "$colorForeground$colorful$level$colorClear";
+      }
+
+      // 基本信息
+      StringBuffer sb = StringBuffer()
+        ..write(config.packageName) // 包名
+        ..write(config.now) // 时间
+        ..write(caller); // 调用栈
+
+      // 获取展示的标题文本长度
+      int len = sb.length + 4 + tagMaxLength + level.length;
+      StringBuffer blank = StringBuffer();
+      while (len-- > 0) {
+        blank.write(" ");
+      }
+
+      // 携带颜色的标签和级别信息
+      sb
+        ..write(" $head$myTag$tail ")
+        ..write(myLevel);
+
+      title = sb.toString();
+      titleReplaceBlank = blank.toString();
     }
-    sb.write(' $head$myTag$tail ');
-    // 输出Level
-    if (config.isColorful && color.isNotEmpty) {
-      String? colorful = color.replaceFirst('3', '4').replaceFirst('9', '10');
-      sb.write('\x1B[1;37;$colorful${level ?? ''}$colorClear');
-    }
-    String title = sb.toString();
+
     String body = msg.toString();
     for (var printer in printers) {
-      printer.output(manager, title, body, head: head, tail: tail);
+      printer.output(manager, title, titleReplaceBlank, body, head: head, tail: tail);
     }
     return body.length;
   }
 
   @override
-  void verbose(Object? msg, {String? tag}) => (_level & LogManager._kVerboseFlag) > 0 &&
-      output(msg, level: 'VERBOSE', tag: tag, color: colorWhiteLight) > 0;
+  void verbose(Object? msg, {String? tag}) => (_level & LogManager._kVerboseFlag) > 0 && output(msg, level: "VERBOSE", tag: tag, color: colorWhiteLight) > 0;
   @override
-  void http(Object? msg, {String? tag}) => (_level & LogManager._kVerboseFlag) > 0 &&
-      output(msg, level: ' HTTP  ', tag: tag, color: colorMagentaLight) > 0;
+  void http(Object? msg, {String? tag}) => (_level & LogManager._kVerboseFlag) > 0 && output(msg, level: " HTTP  ", tag: tag, color: colorMagentaLight) > 0;
   @override
-  void db(Object? msg, {String? tag}) => (_level & LogManager._kVerboseFlag) > 0 &&
-      output(msg, level: '  DB   ', tag: tag, color: colorCyanDark) > 0;
+  void db(Object? msg, {String? tag}) => (_level & LogManager._kVerboseFlag) > 0 && output(msg, level: "  DB   ", tag: tag, color: colorCyanDark) > 0;
   @override
-  void page(Object? msg, {String? tag}) => (_level & LogManager._kVerboseFlag) > 0 &&
-      output(msg, level: ' PAGE  ', tag: tag, color: colorGreenLight) > 0;
+  void page(Object? msg, {String? tag}) => (_level & LogManager._kVerboseFlag) > 0 && output(msg, level: " PAGE  ", tag: tag, color: colorGreenLight) > 0;
   @override
-  void debug(Object? msg, {String? tag}) => (_level & LogManager._kDebugFlag) > 0 &&
-      output(msg, level: ' DEBUG ', tag: tag, color: colorBlueDark) > 0;
+  void debug(Object? msg, {String? tag}) => (_level & LogManager._kDebugFlag) > 0 && output(msg, level: " DEBUG ", tag: tag, color: colorBlueDark) > 0;
   @override
-  void info(Object? msg, {String? tag}) => (_level & LogManager._kInfoFlag) > 0 &&
-      output(msg, level: ' INFO  ', tag: tag, color: colorCyanLight) > 0;
+  void info(Object? msg, {String? tag}) => (_level & LogManager._kInfoFlag) > 0 && output(msg, level: " INFO  ", tag: tag, color: colorCyanLight) > 0;
   @override
-  void warming(Object? msg, {String? tag}) => (_level & LogManager._kWarningFlag) > 0 &&
-      output(msg, level: 'WARMING', tag: tag, color: colorYellowDark) > 0;
+  void warming(Object? msg, {String? tag}) => (_level & LogManager._kWarningFlag) > 0 && output(msg, level: "WARMING", tag: tag, color: colorYellowDark) > 0;
   @override
-  void error(Object? msg, {String? tag}) => (_level & LogManager._kErrorFlag) > 0 &&
-      output(msg, level: ' ERROR ', tag: tag, color: colorRedLight) > 0;
+  void error(Object? msg, {String? tag}) => (_level & LogManager._kErrorFlag) > 0 && output(msg, level: " ERROR ", tag: tag, color: colorRedLight) > 0;
 }
 
 /// 输出日志工具
-class DefaultLogger with LoggerMixin {
-  final LogManager logManager;
-  final List<LogPrinter> logPrinters;
-  DefaultLogger({
-    required this.logManager,
-    List<LogPrinter>? logPrinters,
-  }) : logPrinters = [
-      _DefaultConsolePrinter(),
-      ...logPrinters ?? []
-    ];
+class _DefaultLogger with LoggerMixin {
+  _DefaultLogger({
+    required LogManager logManager,
+    List<LogPrinter> logPrinters = const [],
+  })  : _manager = logManager,
+        _printers = [_DefaultConsolePrinter(), ...logPrinters];
+
   @override
-  LogManager get manager => logManager;
+  LogManager get manager => _manager;
+  final LogManager _manager;
   @override
-  List<LogPrinter> get printers => logPrinters;
+  List<LogPrinter> get printers => _printers;
+  final List<LogPrinter> _printers;
 }
 
 /// 日志管理
@@ -275,71 +284,62 @@ class LogManager {
   }) : level = isDebug ? Level.debug : level,
        config = config ?? const LogConfig();
 
-  Logger get logger => builder == null
-      ? DefaultLogger(logManager: this)
-      : builder!(this);
-  static const String _tag = 'Log';
+  Logger get logger => builder == null ? _DefaultLogger(logManager: this) : builder!(this);
+  static const String _tag = "Log";
 }
 
 /// 日志的配置信息
 class LogConfig {
   final bool isColorful; // 是否在输出的日志展示颜色
-  final bool isAligned; // 是否在输出的日志保持对齐
   final bool showCaller; // 输出的日志是否展示调用的行数
   final bool showTime; // 输出的日志是否展示打印的时间
+  final bool showOnlyMessage; // 输出的日志是否只展示打印的信息
   final int alignedTagMaxLength; // 输出的日志Tag最大长度
   final String packageName; // 输出的包名，为空则不展示
   final int chunkLength; // 日志过长时分块处理日志的长度
-  final int limitLength; // 限制最大的输出长度, -1为不限制
-  final String carriageReturn; // 换行标识 ↩️ ↩  ⏎
 
   const LogConfig({
     this.isColorful = true,
-    this.isAligned = true,
     this.showCaller = false,
     this.showTime = true,
+    this.showOnlyMessage = false,
     this.alignedTagMaxLength = 24,
-    this.packageName = '',
-    this.chunkLength = 1000,
-    this.limitLength = -1,
-    this.carriageReturn = '⏎',
+    this.packageName = "",
+    this.chunkLength = 300,
   });
 
-  /// full string for current time: 'yyyy-mm-dd HH:MM:SS'
+  /// full string for current time: "yyyy-mm-dd HH:MM:ss SSS"
   String get now {
-    DateTime time = DateTime.now();
-    String m = _twoDigits(time.month);
-    String d = _twoDigits(time.day);
-    String h = _twoDigits(time.hour);
-    String min = _twoDigits(time.minute);
-    String sec = _twoDigits(time.second);
-    String mill = '${time.millisecond}'.padLeft(3, '0');
-    return '${time.year}-$m-$d $h:$min:$sec $mill';
+    if (!showTime) return "";
+    DateTime d = DateTime.now();
+    String t(int val) => val > 9 ? "$val" : "0$val";
+    return " ${d.year}-${t(d.month)}-${t(d.day)} "
+        "${t(d.hour)}:${t(d.minute)}:${t(d.second)} "
+        "${d.millisecond.toString().padLeft(3, "0")}";
   }
-  String _twoDigits(int n) => n >= 10  ? '$n' : '0$n';
 }
 
 /// 输出调用所在的行数
 class LogCaller {
-  LogCaller(this.name, this.path, this.line);
-
   final String name;
   final String path;
   final int line;
 
-  @override
-  String toString() => '$path:$line';
+  LogCaller(this.name, this.path, this.line);
 
-  /// locate the real caller: '#3      ...'
+  @override
+  String toString() => "$path:$line";
+
+  /// locate the real caller: "#3      ..."
   static String? locate(StackTrace current) {
-    List<String> array = current.toString().split('\n');
+    List<String> array = current.toString().split("\n");
     for (String line in array) {
-      if (line.contains('fbl/src/config/log.dart:')) {
+      if (line.contains("fbl/src/config/log.dart:")) {
         // skip for Log
         continue;
       }
-      // assert(line.startsWith('#3      '), 'unknown stack trace: $current');
-      if (line.startsWith('#')) {
+      // assert(line.startsWith("#3      "), "unknown stack trace: $current");
+      if (line.startsWith("#")) {
         return line;
       }
     }
@@ -354,22 +354,22 @@ class LogCaller {
       // unknown format
       return null;
     }
-    // skip '#0      '
-    int pos = text.indexOf(' ');
+    // skip "#0      "
+    int pos = text.indexOf(" ");
     text = text.substring(pos + 1).trimLeft();
-    // split 'name' & '(path:line:column)'
-    pos = text.lastIndexOf(' ');
+    // split "name" & "(path:line:column)"
+    pos = text.lastIndexOf(" ");
     String name = text.substring(0, pos);
     String tail = text.substring(pos + 1);
-    String path = 'unknown.file';
-    String line = '-1';
-    int pos1 = tail.indexOf(':');
+    String path = "unknown.file";
+    String line = "-1";
+    int pos1 = tail.indexOf(":");
     if (pos1 > 0) {
-      pos = tail.indexOf(':', pos1 + 1);
+      pos = tail.indexOf(":", pos1 + 1);
       if (pos > 0) {
         path = tail.substring(1, pos);
         pos1 = pos + 1;
-        pos = tail.indexOf(':', pos1);
+        pos = tail.indexOf(":", pos1);
         if (pos > 0) {
           line = tail.substring(pos1, pos);
         } else if (pos1 < tail.length) {

@@ -176,7 +176,7 @@ class _TextPageState extends State<TextPage> with Logging {
                     title: '生日',
                     text: '1997/2/12',
                     textAlign: TextAlign.right,
-                    forward: const ForwardView(),
+                    forward: ForwardView(),
                   ),
                 ),
                 TapLayout(
@@ -186,8 +186,8 @@ class _TextPageState extends State<TextPage> with Logging {
                     icon: Icons.adb,
                     title: '关于',
                     textAlign: TextAlign.right,
-                    forward: const ForwardView(),
-                    badge: const BadgeTag(count: 0),
+                    forward: ForwardView(),
+                    badge: BadgeTag(count: 0),
                   ),
                 ),
                 TapLayout(
@@ -231,8 +231,8 @@ class _TextPageState extends State<TextPage> with Logging {
                   child: const SingleTextView(
                     title: '登陆记录',
                     summary: '查看最近所有的登录记录',
-                    badge: const BadgeTag(count: 0),
-                    forward: const ForwardView(),
+                    badge: BadgeTag(count: 0),
+                    forward: ForwardView(),
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -255,6 +255,20 @@ class _TextPageState extends State<TextPage> with Logging {
                 const AdapterSizeText(
                   '此两者，同出而异名，同谓之玄，玄之又玄，众妙之门。',
                   style: TextStyle(color: Colors.red),
+                ),
+                const SizedBox(height: 8),
+                ExtendedTextField(
+                  controller: _textController,
+                  specialTextSpanBuilder: MySpecialTextSpanBuilder(showAtBackground: true, type: BuilderType.extendedTextField),
+                  onChanged: (s) {
+                    logDebug('输入文本变化：s=$s');
+                  },
+                  onEditingComplete: () {
+                    logDebug('编辑完成');
+                  },
+                  onSubmitted: (s) {
+                    logDebug('提交结果：s=$s');
+                  },
                 ),
                 const SizedBox(height: 24),
               ]),

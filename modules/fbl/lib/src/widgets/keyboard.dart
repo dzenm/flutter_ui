@@ -39,18 +39,6 @@ abstract class KeyboardNames {
 ///
 /// abstract class _AbstractChatInputWidgetState extends State<ChatInputWidget> //
 ///     with KeyboardObserverMixin, WidgetsBindingObserver {
-///   @override
-///   void initState() {
-///     super.initState();
-///     WidgetsBinding.instance.addObserver(this);
-///   }
-///
-///   @override
-///   void dispose() {
-///     WidgetsBinding.instance.removeObserver(this);
-///
-///     super.dispose();
-///   }
 ///
 ///   @override
 ///   void didChangeMetrics() {
@@ -63,12 +51,22 @@ abstract class KeyboardNames {
 /// 监听键盘的变化
 mixin KeyboardObserverMixin<T extends StatefulWidget> on State<T> //
     implements
+        WidgetsBindingObserver,
         ln.Observer {
   FocusNode get focusNode => _focusNode;
   late FocusNode _focusNode; // 输入框的焦点实例
 
   SoftKeyboardValue get value => _value;
   final SoftKeyboardValue _value = SoftKeyboardValue();
+
+  /// 获取通用的最大高度
+  double get maxHeight {
+    double pixelRatio = MediaQuery.devicePixelRatioOf(context);
+    double height = _value._maxHeight / pixelRatio;
+    String s = height.toStringAsFixed(2);
+    double maxHeight = double.parse(s);
+    return maxHeight;
+  }
 
   @override
   void initState() {
@@ -79,6 +77,8 @@ mixin KeyboardObserverMixin<T extends StatefulWidget> on State<T> //
 
     var nc = ln.NotificationCenter();
     nc.addObserver(this, KeyboardNames.kGlobalScreenTap);
+
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
@@ -88,10 +88,12 @@ mixin KeyboardObserverMixin<T extends StatefulWidget> on State<T> //
 
     var nc = ln.NotificationCenter();
     nc.removeObserver(this, KeyboardNames.kGlobalScreenTap);
+
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
-  void didScreenKeyboardChanged({bool isPostFrame = false}) {
+  void didScreenKeyboardChanged() {
     if (!mounted) return;
     if (!_focusNode.hasFocus) return;
     if (_focusNode.context == null) return;
@@ -108,72 +110,51 @@ mixin KeyboardObserverMixin<T extends StatefulWidget> on State<T> //
     // View.of(context) 获取的高度需要除以屏幕的像素比
     double height = View.of(context).viewInsets.bottom;
     _value.setHeight(height);
-    Log.d('键盘变化：height=$height', tag: 'KeyboardObserverMixin');
 
-    double lastHeight = _value._lastHeight;
+    double oldHeight = _value._lastHeight;
     double maxHeight = _value._maxHeight;
     SoftKeyboardPosition position = _value._position;
 
-    if (_value._isRunning) {
-      // 正在变化中
-
-      if ((position == SoftKeyboardPosition.inBottom && height == 0.0) || //
-          (position == SoftKeyboardPosition.inTop && height == maxHeight)) {
-        // 如果在最底部/最顶部重复执行，将不处理这次的回调
-        return;
-      }
-      if (lastHeight < height) {
-        // 键盘在上升（持续弹出）
-        _value.setLastHeight(height);
-        _value.setSoftKeyboardPosition(SoftKeyboardPosition.rising);
-        onKeyboardChanging(SoftKeyboardPosition.rising, height);
-      } else if (lastHeight > height) {
-        // 键盘在下降（持续关闭）
-        _value.setLastHeight(height);
-        _value.setSoftKeyboardPosition(SoftKeyboardPosition.declining);
-        onKeyboardChanging(SoftKeyboardPosition.declining, height);
-      } else if (position == SoftKeyboardPosition.declining && lastHeight == height && height == 0.0) {
-        // 表示键盘从顶部开始向下关闭且此时高度为0.0，已经完全关闭
-        _value.setSoftKeyboardPosition(SoftKeyboardPosition.inBottom);
-        _value.setLastTime(DateTime.now());
-        _value.setRunning(false);
+    if (oldHeight == height && height == SoftKeyboardValue.minValue) {
+      SoftKeyboardPosition newPosition = SoftKeyboardPosition.inBottom;
+      // 处于最底部
+      _value.setSoftKeyboardPosition(newPosition);
+      _value._log('当前键盘处于底部：height=$height, position=$newPosition');
+      if (position.isDeclining) {
+        // 上一次高度等于当前高度，并且是下降的过程中，表示到达了底部
+        onKeyboardChangedEnd(newPosition);
+        _value._log('当前键盘下降到底部：$position -> $newPosition');
         _updateKeyboardPaddingBottom();
-        Log.d('键盘从顶部开始向下隐藏并已经完全关闭：currentHeight=$height', tag: 'KeyboardObserverMixin');
-        onKeyboardChangedEnd(SoftKeyboardPosition.inBottom);
-      } else if (position == SoftKeyboardPosition.rising && lastHeight == height && height > 0) {
-        // 表示键盘从底部开始向上弹出且此时高度跟上一次一样，已经完全弹出
-        _value.setSoftKeyboardPosition(SoftKeyboardPosition.inTop);
-        _value.setLastTime(DateTime.now());
-        _value.setRunning(false);
-        Log.d('键盘从底部开始向上弹出并已经完全弹出：currentHeight=$height', tag: 'KeyboardObserverMixin');
-        onKeyboardChangedEnd(SoftKeyboardPosition.inTop);
       }
-      return;
+    } else if (oldHeight == height && height == maxHeight) {
+      SoftKeyboardPosition newPosition = SoftKeyboardPosition.inTop;
+      // 处于最顶部
+      _value.setSoftKeyboardPosition(newPosition);
+      _value._log('当前键盘处于顶部：height=$height, position=$newPosition');
+      if (position.isRising) {
+        // 上一次高度等于当前高度，并且是上升的过程中，表示到达了顶部
+        onKeyboardChangedEnd(newPosition);
+        _value._log('当前键盘上升到顶部：$position -> $newPosition');
+        _updateKeyboardPaddingBottom();
+      }
     }
-
-    if (height == 0.0) {
-      DateTime? lastTopTime = _value._lastTime;
-      if (lastTopTime != null && //
-          lastTopTime.add(const Duration(milliseconds: 500)).isAfter(DateTime.now())) {
-        // 从顶部隐藏后，如果未超过500毫秒，会从底部重新弹起
-        return;
+    if (oldHeight < height) {
+      if (oldHeight == SoftKeyboardValue.minValue) {
+        // 开始上升
+        onKeyboardChangedStart(SoftKeyboardPosition.inBottom);
       }
-      // 上一次为0.0，表示从底部开始
-      _value.setLastHeight(height);
-      _value.setSoftKeyboardPosition(SoftKeyboardPosition.inBottom);
-      _value.setLastTime(DateTime.now());
-      _value.setRunning(true);
-      _updateKeyboardPaddingBottom();
-      Log.d('键盘从底部开始向上弹出：currentHeight=$height', tag: 'KeyboardObserverMixin');
-      onKeyboardChangedStart(SoftKeyboardPosition.inBottom);
-    } else if (height == maxHeight) {
-      // 否则表示从顶部开始
-      _value.setLastHeight(height);
-      _value.setSoftKeyboardPosition(SoftKeyboardPosition.inTop);
-      _value.setLastTime(DateTime.now());
-      _value.setRunning(true);
-      Log.d('键盘从顶部开始向下隐藏：currentHeight=$height', tag: 'KeyboardObserverMixin');
-      onKeyboardChangedStart(SoftKeyboardPosition.inTop);
+      // 上一次高度小于当前高度，在上升的过程
+      _value.setSoftKeyboardPosition(SoftKeyboardPosition.rising);
+      _value._log('当前键盘处于变化：height=$height');
+    }
+    if (oldHeight > height) {
+      if (oldHeight == maxHeight) {
+        // 开始下降
+        onKeyboardChangedStart(SoftKeyboardPosition.inTop);
+      }
+      // 上一次高度大于当前高度，在下降的过程
+      _value.setSoftKeyboardPosition(SoftKeyboardPosition.declining);
+      _value._log('当前键盘处于变化：height=$height');
     }
   }
 
@@ -192,9 +173,27 @@ mixin KeyboardObserverMixin<T extends StatefulWidget> on State<T> //
     _focusNode.removeListener(listener);
   }
 
+  void updatePosition(bool isShow) {
+    if (isShow) {
+      if (_value.position.isTop) return;
+      _value.setSoftKeyboardPosition(SoftKeyboardPosition.inTop);
+    } else {
+      if (_value.position.isBottom) return;
+      _value.setSoftKeyboardPosition(SoftKeyboardPosition.inBottom);
+    }
+  }
+
   /// 弹出键盘
   void showKeyboard() {
-    if (value.position == SoftKeyboardPosition.inBottom) {
+    _value._log("弹出键盘：isBottom=${_value.position.isBottom}, isMinHeight=${_value.isMinHeight}");
+    if (_value.position.isBottom || _value.isMinHeight) {
+      if (!_focusNode.hasFocus) {
+        _focusNode.requestFocus();
+      }
+      // 显示键盘
+      SystemChannels.textInput.invokeMethod('TextInput.show');
+    } else if (!_focusNode.hasFocus) {
+      _focusNode.requestFocus();
       // 显示键盘
       SystemChannels.textInput.invokeMethod('TextInput.show');
     }
@@ -202,7 +201,7 @@ mixin KeyboardObserverMixin<T extends StatefulWidget> on State<T> //
 
   /// 隐藏键盘
   void hideKeyboard() {
-    if (value.position == SoftKeyboardPosition.inTop) {
+    if (_value.position.isTop || _value.isMaxHeight) {
       // 隐藏键盘
       SystemChannels.textInput.invokeMethod('TextInput.hide');
     }
@@ -245,47 +244,48 @@ mixin KeyboardObserverMixin<T extends StatefulWidget> on State<T> //
 
 /// 软键盘变化过程的值
 class SoftKeyboardValue {
+  static const minValue = 0.0; // 最小值时的Value
+
   double get height => _height;
-  double _height = 0.0; // 记录当前的高度
+  double _height = minValue; // 记录当前的高度
+  double _lastHeight = minValue; // 记录上一次的高度
   void setHeight(double height) {
     double oldHeight = _height;
     _height = height;
-    if (oldHeight != height) return;
-    // 高度变化时，在开始/结束的变化中会回调两次，其它的变化过程中只会回调一次，
-    if (height == 0.0) {
-      // 到达最底部
-    } else if (height > 0.0) {
-      // 到达最顶部
-      _maxHeight = height;
+    _lastHeight = oldHeight;
+    // 先检测最大高度
+    _detectMaxHeight(oldHeight, height);
+    // 再判断处于的状态
+  }
+
+  /// 检测是否到达最顶部
+  void _detectMaxHeight(double oldHeight, double newHeight) {
+    if (oldHeight == newHeight && newHeight > minValue) {
+      _maxHeight = newHeight;
     }
   }
 
-  double get maxHeight => _maxHeight;
-  double _maxHeight = 0.0; // 记录最大高度
+  bool get isMinHeight => _maxHeight == minValue; // 是否是最小的高度
+  bool get isMaxHeight => _maxHeight > minValue && _height == _maxHeight; // 是否是最大的高度
+  double _maxHeight = minValue; // 记录最大高度
+  void setMaxHeight(double height) => _maxHeight = height;
 
   double get paddingBottom => _paddingBottom;
-  double _paddingBottom = 0.0; // 键盘底部距离屏幕底部的内间距，
+  double _paddingBottom = minValue; // 键盘底部距离屏幕底部的内间距，
   void setPaddingBottom(double paddingBottom) => _paddingBottom = paddingBottom;
 
   SoftKeyboardPosition get position => _position;
   SoftKeyboardPosition _position = SoftKeyboardPosition.inBottom; // 当前键盘的位置
   void setSoftKeyboardPosition(SoftKeyboardPosition position) => _position = position;
 
-  double _lastHeight = 0.0; // 记录上一次的高度
-  void setLastHeight(double lastHeight) => _lastHeight = lastHeight;
-  bool _isRunning = false; // 是否正在变化中
-  void setRunning(bool isRunning) => _isRunning = isRunning;
-  DateTime? _lastTime; // 记录结束变化的时间
-  void setLastTime(DateTime lastTime) => _lastTime = lastTime;
+  void _log(String msg) => true ? Log.d(msg, tag: 'KeyboardObserverMixin') : null;
 
   Map<String, dynamic> toJson() => {
         'height': _height,
-        'maxHeight': _maxHeight,
-        'paddingBottom': _paddingBottom,
-        'position': _position,
-        'isRunning': _isRunning,
         'lastHeight': _lastHeight,
-        'lastTime': _lastTime,
+        'maxHeight': _maxHeight,
+        'position': _position,
+        'paddingBottom': _paddingBottom,
       };
 }
 
@@ -294,5 +294,10 @@ enum SoftKeyboardPosition {
   inTop, // 最顶部，键盘完全显示
   rising, // 持续上升，键盘正在弹出中
   inBottom, // 最底部，键盘完全隐藏
-  declining, // 持续下降，键盘正在关闭中
+  declining; // 持续下降，键盘正在关闭中
+
+  bool get isTop => this == inTop; // 是否在最顶部
+  bool get isRising => this == rising; // 是否正在上升的过程中
+  bool get isBottom => this == inBottom; // 是否在最底部
+  bool get isDeclining => this == declining; // 是否正在下降的过程中
 }
