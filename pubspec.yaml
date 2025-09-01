@@ -89,7 +89,9 @@ dependencies:
   ########################################## 工具 ########################################
   lpinyin: 2.0.3                                # 汉字转拼音(全平台) https://pub.flutter-io.cn/packages/lpinyin
   crypto: 3.0.6                                 # 加密解密工具(全平台) https://pub.flutter-io.cn/packages/crypto
+  bonsoir: 5.1.11                               # 利用mdns服务实现搜索附近设备功能(全平台) https://pub.flutter-io.cn/packages/bonsoir
 #  universal_ble: 0.16.0                         # 蓝牙 https://pub.flutter-io.cn/packages/universal_ble
+  get_ip_address: 0.0.7
 dev_dependencies:
   flutter_test:
     sdk: flutter
