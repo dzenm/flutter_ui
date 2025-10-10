@@ -21,129 +21,137 @@ typedef CompleteCallback = void Function(int count, int size);
 ///
 /// Created by a0010 on 2022/9/1 11:56
 /// 文件工具类
-class LocalStorage with _DirectoryMixin, FileIOMixin {
-  LocalStorage._internal();
+class LocalStorage with _DirMixin, _FileIOMixin, _FileHelperMixin {
+  factory LocalStorage() => _instance; //
+  static final LocalStorage _instance = LocalStorage._internal(); //
+  LocalStorage._internal(); //
+}
 
-  factory LocalStorage() => _instance;
-  static final LocalStorage _instance = LocalStorage._internal();
+/// APP文件夹的具体实现
+mixin class _DirMixin {
+  late _DirPairs _dirs;
 
-  /// 清理用户目录除数据库文件夹的缓存
-  Future<void> clear() async {
-    List<Directory> dirs = [];
-    _DirectoryMixin._appDirs.forEach((key, value) async {
-      if (key == UserDirectory.databases) {
-        return;
-      }
-      dirs.add(value);
-    });
-    await Future.forEach(dirs, (item) async {
-      var list = item.list();
-      _log('清理目录：dir=$item');
-      await list.forEach((item) async {
-        await item.delete(recursive: true);
-      });
-    });
-  }
+  Function? _logPrint;
 
-  /// 删除文件（根据路径删除）
-  void delete(String? path) {
-    try {
-      if ((path ?? '').isEmpty) return;
-      File file = File(path!);
-      if (file.existsSync()) {
-        file.deleteSync();
-      }
-      _log('删除文件成功：path=$path');
-    } catch (err) {
-      _log('删除文件失败：err=$err');
+  /// 初始化文件夹
+  /// [rootDir] APP的根目录文件夹，可以切换指定文件夹路径进行存储数据
+  /// [appDirName] 桌面端的APP文件名名称
+  Future<void> init({
+    Function? logPrint,
+    String? rootDir,
+    String appDirName = 'File',
+  }) async {
+    if (logPrint != null) {
+      _logPrint = logPrint;
     }
+    var dir = await _getAppRootDirectory(
+      rootDir: rootDir,
+      appDirName: appDirName,
+    );
+    _dirs = _DirPairs(dir);
+    // 初始化非用户文件夹
+    initLoginUserDirectory("");
   }
 
-  /// 拷贝文件
-  void copy(String oldPath, String newPath) {
-    File oldFile = File(oldPath);
-    try {
-      oldFile.copySync(newPath);
-      _log('文件复制成功: from=$oldPath to=$newPath');
-    } catch (e) {
-      _log('文件复制失败: $e');
-    }
-  }
-
-  /// 拷贝文件夹
-  void copyDir(String oldDir, String newDir) {
-    Directory dir = Directory(oldDir);
-    if (!dir.existsSync()) {
-      return;
-    }
-    dir.listSync().forEach((FileSystemEntity file) {
-      String name = getFileName(file.path);
-      copy('$oldDir$name', '$newDir$name');
-    });
-  }
-
-  /// 保存text到本地文件里面
-  Future<String?> save(String fileName, String text, {required String dir}) async {
-    try {
-      Directory parent = getUserDirectory(dir);
-      File file = File('${parent.path}${Platform.pathSeparator}$fileName');
-      if (!file.existsSync()) {
-        await file.create();
-      }
-      IOSink slink = file.openWrite(mode: FileMode.append);
-      slink.write(text);
-      await slink.close();
-      _log('保存文件成功: ${file.path}');
-      return Future.value(file.path);
-    } catch (e) {
-      _log('保存文件错误: $e');
-      return Future.value(null);
-    }
-  }
-
-  /// 根据路径获取文件名
-  String getFileName(dynamic file) {
-    String path = '';
-    if (file is File) {
-      path = file.path;
+  /// 缓存文件夹路径 @see [init]、[_appDirs]
+  /// Android：/data/user/0/<package_name>/files/[dir]/
+  /// iOS：/var/mobile/Containers/Data/Application/{Random ID}/Library/Application Support/[dir]/
+  /// macOS：/Users/a0010/Documents/[appDirName]/[dir]/
+  /// Windows：C:\Users\Administrator\Documents\[appDirName]\[dir]\
+  Future<Directory> _getAppRootDirectory({
+    String? rootDir,
+    String? appDirName,
+    String? dir,
+  }) async {
+    String appRootDir; // 默认的APP存储路径
+    if (Platform.isAndroid || Platform.isIOS) {
+      // 移动端的存储路径
+      Directory appDocDir = await getApplicationSupportDirectory();
+      appRootDir = join(appDocDir.path);
     } else {
-      path = file.toString();
+      // 桌面端的存储
+      Directory appDocDir = await getApplicationDocumentsDirectory();
+      appRootDir = join(appDocDir.path, appDirName);
     }
-    return path.split(Platform.pathSeparator).last;
+    String parent = join(rootDir ?? appRootDir, dir); // app root dir
+    Directory result = Directory(parent);
+    if (!result.existsSync()) {
+      result.createSync(recursive: true);
+    }
+    return result;
   }
 
-  /// 格式化字节大小，例：
-  /// len  = 2889728
-  /// size = 2.88 MB
-  String formatByteSize(int? len) {
-    // 小于1024，直接按字节显示
-    if (len == null) return '0 B';
-    int multiple = 1024; // 字节的倍数
-    if (len < multiple) return '$len B';
+  Directory get appDir => _dirs.appDir; // APP文件夹
+  Directory get userDir => _dirs.userDir; // 用户文件夹
 
-    List<String> suffix = ["B", "KB", "MB", "GB", "TB", "PB"];
-    // 判断字节显示的范围，从KB开始
-    int scope = multiple, i = 1;
-    for (; i < suffix.length; i++) {
-      if (len < scope * multiple) break; //找到范围 scope < len < scope * multiple
-      scope *= multiple;
+  /// 初始化登录用户目录
+  /// Android：/data/user/0/<package_name>/files/{dir}/{userId}/
+  /// iOS：/var/mobile/Containers/Data/Application/{Random ID}/Library/Application Support/{dir}/{userId}/
+  /// macOS：/Users/a0010/Documents/[_appDir]/{dir}/{userId}/
+  /// Windows：C:\Users\Administrator\Documents\[_appDir]\{dir}\{userId}\
+  void initLoginUserDirectory(String userId) {
+    _dirs.setUserUid(userId);
+    // 初始化常用文件夹
+    for (var root in RootDir.values) {
+      String parent = join(_dirs.appPath, root == RootDir.user ? userId : "global");
+      if (root == RootDir.user && userId.isEmpty) continue;
+      for (var dir in UserDir.values) {
+        String dirName = join(parent, dir.dirName);
+        Directory result = Directory(dirName);
+        if (!result.existsSync()) {
+          result.createSync(recursive: true);
+        }
+        _dirs.setDir(root, dir, result);
+        _log('初始化用户存储目录：path=${result.path}');
+      }
     }
-
-    double res = len / scope; // 得到最终展示的小数
-    return '${toStringAsFixed(res)} ${suffix[i]}';
   }
 
-  /// 计算文件的MD5值
-  Future<String> getMD5(String path) async => await _calculateFileMd5(path);
+  /// 缓存文件夹路径 @see [init]、[_appDirs]
+  /// Android：/data/user/0/<package_name>/files/{dir}/{userId}/Messages/
+  /// iOS：/var/mobile/Containers/Data/Application/{Random ID}/Library/Application Support/{dir}/{userId}/Messages/
+  /// macOS：/Users/a0010/Documents/[_appDir]/{dir}/{userId}/Messages/
+  /// Windows：C:\Users\Administrator\Documents\[_appDir]\{dir}\{userId}\Messages\
+  Directory get messagesDir => _dirs.getDir(RootDir.user, UserDir.messages);
 
-  /// 计算文件的MD5值
-  Future<String> _calculateFileMd5(String path) async {
-    final file = File(path);
-    if (file.existsSync()) {
-      final bytes = await file.readAsBytes();
-      return md5.convert(bytes).toString();
+  /// 缓存文件夹路径 @see [init]、[_appDirs]
+  /// Android：/data/user/0/<package_name>/files/{dir}/{userId}/Files/
+  /// iOS：/var/mobile/Containers/Data/Application/{Random ID}/Library/Application Support/{dir}/{userId}/Files/
+  /// macOS：/Users/a0010/Documents/[_appDir]/{dir}/{userId}/Files/
+  /// Windows：C:\Users\Administrator\Documents\[_appDir]\{dir}\{userId}\Files\
+  Directory get filesDir => _dirs.getDir(RootDir.user, UserDir.files);
+
+  /// @see [getUserDirectory]
+  String getMessagesCategory(FileCategory category, {String? user}) {
+    return getUserDirectory(UserDir.messages.dirName, user, category.dirName).path;
+  }
+
+  /// @see [getUserDirectory]
+  String getFavouritesCategory(FileCategory category, {String? user}) {
+    return getUserDirectory(UserDir.favourites.dirName, user, category.dirName).path;
+  }
+
+  /// 获取指定的文件夹
+  String getDir({RootDir rootDir = RootDir.user, UserDir userDir = UserDir.files}) {
+    Directory dir = _dirs.getDir(rootDir, userDir);
+    return dir.path;
+  }
+
+  /// 获取缓存文件的子目录 @see [messagesDir]
+  Directory getUserDirectory(
+    String part1, [
+    String? part2,
+    String? part3,
+    String? part4,
+    String? part5,
+    String? part6,
+  ]) {
+    String parent = join(_dirs.userPath, part1, part2, part3, part4, part5, part6);
+    Directory result = Directory(parent);
+    if (!result.existsSync()) {
+      result.createSync(recursive: true);
     }
-    return '';
+    return result;
   }
 
   String joins(
@@ -184,171 +192,6 @@ class LocalStorage with _DirectoryMixin, FileIOMixin {
     );
   }
 
-  // String _getMd5(String path) {
-  //   int partSize = 1024 * 1024 * 3; //默认3m每块
-  //   File file = File(path);
-  //   int fileSize = file.lengthSync();
-  //   int totalPart = (fileSize * 1.0 / partSize).ceil();
-  //   int start; //开始读文件的位置
-  //   int length; //读取文件的长度
-  //   var output = convert.AccumulatorSink<Digest>();
-  //   var input = md5.startChunkedConversion(output);
-  //   int currentPart = 0;
-  //   while (currentPart < totalPart) {
-  //     start = currentPart * partSize;
-  //     length = (start + partSize > fileSize) ? (fileSize - start) : partSize;
-  //     RandomAccessFile raf = file.openSync(mode: FileMode.read);
-  //     raf.setPositionSync(start);
-  //     Uint8List data = raf.readSync(length);
-  //     input.add(data);
-  //     currentPart++;
-  //   }
-  //   input.close();
-  //   var digest = output.events.single.toString();
-  //   return digest;
-  // }
-
-  /// 将浮点数 [value] 转为取 [position] 位的小数的字符串
-  String toStringAsFixed(dynamic value, {int position = 2}) {
-    double num;
-    if (value is double) {
-      num = value;
-    } else {
-      num = double.parse(value.toString());
-    }
-
-    int index = num.toString().lastIndexOf(".");
-    String res;
-    if ((num.toString().length - index - 1) < position) {
-      res = num.toStringAsFixed(position);
-    } else {
-      res = num.toString();
-    }
-    return res.substring(0, index + position + 1).toString();
-  }
-}
-
-/// APP文件夹的具体实现
-abstract mixin class _DirectoryMixin {
-  static late Directory _appRootDir;
-  static late Directory _userDir;
-  static final Map<UserDirectory, Directory> _appDirs = {};
-
-  Function? _logPrint;
-
-  /// 初始化文件夹
-  Future<void> init({
-    Function? logPrint,
-    String? rootDir,
-    String appDirName = 'File',
-  }) async {
-    _logPrint = logPrint;
-    _appRootDir = await _getAppRootDirectory(
-      rootDir: rootDir,
-      appDirName: appDirName,
-    );
-  }
-
-  /// 缓存文件夹路径 @see [init]、[_appDirs]
-  /// Android：/data/user/0/<package_name>/files/[dir]/
-  /// iOS：/var/mobile/Containers/Data/Application/{Random ID}/Library/Application Support/[dir]/
-  /// macOS：/Users/a0010/Documents/[appDirName]/[dir]/
-  /// Windows：C:\Users\Administrator\Documents\[appDirName]\[dir]\
-  Future<Directory> _getAppRootDirectory({
-    String? rootDir,
-    String? appDirName,
-    String? dir,
-  }) async {
-    Directory appDocDir = await getApplicationDocumentsDirectory();
-    String appRootDir = join(rootDir ?? appDocDir.path);
-    if (Platform.isAndroid) {
-      appDocDir = await getApplicationSupportDirectory();
-      appRootDir = join(appDocDir.path);
-    } else if (Platform.isIOS) {
-      appDocDir = await getApplicationSupportDirectory();
-      appRootDir = join(appDocDir.path);
-    } else if (Platform.isMacOS) {
-      appRootDir = join(appDocDir.path, appDirName);
-    } else if (Platform.isWindows) {
-      appRootDir = join(appDocDir.path, appDirName);
-    } else if (Platform.isLinux) {
-      appRootDir = join(appDocDir.path, appDirName);
-    }
-    String parent = join(appRootDir, dir);
-    Directory result = Directory(parent);
-    if (!result.existsSync()) {
-      result.createSync(recursive: true);
-    }
-    return result;
-  }
-
-  /// 获取APP的路径
-  Directory get appDir => _appRootDir.absolute;
-
-  /// 初始化登录用户目录
-  /// Android：/data/user/0/<package_name>/files/{dir}/{userId}/
-  /// iOS：/var/mobile/Containers/Data/Application/{Random ID}/Library/Application Support/{dir}/{userId}/
-  /// macOS：/Users/a0010/Documents/[_appDir]/{dir}/{userId}/
-  /// Windows：C:\Users\Administrator\Documents\[_appDir]\{dir}\{userId}\
-  void initLoginUserDirectory(String userId) {
-    String parent = join(_appRootDir.path, userId);
-    _userDir = Directory(parent);
-    _log('初始化用户目录：parent=$parent');
-    // 初始化常用文件夹
-    for (var dir in UserDirectory.values) {
-      String dirName = join(parent, dir.dirName);
-      Directory result = Directory(dirName);
-      if (!result.existsSync()) {
-        result.createSync(recursive: true);
-      }
-      _appDirs[dir] = result;
-      _log('初始化用户存储目录：path=${result.path}');
-    }
-  }
-
-  String get tempPath => _appDirs[UserDirectory.temp]!.path;
-
-  /// 缓存文件夹路径 @see [init]、[_appDirs]
-  /// Android：/data/user/0/<package_name>/files/{dir}/{userId}/Messages/
-  /// iOS：/var/mobile/Containers/Data/Application/{Random ID}/Library/Application Support/{dir}/{userId}/Messages/
-  /// macOS：/Users/a0010/Documents/[_appDir]/{dir}/{userId}/Messages/
-  /// Windows：C:\Users\Administrator\Documents\[_appDir]\{dir}\{userId}\Messages\
-  Directory get messagesDir => _appDirs[UserDirectory.messages]!;
-
-  /// 缓存文件夹路径 @see [init]、[_appDirs]
-  /// Android：/data/user/0/<package_name>/files/{dir}/{userId}/Files/
-  /// iOS：/var/mobile/Containers/Data/Application/{Random ID}/Library/Application Support/{dir}/{userId}/Files/
-  /// macOS：/Users/a0010/Documents/[_appDir]/{dir}/{userId}/Files/
-  /// Windows：C:\Users\Administrator\Documents\[_appDir]\{dir}\{userId}\Files\
-  Directory get filesDir => _appDirs[UserDirectory.files]!;
-
-  /// @see [getUserDirectory]
-  String getMessagesCategory(FileCategory category, {String? user}) {
-    return getUserDirectory(UserDirectory.messages.dirName, user, category.dirName).path;
-  }
-
-  /// @see [getUserDirectory]
-  String getFavouritesCategory(FileCategory category, {String? user}) {
-    return getUserDirectory(UserDirectory.favourites.dirName, user, category.dirName).path;
-  }
-
-  /// 获取缓存文件的子目录 @see [messagesDir]
-  Directory getUserDirectory(
-    String part1, [
-    String? part2,
-    String? part3,
-    String? part4,
-    String? part5,
-    String? part6,
-  ]) {
-    String parent = join(_userDir.path, part1, part2, part3, part4, part5, part6);
-    Directory result = Directory(parent);
-    if (!result.existsSync()) {
-      result.createSync(recursive: true);
-    }
-    return result;
-  }
-
   /// 根据原文件 [path] 获取复制后重命名 [fileName] 的文件地址
   /// path=/data/user/0/[_appDir]/document/1256381735362131.png
   /// fileName=hash123456789
@@ -367,7 +210,7 @@ abstract mixin class _DirectoryMixin {
 }
 
 /// 文件IO操作
-mixin class FileIOMixin {
+mixin class _FileIOMixin {
   /// 读取文件的字符串
   /// [path] 读取的文件路径
   Future<String> readString(String? path) async {
@@ -450,6 +293,188 @@ mixin class FileIOMixin {
       return null;
     }
   }
+
+  /// 删除文件（根据路径删除）
+  /// [path] 删除的文件路径
+  void delete(String? path) {
+    try {
+      if ((path ?? '').isEmpty) return;
+      File file = File(path!);
+      if (file.existsSync()) {
+        file.deleteSync();
+      }
+    } catch (err) {
+      print(err);
+    }
+  }
+
+  /// 拷贝文件
+  /// [oldPath] 拷贝的文件旧路径
+  /// [newPath] 拷贝的文件新路径
+  void copy(String oldPath, String newPath) {
+    File oldFile = File(oldPath);
+    try {
+      oldFile.copySync(newPath);
+    } catch (err) {
+      print(err);
+    }
+  }
+
+  /// 拷贝文件夹
+  /// [oldDir] 拷贝的旧文件夹
+  /// [newDir] 拷贝的新文件夹
+  void copyDir(String oldDir, String newDir) {
+    Directory dir = Directory(oldDir);
+    if (!dir.existsSync()) {
+      return;
+    }
+    dir.listSync().forEach((FileSystemEntity file) {
+      String name = getFileName(file.path);
+      copy('$oldDir$name', '$newDir$name');
+    });
+  }
+
+  /// 保存文本至指定的文件夹
+  /// [dir] 文件所在的文件夹路径
+  /// [fileName] 文件名称
+  /// [text] 文件存储的内容
+  Future<String?> save(String dir, String fileName, String text) async {
+    try {
+      Directory parent = Directory(dir);
+      File file = File('${parent.path}${Platform.pathSeparator}$fileName');
+      if (!file.existsSync()) {
+        await file.create();
+      }
+      IOSink slink = file.openWrite(mode: FileMode.append);
+      slink.write(text);
+      await slink.close();
+      return Future.value(file.path);
+    } catch (e) {
+      return Future.value(null);
+    }
+  }
+
+  /// 根据路径获取文件名
+  String getFileName(dynamic file) {
+    String path = '';
+    if (file is File) {
+      path = file.path;
+    } else {
+      path = file.toString();
+    }
+    return path.split(Platform.pathSeparator).last;
+  }
+}
+
+/// 文件工具操作
+mixin class _FileHelperMixin {
+  /// 格式化字节大小，例：
+  /// len  = 2889728
+  /// size = 2.88 MB
+  String formatByteSize(int? len) {
+    // 小于1024，直接按字节显示
+    if (len == null) return '0 B';
+    int multiple = 1024; // 字节的倍数
+    if (len < multiple) return '$len B';
+
+    List<String> suffix = ["B", "KB", "MB", "GB", "TB", "PB"];
+    // 判断字节显示的范围，从KB开始
+    int scope = multiple, i = 1;
+    for (; i < suffix.length; i++) {
+      if (len < scope * multiple) break; //找到范围 scope < len < scope * multiple
+      scope *= multiple;
+    }
+
+    double res = len / scope; // 得到最终展示的小数
+    return '${toStringAsFixed(res)} ${suffix[i]}';
+  }
+
+  /// 计算文件的MD5值
+  Future<String> getMD5(String path) async => await _calculateFileMd5(path);
+
+  /// 计算文件的MD5值
+  Future<String> _calculateFileMd5(String path) async {
+    final file = File(path);
+    if (file.existsSync()) {
+      final bytes = await file.readAsBytes();
+      return md5.convert(bytes).toString();
+    }
+    return '';
+  }
+
+  // String _getMd5(String path) {
+  //   int partSize = 1024 * 1024 * 3; //默认3m每块
+  //   File file = File(path);
+  //   int fileSize = file.lengthSync();
+  //   int totalPart = (fileSize * 1.0 / partSize).ceil();
+  //   int start; //开始读文件的位置
+  //   int length; //读取文件的长度
+  //   var output = convert.AccumulatorSink<Digest>();
+  //   var input = md5.startChunkedConversion(output);
+  //   int currentPart = 0;
+  //   while (currentPart < totalPart) {
+  //     start = currentPart * partSize;
+  //     length = (start + partSize > fileSize) ? (fileSize - start) : partSize;
+  //     RandomAccessFile raf = file.openSync(mode: FileMode.read);
+  //     raf.setPositionSync(start);
+  //     Uint8List data = raf.readSync(length);
+  //     input.add(data);
+  //     currentPart++;
+  //   }
+  //   input.close();
+  //   var digest = output.events.single.toString();
+  //   return digest;
+  // }
+
+  /// 将浮点数 [value] 转为取 [position] 位的小数的字符串
+  String toStringAsFixed(dynamic value, {int position = 2}) {
+    double num;
+    if (value is double) {
+      num = value;
+    } else {
+      num = double.parse(value.toString());
+    }
+    int index = num.toString().lastIndexOf(".");
+    String res;
+    if ((num.toString().length - index - 1) < position) {
+      res = num.toStringAsFixed(position);
+    } else {
+      res = num.toString();
+    }
+    return res.substring(0, index + position + 1).toString();
+  }
+}
+
+/// 文件夹表
+class _DirPairs {
+  String get appPath => _dir.path; // APP文件夹路径
+  Directory get appDir => _dir; // APP文件夹
+  final Directory _dir; // APP文件夹
+  String get userPath => userDir.path; // 用户文件夹路径
+  Directory get userDir => _dirs[RootDir.user]!.values.first.parent; // 用户文件夹
+
+  _DirPairs(this._dir);
+
+  String _userUid = ""; // 用户ID
+  void setUserUid(String userUid) => _userUid = userUid; // 设置用户ID
+  final Map<RootDir, Map<UserDir, Directory>> _dirs = {}; // 文件夹集合
+  Directory getDir(RootDir rootDir, UserDir userDir) => _dirs[rootDir]![userDir]!; // 获取指定的文件夹
+  // 设置指定的文件夹
+  void setDir(RootDir rootDir, UserDir key, Directory value) {
+    Map<UserDir, Directory>? myDirs = _dirs[rootDir];
+    if (myDirs == null) {
+      myDirs = {key: value};
+      _dirs[rootDir] = myDirs;
+    } else {
+      myDirs[key] = value;
+    }
+  }
+
+  Map<String, dynamic> toJson() => {
+        "appPath": appPath,
+        "userPath": userPath,
+        ..._dirs.map((key, value) => MapEntry(key.toString(), value)),
+      };
 }
 
 /// 对路径进行解析获取常用的字符信息
@@ -701,8 +726,14 @@ class FileScanner {
   }
 }
 
+/// 根目录文件夹
+enum RootDir {
+  global,
+  user;
+}
+
 /// 用户目录
-enum UserDirectory {
+enum UserDir {
   messages('Messages'),
   databases('Databases'),
   favourites('Favourites'),
@@ -710,9 +741,8 @@ enum UserDirectory {
   crash('Crash'),
   temp('Temp');
 
-  final String dirName;
-
-  const UserDirectory(this.dirName);
+  final String dirName; //
+  const UserDir(this.dirName); //
 }
 
 /// 文件类别
@@ -723,9 +753,8 @@ enum FileCategory {
   files('Files'),
   others('Others');
 
-  final String dirName;
-
-  const FileCategory(this.dirName);
+  final String dirName; //
+  const FileCategory(this.dirName); //
 }
 
 /// 文件类型
@@ -742,10 +771,9 @@ enum MimeType {
   ppt(value: 9, icon: 'icon_ppt'),
   apk(value: 10, icon: 'icon_apk');
 
-  final int value;
-  final String icon;
-
-  const MimeType({required this.value, required this.icon});
+  final int value; //
+  final String icon; //
+  const MimeType({required this.value, required this.icon}); //
 }
 
 /// 根据路径后缀判断文件类型
