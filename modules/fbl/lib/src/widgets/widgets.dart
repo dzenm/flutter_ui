@@ -23,6 +23,7 @@ export 'progress.dart';
 export 'rows.dart';
 export 'scrollview/scrollview_observer.dart';
 export 'shimmer.dart';
+export 'stars.dart';
 export 'states.dart';
 export 'tags.dart';
 export 'tap.dart';
