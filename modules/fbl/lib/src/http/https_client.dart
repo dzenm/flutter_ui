@@ -9,14 +9,10 @@ import 'log_interceptor.dart';
 
 /// 请求成功返回的结果，使用Future<void> 作为返回值，是为了在有些情况保证执行 [Success]
 /// 之后能够拿到通过 [HttpsClient.request] 请求返回的 Future<dynamic>
-typedef Success = Future<void> Function(dynamic data);
+typedef Success<T> = Future<void> Function(T data);
 
 /// 下载/上传文件的进度
 typedef Progress = void Function(double percent, int count, int total);
-
-/// 请求完成的标志，使用Future<void> 作为返回值，是为了在有些情况保证执行 [Complete]
-/// 之后能够拿到通过 [HttpsClient.request] 请求返回的 Future<dynamic>
-typedef Complete = Future<void> Function();
 
 /// 请求失败返回的结果，使用Future<void> 作为返回值，是为了在有些情况保证执行 [Failed]
 /// 之后能够拿到通过 [HttpsClient.request] 请求返回的 Future<dynamic>
@@ -59,11 +55,8 @@ final class HttpsClient {
   /// 如果存在多个url的情况，在这里添加，默认使用 [apiServices] ，其他使用 [api] 请求接口
   final List<String> _baseUrls = [];
 
-  /// 日志打印，如果不设置，将不打印日志，如果要设置在使用数据库之前调用 [init]
-  Function? _logPrint;
-
   /// 全局的请求提醒加载框
-  Function? _loading;
+  void Function()? _loading;
 
   /// 全局的错误的toast提醒加载框
   Function? _toast;
@@ -91,7 +84,6 @@ final class HttpsClient {
     List<String>? baseUrls,
     ApiCreator? creator,
   }) {
-    _logPrint = logPrint;
     _toast = toast;
     _loading = loading;
 
@@ -171,67 +163,67 @@ final class HttpsClient {
   /// 发起http请求
   /// [future] 异步请求的信息
   /// [success] 请求成功的结果，如果[isCustomResult]为true，返回的data是未经处理的response body，为false，返回的是[DataEntity.data]
-  /// [complete] 请求完成的结果，不返回任何结果，不管是成功还是失败都会进入[complete]
   /// [failed] 请求失败的结果，[HttpError] 是失败的信息
   /// [isShowDialog] 是否显示加载的dialog，可以在[init]自定义全局的加载弹窗提示，[loading]为局部的加载弹窗提示
   /// [isShowToast] 是否显示错误的toast提醒
-  /// [isCustomResult] 是否自定义处理response body，@see [success]
   /// [loading] 自定义加载弹窗提示，@see [isShowDialog]
-  Future<dynamic> request(
-    Future<DataEntity> future, {
-    Success? success,
+  Future<T?> request<T>(
+    Future<DataEntity<T>> future, {
+    Success<T?>? success,
     Failed? failed,
-    Complete? complete,
     bool isShowDialog = true,
     bool isShowToast = true,
-    bool isCustomResult = false,
     void Function()? loading,
     ResponseInterceptor? interceptor,
   }) async {
-    Function? cancel;
-    HttpError? error;
-    dynamic result;
+    Function? cancelLoading;
     if (isShowDialog) {
-      // 优先使用局部的加载提示框
-      Function? loadingFunc = loading ?? _loading;
-      if (loadingFunc != null) cancel = loadingFunc();
+      // 如果需要显示加载提示框，优先使用局部定义的加载提示框
+      Function? showLoading = loading ?? _loading;
+      cancelLoading = showLoading?.call();
     }
+
+    void cancel() => cancelLoading?.call();
+
+    HttpError? error;
+    T? data;
     try {
-      DataEntity data = await future;
+      // 执行请求
+      DataEntity<T?> result = await future;
       // 判断是否拦截
-      ResponseInterceptor? responseInterceptor = interceptor ?? _interceptor;
-      if (responseInterceptor != null && responseInterceptor(data)) {
-        if (cancel != null) cancel();
+      ResponseInterceptor? responseInterceptor = interceptor;
+      // 局部拦截
+      if (responseInterceptor != null && responseInterceptor(result)) {
+        cancel();
         return null;
       }
-      if (isCustomResult) {
-        result = data;
+      // 全局拦截
+      responseInterceptor = _interceptor;
+      if (responseInterceptor != null && responseInterceptor(result)) {
+        cancel();
+        return null;
+      }
+      // 根据前后端协议
+      if (result.isSuccessful) {
+        data = result.data;
       } else {
-        // 根据前后端协议
-        if (data.isSuccessful) {
-          result = data.data;
-        } else {
-          error = parse(code: data.errorCode, msg: data.errorMsg);
-        }
+        error = parse(code: result.errorCode, msg: result.errorMsg);
       }
     } catch (err) {
       error = parse(error: err);
     }
     // 请求结束关闭提示框
-    if (cancel != null) cancel();
+    cancel();
     if (error == null) {
       // 请求成功
-      if (success != null) await success(result);
+      await success?.call(data);
     } else {
       // 请求失败，需要自定义处理异常，处理异常
-      if (failed != null) await failed(error);
+      await failed?.call(error);
       // 如果有异常通过toast提醒
-      if (isShowToast && _toast != null) _toast!('请求错误：${error.msg}');
-      log('HTTP请求错误: code=${error.code}, msg=${error.msg}, error=${error.error}');
+      if (isShowToast) _toast?.call(error.msg);
     }
-    // 不管成功与否，都进入完成处理
-    if (complete != null) await complete();
-    return result;
+    return data;
   }
 
   /// 下载文件
@@ -290,7 +282,6 @@ final class HttpsClient {
     // 下载结果
     if (error == null) return null;
     if (failed != null) await failed(error!);
-    log('下载错误: code=${error!.code}, msg=${error!.msg}, error=${error!.error}');
     return null;
   }
 
@@ -343,7 +334,6 @@ final class HttpsClient {
           onReceiveProgress(progressPercent, count, total);
         },
       );
-      log('上传结果: statusCode=${response.statusCode}, statusMessage=${response.statusMessage}, data=${response.data}');
       if (response.statusCode == 200) {
         final value = DataEntity<dynamic>.fromJson(response.data!);
         // 下载成功的返回结果
@@ -362,11 +352,8 @@ final class HttpsClient {
     // 下载结果
     if (error == null) return null;
     if (failed != null) await failed(error!);
-    log('上传错误: code=${error!.code}, msg=${error!.msg}, error=${error!.error}');
     return null;
   }
-
-  void log(dynamic text) => _logPrint == null ? null : _logPrint!(text, tag: 'HttpsClient');
 
   /// 处理异常
   HttpError parse({dynamic error, int? code = 0, String? msg = ''}) {
