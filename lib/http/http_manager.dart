@@ -482,6 +482,12 @@ class HttpManager {
       if (failed != null) {
         failed(error);
       }
+    }, interceptor: (data) {
+      if (data.isSuccessful) {
+        success?.call(data.data);
+      } else {
+      }
+      return true;
     });
   }
 

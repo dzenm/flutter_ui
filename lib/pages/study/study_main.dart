@@ -88,12 +88,9 @@ class StudyMain {
     }
     _log('测试：user=${user.toJson()}');
 
-    Map<String, dynamic> map = {
-      'name': '清华大学'
-    };
+    Map<String, dynamic> map = {'name': '清华大学'};
     School school = School.fromJson(map);
     _log('测试：school=${school.toJson()}');
-
   }
 
   static void _getIP() async {
@@ -121,9 +118,10 @@ class StudyMain {
 enum Stranger {
   none(0),
   temporary(1);
+
   final int value; //
   const Stranger(this.value); //
-  bool get isNormal => this == Stranger.none;//
+  bool get isNormal => this == Stranger.none; //
   static Stranger parse(int? value) {
     for (var item in Stranger.values) {
       if (item.value == value) return item;
@@ -232,5 +230,6 @@ class School {
 
 class SocketAddress {
   final String ip;
+
   SocketAddress(this.ip);
 }

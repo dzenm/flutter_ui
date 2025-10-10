@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dbl/dbl.dart';
 import 'package:desktop_multi_window/desktop_multi_window.dart';
@@ -23,6 +24,7 @@ import 'pages/widgets/keyboard/mocks/mock_binding.dart';
 class Application with _InitAppMixin {
   /// 私有构造方法
   Application._internal();
+
   factory Application() => _instance;
   static final Application _instance = Application._internal();
 
@@ -55,7 +57,7 @@ class Application with _InitAppMixin {
           handleMsg: (message) async {
             String logFileName = 'crash_${DateTime.now()}.log';
             log('异常信息文件：logFileName=$logFileName');
-            await LocalStorage().save(logFileName, message, dir: 'crash');
+            await LocalStorage().save('${LocalStorage().userDir.path}${Platform.pathSeparator}crash', logFileName, message);
           },
         ),
       );
@@ -111,7 +113,6 @@ abstract mixin class _InitAppMixin {
 
     log('  初始化 HttpsClient');
     HttpsClient().init(
-      logPrint: BuildConfig.showHTTPLog ? Log.h : null,
       loading: CommonDialog.loading,
       toast: CommonDialog.showToast,
       interceptors: [HttpInterceptor(), CookieInterceptor()],

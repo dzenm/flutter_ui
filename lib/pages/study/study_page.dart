@@ -325,7 +325,7 @@ class _StudyPageState extends State<StudyPage> //
 
   String _readText = "";
   String _writeText = "";
-  String _path = LocalStorage().tempPath + "/test.txt";
+  String _path = LocalStorage().filesDir.path + "/test.txt";
 
   Future<String> calculateFileMd5(String filePath) async {
     final file = File(filePath);
