@@ -91,6 +91,12 @@ class StudyMain {
     Map<String, dynamic> map = {'name': '清华大学'};
     School school = School.fromJson(map);
     _log('测试：school=${school.toJson()}');
+
+    Time time = const Time(days: 5, hours: 8, minutes: 7, seconds: 8);
+    Time time1 = const Time.second(4300);
+
+    _log("打印时间：${time1.days}, ${time1.hours}:${time1.minutes}:${time1.seconds} ${time1.inMicroseconds}");
+    _log("打印时间：${time.inDays}, ${time.inHours}:${time.inMinutes}:${time.inSeconds} ${time.inMicroseconds}");
   }
 
   static void _getIP() async {
