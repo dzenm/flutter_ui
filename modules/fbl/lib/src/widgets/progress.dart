@@ -1,6 +1,7 @@
 import 'package:fbl/src/config/notification.dart' as ln;
 import 'package:flutter/material.dart';
 
+import '../core/shared/notify.dart';
 import 'indicators.dart';
 
 ///
@@ -15,26 +16,28 @@ class UploadProgressView extends StatefulWidget {
   State<UploadProgressView> createState() => _UploadProgressViewState();
 }
 
-class _UploadProgressViewState extends State<UploadProgressView> implements ln.Observer {
+class _UploadProgressViewState extends State<UploadProgressView> //
+    with
+        StateObserver {
   double _progress = 0;
   bool _show = false;
 
   @override
   void initState() {
     super.initState();
-    var nc = ln.NotificationCenter();
-    nc.addObserver(this, UploadNames.kFileUploadSuccess);
-    nc.addObserver(this, UploadNames.kFileUploading);
-    nc.addObserver(this, UploadNames.kFileUploadFailure);
+    addObserver(UploadNames.kFileUploading);
+    addObserver(UploadNames.kFileUploadCancel);
+    addObserver(UploadNames.kFileUploadSuccess);
+    addObserver(UploadNames.kFileUploadFailure);
   }
 
   @override
   void dispose() {
     super.dispose();
-    var nc = ln.NotificationCenter();
-    nc.removeObserver(this, UploadNames.kFileUploadSuccess);
-    nc.removeObserver(this, UploadNames.kFileUploading);
-    nc.removeObserver(this, UploadNames.kFileUploadFailure);
+    removeObserver(UploadNames.kFileUploading);
+    removeObserver(UploadNames.kFileUploadCancel);
+    removeObserver(UploadNames.kFileUploadSuccess);
+    removeObserver(UploadNames.kFileUploadFailure);
   }
 
   @override
@@ -51,15 +54,20 @@ class _UploadProgressViewState extends State<UploadProgressView> implements ln.O
 
   @override
   Future<void> onReceiveNotification(ln.Notification notification) async {
-    String name = notification.name;
+    var name = notification.name;
+    var userInfo = notification.userInfo;
+    String? taskUid = userInfo?['taskUid'];
+    if (taskUid == null || taskUid != widget.taskUid) {
+      return;
+    }
     if (name == UploadNames.kFileUploading) {
       _show = true;
-      String? taskUid = notification.userInfo?['taskUid'];
-      if (taskUid != null && taskUid == widget.taskUid) {
-        double? progress = notification.userInfo?['progress'];
-        _progress = progress ?? 0.0;
-        setState(() {});
-      }
+      double? progress = userInfo?['progress'];
+      _progress = progress ?? 0.0;
+      setState(() {});
+    } else if (name == UploadNames.kFileUploading) {
+      _show = false;
+      setState(() {});
     } else if (name == UploadNames.kFileUploadSuccess) {
       _show = false;
       setState(() {});
@@ -71,7 +79,8 @@ class _UploadProgressViewState extends State<UploadProgressView> implements ln.O
 }
 
 abstract class UploadNames {
-  static const kFileUploadSuccess = 'FileUploadSuccess';
   static const kFileUploading = 'FileUploading';
+  static const kFileUploadCancel = 'FileUploadCancel';
+  static const kFileUploadSuccess = 'FileUploadSuccess';
   static const kFileUploadFailure = 'FileUploadFailure';
 }

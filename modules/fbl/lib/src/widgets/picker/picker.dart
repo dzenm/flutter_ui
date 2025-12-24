@@ -11,38 +11,39 @@ const double _kPickerItemHeight = 40.0;
 
 /// 列表选择器
 class PickerView<T> extends StatefulWidget {
-  final List<PickerEntity> list;
-  final List<String>? initialItem;
-  final IndexedWidgetBuilder? itemBuilder;
-  final PickerPopupRoute route;
-  final ValueChanged<List<PickerEntity>>? onChanged;
+  final List<PickerEntity<T>> pickers;
+  final List<String>? initialPicker;
+  final List<String>? labels;
+  final Widget Function(BuildContext context, PickerEntity<T> item)? itemBuilder;
+  final PopupRoute<List<PickerEntity<T>>> popupRoute;
+  final ValueChanged<List<PickerEntity<T>>>? onChanged;
 
   const PickerView({
     super.key,
-    required this.list,
-    this.initialItem,
+    required this.pickers,
+    this.initialPicker,
+    this.labels,
     this.itemBuilder,
-    required this.route,
+    required this.popupRoute,
     this.onChanged,
   });
 
-  static Future<List<PickerEntity>?> show<T>(
+  static Future<List<PickerEntity<T>>?> show<T>(
     BuildContext context, {
-    required List<PickerEntity> list,
+    required List<PickerEntity<T>> list,
     List<String>? initialItem,
+    List<String>? labels,
     ValueChanged<List<String>>? onChanged,
   }) async {
-    var result = await Navigator.push<List<PickerEntity>>(
+    return await showDialog<T>(
       context,
-      PickerPopupRoute<List<PickerEntity>>(
-        list: list,
-        initialItem: initialItem,
-        onChanged: onChanged == null ? null : (list) => onChanged(list.map((e) => e.name ?? '').toList()),
-        theme: Theme.of(context),
-        barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-      ),
+      list: list,
+      initialItem: initialItem,
+      labels: labels,
+      onChanged: onChanged == null //
+          ? null
+          : (list) => onChanged(list.map((e) => e.name ?? '').toList()),
     );
-    return result ?? [];
   }
 
   /// 选择地区
@@ -53,35 +54,32 @@ class PickerView<T> extends StatefulWidget {
   ///     Log.d('选中的结果: results=$results');
   ///   }
   /// )
-  static Future<List<PickerEntity>?> showLocation<T>(
+  static Future<List<PickerEntity>?> showLocation(
     BuildContext context, {
     List<String>? initialItem,
     ValueChanged<List<String>>? onChanged,
     int maxColumn = 3,
   }) async {
     assert(maxColumn <= 3, 'maxColumn must be less than 3');
-    List<PickerEntity> list = _getLocation(maxColumn);
-
-    var result = await Navigator.push<List<PickerEntity>>(
+    List<PickerEntity<String>> list = _getLocation(maxColumn);
+    var result = await showDialog<String>(
       context,
-      PickerPopupRoute<List<PickerEntity>>(
-        list: list,
-        initialItem: initialItem,
-        onChanged: onChanged == null ? null : (list) => onChanged(list.map((e) => e.name ?? '').toList()),
-        theme: Theme.of(context),
-        barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-      ),
+      list: list,
+      initialItem: initialItem,
+      onChanged: onChanged == null //
+          ? null
+          : (list) => onChanged(list.map((e) => e.name ?? '').toList()),
     );
     return result ?? [];
   }
 
   /// 获取位置信息的数据
-  static List<PickerEntity> _getLocation(int maxColumn) {
-    List<PickerEntity> provinceList = [];
+  static List<PickerEntity<String>> _getLocation(int maxColumn) {
+    List<PickerEntity<String>> provinceList = [];
     for (var province in locations) {
       // 添加省份信息
-      List<PickerEntity> cityList = [];
-      provinceList.add(PickerEntity(
+      List<PickerEntity<String>> cityList = [];
+      provinceList.add(PickerEntity<String>(
         name: province['name'] ?? '',
         list: cityList,
       ));
@@ -89,7 +87,7 @@ class PickerView<T> extends StatefulWidget {
 
       List<dynamic> cities = province['cityList'] ?? [];
       for (var city in cities) {
-        List<PickerEntity> areaList = [];
+        List<PickerEntity<String>> areaList = [];
         bool showCity = maxColumn == 2 && city['name'] != null;
         if (maxColumn == 3 || showCity) {
           // 添加城市信息
@@ -126,18 +124,42 @@ class PickerView<T> extends StatefulWidget {
     String? initialItem,
     ValueChanged<String>? onChanged,
   }) async {
-    var result = await Navigator.push<List<PickerEntity>>(
+    var result = await showDialog<String>(
       context,
-      PickerPopupRoute<List<PickerEntity>>(
-        list: list.map((item) => PickerEntity(name: item)).toList(),
-        initialItem: initialItem == null ? null : [initialItem],
-        onChanged: onChanged == null ? null : (list) => onChanged(list[0].name ?? ''),
-        theme: Theme.of(context),
-        barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-      ),
+      list: list.map((item) => PickerEntity<String>(name: item)).toList(),
+      initialItem: initialItem == null ? null : [initialItem],
+      onChanged: onChanged == null ? null : (list) => onChanged(list[0].name ?? ''),
     );
-    if (result == null) return null;
-    return result[0].name;
+    if (result == null || result.isEmpty) return null;
+    return result.first.name ?? "";
+  }
+
+  static Future<List<PickerEntity<I>>?> showDialog<I>(
+    BuildContext context, {
+    bool barrierDismissible = true,
+    required List<PickerEntity<I>> list,
+    List<String>? initialItem,
+    List<String>? labels,
+    Widget Function(BuildContext context, PickerEntity<I> item)? itemBuilder,
+    ValueChanged<List<PickerEntity<I>>>? onChanged,
+  }) async {
+    return await Navigator.push<List<PickerEntity<I>>>(
+      context,
+      PickerPopupRoute<List<PickerEntity<I>>>(
+          barrierDismissible: barrierDismissible,
+          theme: Theme.of(context),
+          barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+          pageBuilder: (pageRoute) {
+            return PickerView<I>(
+              pickers: list,
+              initialPicker: initialItem,
+              labels: labels,
+              itemBuilder: itemBuilder,
+              popupRoute: pageRoute,
+              onChanged: onChanged,
+            );
+          }),
+    );
   }
 
   // 获取所有城市名称
@@ -167,12 +189,12 @@ class PickerView<T> extends StatefulWidget {
   }
 
   @override
-  State<StatefulWidget> createState() => _PickerViewState();
+  State<PickerView<T>> createState() => _PickerViewState<T>();
 }
 
 /// 列表选择器的状态
-class _PickerViewState<T> extends State<PickerView> {
-  List<PickerEntity> _list = [];
+class _PickerViewState<T> extends State<PickerView<T>> {
+  List<PickerEntity<T>> _list = [];
   List<int> _selectedIndexes = [];
   List<FixedExtentScrollController> _controllers = [];
   int _len = 0;
@@ -182,13 +204,13 @@ class _PickerViewState<T> extends State<PickerView> {
     super.initState();
 
     // 获取数据
-    _list = widget.list;
+    _list = widget.pickers;
     _len = _getMaxLevel(0, _list);
 
     // 初始化选中的下标
     _selectedIndexes = List.generate(_len, (index) => 0);
-    List<PickerEntity>? data = _list;
-    List<String> names = widget.initialItem ?? [];
+    List<PickerEntity<T>>? data = _list;
+    List<String> names = widget.initialPicker ?? [];
     for (int i = 0; i < names.length; i++) {
       // 数据为空不处理
       if (data == null || data.isEmpty) continue;
@@ -208,8 +230,8 @@ class _PickerViewState<T> extends State<PickerView> {
   }
 
   /// 获取List的最大深度
-  int _getMaxLevel(int level, List<PickerEntity> list) {
-    if (list.isNotEmpty && list[0].list == null) {
+  int _getMaxLevel(int level, List<PickerEntity<T>> list) {
+    if (list.isNotEmpty && list.first.list == null) {
       return level + 1;
     }
     int maxLevel = level;
@@ -222,13 +244,17 @@ class _PickerViewState<T> extends State<PickerView> {
 
   @override
   Widget build(BuildContext context) {
+    var animation = widget.popupRoute.animation;
+    if (animation == null) {
+      return const SizedBox.shrink();
+    }
     return GestureDetector(
       child: AnimatedBuilder(
-        animation: widget.route.animation!,
+        animation: animation,
         builder: (BuildContext context, Widget? child) {
           return ClipRect(
             child: CustomSingleChildLayout(
-              delegate: _BottomPickerLayout(widget.route.animation!.value),
+              delegate: _BottomPickerLayout(animation.value),
               child: GestureDetector(
                 child: Material(
                   color: Colors.transparent,
@@ -274,20 +300,16 @@ class _PickerViewState<T> extends State<PickerView> {
               ),
             ),
             onPressed: () {
-              List<PickerEntity> results = [];
-              List<PickerEntity> data = _list;
-              for (var index in _selectedIndexes) {
-                PickerEntity item = data[index];
-                results.add(PickerEntity(
-                  name: item.name,
-                  data: item.data,
-                ));
+              List<int> indexes = _selectedIndexes;
+              List<PickerEntity<T>> data = _list;
+              List<PickerEntity<T>> results = [];
+              for (var index in indexes) {
+                PickerEntity<T> item = data[index];
+                results.add(item);
                 data = item.list ?? [];
               }
-              if (widget.onChanged != null) {
-                widget.onChanged!(results);
-              }
-              Navigator.pop(context, results);
+              widget.onChanged?.call(results);
+              Navigator.pop<List<PickerEntity<T>>>(context, results);
             },
           ),
         ),
@@ -297,58 +319,60 @@ class _PickerViewState<T> extends State<PickerView> {
 
   /// 选择布局列表
   Widget _buildPickerListView() {
-    List<PickerEntity> getData(int i, int level, List<PickerEntity> list, int index) {
-      if (i == level) {
-        return list;
-      }
-      return getData(i + 1, level, list[index].list ?? [], _selectedIndexes[i + 1]);
-    }
-
+    var indexes = _selectedIndexes;
     List<Widget> widgets = [];
-    for (int i = 0; i < _len; i++) {
-      widgets.add(_buildSinglePickerView(i, getData(0, i, _list, _selectedIndexes[0])));
+    widgets.add(const SizedBox(width: 10));
+    for (int level = 0; level < indexes.length; level++) {
+      // 根据层级数找到对应展示的List
+      var list = _list;
+      int j = 0;
+      while (true) {
+        if (j == level) break;
+        list = list[indexes[j++]].list ?? [];
+      }
+      widgets.add(Expanded(child: _buildSinglePickerView(level, list)));
+      // 单位名称
+      var labels = widget.labels;
+      if (labels == null) continue;
+      String? label = level < labels.length ? labels[level] : null;
+      if (label == null) continue;
+      widgets.add(const SizedBox(width: 4));
+      widgets.add(Text(label));
+      widgets.add(const SizedBox(width: 4));
     }
+    widgets.add(const SizedBox(width: 10));
     return Container(
       height: _kPickerHeight,
       decoration: const BoxDecoration(color: Colors.white),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: widgets,
-      ),
+      child: Row(children: widgets),
     );
   }
 
   /// 单个选择列表的布局
   /// [index] 单个列表所在的下标
   /// [list] 单个选择列表布局对应展示的数据列表
-  Widget _buildSinglePickerView(int index, List<PickerEntity> list) {
+  Widget _buildSinglePickerView(int index, List<PickerEntity<T>> list) {
     List<Widget> widgets = [];
     for (int i = 0; i < list.length; i++) {
-      PickerEntity item = list[i];
-      if (widget.itemBuilder == null) {
-        widgets.add(_buildPickerItemView(item.name ?? ''));
-      } else {
-        widget.itemBuilder!(context, i);
-      }
+      PickerEntity<T> item = list[i];
+      widgets.add((widget.itemBuilder ?? _buildPickerItemView).call(context, item));
     }
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(8.0),
-        height: _kPickerHeight,
-        decoration: const BoxDecoration(color: Colors.white),
-        child: CupertinoPicker(
-          backgroundColor: Colors.white,
-          scrollController: _controllers[index],
-          itemExtent: _kPickerItemHeight,
-          onSelectedItemChanged: (int i) => _update(index, list, i),
-          children: widgets,
-        ),
+    return Container(
+      height: _kPickerHeight,
+      decoration: const BoxDecoration(color: Colors.white),
+      child: CupertinoPicker(
+        backgroundColor: Colors.white,
+        scrollController: _controllers[index],
+        itemExtent: _kPickerItemHeight,
+        onSelectedItemChanged: (int i) => _update(index, list, i),
+        children: widgets,
       ),
     );
   }
 
   /// 选择列表的子布局
-  Widget _buildPickerItemView(String text) {
+  Widget _buildPickerItemView(BuildContext context, PickerEntity<T> item) {
+    String text = item.name ?? '';
     return Container(
       height: _kPickerItemHeight,
       alignment: Alignment.center,
@@ -368,13 +392,14 @@ class _PickerViewState<T> extends State<PickerView> {
     double ratio = 0;
     if (text.length <= 6) {
       return 18.0;
-    } else if (text.length < 9) {
-      return 16.0 + ratio;
-    } else if (text.length < 13) {
-      return 12.0 + ratio;
-    } else {
-      return 10.0 + ratio;
     }
+    if (text.length < 9) {
+      return 16.0 + ratio;
+    }
+    if (text.length < 13) {
+      return 12.0 + ratio;
+    }
+    return 10.0 + ratio;
   }
 
   /// 更新数据
@@ -389,37 +414,31 @@ class _PickerViewState<T> extends State<PickerView> {
 
   @override
   void dispose() {
-    super.dispose();
     for (var controller in _controllers) {
       controller.dispose();
     }
+    super.dispose();
   }
 }
 
 /// Popup弹入弹出的动画
 class PickerPopupRoute<T> extends PopupRoute<T> {
-  final List<PickerEntity> list;
-  final List<String>? initialItem;
-  final IndexedWidgetBuilder? itemBuilder;
-  final ValueChanged<List<PickerEntity>>? onChanged;
+  final Widget Function(PopupRoute<T> pageRoute) pageBuilder;
   final ThemeData theme;
-  final bool dismissible;
+  final bool _barrierDismissible;
 
   PickerPopupRoute({
-    this.dismissible = true,
-    required this.list,
-    this.initialItem,
-    this.itemBuilder,
-    this.onChanged,
+    required this.pageBuilder,
     required this.theme,
+    bool barrierDismissible = true,
     required this.barrierLabel,
-  });
+  }) : _barrierDismissible = barrierDismissible;
 
   @override
   Duration get transitionDuration => const Duration(milliseconds: 200);
 
   @override
-  bool get barrierDismissible => dismissible;
+  bool get barrierDismissible => _barrierDismissible;
 
   @override
   final String barrierLabel;
@@ -432,13 +451,7 @@ class PickerPopupRoute<T> extends PopupRoute<T> {
     Widget bottomSheet = MediaQuery.removePadding(
       context: context,
       removeTop: true,
-      child: PickerView(
-        list: list,
-        route: this,
-        initialItem: initialItem,
-        itemBuilder: itemBuilder,
-        onChanged: onChanged,
-      ),
+      child: pageBuilder.call(this),
     );
     bottomSheet = Theme(data: theme, child: bottomSheet);
     return bottomSheet;
@@ -448,7 +461,7 @@ class PickerPopupRoute<T> extends PopupRoute<T> {
 /// Picker展示的数据
 class PickerEntity<T> {
   String? name;
-  List<PickerEntity>? list;
+  List<PickerEntity<T>>? list;
   T? data;
 
   PickerEntity({this.name, this.list, this.data});
@@ -482,172 +495,3 @@ class _BottomPickerLayout extends SingleChildLayoutDelegate {
     return progress != oldDelegate.progress;
   }
 }
-
-/// TODO 待实现
-// class ChatTimePicker {
-//   static List<String> days = [];
-//   static List<List<String>> hrs = [];
-//   static List<List<List<String>>> mins = [];
-//
-//   static late DateTime start, end;
-//
-//   static void showPicker(BuildContext context, {required DateChangedCallback onConfirm, required Function onCancel}) {
-//     DateTime now = DateTime.now();
-//     start = now.add(Duration(minutes: 10));
-//     end = DateTime(now.year, now.month, now.day + 2, 23, 59);
-//
-//     // print('start $start end $end');
-//
-//     getDateList();
-//
-//     Navigator.push(
-//         context,
-//         BasePickerRoute<String>(
-//           list: [],
-//           onConfirm: onConfirm,
-//           dismissible: false,
-//           onCancel: onCancel,
-//           theme: Theme.of(context /*, shadowThemeOnly: true*/),
-//           barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-//         ));
-//   }
-//
-//   static getDateList() {
-//     List<List<String>> tmpHrs = [];
-//     List<List<List<String>>> tmpMins = [];
-//     var formatter = DateFormat('MM-dd');
-//     days = ['今天', formatter.format(start.add(Duration(days: 1))), formatter.format(start.add(Duration(days: 2)))];
-//
-//     for (int i = 0; i < days.length; i++) {
-//       String day = days[i];
-//
-//       List<String> tmp_hr = List.generate(24, (index) => '${index}');
-//       if ('今天' == day) {
-//         tmp_hr = List.generate(24 - start.hour, (index) => '${index + start.hour}');
-//       }
-//       tmpHrs.add(tmp_hr);
-//
-//       List<List<String>> tmp_mins = [];
-//       for (int j = 0; j < tmp_hr.length; j++) {
-//         String hour = tmp_hr[j];
-//         // List<String> tmp_min = List.generate(60, (index) => '${Utils.fillDigits(index, 2)}');
-//         // if ('今天' == day && '${start.hour}' == hour) {
-//         //   tmp_min = List.generate(60 - start.minute, (index) => '${Utils.fillDigits(index + start.minute, 2)}');
-//         // }
-//         // tmp_mins.add(tmp_min);
-//       }
-//       tmpMins.add(tmp_mins);
-//     }
-//     hrs = tmpHrs;
-//     mins = tmpMins;
-//   }
-// }
-//
-// enum DateType { YMD, YM, Y }
-//
-// class DatePicker {
-//   static List<int> years = [];
-//   static List<List<int>> months = [];
-//   static List<List<List<int>>> days = [];
-//
-//   static late DateTime start, end;
-//   static late DateType dType;
-//
-//   static void showPicker(
-//     BuildContext context, {
-//     DateTime? startDate,
-//     DateTime? endDate,
-//     DateTime? selectDate,
-//     DateType dateType = DateType.YMD,
-//     required DateChangedCallback onConfirm,
-//   }) {
-//     DateTime now = DateTime.now();
-//     selectDate ??= now;
-//
-//     startDate ??= DateTime(now.year - 100, 1, 1);
-//     endDate ??= DateTime(now.year + 15, now.month, now.day);
-//
-//     start = startDate;
-//     end = endDate;
-//     dType = dateType;
-//
-//     getDateList();
-//     if (dateType == DateType.Y) {
-//       Navigator.push(
-//         context,
-//         BasePickerRoute<int>(
-//           list: [],
-//           onConfirm: onConfirm,
-//           theme: Theme.of(context /*, shadowThemeOnly: true*/),
-//           barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-//         ),
-//       );
-//     } else if (dateType == DateType.YM) {
-//       Navigator.push(
-//         context,
-//         BasePickerRoute<int>(
-//           list: [],
-//           onConfirm: onConfirm,
-//           theme: Theme.of(context /*, shadowThemeOnly: true*/),
-//           barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-//         ),
-//       );
-//     } else {
-//       Navigator.push(
-//         context,
-//         BasePickerRoute<int>(
-//           list: [],
-//           onConfirm: onConfirm,
-//           theme: Theme.of(context /*, shadowThemeOnly: true*/),
-//           barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-//         ),
-//       );
-//     }
-//   }
-//
-//   static getDateList() {
-//     List<List<int>> tmpMonths = [];
-//     List<List<List<int>>> tmpDays = [];
-//     int yearCount = end.year - start.year + 1;
-//     years = List.generate(yearCount, (index) => start.year + index);
-//
-//     for (int i = 0; i < years.length; i++) {
-//       int year = years[i];
-//
-//       List<int> tmp_month = List.generate(12, (index) => index + 1);
-//       if (end.year == year) {
-//         tmp_month = List.generate(end.month, (index) => index + 1);
-//       } else if (start.year == year) {
-//         tmp_month = List.generate(12 - start.month + 1, (index) => index + start.month);
-//       }
-//       tmpMonths.add(tmp_month);
-//       print('year $year month ${tmp_month}');
-//
-//       if (dType == DateType.YMD) {
-//         List<List<int>> tmp_days = [];
-//         for (int j = 0; j < tmp_month.length; j++) {
-//           int month = tmp_month[j];
-//           List<int> tmp_day;
-//           if ([1, 3, 5, 7, 8, 10, 12].contains(month)) {
-//             tmp_day = List.generate(31, (index) => index + 1);
-//           } else if ([4, 6, 9, 11].contains(month)) {
-//             tmp_day = List.generate(30, (index) => index + 1);
-//           } else {
-//             if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
-//               tmp_day = List.generate(29, (index) => index + 1);
-//             } else {
-//               tmp_day = List.generate(28, (index) => index + 1);
-//             }
-//           }
-//           if (end.year == year && end.month == month) {
-//             tmp_day = List.generate(end.day, (index) => index + 1);
-//           }
-//           tmp_days.add(tmp_day);
-//         }
-//         tmpDays.add(tmp_days);
-//       }
-//     }
-//     months = tmpMonths;
-//     days = tmpDays;
-//   }
-// }

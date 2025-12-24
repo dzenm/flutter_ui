@@ -1,9 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:http/http.dart' as http;
 
@@ -34,6 +37,19 @@ class ImageCacheView extends StatelessWidget {
     this.placeholder,
     this.errorPlaceholder,
   });
+
+  static Future<void> clear(String? url) async {
+    String uri = url ?? '';
+    if (uri.isEmpty) {
+      return;
+    }
+    await CachedNetworkImage.evictFromCache(
+      uri,
+      cacheManager: uri.startsWith('http') //
+          ? ImageCacheManager()
+          : null,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -207,4 +223,35 @@ class FileImageExt extends FileImage {
 
   @override
   int get hashCode => Object.hash(file.path, scale);
+}
+
+/// 截取组件保存为图片
+mixin ScreenshotImageMixin<T extends StatefulWidget> on State<T> {
+  Future<Uint8List?> renderImage(
+    GlobalKey globalKey, {
+    double pixelRatio = 3.0,
+  }) async {
+    Uint8List? bytes = await _renderImageAsBytes(globalKey, pixelRatio);
+    if (bytes == null) {
+      return null;
+    }
+    return bytes;
+  }
+
+  Future<Uint8List?> _renderImageAsBytes(
+    GlobalKey globalKey,
+    double pixelRatio,
+  ) async {
+    RenderObject? renderObject = globalKey.currentContext?.findRenderObject();
+    if (renderObject == null) {
+      return null;
+    }
+    RenderRepaintBoundary boundary = renderObject as RenderRepaintBoundary;
+    var image = await boundary.toImage(pixelRatio: pixelRatio);
+    var byteData = await image.toByteData(format: ImageByteFormat.png);
+    if (byteData == null) {
+      return null;
+    }
+    return byteData.buffer.asUint8List();
+  }
 }

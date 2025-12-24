@@ -73,7 +73,7 @@ class _SettingPageState extends State<SettingPage> with Logging {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 background: theme.white,
                 child: SingleTextView(
-                  icon: Icons.notifications_on_sharp,
+                  image: const Icon(Icons.notifications_on_sharp),
                   title: S.of(context).notification,
                   suffix: CupertinoSwitch(
                     value: switchState,
@@ -87,7 +87,7 @@ class _SettingPageState extends State<SettingPage> with Logging {
                 background: theme.white,
                 onTap: () => _selectedTheme(),
                 child: SingleTextView(
-                  icon: Icons.color_lens,
+                  image: const Icon(Icons.color_lens),
                   title: S.of(context).theme,
                   forward: const ForwardView(),
                   suffix: Container(
@@ -104,11 +104,10 @@ class _SettingPageState extends State<SettingPage> with Logging {
                 background: theme.white,
                 onTap: _selectedLanguage,
                 child: SingleTextView(
-                  icon: Icons.language,
+                  image: const Icon(Icons.language),
                   title: S.of(context).language,
                   forward: const ForwardView(),
                   text: _convertLocale(locale),
-                  textAlign: TextAlign.right,
                 ),
               ),
               const DividerView(height: 8),

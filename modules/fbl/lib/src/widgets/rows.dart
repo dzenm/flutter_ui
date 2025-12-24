@@ -5,26 +5,15 @@ import 'icons.dart';
 import 'tap.dart';
 
 ///
-/// Created by a0010 on 2024/12/30 15:58
-/// 单行占满的布局的通用组件
-///
-
-///
-/// Created by a0010 on 2025/1/2 15:14
-///
-
-///
 /// 单行文本布局
 /// SingleTextView(
 ///   icon: Icons.language,
 ///   title: S.of(context).language,
-///   forward: const ForwardView(),
+///   isShowForward: true,
 ///   text: _convertLocale(locale),
 ///   isTextLeft: false,
 /// )
 class SingleTextView extends StatelessWidget {
-  final IconData? icon; // 标题图标
-  final Color? iconColor; // 标题图标颜色
   final Widget? image; // 标题图像
   final String? title; // 标题文本
   final Color? titleColor; // 标题文本颜色
@@ -35,12 +24,9 @@ class SingleTextView extends StatelessWidget {
   final Widget? child; // 内容布局
   final String? text; // 内容文本
   final Color? textColor; // 内容文本颜色
-
-  final String? summary; // 概要文本
-  final Color? summaryColor; // 概要文本颜色
-
   final double fontSize; //字体大小
-  final TextAlign textAlign; // 内容展示的起始位置
+
+  final Widget? summary; // 概要文本
 
   final Widget? suffix; // 指向下一级按钮前的布局
   final Widget? badge; // 徽章布局（小红点/数量提示）
@@ -48,21 +34,17 @@ class SingleTextView extends StatelessWidget {
 
   const SingleTextView({
     super.key,
-    this.icon,
-    this.iconColor,
     this.image,
     this.title,
     this.titleColor,
     this.contentDistance = 0,
     this.prefix,
     this.isDense = false,
-    this.text,
     this.child,
+    this.text,
     this.textColor,
-    this.summary,
-    this.summaryColor,
     this.fontSize = 14,
-    this.textAlign = TextAlign.left,
+    this.summary,
     this.suffix,
     this.badge,
     this.forward,
@@ -73,24 +55,27 @@ class SingleTextView extends StatelessWidget {
     return Row(children: [
       Expanded(
         child: Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.start, children: [
-          _TitleView(
-            icon: icon,
-            iconColor: iconColor,
+          TitleView(
             image: image,
-            title: title,
-            titleColor: titleColor,
+            title: Text(
+              title ?? '',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: fontSize,
+                color: titleColor,
+              ),
+            ),
             contentDistance: contentDistance,
             prefix: prefix,
             isDense: isDense,
             text: text,
-            textColor: textColor,
             fontSize: fontSize,
-            textAlign: textAlign,
             child: child,
           ),
-          if (summary != null) const SizedBox(height: 8),
+          if (summary != null) const SizedBox(height: 6),
           // 概要文本
-          _buildSummaryText(),
+          if (summary != null) summary!,
         ]),
       ),
       if (text != null) SizedBox(width: 8 + contentDistance),
@@ -100,20 +85,6 @@ class SingleTextView extends StatelessWidget {
       if (badge != null) badge!, // 小红点
       if (forward != null) forward!, // 下一级
     ]);
-  }
-  Widget _buildSummaryText() {
-    if (summary == null) {
-      return const SizedBox.shrink();
-    }
-    return Text(
-      summary ?? '',
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      style: TextStyle(
-        fontSize: fontSize - 2,
-        color: summaryColor,
-      ),
-    );
   }
 }
 
@@ -125,96 +96,60 @@ class SingleTextView extends StatelessWidget {
 ///   isDense: true,
 ///   mainAxisSize: MainAxisSize.min,
 /// )
-class _TitleView extends StatelessWidget {
-  final IconData? icon; // 标题图标
-  final Color? iconColor; // 标题图标颜色
-
+class TitleView extends StatelessWidget {
   final Widget? image; // 标题图像
-  final String? title; // 标题文本
-  final Color? titleColor; // 标题文本颜色
+  final Widget? title; // 标题
   final double contentDistance; // 内容两边的间距
-
   final Widget? prefix; // 标题后内容前的布局
   final bool isDense; // 标题和内容是否存在间距
 
   final Widget? child; // 内容布局
   final String? text; // 内容文本
-  final Color? textColor; // 内容文本颜色
-
+  final Color? color; // 内容文本颜色
   final double fontSize; //字体大小
-  final TextAlign textAlign; // 内容展示的起始位置
 
-  const _TitleView({
+  const TitleView({
     super.key,
-    this.icon,
-    this.iconColor,
     this.image,
     this.title,
-    this.titleColor,
     this.contentDistance = 0,
     this.prefix,
     this.isDense = false,
     this.text,
     this.child,
-    this.textColor,
+    this.color,
     this.fontSize = 14,
-    this.textAlign = TextAlign.left,
   });
 
   @override
   Widget build(BuildContext context) {
     return Row(children: [
       // 标题图标
-      _buildTitleIcon(),
-      if ((icon != null || image != null) && title != null) SizedBox(width: 8 + contentDistance),
+      if (image != null) image!,
+      if (image != null && title != null) SizedBox(width: 8 + contentDistance),
       // 标题文本
-      _buildTitleText(),
+      if (title != null) title!,
       if (prefix != null) const SizedBox(width: 8),
       // 前缀布局
       if (prefix != null) prefix!,
-      if ((icon != null || image != null || title != null) && !isDense) const SizedBox(width: 16),
-      // 文本内容(Expanded用于解决文本过长导致布局溢出的错误)
+      if ((image != null || title != null) && isDense) const SizedBox(width: 16),
+      // 文本内容(Flexible用于解决文本过长导致布局溢出的错误)
       Flexible(child: _buildContentText()),
     ]);
   }
 
-  Widget _buildTitleIcon() {
-    if (icon != null) {
-      return Icon(icon, color: iconColor, size: fontSize + 4);
-    }
-    if (image != null) {
-      return image!;
-    }
-    return const SizedBox.shrink();
-  }
-
-  Widget _buildTitleText() {
-    if (title == null) {
-      return const SizedBox.shrink();
-    }
-    return Text(
-      title ?? '',
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      style: TextStyle(
-        fontSize: fontSize,
-        color: titleColor,
-      ),
-    );
-  }
-
   Widget _buildContentText() {
-    if (text == null) {
-      return Row(children: [child ?? const SizedBox(width: 0)]);
+    if (child != null) {
+      return child!;
     }
     return Text(
       text ?? '',
-      textAlign: textAlign,
+      textAlign: TextAlign.left,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       style: TextStyle(
         fontSize: fontSize,
-        color: textColor,
+        color: color,
       ),
     );
   }
@@ -591,14 +526,16 @@ class SubTitleView extends StatelessWidget {
   final GestureTapCallback? onTap;
   final Widget? image;
   final Widget? suffix;
+  final Widget? summary;
   final bool isShowForward;
 
   const SubTitleView({
     super.key,
     required this.text,
+    this.onTap,
     this.image,
     this.suffix,
-    this.onTap,
+    this.summary,
     this.isShowForward = false,
   });
 
@@ -606,13 +543,14 @@ class SubTitleView extends StatelessWidget {
   Widget build(BuildContext context) {
     return TapLayout(
       background: Colors.white,
-      height: 45,
-      padding: const EdgeInsets.symmetric(horizontal: 15),
+      height: summary == null ? 45 : null,
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: summary == null ? 0 : 12),
       onTap: onTap,
       child: SingleTextView(
         image: image,
         suffix: suffix,
         forward: isShowForward ? const ForwardView() : null,
+        summary: summary,
         child: Text(text, style: const TextStyle(fontSize: 16)),
       ),
     );

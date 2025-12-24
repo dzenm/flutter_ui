@@ -99,7 +99,8 @@ dev_dependencies:
   build_runner: 2.4.11                          # 自动生成工具 https://pub.flutter-io.cn/packages/build_runner
   retrofit_generator: 8.2.0                     # retrofit自动生成工具 https://pub.flutter-io.cn/packages/retrofit_generator
   json_serializable: 6.8.0                      # json序列化自动生成工具 https://pub.flutter-io.cn/packages/json_serializable
-
+  database_generator:
+    path: ./modules/database_generator
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your

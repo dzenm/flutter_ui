@@ -22,6 +22,7 @@ export 'picker/picker.dart';
 export 'progress.dart';
 export 'rows.dart';
 export 'scrollview/scrollview_observer.dart';
+export 'selector.dart';
 export 'shimmer.dart';
 export 'stars.dart';
 export 'states.dart';

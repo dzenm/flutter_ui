@@ -13,50 +13,123 @@ const double _kWindowScreenPadding = 0.0;
 class CustomPopupSubmenu<T> extends StatelessWidget {
   const CustomPopupSubmenu({
     super.key,
+    required this.popupRoute,
+    required this.animation,
+    required this.secondaryAnimation,
     required this.child,
-    this.semanticLabel,
+    required this.position,
     this.constraints,
+    this.elevation = 8.0,
+    this.backgroundColor = Colors.transparent,
   });
 
+  final PopupRoute<T> popupRoute;
+  final Animation<double> animation;
+  final Animation<double> secondaryAnimation;
   final Widget child;
-  final String? semanticLabel;
+  final RelativeRect position;
   final BoxConstraints? constraints;
+  final double elevation;
+  final Color? backgroundColor; // const Color(0x99000000)
 
-  ///弹窗方法
-  static Future<T?> show<T>({
+  /// 弹窗方法
+  static Future<SubmenuEntity<T>?> show<T>({
     required BuildContext context,
     required Widget child,
     required RelativeRect position,
-    double elevation = 8.0,
-    String? semanticLabel,
     BoxConstraints? constraints,
+    double elevation = 8.0,
   }) async {
-    Route<T> route = _CustomPopupSubmenuRoute(
-      position: position,
-      elevation: elevation,
-      theme: Theme.of(context),
-      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-      builder: (route) {
-        return _buildContentView(
-          child: CustomPopupSubmenu<T>(
-            semanticLabel: semanticLabel ?? MaterialLocalizations.of(context).popupMenuLabel,
+    return await Navigator.push<SubmenuEntity<T>>(
+      context,
+      _CustomPopupSubmenuRoute<SubmenuEntity<T>>(
+        barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        builder: (popupRoute, animation, secondaryAnimation) {
+          return CustomPopupSubmenu<SubmenuEntity<T>>(
+            popupRoute: popupRoute,
+            animation: animation,
+            secondaryAnimation: secondaryAnimation,
+            position: position,
             constraints: constraints,
+            elevation: elevation,
             child: child,
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
-    return await Navigator.push<T>(context, route);
   }
 
-  static Future<T?> showList<T>(
+  static Future<SubmenuEntity<String>?> showListText(
     BuildContext context,
     GlobalKey targetKey,
     List<String> items, {
-    void Function(String item)? onTap,
-    Alignment? alignment,
+    ValueChanged<String>? onTap,
     double width = 100,
   }) async {
+    List<SubmenuEntity<String>> list = [];
+    for (var item in items) {
+      var submenu = SubmenuEntity<String>(title: item.toString(), data: item);
+      list.add(submenu);
+    }
+    return await showList(
+      context,
+      targetKey,
+      list,
+      width: width,
+      onTap: (item) {
+        onTap?.call(item.title);
+      },
+    );
+  }
+
+  static Future<SubmenuEntity<T>?> showList<T>(
+    BuildContext context,
+    GlobalKey targetKey,
+    List<SubmenuEntity<T>> items, {
+    ValueChanged<SubmenuEntity<T>>? onTap,
+    double width = 100,
+  }) async {
+    return await show<T>(
+      context: context,
+      position: _createRect(context, targetKey, items),
+      elevation: 0.0,
+      child: Builder(builder: (context) {
+        List<Widget> children = [];
+        int index = 0;
+        for (var item in items) {
+          children.add(TapLayout(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            onTap: () {
+              onTap?.call(item);
+              Navigator.pop(context, item);
+            },
+            child: Text(item.title, style: const TextStyle(fontSize: 16)),
+          ));
+          if (index < items.length - 1) {
+            children.add(const Divider(
+              height: 0.5,
+              indent: 15,
+              endIndent: 15,
+              color: Color(0xFFEEEEEE),
+            ));
+          }
+          index++;
+        }
+        return Container(
+          // key: popupKey,
+          width: width,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(5),
+            border: Border.all(color: const Color(0xffE6E6E6), width: 1),
+          ),
+          child: Column(mainAxisSize: MainAxisSize.min, children: children),
+        );
+      }),
+    );
+  }
+
+  static RelativeRect _createRect(BuildContext context, GlobalKey targetKey, List<SubmenuEntity> items) {
     // GlobalKey popupKey = GlobalKey();
     RenderBox targetView = targetKey.currentContext!.findRenderObject() as RenderBox;
     // RenderBox popupChildView = popupKey.currentContext!.findRenderObject() as RenderBox;
@@ -76,56 +149,28 @@ class CustomPopupSubmenu<T> extends StatelessWidget {
       Rect.fromPoints(a, b),
       Offset.zero & popupView.size,
     );
-
-    return await show<T>(
-      context: context,
-      position: position,
-      elevation: 0.0,
-      child: GestureDetector(
-        onTap: () => Navigator.pop(context),
-        child: Container(
-          // key: popupKey,
-          width: width,
-          padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(5),
-            border: Border.all(color: const Color(0xffE6E6E6), width: 1),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: items
-                .map(
-                  (item) => Column(children: [
-                    TapLayout(
-                      height: 35,
-                      alignment: alignment,
-                      foreground: Colors.transparent,
-                      onTap: () {
-                        if (onTap != null) onTap(item);
-                        Navigator.pop(context);
-                      },
-                      child: Text(item, style: const TextStyle(fontSize: 16)),
-                    ),
-                    if (items.indexOf(item) != items.length - 1)
-                      const Divider(
-                        height: 0.5,
-                        indent: 0,
-                        endIndent: 0,
-                        color: Color(0xFFEEEEEE),
-                      ),
-                  ]),
-                )
-                .toList(),
-          ),
-        ),
-      ),
-    );
+    return position;
   }
 
-  static Widget _buildContentView({required Widget child}) {
-    return Container(
+  @override
+  Widget build(BuildContext context) {
+    BoxConstraints? boxConstraints = constraints ??
+        const BoxConstraints(
+          minWidth: _kWindowMinWidth,
+          maxWidth: _kWindowMaxWidth,
+        );
+    // 限制大小
+    Widget current = ConstrainedBox(
+      constraints: boxConstraints,
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(
+          vertical: _kWindowVerticalPadding,
+        ),
+        child: child,
+      ),
+    );
+    // 外层阴影
+    current = Container(
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -146,42 +191,87 @@ class CustomPopupSubmenu<T> extends StatelessWidget {
           ),
         ],
       ),
-      child: child,
+      child: current,
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: constraints ??
-          const BoxConstraints(
-            minWidth: _kWindowMinWidth,
-            maxWidth: _kWindowMaxWidth,
+    // 显示隐藏的动画
+    const double length = 10.0;
+    const double unit = 1.0 / (length + 1.5); // 1.0 for the width and 0.5 for the last item's fade.
+    CurveTween opacity = CurveTween(curve: const Interval(0.0, 1.0 / 3.0));
+    CurveTween width = CurveTween(curve: const Interval(0.0, unit));
+    CurveTween height = CurveTween(curve: const Interval(0.0, unit * length));
+    current = AnimatedBuilder(
+      animation: animation,
+      builder: (BuildContext context, Widget? child) {
+        return Opacity(
+          opacity: opacity.evaluate(animation),
+          child: Material(
+            type: elevation == 0 ? MaterialType.transparency : MaterialType.card,
+            elevation: elevation,
+            child: Align(
+              alignment: AlignmentDirectional.topEnd,
+              widthFactor: width.evaluate(animation),
+              heightFactor: height.evaluate(animation),
+              child: Semantics(
+                scopesRoute: true,
+                namesRoute: true,
+                explicitChildNodes: true,
+                label: MaterialLocalizations.of(context).popupMenuLabel,
+                child: child,
+              ),
+            ),
           ),
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: _kWindowVerticalPadding),
-        child: child,
+        );
+      },
+      child: current,
+    );
+    return MediaQuery.removePadding(
+      context: context,
+      removeTop: true,
+      removeBottom: true,
+      removeLeft: true,
+      removeRight: true,
+      child: Material(
+        type: MaterialType.transparency,
+        color: backgroundColor,
+        child: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: CustomSingleChildLayout(
+            delegate: _CustomPopupSubmenuLayoutDelegate(
+              position,
+              null,
+              Directionality.of(context),
+            ),
+            child: Theme(data: Theme.of(context), child: current),
+          ),
+        ),
       ),
     );
   }
 }
 
+class SubmenuEntity<T> {
+  String get text => title;
+  final String title;
+  final T? data;
+
+  SubmenuEntity({required this.title, this.data});
+}
+
+/// 自定义弹窗布局创建
+typedef SubmenuPageBuilder<T> = Widget Function(
+  PopupRoute<T> route,
+  Animation<double> animation,
+  Animation<double> secondaryAnimation,
+);
+
 /// 自定义弹窗路由：添加弹出位置、动画等约束条件
 class _CustomPopupSubmenuRoute<T> extends PopupRoute<T> {
   _CustomPopupSubmenuRoute({
     required this.builder,
-    required this.position,
-    this.elevation = 8.0,
-    this.theme,
-    this.backgroundColor = Colors.transparent,
     this.barrierLabel,
   }) : super();
 
-  final Widget Function(PopupRoute route) builder;
-  final RelativeRect position;
-  final double elevation;
-  final ThemeData? theme;
-  final Color? backgroundColor; // const Color(0x99000000)
+  final SubmenuPageBuilder<T> builder;
 
   @override
   bool get barrierDismissible => true;
@@ -207,65 +297,7 @@ class _CustomPopupSubmenuRoute<T> extends PopupRoute<T> {
     Animation<double> animation,
     Animation<double> secondaryAnimation,
   ) {
-    const double length = 10.0;
-    const double unit = 1.0 / (length + 1.5); // 1.0 for the width and 0.5 for the last item's fade.
-    CurveTween opacity = CurveTween(curve: const Interval(0.0, 1.0 / 3.0));
-    CurveTween width = CurveTween(curve: const Interval(0.0, unit));
-    CurveTween height = CurveTween(curve: const Interval(0.0, unit * length));
-
-    Widget child = AnimatedBuilder(
-      animation: animation,
-      builder: (BuildContext context, Widget? child) {
-        return Opacity(
-          opacity: opacity.evaluate(animation),
-          child: Material(
-            type: elevation == 0 ? MaterialType.transparency : MaterialType.card,
-            elevation: elevation,
-            child: Align(
-              alignment: AlignmentDirectional.topEnd,
-              widthFactor: width.evaluate(animation),
-              heightFactor: height.evaluate(animation),
-              child: Semantics(
-                scopesRoute: true,
-                namesRoute: true,
-                explicitChildNodes: true,
-                child: child,
-              ),
-            ),
-          ),
-        );
-      },
-      child: builder(this),
-    );
-    if (theme != null) {
-      child = Theme(data: theme!, child: child);
-    }
-    return MediaQuery.removePadding(
-      context: context,
-      removeTop: true,
-      removeBottom: true,
-      removeLeft: true,
-      removeRight: true,
-      child: Builder(
-        builder: (BuildContext context) {
-          return Material(
-            type: MaterialType.transparency,
-            child: GestureDetector(
-              onTap: () => Navigator.pop(context),
-              child: Container(
-                width: double.infinity,
-                height: double.infinity,
-                color: backgroundColor,
-                child: CustomSingleChildLayout(
-                  delegate: _CustomPopupSubmenuLayoutDelegate(position, null, Directionality.of(context)),
-                  child: child,
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
+    return builder(this, animation, secondaryAnimation);
   }
 
   @override

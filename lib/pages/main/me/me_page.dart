@@ -195,7 +195,7 @@ class _MePageState extends State<_MePage> with Logging {
         path: MeRouter.collect,
         onTap: push,
         child: SingleTextView(
-          icon: Icons.collections,
+          image: const Icon(Icons.collections),
           title: S.of(context).collect,
           forward: const ForwardView(),
         ),
@@ -204,7 +204,7 @@ class _MePageState extends State<_MePage> with Logging {
         path: MeRouter.coin,
         onTap: push,
         child: SingleTextView(
-          icon: Icons.money,
+          image: const Icon(Icons.money),
           title: S.of(context).coinRecord,
           forward: const ForwardView(),
         ),
@@ -213,7 +213,7 @@ class _MePageState extends State<_MePage> with Logging {
         path: MeRouter.rank,
         onTap: push,
         child: SingleTextView(
-          icon: Icons.money,
+          image: const Icon(Icons.money),
           title: S.of(context).integralRankingList,
           forward: const ForwardView(),
         ),
@@ -222,7 +222,7 @@ class _MePageState extends State<_MePage> with Logging {
         path: MeRouter.article,
         onTap: push,
         child: SingleTextView(
-          icon: Icons.article,
+          image: const Icon(Icons.article),
           title: S.of(context).sharedArticle,
           forward: const ForwardView(),
         ),
@@ -231,7 +231,7 @@ class _MePageState extends State<_MePage> with Logging {
         path: StudyRouter.study,
         onTap: push,
         child: SingleTextView(
-          icon: Icons.real_estate_agent_sharp,
+          image: const Icon(Icons.real_estate_agent_sharp),
           title: S.of(context).studyMainPage(''),
           forward: const ForwardView(),
         ),
@@ -240,7 +240,7 @@ class _MePageState extends State<_MePage> with Logging {
         path: MeRouter.info,
         onTap: push,
         child: SingleTextView(
-          icon: Icons.supervised_user_circle_sharp,
+          image: const Icon(Icons.supervised_user_circle_sharp),
           title: S.of(context).profile,
           forward: const ForwardView(),
         ),
@@ -249,7 +249,7 @@ class _MePageState extends State<_MePage> with Logging {
         path: MallRouter.mall,
         onTap: push,
         child: SingleTextView(
-          icon: Icons.local_mall_rounded,
+          image: const Icon(Icons.local_mall_rounded),
           title: S.of(context).mall,
           forward: const ForwardView(),
         ),
@@ -258,7 +258,7 @@ class _MePageState extends State<_MePage> with Logging {
         path: MeRouter.setting,
         onTap: push,
         child: SingleTextView(
-          icon: Icons.settings,
+          image: const Icon(Icons.settings),
           title: S.of(context).setting,
           forward: const ForwardView(),
         ),
@@ -269,10 +269,10 @@ class _MePageState extends State<_MePage> with Logging {
         onTap: () {
           context.read<MeModel>().updateText('测试数据');
         },
-        child: SingleTextView(
-          icon: Icons.settings,
+        child: const SingleTextView(
+          image: Icon(Icons.settings),
           title: '测试数据',
-          forward: const ForwardView(),
+          forward: ForwardView(),
         ),
       ),
       TapLayout(
@@ -281,10 +281,10 @@ class _MePageState extends State<_MePage> with Logging {
         onTap: () {
           context.read<MeModel>().updateText('这是测试数据');
         },
-        child: SingleTextView(
-          icon: Icons.settings,
+        child: const SingleTextView(
+          image: Icon(Icons.settings),
           title: '这是测试数据',
-          forward: const ForwardView(),
+          forward: ForwardView(),
         ),
       ),
       const SizedBox(height: 16),
