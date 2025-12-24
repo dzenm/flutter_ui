@@ -8,9 +8,6 @@ import io.flutter.Log
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugins.GeneratedPluginRegistrant
-import java.util.ArrayDeque
-import java.util.Deque
-import java.util.Queue
 
 class MainActivity : FlutterActivity() {
 
@@ -25,8 +22,7 @@ class MainActivity : FlutterActivity() {
         flutterEngine.let {
             // 注册flutter第三方依赖初始化
             GeneratedPluginRegistrant.registerWith(flutterEngine)
-            val messenger = it.dartExecutor.binaryMessenger
-            manager.register(messenger, this)
+            manager.register(flutterEngine, this)
         }
     }
 

@@ -3,6 +3,7 @@ package com.dzenm.flutter_ui.plugins
 import android.app.Activity
 import android.widget.Toast
 import io.flutter.Log
+import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -12,6 +13,7 @@ class FlutterPluginManager {
 
     companion object {
         const val FLUTTER_CHANNEL = "flutter_ui/channel/" // 通讯名称
+        const val FLUTTER_STREAM_KEYBOARD = SoftKeyboardPlugin.FLUTTER_STREAM_KEYBOARD // 软键盘监听
         const val METHOD_BACK_TO_DESKTOP = "backToDesktop"
         const val METHOD_INSTALL_APK = "installAPK"
         const val METHOD_OPEN_WIFI_HOTSPOT = "openWifiHotspot"
@@ -22,11 +24,13 @@ class FlutterPluginManager {
     /**
      * Android和flutter通信的方法通道
      */
-    fun register(messenger: BinaryMessenger, activity: Activity) {
+    fun register(flutterEngine: FlutterEngine, activity: Activity) {
+        val messenger = flutterEngine.dartExecutor.binaryMessenger
         // 监听flutter的指令调用
         MethodChannel(messenger, FLUTTER_CHANNEL).setMethodCallHandler { methodCall, result ->
             queryChannelMethod(activity, methodCall, result)
         }
+        flutterEngine.plugins.add(SoftKeyboardPlugin())
         wifiHotspot = WifiHotspot(activity)
     }
 

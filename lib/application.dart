@@ -16,6 +16,7 @@ import 'entities/entity.dart';
 import 'http/api_services.dart';
 import 'http/cookie_interceptor.dart';
 import 'pages/study/window/sub_window_page.dart';
+import 'pages/utils/keyboard.dart';
 import 'pages/widgets/keyboard/mocks/mock_binding.dart';
 
 ///
@@ -143,6 +144,12 @@ abstract mixin class _InitAppMixin {
       linux: true,
     );
 
+    FlutterChannelFactory(channels: [
+      SoftKeyboardStream(),
+    ]);
+    SoftKeyboardStream().addListener(GlobalSoftKeyboard((SoftKeyboardState softKeyboardState) {
+      log('接收到键盘发生变化：isVisible=${softKeyboardState.isSoftKeyboardVisible}, currentHeight=${softKeyboardState.softKeyboardHeight}');
+    }));
     int end = DateTime.now().millisecondsSinceEpoch;
     duration = end - now;
     log('  结束: now=$end, duration=$duration');
