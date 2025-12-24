@@ -54,9 +54,8 @@ class _InfoPageState extends State<InfoPage> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             onTap: () => ViewMediaPage.show(context, medias: images, tag: heroTag),
             child: SingleTextView(
-              icon: Icons.account_circle,
+              image: const Icon(Icons.account_circle),
               title: S.of(context).avatar,
-              textAlign: TextAlign.right,
               suffix: Hero(
                 tag: heroTag,
                 child: ClipRRect(
@@ -79,10 +78,9 @@ class _InfoPageState extends State<InfoPage> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             onTap: () => context.read<StudyModel>().setValue('new value'),
             child: SingleTextView(
-              icon: Icons.phone,
+              image: const Icon(Icons.phone),
               title: S.of(context).id,
               text: id,
-              textAlign: TextAlign.right,
               forward: const ForwardView(),
             ),
           );
@@ -98,10 +96,9 @@ class _InfoPageState extends State<InfoPage> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             onTap: () => context.pushNamed(MeRouter.editInfo, queryParameters: {'name': username}),
             child: SingleTextView(
-              icon: Icons.person,
+              image: const Icon(Icons.person),
               title: S.of(context).username,
               text: username,
-              textAlign: TextAlign.right,
               forward: const ForwardView(),
             ),
           );
@@ -117,10 +114,9 @@ class _InfoPageState extends State<InfoPage> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             onTap: () => context.read<StudyModel>().setValue('new value'),
             child: SingleTextView(
-              icon: Icons.email,
+              image: const Icon(Icons.email),
               title: S.of(context).email,
               text: email,
-              textAlign: TextAlign.right,
               forward: const ForwardView(),
             ),
           );
@@ -136,10 +132,9 @@ class _InfoPageState extends State<InfoPage> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             onTap: () => context.read<StudyModel>().setValue('new value'),
             child: SingleTextView(
-              icon: Icons.money,
+              image: const Icon(Icons.money),
               title: S.of(context).coin,
               text: coinCount,
-              textAlign: TextAlign.right,
               forward: const ForwardView(),
             ),
           );
