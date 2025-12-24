@@ -237,11 +237,23 @@ extension DateExt on Date {
     return millisecondsSinceEpoch > format.millisecondsSinceEpoch;
   }
 
+  /// 比较是否靠后
+  bool isAfterNow() {
+    Date date = Date._now();
+    return millisecondsSinceEpoch > date.millisecondsSinceEpoch;
+  }
+
   /// 比较是否靠前
   /// [other] 需要比较的时间，接受格式化的 [String] 、 [DateTime] 、 [Date] 类型
   bool isBefore(dynamic other) {
     Date format = _getDate(other);
     return millisecondsSinceEpoch < format.millisecondsSinceEpoch;
+  }
+
+  /// 比较是否靠前
+  bool isBeforeNow() {
+    Date date = Date._now();
+    return millisecondsSinceEpoch < date.millisecondsSinceEpoch;
   }
 
   /// 比较添加 [duration] 后与当前时间相比是否靠后
@@ -375,6 +387,21 @@ extension DateExt on Date {
     }
     return ymdHm;
   }
+
+  /// 今天：显示时分
+  /// 其他：显示年月日时分
+  String get formatDate {
+    Date now = Date._now();
+    if (now._yea == _yea) {
+      if (now._mon == _mon) {
+        if (now._day == _day) {
+          return hm;
+        }
+      }
+      return mdHm;
+    }
+    return ymdHm;
+  }
 }
 
 final class Time implements Comparable<Time> {
@@ -464,7 +491,12 @@ final class Time implements Comparable<Time> {
 
   int get inMicroseconds => _duration;
 
-  String get timeString => "$days天$hours小时$minutes分$seconds秒";
+  /// 7天4时36分15秒
+  String get timeString => "$days天$hours小时$minutes分$seconds秒"; //
+  /// 09:35
+  String get hm => "${Date.t(hours)}:${Date.t(minutes)}"; //
+  /// 09:35:51
+  String get hms => "${Date.t(hours)}:${Date.t(minutes)}:${Date.t(seconds)}"; //
 
   @override
   bool operator ==(Object other) => other is Time && _duration == other.inMicroseconds;
