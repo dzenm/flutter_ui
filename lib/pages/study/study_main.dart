@@ -18,6 +18,17 @@ class StudyMain {
     int value = 0;
     Stranger flag = Stranger.parse(value);
     _log('枚举结果：${flag.isNormal}');
+
+    String fileName = "20231008094730669_o.mp4";
+    String from = "_o";
+    String replace = "_t";
+    String suffix = "png";
+    String url = "https://192.168.1.129/images/app/circle/20231008094730669_o.jpg?size=720*1600";
+    var res = FileNameCompatible()._recombinationUrl(url, (filename) => FileNameCompatible().replace(filename,
+      suffix: suffix,
+    ));
+    _log("重组开始：url=$url");
+    _log("重组结果：result=$res");
   }
 
   static Future<void> _pathProviderTest() async {
@@ -118,6 +129,69 @@ class StudyMain {
 
   static void _log(String msg) {
     Log.d(msg, tag: _tag);
+  }
+}
+
+class FileNameCompatible {
+
+  /// https://192.168.1.129/images/app/circle/20231008094730669_o.jpg?size=720*1600
+  /// 将名称替换为图片的名称
+  /// [name] 20231008094730669_o.mp4
+  String replacePhotoName(String fileName) {
+    int index = fileName.lastIndexOf(".");
+    String name = fileName.substring(0, index - 1);
+    String suffix = fileName.substring(index + 1);
+    return "$name.$suffix";
+  }
+
+  /// 重组
+  String _recombinationUrl(String url, String Function(String filename) recombination) {
+    Uri uri = Uri.parse(url);
+    List<String> list = List.from(uri.pathSegments);
+    String filename = list.removeLast();
+    var text = recombination.call(filename);
+    list.add(text);
+    return uri.replace(pathSegments: list).toString();
+  }
+
+  /// 例：
+  /// String fileName = "20231008094730669_o.mp4";
+  /// String from = "_o";
+  /// String replace = "_t";
+  /// String suffix = "png";
+  /// var result = print(replace(fileName,
+  ///   from: from,
+  ///   replace: replace,
+  ///   suffix: suffix,
+  /// )); // "20231008094730669_t.png"
+  ///
+  /// from = "__o";
+  /// var result = print(replace(fileName,
+  ///   from: from,
+  ///   replace: replace,
+  ///   suffix: suffix,
+  /// )); // "20231008094730669_o.png"
+  ///
+  /// [fileName] 文件名称
+  /// [from] 需要替换结尾的文本
+  /// [replace] 替换后的文本
+  /// [fileType] 替换文件的类型
+  String replace(String fileName, {String from = "", String replace = "", String suffix = ""}) {
+    var index = fileName.lastIndexOf(".");
+    var name = fileName.substring(0, index);
+    var fileType = fileName.substring(index + 1);
+
+    String s1 = name;
+    if (name.endsWith(from)) {
+      var end = name.length - from.length;
+      var prefix = name.substring(0, end);
+      s1 = prefix + replace;
+    }
+    String s2 = fileType;
+    if (suffix.isNotEmpty) {
+      s2 = suffix;
+    }
+    return "$s1.$s2";
   }
 }
 

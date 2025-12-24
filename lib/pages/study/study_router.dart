@@ -10,6 +10,7 @@ import 'components/float_navigation/float_navigation_page.dart';
 import 'components/gif/gif_page.dart';
 import 'components/image/image_editor_page.dart';
 import 'components/keyword/keyword_board_page.dart';
+import 'components/linked/linked.dart';
 import 'components/list/list_page.dart';
 import 'components/popup/popup_page.dart';
 import 'components/qr/qr_page.dart';
@@ -56,6 +57,7 @@ class StudyRouter {
   static const String gif = 'gif';
   static const String image = 'image';
   static const String keyword = 'keyword';
+  static const String linked = 'linked';
   static const String list = 'list';
   static const String popup = 'popup';
   static const String qr = 'qr';
@@ -216,6 +218,13 @@ class StudyRouter {
           path: '/keyword',
           builder: (context, state) {
             return const KeywordBoardPage();
+          },
+        ),
+        ARoute(
+          name: linked,
+          path: '/linked',
+          builder: (context, state) {
+            return const LinkedPage();
           },
         ),
         ARoute(

@@ -87,6 +87,13 @@ class ComponentsPage extends StatelessWidget {
         onPressed: () => context.pushNamed(StudyRouter.keyword),
         child: _text('自定义键盘'),
       ),
+      // 自定义链表
+      MaterialButton(
+        textColor: Colors.white,
+        color: theme.button,
+        onPressed: () => context.pushNamed(StudyRouter.linked),
+        child: _text('自定义链表'),
+      ),
       const SizedBox(height: 8),
       // 刷新和底部加载的列表
       MaterialButton(

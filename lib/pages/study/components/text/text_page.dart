@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../generated/l10n.dart';
 import '../../../main/me/me_router.dart';
+import '../../../widgets/rich_text_field.dart';
 import '../../../widgets/widgets.dart';
 
 /// 文本展示测试页面
@@ -17,8 +18,8 @@ class TextPage extends StatefulWidget {
 
 class _TextPageState extends State<TextPage> with Logging {
   static const String _tag = 'TextPage';
-  final TextEditingController _controller = TextEditingController(text: "初始化");
-  final TextEditingController _textController = TextEditingController();
+  final RichTextEditingController _controller = RichTextEditingController(text: "初始化");
+  final RichTextEditingController _textController = RichTextEditingController();
   String text = '';
   String newText = '';
   bool switchState = true;
@@ -81,7 +82,9 @@ class _TextPageState extends State<TextPage> with Logging {
                 CommonWidget.titleView('无边框带字数控制的输入框: '),
                 SingleEditView(
                   title: '账户',
-                  onChanged: (value) => setState(() => newText = value),
+                  onChanged: (value) {
+                    setState(() => newText = value);
+                  },
                   controller: _controller,
                   maxLength: 12,
                   fontSize: 14,
@@ -100,11 +103,14 @@ class _TextPageState extends State<TextPage> with Logging {
                   '特殊小技巧，试试输入\'[a]\', \'[b]\', \'[c]\', \'[d]\', \'[e]\'',
                   style: TextStyle(fontSize: 10),
                 ),
-                ExtendedTextField(
+                RichTextField(
                   controller: _textController,
-                  specialTextSpanBuilder: MySpecialTextSpanBuilder(showAtBackground: true, type: BuilderType.extendedTextField),
                   onChanged: (s) {
-                    logDebug('输入文本变化：s=$s');
+                    int start = _textController.selection.start;
+                    int end = _textController.selection.end;
+                    var base = _textController.selection.base;
+                    var extent = _textController.selection.extent;
+                    logDebug('输入文本变化：s=$s, start=$start, end=$end, base=$base, extent=$extent');
                   },
                   onEditingComplete: () {
                     logDebug('编辑完成');
@@ -161,10 +167,12 @@ class _TextPageState extends State<TextPage> with Logging {
                 TapLayout(
                   height: 50.0,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
+                  onTap: () {
+                    _controller.text = "21313";
+                  },
                   child: SingleTextView(
                     title: S.of(context).phone,
                     text: '17601487212',
-                    textAlign: TextAlign.right,
                     forward: const ForwardView(),
                   ),
                 ),
@@ -172,10 +180,9 @@ class _TextPageState extends State<TextPage> with Logging {
                   height: 50.0,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: const SingleTextView(
-                    icon: Icons.date_range_outlined,
+                    image: Icon(Icons.date_range_outlined),
                     title: '生日',
                     text: '1997/2/12',
-                    textAlign: TextAlign.right,
                     forward: ForwardView(),
                   ),
                 ),
@@ -183,9 +190,8 @@ class _TextPageState extends State<TextPage> with Logging {
                   height: 50.0,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: const SingleTextView(
-                    icon: Icons.adb,
+                    image: Icon(Icons.adb),
                     title: '关于',
-                    textAlign: TextAlign.right,
                     forward: ForwardView(),
                     badge: BadgeTag(count: 0),
                   ),
@@ -194,9 +200,8 @@ class _TextPageState extends State<TextPage> with Logging {
                   height: 50.0,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: SingleTextView(
-                    icon: Icons.person,
+                    image: const Icon(Icons.person),
                     title: S.of(context).avatar,
-                    textAlign: TextAlign.right,
                     suffix: ClipRRect(
                       borderRadius: BorderRadius.circular(16),
                       child: Image.asset(
@@ -230,7 +235,7 @@ class _TextPageState extends State<TextPage> with Logging {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: const SingleTextView(
                     title: '登陆记录',
-                    summary: '查看最近所有的登录记录',
+                    summary: Text('查看最近所有的登录记录'),
                     badge: BadgeTag(count: 0),
                     forward: ForwardView(),
                   ),
