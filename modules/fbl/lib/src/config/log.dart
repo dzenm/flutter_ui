@@ -65,20 +65,13 @@ final class Log {
 /// Log with class name
 mixin Logging {
   void logVerbose(Object? msg) => Log.v(msg, tag: _tag);
-
-  void logHttp(Object? msg) => Log.h(msg, tag: _tag);
-
-  void logDB(Object? msg) => Log.b(msg, tag: _tag);
-
-  void logPage(Object? msg) => Log.p(msg, tag: _tag);
-
-  void logDebug(Object? msg) => Log.d(msg, tag: _tag);
-
-  void logInfo(Object? msg) => Log.i(msg, tag: _tag);
+  void logHttp(Object? msg)    => Log.h(msg, tag: _tag);
+  void logDB(Object? msg)      => Log.b(msg, tag: _tag);
+  void logPage(Object? msg)    => Log.p(msg, tag: _tag);
+  void logDebug(Object? msg)   => Log.d(msg, tag: _tag);
+  void logInfo(Object? msg)    => Log.i(msg, tag: _tag);
   void logWarning(Object? msg) => Log.w(msg, tag: _tag);
-
-  void logError(Object? msg) => Log.e(msg, tag: _tag);
-
+  void logError(Object? msg)   => Log.e(msg, tag: _tag);
   String get _tag => "$runtimeType".replaceAll("_", "").replaceAll("State", "");
 }
 
@@ -108,15 +101,21 @@ class _DefaultConsolePrinter extends LogPrinter {
   }) {
     LogConfig config = manager.config;
     int chunkLength = config.chunkLength;
-    int size = body.length;
 
-    int start = 0, end = 0;
-    while (end < size) {
-      start = end;
-      end = min(start + chunkLength, size);
-      // first line print title, others line print blank
-      String text = start == 0 ? title : titleReplaceBlank;
-      _print(text + head + body.substring(start, end) + tail);
+    List<String> list = body.split("\n");
+    int index = 0;
+    for (var item in list) {
+      int start = 0, end = 0;
+      int len = item.length;
+      while (end < len) {
+        start = end;
+        end = min(start + chunkLength, len);
+        // first line print title, others line print blank
+        String prefix = index++ == 0 ? title : titleReplaceBlank;
+        String text = item.substring(start, end);
+        String message = prefix + head + text + tail;
+        _print(message);
+      }
     }
   }
 
@@ -140,78 +139,85 @@ abstract class Logger {
 
 /// 组装和输出不同级别[Level]的日志
 mixin LoggerMixin implements Logger {
-  static String colorRedLight = "31m";
-  static String colorRedDark = "91m";
-  static String colorGreenLight = "32m";
-  static String colorGreenDark = "92m";
-  static String colorYellowLight = "33m";
-  static String colorYellowDark = "93m";
-  static String colorBlueLight = "34m";
-  static String colorBlueDark = "94m";
-  static String colorMagentaLight = "35m";
-  static String colorMagentaDark = "95m";
-  static String colorCyanLight = "36m";
-  static String colorCyanDark = "96m";
-  static String colorWhiteLight = "37m";
-  static String colorWhiteDark = "97m";
-  static String colorGreyDark = "99m";
-  static String colorStart = "\x1B[";
-  static String colorClear = "\x1B[0m";
-  static String colorForeground = "\x1B[1;37;";
+  static const String colorRedLight     = "31m";
+  static const String colorRedDark      = "91m";
+  static const String colorGreenLight   = "32m";
+  static const String colorGreenDark    = "92m";
+  static const String colorYellowLight  = "33m";
+  static const String colorYellowDark   = "93m";
+  static const String colorBlueLight    = "34m";
+  static const String colorBlueDark     = "94m";
+  static const String colorMagentaLight = "35m";
+  static const String colorMagentaDark  = "95m";
+  static const String colorCyanLight    = "36m";
+  static const String colorCyanDark     = "96m";
+  static const String colorWhiteLight   = "37m";
+  static const String colorWhiteDark    = "97m";
+  static const String colorGreyDark     = "99m";
+  static const String colorStart        = "\x1B[";
+  static const String colorClear        = "\x1B[0m";
+  static const String colorForeground   = "\x1B[1;37;";
 
-  int get _level => manager.level.value;
+  /// 2025-12-31 13:32:08 478 ConversationInit           DEBUG
+  int output(Object? msg, String? tag, MessageLevel messageLevel) {
+    int level =  manager.level.value;
+    if ((level & LogManager._kErrorFlag) <= 0) return 0;
 
-  int output(Object? msg, {String level = "", String? tag, String color = ""}) {
+    String levelText = messageLevel.text;
+    String textColor = messageLevel.color;
     LogConfig config = manager.config;
 
     // 为文本展示增加颜色
-    String head = "", tail = "";
-    if (config.isColorful && color.isNotEmpty) {
-      head = "$colorStart$color "; // 字符变色的前缀
-      tail = " $colorClear"; // 字符变色的后缀
+    String colorPrefix = "", colorSuffix = "";
+    String colorPrefixWithForeground = "", colorSuffixWithForeground = "";
+    if (config.isColorful) {
+      colorPrefix = "$colorStart$textColor"; // 字符变色的前缀
+      colorSuffix = " $colorClear"; // 字符变色的后缀
+      String? boldColor = textColor.replaceFirst("3", "4").replaceFirst("9", "10");
+      colorPrefixWithForeground = "$colorForeground$boldColor";
+      colorSuffixWithForeground = " $colorClear";
     }
 
     String title = "", titleReplaceBlank = "";
     if (!config.showOnlyMessage) {
-      String caller = "";
+      // 输出包名
+      String packageName = config.packageName;
+      String myPackageName = packageName.isEmpty ? "" : "$packageName ";
+      // 输出时间
+      String time = config.now;
+      String myTime = time.isEmpty ? "" : "$time ";
       // 输出调用的位置
+      String myCaller = "";
       if (config.showCaller) {
-        LogCaller? myCaller = LogCaller.parse(StackTrace.current);
-        if (myCaller != null) {
-          caller = "   $myCaller   ";
+        LogCaller? caller = LogCaller.parse(StackTrace.current);
+        if (caller != null) {
+          myCaller = "   $caller    ";
         }
       }
       // 输出tag
-      String myTag = tag ?? manager.tag;
+      String oTag = tag ?? "";
+      String showTag = oTag.isEmpty ? manager.tag : oTag;
       int tagMaxLength = config.alignedTagMaxLength;
-      if (tagMaxLength < myTag.length) {
-        myTag = "${myTag.substring(0, tagMaxLength - 2)}..";
-      }
-      myTag = myTag.padRight(tagMaxLength);
-      // 输出Level
-      String myLevel = "";
-      if (config.isColorful && color.isNotEmpty) {
-        String? colorful = color.replaceFirst("3", "4").replaceFirst("9", "10");
-        myLevel = "$colorForeground$colorful$level$colorClear";
-      }
+      String myTag = tagMaxLength < showTag.length
+          ? "${showTag.substring(0, tagMaxLength - 2)}.." // 过长截取
+          : showTag.padRight(tagMaxLength); // 不足补空
+      // 输出level
+      String myLevel = levelText;
 
       // 基本信息
       StringBuffer sb = StringBuffer()
-        ..write(config.packageName) // 包名
-        ..write(config.now) // 时间
-        ..write(caller); // 调用栈
+        ..write(myPackageName)
+        ..write(myTime)
+        ..write(myCaller)
+        ..write("$colorPrefix$myTag$colorSuffix")
+        ..write("$colorPrefixWithForeground$myLevel$colorSuffixWithForeground ");
 
       // 获取展示的标题文本长度
-      int len = sb.length + 4 + tagMaxLength + level.length;
+      int length = myPackageName.length + myTime.length + myCaller.length + myTag.length + myLevel.length + 3;
       StringBuffer blank = StringBuffer();
-      while (len-- > 0) {
+      while (length-- > 0) {
         blank.write(" ");
       }
-
-      // 携带颜色的标签和级别信息
-      sb
-        ..write(" $head$myTag$tail ")
-        ..write(myLevel);
 
       title = sb.toString();
       titleReplaceBlank = blank.toString();
@@ -219,27 +225,27 @@ mixin LoggerMixin implements Logger {
 
     String body = msg.toString();
     for (var printer in printers) {
-      printer.output(manager, title, titleReplaceBlank, body, head: head, tail: tail);
+      printer.output(manager, title, titleReplaceBlank, body, head: colorPrefix, tail: colorSuffix);
     }
     return body.length;
   }
 
   @override
-  void verbose(Object? msg, {String? tag}) => (_level & LogManager._kVerboseFlag) > 0 && output(msg, level: "VERBOSE", tag: tag, color: colorWhiteLight) > 0;
+  void verbose(Object? msg, {String? tag}) => output(msg, tag, MessageLevel.verbose);
   @override
-  void http(Object? msg, {String? tag}) => (_level & LogManager._kVerboseFlag) > 0 && output(msg, level: " HTTP  ", tag: tag, color: colorMagentaLight) > 0;
+  void http   (Object? msg, {String? tag}) => output(msg, tag, MessageLevel.http);
   @override
-  void db(Object? msg, {String? tag}) => (_level & LogManager._kVerboseFlag) > 0 && output(msg, level: "  DB   ", tag: tag, color: colorCyanDark) > 0;
+  void db     (Object? msg, {String? tag}) => output(msg, tag, MessageLevel.db);
   @override
-  void page(Object? msg, {String? tag}) => (_level & LogManager._kVerboseFlag) > 0 && output(msg, level: " PAGE  ", tag: tag, color: colorGreenLight) > 0;
+  void page   (Object? msg, {String? tag}) => output(msg, tag, MessageLevel.page);
   @override
-  void debug(Object? msg, {String? tag}) => (_level & LogManager._kDebugFlag) > 0 && output(msg, level: " DEBUG ", tag: tag, color: colorBlueDark) > 0;
+  void debug  (Object? msg, {String? tag}) => output(msg, tag, MessageLevel.debug);
   @override
-  void info(Object? msg, {String? tag}) => (_level & LogManager._kInfoFlag) > 0 && output(msg, level: " INFO  ", tag: tag, color: colorCyanLight) > 0;
+  void info   (Object? msg, {String? tag}) => output(msg, tag, MessageLevel.info);
   @override
-  void warming(Object? msg, {String? tag}) => (_level & LogManager._kWarningFlag) > 0 && output(msg, level: "WARMING", tag: tag, color: colorYellowDark) > 0;
+  void warming(Object? msg, {String? tag}) => output(msg, tag, MessageLevel.warming);
   @override
-  void error(Object? msg, {String? tag}) => (_level & LogManager._kErrorFlag) > 0 && output(msg, level: " ERROR ", tag: tag, color: colorRedLight) > 0;
+  void error  (Object? msg, {String? tag}) => output(msg, tag, MessageLevel.error);
 }
 
 /// 输出日志工具
@@ -379,6 +385,22 @@ class LogCaller {
     }
     return LogCaller(name, path, int.parse(line));
   }
+}
+
+/// 输出的消息级别
+enum MessageLevel {
+  verbose(LogManager._kVerboseFlag, "VERBOSE", LoggerMixin.colorWhiteLight),
+  http   (LogManager._kVerboseFlag, " HTTP  ", LoggerMixin.colorMagentaLight),
+  db     (LogManager._kVerboseFlag, "  DB   ", LoggerMixin.colorCyanDark),
+  page   (LogManager._kVerboseFlag, " PAGE  ", LoggerMixin.colorGreenLight),
+  debug  (LogManager._kDebugFlag,   " DEBUG ", LoggerMixin.colorBlueDark),
+  info   (LogManager._kInfoFlag,    " INFO  ", LoggerMixin.colorCyanLight),
+  warming(LogManager._kWarningFlag, "WARMING", LoggerMixin.colorYellowDark),
+  error  (LogManager._kErrorFlag,   " ERROR ", LoggerMixin.colorRedLight);
+  final int level;
+  final String text;
+  final String color;
+  const MessageLevel(this.level, this.text, this.color);
 }
 
 /// 输出日志的级别
