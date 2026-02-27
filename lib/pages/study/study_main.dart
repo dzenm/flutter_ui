@@ -1,8 +1,10 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:fbl/fbl.dart';
 import 'package:get_ip_address/get_ip_address.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter/material.dart';
 
 ///
 /// Created by a0010 on 2023/11/29 16:27
@@ -24,11 +26,26 @@ class StudyMain {
     String replace = "_t";
     String suffix = "png";
     String url = "https://192.168.1.129/images/app/circle/20231008094730669_o.jpg?size=720*1600";
-    var res = FileNameCompatible()._recombinationUrl(url, (filename) => FileNameCompatible().replace(filename,
-      suffix: suffix,
-    ));
+    var res = FileNameCompatible()._recombinationUrl(
+        url,
+        (filename) => FileNameCompatible().replace(
+              filename,
+              suffix: suffix,
+            ));
     _log("重组开始：url=$url");
     _log("重组结果：result=$res");
+
+
+  }
+
+  static bool isInt(String value) {
+    if (value.isEmpty) return false;
+    int len = value.length;
+    for (int i = 0; i < len; i++) {
+      int code = value.codeUnitAt(i);
+      if (code < 48 || code > 57) return false;
+    }
+    return true;
   }
 
   static Future<void> _pathProviderTest() async {
@@ -132,8 +149,15 @@ class StudyMain {
   }
 }
 
-class FileNameCompatible {
+class _Node<E> {
+  _Node? _next;
+  E? _data;
+  _Node? _previous;
 
+  _Node(this._next, this._data, {_Node? previous}) : _previous = previous;
+}
+
+class FileNameCompatible {
   /// https://192.168.1.129/images/app/circle/20231008094730669_o.jpg?size=720*1600
   /// 将名称替换为图片的名称
   /// [name] 20231008094730669_o.mp4

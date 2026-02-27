@@ -1,6 +1,7 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:fbl/fbl.dart';
 import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 
 import 'common/city_select.dart';
 import 'common/example.dart';
@@ -34,12 +35,11 @@ class Routers extends NavigatorObserver {
 
   static final LoginAuth auth = LoginAuth();
 
-  static final routes = ARouter(
+  static final routes = GoRouter(
     observers: [
       BotToastNavigatorObserver(),
       Routers(),
     ],
-    debugLog: Log.d,
     initialLocation: mainPage,
     refreshListenable: auth,
     debugLogDiagnostics: true,
@@ -50,7 +50,7 @@ class Routers extends NavigatorObserver {
   );
 
   /// 路由守卫，判断是否需要拦截路由
-  static String? _guard(BuildContext context, ARouterState state) {
+  static String? _guard(BuildContext context, GoRouterState state) {
     final bool signedIn = auth.signedIn;
     final bool signingIn = state.matchedLocation == '/$login';
 
@@ -114,8 +114,8 @@ class _RouterMobile {
   static final GlobalKey<NavigatorState> _navKey = GlobalKey(debugLabel: 'nav');
   static final GlobalKey<NavigatorState> _meKey = GlobalKey(debugLabel: 'me');
   static List<RouteBase> routers = [
-    ARoute(name: Routers.root, path: '/', redirect: (_, __) => Routers.mainPage),
-    ARoute(
+    GoRoute(name: Routers.root, path: '/', redirect: (_, __) => Routers.mainPage),
+    GoRoute(
       name: Routers.login,
       path: '/login',
       pageBuilder: (context, state) => FadeTransitionPage(
@@ -123,16 +123,16 @@ class _RouterMobile {
         child: LoginPage(),
       ),
     ),
-    ARoute(
+    GoRoute(
       name: Routers.register,
       path: '/register',
       builder: (context, state) => const RegisterPage(),
     ),
-    ARoute(name: Routers.main, path: '/main', redirect: (_, __) => '/home'),
+    GoRoute(name: Routers.main, path: '/main', redirect: (_, __) => '/home'),
     StatefulShellRoute(
       builder: (
         BuildContext context,
-        ARouterState state,
+        GoRouterState state,
         StatefulNavigationShell navigationShell,
       ) {
         // This nested StatefulShellRoute demonstrates the use of a
@@ -166,12 +166,12 @@ class _RouterMobile {
         StatefulShellBranch(
           navigatorKey: _homeKey,
           routes: <RouteBase>[
-            ARoute(
+            GoRoute(
               // The screen to display as the root in the first tab of the
               // bottom navigation bar.
               name: Routers.home,
               path: '/home',
-              builder: (BuildContext context, ARouterState state) => const HomePage(),
+              builder: (BuildContext context, GoRouterState state) => const HomePage(),
             ),
           ],
         ),
@@ -179,26 +179,23 @@ class _RouterMobile {
         // The route branch for the second tab of the bottom navigation bar.
         StatefulShellBranch(
           navigatorKey: _navKey,
-          // To enable preloading of the initial locations of branches, pass
-          // `true` for the parameter `preload` (`false` is default).
-          preload: true,
           // StatefulShellBranch will automatically use the first descendant
           // GoRoute as the initial location of the branch. If another route
           // is desired, specify the location of it using the defaultLocation
           // parameter.
           initialLocation: '/nav',
           routes: <RouteBase>[
-            ARoute(
+            GoRoute(
               // The screen to display as the root in the first tab of the
               // bottom navigation bar.
               name: Routers.nav,
               path: '/nav',
-              builder: (BuildContext context, ARouterState state) => const NavPage(),
+              builder: (BuildContext context, GoRouterState state) => const NavPage(),
             ),
             // StatefulShellRoute(
             //   builder: (
             //     BuildContext context,
-            //     ARouterState state,
+            //     GoRouterState state,
             //     StatefulNavigationShell navigationShell,
             //   ) {
             //     // Just like with the top level StatefulShellRoute, no
@@ -265,10 +262,9 @@ class _RouterMobile {
         // The route branch for the third tab of the bottom navigation bar.
         StatefulShellBranch(
           navigatorKey: _meKey,
-          preload: true,
           initialLocation: '/me',
           routes: <RouteBase>[
-            ARoute(
+            GoRoute(
               name: MeRouter.me,
               path: '/me',
               builder: (context, state) => const MePageMobile(),
@@ -291,8 +287,8 @@ class _RouterDesktop {
   static final GlobalKey<NavigatorState> _navKey = GlobalKey(debugLabel: 'nav');
   static final GlobalKey<NavigatorState> _meKey = GlobalKey(debugLabel: 'me');
   static List<RouteBase> routers = [
-    ARoute(name: Routers.root, path: '/', redirect: (_, __) => Routers.mainPage),
-    ARoute(
+    GoRoute(name: Routers.root, path: '/', redirect: (_, __) => Routers.mainPage),
+    GoRoute(
       name: Routers.login,
       path: '/login',
       pageBuilder: (context, state) => FadeTransitionPage(
@@ -300,16 +296,16 @@ class _RouterDesktop {
         child: LoginPage(),
       ),
     ),
-    ARoute(
+    GoRoute(
       name: Routers.register,
       path: '/register',
       builder: (context, state) => const RegisterPage(),
     ),
-    ARoute(name: Routers.main, path: '/main', redirect: (_, __) => '/home'),
+    GoRoute(name: Routers.main, path: '/main', redirect: (_, __) => '/home'),
     StatefulShellRoute(
       builder: (
         BuildContext context,
-        ARouterState state,
+        GoRouterState state,
         StatefulNavigationShell navigationShell,
       ) {
         // This nested StatefulShellRoute demonstrates the use of a
@@ -343,12 +339,12 @@ class _RouterDesktop {
         StatefulShellBranch(
           navigatorKey: _homeKey,
           routes: <RouteBase>[
-            ARoute(
+            GoRoute(
               // The screen to display as the root in the first tab of the
               // bottom navigation bar.
               name: Routers.home,
               path: '/home',
-              builder: (BuildContext context, ARouterState state) => const HomePage(),
+              builder: (BuildContext context, GoRouterState state) => const HomePage(),
             ),
           ],
         ),
@@ -356,26 +352,23 @@ class _RouterDesktop {
         // The route branch for the second tab of the bottom navigation bar.
         StatefulShellBranch(
           navigatorKey: _navKey,
-          // To enable preloading of the initial locations of branches, pass
-          // `true` for the parameter `preload` (`false` is default).
-          preload: true,
           // StatefulShellBranch will automatically use the first descendant
           // GoRoute as the initial location of the branch. If another route
           // is desired, specify the location of it using the defaultLocation
           // parameter.
           initialLocation: '/nav',
           routes: <RouteBase>[
-            ARoute(
+            GoRoute(
               // The screen to display as the root in the first tab of the
               // bottom navigation bar.
               name: Routers.nav,
               path: '/nav',
-              builder: (BuildContext context, ARouterState state) => const NavPage(),
+              builder: (BuildContext context, GoRouterState state) => const NavPage(),
             ),
             // StatefulShellRoute(
             //   builder: (
             //     BuildContext context,
-            //     ARouterState state,
+            //     GoRouterState state,
             //     StatefulNavigationShell navigationShell,
             //   ) {
             //     // Just like with the top level StatefulShellRoute, no
@@ -442,7 +435,6 @@ class _RouterDesktop {
         // The route branch for the third tab of the bottom navigation bar.
         StatefulShellBranch(
           navigatorKey: _meKey,
-          preload: true,
           routes: MeRouter.routers,
         ),
       ],
@@ -451,17 +443,17 @@ class _RouterDesktop {
 }
 
 class CommonRouters {
-  static ARoute citySelected = ARoute(
+  static GoRoute citySelected = GoRoute(
     name: Routers.citySelected,
     path: '/citySelected',
     builder: (context, state) => const CitySelectedPage(),
   );
-  static ARoute example = ARoute(
+  static GoRoute example = GoRoute(
     name: Routers.example,
     path: '/example',
     builder: (context, state) => const ExamplePage(),
   );
-  static ARoute webView = ARoute(
+  static GoRoute webView = GoRoute(
     name: Routers.webView,
     path: '/webView',
     builder: (context, state) {
@@ -471,7 +463,7 @@ class CommonRouters {
       return WebViewPage(title: title, url: url);
     },
   );
-  static ARoute viewMedia = ARoute(
+  static GoRoute viewMedia = GoRoute(
     name: Routers.viewMedia,
     path: '/viewMedia',
     builder: (context, state) {

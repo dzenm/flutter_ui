@@ -5,5 +5,3 @@ library config;
 
 export 'build_config.dart';
 export 'handle_error.dart';
-export 'log.dart';
-export 'notification.dart';

@@ -6,7 +6,6 @@
 
 #include "generated_plugin_registrant.h"
 
-#include <bonsoir_windows/bonsoir_windows_plugin_c_api.h>
 #include <contextual_menu/contextual_menu_plugin.h>
 #include <desktop_drop/desktop_drop_plugin.h>
 #include <desktop_multi_window/desktop_multi_window_plugin.h>
@@ -19,14 +18,11 @@
 #include <screen_brightness_windows/screen_brightness_windows_plugin.h>
 #include <screen_retriever_windows/screen_retriever_windows_plugin_c_api.h>
 #include <tray_manager/tray_manager_plugin.h>
-#include <universal_ble/universal_ble_plugin_c_api.h>
 #include <url_launcher_windows/url_launcher_windows.h>
 #include <window_manager/window_manager_plugin.h>
 #include <windows_single_instance/windows_single_instance_plugin.h>
 
 void RegisterPlugins(flutter::PluginRegistry* registry) {
-  BonsoirWindowsPluginCApiRegisterWithRegistrar(
-      registry->GetRegistrarForPlugin("BonsoirWindowsPluginCApi"));
   ContextualMenuPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("ContextualMenuPlugin"));
   DesktopDropPluginRegisterWithRegistrar(
@@ -51,8 +47,6 @@ void RegisterPlugins(flutter::PluginRegistry* registry) {
       registry->GetRegistrarForPlugin("ScreenRetrieverWindowsPluginCApi"));
   TrayManagerPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("TrayManagerPlugin"));
-  UniversalBlePluginCApiRegisterWithRegistrar(
-      registry->GetRegistrarForPlugin("UniversalBlePluginCApi"));
   UrlLauncherWindowsRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("UrlLauncherWindows"));
   WindowManagerPluginRegisterWithRegistrar(

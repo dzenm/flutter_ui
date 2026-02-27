@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dbl/dbl.dart';
-import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,7 +14,6 @@ import 'config/configs.dart';
 import 'entities/entity.dart';
 import 'http/api_services.dart';
 import 'http/cookie_interceptor.dart';
-import 'pages/study/window/sub_window_page.dart';
 import 'pages/utils/keyboard.dart';
 import 'pages/widgets/keyboard/mocks/mock_binding.dart';
 
@@ -64,14 +62,9 @@ class Application with _InitAppMixin {
       );
     } else {
       log('APP初始运行时参数：args=${args.toString()}');
-      final windowId = int.parse(args[1]);
+      final windowId = args[1].toString();
       final argument = args[2].isEmpty ? const {} : jsonDecode(args[2]) as Map<String, dynamic>;
-      _runApp(
-        SubWindowPage(
-          windowController: WindowController.fromWindowId(windowId),
-          args: argument,
-        ),
-      );
+      // _runApp();
     }
   }
 

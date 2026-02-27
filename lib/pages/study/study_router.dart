@@ -1,5 +1,5 @@
-import 'package:fbl/fbl.dart';
 import 'package:flutter_ui/pages/study/mdns/mdns_page.dart';
+import 'package:go_router/go_router.dart';
 
 import 'components/chat/chat_page.dart';
 import 'components/city/city_page.dart';
@@ -25,10 +25,7 @@ import 'http/http_page.dart';
 import 'load_image/load_image_page.dart';
 import 'provider/provider_page.dart';
 import 'router/router_page.dart';
-import 'shared/nearby/chat_page.dart';
-import 'shared/nearby/nearby_page.dart';
 import 'video/video_page.dart';
-import 'window/main_window_page.dart';
 
 ///
 /// Created by a0010 on 2023/5/11 16:05
@@ -67,7 +64,7 @@ class StudyRouter {
   static const String text = 'text';
 
   static List<RouteBase> get routers => [
-        ARoute(
+        GoRoute(
           name: components,
           path: '/components',
           builder: (context, state) {
@@ -75,86 +72,64 @@ class StudyRouter {
           },
           routes: componentsRouter,
         ),
-        ARoute(
+        GoRoute(
           name: convert,
           path: '/convert',
           builder: (context, state) {
             return const ConvertPage();
           },
         ),
-        ARoute(
+        GoRoute(
           name: desktop,
           path: '/desktop',
           builder: (context, state) {
             return const DesktopPage();
           },
         ),
-        ARoute(
+        GoRoute(
           name: http,
           path: '/http',
           builder: (context, state) {
             return const HTTPListPage();
           },
         ),
-        ARoute(
+        GoRoute(
           name: loadImage,
           path: '/loadImage',
           builder: (context, state) {
             return const LoadImagePage();
           },
         ),
-        ARoute(
+        GoRoute(
           name: mdns,
           path: '/mdns',
           builder: (context, state) {
             return const RadarPage();
           },
         ),
-        ARoute(
+        GoRoute(
           name: provider,
           path: '/provider',
           builder: (context, state) {
             return const ProviderPage();
           },
         ),
-        ARoute(
+        GoRoute(
           name: router,
           path: '/router',
           builder: (context, state) {
             return const RouterPage();
           },
         ),
-        ARoute(
+        GoRoute(
           name: video,
           path: '/video',
           builder: (context, state) {
             return const VideoPage();
           },
         ),
-        ARoute(
-          name: wifi,
-          path: '/wifi',
-          builder: (context, state) {
-            return const WifiDirectPage();
-          },
-          routes: [
-            ARoute(
-              name: device,
-              path: '/device',
-              builder: (context, state) {
-                return const DeviceChatPage();
-              },
-            ),
-          ],
-        ),
-        ARoute(
-          name: window,
-          path: '/window',
-          builder: (context, state) {
-            return const MainWindowPage();
-          },
-        ),
-        ARoute(
+
+        GoRoute(
           name: screenCapture,
           path: '/screenCapture',
           builder: (context, state) {
@@ -163,113 +138,113 @@ class StudyRouter {
         ),
       ];
 
-  static List<ARoute> get componentsRouter => [
-        ARoute(
+  static List<GoRoute> get componentsRouter => [
+        GoRoute(
           name: chat,
           path: '/chat',
           builder: (context, state) {
             return const ChatPage();
           },
         ),
-        ARoute(
+        GoRoute(
           name: city,
           path: '/city',
           builder: (context, state) {
             return const CitySelectedPage();
           },
         ),
-        ARoute(
+        GoRoute(
           name: dialog,
           path: '/dialog',
           builder: (context, state) {
             return const DialogPage();
           },
         ),
-        ARoute(
+        GoRoute(
           name: dragList,
           path: '/dragList',
           builder: (context, state) {
             return const DragListPage();
           },
         ),
-        ARoute(
+        GoRoute(
           name: floatNavigation,
           path: '/floatNavigation',
           builder: (context, state) {
             return const FloatNavigationPage();
           },
         ),
-        ARoute(
+        GoRoute(
           name: gif,
           path: '/gif',
           builder: (context, state) {
             return const GifPage();
           },
         ),
-        ARoute(
+        GoRoute(
           name: image,
           path: '/image',
           builder: (context, state) {
             return const ImageEditorPage();
           },
         ),
-        ARoute(
+        GoRoute(
           name: keyword,
           path: '/keyword',
           builder: (context, state) {
             return const KeywordBoardPage();
           },
         ),
-        ARoute(
+        GoRoute(
           name: linked,
           path: '/linked',
           builder: (context, state) {
             return const LinkedPage();
           },
         ),
-        ARoute(
+        GoRoute(
           name: list,
           path: '/list',
           builder: (context, state) {
             return const ListPage();
           },
         ),
-        ARoute(
+        GoRoute(
           name: popup,
           path: '/popup',
           builder: (context, state) {
             return const PopupPage();
           },
         ),
-        ARoute(
+        GoRoute(
           name: qr,
           path: '/qr',
           builder: (context, state) {
             return const QRPage();
           },
         ),
-        ARoute(
+        GoRoute(
           name: recording,
           path: '/recording',
           builder: (context, state) {
             return const RecordingPage();
           },
         ),
-        ARoute(
+        GoRoute(
           name: slide,
           path: '/slide',
           builder: (context, state) {
             return const SlidePage();
           },
         ),
-        ARoute(
+        GoRoute(
           name: state,
           path: '/state',
           builder: (context, state) {
             return const StatePage();
           },
         ),
-        ARoute(
+        GoRoute(
           name: text,
           path: '/text',
           builder: (context, state) {

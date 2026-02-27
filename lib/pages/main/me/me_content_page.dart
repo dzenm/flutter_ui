@@ -1,5 +1,5 @@
-import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 typedef ContentPageBuilder = Widget Function(PageController controller);
 

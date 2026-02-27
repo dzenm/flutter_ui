@@ -1,6 +1,7 @@
 import 'package:fbl/fbl.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ui/pages/mall/mall_router.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../study/study_page.dart';
 import '../../study/study_router.dart';
@@ -43,32 +44,32 @@ class MeRouter {
 
 class _MeRouterMobile {
   static List<RouteBase> get routers => [
-        ARoute(
+        GoRoute(
           name: MeRouter.medicine,
           path: '/medicine',
           builder: (context, state) => const MedicinePage(medicineName: '金银花'),
         ),
-        ARoute(
+        GoRoute(
           name: MeRouter.collect,
           path: '/collect',
           builder: (context, state) => const CollectPage(),
         ),
-        ARoute(
+        GoRoute(
           name: MeRouter.coin,
           path: '/coin',
           builder: (context, state) => const CoinPage(),
         ),
-        ARoute(
+        GoRoute(
           name: MeRouter.rank,
           path: '/rank',
           builder: (context, state) => const RankPage(),
         ),
-        ARoute(
+        GoRoute(
           name: MeRouter.article,
           path: '/article',
           builder: (context, state) => const ArticlePage(),
         ),
-        ARoute(
+        GoRoute(
           name: StudyRouter.study,
           path: '/study',
           builder: (context, state) {
@@ -76,17 +77,17 @@ class _MeRouterMobile {
           },
           routes: StudyRouter.routers,
         ),
-        ARoute(
+        GoRoute(
           name: MeRouter.info,
           path: '/info',
           builder: (context, state) => const InfoPage(),
           routes: [
-            ARoute(
+            GoRoute(
               name: MeRouter.editInfo,
               path: '/edit',
               builder: (context, state) => const EditInfoPage(),
             ),
-            ARoute(
+            GoRoute(
               name: MeRouter.viewInfo,
               path: '/view',
               builder: (context, state) => const ViewInfoPage(),
@@ -94,12 +95,12 @@ class _MeRouterMobile {
           ],
         ),
         ...MallRouter.routers,
-        ARoute(
+        GoRoute(
           name: MeRouter.setting,
           path: '/setting',
           builder: (context, state) => const SettingPage(),
           routes: [
-            ARoute(
+            GoRoute(
               name: MeRouter.about,
               path: '/about',
               builder: (context, state) => const AboutPage(),
@@ -146,9 +147,8 @@ class _MeRouterDesktop {
         branches: [
           StatefulShellBranch(
             navigatorKey: _medicineKey,
-            preload: true,
             routes: [
-              ARoute(
+              GoRoute(
                 name: MeRouter.medicine,
                 path: '/medicine',
                 builder: (context, state) => const MedicinePage(medicineName: '金银花'),
@@ -157,9 +157,8 @@ class _MeRouterDesktop {
           ),
           StatefulShellBranch(
             navigatorKey: _collectKey,
-            preload: true,
             routes: [
-              ARoute(
+              GoRoute(
                 name: MeRouter.collect,
                 path: '/collect',
                 builder: (context, state) => const CollectPage(),
@@ -168,9 +167,8 @@ class _MeRouterDesktop {
           ),
           StatefulShellBranch(
             navigatorKey: _coinKey,
-            preload: true,
             routes: [
-              ARoute(
+              GoRoute(
                 name: MeRouter.coin,
                 path: '/coin',
                 builder: (context, state) => const CoinPage(),
@@ -179,9 +177,8 @@ class _MeRouterDesktop {
           ),
           StatefulShellBranch(
             navigatorKey: _rankKey,
-            preload: true,
             routes: [
-              ARoute(
+              GoRoute(
                 name: MeRouter.rank,
                 path: '/rank',
                 builder: (context, state) => const RankPage(),
@@ -190,9 +187,8 @@ class _MeRouterDesktop {
           ),
           StatefulShellBranch(
             navigatorKey: _articleKey,
-            preload: true,
             routes: [
-              ARoute(
+              GoRoute(
                 name: MeRouter.article,
                 path: '/article',
                 builder: (context, state) => const ArticlePage(),
@@ -201,9 +197,8 @@ class _MeRouterDesktop {
           ),
           StatefulShellBranch(
             navigatorKey: _studyKey,
-            preload: true,
             routes: [
-              ARoute(
+              GoRoute(
                 name: StudyRouter.study,
                 path: '/study',
                 builder: (context, state) {
@@ -215,19 +210,18 @@ class _MeRouterDesktop {
           ),
           StatefulShellBranch(
             navigatorKey: _infoKey,
-            preload: true,
             routes: [
-              ARoute(
+              GoRoute(
                 name: MeRouter.info,
                 path: '/info',
                 builder: (context, state) => const InfoPage(),
                 routes: [
-                  ARoute(
+                  GoRoute(
                     name: MeRouter.editInfo,
                     path: '/edit',
                     builder: (context, state) => const EditInfoPage(),
                   ),
-                  ARoute(
+                  GoRoute(
                     name: MeRouter.viewInfo,
                     path: '/view',
                     builder: (context, state) => const ViewInfoPage(),
@@ -238,19 +232,17 @@ class _MeRouterDesktop {
           ),
           StatefulShellBranch(
             navigatorKey: _mallKey,
-            preload: true,
             routes: MallRouter.routers,
           ),
           StatefulShellBranch(
             navigatorKey: _settingKey,
-            preload: true,
             routes: [
-              ARoute(
+              GoRoute(
                 name: MeRouter.setting,
                 path: '/setting',
                 builder: (context, state) => const SettingPage(),
                 routes: [
-                  ARoute(
+                  GoRoute(
                     name: MeRouter.about,
                     path: '/about',
                     builder: (context, state) => const AboutPage(),

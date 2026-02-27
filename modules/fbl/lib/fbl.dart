@@ -3,6 +3,7 @@
 ///
 library fbl;
 
+export 'package:infra/infra.dart';
 export 'src/config/config.dart';
 export 'src/core/core.dart';
 export 'src/db/db.dart';
@@ -10,7 +11,6 @@ export 'src/http/http.dart';
 export 'src/naughty/http_interceptor.dart';
 export 'src/naughty/naughty.dart';
 export 'src/resource/resource.dart';
-export 'src/router/arouter.dart';
 export 'src/utils/util.dart';
 export 'src/widgets/widgets.dart';
 

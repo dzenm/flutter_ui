@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../config/notification.dart' as ln;
+import 'package:infra/infra.dart' as ln;
 
 ///
 /// Created by a0010 on 2025/7/17 13:21

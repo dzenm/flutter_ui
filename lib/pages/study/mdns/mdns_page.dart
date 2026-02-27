@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:bonsoir/bonsoir.dart';
 import 'package:fbl/fbl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,20 +23,20 @@ class _MdnsPageState extends State<MdnsPage> with Logging {
 
   void _createService() async {
     // Let's create our service !
-    BonsoirService service = BonsoirService(
-      name: 'My wonderful service',
-      // Put your service name here.
-      type: '_wonderful-service._tcp',
-      // Put your service type here. Syntax : _ServiceType._TransportProtocolName. (see http://wiki.ros.org/zeroconf/Tutorials/Understanding%20Zeroconf%20Service%20Types).
-      port: 3030, // Put your service port here.
-    );
-    logInfo('创建服务');
-
-    // And now we can broadcast it :
-    BonsoirBroadcast broadcast = BonsoirBroadcast(service: service);
-    await broadcast.ready;
-    await broadcast.start();
-    logInfo('启动服务');
+    // BonsoirService service = BonsoirService(
+    //   name: 'My wonderful service',
+    //   // Put your service name here.
+    //   type: '_wonderful-service._tcp',
+    //   // Put your service type here. Syntax : _ServiceType._TransportProtocolName. (see http://wiki.ros.org/zeroconf/Tutorials/Understanding%20Zeroconf%20Service%20Types).
+    //   port: 3030, // Put your service port here.
+    // );
+    // logInfo('创建服务');
+    //
+    // // And now we can broadcast it :
+    // BonsoirBroadcast broadcast = BonsoirBroadcast(service: service);
+    // await broadcast.ready;
+    // await broadcast.start();
+    // logInfo('启动服务');
 
     // ...
 
@@ -50,25 +49,25 @@ class _MdnsPageState extends State<MdnsPage> with Logging {
     String type = '_wonderful-service._tcp';
 
     // Once defined, we can start the discovery :
-    BonsoirDiscovery discovery = BonsoirDiscovery(type: type);
-    await discovery.ready;
-    logInfo('发现服务');
-
-    // If you want to listen to the discovery :
-    discovery.eventStream!.listen((event) {
-      // `eventStream` is not null as the discovery instance is "ready" !
-      if (event.type == BonsoirDiscoveryEventType.discoveryServiceFound) {
-        print('Service found : ${event.service?.toJson()}');
-        event.service!.resolve(discovery.serviceResolver); // Should be called when the user wants to connect to this service.
-      } else if (event.type == BonsoirDiscoveryEventType.discoveryServiceResolved) {
-        print('Service resolved : ${event.service?.toJson()}');
-      } else if (event.type == BonsoirDiscoveryEventType.discoveryServiceLost) {
-        print('Service lost : ${event.service?.toJson()}');
-      }
-    });
+    // BonsoirDiscovery discovery = BonsoirDiscovery(type: type);
+    // await discovery.ready;
+    // logInfo('发现服务');
+    //
+    // // If you want to listen to the discovery :
+    // discovery.eventStream!.listen((event) {
+    //   // `eventStream` is not null as the discovery instance is "ready" !
+    //   if (event.type == BonsoirDiscoveryEventType.discoveryServiceFound) {
+    //     print('Service found : ${event.service?.toJson()}');
+    //     event.service!.resolve(discovery.serviceResolver); // Should be called when the user wants to connect to this service.
+    //   } else if (event.type == BonsoirDiscoveryEventType.discoveryServiceResolved) {
+    //     print('Service resolved : ${event.service?.toJson()}');
+    //   } else if (event.type == BonsoirDiscoveryEventType.discoveryServiceLost) {
+    //     print('Service lost : ${event.service?.toJson()}');
+    //   }
+    // });
 
     // Start the discovery **after** listening to discovery events :
-    await discovery.start();
+    // await discovery.start();
     logInfo('启动发现服务');
 
     // Then if you want to stop the discovery :
@@ -133,7 +132,7 @@ class _RadarPageState extends State<RadarPage> with TickerProviderStateMixin {
   bool _isScanning = false;
   final _random = Random();
 
-  BonsoirDiscovery _discovery = BonsoirDiscovery(type: '_http._tcp');
+  // BonsoirDiscovery _discovery = BonsoirDiscovery(type: '_http._tcp');
 
   @override
   void initState() {
@@ -167,7 +166,7 @@ class _RadarPageState extends State<RadarPage> with TickerProviderStateMixin {
         // 停止扫描：暂停动画并清空设备
         _rotationController?.stop();
         _expansionController?.stop();
-        _discovery.stop();
+        // _discovery.stop();
 
         _devicesNotifier.value.clear();
       }
@@ -277,69 +276,69 @@ class _RadarPageState extends State<RadarPage> with TickerProviderStateMixin {
   }
 
   void _startDiscovery() {
-    _discovery = BonsoirDiscovery(type: '_http._tcp');
-    _discovery.ready.then((_) {
-      _discovery.eventStream?.listen((event) async {
-        if (event.type == BonsoirDiscoveryEventType.discoveryServiceFound) {
-          debugPrint('Service found : ${event.service?.toJson()}');
-          event.service!.resolve(_discovery.serviceResolver); // Should be called when the user wants to connect to this service.
-        } else if (event.type == BonsoirDiscoveryEventType.discoveryServiceResolved) {
-          debugPrint('Service resolved : ${event.service?.toJson()}');
-          if (event.service != null) {
-            final service = event.service!;
-            // 尝试解析 IP 地址
-            final ip = await resolveIpAddress(service as ResolvedBonsoirService);
-            const double minDistance = 50;
-            bool overlap = true;
-            Device? device;
-
-            // 找到一个不重叠的设备位置
-            while (overlap) {
-              final angle = _random.nextDouble() * 2 * pi;
-              final distance = 0.1 + _random.nextDouble() * 0.05;
-              overlap = false;
-
-              device = Device(
-                name: service.name,
-                details: service.toString(),
-                port: service.port,
-                ip: ip ?? _ipResolveFailed,
-                angle: angle,
-                distance: distance,
-              );
-
-              if (_devicesNotifier.value.isEmpty) {
-                _devicesNotifier.value = [device];
-                debugPrint('length1: ${_devicesNotifier.value.length}');
-                break;
-              } else {
-                final list = _devicesNotifier.value;
-                for (Device existingDevice in list) {
-                  if (_calculateDistance(device, existingDevice) < minDistance) {
-                    overlap = true;
-                    break;
-                  }
-                }
-                // 只有在没有重叠的情况下才添加设备
-                if (!overlap) {
-                  _devicesNotifier.value = [..._devicesNotifier.value, device];
-                  debugPrint('length2: ${_devicesNotifier.value.length}');
-                  break;
-                }
-              }
-            }
-          }
-        } else if (event.type == BonsoirDiscoveryEventType.discoveryServiceLost) {
-          debugPrint('Service lost : ${event.service?.toJson()}');
-          if (event.service != null) {
-            final list = _devicesNotifier.value;
-            list.removeWhere((e) => e.name == event.service!.name);
-            _devicesNotifier.value = list;
-          }
-        }
-      });
-      _discovery.start();
-    });
+    // _discovery = BonsoirDiscovery(type: '_http._tcp');
+    // _discovery.ready.then((_) {
+    //   _discovery.eventStream?.listen((event) async {
+    //     if (event.type == BonsoirDiscoveryEventType.discoveryServiceFound) {
+    //       debugPrint('Service found : ${event.service?.toJson()}');
+    //       event.service!.resolve(_discovery.serviceResolver); // Should be called when the user wants to connect to this service.
+    //     } else if (event.type == BonsoirDiscoveryEventType.discoveryServiceResolved) {
+    //       debugPrint('Service resolved : ${event.service?.toJson()}');
+    //       if (event.service != null) {
+    //         final service = event.service!;
+    //         // 尝试解析 IP 地址
+    //         final ip = await resolveIpAddress(service as ResolvedBonsoirService);
+    //         const double minDistance = 50;
+    //         bool overlap = true;
+    //         Device? device;
+    //
+    //         // 找到一个不重叠的设备位置
+    //         while (overlap) {
+    //           final angle = _random.nextDouble() * 2 * pi;
+    //           final distance = 0.1 + _random.nextDouble() * 0.05;
+    //           overlap = false;
+    //
+    //           device = Device(
+    //             name: service.name,
+    //             details: service.toString(),
+    //             port: service.port,
+    //             ip: ip ?? _ipResolveFailed,
+    //             angle: angle,
+    //             distance: distance,
+    //           );
+    //
+    //           if (_devicesNotifier.value.isEmpty) {
+    //             _devicesNotifier.value = [device];
+    //             debugPrint('length1: ${_devicesNotifier.value.length}');
+    //             break;
+    //           } else {
+    //             final list = _devicesNotifier.value;
+    //             for (Device existingDevice in list) {
+    //               if (_calculateDistance(device, existingDevice) < minDistance) {
+    //                 overlap = true;
+    //                 break;
+    //               }
+    //             }
+    //             // 只有在没有重叠的情况下才添加设备
+    //             if (!overlap) {
+    //               _devicesNotifier.value = [..._devicesNotifier.value, device];
+    //               debugPrint('length2: ${_devicesNotifier.value.length}');
+    //               break;
+    //             }
+    //           }
+    //         }
+    //       }
+    //     } else if (event.type == BonsoirDiscoveryEventType.discoveryServiceLost) {
+    //       debugPrint('Service lost : ${event.service?.toJson()}');
+    //       if (event.service != null) {
+    //         final list = _devicesNotifier.value;
+    //         list.removeWhere((e) => e.name == event.service!.name);
+    //         _devicesNotifier.value = list;
+    //       }
+    //     }
+    //   });
+    //   _discovery.start();
+    // });
   }
 
   // Future<String?> resolveIpAddress(ResolvedBonsoirService service) async {
@@ -358,41 +357,41 @@ class _RadarPageState extends State<RadarPage> with TickerProviderStateMixin {
   //   return null;
   // }
 
-  Future<String?> resolveIpAddress(ResolvedBonsoirService service) async {
-    try {
-      final attributesIp = service.attributes['CurrentIp'];
-      if (attributesIp != null && attributesIp != '127.0.0.1') {
-        return attributesIp;
-      }
-
-      /// 判断 host
-      if (service.host == null || service.host!.isEmpty) {
-        debugPrint("Resolved host is empty");
-      }
-
-      // 使用 DNS 查找
-      debugPrint("Resolving IP for host: ${service.host}");
-      List<InternetAddress> addresses = await InternetAddress.lookup(service.host!, type: InternetAddressType.IPv4);
-      if (addresses.isNotEmpty) {
-        debugPrint("Resolved IP Address: ${addresses.first.address}");
-        return addresses.first.address;
-      } else {
-        debugPrint("No IP addresses found for host: ${service.host}");
-      }
-    } catch (e, stackTrace) {
-      debugPrint("Failed to resolve IP: $e");
-      debugPrint("Stack trace: $stackTrace");
-    }
-    return null;
-  }
-
-  @override
-  void dispose() {
-    _rotationController?.dispose();
-    _expansionController?.dispose();
-    _discovery.stop();
-    super.dispose();
-  }
+  // Future<String?> resolveIpAddress(ResolvedBonsoirService service) async {
+  //   try {
+  //     final attributesIp = service.attributes['CurrentIp'];
+  //     if (attributesIp != null && attributesIp != '127.0.0.1') {
+  //       return attributesIp;
+  //     }
+  //
+  //     /// 判断 host
+  //     if (service.host == null || service.host!.isEmpty) {
+  //       debugPrint("Resolved host is empty");
+  //     }
+  //
+  //     // 使用 DNS 查找
+  //     debugPrint("Resolving IP for host: ${service.host}");
+  //     List<InternetAddress> addresses = await InternetAddress.lookup(service.host!, type: InternetAddressType.IPv4);
+  //     if (addresses.isNotEmpty) {
+  //       debugPrint("Resolved IP Address: ${addresses.first.address}");
+  //       return addresses.first.address;
+  //     } else {
+  //       debugPrint("No IP addresses found for host: ${service.host}");
+  //     }
+  //   } catch (e, stackTrace) {
+  //     debugPrint("Failed to resolve IP: $e");
+  //     debugPrint("Stack trace: $stackTrace");
+  //   }
+  //   return null;
+  // }
+  //
+  // @override
+  // void dispose() {
+  //   _rotationController?.dispose();
+  //   _expansionController?.dispose();
+  //   _discovery.stop();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {

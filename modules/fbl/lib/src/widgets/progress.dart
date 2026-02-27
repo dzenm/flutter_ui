@@ -1,5 +1,5 @@
-import 'package:fbl/src/config/notification.dart' as ln;
 import 'package:flutter/material.dart';
+import 'package:infra/infra.dart' as ln;
 
 import '../core/shared/notify.dart';
 import 'indicators.dart';

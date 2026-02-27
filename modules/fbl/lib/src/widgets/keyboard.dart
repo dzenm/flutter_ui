@@ -2,9 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import '../config/config.dart' as ln;
-import '../config/config.dart';
+import 'package:infra/infra.dart' as ln;
+import 'package:infra/infra.dart';
 
 ///
 /// Created by a0010 on 2025/6/24 16:03

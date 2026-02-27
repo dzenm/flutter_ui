@@ -1,4 +1,5 @@
 import 'package:fbl/fbl.dart';
+import 'package:go_router/go_router.dart';
 
 import '../routers.dart';
 import 'mall_page.dart';
@@ -19,28 +20,28 @@ class MallRouter {
 
 class _MallRouterMobile {
   static List<RouteBase> get routers => [
-        ARoute(
+        GoRoute(
           name: MallRouter.mall,
           path: '/mall',
           builder: (context, state) {
             return const MallPage();
           },
           routes: [
-            ARoute(
+            GoRoute(
               name: MallRouter.orders,
               path: '/orders',
               builder: (context, state) {
                 return const OrderPage();
               },
             ),
-            ARoute(
+            GoRoute(
               name: MallRouter.addOrder,
               path: '/addOrder',
               builder: (context, state) {
                 return const AddOrderPage();
               },
               routes: [
-                ARoute(
+                GoRoute(
                   name: MallRouter.addAddress,
                   path: '/addAddress',
                   builder: (context, state) {
@@ -56,28 +57,28 @@ class _MallRouterMobile {
 
 class _MallRouterDesktop {
   static List<RouteBase> get routers => [
-        ARoute(
+        GoRoute(
           name: MallRouter.mall,
           path: '/mall',
           builder: (context, state) {
             return const MallPage();
           },
           routes: [
-            ARoute(
+            GoRoute(
               name: MallRouter.orders,
               path: '/orders',
               builder: (context, state) {
                 return const OrderPage();
               },
             ),
-            ARoute(
+            GoRoute(
               name: MallRouter.addOrder,
               path: '/addOrder',
               builder: (context, state) {
                 return const AddOrderPage();
               },
               routes: [
-                ARoute(
+                GoRoute(
                   name: MallRouter.addAddress,
                   path: '/addAddress',
                   builder: (context, state) {

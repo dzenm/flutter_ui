@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:infra/infra.dart';
 
 import 'build_config.dart';
-import 'log.dart';
 
 /// 处理字符串
 typedef HandleMsg = void Function(String message);
@@ -18,7 +18,7 @@ typedef HandleMsg = void Function(String message);
 ///     await FileUtil()save(logFileName, message, dir: 'crash').then((String? filePath) async {});
 ///   }),
 /// )
-class HandleError {
+class HandleError with Logging {
   /// 捕获flutter运行时的错误
   Future catchFlutterError(
     Function runApp, {
@@ -88,7 +88,7 @@ class HandleError {
     StringBuffer sb = StringBuffer();
     const String interval = '  '; // 缩进的距离
     // 打印日志
-    void log(dynamic msg) => config.showLogInConsole ? Log.e(msg, tag: 'HandleError') : null;
+    void log(dynamic msg) => config.showLogInConsole ? logError(msg) : null;
     // 处理单条信息
     void handleSingleMessage(String message, {bool needLog = true}) {
       if (message.isEmpty || message == '\n') return; // 过滤空白信息和换行符

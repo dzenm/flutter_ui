@@ -10,6 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  infra:
+    path: ../../modules/infra
   ########################################## BASE ########################################
   # config文件夹
   package_info_plus: 8.1.2                      # 获取包名信息(全平台) https://pub.dev/packages/package_info_plus
@@ -30,6 +32,7 @@ dependencies:
   photo_view: 0.15.0                            # 图片预览控件(全平台) https://pub.flutter-io.cn/packages/photo_view
   media_kit: 1.1.11                             # 音频全平台核心依赖 https://pub.flutter-io.cn/packages/media_kit
   media_kit_video: 1.2.5                        # 音频渲染组件 https://pub.flutter-io.cn/packages/media_kit_video
+  media_kit_libs_video: 1.0.7                   # 音频渲染组件（全平台） https://pub.flutter-io.cn/packages/media_kit_libs_video
   video_player_media_kit: 1.0.5                 # 视频播放全平台核心依赖 https://pub.flutter-io.cn/packages/video_player_media_kit
 
 dev_dependencies:
